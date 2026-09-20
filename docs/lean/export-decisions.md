@@ -45,7 +45,7 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support synchronous functions with zero to 32 arguments. Each argument and result can be a primitive or a synchronous callable whose one to sixteen arguments and result are primitive:
+Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives and nested arrays of primitives. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; arrays and callables cannot yet share one component.
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
@@ -58,8 +58,9 @@ Ordinary npm components support synchronous functions with zero to 32 arguments.
 | `String` | Unicode `string`, including embedded NUL; unpaired UTF-16 surrogates are rejected |
 | `Char` | A `string` containing exactly one Unicode scalar, including supplementary characters and NUL |
 | `ByteArray` | Copied `Uint8Array` |
+| `Array α` | Dense ordinary arrays, declared as `ReadonlyArray<T>` in TypeScript; elements can be primitives or nested arrays |
 
-Calls use a binary scalar frame. Integers cross as 32-bit limbs without narrowing. Each copied value has a 16 MiB transport budget; `Float32` rounds to IEEE single precision.
+Calls use typed binary frames. Integers cross as 32-bit limbs without narrowing; `Float32` rounds to IEEE single precision. Scalar-only calls limit each copied value to 16 MiB. Array calls share a 16 MiB budget across copied slots and payloads in all arguments and the result, with at most 32 array levels. Arrays and byte buffers are independent copies and need no disposal.
 
 `Char` is one Unicode scalar, including NUL and supplementary characters. Native and PHP-Wasm packages also support it in copied arrays and record fields. C uses `uint32_t`, C++ `char32_t`, Rust `char`, .NET `System.Text.Rune`, Java/Kotlin `int`/`Int` code points, and WIT `char`. Python, Ruby, Perl and PHP use one-scalar strings. Multi-scalar grapheme clusters require `String`. See the [conversion tables](../reference/types.md).
 
@@ -69,7 +70,7 @@ The [first-component tutorial](first-component.md) executes `add` and `isEmpty` 
 
 Compilation, packaging, and loading check the same ordinary-component capability contract. `analyze` resolves aliases, notation, and inferred types using fresh Lean interfaces in the pinned engine. Ordinary builds use the same metadata extractor for captured and [generated entry modules](existing-package.md#generate-the-public-entry-module).
 
-Use [concrete specializations](existing-package.md#export-concrete-specializations) to bind a generic function's leading type parameters and resolve its following instance dictionaries. Each configured name becomes a concrete npm function. The runtime arguments and result still use the primitive types above. CPAN accepts the same configuration against its native type profile, including [specialized returned closures](../publish/cpan.md#export-a-specialized-closure).
+Use [concrete specializations](existing-package.md#export-concrete-specializations) to bind a generic function's leading type parameters and resolve its following instance dictionaries. Each configured name becomes a concrete npm function with supported runtime arguments and results. CPAN accepts the same configuration against its native type profile, including [specialized returned closures](../publish/cpan.md#export-a-specialized-closure).
 
 Analysis reports separate reasons for unresolved implicit, instance, dependent, generic, effectful and unsupported value types. The [compiler metadata](../architecture/elaborated-export-metadata.md) retains the binder types and source positions for inspection. Theorem references record direct relationships in Lean's environment; assurance claims require separate verification.
 
@@ -112,9 +113,9 @@ The compiler-backed analyzer projects:
 - `USize` and `ISize`, with the compiled target's width;
 - `Float32`, `Float`, `Char`, `String`, and `ByteArray`.
 
-Synchronous primitive callbacks and returned functions are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task`, collections, records and resources produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
+Nested arrays of these primitives, synchronous primitive callbacks and returned functions are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task`, other collections, records and resources produce unsupported diagnostics in this profile. The report retains their elaborated types for inspection. Analysis requires the same pinned engine backend as building; it does not compile a consumer adapter.
 
-Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. Builds can [compile reviewed APIs](existing-package.md#compile-a-reviewed-contract) after checking the contract against fresh Lean metadata: copied primitives, arrays and records for native/PHP-Wasm, or primitives and synchronous primitive callables for npm. C, C++, CPAN, PyPI, RubyGems, Cargo, NuGet, Maven, native PHP and PHP-Wasm also compile reviewed synchronous primitive callbacks and returned closures. Combined builds require the same API to be admitted by every selected profile. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
+Explicit reviewed Binding IR can describe richer APIs and can be validated without a compiler. Builds can [compile reviewed APIs](existing-package.md#compile-a-reviewed-contract) after checking the contract against fresh Lean metadata: copied primitives, arrays and records for native/PHP-Wasm, or primitives, nested primitive arrays and synchronous primitive callables for npm. C, C++, CPAN, PyPI, RubyGems, Cargo, NuGet, Maven, native PHP and PHP-Wasm also compile reviewed synchronous primitive callbacks and returned closures. Combined builds require the same API to be admitted by every selected profile. The [consumer support contract](../consumer-support.v1.json) records tested runtime profiles separately from the public analyzer's primitive projection.
 
 ## Declarations the analyzer skips
 

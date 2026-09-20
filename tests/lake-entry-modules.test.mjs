@@ -264,7 +264,7 @@ test("entry lowering requires shared metadata and keeps selected generated roots
 	for(const change of [
 		value => { value.metadata.modules[0].name = "Units"; }
 		, value => { value.metadata.modules[0].declarations.push(value.metadata.modules[0].declarations[0]); }
-		, value => { value.metadata.modules[0].declarations[0].projection.result = { kind: "array", element: uint32 }; }
+		, value => { value.metadata.modules[0].declarations[0].projection.result = { kind: "array", element: { kind: "primitive", name: "unknown" } }; }
 		, value => { value.metadata.modules[0].declarations[0].projection.result.name = "unknown"; }
 		, value => { value.metadata.modules[0].declarations[0].body = "source fallback"; }
 	]) {

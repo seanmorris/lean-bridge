@@ -25,6 +25,15 @@ lean_object *bridge_scalar_decode_object(bridge_scalar_slot const *);
 uint32_t bridge_scalar_encode_object(bridge_scalar_slot *, uint32_t, lean_object *);
 uint32_t bridge_scalar_call(char const *, bridge_scalar_frame *);
 void bridge_scalar_frame_clear(bridge_scalar_frame *);
+/* Copied ABI 1 uses frame version 4. A shape is an array depth plus a primitive
+   leaf tag. Validation charges every slot and payload to one call budget.
+   Decode requires validated input; encode consumes its owned Lean reference. */
+uint32_t bridge_copied_abi(void);
+uint32_t bridge_copied_frame_validate(bridge_scalar_frame *, uint32_t);
+uint32_t bridge_copied_validate(bridge_scalar_slot const *, uint32_t, uint32_t, uint32_t *);
+lean_object *bridge_copied_decode(bridge_scalar_slot const *, uint32_t, uint32_t);
+uint32_t bridge_copied_encode(bridge_scalar_slot *, uint32_t, uint32_t, lean_object *, uint32_t *);
+void bridge_copied_frame_clear(bridge_scalar_frame *);
 /* Callable ABI 1 shares scalar slots. Store consumes one owned Lean reference;
    invoke transfers a separately retained reference to its typed trampoline. */
 typedef uint32_t (*bridge_callable_apply)(lean_object *, bridge_scalar_frame *);

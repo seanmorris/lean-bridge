@@ -100,6 +100,7 @@ const allowedFunctionImport = name => name === "initialize_Init"
   || name === "abort"
   || name.startsWith("lean_")
   || name.startsWith("bridge_scalar_")
+  || ["bridge_copied_abi", "bridge_copied_frame_validate", "bridge_copied_validate", "bridge_copied_decode", "bridge_copied_encode"].includes(name)
   || ["bridge_callable_abi", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].includes(name)
   || name.startsWith("l_")
   || name.startsWith("emscripten_")

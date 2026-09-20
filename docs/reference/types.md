@@ -4,7 +4,7 @@ Use this reference to choose Lean exports and pass values to prepared packages. 
 
 ## Full type surface
 
-Inventory 0.19.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
+Inventory 0.20.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
 
 | Consumer table | Runtime context | Compiled Lean width |
 | --- | --- | --- |
@@ -83,7 +83,7 @@ Platform integers follow the compiled Lean target: npm and PHP-Wasm use 32-bit w
 
 All seventeen profiles have installed checks for synchronous primitive callbacks and returned Lean functions on both source paths. The [npm callable record](../evidence/npm-callables-20260919.md) covers Node, strict TypeScript, Chromium and Firefox, including React and workers. Callables use one through sixteen primitive arguments and a primitive result; compound and asynchronous callables remain separate work.
 
-The tables retain the separately audited type/position inventory, including older Alpha-only generator observations. Standalone Binding IR generators and compiler-backed packages have different coverage: Rust's standalone generator rejects arbitrary-precision integers, while its compiled native adapter preserves them exactly. npm's scalar source ABI does not accept Option, Except, tuples, arrays or records. Missing mappings and positions remain assigned work in the [type inventory](../type-surface.v1.json).
+The tables retain the separately audited type/position inventory, including older Alpha-only generator observations. Standalone Binding IR generators and compiler-backed packages have different coverage: Rust's standalone generator rejects arbitrary-precision integers, while its compiled native adapter preserves them exactly. npm's [copied-array ABI](../evidence/npm-arrays-20260920.md) supports nested arrays of all nineteen primitives on both source paths in Node, strict TypeScript, Chromium, Firefox and WebKit, including React and workers. npm does not yet compile Option, Except, tuples, records or compound callables. Missing mappings and positions remain assigned work in the [type inventory](../type-surface.v1.json).
 
 ## Generated host types
 

@@ -1,5 +1,5 @@
 /**
- * Staged copied-slot shapes. Compiler and package admission remain separate.
+ * Bounded copied-slot shapes and closed compiled-array admission.
  *
  * @file
  */
@@ -8,6 +8,8 @@ import { componentScalarTypes, scalarCopyLimit } from "./component-scalars.mjs";
 // Leave space for additional primitive tags without renumbering scalar ABI 2.
 export const componentCopiedTags = Object.freeze({ array: 32, tuple: 33, option: 34, result: 35 });
 export const componentCopiedDepth = 32;
+export const componentCopiedAbi = 4;
+export const componentCopiedDispatch = "copied-array-frame-v1";
 const maximumTypeNodes = 4096;
 
 const invalid = message => { throw new TypeError(`Invalid component copied type: ${message}`); };
@@ -60,6 +62,76 @@ export const snapshotComponentCopiedType = type => {
 		{ active.delete(value); }
 	};
 	return visit(type, 0);
+};
+
+/**
+ * Describe the currently compiled subset: primitives and nested arrays only.
+ *
+ * @param type - Public or private semantic type reference.
+ */
+export const componentArrayShape = type => {
+	let value = snapshotComponentCopiedType(type), depth = 0;
+	while(value.kind === "apply")
+	{
+		if(value.constructor !== "array") invalid("compiled copied values currently require arrays");
+		depth++;
+		value = value.arguments[0];
+	}
+	return { kind: componentScalarTypes.indexOf(value.name), depth };
+};
+
+/**
+ * Check the versioned, closed descriptor before linking a copied component.
+ *
+ * @param abi - Compiler-generated private array descriptor.
+ */
+export const assertComponentCopiedAbi = abi => {
+	fields(abi, ["version", "dispatch", "exports"]);
+	if(abi.version !== componentCopiedAbi || abi.dispatch !== componentCopiedDispatch) invalid("unsupported copied ABI");
+	if(!Array.isArray(abi.exports) || !abi.exports.length || abi.exports.length > 10000) invalid("invalid export table");
+	const bindings = new Set(), symbols = new Set();
+	let arrays = false;
+	for(const item of abi.exports)
+	{
+		fields(item, ["bindingId", "symbol", "parameters", "result", "resultMode"]);
+		if(typeof item.bindingId !== "string" || !item.bindingId.length || item.bindingId.length > 1024 || bindings.has(item.bindingId)
+			|| typeof item.symbol !== "string" || !/^lean_bridge_[a-f0-9]{24}$/.test(item.symbol) || symbols.has(item.symbol)) invalid("invalid export identity");
+		bindings.add(item.bindingId); symbols.add(item.symbol);
+		if(item.resultMode !== "value" || !Array.isArray(item.parameters) || item.parameters.length > 32) invalid("copied calls require synchronous bounded arity");
+		for(const type of [...item.parameters, item.result]) if(componentArrayShape(type).depth) arrays = true;
+	}
+	if(!arrays) invalid("scalar-only components must retain scalar ABI 2");
+};
+
+/**
+ * Bind the transport to the public types, copy ownership and pure effects.
+ *
+ * @param abi - Closed private descriptor.
+ * @param ir - Compiler-checked Binding IR.
+ */
+export const assertComponentCopiedBindings = (abi, ir) => {
+	assertComponentCopiedAbi(abi);
+	if(ir.types.length || ir.errors.length || ir.capabilities.length || ir.declarations.length !== abi.exports.length) invalid("unsupported copied binding tables");
+	const seen = new Set();
+	const site = (value, type) => {
+		const actual = componentArrayShape(value.type), expected = componentArrayShape(type);
+		if(actual.kind !== expected.kind || actual.depth !== expected.depth || value.ownership !== "copy" || value.lifetime !== null) invalid("binding type or ownership mismatch");
+	};
+	for(const declaration of ir.declarations)
+	{
+		const expected = abi.exports.find(item => item.bindingId === declaration.id);
+		if(!expected || seen.has(declaration.id) || declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null
+			|| declaration.typeParameters.length || declaration.resultMode !== "value" || declaration.mutability !== "immutable"
+			|| declaration.effects.length || declaration.capabilities.length || declaration.failure.mode !== "none"
+			|| declaration.failure.errors.length || declaration.failure.unexpected !== "poison-runtime"
+			|| declaration.parameters.length !== expected.parameters.length) invalid("unsupported copied export semantics");
+		seen.add(declaration.id);
+		declaration.parameters.forEach((value, index) => {
+			if(value.optional || value.default !== null || value.mutability !== "immutable") invalid("unsupported copied parameter semantics");
+			site(value, expected.parameters[index]);
+		});
+		site(declaration.result, expected.result);
+	}
 };
 
 /**

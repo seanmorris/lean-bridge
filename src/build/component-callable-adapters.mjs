@@ -6,6 +6,7 @@
 import { assertComponentCallableAbi, assertComponentCallableBindings, componentCallableSignatureText } from "../abi/component-callables.mjs";
 import { componentScalarTypes, assertComponentSignature } from "../abi/component-scalars.mjs";
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
+import { assertComponentCopiedBindings, componentCopiedAbi, componentCopiedDispatch } from "../abi/component-copied.mjs";
 import { sha256 } from "../capsule/node.mjs";
 
 /**
@@ -14,13 +15,14 @@ import { sha256 } from "../capsule/node.mjs";
  * @param document - Validated compiler-owned Binding IR.
  */
 export const createComponentPrivateAbi = document => {
+	const copied = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(type => type.kind === "apply"));
 	const callbacks = document.types.filter(type => type.kind === "callback").map(type => {
 		const signature = { parameters: type.callable.parameters.map(parameter => parameter.type), result: type.callable.result.type };
 		return { id: type.id, key: sha256(componentCallableSignatureText(signature)).slice(0, 40), ...signature };
 	});
 	const abi = {
-		version: callbacks.length ? 3 : 2
-		, dispatch: callbacks.length ? "scalar-callable-frame-v1" : "scalar-frame-v2"
+		version: callbacks.length ? 3 : copied ? componentCopiedAbi : 2
+		, dispatch: callbacks.length ? "scalar-callable-frame-v1" : copied ? componentCopiedDispatch : "scalar-frame-v2"
 		, ...(callbacks.length ? { callbacks } : {})
 		, exports: document.declarations.map(declaration => ({
 			bindingId: declaration.id
@@ -30,6 +32,7 @@ export const createComponentPrivateAbi = document => {
 			, resultMode: declaration.resultMode }))
 	};
 	if(callbacks.length) assertComponentCallableBindings(abi, document);
+	else if(copied) assertComponentCopiedBindings(abi, document);
 	else for(const declaration of document.declarations) assertComponentSignature(declaration);
 	return abi;
 };

@@ -193,9 +193,17 @@ def scalarType (request : Request) (e : Expr) : MetaM Json := do
   let name ← ofExcept <| value.getObjValAs? String "name"
   return obj [("kind", str "primitive"), ("name", str name)]
 
-def componentType (value : Json) : MetaM Json := do
+partial def componentCopiedType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption == some "primitive" then
     return obj [("kind", str "primitive"), ("name", ← ofExcept <| value.getObjVal? "name")]
+  if (value.getObjValAs? String "kind").toOption == some "array" then
+    return obj [("kind", str "array"),
+      ("element", ← componentCopiedType (← ofExcept <| value.getObjVal? "element"))]
+  throwError "component copied values require primitives or nested arrays"
+
+def componentType (value : Json) : MetaM Json := do
+  if (value.getObjValAs? String "kind").toOption != some "callback" then
+    return ← componentCopiedType value
   unless (value.getObjValAs? String "kind").toOption == some "callback" do
     throwError "components require primitives or synchronous primitive callables"
   let parameters ← ofExcept <| value.getObjValAs? (Array Json) "parameters"

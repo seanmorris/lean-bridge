@@ -61,19 +61,19 @@ const values = {
 	, usize: [0, 0xffffffff], isize: [-0x80000000, -1, 0x7fffffff]
 };
 
-test("copied descriptors are closed, bounded, snapshotted and leave compiler admission blocked", () => {
+test("copied descriptors are closed and snapshotted; non-array admission remains blocked", () => {
 	const input = array(option(u32)), codec = compileComponentCopiedCodec(input);
 	assert.deepEqual(codec.type, input);
 	input.arguments.length = 0;
 	assert.equal(Object.isFrozen(codec.type.arguments[0].arguments), true);
 	assert.deepEqual(roundTrip(codec.type, [none(), some(42)]), [none(), some(42)]);
-	for(const type of [array(u32), tuple(u32, bool), option(unit), result(u32, primitive("string"))])
+	for(const type of [tuple(u32, bool), option(unit), result(u32, primitive("string"))])
 	{
 		const document = {
 			component: { id: "copied-test" }, types: []
 			, declarations: [{ id: "lean:test", kind: "function", parameters: [{ type }], result: { type }, resultMode: "value" }]
 		};
-		assert.throws(() => createComponentPrivateAbi(document), { code: "unsupported-component-signature" });
+		assert.throws(() => createComponentPrivateAbi(document), /compiled copied values currently require arrays/);
 	}
 	for(const invalid of [
 		{ kind: "primitive", name: "future" }, { ...u32, extra: true }

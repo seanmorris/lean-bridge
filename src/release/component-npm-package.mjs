@@ -20,6 +20,7 @@ import { validateComponentReleaseBundleManifest } from "./component-release-bund
 import { createDeterministicTarGz, createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { assertComponentSignature, componentScalarAbi } from "../abi/component-scalars.mjs";
 import { assertComponentCallableBindings, componentCallableSignatureText } from "../abi/component-callables.mjs";
+import { assertComponentCopiedBindings } from "../abi/component-copied.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { componentNpmIdentity, validateComponentPackageReceipt } from "./component-package-receipt.mjs";
 import { writeNpmPackageSet } from "./package-set-assembly.mjs";
@@ -129,19 +130,21 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		assertComponentCallableBindings(abi, ir);
 		for(const signature of abi.callbacks) if(sha256(componentCallableSignatureText(signature)).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
 	}
+	else if(abi.version === 4) assertComponentCopiedBindings(abi, ir);
 	else
 	{
 		if(abi.version !== componentScalarAbi || abi.dispatch !== "scalar-frame-v2") throw new Error("Rebuild this component for scalar ABI 2");
 		for(const declaration of ir.declarations) assertComponentSignature(declaration);
 		for(const declaration of abi.exports) assertComponentSignature(declaration);
 	}
-	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs");
+	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs");
 	const runtimeSource = relocate(await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8"));
 	const scalarSource = await readFile(new URL("../abi/component-scalars.mjs", import.meta.url), "utf8");
 	const codecSource = (await readFile(new URL("./component-scalar-codec.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
 	if(!mainModule.includes(Buffer.from("bridge_scalar_call")) || !mainModule.includes(Buffer.from("bridge_scalar_frame_clear"))) throw new Error("Prepared runtime lacks scalar ABI 2; rebuild the shared runtime");
 	const runtimeExports = new Set(WebAssembly.Module.exports(new WebAssembly.Module(mainWasm)).map(item => `${item.kind}:${item.name}`));
 	if(abi.version === 3 && ["bridge_callable_abi", "bridge_callable_invoke", "bridge_callable_release", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component callable ABI; rebuild the shared runtime");
+	if(abi.version === 4 && ["bridge_copied_abi", "bridge_copied_frame_validate", "bridge_copied_validate", "bridge_copied_decode", "bridge_copied_encode", "bridge_copied_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component copied ABI; rebuild the shared runtime");
 	const side = new WebAssembly.Module(await readFile(join(bundle.root, artifact.path)));
 	const sideExports = new Set(WebAssembly.Module.exports(side).map(item => `${item.kind}:${item.name}`));
 	for(const item of WebAssembly.Module.imports(side))
@@ -163,6 +166,9 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, ["internal/component-scalar-codec.mjs", codecSource]
 		, ["internal/component-callables.mjs", await readFile(new URL("../abi/component-callables.mjs", import.meta.url))]
 		, ["internal/component-callable-runtime.mjs", relocate(await readFile(new URL("./component-callable-runtime.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-copied.mjs", await readFile(new URL("../abi/component-copied.mjs", import.meta.url))]
+		, ["internal/component-copied-codec.mjs", relocate(await readFile(new URL("./component-copied-codec.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-copied-runtime.mjs", relocate(await readFile(new URL("./component-copied-runtime.mjs", import.meta.url), "utf8"))]
 		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
 	]);
 	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);

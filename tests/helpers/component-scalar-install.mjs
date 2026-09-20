@@ -58,7 +58,7 @@ const compile = async (fixture, projectRoot, root, local = false) => {
 		// Rename the export without changing the module's binary section lengths.
 		wasm[at] = "x".charCodeAt(0);
 		await writeFile(join(oldRuntime, "main.wasm"), wasm);
-		await assert.rejects(() => buildComponentNpmPackages({ bundleRoot, runtimeRoot: oldRuntime, outputRoot: join(root, "rejected-npm") }), /cannot resolve component import/);
+		await assert.rejects(() => buildComponentNpmPackages({ bundleRoot, runtimeRoot: oldRuntime, outputRoot: join(root, "rejected-npm") }), /cannot resolve component import|lacks the component copied ABI/);
 	}
 	return release;
 };
@@ -153,7 +153,7 @@ export const checkInstalledScalars = async (t, fixture) => {
 		builds.push({ path, release });
 	}
 	const mismatched = fixture.reviewedIr();
-	mismatched.declarations[0].parameters[0].type.name = "uint32";
+	mismatched.declarations[0].parameters[0].type = { kind: "primitive", name: "uint32" };
 	await save("reviewed.binding-ir.json", mismatched);
 	await assert.rejects(() => compile(fixture, source, join(scratch, "mismatch"), true), { code: "reviewed-ir-source-mismatch" });
 	await assert.rejects(lstat(join(scratch, "mismatch/output")), { code: "ENOENT" });

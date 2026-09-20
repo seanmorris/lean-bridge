@@ -1,6 +1,6 @@
 /**
- * Staged recursive copied slots, reusing the installed primitive wire codecs.
- * No compiler or package admits this transport until its Lean adapters land.
+ * Recursive copied slots, reusing the installed primitive wire codecs.
+ * Arrays are compiled; tuple, Option and Except codecs remain staged.
  *
  * @file
  */

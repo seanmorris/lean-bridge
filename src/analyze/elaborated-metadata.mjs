@@ -143,8 +143,14 @@ export const validateElaboratedMetadata = (report, request) => {
 					|| projection.parameters.length > (native ? 1024 : 32) || projection.parameters.length !== Math.min(arity, declaration.parameters.length)
 					|| declaration.parameters.some(parameter => parameter.binderInfo !== "explicit") || declaration.effects.length) fail("Invalid supported projection");
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
+				const copied = (type, depth = 0) => {
+					if(depth > 32) fail("Component copied type nesting exceeds 32");
+					if(type?.kind !== "array") return scalar(type);
+					closed(type, ["kind", "element"]);
+					copied(type.element, depth + 1);
+				};
 				const component = type => {
-					if(type?.kind !== "callback") return scalar(type);
+					if(type?.kind !== "callback") return copied(type);
 					closed(type, ["kind", "parameters", "result"]);
 					if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("Invalid component callback arity");
 					for(const parameter of type.parameters) scalar(parameter);

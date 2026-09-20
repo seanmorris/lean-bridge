@@ -6,6 +6,8 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/build/component-copied-adapters.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/component-copied-runtime.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/abi/component-copied.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/component-copied-codec.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/abi/component-callables.mjs", "classification": "strict-migration-backlog" },

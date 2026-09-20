@@ -1,5 +1,9 @@
 # npm copied-value transport staging, 20 September 2026
 
+The subsequent [compiled-array milestone](npm-arrays-20260920.md) enables nested
+primitive arrays. This record describes the earlier codec-only milestone;
+tuples, Option and Except remain staged.
+
 VO1219 now has a typed slot codec for nested arrays, tuples, Option and Except.
 The tests exercise JavaScript conversion in `WebAssembly.Memory`. They do not
 execute Lean or install packages. Compiler and npm package admission remain

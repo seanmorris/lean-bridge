@@ -208,7 +208,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Float` | `number` (input, result, callback input, callback result, field) | Ordinary source: Installed checks passed (input, result, callback input, callback result); Not audited (field). Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | IEEE binary64 projected as number; preserves NaN classification, infinities and signed zero. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
 | `String` | `string` (input, result, callback input, callback result, field) | Ordinary source: Installed checks passed (input, result, callback input, callback result); Not audited (field). Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Copied UTF-8 text, including BOM, NUL and supplementary characters. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `Uint8Array` (input, result, callback input, callback result, field) | Ordinary source: Installed checks passed (input, result, callback input, callback result); Not audited (field). Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Copied Uint8Array; no view into Lean memory. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `readonly T[]; UInt32 arrays use readonly number[]` (input, result, field, callback input, callback result) | Ordinary source: Compilation rejected. Reviewed IR: Generator inspected | Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Array α` | `ReadonlyArray<T> (nested primitive elements)` (input, result); `readonly T[]; UInt32 arrays use readonly number[]` (field, callback input, callback result) | Ordinary source: Installed checks passed (input, result); Compilation rejected (field, callback input, callback result). Reviewed IR: Installed checks passed (input, result); Generator inspected (field, callback input, callback result) | Dense ordinary JavaScript arrays, recursively; holes, getters, cycles and extra properties reject. No Wasm views or disposal. ByteArray elements use independent Uint8Array copies. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Generation rejected | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Generation rejected | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Generation rejected | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
@@ -269,7 +269,27 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
 
-The ordinary component build path accepts primitives and synchronous functions with primitive arguments and results. Arrays, records, resources, `IO`, and `Task` remain unsupported. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+The ordinary component build path accepts primitives, nested arrays of primitives, and synchronous functions with primitive arguments and results. Records, resources, `IO`, and `Task` remain unsupported. Arrays and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+
+### Nested arrays
+
+An exported Lean function taking `Array (Array Nat)` accepts a JavaScript array
+of arrays of `bigint`. Generated TypeScript uses
+`ReadonlyArray<ReadonlyArray<bigint>>`. The same mapping applies recursively to
+all nineteen primitive types, including `Uint8Array` for each `ByteArray` value.
+Pass ordinary dense arrays for `Array`; typed arrays are only used for `ByteArray`.
+
+Arrays and byte buffers are copied in both directions. Returned values share no
+storage with inputs or the Lean heap and need no disposal. Holes, extra fields,
+getters, cycles and incorrectly typed elements are rejected. Limits are 32 array
+levels and a cumulative 16 MiB of slot storage and copied payloads across all
+arguments and the result. A result that exceeds the limit throws `RangeError`;
+the runtime releases partial output and remains usable.
+
+The installed-package checks cover ordinary Lean source and independently
+reviewed IR in Node, strict TypeScript, browser pages, React and workers. See the
+[array execution evidence](evidence/npm-arrays-20260920.md). Arrays of records,
+options, results and callables are not admitted by this compiler path yet.
 
 ### Validate numeric inputs
 

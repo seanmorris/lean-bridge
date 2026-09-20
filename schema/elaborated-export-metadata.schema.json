@@ -277,13 +277,21 @@
     },
     "runtimeType": {
       "oneOf": [
-        { "$ref": "#/$defs/scalarType" },
+        { "$ref": "#/$defs/copiedType" },
         { "type": "object", "additionalProperties": false, "required": ["kind", "parameters", "result"],
           "properties": {
             "kind": { "const": "callback" },
             "parameters": { "type": "array", "minItems": 1, "maxItems": 16, "items": { "$ref": "#/$defs/scalarType" } },
             "result": { "$ref": "#/$defs/scalarType" }
           }
+        }
+      ]
+    },
+    "copiedType": {
+      "oneOf": [
+        { "$ref": "#/$defs/scalarType" },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "element"],
+          "properties": { "kind": { "const": "array" }, "element": { "$ref": "#/$defs/copiedType" } }
         }
       ]
     },

@@ -10,6 +10,7 @@ import { dirname, join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { assertComponentSignature } from "../abi/component-scalars.mjs";
 import { assertComponentCallableAbi } from "../abi/component-callables.mjs";
+import { assertComponentCopiedAbi, componentCopiedAbi } from "../abi/component-copied.mjs";
 import { componentCallableLeanPrelude, createComponentPrivateAbi } from "./component-callable-adapters.mjs";
 
 const primitiveLeanTypes = new Map([
@@ -76,10 +77,10 @@ const leanType = (type, callbacks = new Map()) => {
 	}
 	if(type.kind === "apply")
 	{
-		const arguments_ = type.arguments.map(leanType);
-		if(type.constructor === "array" && arguments_.length === 1) return `Array ${arguments_[0]}`;
-		if(type.constructor === "option" && arguments_.length === 1) return `Option ${arguments_[0]}`;
-		if(type.constructor === "result" && arguments_.length === 2) return `Except ${arguments_[0]} ${arguments_[1]}`;
+		const arguments_ = type.arguments.map(type => leanType(type, callbacks));
+		if(type.constructor === "array" && arguments_.length === 1) return `(_root_.Array ${arguments_[0]})`;
+		if(type.constructor === "option" && arguments_.length === 1) return `(_root_.Option ${arguments_[0]})`;
+		if(type.constructor === "result" && arguments_.length === 2) return `(_root_.Except ${arguments_[1]} ${arguments_[0]})`;
 		if(type.constructor === "tuple" && arguments_.length >= 2) return `(${arguments_.join(" × ")})`;
 	}
 	fail("unsupported-compiler-type", `Compiler adapters cannot project ${JSON.stringify(type)}`);
@@ -122,12 +123,13 @@ export const validateCompilerAdapterPlan = plan => {
 		if(item.leanEffect !== null && !new Set(["IO", "Task"]).has(item.leanEffect)) fail("invalid-compiler-adapter-plan", "compiler adapter effect is unsupported");
 		if((item.resultMode === "promise") !== (item.leanEffect !== null)) fail("invalid-compiler-adapter-plan", "promise adapters require IO or Task");
 	}
-	const callable = plan.privateAbi.version === 3;
+	const callable = plan.privateAbi.version === 3, copied = plan.privateAbi.version === componentCopiedAbi;
 	if(callable) assertComponentCallableAbi(plan.privateAbi);
+	else if(copied) assertComponentCopiedAbi(plan.privateAbi);
 	else
 	{
 		exactKeys(plan.privateAbi, ["version", "dispatch", "exports"], "private ABI");
-		if(plan.privateAbi.version !== 2 || plan.privateAbi.dispatch !== "scalar-frame-v2") fail("invalid-compiler-adapter-plan", "private ABI must use scalar frame 2 or callable frame 3");
+		if(plan.privateAbi.version !== 2 || plan.privateAbi.dispatch !== "scalar-frame-v2") fail("invalid-compiler-adapter-plan", "private ABI must use scalar frame 2, callable frame 3 or copied frame 4");
 	}
 	if(!Array.isArray(plan.privateAbi.exports) || plan.privateAbi.exports.length !== plan.exports.length) fail("invalid-compiler-adapter-plan", "private ABI must cover every generated export");
 	for(const [index, item] of plan.privateAbi.exports.entries())
@@ -138,7 +140,7 @@ export const validateCompilerAdapterPlan = plan => {
 			fail("invalid-compiler-adapter-plan", "private ABI export order and identities must match generated exports");
 		}
 		if(!Array.isArray(item.parameters) || item.result === null || typeof item.result !== "object") fail("invalid-compiler-adapter-plan", "private ABI type shapes are incomplete");
-		if(!callable) assertComponentSignature(item);
+		if(!callable && !copied) assertComponentSignature(item);
 	}
 	return true;
 };
@@ -180,9 +182,10 @@ export const generateCompilerAdapters = ({ analysis, componentPlan }) => {
 	const document = analysis.bindingIr.document;
 	const privateAbi = createComponentPrivateAbi(document), callbacks = privateAbi.callbacks ?? [];
 	if(callbacks.length && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Callable adapters require freshly elaborated Binding IR");
+	if(privateAbi.version === componentCopiedAbi && analysis.bindingIr.origin !== "lean-elaborated") fail("compiler-adapter-ir-origin", "Copied adapters require freshly elaborated Binding IR");
 	const callbackTypes = new Map(callbacks.map(type => [type.id, type]));
 	const exports = analysis.bindingIr.document.declarations.map(declaration => {
-    if(!callbacks.length) assertComponentSignature(declaration);
+    if(privateAbi.version === 2) assertComponentSignature(declaration);
     if(declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null) fail("unsupported-compiler-declaration", `Compiler adapter cannot emit ${declaration.id}`);
     const sourceDeclaration = declaration.source.declaration;
     const specialization = declaration.source.extensions["lean-lang.org/specialization"];

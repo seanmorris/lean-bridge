@@ -427,7 +427,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /node --test tests\/component-words\.test\.mjs/);
   assert.match(workflow, /node --test tests\/component-callables\.test\.mjs/);
   assert.match(workflow, /test -s build\/callables\/npm\/report\.json/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*build\/word-npm\/\n\s*build\/callables\/npm\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /node --test tests\/component-arrays\.test\.mjs/);
+  assert.match(workflow, /test -s build\/arrays\/npm\/report\.json/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*build\/word-npm\/\n\s*build\/callables\/npm\/\n\s*build\/arrays\/npm\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /id: type_corpus_python/);
   assert.match(workflow, /npm run test:type-corpus:python/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);

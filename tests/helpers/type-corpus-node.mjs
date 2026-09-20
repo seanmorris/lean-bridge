@@ -210,9 +210,10 @@ export const runNpmCorpusLibrary = async (t, library, profiles, { path = "ordina
 	for(const archive of ["componentArchive", "runtimeArchive"])
 		assert.deepEqual(await readFile(releases[0][archive]), await readFile(releases[1][archive]));
 
-	// Unsupported selections include one admitted export so the exact hint set,
-	// rather than an empty-API failure, identifies every unimplemented projection.
-	const unsupported = corpusSignatures(library).filter(signature => !signatures.some(item => item.name === signature.name)).map(signature => signature.name);
+	// This historical corpus release still selects primitives. Arrays now have
+	// their own nineteen-element installed suite, so only records remain an
+	// unsupported selection here. Include one admitted export for exact hints.
+	const unsupported = corpusSignatures(library).filter(signature => [...signature.parameters, signature.result].some(type => type.record)).map(signature => signature.name);
 	const rejectedExports = [...unsupported, library.pendingExport];
 	const pending = join(context.directory, "pending");
 	await cp(context.workspace, pending, { recursive: true });

@@ -144,6 +144,12 @@ BRIDGE_EXPORTS=(
   _bridge_scalar_word_bits
   _bridge_scalar_decode_object
   _bridge_scalar_encode_object
+  _bridge_copied_abi
+  _bridge_copied_frame_validate
+  _bridge_copied_validate
+  _bridge_copied_decode
+  _bridge_copied_encode
+  _bridge_copied_frame_clear
   _bridge_callable_abi
   _bridge_callable_store
   _bridge_callable_invoke
@@ -250,8 +256,11 @@ done \
 {
   printf '%s\n' "${BRIDGE_EXPORTS[@]}"
   sed -n '/^_/p' "$SIDE_IMPORTS"
+  # Compiled Lean libraries import public Init data as well as functions, for
+  # example the boxed default values used by Array.get!. Export both so a
+  # prepared runtime can serve packages other than the link-spike fixtures.
   "$LEAN_WASM_EMSDK/upstream/bin/llvm-nm" --defined-only --extern-only "$LEAN_RUNTIME" "$LEAN_INIT" \
-    | awk '$2 ~ /^[TW]$/ && $3 ~ /^(lean_|l_|initialize_)/ {print "_" $3}'
+    | awk '$2 ~ /^[TWBDRV]$/ && $3 ~ /^(lean_|l_|initialize_)/ {print "_" $3}'
 } \
   | sort -u \
   | grep -Fvx -f "$SIDE_PROVIDED_SYMBOLS" \

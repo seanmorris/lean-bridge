@@ -89,7 +89,7 @@ Verify the npm handoff with `lean-bridge verify --receipt /path/to/new-release/p
 
 Add `--target c` or `--target cpp` to include [prepared native C/C++ archives](c.md#build-an-ordinary-lean-project). Those targets share the same native compilation with CPAN. You can also omit CPAN and build npm with either C-family target; no Perl installation is needed in that case.
 
-The selected exports must fit both profiles: primitives and synchronous primitive callables, including supported concrete specializations. Source-configured closure arities still require separate target builds. Native-only arrays, records and resources also use a separate native build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
+The selected exports must fit both profiles: primitives, nested primitive arrays or synchronous primitive callables, including supported concrete specializations. Arrays and callables cannot share one npm component yet. Source-configured closure arities still require separate target builds. Records and resources also use a separate native build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
 
 ## Publish an ordinary component
 
