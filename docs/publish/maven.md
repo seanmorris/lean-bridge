@@ -1,6 +1,6 @@
 # Build and publish Java and Kotlin packages
 
-Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all 16 primitive types, nested arrays and acyclic copied records. Consumers install the artifacts without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays, acyclic copied records, options, results, binary products and synchronous primitive callables. Consumers install the artifacts without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,9 +32,15 @@ lean-bridge build --project /absolute/path/to/maple --target maven \
 
 The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes compiled Java 22 classes, native libraries, generated sources, compiler evidence and dependency license notices. Its README names the generated Java package and API. Changing the Maven coordinate does not rename the Lean-derived Java package.
 
-Calls accept concrete copied values, synchronous primitive callbacks and returned closures. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Optional values, variants, resources, compound callables and asynchronous effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
+Calls accept concrete copied values, synchronous primitive callbacks and returned closures. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Variants, resources, compound callables and asynchronous effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export options, results and products
+
+Both ordinary-source and independently reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain admitted primitives, arrays and acyclic records. The generated JAR supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches and a binary `Pair<A, B>` record. Generic primitive payloads use boxed JVM types. None, Some Unit and nested options remain distinct; domain errors return `Err` values while bridge failures throw exceptions.
+
+Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract). Lean checks the source API before adapter generation on either path. Every selected target must admit the full API in a combined build. See the [Java](../consume/java.md#options-results-and-products) and [Kotlin](../consume/kotlin.md#options-results-and-products) examples and the [installed Maven evidence](../evidence/jvm-compounds-20260920.md).
 
 ## Export callbacks and returned functions
 

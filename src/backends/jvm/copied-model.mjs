@@ -20,24 +20,28 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedJvmModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true });
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true });
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-jvm-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
 	};
 	if(keywords.has(surface.prefix)) fail(ir.declarations[0], "Java package name is a reserved word");
 	const names = new Set(reserved);
+	if(surface.copies.some(copy => copy.compound)) for(const name of ["Option", "Result", "Pair"]) names.add(name);
 	for(const copy of surface.copies)
 	{
 		copy.nativeType = copy.aggregate ? "MemorySegment" : nativeTypes[copy.scalarName];
 		copy.layout = copy.aggregate ? "ADDRESS" : `JAVA_${copy.nativeType.toUpperCase()}`;
-		if(copy.record)
+		if(copy.record || copy.compound)
 		{
-			copy.publicName = pascal(copy.record.name);
-			if(names.has(copy.publicName)) fail(ir.declarations[0], `Java record name collides: ${copy.publicName}`);
-			names.add(copy.publicName);
+			if(copy.record)
+			{
+				copy.publicName = pascal(copy.record.name);
+				if(names.has(copy.publicName)) fail(ir.declarations[0], `Java record name collides: ${copy.publicName}`);
+				names.add(copy.publicName);
+			}
 			const fields = new Set();
-			let size = 0, alignment = 1;
+			let size = copy.compound && copy.compound !== "tuple" ? 1 : 0, alignment = 1;
 			for(const field of copy.fields)
 			{
 				field.publicName = camel(field.name);
@@ -70,8 +74,13 @@ export const compileCopiedJvmModel = ir => {
 		names.add(callback.publicName);
 		Object.assign(callback, { nativeType: "MemorySegment", layout: "ADDRESS", size: 8, alignment: 8 });
 	}
-	const publicType = copy => copy.type?.callable ? copy.publicName : copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];
-	return { ir, surface, namespace: `org.leanbridge.${surface.prefix}`, publicType };
+	const wrapper = copy => ({ option: "Option", result: "Result", tuple: "Pair" })[copy.compound];
+	const boxed = type => ({ boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer", long: "Long", float: "Float", double: "Double" })[type] ?? type;
+	const publicType = copy => copy.type?.callable ? copy.publicName : copy.record ? copy.publicName
+		: copy.compound ? `${wrapper(copy)}<${copy.fields.map(field => boxed(publicType(field.type))).join(", ")}>`
+			: copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];
+	const erasedType = copy => copy.compound ? wrapper(copy) : copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);
+	return { ir, surface, namespace: `org.leanbridge.${surface.prefix}`, publicType, erasedType };
 };
 
 /**

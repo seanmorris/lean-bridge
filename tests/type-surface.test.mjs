@@ -141,9 +141,10 @@ test("native compound evidence promotes exactly C/C++ copied positions on both p
 	}
 });
 
-for(const profile of ["python", "rust", "dotnet"]) test(`${profile} compound evidence promotes exactly eighteen copied positions on both paths`, () => {
+for(const profile of ["python", "rust", "dotnet", "java", "kotlin"]) test(`${profile} compound evidence promotes exactly eighteen copied positions on both paths`, () => {
 	const cells = typeSurfaceCells(document, contracts);
-	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes(`${profile}-compounds-installed`));
+	const evidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
+	const observed = cells.filter(cell => cell.profile === profile && cell.stages.installedExecution.evidence.includes(evidence));
 	assert.equal(observed.length, 18);
 	for(const cell of observed)
 	{
@@ -252,7 +253,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
 		&& cell.stages.installedExecution.state === "passed"
 		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
-	const compounds = ["python", "rust", "dotnet"].includes(profile) ? ["option", "result", "tuple"] : [];
+	const compounds = ["python", "rust", "dotnet", "java", "kotlin"].includes(profile) ? ["option", "result", "tuple"] : [];
+	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
 	assert.equal(observed.length, 63 + 3 * compounds.length);
 	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds].sort());
 	for(const cell of observed)
@@ -261,7 +263,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [compounds.includes(cell.shape) ? `${profile}-compounds-installed` : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
+			assert.deepEqual(stage.evidence, [compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
 		}
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile

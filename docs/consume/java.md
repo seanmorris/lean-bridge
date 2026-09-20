@@ -50,6 +50,36 @@ UInt8 and UInt16 use range-checked `int`; UInt32 uses range-checked `long`. UInt
 
 Calls copy nested inputs and outputs. Null, negative Nat, out-of-range unsigned values and malformed UTF-16 throw. Native input and output conversions share a 16 MiB budget; the Java input scratch budget is also bounded. An oversized result throws after Lean returns. Scoped native memory and deep owned results are released on failure. The loader checks bundled native hashes, shares a compatible runtime and removes its private extracted files at normal JVM shutdown.
 
+### Options, results and products
+
+Ordinary-source and reviewed Maven packages support `Option`, `Except` and nested binary products, including mixtures with arrays and copied records. The JAR supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches, plus a `Pair<A, B>` record.
+
+For the `org.leanbridge:compounds:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import org.leanbridge.compounds.Api;
+import org.leanbridge.compounds.Option;
+import org.leanbridge.compounds.Pair;
+import org.leanbridge.compounds.Unit;
+
+class Example {
+    public static void main(String[] args) {
+        var present = Api.optionUint32(Option.some(42L));
+        System.out.println(present.value()); // 42
+        System.out.println(Api.classify(Option.some(Option.<Unit>none()))); // 1
+        System.out.println(Api.tupleUint32(new Pair<>(1L, 2L)).first()); // 2
+        var result = Api.duplicate(Option.none());
+        if (!result.isOk()) System.out.println(result.error()); // empty
+    }
+}
+```
+
+Compile and run using the [prepared JAR commands](#call-an-ordinary-lean-package). Generic payloads use boxed Java primitives: `Option<Long>` for `Option UInt32`, for example. `ByteArray` remains `byte[]`, and arbitrary integers retain `BigInteger`.
+
+`Option.none()` and `Option.some(Unit.INSTANCE)` are different values. Nested options retain every branch. Read `value()` when `isSome()` is true. `Result.ok(value)` and `Result.err(error)` preserve Lean `Except E T` as `Result<T, E>`; read `value()` when `isOk()` is true, otherwise `error()`. An inactive accessor throws `IllegalStateException`. Domain errors return `Err`; bridge failures throw exceptions. Both sealed hierarchies support exhaustive Java switches.
+
+Factories and record constructors reject null payloads; calls reject null containers. A `Pair` always has two typed elements and retains product nesting. Returned arrays own independent copies. Java record equality compares array fields by reference, so use content comparisons for arrays. The 32-level type limit and existing copy budgets apply to compounds. See the [installed Java/Kotlin checks](../evidence/jvm-compounds-20260920.md).
+
 ### Callbacks and returned Lean functions
 
 Ordinary-source and compiler-checked reviewed Maven packages support synchronous callbacks and returned functions across all nineteen primitives. Generated functional interfaces carry the exact parameter and result types. Pass a Java lambda directly:
@@ -209,9 +239,9 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `String` | `String` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Strict Unicode conversion preserves embedded NUL. Null and malformed UTF-16 throw. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `byte[]` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Copied mutable byte array with independent returned storage. Null throws. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
 | `Array α` | `Typed Java array` (input, result, field); `long[]` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Primitive arrays retain their scalar mappings; nested/reference arrays preserve their types. Calls deep-copy values and reject nested nulls. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Option α` | `Option<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Generated sealed interface with None/Some record branches, none()/some(value) factories, isSome() and guarded value(). Boxed primitive payloads preserve JVM generic types. Some(None) and Some(Some(Unit)) remain distinct. Null containers and payloads reject. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `Result<T, E>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` uses success-first `Result<T, E>.ok(value)` or `.err(error)`. Generated sealed Ok/Err records support exhaustive matching. isOk() selects guarded value()/error(). Domain errors return Err; bridge failures throw exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `Pair<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed generated Pair elements, preserving binary nesting. Kotlin uses this generated record, not kotlin.Pair. Inputs are copied; returned arrays own independent storage. Record equality compares array fields by reference. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated Java record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |

@@ -52,9 +52,9 @@ test("source intake describes new and existing libraries without widening target
 	assert.match(targets, /CLI target `php-native` or `php-wasm`/);
 	assert.match(targets, /JavaScript-Wasm for npm, and separately for PHP-Wasm/);
 	assert.match(targets, /\[pip \/ PyPI\]\(publish\/pypi\.md\) \| An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `pypi`/);
-	assert.match(targets, /\[Maven\]\(publish\/maven\.md\) \| An ordinary Lake project with copied primitives, arrays, acyclic records and synchronous primitive callables; CLI target `maven`/);
+	assert.match(targets, /\[Maven\]\(publish\/maven\.md\) \| An ordinary Lake project with copied primitives, arrays, acyclic records, options, results, products and synchronous primitive callables; CLI target `maven`/);
 	assert.match(targets, /\[RubyGems\]\(publish\/rubygems\.md\) \| An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `rubygems`/);
-	assert.match(targets, /\[NuGet\]\(publish\/nuget\.md\) \| An ordinary Lake project with copied primitives, arrays, acyclic records and synchronous primitive callables; CLI target `nuget`/);
+	assert.match(targets, /\[NuGet\]\(publish\/nuget\.md\) \| An ordinary Lake project with copied primitives, arrays, acyclic records, options, results, products and synchronous primitive callables; CLI target `nuget`/);
 	assert.match(targets, /\[Component and archive distribution\]\(publish\/wit-wasi\.md\) \| An ordinary Lake project with pure copied primitives, arrays and acyclic records; CLI target `wit-wasi`/);
 	assert.match(targets, /Lean compiles once per required ABI/);
 	assert.match(targets, /does not require Lean Bridge's internal deployment-profile approvals/);

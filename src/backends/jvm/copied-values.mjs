@@ -53,10 +53,13 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
 		files[`${prefix}/${copy.publicName}.java`] = `package ${model.namespace};\npublic record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) { }\n`;
 	for(const callback of model.surface.callbacks.values())
 		files[`${prefix}/${callback.publicName}.java`] = jvmCallablePublic(model, callback);
+	if(model.surface.copies.some(copy => copy.compound))
+		for(const [name, source] of Object.entries(compoundTypes)) files[`${prefix}/${name}.java`] = `package ${model.namespace};\n${source}`;
 	const publicFiles = Object.keys(files), internalFiles = [`${prefix}/Runtime.java`, `${prefix}/NativeAssets.java`, `${prefix}/Scope.java`];
 	files[internalFiles[0]] = runtime(model); files[internalFiles[1]] = copiedJvmAssets(model, evidence);
 	files[internalFiles[2]] = `package ${model.namespace};\nimport java.lang.foreign.*;\n${copiedJvmScope}\n`;
 	files["README.md"] = `# ${model.namespace}\n\nCall ${model.namespace}.Api from Java or Kotlin. Requires Java 22 or newer with --enable-native-access=ALL-UNNAMED on Linux x86-64. Prepared Maven JARs contain their native adapter, component and shared Lean runtime. No compiler, JNI declarations or runtime-path settings are needed by the consumer.\n\nUInt8/UInt16 use checked int, UInt32 uses checked long, and UInt64/Nat/Int use java.math.BigInteger. Signed values use corresponding JVM primitives. Unit parameters use Unit.INSTANCE; Unit results return void. Arrays, byte arrays and record contents are copied on calls. Null, invalid unsigned ranges and malformed UTF-16 are rejected. Pure acyclic copied values are bounded to 32 type levels and a 16 MiB native input/output conversion budget. Native assets are verified and extracted into private process-lifetime temporary directories, removed at normal JVM shutdown.\n`;
+	if(model.surface.copies.some(copy => copy.compound)) files["README.md"] += "\nOption<T> is a sealed None/Some hierarchy with none()/some(value) factories and isSome()/value(). Result<T,E> preserves Lean Except through ok(value)/err(error), isOk()/value()/error(). Inactive payload access throws; null containers and payloads reject. Nested Unit options remain distinct. Domain errors return Err; bridge failures throw exceptions. Pair<A,B> retains binary product nesting. These generic types box primitive payloads and compose with copied arrays and records. Import the generated Pair explicitly in Kotlin; it is not kotlin.Pair. Java record equality keeps reference equality for array payloads.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "jvm-copied-v1", target: "jvm", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, files: Object.keys(files), publicFiles, internalFiles, packageFiles: [], supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "owned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary Maven admits copied values and synchronous primitive callables, not resources, compound callables or async delivery." }, { feature: "additional-platforms", reason: "The compiled native profile is Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);
 };
@@ -68,3 +71,46 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
  * @param evidence - Optional compiled library evidence.
  */
 export const generateCopiedJvmPackage = (ir, evidence = null) => renderCopiedJvmPackage(compileCopiedJvmModel(ir), evidence);
+
+const compoundTypes = {
+	Option: `/** A copied Lean Option. None and Some(Unit) are distinct. */
+public sealed interface Option<T> permits Option.None, Option.Some {
+    boolean isSome();
+    T value();
+    static <T> Option<T> none() { return new None<>(); }
+    static <T> Option<T> some(T value) { return new Some<>(value); }
+    record None<T>() implements Option<T> {
+        public boolean isSome() { return false; }
+        public T value() { throw new IllegalStateException("None has no value"); }
+    }
+    record Some<T>(T value) implements Option<T> {
+        public Some { java.util.Objects.requireNonNull(value); }
+        public boolean isSome() { return true; }
+    }
+}
+`
+	, Result: `/** A copied Lean Except. Domain errors are values; bridge failures throw. */
+public sealed interface Result<T, E> permits Result.Ok, Result.Err {
+    boolean isOk();
+    T value();
+    E error();
+    static <T, E> Result<T, E> ok(T value) { return new Ok<>(value); }
+    static <T, E> Result<T, E> err(E error) { return new Err<>(error); }
+    record Ok<T, E>(T value) implements Result<T, E> {
+        public Ok { java.util.Objects.requireNonNull(value); }
+        public boolean isOk() { return true; }
+        public E error() { throw new IllegalStateException("Ok has no error"); }
+    }
+    record Err<T, E>(E error) implements Result<T, E> {
+        public Err { java.util.Objects.requireNonNull(error); }
+        public boolean isOk() { return false; }
+        public T value() { throw new IllegalStateException("Err has no success value"); }
+    }
+}
+`
+	, Pair: `/** A copied binary Lean product. Nested products retain their structure. */
+public record Pair<A, B>(A first, B second) {
+    public Pair { java.util.Objects.requireNonNull(first); java.util.Objects.requireNonNull(second); }
+}
+`
+};

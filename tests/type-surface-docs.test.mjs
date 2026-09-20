@@ -203,6 +203,19 @@ test("C# compound docs preserve nested options and separate domain errors from b
 	assert.match(source, /Option<Option<Unit>>\.Some\(Option<Unit>\.None\)/);
 });
 
+for(const profile of ["java", "kotlin"]) test(`${profile} compound docs show installed boxed payloads and generated products`, async () => {
+	const source = await readFile(`docs/consume/${profile}.md`, "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "Option α"), /`Option<T>`/u);
+	assert.match(row(source, "Except ε α"), /`Result<T, E>`/u);
+	assert.match(row(source, "Prod α β / tuples"), /Pair<A, B>/u);
+	assert.match(source, /box(?:ed|ing)/u);
+	assert.match(source, /IllegalStateException/u);
+	assert.match(source, /Option\.some\(Option\.(?:<Unit>)?none/);
+	if(profile === "kotlin") assert.match(source, /Import `Pair` explicitly to distinguish it from `kotlin\.Pair`/u);
+});
+
 test("recorded result and arbitrary-integer rejections exercise real generator guards", () => {
 	const apply = constructor => ({ kind: "apply", constructor, arguments: [{ kind: "primitive", name: "uint32" }, { kind: "primitive", name: "string" }] });
 	for(const [generate, type, code] of [

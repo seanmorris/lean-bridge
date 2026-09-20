@@ -444,6 +444,21 @@ of the compiler-produced C# projection tests conversion failures and malformed
 native flags without changing the installed assembly. CI retains
 `build/compounds/dotnet.json`.
 
+Run the installed Java and Kotlin compound checks with JDK 22, Kotlin 2.2 and
+Maven 3.9.11, using the same tool paths as the JVM corpus:
+
+```sh
+LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs
+node --test tests/jvm-compound-contract.test.mjs
+```
+
+The [JVM compound suite](../evidence/jvm-compounds-20260920.md) builds a prepared
+Maven package on each source path. Independent Java and Kotlin consumers install
+it offline, check boxed generic signatures and compile invalid callers. Each
+consumer runs twice in a relocated deployment with only a `java.base` runtime.
+A separate instrumented adapter checks scoped cleanup and malformed output;
+the installed release JAR stays unchanged. CI retains `build/compounds/jvm.json`.
+
 Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
 
 C executes 94 positive catalog cases, rejects four negative-Nat cases at runtime, and rejects 26 invalid programs at compile time. C++ executes 92 positive cases, rejects four negative-Nat cases at runtime, and rejects 28 invalid programs at compile time. Both check all 19 public function signatures per library. C11 uses fatal conversion warnings for invalid fixed-width inputs; C++20 uses list-initialization narrowing checks. These are compiler policies, not dynamic range checks by the installed API. Both languages permit integer/boolean and integer/float conversions; C also permits the corpus's zero-valued unit marker as a `uint32_t`. Each accepted conversion must match the corresponding Lean call.

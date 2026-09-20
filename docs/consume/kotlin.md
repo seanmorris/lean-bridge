@@ -35,6 +35,36 @@ UInt8 and UInt16 use `Int`, UInt32 uses `Long`, and UInt64/Nat/Int use `java.mat
 
 Unit arguments use the generated Java enum. Import it with an alias, such as `import org.leanbridge.maple.Unit as LeanUnit`, then pass `LeanUnit.INSTANCE`. A Lean Unit result returns Kotlin `Unit`. Java platform types do not make null a valid Lean value; generated calls reject null. Native loading, copying, limits and cleanup follow the [Java rules](java.md#call-an-ordinary-lean-package).
 
+### Options, results and products
+
+Java and Kotlin use the same prepared JAR on either source path. Its generated `Option<T>`, `Result<T, E>` and `Pair<A, B>` types preserve nested options, error branches and binary products. These types compose with arrays and copied records. Import `Pair` explicitly to distinguish it from `kotlin.Pair`, and alias the generated Unit enum.
+
+For the `org.leanbridge:compounds:1.0.0` acceptance archive, save `Example.kt`:
+
+```kotlin
+import org.leanbridge.compounds.Api
+import org.leanbridge.compounds.Option
+import org.leanbridge.compounds.Pair
+import org.leanbridge.compounds.Unit as LeanUnit
+
+fun main() {
+    val present = Api.optionUint32(Option.some(42L))
+    println(present.value()) // 42
+    println(Api.classify(Option.some(Option.none<LeanUnit>()))) // 1
+    println(Api.tupleUint32(Pair(1L, 2L)).first()) // 2
+    when (present) {
+        is Option.None -> println("absent")
+        is Option.Some -> println(present.value())
+    }
+    val result = Api.duplicate(Option.none())
+    if (!result.isOk()) println(result.error()) // empty
+}
+```
+
+Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package). The sealed Java branches support exhaustive Kotlin `when` expressions. `Option.none<LeanUnit>()`, `Option.some(LeanUnit.INSTANCE)` and an outer `Some` containing `None` stay distinct. Lean `Except E T` maps to the generated `Result<T, E>`, not `kotlin.Result`; factories are `Result.ok` and `Result.err`. Domain errors are values, while bridge failures throw exceptions.
+
+Primitive generic payloads use their Kotlin names, such as `Option<Long>`, with JVM boxing. Lean Unit payloads always use `LeanUnit.INSTANCE`. Java platform types do not authorize null: factories and record constructors reject null payloads, and calls reject null containers. Inactive payload access throws `IllegalStateException`. Generated records retain reference equality for array fields; use content comparisons when needed. Copy limits and ownership follow the [Java compound rules](java.md#options-results-and-products). The [installed checks](../evidence/jvm-compounds-20260920.md) independently compile Java and Kotlin consumers.
+
 ### Callbacks and returned Lean functions
 
 Use Kotlin lambdas with the generated Java functional interfaces. Add these calls to the Maple example's `main` function:
@@ -176,9 +206,9 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `String` | `String` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Strict Unicode conversion preserves embedded NUL. Null and malformed UTF-16 throw. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `ByteArray` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Copied mutable byte array with independent returned storage. Null throws. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
 | `Array α` | `Primitive array or Array<T>` (input, result, field); `LongArray` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Primitive arrays retain their scalar mappings; nested/reference arrays preserve their types. Calls deep-copy values and reject nested nulls. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Option α` | `Option<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Generated sealed interface with None/Some record branches, none()/some(value) factories, isSome() and guarded value(). Boxed primitive payloads preserve JVM generic types. Some(None) and Some(Some(Unit)) remain distinct. Null containers and payloads reject. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `Result<T, E>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` uses success-first `Result<T, E>.ok(value)` or `.err(error)`. Generated sealed Ok/Err records support exhaustive matching. isOk() selects guarded value()/error(). Domain errors return Err; bridge failures throw exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `Pair<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed generated Pair elements, preserving binary nesting. Kotlin uses this generated record, not kotlin.Pair. Inputs are copied; returned arrays own independent storage. Record equality compares array fields by reference. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated Java record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
