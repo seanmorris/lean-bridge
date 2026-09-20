@@ -344,7 +344,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"));
   assert.match(workflow, /test -s build\/compounds\/jvm\.json/);
-  assert.match(workflow, /build\/callables\/jvm\.json\n\s*build\/compounds\/jvm\.json\n\s*if-no-files-found: error/);
+  assert.ok(workflow.includes("LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"));
+  assert.match(workflow, /test -s build\/lists\/jvm\.json/);
+  assert.match(workflow, /build\/callables\/jvm\.json\n\s*build\/compounds\/jvm\.json\n\s*build\/lists\/jvm\.json\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs"));
   assert.match(workflow, /test -s build\/compounds\/python\.json/);
@@ -411,7 +413,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_jvm\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_jvm\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-jvm-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/java-kotlin\.json\n\s*build\/type-corpus\/reviewed-native-java-kotlin\.json\n\s*build\/char-native\/java-kotlin\.json\n\s*build\/word-native\/java-kotlin\.json\n\s*build\/callables\/jvm\.json\n\s*build\/compounds\/jvm\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/java-kotlin\.json\n\s*build\/type-corpus\/reviewed-native-java-kotlin\.json\n\s*build\/char-native\/java-kotlin\.json\n\s*build\/word-native\/java-kotlin\.json\n\s*build\/callables\/jvm\.json\n\s*build\/compounds\/jvm\.json\n\s*build\/lists\/jvm\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:dotnet"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=dotnet node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: ordinary_dotnet\n\s*continue-on-error: true/);
   assert.match(workflow, /id: type_corpus_dotnet/);

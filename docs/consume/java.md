@@ -46,13 +46,36 @@ javac --release 22 -encoding UTF-8 -cp "$LEAN_BRIDGE_JAR" Example.java
 java --enable-native-access=ALL-UNNAMED -cp ".:$LEAN_BRIDGE_JAR" Example
 ```
 
-UInt8 and UInt16 use range-checked `int`; UInt32 uses range-checked `long`. UInt64, Nat and Int use `BigInteger`. Signed integers and floating-point values use their corresponding Java primitives. Arrays use typed Java arrays, ByteArray uses `byte[]`, and copied structures become Java records. Unit inputs use the generated `Unit.INSTANCE`; Unit results return `void`.
+UInt8 and UInt16 use range-checked `int`; UInt32 uses range-checked `long`. UInt64, Nat and Int use `BigInteger`. Signed integers and floating-point values use their corresponding Java primitives. Arrays and Lists use typed Java arrays, ByteArray uses `byte[]`, and copied structures become Java records. Unit inputs use the generated `Unit.INSTANCE`; Unit results return `void`.
 
 Calls copy nested inputs and outputs. Null, negative Nat, out-of-range unsigned values and malformed UTF-16 throw. Native input and output conversions share a 16 MiB budget; the Java input scratch budget is also bounded. An oversized result throws after Lean returns. Scoped native memory and deep owned results are released on failure. The loader checks bundled native hashes, shares a compatible runtime and removes its private extracted files at normal JVM shutdown.
 
+### Lists
+
+Lean `List T` uses a typed Java array in inputs, results and record fields. Primitive elements use primitive arrays, such as `long[]` for `List UInt32`. Reference elements use arrays such as `BigInteger[]` for `List Nat`. Lists can nest with arrays, records, options, results and products. Lean List and Array retain distinct contract identities.
+
+For the `org.leanbridge:lists:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import java.util.Arrays;
+import org.leanbridge.lists.Api;
+
+class Example {
+    public static void main(String[] args) {
+        long[] input = {1, 2, 2, 3};
+        long[] reversed = Api.reverseUint32(input);
+        System.out.println(Arrays.toString(reversed)); // [3, 2, 2, 1]
+        reversed[0] = 99; // input is unchanged
+        System.out.println(Api.reverseUint32(new long[0]).length); // 0
+    }
+}
+```
+
+Compile and run using the [prepared JAR commands](#call-an-ordinary-lean-package). Pass arrays, not `java.util.List`, boxed numeric arrays or streams. Copies preserve order, duplicates and every nesting level; returned mutable values have independent storage. Nulls, invalid payloads and oversized copies throw. Native sequence lengths and buffer alignment are checked before allocation or element reads. The existing budgets and 32-level type limit apply. [Installed List checks](../evidence/jvm-lists-20260920.md) cover both source paths, compiler rejections, cleanup and runtime-only deployment. List callback payloads remain unsupported.
+
 ### Options, results and products
 
-Ordinary-source and reviewed Maven packages support `Option`, `Except` and nested binary products, including mixtures with arrays and copied records. The JAR supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches, plus a `Pair<A, B>` record.
+Ordinary-source and reviewed Maven packages support `Option`, `Except` and nested binary products, including mixtures with arrays, Lists and copied records. The JAR supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches, plus a `Pair<A, B>` record.
 
 For the `org.leanbridge:compounds:1.0.0` acceptance archive, save `Example.java`:
 
@@ -247,7 +270,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Typed Fn...To... functional interface` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous functional interfaces accept Java and Kotlin lambdas. Call-scoped native stubs retain their targets. Callback failures preserve the same Throwable, stack and suppressed exceptions after cleanup. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `T[] (primitive arrays for primitive elements)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Typed JVM arrays preserve empty Lists, order, duplicates and nesting. Primitive elements retain primitive array storage; Kotlin uses LongArray for List UInt32, for example. Returned arrays and mutable payloads own independent storage. Nulls, invalid payloads and oversized copies reject. Native lengths, missing buffers and alignment are checked before allocation or reads; scoped arenas and native output clears run on conversion failure. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Use an integer code point, not a UTF-16 char. A checked Unicode scalar code point including NUL and supplementary values. Surrogates and out-of-range integers reject. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Exact BigInteger for the 64-bit compiled Lean target, checked in 0..2^64-1. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Signed JVM value for the 64-bit compiled Lean target; both endpoints are preserved. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |

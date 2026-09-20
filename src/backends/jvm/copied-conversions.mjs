@@ -63,10 +63,16 @@ ${copy.fields.map(field => `        ${writeValue(field.type, "result", field.off
         var data = scope.arena.allocate(Math.max(1, (long)value.length * ${e.size}), ${e.alignment});
         for (int index = 0; index < value.length; index++) { ${writeValue(e, "data", `(long)index * ${e.size}`, `to${e.index}(value[index]${e.aggregate ? ", scope" : ""})`)} }
         return slice(scope, data, value.length, 32);`;
-		output = `int count = Math.toIntExact(value.get(JAVA_LONG, 8));
+		output = `long length = value.get(JAVA_LONG, 8);
+        if (length < 0 || length > (16 * 1024 * 1024) / Math.max(${e.size}, 8))
+            throw new IllegalArgumentException("Lean Bridge native sequence exceeds the 16 MiB copy limit");
+        var pointer = value.get(ADDRESS, 0);
+        if (length != 0 && (pointer.address() == 0 || pointer.address() % ${e.alignment} != 0))
+            throw new IllegalStateException("Invalid native sequence buffer");
+        int count = (int)length;
         @SuppressWarnings("unchecked")
         var result = (${type})java.lang.reflect.Array.newInstance(${model.erasedType(e)}.class, count);
-        var data = value.get(ADDRESS, 0).reinterpret((long)count * ${e.size});
+        var data = pointer.reinterpret((long)count * ${e.size});
         for (int index = 0; index < count; index++) result[index] = from${e.index}(${readJvmValue(e, "data", `(long)index * ${e.size}`)});
         return result;`;
 	} else switch(copy.scalarName)

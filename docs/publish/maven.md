@@ -1,6 +1,6 @@
 # Build and publish Java and Kotlin packages
 
-Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays, acyclic copied records, options, results, binary products and synchronous primitive callables. Consumers install the artifacts without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays and Lists, acyclic copied records, options, results, binary products and synchronous primitive callables. Consumers install the artifacts without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -41,6 +41,12 @@ Test the original archives with the [Java](../consume/java.md#call-an-ordinary-l
 Both ordinary-source and independently reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain admitted primitives, arrays and acyclic records. The generated JAR supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches and a binary `Pair<A, B>` record. Generic primitive payloads use boxed JVM types. None, Some Unit and nested options remain distinct; domain errors return `Err` values while bridge failures throw exceptions.
 
 Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract). Lean checks the source API before adapter generation on either path. Every selected target must admit the full API in a combined build. See the [Java](../consume/java.md#options-results-and-products) and [Kotlin](../consume/kotlin.md#options-results-and-products) examples and the [installed Maven evidence](../evidence/jvm-compounds-20260920.md).
+
+## Export Lists
+
+Ordinary-source and reviewed-IR builds support `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested arrays and Lists, records, `Option`, `Except` and binary products. Select concrete exports in the ordinary configuration or reviewed contract; no List-specific setting is required.
+
+Java callers use typed arrays; Kotlin uses the corresponding primitive or reference arrays. `List UInt32`, for example, uses Java `long[]` and Kotlin `LongArray`. The generated conversions preserve order, duplicates, nesting and independent result storage. The existing copy budgets and 32-level type limit apply. List callback payloads remain unsupported. See the [Java](../consume/java.md#lists) and [Kotlin](../consume/kotlin.md#lists) examples and the [installed Maven evidence](../evidence/jvm-lists-20260920.md).
 
 ## Export callbacks and returned functions
 

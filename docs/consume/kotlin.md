@@ -35,9 +35,29 @@ UInt8 and UInt16 use `Int`, UInt32 uses `Long`, and UInt64/Nat/Int use `java.mat
 
 Unit arguments use the generated Java enum. Import it with an alias, such as `import org.leanbridge.maple.Unit as LeanUnit`, then pass `LeanUnit.INSTANCE`. A Lean Unit result returns Kotlin `Unit`. Java platform types do not make null a valid Lean value; generated calls reject null. Native loading, copying, limits and cleanup follow the [Java rules](java.md#call-an-ordinary-lean-package).
 
+### Lists
+
+Lean Lists use the same array types as Lean arrays. `List UInt32` uses `LongArray`, `List Nat` uses `Array<BigInteger>`, and `List (List UInt32)` uses `Array<LongArray>`. Lists can nest with records, arrays, options, results and products. List and Array retain distinct Lean and Binding IR identities.
+
+For the `org.leanbridge:lists:1.0.0` acceptance archive, save `Example.kt`:
+
+```kotlin
+import org.leanbridge.lists.Api
+
+fun main() {
+    val input = longArrayOf(1, 2, 2, 3)
+    val reversed: LongArray = Api.reverseUint32(input)
+    println(reversed.contentToString()) // [3, 2, 2, 1]
+    reversed[0] = 99 // input is unchanged
+    println(Api.reverseUint32(longArrayOf()).size) // 0
+}
+```
+
+Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package). Kotlin `List<T>` and boxed `Array<Long>` do not replace a required `LongArray`. Calls preserve empty Lists, order, duplicates and nesting, and return independent copies. Java platform types do not authorize null elements or containers. The [Java List conversion rules](java.md#lists) cover validation, budgets and cleanup. [Installed checks](../evidence/jvm-lists-20260920.md) compile Kotlin independently against the same prepared JAR as Java. List callback payloads remain unsupported.
+
 ### Options, results and products
 
-Java and Kotlin use the same prepared JAR on either source path. Its generated `Option<T>`, `Result<T, E>` and `Pair<A, B>` types preserve nested options, error branches and binary products. These types compose with arrays and copied records. Import `Pair` explicitly to distinguish it from `kotlin.Pair`, and alias the generated Unit enum.
+Java and Kotlin use the same prepared JAR on either source path. Its generated `Option<T>`, `Result<T, E>` and `Pair<A, B>` types preserve nested options, error branches and binary products. These types compose with arrays, Lists and copied records. Import `Pair` explicitly to distinguish it from `kotlin.Pair`, and alias the generated Unit enum.
 
 For the `org.leanbridge:compounds:1.0.0` acceptance archive, save `Example.kt`:
 
@@ -214,7 +234,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Typed Fn...To... functional interface` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous functional interfaces accept Java and Kotlin lambdas. Call-scoped native stubs retain their targets. Callback failures preserve the same Throwable, stack and suppressed exceptions after cleanup. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `primitive arrays or Array<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Typed JVM arrays preserve empty Lists, order, duplicates and nesting. Primitive elements retain primitive array storage; Kotlin uses LongArray for List UInt32, for example. Returned arrays and mutable payloads own independent storage. Nulls, invalid payloads and oversized copies reject. Native lengths, missing buffers and alignment are checked before allocation or reads; scoped arenas and native output clears run on conversion failure. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `Int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Use an integer code point, not a UTF-16 char. A checked Unicode scalar code point including NUL and supplementary values. Surrogates and out-of-range integers reject. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Exact BigInteger for the 64-bit compiled Lean target, checked in 0..2^64-1. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `Long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Signed JVM value for the 64-bit compiled Lean target; both endpoints are preserved. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |

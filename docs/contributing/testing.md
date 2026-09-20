@@ -536,6 +536,20 @@ consumer runs twice in a relocated deployment with only a `java.base` runtime.
 A separate instrumented adapter checks scoped cleanup and malformed output;
 the installed release JAR stays unchanged. CI retains `build/compounds/jvm.json`.
 
+Run the installed Java and Kotlin List checks with the same tools:
+
+```sh
+LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs
+node --test tests/jvm-list-contract.test.mjs
+```
+
+The [JVM List suite](../evidence/jvm-lists-20260920.md) checks primitive and
+reference arrays, nested copied values, compiler rejections and copy budgets.
+Both languages install the same prepared JAR offline on each source path and
+run twice with only a `java.base` runtime. Separate probes inject conversion
+and allocation failures and reject malformed native sequence buffers. CI
+retains `build/lists/jvm.json`.
+
 Run the installed Ruby compound checks with MRI Ruby 3.3 and RubyGems:
 
 ```sh

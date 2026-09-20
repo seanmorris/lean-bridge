@@ -20,7 +20,7 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedJvmModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true });
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true });
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-jvm-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });

@@ -1,0 +1,2083 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "da8ed09142e2e6e02b90d2488762d2e1db2f926a",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "wordBits": 64,
+  "jdk": "22.0.2",
+  "kotlin": "2.2.0",
+  "maven": "3.9.11",
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "reportSha256": "916280c2b15b54cbf42bda3d41ccdf543b225d0f53939195315c550cfe6157b2",
+  "sourceHashes": {
+    "tests/helpers/list-fixture.mjs": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c",
+    "tests/helpers/jvm-list-fixture.mjs": "49fa294a104087d2ee6f234927fd43e4006bb30b2fc4b9d258d7800c09d252cc",
+    "tests/helpers/jvm-list-faults.mjs": "83141422bc87a418843c1ab2afc29422ed995e3e94f931cd0f00cdf83c4a43dc",
+    "tests/helpers/type-corpus-jvm.mjs": "ae6da42425c8d6a14688f1477e257e2dec8b0e66a0b7fa284b456c3d1966ffb3",
+    "tests/helpers/type-corpus-jvm-tools.mjs": "33cea0cde3652ccccb073b445d19e294485e83a4fd60aa9152f80612287af91c",
+    "tests/fixtures/list-consumers/java.java": "4376723486d81ae2f15e0e89698d2a25536834afa752f41da28c13cea2c159e3",
+    "tests/fixtures/list-consumers/kotlin.kt": "9ea735de730bb77d3e46bb2f3c55e433933d508132c50b2071f43503ac1328fa",
+    "tests/fixtures/list-consumers/jvm-faults.java": "50fb9330683da9c109b92222f9a191498afdbdacf7638ee06509ee77c031e8e5",
+    "tests/fixtures/onboarding/npm-lists/Lists.lean": "410007916439f78046c9fcb45672ceab64b8020d66e19f940dd58e787888ee38"
+  },
+  "consumerHashes": {
+    "java": "22f790144a8727e20c787afc1f99f5f8d27bb27c8c266c9e43e233b74838eed7",
+    "kotlin": "89735743c95f28dd4dced4171da622ce196a5eb11cfa04c05d0b891fe567a8ab"
+  },
+  "signatures": [
+    {
+      "name": "Lists.reverse_unit",
+      "parameters": [
+        {
+          "list": "unit"
+        }
+      ],
+      "result": {
+        "list": "unit"
+      }
+    },
+    {
+      "name": "Lists.reverse_bool",
+      "parameters": [
+        {
+          "list": "bool"
+        }
+      ],
+      "result": {
+        "list": "bool"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint8",
+      "parameters": [
+        {
+          "list": "uint8"
+        }
+      ],
+      "result": {
+        "list": "uint8"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint16",
+      "parameters": [
+        {
+          "list": "uint16"
+        }
+      ],
+      "result": {
+        "list": "uint16"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint32",
+      "parameters": [
+        {
+          "list": "uint32"
+        }
+      ],
+      "result": {
+        "list": "uint32"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint64",
+      "parameters": [
+        {
+          "list": "uint64"
+        }
+      ],
+      "result": {
+        "list": "uint64"
+      }
+    },
+    {
+      "name": "Lists.reverse_int8",
+      "parameters": [
+        {
+          "list": "int8"
+        }
+      ],
+      "result": {
+        "list": "int8"
+      }
+    },
+    {
+      "name": "Lists.reverse_int16",
+      "parameters": [
+        {
+          "list": "int16"
+        }
+      ],
+      "result": {
+        "list": "int16"
+      }
+    },
+    {
+      "name": "Lists.reverse_int32",
+      "parameters": [
+        {
+          "list": "int32"
+        }
+      ],
+      "result": {
+        "list": "int32"
+      }
+    },
+    {
+      "name": "Lists.reverse_int64",
+      "parameters": [
+        {
+          "list": "int64"
+        }
+      ],
+      "result": {
+        "list": "int64"
+      }
+    },
+    {
+      "name": "Lists.reverse_nat",
+      "parameters": [
+        {
+          "list": "nat"
+        }
+      ],
+      "result": {
+        "list": "nat"
+      }
+    },
+    {
+      "name": "Lists.reverse_int",
+      "parameters": [
+        {
+          "list": "int"
+        }
+      ],
+      "result": {
+        "list": "int"
+      }
+    },
+    {
+      "name": "Lists.reverse_float32",
+      "parameters": [
+        {
+          "list": "float32"
+        }
+      ],
+      "result": {
+        "list": "float32"
+      }
+    },
+    {
+      "name": "Lists.reverse_float64",
+      "parameters": [
+        {
+          "list": "float64"
+        }
+      ],
+      "result": {
+        "list": "float64"
+      }
+    },
+    {
+      "name": "Lists.reverse_string",
+      "parameters": [
+        {
+          "list": "string"
+        }
+      ],
+      "result": {
+        "list": "string"
+      }
+    },
+    {
+      "name": "Lists.reverse_bytes",
+      "parameters": [
+        {
+          "list": "bytes"
+        }
+      ],
+      "result": {
+        "list": "bytes"
+      }
+    },
+    {
+      "name": "Lists.reverse_char",
+      "parameters": [
+        {
+          "list": "char"
+        }
+      ],
+      "result": {
+        "list": "char"
+      }
+    },
+    {
+      "name": "Lists.reverse_usize",
+      "parameters": [
+        {
+          "list": "usize"
+        }
+      ],
+      "result": {
+        "list": "usize"
+      }
+    },
+    {
+      "name": "Lists.reverse_isize",
+      "parameters": [
+        {
+          "list": "isize"
+        }
+      ],
+      "result": {
+        "list": "isize"
+      }
+    },
+    {
+      "name": "Lists.join",
+      "parameters": [
+        {
+          "list": "string"
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Lists.mix",
+      "parameters": [
+        {
+          "list": {
+            "array": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "list": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Lists.transform",
+      "parameters": [
+        {
+          "record": "Lists.Packet",
+          "fields": {
+            "sequences": {
+              "list": {
+                "list": "uint32"
+              }
+            },
+            "branches": {
+              "list": {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "nat",
+                        "unit"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              }
+            },
+            "buffers": {
+              "list": "bytes"
+            },
+            "arrays": {
+              "array": {
+                "list": {
+                  "tuple": [
+                    "bool",
+                    "char"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "record": "Lists.Packet",
+        "fields": {
+          "sequences": {
+            "list": {
+              "list": "uint32"
+            }
+          },
+          "branches": {
+            "list": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "nat",
+                      "unit"
+                    ]
+                  },
+                  "string"
+                ]
+              }
+            }
+          },
+          "buffers": {
+            "list": "bytes"
+          },
+          "arrays": {
+            "array": {
+              "list": {
+                "tuple": [
+                  "bool",
+                  "char"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Lists.duplicate",
+      "parameters": [
+        "bytes"
+      ],
+      "result": {
+        "list": "bytes"
+      }
+    },
+    {
+      "name": "Lists.generate",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "list": "uint32"
+      }
+    },
+    {
+      "name": "Lists.nest",
+      "parameters": [
+        {
+          "option": {
+            "list": {
+              "result": [
+                {
+                  "list": "unit"
+                },
+                "string"
+              ]
+            }
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "list": {
+            "result": [
+              {
+                "list": "unit"
+              },
+              "string"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Lists.swap",
+      "parameters": [
+        {
+          "result": [
+            {
+              "tuple": [
+                {
+                  "list": "nat"
+                },
+                {
+                  "list": "uint32"
+                }
+              ]
+            },
+            {
+              "list": "string"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "list": "string"
+          },
+          {
+            "tuple": [
+              {
+                "list": "nat"
+              },
+              {
+                "list": "uint32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Lists.deep",
+      "parameters": [
+        {
+          "list": {
+            "list": {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": {
+                                                        "list": "uint32"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "list": {
+          "list": {
+            "list": {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": "uint32"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "executions": [
+    {
+      "bindingIrSha256": "b9f852683bed19c2b2397e254f6f5df66562792799c206517e3402ef58c33743",
+      "checks": 91674,
+      "jvm": {
+        "archiveSha256": "ecbb2fec0a7bb650dbaf3ec8b990c5c42f256ff1f0fa4c685af7f90939faefd1",
+        "bindingIrSha256": "b9f852683bed19c2b2397e254f6f5df66562792799c206517e3402ef58c33743",
+        "classpathSha256": "fe0fc90f3992bc695b987e2fdaba216adf82daa69fbf24170026c0a7d5992a34",
+        "compiledProjectionSha256": "60beeafd08219581f31c38a5049997d4a1fa8c814e25133d6351c3ce750667c0",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "--release",
+          "22",
+          "-g:none",
+          "-proc:none",
+          "-encoding",
+          "UTF-8",
+          "-Xlint:all",
+          "-Werror",
+          "-implicit:none"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "22f790144a8727e20c787afc1f99f5f8d27bb27c8c266c9e43e233b74838eed7",
+        "declarationsSha256": "e4ebdc4cb1450b1dab21119ee639eb984c99399398a0dceb6306edad5f2cb014",
+        "deployment": {
+          "classes/Consumer.class": {
+            "bytes": 13724,
+            "sha256": "8d22c5ac4977112265fdbd1428b709c1e9dfd83450dfe4acce0269f5e0e34713"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "package.jar": {
+            "bytes": 51481092,
+            "sha256": "ecbb2fec0a7bb650dbaf3ec8b990c5c42f256ff1f0fa4c685af7f90939faefd1"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcomponent_7545b0c2966a961b6086.so": "3477723a1cf5eff900083e04c7304b5f5976d60b91f8a0ac09fd8bf197a6d0a2",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "liblists.so": "59527be24f76ec00da70c655e636a94de45d86ae84b02cc00087db82a9151127"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "acdaa6998b627a51d010f798f538b69aeaf0512a6beed6230639b5c1032f7319",
+        "pomSha256": "85f1807b69efff15b01d50e0977e50544944586806e72a12bb9475506f820565",
+        "projectSourceSha256": "eaec2860a572c335876455df73163a3b53e54a2d67700fefcd29b2c28cf6824a",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "6e25841df4afb61e5db0d52d412647564dcd73b5b118791e10399b34f1674884",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "filesSha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        }
+      },
+      "modelSha256": "dab03b6b2ecc91d649792c65c244368074498c9268248564b26c36f6d5554b67",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51481092,
+              "path": "archives/lists-1.0.0.jar",
+              "sha256": "ecbb2fec0a7bb650dbaf3ec8b990c5c42f256ff1f0fa4c685af7f90939faefd1"
+            },
+            {
+              "bytes": 460,
+              "path": "archives/lists-1.0.0.pom",
+              "sha256": "85f1807b69efff15b01d50e0977e50544944586806e72a12bb9475506f820565"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:lists",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "c2a3ab17e6305e8d989253c5865b4b37115d754c9d7171ddda84c58396462da4",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "0255d00a45c2702f0bd39344a3790a972e6f699657fdaca46c6cbb58f784ac1c",
+      "observationSha256": "ab59682cd5fc0870a65f3ff1d9c1fdcc688ce59642a98e9b193220b20b9ed99a",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-element-type.java",
+              "line": 4,
+              "message": "kindname.method, reverseUint32, long[], boolean[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: boolean[], long[]))"
+            }
+          ],
+          "id": "lists/element-type",
+          "sourceSha256": "f897e58a24ddf71c8714232389f6c3b66d17271fdf9af810e0e8b242c0e67368",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-unit-element.java",
+              "line": 4,
+              "message": "kindname.method, reverseUnit, org.leanbridge.lists.Unit[], byte[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: byte[], org.leanbridge.lists.Unit[]))"
+            }
+          ],
+          "id": "lists/unit-element",
+          "sourceSha256": "a6b5b9677b79829f8f0b8429cd82a86af7233e29c71a03ccc431c8680cc9baed",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-scalar-container.java",
+              "line": 4,
+              "message": "kindname.method, reverseUint32, long[], long, kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long, long[]))"
+            }
+          ],
+          "id": "lists/scalar-container",
+          "sourceSha256": "1561ab14123b12c7e93e13d0fbf78e46ec591181fb28a6af4ee4d28ebfbb2d5c",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-wrong-nesting.java",
+              "line": 4,
+              "message": "kindname.method, mix, long[][], long[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long[], long[][]))"
+            }
+          ],
+          "id": "lists/wrong-nesting",
+          "sourceSha256": "200df036f4b22fb09ff0d92cbfbeacd8757cfff62fd799111c1d93057b3650c7",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-option-presence.java",
+              "line": 4,
+              "message": "kindname.method, nest, org.leanbridge.lists.Option<org.leanbridge.lists.Result<org.leanbridge.lists.Unit[],java.lang.String>[]>, org.leanbridge.lists.Unit[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: org.leanbridge.lists.Unit[], org.leanbridge.lists.Option<org.leanbridge.lists.Result<org.leanbridge.lists.Unit[],java.lang.String>[]>))"
+            }
+          ],
+          "id": "lists/option-presence",
+          "sourceSha256": "d104e0f3dd881c9624f25f80d852f4104daa3039dfcc0c19ea2241289f0282cc",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-product-type.java",
+              "line": 4,
+              "message": "kindname.method, swap, org.leanbridge.lists.Result<org.leanbridge.lists.Pair<java.math.BigInteger[],long[]>,java.lang.String[]>, org.leanbridge.lists.Result<org.leanbridge.lists.Pair<java.lang.String[],long[]>,java.lang.Object>, kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.bounds: A, (compiler.misc.eq.bounds: java.math.BigInteger[]), (compiler.misc.lower.bounds: java.lang.String[])))"
+            }
+          ],
+          "id": "lists/product-type",
+          "sourceSha256": "769deecca263b4c461436e32a06079f83c5cbbb81a24f29a005a6c91c8db495c",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-boxed-array.java",
+              "line": 4,
+              "message": "kindname.method, reverseUint32, long[], java.lang.Long[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.Long[], long[]))"
+            }
+          ],
+          "id": "lists/boxed-array",
+          "sourceSha256": "e40f90c40f2d130f02c75ba070b79f46addee914974c30d81a684b21fa9c80d4",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-collection-container.java",
+              "line": 4,
+              "message": "kindname.method, reverseUint32, long[], java.util.List<java.lang.Long>, kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.infer.no.conforming.instance.exists: E, java.util.List<E>, long[]))"
+            }
+          ],
+          "id": "lists/collection-container",
+          "sourceSha256": "2c4e12a36616f860b3d79487d6067d1871f9921e6ecb9f131a4d4b02aa3f3ea0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.prob.found.req",
+              "column": 31,
+              "file": "src/reject-scalar-result.java",
+              "line": 4,
+              "message": "(compiler.misc.inconvertible.types: long[], long)"
+            }
+          ],
+          "id": "lists/scalar-result",
+          "sourceSha256": "c8d2113ea5c4f68daf73d528372aea7bca6f881ef729214a141bc43c72afc60d",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.prob.found.req",
+              "column": 30,
+              "file": "src/reject-fixed-overflow.java",
+              "line": 4,
+              "message": "(compiler.misc.possible.loss.of.precision: int, byte)"
+            }
+          ],
+          "id": "lists/fixed-overflow",
+          "sourceSha256": "a0943b5d8cd451c33095fcd6fee0aac2305ce5408f347c96cb099669ff5ccf14",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-signed-width.java",
+              "line": 4,
+              "message": "kindname.method, reverseInt32, int[], long[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long[], int[]))"
+            }
+          ],
+          "id": "lists/signed-width",
+          "sourceSha256": "7df0f9c95cd04adc99160c3d249bffe1fcc66319fa65dbc48186130f890a15ea",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-exact-integer.java",
+              "line": 4,
+              "message": "kindname.method, reverseNat, java.math.BigInteger[], long[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long[], java.math.BigInteger[]))"
+            }
+          ],
+          "id": "lists/exact-integer",
+          "sourceSha256": "4cc35443166f11c2ec4b363db847308caed683fc60bf5585434415f56ea3fdff",
+          "status": "rejected-at-compile-time"
+        }
+      ],
+      "faultProbe": "ordinary-source"
+    },
+    {
+      "bindingIrSha256": "b9f852683bed19c2b2397e254f6f5df66562792799c206517e3402ef58c33743",
+      "checks": 91696,
+      "jvm": {
+        "archiveSha256": "ecbb2fec0a7bb650dbaf3ec8b990c5c42f256ff1f0fa4c685af7f90939faefd1",
+        "bindingIrSha256": "b9f852683bed19c2b2397e254f6f5df66562792799c206517e3402ef58c33743",
+        "classpathSha256": "a41b19e39f2c596c1477ee0e57eb8549ec9b2aaadcd334d1b3108f3bd6da1531",
+        "compiledProjectionSha256": "60beeafd08219581f31c38a5049997d4a1fa8c814e25133d6351c3ce750667c0",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "-jvm-target",
+          "22",
+          "-no-stdlib",
+          "-no-reflect",
+          "-Werror",
+          "-Xrender-internal-diagnostic-names"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "89735743c95f28dd4dced4171da622ce196a5eb11cfa04c05d0b891fe567a8ab",
+        "declarationsSha256": "e4ebdc4cb1450b1dab21119ee639eb984c99399398a0dceb6306edad5f2cb014",
+        "deployment": {
+          "classes/ConsumerKt$main$1.class": {
+            "bytes": 1297,
+            "sha256": "ae7392ebff7f835dffb86379c77782b744adf83f6fe3f19df218696b80018abf"
+          },
+          "classes/ConsumerKt$main$10.class": {
+            "bytes": 1119,
+            "sha256": "f6a1a21c4ce8c5031b9d980bca95a63012454214895db657fb8d317382d6d291"
+          },
+          "classes/ConsumerKt$main$11.class": {
+            "bytes": 1262,
+            "sha256": "dbc61a296668462346869c01e993833517e7488344772c7471390848136e44c5"
+          },
+          "classes/ConsumerKt$main$12.class": {
+            "bytes": 1262,
+            "sha256": "57365652e4f60daecb94f756491e78f48b57aa059b43fe8a13b05d80c170567f"
+          },
+          "classes/ConsumerKt$main$13.class": {
+            "bytes": 1123,
+            "sha256": "83c4794faac4d00d31c240a0d88035d71234e0c39976b80c6510813c336113e6"
+          },
+          "classes/ConsumerKt$main$14.class": {
+            "bytes": 1123,
+            "sha256": "401cad0609f62cf05cefde3ec465ff8ad6459a7cb156730f7ea32b41efeead04"
+          },
+          "classes/ConsumerKt$main$15.class": {
+            "bytes": 1240,
+            "sha256": "4cb2ba10939eaa7f3ad9616d352da840292e4b39863968ff6b22e81aa26482be"
+          },
+          "classes/ConsumerKt$main$16.class": {
+            "bytes": 1126,
+            "sha256": "cc19eaa23e35e25de185f9c610bb26d306662d63c5eef548dc7e3a2b9e2a54ed"
+          },
+          "classes/ConsumerKt$main$17.class": {
+            "bytes": 1117,
+            "sha256": "a0ee3ead3b25d9407ac52744c9a01994a23c0fb71b8458c9182718fb811a523b"
+          },
+          "classes/ConsumerKt$main$18.class": {
+            "bytes": 1266,
+            "sha256": "3379a2ce0118afcf384ed3397e415641c53d3e531c210941afc31fbd881d9c19"
+          },
+          "classes/ConsumerKt$main$19.class": {
+            "bytes": 1119,
+            "sha256": "5f611bc9734aaf6624140f7752dabf52a6c21b89e5f7b8ff3a3ad450f3e38919"
+          },
+          "classes/ConsumerKt$main$2.class": {
+            "bytes": 1115,
+            "sha256": "c3c02baad942501691aba95666761d1ed641150833eea24c52b755959af71e16"
+          },
+          "classes/ConsumerKt$main$3.class": {
+            "bytes": 1117,
+            "sha256": "c108f1a8d53c785f5fbfff021ce15bc0f7259c584abde46fa96f63bfbfa486ce"
+          },
+          "classes/ConsumerKt$main$4.class": {
+            "bytes": 1119,
+            "sha256": "e1a946ccceafe4a5c45c7a72a4658dcc538b8aded00429bab7b3fce1c0e9d5e4"
+          },
+          "classes/ConsumerKt$main$5.class": {
+            "bytes": 1119,
+            "sha256": "a7013f33c8904d7dcd616df60d76ac978b3d748c1ccc6e9ede5523e61bf8cfe4"
+          },
+          "classes/ConsumerKt$main$6.class": {
+            "bytes": 1266,
+            "sha256": "27bc883a4626b0b7c7db891e1e8d492f9c4a9a32aba0ebedb65572954514efb4"
+          },
+          "classes/ConsumerKt$main$7.class": {
+            "bytes": 1115,
+            "sha256": "2b800ab2da5d0f30057a8f8abae0014be20205bfd6c84fb63526f63dde46bbb3"
+          },
+          "classes/ConsumerKt$main$8.class": {
+            "bytes": 1117,
+            "sha256": "0349d549be7b0497d8db338af254136f478051b4adc73511725ee48bc0e9b55a"
+          },
+          "classes/ConsumerKt$main$9.class": {
+            "bytes": 1117,
+            "sha256": "5805127fd77b308cf1b4b23a89b91b934c963ab51ccf33886e87c1f3996a1c46"
+          },
+          "classes/ConsumerKt$main$join$1.class": {
+            "bytes": 1227,
+            "sha256": "c8b2f98c155bd558dde22a81f6447dff21ce021b7dade56c4aa88d073a368cb7"
+          },
+          "classes/ConsumerKt$main$mix$1.class": {
+            "bytes": 1114,
+            "sha256": "f6a872198be6a62ff8409f9d778b471c62960d5b7b9b0d8ce9363a1b9cec6837"
+          },
+          "classes/ConsumerKt$main$nest$1.class": {
+            "bytes": 1721,
+            "sha256": "23f77462a0939d6d17ac1cd63bff39a2e6027730e526d1ee46c7a1168c3ff049"
+          },
+          "classes/ConsumerKt$main$swap$1.class": {
+            "bytes": 1701,
+            "sha256": "40f8b5281b5120f3c1059b55bd6412a0d9b1a468eec78661ad5e7291d6373cca"
+          },
+          "classes/ConsumerKt.class": {
+            "bytes": 21513,
+            "sha256": "7427c3fd1c71d240100e97bafe11b9cfec448b7e0e90d38cadbff7527a09754f"
+          },
+          "classes/META-INF/main.kotlin_module": {
+            "bytes": 40,
+            "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "kotlin-stdlib.jar": {
+            "bytes": 1750373,
+            "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+          },
+          "package.jar": {
+            "bytes": 51481092,
+            "sha256": "ecbb2fec0a7bb650dbaf3ec8b990c5c42f256ff1f0fa4c685af7f90939faefd1"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "kotlin": {
+          "compilerFiles": {
+            "allopen-compiler-plugin.jar": "4e71266b484ca70149379b9f65fd0fdc2014df481f30f7026fac23cc11c2b69d",
+            "android-extensions-compiler.jar": "a58b87f9104123efb9c4089830f935dd04ced75dedcce4c90122242766638cb5",
+            "android-extensions-runtime.jar": "b43fa546caf93a17c76ca22ffae8d3cbc3bd615a5daf81588d0472d7932cbed2",
+            "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+            "assignment-compiler-plugin.jar": "71592c36dc068b210e6ac5e8983297aac85418ccc1f2aa0cc3ce697fbd553366",
+            "compose-compiler-plugin.jar": "471e82ec9809643c41b3b849fe91ed3182d1c50e7cca6aa1943d6fd7d5427798",
+            "jvm-abi-gen.jar": "d66b8e150ab3b9934536788bf6eb3b7897db85f01e183506d9108dce38b2df37",
+            "kotlin-annotation-processing-cli.jar": "8acfb152e1fc6bf906c4fa8d0c4534d8e74036a1bc614fa3c618e590bac75570",
+            "kotlin-annotation-processing-runtime.jar": "31bd9facf35b536cf94a575c671e6d31701dcfd72b0deafa902f850294e95ee4",
+            "kotlin-annotation-processing.jar": "dbeccd9cb6c2272c4d664deb1dc6a15d4099e144333851852d5133fa9164150e",
+            "kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+            "kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+            "kotlin-ant.jar": "332c5abb8040dbb092917764c33bcf65fbd66a1a49c85bbee9c0f4059712d878",
+            "kotlin-compiler.jar": "cb2b7b0b82ad5b6ddc2e8c6c41c73e837a2b42e2abf64af64dda1b6173609790",
+            "kotlin-daemon-client.jar": "21293da016e4ba12a128ac26fd920a74e8b87f574cf9bc43c60a3d2e7645a7ae",
+            "kotlin-daemon.jar": "efd0b911bd952c91a74acdf2861b74a61516b869cc9a22aa1858197a87a66c35",
+            "kotlin-imports-dumper-compiler-plugin.jar": "1acbe1d35d5800fbf9b5c9615779cf8af5887db0d4184fac42ca70fa1782da05",
+            "kotlin-main-kts.jar": "cae50d93ce288a4a784b858eae00d0d96a52393f588921d8a0f77a5520d692dd",
+            "kotlin-metadata-jvm-sources.jar": "2ab97ab16e203e715633593c480bcf0ac1cc151e54cd2adaaa7dca1085835ede",
+            "kotlin-metadata-jvm.jar": "501222ae7d63527e55f2e5e645f18d4eff2c19074c85b9bc055866e3ed2b17bf",
+            "kotlin-preloader.jar": "9fc99ab6db8fb5ce1552d248e1f1472fdf48a287ef435770092c70f7e0903411",
+            "kotlin-reflect-sources.jar": "e9719062ea18b7c10f231ee170306f95acf78c31b4f4592d32e8376ca3779f0b",
+            "kotlin-reflect.jar": "230d91c2e410e3cfca3a4dc73d255455f62ff52aac091a33397a6e30bde91bf7",
+            "kotlin-runner.jar": "97e742218ac6888b9893c61cd67f10fe34317fcca469ed2e4afec0269c200a18",
+            "kotlin-script-runtime-sources.jar": "d9d6b416bf1267d5d9a2fffb309c8d02fa707608154d7b0d7dd318d2dd7daa96",
+            "kotlin-script-runtime.jar": "4ed97fd1e0c9bb1d0948ed5e63cc91456313a59518295b92b2c1514aef556150",
+            "kotlin-scripting-common.jar": "7c9ac8499fa91b201ea7836537c625dd52a82549e57e6b3f175cc0c79e9ab604",
+            "kotlin-scripting-compiler-impl.jar": "9a8c5eb59547320b098ebb09a6c63926cf61e091cd22043d7f447034f6cdf4dd",
+            "kotlin-scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90",
+            "kotlin-scripting-jvm.jar": "60a8c742d61f44f2311fbdc8a86b767d171ba09d97be72d6ba450d37f7e3fdbf",
+            "kotlin-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+            "kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+            "kotlin-stdlib-jdk7.jar": "0d10bc0d42b8605f23629a3f31ea27c19cdbca9dcdf4f53f6d22cd6366836d18",
+            "kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+            "kotlin-stdlib-jdk8.jar": "adc16648dbbcf35b0d10e7ec301c35d746d1c2fe460c606aba59f12b117cf9b0",
+            "kotlin-stdlib-js-sources.jar": "14ad20758afba0957d67c512002a763064add63053f8b6aaef145dc4c6d6c33b",
+            "kotlin-stdlib-sources.jar": "967ad9599254e3a60d96d6c789547cc35c22d770d9c8fb1e3f15fac3b4c3b65d",
+            "kotlin-stdlib.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+            "kotlin-test-js-sources.jar": "4a7a5f653f89107e847345688171be7b2d4172332f7f9a5771b9240bf07e8f18",
+            "kotlin-test-junit-sources.jar": "c411a0dad1218f3f652b6619f228fefee498903ee6e11c36c990fbc3fe823f18",
+            "kotlin-test-junit.jar": "f45ed32e721d901d3cbe83ece7f41c98533b34155186368a79bfdc667e433dce",
+            "kotlin-test-junit5-sources.jar": "891c56d8183d2cd3e912cf250adeca889dba51d02b07fce3015321e08f72b4a2",
+            "kotlin-test-junit5.jar": "716c89ba2e387c4422ea0e9a85c5731f9a328b669a7a0bbed3259e52291b555e",
+            "kotlin-test-sources.jar": "c8445545032c2e09195fc883b274260dd414b33f2cdc1dadd4f3441c1a4e456b",
+            "kotlin-test-testng-sources.jar": "748366365d0b3e985289aab702aecab84d0bd8ef6dd104659e86c1f31359c5aa",
+            "kotlin-test-testng.jar": "381e3c4a4aaaacf4f0a7944ec7908e914ededcd49e9794e4417d97edb63d932b",
+            "kotlin-test.jar": "8db175a3f56cf139ebdf8936f293ce5a64a16b52a0408804e0ec077e8848eb32",
+            "kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+            "kotlinx-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+            "lombok-compiler-plugin.jar": "970a55e6837e7cd4787157ca8f41da60825b1d29199d4a430aa628293c5a05c3",
+            "mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+            "noarg-compiler-plugin.jar": "60f1c4d25a87bf3368b7a2512543cbc108fb27f1224ca30f86f62363efe0bd1c",
+            "parcelize-compiler.jar": "c7141f771089e7ca0bc5267f5d39c55a5f3ab27f2b36602efeb689edc5da9ed0",
+            "parcelize-runtime.jar": "ffd266a80d58ea089f8ae78cfcc81f19f276ef491fb05c0777bdc99f22ae84a1",
+            "power-assert-compiler-plugin.jar": "3d508b1c7597cf85735b561233bfdb9bc07c4445fda2982cc9842269aeff3f95",
+            "sam-with-receiver-compiler-plugin.jar": "75623f2d557812415e59ecfe67359545d8066894a53227c7e4883b318fb25239",
+            "scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90"
+          },
+          "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+          "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)"
+        },
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcomponent_7545b0c2966a961b6086.so": "3477723a1cf5eff900083e04c7304b5f5976d60b91f8a0ac09fd8bf197a6d0a2",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "liblists.so": "59527be24f76ec00da70c655e636a94de45d86ae84b02cc00087db82a9151127"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "acdaa6998b627a51d010f798f538b69aeaf0512a6beed6230639b5c1032f7319",
+        "pomSha256": "85f1807b69efff15b01d50e0977e50544944586806e72a12bb9475506f820565",
+        "projectSourceSha256": "eaec2860a572c335876455df73163a3b53e54a2d67700fefcd29b2c28cf6824a",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "7aaea87a157d90b805b2c2456c36c4c9d953f100e6e92d7087a6d83696929d51",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "filesSha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        }
+      },
+      "modelSha256": "dab03b6b2ecc91d649792c65c244368074498c9268248564b26c36f6d5554b67",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51481092,
+              "path": "archives/lists-1.0.0.jar",
+              "sha256": "ecbb2fec0a7bb650dbaf3ec8b990c5c42f256ff1f0fa4c685af7f90939faefd1"
+            },
+            {
+              "bytes": 460,
+              "path": "archives/lists-1.0.0.pom",
+              "sha256": "85f1807b69efff15b01d50e0977e50544944586806e72a12bb9475506f820565"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:lists",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "c2a3ab17e6305e8d989253c5865b4b37115d754c9d7171ddda84c58396462da4",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "0255d00a45c2702f0bd39344a3790a972e6f699657fdaca46c6cbb58f784ac1c",
+      "observationSha256": "b2d7dcc935fdc33427f9d5c5775be4c719ff4113f8e0d0bd01f85e682c6cdf49",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-element-type.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'BooleanArray', but 'LongArray!' was expected."
+            }
+          ],
+          "id": "lists/element-type",
+          "sourceSha256": "bfa6ee84f6e2c0c898378a98339d105fd1ab4980af216db076696169009d225f",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-unit-element.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'ByteArray', but 'Array<(out) Unit!>!' was expected."
+            }
+          ],
+          "id": "lists/unit-element",
+          "sourceSha256": "31655a5635e98e08c422b1c7502a658fa680bbb1ba50c8fb133db48a0496a19e",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-scalar-container.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Long', but 'LongArray!' was expected."
+            }
+          ],
+          "id": "lists/scalar-container",
+          "sourceSha256": "543c0971eaef95b122773959395dfe8bfdd7732e03324471336f2d0e01d47af7",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 9,
+              "file": "src/reject-wrong-nesting.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'LongArray', but 'Array<(out) LongArray!>!' was expected."
+            }
+          ],
+          "id": "lists/wrong-nesting",
+          "sourceSha256": "509b5fe46cf34b95475e3676f44bf94cf4377534caa6027002d42c892fd4e132",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 10,
+              "file": "src/reject-option-presence.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Array<Unit>', but 'Option<Array<(out) Result<Array<(out) Unit!>!, String!>!>!>!' was expected."
+            }
+          ],
+          "id": "lists/option-presence",
+          "sourceSha256": "2775642fdc68065fd54eb11b9d602b71bb0269fe71d54f34547110b5efb4bc64",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 10,
+              "file": "src/reject-product-type.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Result<Pair<Array<String>, LongArray>!, Array<String>!>!', but 'Result<Pair<Array<(out) BigInteger!>!, LongArray!>!, Array<(out) String!>!>!' was expected."
+            }
+          ],
+          "id": "lists/product-type",
+          "sourceSha256": "0914809fb0d8420e23e850eb957abc626d3dc575234c4ab3633353103c2cf0f5",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-boxed-array.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Array<Long>', but 'LongArray!' was expected."
+            }
+          ],
+          "id": "lists/boxed-array",
+          "sourceSha256": "de1a610dcc8812c57194425592f6370752d64dcaf950ef0f42dfa6f4d07197ca",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-collection-container.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'List<Long>', but 'LongArray!' was expected."
+            }
+          ],
+          "id": "lists/collection-container",
+          "sourceSha256": "254de4a6c5fd05d33dbd57eb922ca28d27103bb9b16ddd4ccdaa1227fdffce82",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INITIALIZER_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-scalar-result.kt",
+              "line": 5,
+              "message": "Initializer type mismatch: expected 'Long', actual 'LongArray!'."
+            },
+            {
+              "code": "TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-scalar-result.kt",
+              "line": 5,
+              "message": "Type mismatch: inferred type is 'LongArray!', but 'Long' was expected."
+            }
+          ],
+          "id": "lists/scalar-result",
+          "sourceSha256": "7646d48009ee8ee0797bd74ce262be49396df03c15d15b1533477099ca53af0e",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 29,
+              "file": "src/reject-fixed-overflow.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Int', but 'Byte' was expected."
+            }
+          ],
+          "id": "lists/fixed-overflow",
+          "sourceSha256": "fb5f3ac7557eec6fa5c6d0bab8614cecd7d339a5e8c02e21d31e0254823c0c76",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 18,
+              "file": "src/reject-signed-width.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'LongArray', but 'IntArray!' was expected."
+            }
+          ],
+          "id": "lists/signed-width",
+          "sourceSha256": "61cc447307e9b478b7c6da072bc5b03c7b81069e915cad4d1dac088c04e273ef",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 16,
+              "file": "src/reject-exact-integer.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'LongArray', but 'Array<(out) BigInteger!>!' was expected."
+            }
+          ],
+          "id": "lists/exact-integer",
+          "sourceSha256": "6d539b9a98d3d4fa6b83dbdedc6bdc7d9e30616ce426d9faa2df6dc8bb0efb32",
+          "status": "rejected-at-compile-time"
+        }
+      ],
+      "faultProbe": "ordinary-source"
+    },
+    {
+      "bindingIrSha256": "dd6fbfe826bc94988fa5c8edf9f6cda91986e35ab82ec0a403c1f91055e87029",
+      "checks": 91674,
+      "jvm": {
+        "archiveSha256": "e56210fef89a49a56c799cb3d5c940545c8a154df2406fcb77dfa08db3443ced",
+        "bindingIrSha256": "dd6fbfe826bc94988fa5c8edf9f6cda91986e35ab82ec0a403c1f91055e87029",
+        "classpathSha256": "98c3bfe29b44b06475d667b722ec873a6087b7b2a585dff3efdd7d5c7ced95a9",
+        "compiledProjectionSha256": "7a114c448e2464428619e82394d2544150fbb82300a6cec1b2f6475b5b242e60",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "--release",
+          "22",
+          "-g:none",
+          "-proc:none",
+          "-encoding",
+          "UTF-8",
+          "-Xlint:all",
+          "-Werror",
+          "-implicit:none"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "22f790144a8727e20c787afc1f99f5f8d27bb27c8c266c9e43e233b74838eed7",
+        "declarationsSha256": "e4ebdc4cb1450b1dab21119ee639eb984c99399398a0dceb6306edad5f2cb014",
+        "deployment": {
+          "classes/Consumer.class": {
+            "bytes": 13724,
+            "sha256": "8d22c5ac4977112265fdbd1428b709c1e9dfd83450dfe4acce0269f5e0e34713"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "package.jar": {
+            "bytes": 51489528,
+            "sha256": "e56210fef89a49a56c799cb3d5c940545c8a154df2406fcb77dfa08db3443ced"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcomponent_7545b0c2966a961b6086.so": "3477723a1cf5eff900083e04c7304b5f5976d60b91f8a0ac09fd8bf197a6d0a2",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "liblists.so": "59527be24f76ec00da70c655e636a94de45d86ae84b02cc00087db82a9151127"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "1e4ae8ef35f0d749b46b0f4ed4f934d3a28d38161d6c7deb8be7d1dc15da20c4",
+        "pomSha256": "85f1807b69efff15b01d50e0977e50544944586806e72a12bb9475506f820565",
+        "projectSourceSha256": "eaec2860a572c335876455df73163a3b53e54a2d67700fefcd29b2c28cf6824a",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "6e25841df4afb61e5db0d52d412647564dcd73b5b118791e10399b34f1674884",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "filesSha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        }
+      },
+      "modelSha256": "b96c852bfb9b951f79007e8d4f90306dbeb91cdbf902c5c573644b1a3881bcc3",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51489528,
+              "path": "archives/lists-1.0.0.jar",
+              "sha256": "e56210fef89a49a56c799cb3d5c940545c8a154df2406fcb77dfa08db3443ced"
+            },
+            {
+              "bytes": 460,
+              "path": "archives/lists-1.0.0.pom",
+              "sha256": "85f1807b69efff15b01d50e0977e50544944586806e72a12bb9475506f820565"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:lists",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "java",
+      "receiptSha256": "247a2d5ce9093e8eee1de39c4d87ada45422f1d739c7ba12ebe675f8141bedb0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "44b184b4a24fae5c3c5909aa9acd03ad6180f312cf47ac6ca43d2e2e1aa47bdb",
+      "observationSha256": "1c6124455e3749d73b5569844b2d7e311f498823afa1dd2bc2a41be5ab177f5d",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-element-type.java",
+              "line": 4,
+              "message": "kindname.method, reverseUint32, long[], boolean[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: boolean[], long[]))"
+            }
+          ],
+          "id": "lists/element-type",
+          "sourceSha256": "f897e58a24ddf71c8714232389f6c3b66d17271fdf9af810e0e8b242c0e67368",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-unit-element.java",
+              "line": 4,
+              "message": "kindname.method, reverseUnit, org.leanbridge.lists.Unit[], byte[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: byte[], org.leanbridge.lists.Unit[]))"
+            }
+          ],
+          "id": "lists/unit-element",
+          "sourceSha256": "a6b5b9677b79829f8f0b8429cd82a86af7233e29c71a03ccc431c8680cc9baed",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-scalar-container.java",
+              "line": 4,
+              "message": "kindname.method, reverseUint32, long[], long, kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long, long[]))"
+            }
+          ],
+          "id": "lists/scalar-container",
+          "sourceSha256": "1561ab14123b12c7e93e13d0fbf78e46ec591181fb28a6af4ee4d28ebfbb2d5c",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-wrong-nesting.java",
+              "line": 4,
+              "message": "kindname.method, mix, long[][], long[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long[], long[][]))"
+            }
+          ],
+          "id": "lists/wrong-nesting",
+          "sourceSha256": "200df036f4b22fb09ff0d92cbfbeacd8757cfff62fd799111c1d93057b3650c7",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-option-presence.java",
+              "line": 4,
+              "message": "kindname.method, nest, org.leanbridge.lists.Option<org.leanbridge.lists.Result<org.leanbridge.lists.Unit[],java.lang.String>[]>, org.leanbridge.lists.Unit[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: org.leanbridge.lists.Unit[], org.leanbridge.lists.Option<org.leanbridge.lists.Result<org.leanbridge.lists.Unit[],java.lang.String>[]>))"
+            }
+          ],
+          "id": "lists/option-presence",
+          "sourceSha256": "d104e0f3dd881c9624f25f80d852f4104daa3039dfcc0c19ea2241289f0282cc",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-product-type.java",
+              "line": 4,
+              "message": "kindname.method, swap, org.leanbridge.lists.Result<org.leanbridge.lists.Pair<java.math.BigInteger[],long[]>,java.lang.String[]>, org.leanbridge.lists.Result<org.leanbridge.lists.Pair<java.lang.String[],long[]>,java.lang.Object>, kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.bounds: A, (compiler.misc.eq.bounds: java.math.BigInteger[]), (compiler.misc.lower.bounds: java.lang.String[])))"
+            }
+          ],
+          "id": "lists/product-type",
+          "sourceSha256": "769deecca263b4c461436e32a06079f83c5cbbb81a24f29a005a6c91c8db495c",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-boxed-array.java",
+              "line": 4,
+              "message": "kindname.method, reverseUint32, long[], java.lang.Long[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.Long[], long[]))"
+            }
+          ],
+          "id": "lists/boxed-array",
+          "sourceSha256": "e40f90c40f2d130f02c75ba070b79f46addee914974c30d81a684b21fa9c80d4",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-collection-container.java",
+              "line": 4,
+              "message": "kindname.method, reverseUint32, long[], java.util.List<java.lang.Long>, kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.infer.no.conforming.instance.exists: E, java.util.List<E>, long[]))"
+            }
+          ],
+          "id": "lists/collection-container",
+          "sourceSha256": "2c4e12a36616f860b3d79487d6067d1871f9921e6ecb9f131a4d4b02aa3f3ea0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.prob.found.req",
+              "column": 31,
+              "file": "src/reject-scalar-result.java",
+              "line": 4,
+              "message": "(compiler.misc.inconvertible.types: long[], long)"
+            }
+          ],
+          "id": "lists/scalar-result",
+          "sourceSha256": "c8d2113ea5c4f68daf73d528372aea7bca6f881ef729214a141bc43c72afc60d",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.prob.found.req",
+              "column": 30,
+              "file": "src/reject-fixed-overflow.java",
+              "line": 4,
+              "message": "(compiler.misc.possible.loss.of.precision: int, byte)"
+            }
+          ],
+          "id": "lists/fixed-overflow",
+          "sourceSha256": "a0943b5d8cd451c33095fcd6fee0aac2305ce5408f347c96cb099669ff5ccf14",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-signed-width.java",
+              "line": 4,
+              "message": "kindname.method, reverseInt32, int[], long[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long[], int[]))"
+            }
+          ],
+          "id": "lists/signed-width",
+          "sourceSha256": "7df0f9c95cd04adc99160c3d249bffe1fcc66319fa65dbc48186130f890a15ea",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-exact-integer.java",
+              "line": 4,
+              "message": "kindname.method, reverseNat, java.math.BigInteger[], long[], kindname.class, org.leanbridge.lists.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long[], java.math.BigInteger[]))"
+            }
+          ],
+          "id": "lists/exact-integer",
+          "sourceSha256": "4cc35443166f11c2ec4b363db847308caed683fc60bf5585434415f56ea3fdff",
+          "status": "rejected-at-compile-time"
+        }
+      ],
+      "faultProbe": "reviewed-ir"
+    },
+    {
+      "bindingIrSha256": "dd6fbfe826bc94988fa5c8edf9f6cda91986e35ab82ec0a403c1f91055e87029",
+      "checks": 91696,
+      "jvm": {
+        "archiveSha256": "e56210fef89a49a56c799cb3d5c940545c8a154df2406fcb77dfa08db3443ced",
+        "bindingIrSha256": "dd6fbfe826bc94988fa5c8edf9f6cda91986e35ab82ec0a403c1f91055e87029",
+        "classpathSha256": "ab8fb1dc078c9923da3efc790612b54e3f1bcd87cc0e128059d20a33f08a7053",
+        "compiledProjectionSha256": "7a114c448e2464428619e82394d2544150fbb82300a6cec1b2f6475b5b242e60",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "-jvm-target",
+          "22",
+          "-no-stdlib",
+          "-no-reflect",
+          "-Werror",
+          "-Xrender-internal-diagnostic-names"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "89735743c95f28dd4dced4171da622ce196a5eb11cfa04c05d0b891fe567a8ab",
+        "declarationsSha256": "e4ebdc4cb1450b1dab21119ee639eb984c99399398a0dceb6306edad5f2cb014",
+        "deployment": {
+          "classes/ConsumerKt$main$1.class": {
+            "bytes": 1297,
+            "sha256": "ae7392ebff7f835dffb86379c77782b744adf83f6fe3f19df218696b80018abf"
+          },
+          "classes/ConsumerKt$main$10.class": {
+            "bytes": 1119,
+            "sha256": "f6a1a21c4ce8c5031b9d980bca95a63012454214895db657fb8d317382d6d291"
+          },
+          "classes/ConsumerKt$main$11.class": {
+            "bytes": 1262,
+            "sha256": "dbc61a296668462346869c01e993833517e7488344772c7471390848136e44c5"
+          },
+          "classes/ConsumerKt$main$12.class": {
+            "bytes": 1262,
+            "sha256": "57365652e4f60daecb94f756491e78f48b57aa059b43fe8a13b05d80c170567f"
+          },
+          "classes/ConsumerKt$main$13.class": {
+            "bytes": 1123,
+            "sha256": "83c4794faac4d00d31c240a0d88035d71234e0c39976b80c6510813c336113e6"
+          },
+          "classes/ConsumerKt$main$14.class": {
+            "bytes": 1123,
+            "sha256": "401cad0609f62cf05cefde3ec465ff8ad6459a7cb156730f7ea32b41efeead04"
+          },
+          "classes/ConsumerKt$main$15.class": {
+            "bytes": 1240,
+            "sha256": "4cb2ba10939eaa7f3ad9616d352da840292e4b39863968ff6b22e81aa26482be"
+          },
+          "classes/ConsumerKt$main$16.class": {
+            "bytes": 1126,
+            "sha256": "cc19eaa23e35e25de185f9c610bb26d306662d63c5eef548dc7e3a2b9e2a54ed"
+          },
+          "classes/ConsumerKt$main$17.class": {
+            "bytes": 1117,
+            "sha256": "a0ee3ead3b25d9407ac52744c9a01994a23c0fb71b8458c9182718fb811a523b"
+          },
+          "classes/ConsumerKt$main$18.class": {
+            "bytes": 1266,
+            "sha256": "3379a2ce0118afcf384ed3397e415641c53d3e531c210941afc31fbd881d9c19"
+          },
+          "classes/ConsumerKt$main$19.class": {
+            "bytes": 1119,
+            "sha256": "5f611bc9734aaf6624140f7752dabf52a6c21b89e5f7b8ff3a3ad450f3e38919"
+          },
+          "classes/ConsumerKt$main$2.class": {
+            "bytes": 1115,
+            "sha256": "c3c02baad942501691aba95666761d1ed641150833eea24c52b755959af71e16"
+          },
+          "classes/ConsumerKt$main$3.class": {
+            "bytes": 1117,
+            "sha256": "c108f1a8d53c785f5fbfff021ce15bc0f7259c584abde46fa96f63bfbfa486ce"
+          },
+          "classes/ConsumerKt$main$4.class": {
+            "bytes": 1119,
+            "sha256": "e1a946ccceafe4a5c45c7a72a4658dcc538b8aded00429bab7b3fce1c0e9d5e4"
+          },
+          "classes/ConsumerKt$main$5.class": {
+            "bytes": 1119,
+            "sha256": "a7013f33c8904d7dcd616df60d76ac978b3d748c1ccc6e9ede5523e61bf8cfe4"
+          },
+          "classes/ConsumerKt$main$6.class": {
+            "bytes": 1266,
+            "sha256": "27bc883a4626b0b7c7db891e1e8d492f9c4a9a32aba0ebedb65572954514efb4"
+          },
+          "classes/ConsumerKt$main$7.class": {
+            "bytes": 1115,
+            "sha256": "2b800ab2da5d0f30057a8f8abae0014be20205bfd6c84fb63526f63dde46bbb3"
+          },
+          "classes/ConsumerKt$main$8.class": {
+            "bytes": 1117,
+            "sha256": "0349d549be7b0497d8db338af254136f478051b4adc73511725ee48bc0e9b55a"
+          },
+          "classes/ConsumerKt$main$9.class": {
+            "bytes": 1117,
+            "sha256": "5805127fd77b308cf1b4b23a89b91b934c963ab51ccf33886e87c1f3996a1c46"
+          },
+          "classes/ConsumerKt$main$join$1.class": {
+            "bytes": 1227,
+            "sha256": "c8b2f98c155bd558dde22a81f6447dff21ce021b7dade56c4aa88d073a368cb7"
+          },
+          "classes/ConsumerKt$main$mix$1.class": {
+            "bytes": 1114,
+            "sha256": "f6a872198be6a62ff8409f9d778b471c62960d5b7b9b0d8ce9363a1b9cec6837"
+          },
+          "classes/ConsumerKt$main$nest$1.class": {
+            "bytes": 1721,
+            "sha256": "23f77462a0939d6d17ac1cd63bff39a2e6027730e526d1ee46c7a1168c3ff049"
+          },
+          "classes/ConsumerKt$main$swap$1.class": {
+            "bytes": 1701,
+            "sha256": "40f8b5281b5120f3c1059b55bd6412a0d9b1a468eec78661ad5e7291d6373cca"
+          },
+          "classes/ConsumerKt.class": {
+            "bytes": 21513,
+            "sha256": "7427c3fd1c71d240100e97bafe11b9cfec448b7e0e90d38cadbff7527a09754f"
+          },
+          "classes/META-INF/main.kotlin_module": {
+            "bytes": 40,
+            "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "kotlin-stdlib.jar": {
+            "bytes": 1750373,
+            "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+          },
+          "package.jar": {
+            "bytes": 51489528,
+            "sha256": "e56210fef89a49a56c799cb3d5c940545c8a154df2406fcb77dfa08db3443ced"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "kotlin": {
+          "compilerFiles": {
+            "allopen-compiler-plugin.jar": "4e71266b484ca70149379b9f65fd0fdc2014df481f30f7026fac23cc11c2b69d",
+            "android-extensions-compiler.jar": "a58b87f9104123efb9c4089830f935dd04ced75dedcce4c90122242766638cb5",
+            "android-extensions-runtime.jar": "b43fa546caf93a17c76ca22ffae8d3cbc3bd615a5daf81588d0472d7932cbed2",
+            "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+            "assignment-compiler-plugin.jar": "71592c36dc068b210e6ac5e8983297aac85418ccc1f2aa0cc3ce697fbd553366",
+            "compose-compiler-plugin.jar": "471e82ec9809643c41b3b849fe91ed3182d1c50e7cca6aa1943d6fd7d5427798",
+            "jvm-abi-gen.jar": "d66b8e150ab3b9934536788bf6eb3b7897db85f01e183506d9108dce38b2df37",
+            "kotlin-annotation-processing-cli.jar": "8acfb152e1fc6bf906c4fa8d0c4534d8e74036a1bc614fa3c618e590bac75570",
+            "kotlin-annotation-processing-runtime.jar": "31bd9facf35b536cf94a575c671e6d31701dcfd72b0deafa902f850294e95ee4",
+            "kotlin-annotation-processing.jar": "dbeccd9cb6c2272c4d664deb1dc6a15d4099e144333851852d5133fa9164150e",
+            "kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+            "kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+            "kotlin-ant.jar": "332c5abb8040dbb092917764c33bcf65fbd66a1a49c85bbee9c0f4059712d878",
+            "kotlin-compiler.jar": "cb2b7b0b82ad5b6ddc2e8c6c41c73e837a2b42e2abf64af64dda1b6173609790",
+            "kotlin-daemon-client.jar": "21293da016e4ba12a128ac26fd920a74e8b87f574cf9bc43c60a3d2e7645a7ae",
+            "kotlin-daemon.jar": "efd0b911bd952c91a74acdf2861b74a61516b869cc9a22aa1858197a87a66c35",
+            "kotlin-imports-dumper-compiler-plugin.jar": "1acbe1d35d5800fbf9b5c9615779cf8af5887db0d4184fac42ca70fa1782da05",
+            "kotlin-main-kts.jar": "cae50d93ce288a4a784b858eae00d0d96a52393f588921d8a0f77a5520d692dd",
+            "kotlin-metadata-jvm-sources.jar": "2ab97ab16e203e715633593c480bcf0ac1cc151e54cd2adaaa7dca1085835ede",
+            "kotlin-metadata-jvm.jar": "501222ae7d63527e55f2e5e645f18d4eff2c19074c85b9bc055866e3ed2b17bf",
+            "kotlin-preloader.jar": "9fc99ab6db8fb5ce1552d248e1f1472fdf48a287ef435770092c70f7e0903411",
+            "kotlin-reflect-sources.jar": "e9719062ea18b7c10f231ee170306f95acf78c31b4f4592d32e8376ca3779f0b",
+            "kotlin-reflect.jar": "230d91c2e410e3cfca3a4dc73d255455f62ff52aac091a33397a6e30bde91bf7",
+            "kotlin-runner.jar": "97e742218ac6888b9893c61cd67f10fe34317fcca469ed2e4afec0269c200a18",
+            "kotlin-script-runtime-sources.jar": "d9d6b416bf1267d5d9a2fffb309c8d02fa707608154d7b0d7dd318d2dd7daa96",
+            "kotlin-script-runtime.jar": "4ed97fd1e0c9bb1d0948ed5e63cc91456313a59518295b92b2c1514aef556150",
+            "kotlin-scripting-common.jar": "7c9ac8499fa91b201ea7836537c625dd52a82549e57e6b3f175cc0c79e9ab604",
+            "kotlin-scripting-compiler-impl.jar": "9a8c5eb59547320b098ebb09a6c63926cf61e091cd22043d7f447034f6cdf4dd",
+            "kotlin-scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90",
+            "kotlin-scripting-jvm.jar": "60a8c742d61f44f2311fbdc8a86b767d171ba09d97be72d6ba450d37f7e3fdbf",
+            "kotlin-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+            "kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+            "kotlin-stdlib-jdk7.jar": "0d10bc0d42b8605f23629a3f31ea27c19cdbca9dcdf4f53f6d22cd6366836d18",
+            "kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+            "kotlin-stdlib-jdk8.jar": "adc16648dbbcf35b0d10e7ec301c35d746d1c2fe460c606aba59f12b117cf9b0",
+            "kotlin-stdlib-js-sources.jar": "14ad20758afba0957d67c512002a763064add63053f8b6aaef145dc4c6d6c33b",
+            "kotlin-stdlib-sources.jar": "967ad9599254e3a60d96d6c789547cc35c22d770d9c8fb1e3f15fac3b4c3b65d",
+            "kotlin-stdlib.jar": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+            "kotlin-test-js-sources.jar": "4a7a5f653f89107e847345688171be7b2d4172332f7f9a5771b9240bf07e8f18",
+            "kotlin-test-junit-sources.jar": "c411a0dad1218f3f652b6619f228fefee498903ee6e11c36c990fbc3fe823f18",
+            "kotlin-test-junit.jar": "f45ed32e721d901d3cbe83ece7f41c98533b34155186368a79bfdc667e433dce",
+            "kotlin-test-junit5-sources.jar": "891c56d8183d2cd3e912cf250adeca889dba51d02b07fce3015321e08f72b4a2",
+            "kotlin-test-junit5.jar": "716c89ba2e387c4422ea0e9a85c5731f9a328b669a7a0bbed3259e52291b555e",
+            "kotlin-test-sources.jar": "c8445545032c2e09195fc883b274260dd414b33f2cdc1dadd4f3441c1a4e456b",
+            "kotlin-test-testng-sources.jar": "748366365d0b3e985289aab702aecab84d0bd8ef6dd104659e86c1f31359c5aa",
+            "kotlin-test-testng.jar": "381e3c4a4aaaacf4f0a7944ec7908e914ededcd49e9794e4417d97edb63d932b",
+            "kotlin-test.jar": "8db175a3f56cf139ebdf8936f293ce5a64a16b52a0408804e0ec077e8848eb32",
+            "kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+            "kotlinx-serialization-compiler-plugin.jar": "659dc601a79d64be368035a2936e12f327de49d0f16c42e52d2e1ec09dd27943",
+            "lombok-compiler-plugin.jar": "970a55e6837e7cd4787157ca8f41da60825b1d29199d4a430aa628293c5a05c3",
+            "mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+            "noarg-compiler-plugin.jar": "60f1c4d25a87bf3368b7a2512543cbc108fb27f1224ca30f86f62363efe0bd1c",
+            "parcelize-compiler.jar": "c7141f771089e7ca0bc5267f5d39c55a5f3ab27f2b36602efeb689edc5da9ed0",
+            "parcelize-runtime.jar": "ffd266a80d58ea089f8ae78cfcc81f19f276ef491fb05c0777bdc99f22ae84a1",
+            "power-assert-compiler-plugin.jar": "3d508b1c7597cf85735b561233bfdb9bc07c4445fda2982cc9842269aeff3f95",
+            "sam-with-receiver-compiler-plugin.jar": "75623f2d557812415e59ecfe67359545d8066894a53227c7e4883b318fb25239",
+            "scripting-compiler.jar": "e127f4bb3a7aac17e53df1b09e062e0878d8ac665335f79d002a6ac99882ca90"
+          },
+          "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+          "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)"
+        },
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcomponent_7545b0c2966a961b6086.so": "3477723a1cf5eff900083e04c7304b5f5976d60b91f8a0ac09fd8bf197a6d0a2",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "liblists.so": "59527be24f76ec00da70c655e636a94de45d86ae84b02cc00087db82a9151127"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "1e4ae8ef35f0d749b46b0f4ed4f934d3a28d38161d6c7deb8be7d1dc15da20c4",
+        "pomSha256": "85f1807b69efff15b01d50e0977e50544944586806e72a12bb9475506f820565",
+        "projectSourceSha256": "eaec2860a572c335876455df73163a3b53e54a2d67700fefcd29b2c28cf6824a",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "7aaea87a157d90b805b2c2456c36c4c9d953f100e6e92d7087a6d83696929d51",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "filesSha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        }
+      },
+      "modelSha256": "b96c852bfb9b951f79007e8d4f90306dbeb91cdbf902c5c573644b1a3881bcc3",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51489528,
+              "path": "archives/lists-1.0.0.jar",
+              "sha256": "e56210fef89a49a56c799cb3d5c940545c8a154df2406fcb77dfa08db3443ced"
+            },
+            {
+              "bytes": 460,
+              "path": "archives/lists-1.0.0.pom",
+              "sha256": "85f1807b69efff15b01d50e0977e50544944586806e72a12bb9475506f820565"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:lists",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "kotlin",
+      "receiptSha256": "247a2d5ce9093e8eee1de39c4d87ada45422f1d739c7ba12ebe675f8141bedb0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "44b184b4a24fae5c3c5909aa9acd03ad6180f312cf47ac6ca43d2e2e1aa47bdb",
+      "observationSha256": "cfbf3bcc79e95659f5e0fe0150db4e894345221140f0118eed9c76c6ba4d516e",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-element-type.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'BooleanArray', but 'LongArray!' was expected."
+            }
+          ],
+          "id": "lists/element-type",
+          "sourceSha256": "bfa6ee84f6e2c0c898378a98339d105fd1ab4980af216db076696169009d225f",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-unit-element.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'ByteArray', but 'Array<(out) Unit!>!' was expected."
+            }
+          ],
+          "id": "lists/unit-element",
+          "sourceSha256": "31655a5635e98e08c422b1c7502a658fa680bbb1ba50c8fb133db48a0496a19e",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-scalar-container.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Long', but 'LongArray!' was expected."
+            }
+          ],
+          "id": "lists/scalar-container",
+          "sourceSha256": "543c0971eaef95b122773959395dfe8bfdd7732e03324471336f2d0e01d47af7",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 9,
+              "file": "src/reject-wrong-nesting.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'LongArray', but 'Array<(out) LongArray!>!' was expected."
+            }
+          ],
+          "id": "lists/wrong-nesting",
+          "sourceSha256": "509b5fe46cf34b95475e3676f44bf94cf4377534caa6027002d42c892fd4e132",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 10,
+              "file": "src/reject-option-presence.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Array<Unit>', but 'Option<Array<(out) Result<Array<(out) Unit!>!, String!>!>!>!' was expected."
+            }
+          ],
+          "id": "lists/option-presence",
+          "sourceSha256": "2775642fdc68065fd54eb11b9d602b71bb0269fe71d54f34547110b5efb4bc64",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 10,
+              "file": "src/reject-product-type.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Result<Pair<Array<String>, LongArray>!, Array<String>!>!', but 'Result<Pair<Array<(out) BigInteger!>!, LongArray!>!, Array<(out) String!>!>!' was expected."
+            }
+          ],
+          "id": "lists/product-type",
+          "sourceSha256": "0914809fb0d8420e23e850eb957abc626d3dc575234c4ab3633353103c2cf0f5",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-boxed-array.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Array<Long>', but 'LongArray!' was expected."
+            }
+          ],
+          "id": "lists/boxed-array",
+          "sourceSha256": "de1a610dcc8812c57194425592f6370752d64dcaf950ef0f42dfa6f4d07197ca",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-collection-container.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'List<Long>', but 'LongArray!' was expected."
+            }
+          ],
+          "id": "lists/collection-container",
+          "sourceSha256": "254de4a6c5fd05d33dbd57eb922ca28d27103bb9b16ddd4ccdaa1227fdffce82",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INITIALIZER_TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-scalar-result.kt",
+              "line": 5,
+              "message": "Initializer type mismatch: expected 'Long', actual 'LongArray!'."
+            },
+            {
+              "code": "TYPE_MISMATCH",
+              "column": 19,
+              "file": "src/reject-scalar-result.kt",
+              "line": 5,
+              "message": "Type mismatch: inferred type is 'LongArray!', but 'Long' was expected."
+            }
+          ],
+          "id": "lists/scalar-result",
+          "sourceSha256": "7646d48009ee8ee0797bd74ce262be49396df03c15d15b1533477099ca53af0e",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 29,
+              "file": "src/reject-fixed-overflow.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'Int', but 'Byte' was expected."
+            }
+          ],
+          "id": "lists/fixed-overflow",
+          "sourceSha256": "fb5f3ac7557eec6fa5c6d0bab8614cecd7d339a5e8c02e21d31e0254823c0c76",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 18,
+              "file": "src/reject-signed-width.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'LongArray', but 'IntArray!' was expected."
+            }
+          ],
+          "id": "lists/signed-width",
+          "sourceSha256": "61cc447307e9b478b7c6da072bc5b03c7b81069e915cad4d1dac088c04e273ef",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 16,
+              "file": "src/reject-exact-integer.kt",
+              "line": 5,
+              "message": "Argument type mismatch: actual type is 'LongArray', but 'Array<(out) BigInteger!>!' was expected."
+            }
+          ],
+          "id": "lists/exact-integer",
+          "sourceSha256": "6d539b9a98d3d4fa6b83dbdedc6bdc7d9e30616ce426d9faa2df6dc8bb0efb32",
+          "status": "rejected-at-compile-time"
+        }
+      ],
+      "faultProbe": "reviewed-ir"
+    }
+  ],
+  "faultProbes": {
+    "ordinary-source": {
+      "checks": 263,
+      "instrumentedSources": {
+        "src/main/java/org/leanbridge/lists/Api.java": "e4ebdc4cb1450b1dab21119ee639eb984c99399398a0dceb6306edad5f2cb014",
+        "src/main/java/org/leanbridge/lists/Faults.java": "50fb9330683da9c109b92222f9a191498afdbdacf7638ee06509ee77c031e8e5",
+        "src/main/java/org/leanbridge/lists/LeanBridgeException.java": "0a93be8ce2924539d62e58ea6d586035d02500fa66eec23e5f9e3338e0239e5a",
+        "src/main/java/org/leanbridge/lists/ListProbe.java": "bfc3c98ad4db8b33414775d943502ae59c5cab191c1cc912c37ef75dd303385b",
+        "src/main/java/org/leanbridge/lists/NativeAssets.java": "63e1342cdb9a772066120af10030bc380bb55afe05102c9bda0cfccd4d7168fa",
+        "src/main/java/org/leanbridge/lists/Option.java": "a8071499c27aa6c9bdd3d67699b4ad1eb6eac2b615d19206b2ea7dcde2e52dfb",
+        "src/main/java/org/leanbridge/lists/Packet.java": "fb4235144f4c3cdc7d633e5ee720a0f39411fe45f3f594262d8849fa8d53405c",
+        "src/main/java/org/leanbridge/lists/Pair.java": "0d6733a7a44c6003e7e1a28ac50de74c0df60509a82acfb1dc149c6179359f2f",
+        "src/main/java/org/leanbridge/lists/Result.java": "57f7adda893c17e9875aa5f9d2207f842d430127286827eb6db7e734aa53dee7",
+        "src/main/java/org/leanbridge/lists/Runtime.java": "2d014693c986a0d436c2e24c3ad9d2240b4d521f5d296e7d05a5452d4ef76c43",
+        "src/main/java/org/leanbridge/lists/Scope.java": "62b7017e9f0750e3217089f4f85ae292b8709a9c75908f367fdf09925371c895",
+        "src/main/java/org/leanbridge/lists/Unit.java": "80c93113984c918b2cfecc799882637819ea829fe1d9bb13dead88ba5dccb0ae"
+      },
+      "isolatedInstrumentedProjection": true,
+      "layoutChecks": 11,
+      "normalExitCleanup": true,
+      "originalSources": {
+        "src/main/java/org/leanbridge/lists/Api.java": "e4ebdc4cb1450b1dab21119ee639eb984c99399398a0dceb6306edad5f2cb014",
+        "src/main/java/org/leanbridge/lists/LeanBridgeException.java": "0a93be8ce2924539d62e58ea6d586035d02500fa66eec23e5f9e3338e0239e5a",
+        "src/main/java/org/leanbridge/lists/NativeAssets.java": "63e1342cdb9a772066120af10030bc380bb55afe05102c9bda0cfccd4d7168fa",
+        "src/main/java/org/leanbridge/lists/Option.java": "a8071499c27aa6c9bdd3d67699b4ad1eb6eac2b615d19206b2ea7dcde2e52dfb",
+        "src/main/java/org/leanbridge/lists/Packet.java": "fb4235144f4c3cdc7d633e5ee720a0f39411fe45f3f594262d8849fa8d53405c",
+        "src/main/java/org/leanbridge/lists/Pair.java": "0d6733a7a44c6003e7e1a28ac50de74c0df60509a82acfb1dc149c6179359f2f",
+        "src/main/java/org/leanbridge/lists/Result.java": "57f7adda893c17e9875aa5f9d2207f842d430127286827eb6db7e734aa53dee7",
+        "src/main/java/org/leanbridge/lists/Runtime.java": "8a5477ca87a6812d573a07ba48da3852ef64faf733ee9b8cf0d6e8f0026dff66",
+        "src/main/java/org/leanbridge/lists/Scope.java": "27bb6f59537e2228cc849b81f9dfa43f6b51d3069eab7b660089d499cb5af04e",
+        "src/main/java/org/leanbridge/lists/Unit.java": "80c93113984c918b2cfecc799882637819ea829fe1d9bb13dead88ba5dccb0ae"
+      },
+      "partialInputChecks": 16,
+      "probeSourceSha256": "50fb9330683da9c109b92222f9a191498afdbdacf7638ee06509ee77c031e8e5",
+      "releaseJarUnchanged": true,
+      "replacements": [
+        156,
+        27,
+        104,
+        1,
+        27,
+        27
+      ]
+    },
+    "reviewed-ir": {
+      "checks": 263,
+      "instrumentedSources": {
+        "src/main/java/org/leanbridge/lists/Api.java": "e4ebdc4cb1450b1dab21119ee639eb984c99399398a0dceb6306edad5f2cb014",
+        "src/main/java/org/leanbridge/lists/Faults.java": "50fb9330683da9c109b92222f9a191498afdbdacf7638ee06509ee77c031e8e5",
+        "src/main/java/org/leanbridge/lists/LeanBridgeException.java": "0a93be8ce2924539d62e58ea6d586035d02500fa66eec23e5f9e3338e0239e5a",
+        "src/main/java/org/leanbridge/lists/ListProbe.java": "bfc3c98ad4db8b33414775d943502ae59c5cab191c1cc912c37ef75dd303385b",
+        "src/main/java/org/leanbridge/lists/NativeAssets.java": "08b8cef761d9eaa59ee80338b35a54d4da123e05c6acc400a41bce8fd8222f5d",
+        "src/main/java/org/leanbridge/lists/Option.java": "a8071499c27aa6c9bdd3d67699b4ad1eb6eac2b615d19206b2ea7dcde2e52dfb",
+        "src/main/java/org/leanbridge/lists/Packet.java": "fb4235144f4c3cdc7d633e5ee720a0f39411fe45f3f594262d8849fa8d53405c",
+        "src/main/java/org/leanbridge/lists/Pair.java": "0d6733a7a44c6003e7e1a28ac50de74c0df60509a82acfb1dc149c6179359f2f",
+        "src/main/java/org/leanbridge/lists/Result.java": "57f7adda893c17e9875aa5f9d2207f842d430127286827eb6db7e734aa53dee7",
+        "src/main/java/org/leanbridge/lists/Runtime.java": "2d014693c986a0d436c2e24c3ad9d2240b4d521f5d296e7d05a5452d4ef76c43",
+        "src/main/java/org/leanbridge/lists/Scope.java": "62b7017e9f0750e3217089f4f85ae292b8709a9c75908f367fdf09925371c895",
+        "src/main/java/org/leanbridge/lists/Unit.java": "80c93113984c918b2cfecc799882637819ea829fe1d9bb13dead88ba5dccb0ae"
+      },
+      "isolatedInstrumentedProjection": true,
+      "layoutChecks": 11,
+      "normalExitCleanup": true,
+      "originalSources": {
+        "src/main/java/org/leanbridge/lists/Api.java": "e4ebdc4cb1450b1dab21119ee639eb984c99399398a0dceb6306edad5f2cb014",
+        "src/main/java/org/leanbridge/lists/LeanBridgeException.java": "0a93be8ce2924539d62e58ea6d586035d02500fa66eec23e5f9e3338e0239e5a",
+        "src/main/java/org/leanbridge/lists/NativeAssets.java": "08b8cef761d9eaa59ee80338b35a54d4da123e05c6acc400a41bce8fd8222f5d",
+        "src/main/java/org/leanbridge/lists/Option.java": "a8071499c27aa6c9bdd3d67699b4ad1eb6eac2b615d19206b2ea7dcde2e52dfb",
+        "src/main/java/org/leanbridge/lists/Packet.java": "fb4235144f4c3cdc7d633e5ee720a0f39411fe45f3f594262d8849fa8d53405c",
+        "src/main/java/org/leanbridge/lists/Pair.java": "0d6733a7a44c6003e7e1a28ac50de74c0df60509a82acfb1dc149c6179359f2f",
+        "src/main/java/org/leanbridge/lists/Result.java": "57f7adda893c17e9875aa5f9d2207f842d430127286827eb6db7e734aa53dee7",
+        "src/main/java/org/leanbridge/lists/Runtime.java": "8a5477ca87a6812d573a07ba48da3852ef64faf733ee9b8cf0d6e8f0026dff66",
+        "src/main/java/org/leanbridge/lists/Scope.java": "27bb6f59537e2228cc849b81f9dfa43f6b51d3069eab7b660089d499cb5af04e",
+        "src/main/java/org/leanbridge/lists/Unit.java": "80c93113984c918b2cfecc799882637819ea829fe1d9bb13dead88ba5dccb0ae"
+      },
+      "partialInputChecks": 16,
+      "probeSourceSha256": "50fb9330683da9c109b92222f9a191498afdbdacf7638ee06509ee77c031e8e5",
+      "releaseJarUnchanged": true,
+      "replacements": [
+        156,
+        27,
+        104,
+        1,
+        27,
+        27
+      ]
+    }
+  }
+}
