@@ -114,7 +114,9 @@ const composerInstall = async ({ project, handoff, pkg, environment, clean }) =>
  * @param options - Prepared handoff, captured payload identities and explicit tools.
  */
 export const installedPhpWasmCorpus = async options => {
-	const { t, library, consumer, handoff, receipt, packageSet, environment, clean, sourcePath = "ordinary-source" } = options;
+	const { t, library, consumer, handoff, receipt, packageSet, environment, clean, sourcePath = "ordinary-source", fixture } = options;
+	const source = mode => fixture ? fixture.source(mode, sourcePath) : corpusPhpSource(mode, "php-wasm", sourcePath);
+	const request = arrangement => fixture ? fixture.request(arrangement, sourcePath) : corpusPhpRequestJson(library, "php-wasm", arrangement);
 	const project = join(consumer, "project"), deployment = join(consumer, "relocated");
 	const bin = join(project, "bin"), cache = join(project, "npm-cache");
 	for(const directory of [bin, cache])
@@ -163,7 +165,7 @@ export const installedPhpWasmCorpus = async options => {
 	assert.deepEqual(await phpWasmInventory(join(project, "node_modules")), modules);
 	const composerPkg = receipt.packages.find(pkg => pkg.ecosystem === "composer");
 	const composer = await composerInstall({ project, handoff, pkg: composerPkg, environment, clean });
-	const settings = corpusPhpWasmSettings(library);
+	const settings = fixture?.settings ?? corpusPhpWasmSettings(library);
 	for(const path of ["src/Api.php", "src/Internal/Native.php"])
 		assert.deepEqual(await readFile(join(project, "vendor", settings.composer.name, path)), await readFile(join(project, "node_modules", settings.npm.name, "compiled", path)));
 	await saveLakeFile(project, "entry.mjs", "export { default as api } from " + JSON.stringify(settings.npm.name) + ";\n");
@@ -177,9 +179,10 @@ export const installedPhpWasmCorpus = async options => {
 	for(const [fixture, path] of [["php-wasm", "driver"], ["php-wasm-node", "node"], ["php-wasm-browser", "browser"]])
 		await cp(join(repository, "tests/fixtures/type-corpus/consumers", fixture + ".mjs"), join(deployment, path + ".mjs"));
 	await saveLakeFile(deployment, "index.html", '<!doctype html><html><head><link rel="icon" href="data:,"></head><body><script type="module" src="./browser.mjs"></script></body></html>');
-	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", corpusPhpSource(mode, "php-wasm", sourcePath));
-	for(const arrangement of ["embedded", "composer"]) await saveLakeFile(deployment, "request-" + arrangement + ".json", corpusPhpRequestJson(library, "php-wasm", arrangement));
+	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", source(mode));
+	for(const arrangement of ["embedded", "composer"]) await saveLakeFile(deployment, "request-" + arrangement + ".json", request(arrangement));
 	await rm(project, { recursive: true, force: true });
+	if(fixture?.removeHandoff) await rm(handoff, { recursive: true, force: true });
 	const evidence = { packageSet
 		, host: { version: hostManifest.version, files: hostFiles, archiveSha256: sha256(hostArchive) }
 		, component: await json(join(deployment, "node_modules", settings.npm.name, "compiled/php-wasm-component.json"))
@@ -192,8 +195,8 @@ export const installedPhpWasmCorpus = async options => {
 		, offlineInstall: true, emptyCaches: true, lockedInstall: true
 		, relocated: true, publicApiOnly: true, repeatExecution: true
 		, unchangedDeployment: true, compilerFreeExecution: true
-		, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(corpusPhpSource(mode, "php-wasm", sourcePath))]))
-		, requests: Object.fromEntries(["embedded", "composer"].map(arrangement => [arrangement, sha256(corpusPhpRequestJson(library, "php-wasm", arrangement))]))
+		, consumerSources: Object.fromEntries(["weak", "strict"].map(mode => [mode, sha256(source(mode))]))
+		, requests: Object.fromEntries(["embedded", "composer"].map(arrangement => [arrangement, sha256(request(arrangement))]))
 		, deployment: await phpWasmInventory(deployment), executions: [] };
 	for(const arrangement of ["embedded", "composer"])
 	for(const loading of ["startup", "lazy"])

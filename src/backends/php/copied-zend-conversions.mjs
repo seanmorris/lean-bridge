@@ -47,12 +47,35 @@ export const copiedZendConversions = model => model.surface.copies.map(copy => {
 		output.push('if (!lb_charge(s, value->length, 1) || (value->length && !value->data)) return lb_fail(s, "Invalid string buffer", 0);');
 		if(name === "string") output.push('if (!lb_utf8((const unsigned char *)value->data, value->length)) return lb_fail(s, "Native string is not valid UTF-8", 0);');
 		output.push('ZVAL_STRINGL(out, value->length ? (const char *)value->data : "", value->length);');
+	} else if(copy.compound === "option")
+	{
+		const field = copy.fields[0].type;
+		input.push("if (Z_TYPE_P(value) == IS_NULL) { out->has_value = 0; return 1; }"
+			, 'if (Z_TYPE_P(value) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(value)) || zend_hash_num_elements(Z_ARRVAL_P(value)) != 1) return lb_fail(s, "Option wire requires null or one payload", 1);'
+			, "if (!lb_charge(s, 1, 32)) return 0;", "out->has_value = 1;"
+			, `if (!lb_to${field.index}(zend_hash_index_find(Z_ARRVAL_P(value), 0), &out->value, s)) return 0;`);
+		output.push('if (value->has_value > 1) return lb_fail(s, "Invalid native Option flag", 0);'
+			, "if (!value->has_value) { ZVAL_NULL(out); return 1; }"
+			, "if (!lb_charge(s, 1, 32)) return 0;", "array_init_size(out, 1);", "zval item; ZVAL_NULL(&item);"
+			, `if (!lb_from${field.index}(&value->value, &item, s)) { zval_ptr_dtor(&item); return 0; }`, "add_next_index_zval(out, &item);");
+	} else if(copy.compound === "result")
+	{
+		input.push('if (Z_TYPE_P(value) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(value)) || zend_hash_num_elements(Z_ARRVAL_P(value)) != 2) return lb_fail(s, "Except wire requires a tag and payload", 1);'
+			, "if (!lb_charge(s, 2, 32)) return 0;", "zval *tag = zend_hash_index_find(Z_ARRVAL_P(value), 0); ZVAL_DEREF(tag);"
+			, 'if (Z_TYPE_P(tag) != IS_TRUE && Z_TYPE_P(tag) != IS_FALSE) return lb_fail(s, "Except wire tag requires bool", 1);'
+			, "out->is_ok = Z_TYPE_P(tag) == IS_TRUE;", "zval *payload = zend_hash_index_find(Z_ARRVAL_P(value), 1);"
+			, `return out->is_ok ? lb_to${copy.fields[0].type.index}(payload, &out->ok, s) : lb_to${copy.fields[1].type.index}(payload, &out->error, s);`);
+		output.push('if (value->is_ok > 1) return lb_fail(s, "Invalid native Except flag", 0);'
+			, "if (!lb_charge(s, 2, 32)) return 0;", "array_init_size(out, 2);", "add_next_index_bool(out, value->is_ok);", "zval item; ZVAL_NULL(&item);"
+			, `int valid = value->is_ok ? lb_from${copy.fields[0].type.index}(&value->ok, &item, s) : lb_from${copy.fields[1].type.index}(&value->error, &item, s);`
+			, "if (!valid) { zval_ptr_dtor(&item); return 0; }", "add_next_index_zval(out, &item);");
 	} else
 	{
 		input.push('if (Z_TYPE_P(value) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(value))) return lb_fail(s, "Expected a consecutive-key wire list", 1);');
-		if(copy.record)
+		if(copy.record || copy.compound === "tuple")
 		{
-			input.push(`if (zend_hash_num_elements(Z_ARRVAL_P(value)) != ${copy.fields.length}) return lb_fail(s, "Record wire field count differs", 0);`);
+			input.push(`if (zend_hash_num_elements(Z_ARRVAL_P(value)) != ${copy.fields.length}) return lb_fail(s, "${copy.record ? "Record" : "Prod"} wire field count differs", 0);`);
+			if(copy.compound) input.push(`if (!lb_charge(s, ${copy.fields.length}, 32)) return 0;`);
 			for(const [i, field] of copy.fields.entries()) input.push(`if (!lb_to${field.type.index}(zend_hash_index_find(Z_ARRVAL_P(value), ${i}), &out->${field.name}, s)) return 0;`);
 			if(!copy.fields.length) input.push("out->empty = 0;");
 			output.push(`if (!lb_charge(s, ${copy.fields.length}, 32)) return 0;`, `array_init_size(out, ${copy.fields.length});`);

@@ -27,7 +27,7 @@ export const validateOrdinaryPhpSettings = (settings = {}) => {
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  * @param options.wordBits - Compiled Lean target width, independent of PHP's integer width.
  * @param options.callables - Admit synchronous primitive callables for FFI or Zend.
- * @param options.compounds - Admit the implemented FFI compound projection; Zend opts out.
+ * @param options.compounds - Admit copied options, results and binary products.
  */
 export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits, callables = true, compounds = true } = {}) => {
 	if(![32, 64].includes(integerBits)) throw new TypeError("PHP integer width must be 32 or 64");

@@ -21,6 +21,19 @@ const phpWire = model => model.surface.copies.map(copy => {
 	{ input = "(string) $value"; output = "\\Brick\\Math\\BigInteger::of($value)"; }
 	else if(name === "bytes")
 	{ input = "$value->toString()"; output = `${ns}Bytes::fromString($value)`; }
+	else if(copy.compound === "option")
+	{
+		input = `$value === null ? null : [self::to${copy.fields[0].type.index}($value->value)]`;
+		output = `$value === null ? null : new ${ns}Some(self::from${copy.fields[0].type.index}($value[0]))`;
+	} else if(copy.compound === "result")
+	{
+		input = `$value instanceof ${ns}Ok ? [true, self::to${copy.fields[0].type.index}($value->value)] : [false, self::to${copy.fields[1].type.index}($value->value)]`;
+		output = `$value[0] ? new ${ns}Ok(self::from${copy.fields[0].type.index}($value[1])) : new ${ns}Err(self::from${copy.fields[1].type.index}($value[1]))`;
+	} else if(copy.compound === "tuple")
+	{
+		input = `[${copy.fields.map((field, i) => `self::to${field.type.index}($value[${i}])`).join(", ")}]`;
+		output = `[${copy.fields.map((field, i) => `self::from${field.type.index}($value[${i}])`).join(", ")}]`;
+	}
 	else if(copy.record)
 	{
 		input = `[${copy.fields.map(field => `self::to${field.type.index}($value->${field.name})`).join(", ")}]`;
@@ -139,7 +152,7 @@ static ZEND_FUNCTION(lb_call${index}) {
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  */
 export const generateCopiedPhpZendAdapter = (ir, { integerBits = 32 } = {}) => {
-	const model = compileCopiedPhpModel(ir, { integerBits, compounds: false }), identity = hashBindingIr(ir);
+	const model = compileCopiedPhpModel(ir, { integerBits }), identity = hashBindingIr(ir);
 	const stem = `lb_${model.surface.prefix}_${identity.slice(0, 16)}`;
 	const transport = `${model.namespace}\\Internal\\Zend${identity.slice(0, 16)}`;
 	const c = generateCBindingPackage(ir);

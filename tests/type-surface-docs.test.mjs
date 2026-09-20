@@ -54,7 +54,7 @@ test("the PHP overview records exact UInt32 values in copied and Alpha profiles"
 	assert.match(row(source, "UInt32"), /Reviewed IR: Installed checks passed/u);
 	assert.match(row(source, "UInt32"), /Alpha.*full 0\.\.4294967295/u);
 	assert.match(row(source, "Nat"), /BigInteger.*Generator inspected/u);
-	assert.match(row(source, "Except ε α"), /Generation rejected/u);
+	assert.match(row(source, "Except ε α"), /Installed checks passed \(input, result, field\)/u);
 	const wasm = source;
 	assert.match(row(wasm, "Int64"), /32-bit projection uses Brick\\Math\\BigInteger/u);
 	assert.match(row(wasm, "Int64"), /compiled copied API uses Brick\\Math\\BigInteger for the full/u);
@@ -169,27 +169,32 @@ test("npm compound mappings have installed value coverage without promoting nati
 						assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-compounds-installed"]);
 					}
 				}
-	for(const cell of cells.filter(cell => cell.profile === "php-wasm" && ["option", "result", "tuple"].includes(cell.shape)))
+	for(const cell of cells.filter(cell => cell.profile === "wit-wasi" && ["option", "result", "tuple"].includes(cell.shape)))
 		assert.notEqual(cell.stages.installedExecution.state, "passed");
 });
 
-test("native PHP compound docs do not borrow installed coverage for PHP-Wasm", async () => {
+test("PHP compound docs record independent native and PHP-Wasm coverage", async () => {
 	const source = await readFile("docs/php.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
-	{
-		assert.match(row(source, lean), /Native PHP: Installed checks passed \(input, result, field\)/u);
-		assert.match(row(source, lean), /PHP-Wasm: Not audited/u);
-	}
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed \(input, result, field\).*Reviewed IR: Installed checks passed \(input, result, field\)/u);
 	assert.match(row(source, "Option α"), /null.*Some/u);
 	assert.match(row(source, "Except ε α"), /Ok.*Err/u);
 	assert.match(source, /new Some\(new Some\(null\)\)/u);
 	assert.match(source, /PHP `===` compares object identity/u);
-	for(const path of ["ordinary-source", "reviewed-ir"]) for(const shape of ["option", "result", "tuple"])
-		for(const position of ["callback-parameter", "callback-result"])
+	for(const profile of ["php-native", "php-wasm"]) for(const path of ["ordinary-source", "reviewed-ir"]) for(const shape of ["option", "result", "tuple"])
+		for(const position of ["parameter", "result", "field", "callback-parameter", "callback-result"])
 		{
-			const cell = cells.find(cell => cell.id === `php-native/${shape}/${path}/${position}`);
-			assert.equal(cell.stages.compilation.state, "rejected");
-			assert.notEqual(cell.stages.installedExecution.state, "passed");
+			const cell = cells.find(cell => cell.id === `${profile}/${shape}/${path}/${position}`);
+			if(position.startsWith("callback"))
+			{
+				assert.equal(cell.stages.compilation.state, "rejected");
+				assert.notEqual(cell.stages.installedExecution.state, "passed");
+			}
+			else
+			{
+				assert.equal(cell.stages.installedExecution.state, "passed");
+				assert.deepEqual(cell.stages.installedExecution.evidence, [`${profile}-compounds-installed`]);
+			}
 		}
 });
 

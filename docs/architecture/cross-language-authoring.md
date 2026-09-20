@@ -28,8 +28,9 @@ Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [NuGet packages](../evidence/dotnet-compounds-20260920.md),
 [Maven packages](../evidence/jvm-compounds-20260920.md),
 [RubyGems](../evidence/ruby-compounds-20260920.md),
-[CPAN packages](../evidence/perl-compounds-20260920.md) and
-[native Composer packages](../evidence/php-native-compounds-20260920.md) also compile options,
+[CPAN packages](../evidence/perl-compounds-20260920.md),
+[native Composer packages](../evidence/php-native-compounds-20260920.md) and
+[PHP-Wasm packages](../evidence/php-wasm-compounds-20260920.md) also compile options,
 results and binary products on both source paths. Python uses explicit `Some`,
 `Ok` and `Err` wrappers. Rust uses its standard `Option`, `Result` and tuples,
 with an outer `Result` for bridge failures. C# uses generated `Option<T>` and
@@ -40,10 +41,10 @@ Ruby uses `nil` or `Some`, `Ok` or `Err`, and two-element arrays. Branch wrapper
 are frozen `Data` classes with pattern matching; nested mutable payloads are copied.
 Perl uses `undef` or `Some`, `Ok` or `Err`, and two-element array references.
 Its mutable branch objects preserve presence even when the payload is `undef`.
-Native PHP uses `null` or `Some`, `Ok` or `Err`, and two-element arrays;
+Native PHP and PHP-Wasm use `null` or `Some`, `Ok` or `Err`, and two-element arrays;
 final readonly branch wrappers retain present `null` payloads.
 These adapters preserve Unit and nested options.
-The remaining compound adapters are native PHP, PHP-Wasm and WIT/WASI.
+WIT/WASI is the remaining profile in this compound-adapter round.
 
 ## Shared configuration and Perl cutover
 

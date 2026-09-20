@@ -11,7 +11,6 @@ import { join } from "node:path";
 import test from "node:test";
 import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
-import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { compoundReviewedIr } from "./helpers/compound-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -43,8 +42,7 @@ for(const name of ["Some", "sOmE", "Ok", "Err"]) test(`PHP rejects the compound 
 	assert.throws(() => compileCopiedPhpModel(fn), /reserved or duplicated/);
 });
 
-test("PHP compound admission leaves Zend and compound callables closed", () => {
-	for(const integerBits of [32, 64]) assert.throws(() => generateCopiedPhpZendAdapter(compoundReviewedIr(), { integerBits }), /compound values are not implemented/);
+test("PHP compound admission leaves compound callables closed", () => {
 	for(const constructor of ["option", "result", "tuple"])
 	{
 		for(const position of ["parameter", "result"])

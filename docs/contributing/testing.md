@@ -180,7 +180,26 @@ both public callers then repeat against the unchanged installation. The suite
 checks malformed values, native flags, inactive payloads, copy limits and
 recovery. CI retains `build/compounds/php-native.json`. The
 [native compound record](../evidence/php-native-compounds-20260920.md) records
-the exact installed packages. PHP-Wasm compounds remain a separate milestone.
+the exact installed packages.
+
+PHP-Wasm runs the same compound signature catalog through its 32-bit Zend adapter:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test \
+  tests/php-wasm-compounds.test.mjs \
+  tests/php-wasm-compound-contract.test.mjs \
+  tests/php-wasm-compound-zend.test.mjs
+```
+
+Both source paths install npm and Composer archives offline with empty caches,
+repeat locked installs, relocate the application, and remove producer sources
+and the handoff before execution. Node and Chromium repeat weak/strict callers
+with startup and lazy loading. Every run preserves the installed-file inventory.
+Separate synthetic Zend providers check allocation failure, malformed wire
+values, inactive payloads, native flags and bailout cleanup. These probes do not
+replace the compiled Lean acceptance library. CI retains
+`build/compounds/php-wasm.json` and `build/compounds/php-wasm-zend-faults.json`.
+See the [PHP-Wasm compound record](../evidence/php-wasm-compounds-20260920.md).
 
 The generic Zend adapter has a separate real PHP-Wasm check:
 
