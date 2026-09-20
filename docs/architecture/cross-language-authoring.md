@@ -54,7 +54,8 @@ also have installed List checks on both paths, using typed C spans and owned
 C++ vectors. [Python wheels](../evidence/python-lists-20260920.md) accept exact
 lists or tuples and return owned tuples on both paths.
 [Rust crates](../evidence/rust-lists-20260920.md) borrow slices and return owned
-vectors on both paths. Other native hosts and PHP-Wasm List adapters, aliases,
+vectors on both paths. [C# packages](../evidence/dotnet-lists-20260920.md) use
+owned typed arrays on both paths. Other native hosts and PHP-Wasm List adapters, aliases,
 arbitrary and recursive variants, and compound callables remain open.
 
 ## Shared configuration and Perl cutover

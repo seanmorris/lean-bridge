@@ -57,6 +57,7 @@ const profileManifest = Object.freeze({
 		, "cpp-callable-evidence"
 		, "dotnet-callable-contract"
 		, "dotnet-compound-contract"
+		, "dotnet-list-contract"
 		, "dotnet-callable-evidence"
 		, "jvm-callable-contract"
 		, "jvm-compound-contract"
@@ -181,6 +182,7 @@ const profileManifest = Object.freeze({
 	, native: Object.freeze([
 		"dotnet-callables"
 		, "dotnet-compounds"
+		, "dotnet-lists"
 		, "jvm-callables"
 		, "jvm-compounds"
 		, "php-callables"

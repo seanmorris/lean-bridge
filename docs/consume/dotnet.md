@@ -48,13 +48,32 @@ dotnet build Consumer.csproj --configuration Release --no-restore --disable-buil
 dotnet bin/Release/net8.0/Consumer.dll
 ```
 
-Nat and Int use `BigInteger`. Fixed-width numbers use their corresponding C# numeric types. Strings preserve Unicode and embedded NUL; invalid UTF-16 throws. Arrays use `T[]`, byte arrays use `byte[]`, and copied Lean records become sealed C# records. Calls copy nested values; changing a returned array cannot change the input. Unit arguments use `default(Unit)` and Unit results return `void`.
+Nat and Int use `BigInteger`. Fixed-width numbers use their corresponding C# numeric types. Strings preserve Unicode and embedded NUL; invalid UTF-16 throws. Arrays and Lists use `T[]`, byte arrays use `byte[]`, and copied Lean records become sealed C# records. Calls copy nested values; changing a returned array cannot change the input. Unit arguments use `default(Unit)` and Unit results return `void`.
 
 Null strings, arrays and records, negative Nat inputs, and oversized input copies throw before invoking the Lean function. Managed input copying has a 16 MiB accounting budget. Native copying shares a separate 16 MiB budget across inputs and outputs, including array slots and record storage. These budgets do not bound every managed allocation or Lean working memory. An oversized result throws after Lean returns. Generated code releases temporary input buffers and native results on failure. Native library hashes and runtime compatibility are checked automatically when loading. See the [author guide](../publish/nuget.md#build-an-ordinary-lean-project) for admitted signatures.
 
+### Lists
+
+Lean `List T` uses `T[]` in C# inputs, results and record fields. The adapter copies every element, preserves order and duplicates, and returns independent arrays. Lists can nest with arrays, records, `Option`, `Except` and binary products. List and Array remain distinct in the Lean signature and Binding IR, even though both use C# arrays.
+
+For the `Lean.Lists` acceptance package, reference its prepared NuGet archive and save this as `Program.cs`:
+
+```csharp
+using System;
+using LeanBridge.Lists;
+
+uint[] input = { 1, 2, 2, 3 };
+uint[] reversed = Api.ReverseUint32(input);
+Console.WriteLine(string.Join(", ", reversed)); // 3, 2, 2, 1
+reversed[0] = 99; // input still contains 1, 2, 2, 3
+Console.WriteLine(Api.ReverseUint32(Array.Empty<uint>()).Length); // 0
+```
+
+Pass an array, not `List<T>` or another `IEnumerable<T>` implementation. Null arrays and invalid nested payloads throw. Existing copy budgets and the 32-level type limit apply. The adapter checks native sequence lengths, missing buffers and alignment before allocating an output array or reading elements. [Installed List checks](../evidence/dotnet-lists-20260920.md) cover both source paths, compiler rejections, cleanup failures and deployments with no SDK. List callback payloads remain unsupported.
+
 ### Options, results and products
 
-Ordinary-source and reviewed NuGet packages support `Option`, `Except` and binary products, including mixtures with arrays and copied records. The package generates readonly C# value types `Option<T>` and `Result<T, E>`; products use native `(A, B)` tuples. Nested products retain their binary structure.
+Ordinary-source and reviewed NuGet packages support `Option`, `Except` and binary products, including mixtures with arrays, Lists and copied records. The package generates readonly C# value types `Option<T>` and `Result<T, E>`; products use native `(A, B)` tuples. Nested products retain their binary structure.
 
 For the `Lean.Compounds` acceptance package, use its prepared NuGet archive as the project dependency and save this as `Program.cs`:
 
@@ -236,7 +255,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Func<...> / Action<...>` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous Func/Action delegates borrow the call. Exceptions preserve their original object and stack after cleanup. Async void delegates reject before execution. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `T[]` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Typed C# arrays preserve empty Lists, order, duplicates and nesting. Returned arrays and mutable payloads own independent storage. Null arrays and invalid payloads reject; native lengths, missing buffers and alignment are checked before output allocation or reads. Scratch and native output cleanup runs on conversion failure. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `System.Text.Rune` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Rune preserves supplementary characters; System.Char alone cannot. System.Text.Rune stores one Unicode scalar, including NUL and supplementary code points. Surrogates are rejected by its constructor. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `ulong` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. ulong for the 64-bit compiled Lean target; all bits are preserved. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. long for the 64-bit compiled Lean target; signed endpoints are preserved. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |

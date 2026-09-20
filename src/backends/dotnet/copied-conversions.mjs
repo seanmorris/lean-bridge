@@ -4,6 +4,10 @@
  * @file
  */
 
+const nativeAlignment = copy => copy.record || copy.compound ? Math.max(1, ...copy.fields.map(field => nativeAlignment(field.type)))
+	: copy.aggregate ? 8 : ["unit", "bool", "uint8", "int8"].includes(copy.scalarName) ? 1
+		: ["uint16", "int16"].includes(copy.scalarName) ? 2 : ["char", "uint32", "int32", "float32"].includes(copy.scalarName) ? 4 : 8;
+
 /**
  * Render all unmanaged C structs, including nested and empty records.
  *
@@ -62,7 +66,11 @@ export const copiedConversions = model => model.surface.copies.map(copy => {
         var data = scope.Allocate(value.Length, sizeof(${et}), Math.Max(sizeof(${et}), IntPtr.Size));
         for (var index = 0; index < value.Length; index++) ((${et}*)data)[index] = To${e.index}(value[index]${e.aggregate ? ", scope" : ""});
         return new ${native} { Data = data, Length = (nuint)value.Length };`;
-		output = `var result = global::System.GC.AllocateUninitializedArray<${model.publicType(e)}>(checked((int)value.Length));
+		output = `if (value.Length > (nuint)((16 * 1024 * 1024) / Math.Max(sizeof(${et}), IntPtr.Size)))
+            throw new ArgumentException("Lean Bridge native sequence exceeds the 16 MiB copy limit");
+        if (value.Length != 0 && (value.Data == 0 || (nuint)value.Data % ${nativeAlignment(e)} != 0))
+            throw new InvalidOperationException("Invalid native sequence buffer");
+        var result = global::System.GC.AllocateUninitializedArray<${model.publicType(e)}>(checked((int)value.Length));
         for (var index = 0; index < result.Length; index++) result[index] = From${e.index}(((${et}*)value.Data)[index]);
         return result;`;
 	} else switch(copy.scalarName)

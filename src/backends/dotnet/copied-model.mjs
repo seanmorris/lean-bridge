@@ -16,7 +16,7 @@ const scalar = { char: "global::System.Text.Rune", unit: "Unit", bool: "bool", u
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedDotnetModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true }), componentName = pascal(surface.prefix);
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true }), componentName = pascal(surface.prefix);
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-dotnet-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });

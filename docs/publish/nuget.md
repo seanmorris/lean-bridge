@@ -1,6 +1,6 @@
 # Build and publish C# / .NET packages
 
-Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays, acyclic copied records, options, results, binary products, and synchronous primitive callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays and Lists, acyclic copied records, options, results, binary products, and synchronous primitive callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -43,6 +43,12 @@ NuGet archive assembly consumes verified compiled artifacts and does not invoke 
 Both ordinary-source and reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain the admitted copied primitives, arrays and acyclic records. Consumers use generated readonly `Option<T>` and `Result<T, E>` value types and native C# `(A, B)` tuples. Default options mean None; default results have no branch and reject. Lean domain errors return `Err` values, while bridge failures throw exceptions.
 
 Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract). Both paths receive fresh Lean compiler checks before generating the C# adapter. See the [consumer example](../consume/dotnet.md#options-results-and-products) and [installed NuGet evidence](../evidence/dotnet-compounds-20260920.md). Compound signatures can be combined with C, C++, Python and Rust; every selected target must admit the complete API.
+
+## Export Lists
+
+Both ordinary-source and reviewed-IR builds accept `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested Lists and arrays, copied records, `Option`, `Except` and binary products. Select concrete Lean exports as usual; no List-specific configuration is required.
+
+C# consumers pass and receive typed `T[]` values. Copies preserve empty Lists, order, duplicates and every nesting level. Returned arrays have independent storage. The existing 16 MiB accounting budgets and 32-level type limit apply. List callback payloads remain unsupported. See the [consumer example](../consume/dotnet.md#lists) and [installed NuGet List evidence](../evidence/dotnet-lists-20260920.md).
 
 ## Export callbacks and returned functions
 

@@ -508,6 +508,19 @@ of the compiler-produced C# projection tests conversion failures and malformed
 native flags without changing the installed assembly. CI retains
 `build/compounds/dotnet.json`.
 
+Run the copied .NET List checks on both source paths:
+
+```sh
+LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs
+node --test tests/dotnet-list-contract.test.mjs
+```
+
+The [.NET List suite](../evidence/dotnet-lists-20260920.md) checks typed arrays
+and nested values, rejects twelve invalid C# consumers, injects conversion
+failures, and checks malformed native sequence buffers. It reruns from a
+deployment with no SDK, source package or feed. CI retains
+`build/lists/dotnet.json`.
+
 Run the installed Java and Kotlin compound checks with JDK 22, Kotlin 2.2 and
 Maven 3.9.11, using the same tool paths as the JVM corpus:
 

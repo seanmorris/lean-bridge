@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.36.0",
+  "contractVersion": "0.37.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,193 @@
   ],
   "evidence": [
     {
+      "id": "dotnet-lists-installed",
+      "kind": "installed",
+      "revision": "7b58c469b5f2b173503db74eccced3be136e8857",
+      "command": "LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs; node --test tests/dotnet-list-contract.test.mjs",
+      "scope": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
+        },
+        {
+          "path": "docs/evidence/dotnet-lists-20260920.json",
+          "sha256": "0fd7ecb97d6d82ce0c2616658f0e0f2e8df04714d7613fcf0d04f2071a247253"
+        },
+        {
+          "path": "docs/evidence/dotnet-lists-20260920.md",
+          "sha256": "3fc10f50563aa2005926a82dd83903ae3a567f4660a4663d8fec6fec7fb7d254"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
+        },
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "fec3a0f5a025d93c4e4dc9ac3d2e1fc68aee5995728f2c88b086a6f3e9d4b048"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "96ad0c1eb9c062bbf0164eb03f3fab7a9029bde75cd006f33be39970a63c0036"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "c471836195e5cd29915e94b6023659b276b947b57715129a9485b3c1969e7974"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "7ab0d6c15caf440db88af321359224526566c942f08a6e634947b6a7f507ed50"
+        },
+        {
+          "path": "src/backends/dotnet/callables.mjs",
+          "sha256": "d26caf5de38cdb4dcdcee40d8a961e2d59c0d244fb06158bcfbe1c6d1145f32b"
+        },
+        {
+          "path": "src/backends/dotnet/copied-conversions.mjs",
+          "sha256": "5b1194197eb57b0ae715740334416c9c2cdc90a72569ab4999fdca7fe83b67f6"
+        },
+        {
+          "path": "src/backends/dotnet/copied-model.mjs",
+          "sha256": "593ccefdc81734601d18bdad40ce941f18273fee2f3c7606cb4ffd32b6315c6e"
+        },
+        {
+          "path": "src/backends/dotnet/copied-values.mjs",
+          "sha256": "f16458e47b9dd13f4373aebbdab37ab12dd975187a131fb7b4cef89b289d0d5e"
+        },
+        {
+          "path": "src/backends/dotnet/generate.mjs",
+          "sha256": "4a270f1cee05936996eed48b57faa57405efaae103348c5e4f6ba9604ebbb73b"
+        },
+        {
+          "path": "src/backends/managed/package-audit.mjs",
+          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
+        },
+        {
+          "path": "src/build/native-dotnet-artifacts.mjs",
+          "sha256": "7a51ec5953cf43473bd8110401c922a764ee854af39c4bba09a82434bfafa640"
+        },
+        {
+          "path": "src/build/native-dotnet-projection.mjs",
+          "sha256": "0251e2977aa7fabae75b346d73863119057aa82c7640a32780db756c62a22741"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
+        },
+        {
+          "path": "src/release/native-nuget.mjs",
+          "sha256": "855e9b30a71d53716000e15c297b589294ee9ec9c7b421c325db883c9c565702"
+        },
+        {
+          "path": "tests/dotnet-list-contract.test.mjs",
+          "sha256": "988abeecbe0ee90cf7c9d7628daadc4fd5bced41786fb80e144ad41559ef52ba"
+        },
+        {
+          "path": "tests/dotnet-lists.test.mjs",
+          "sha256": "ead19fb87871e4d69bc52626af815a5be3d8b1ac0310794a862913a42a8758c4"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/dotnet-faults.cs",
+          "sha256": "f1462e848aea7e30cfa48165119d65f993a7069d89844185b6045e40ba6043b0"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/dotnet.cs",
+          "sha256": "835a6b4dec4428ed4b27729104d0dbb99412f7f1abaf6579a0516f195c432fa1"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/Lists.lean",
+          "sha256": "410007916439f78046c9fcb45672ceab64b8020d66e19f940dd58e787888ee38"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/lakefile.toml",
+          "sha256": "15b55c2569ab80e5d5cdde5e50f55800b06a80dba48bcebc6a664bbbcfec80d4"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/package.json",
+          "sha256": "6e15912b4c0824b727f128749fcbd80f2cf45b97727236ee46a85dc6ed33f657"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/dotnet-copied-install.mjs",
+          "sha256": "ba2081792d64254a49a26bd78958a72df90bdd10eff8e945a2969b5dd285d936"
+        },
+        {
+          "path": "tests/helpers/dotnet-list-faults.mjs",
+          "sha256": "55fb90317adb6abcea295ff4e222b83292248174a12babe99c37340b5198b80c"
+        },
+        {
+          "path": "tests/helpers/dotnet-list-install.mjs",
+          "sha256": "8638483032e87a25f1509ee0b2fdba44ad81aa12add437ebbaa47c5e81187583"
+        },
+        {
+          "path": "tests/helpers/list-fixture.mjs",
+          "sha256": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "dotnet/ordinary-source/archives/Lean.Lists.1.0.0.nupkg",
+          "sha256": "787e6221db1bb9f695984c8fbbc858e3e04a13aa0648a16ac5aa403afc6282a3"
+        },
+        {
+          "path": "dotnet/reviewed-ir/archives/Lean.Lists.1.0.0.nupkg",
+          "sha256": "047c353051089bef649c1416a1d8144d62afc7134e6f89d2e444fb14dd7e3ae5"
+        }
+      ]
+    },
+    {
       "id": "rust-lists-installed",
       "kind": "installed",
       "revision": "1e31de3957f33e0a6d63eb50b72210895a7f39ff",
@@ -237,7 +424,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -249,7 +436,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -412,7 +599,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -424,7 +611,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -567,7 +754,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -579,7 +766,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -670,7 +857,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -702,7 +889,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -809,7 +996,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -825,7 +1012,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1028,7 +1215,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -1044,7 +1231,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1116,7 +1303,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1128,7 +1315,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -1243,7 +1430,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1307,7 +1494,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -1454,7 +1641,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -1470,7 +1657,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1542,7 +1729,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1554,7 +1741,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -1633,7 +1820,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -1649,7 +1836,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1721,7 +1908,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1741,7 +1928,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -1840,7 +2027,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -1856,7 +2043,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1904,15 +2091,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "c8c4f64dea162deb1dae7dd6da9ecf4f131a4cbb9a58249c25a14f32f5523461"
+          "sha256": "5b1194197eb57b0ae715740334416c9c2cdc90a72569ab4999fdca7fe83b67f6"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "c0dd2843859aff4a6e8e79c2f1e63e25f1661fd884d7272b49244067a508db55"
+          "sha256": "593ccefdc81734601d18bdad40ce941f18273fee2f3c7606cb4ffd32b6315c6e"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "76991df785495b29f503ea83c3c8100532b80efaa615e13fcb5c5802610f3480"
+          "sha256": "f16458e47b9dd13f4373aebbdab37ab12dd975187a131fb7b4cef89b289d0d5e"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -1924,7 +2111,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -1944,7 +2131,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -2099,7 +2286,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -2111,7 +2298,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -2270,7 +2457,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -2282,7 +2469,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -2421,7 +2608,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -2433,7 +2620,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -2524,7 +2711,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -2727,7 +2914,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -2890,7 +3077,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -2930,7 +3117,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "01afba2d0937c33e2052285379c9febad604319625a5de7c3e5c8fef8a6e82be"
+          "sha256": "e143cf5738950483d4ed999be71a9389cb1721618e7a21f92b78ea816d24abb1"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -2938,7 +3125,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3161,11 +3348,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -3280,11 +3467,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -3300,11 +3487,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -3419,7 +3606,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -3427,7 +3614,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -3455,7 +3642,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -3610,11 +3797,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-php-artifacts.mjs",
@@ -3658,7 +3845,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -3666,7 +3853,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -3694,7 +3881,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -3785,11 +3972,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -3849,11 +4036,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -3877,7 +4064,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -3992,15 +4179,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "c0dd2843859aff4a6e8e79c2f1e63e25f1661fd884d7272b49244067a508db55"
+          "sha256": "593ccefdc81734601d18bdad40ce941f18273fee2f3c7606cb4ffd32b6315c6e"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "76991df785495b29f503ea83c3c8100532b80efaa615e13fcb5c5802610f3480"
+          "sha256": "f16458e47b9dd13f4373aebbdab37ab12dd975187a131fb7b4cef89b289d0d5e"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "c8c4f64dea162deb1dae7dd6da9ecf4f131a4cbb9a58249c25a14f32f5523461"
+          "sha256": "5b1194197eb57b0ae715740334416c9c2cdc90a72569ab4999fdca7fe83b67f6"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -4012,11 +4199,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
@@ -4072,11 +4259,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -4096,7 +4283,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -4187,11 +4374,11 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -4271,15 +4458,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "flake.nix",
@@ -4402,11 +4589,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -4482,15 +4669,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -4601,11 +4788,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-rust-projection.mjs",
@@ -4677,15 +4864,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -4748,11 +4935,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -4808,15 +4995,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -4879,11 +5066,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -4939,15 +5126,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -5006,11 +5193,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -5058,15 +5245,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -5169,15 +5356,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "d4c171ba50a9fa4d2354b017462b9ac3fd9657dad2038efdc1cf2a3d984ce08c"
+          "sha256": "d5f89a05eec615ca91927889c9f2f8ef5a9fcc5fb90544eac4190525bd128bbd"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -5268,7 +5455,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -5308,7 +5495,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "01afba2d0937c33e2052285379c9febad604319625a5de7c3e5c8fef8a6e82be"
+          "sha256": "e143cf5738950483d4ed999be71a9389cb1721618e7a21f92b78ea816d24abb1"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -5316,7 +5503,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -5356,11 +5543,11 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "c8c4f64dea162deb1dae7dd6da9ecf4f131a4cbb9a58249c25a14f32f5523461"
+          "sha256": "5b1194197eb57b0ae715740334416c9c2cdc90a72569ab4999fdca7fe83b67f6"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "c0dd2843859aff4a6e8e79c2f1e63e25f1661fd884d7272b49244067a508db55"
+          "sha256": "593ccefdc81734601d18bdad40ce941f18273fee2f3c7606cb4ffd32b6315c6e"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
@@ -5468,7 +5655,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "d4c171ba50a9fa4d2354b017462b9ac3fd9657dad2038efdc1cf2a3d984ce08c"
+          "sha256": "d5f89a05eec615ca91927889c9f2f8ef5a9fcc5fb90544eac4190525bd128bbd"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -5572,7 +5759,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "b95067c3312ed28b4fac929db94546308190b561f501d52d6c8519686c67ea22"
+          "sha256": "148ba9c1c8f727297b6b4716fe36e221df2dacd91a44eb215bba09efea9c6f84"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -5647,7 +5834,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -5659,7 +5846,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -5679,11 +5866,11 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "c8c4f64dea162deb1dae7dd6da9ecf4f131a4cbb9a58249c25a14f32f5523461"
+          "sha256": "5b1194197eb57b0ae715740334416c9c2cdc90a72569ab4999fdca7fe83b67f6"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "c0dd2843859aff4a6e8e79c2f1e63e25f1661fd884d7272b49244067a508db55"
+          "sha256": "593ccefdc81734601d18bdad40ce941f18273fee2f3c7606cb4ffd32b6315c6e"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
@@ -6021,11 +6208,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -6168,11 +6355,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -6315,11 +6502,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -6418,11 +6605,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -6465,7 +6652,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9d07448e8d93d2f716de0ce406da5ddc4585ae3fa28e26b2aa5653c2e4eed5d6"
+          "sha256": "c2af9647a899d959b341a113df29ca79f00ec4223576e035fd9f41c6783d4043"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -6481,7 +6668,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "b16c4e857d629f3927bdadbbd755e3125bbcbce1ab498cc289abf5a647ac20f5"
+          "sha256": "1636ed34a8838ad82d5bc2f534199be6b40aad92c92768226b9d6d6ee64d41d6"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6545,7 +6732,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -6553,7 +6740,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -6680,11 +6867,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -6775,11 +6962,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -6870,11 +7057,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -6953,15 +7140,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "c0dd2843859aff4a6e8e79c2f1e63e25f1661fd884d7272b49244067a508db55"
+          "sha256": "593ccefdc81734601d18bdad40ce941f18273fee2f3c7606cb4ffd32b6315c6e"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "c8c4f64dea162deb1dae7dd6da9ecf4f131a4cbb9a58249c25a14f32f5523461"
+          "sha256": "5b1194197eb57b0ae715740334416c9c2cdc90a72569ab4999fdca7fe83b67f6"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "76991df785495b29f503ea83c3c8100532b80efaa615e13fcb5c5802610f3480"
+          "sha256": "f16458e47b9dd13f4373aebbdab37ab12dd975187a131fb7b4cef89b289d0d5e"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -6973,11 +7160,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -7072,7 +7259,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -7088,7 +7275,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -7163,11 +7350,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "99a89cac7a6d22ddbd050403cacd35a7cbd62e2e1c06cc0b8741713fdb2cdb28"
+          "sha256": "37a4f3bf5d12dedd6f20f2a6adcf92a9cef2d7d68d95c8c3b4de12f409179f85"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -7390,7 +7577,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "2b06b833cdb4067708d881d8dfdb7eb15b89a1a9c1916a0d65740acdfbf0ca14"
+          "sha256": "163863f54035e66747c3b2aff59899f9674cdc41ca5bb61cc56e1a1b3407184a"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -7902,6 +8089,142 @@
     }
   ],
   "observations": [
+    {
+      "id": "dotnet-lists-ordinary-source",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state.",
+      "hostTypes": {
+        "list": {
+          "parameter": "T[]",
+          "result": "T[]",
+          "field": "T[]"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        }
+      },
+      "limitations": [
+        ".NET 8 on Linux x86-64 with glibc; other runtimes remain separate work.",
+        "Managed input conversions and native copies each enforce a 16 MiB accounting budget; native sequence output guards limit each allocation. These checks do not bound every managed allocation or Lean working memory. Types are limited to 32 levels.",
+        "List callback payloads remain unsupported. Copied values cannot contain callbacks or resources."
+      ],
+      "conversionNotes": {
+        "list": "Typed C# arrays preserve empty Lists, order, duplicates and nesting. Returned arrays and mutable payloads own independent storage. Null arrays and invalid payloads reject; native lengths, missing buffers and alignment are checked before output allocation or reads. Scratch and native output cleanup runs on conversion failure."
+      }
+    },
+    {
+      "id": "dotnet-lists-reviewed-ir",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state.",
+      "hostTypes": {
+        "list": {
+          "parameter": "T[]",
+          "result": "T[]",
+          "field": "T[]"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-lists-installed"
+          ],
+          "note": "Installed C# NuGet packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE special values, independent results and copy-budget recovery. Both ordinary-source and independently reviewed packages install offline after producer removal. Each path passes 99180 assertions, twelve compiler rejections, 214 injected conversion/allocation failures, sixteen partial-input failures and nine malformed-output checks. Relocated deployments repeat all assertions twice without SDK, sources, feed or caches; four concurrent callers retain independent state."
+        }
+      },
+      "limitations": [
+        ".NET 8 on Linux x86-64 with glibc; other runtimes remain separate work.",
+        "Managed input conversions and native copies each enforce a 16 MiB accounting budget; native sequence output guards limit each allocation. These checks do not bound every managed allocation or Lean working memory. Types are limited to 32 levels.",
+        "List callback payloads remain unsupported. Copied values cannot contain callbacks or resources."
+      ],
+      "conversionNotes": {
+        "list": "Typed C# arrays preserve empty Lists, order, duplicates and nesting. Returned arrays and mutable payloads own independent storage. Null arrays and invalid payloads reject; native lengths, missing buffers and alignment are checked before output allocation or reads. Scratch and native output cleanup runs on conversion failure."
+      }
+    },
     {
       "id": "rust-lists-ordinary-source",
       "profiles": [
