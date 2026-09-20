@@ -1,6 +1,6 @@
 # Build and publish C# / .NET packages
 
-Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays, acyclic copied records, and synchronous primitive callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays, acyclic copied records, options, results, binary products, and synchronous primitive callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,11 +32,17 @@ lean-bridge build --project /absolute/path/to/aurora --target nuget \
 
 The result includes `archives/Acme.Aurora.2.0.0-rc.1.nupkg` and `native-release.json`, which records the exact archive digest. The archive contains the compiled .NET 8 assembly, native adapter, Lean component, shared runtime, generated sources, compiler evidence and dependency license notices. Its README identifies the generated namespace and API. A different NuGet package ID does not rename the Lean-derived C# namespace.
 
-The native profile accepts concrete functions with copied values and synchronous primitive callbacks or returned closures. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. Optional values, variants, resources, compound callables and asynchronous effects remain outside this ordinary NuGet profile.
+The native profile accepts concrete functions with copied values and synchronous primitive callbacks or returned closures. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. Variants, resources, compound callables and asynchronous effects remain outside this ordinary NuGet profile.
 
 Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
 
 NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. Verify the release with `lean-bridge verify --receipt /absolute/path/to/aurora-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export options, results and products
+
+Both ordinary-source and reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain the admitted copied primitives, arrays and acyclic records. Consumers use generated readonly `Option<T>` and `Result<T, E>` value types and native C# `(A, B)` tuples. Default options mean None; default results have no branch and reject. Lean domain errors return `Err` values, while bridge failures throw exceptions.
+
+Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract). Both paths receive fresh Lean compiler checks before generating the C# adapter. See the [consumer example](../consume/dotnet.md#options-results-and-products) and [installed NuGet evidence](../evidence/dotnet-compounds-20260920.md). Compound signatures can be combined with C, C++, Python and Rust; every selected target must admit the complete API.
 
 ## Export callbacks and returned functions
 

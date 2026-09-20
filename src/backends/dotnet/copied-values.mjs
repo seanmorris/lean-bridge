@@ -5,7 +5,7 @@
  */
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { compileCopiedDotnetModel } from "./copied-model.mjs";
-import { copiedConversions, copiedNativeTypes, copiedScope } from "./copied-conversions.mjs";
+import { copiedConversions, copiedNativeTypes, copiedScope, copiedCompoundTypes } from "./copied-conversions.mjs";
 import { dotnetValue, dotnetResult, dotnetNativeCall, dotnetCallableTypes, dotnetCallableState, dotnetCallableSupport, dotnetCallableImports, dotnetClosurePublic } from "./callables.mjs";
 
 const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(dotnetValue(model, site.type))} @${fn.parameters[index].name}`).join(", ");
@@ -130,6 +130,7 @@ export const renderCopiedDotnetPackage = (model, evidence = null) => {
 
 /// <summary>The sole runtime value of Lean Unit.</summary>
 public readonly record struct Unit;
+${model.surface.copies.some(copy => copy.compound) ? copiedCompoundTypes : ""}
 /// <summary>A failure reported by a compiled Lean call.</summary>
 public sealed class LeanBridgeException : global::System.Exception
 {
@@ -165,6 +166,7 @@ ${model.surface.functions.map((fn, index) => `    public static ${resultType(mod
 		, "NuGet.Config": '<configuration><packageSources><clear /></packageSources></configuration>\n'
 		, "README.md": `# ${model.assembly}\n\nGenerated C# API: ${model.namespace}.Api. Nat and Int use System.Numerics.BigInteger; arrays and byte arrays own copied managed storage. Strings use strict UTF-8 and preserve embedded NUL. Unit parameters use default(Unit); Unit results return void. Native conversions share a 16 MiB per-call copy budget and accept nested arrays/acyclic records up to 32 types deep. Null records, strings and arrays, negative Nat values and invalid UTF-16 fail before invoking Lean. Callbacks use typed Func/Action delegates and borrow the synchronous call. Async delegates are rejected; callback arguments are independent managed copies. Callback exceptions retain identity and their original stack after native cleanup. Returned LeanClosure<TDelegate> values expose Invoke and IsClosed; use using/Dispose to release them. Invocation requires the creating thread; disposal can run on another thread and defers until active invocation finishes. Finalization is a fallback. Retaining Invoke retains the same lease, and all aliases reject after disposal. Calls after fork require a fresh process. The compiled NuGet release includes its runtime and checks native library hashes when loading.\n`
 	};
+	files["README.md"] += "\nLean Option uses Option<T>.None or Option<T>.Some(value); default(Option<T>) is None. Except E T uses Result<T, E>.Ok(value) or .Err(error); default(Result<T, E>) is invalid. Branches expose IsSome/Value or IsOk/IsError/Value/Error, and accessing an inactive payload throws. Domain errors return Err; bridge failures throw exceptions. Binary products use C# (A, B) tuples and retain their nesting. These values can nest with arrays and copied records. Active null reference payloads reject; a missing option never reads its inactive payload. Returned arrays own independent storage. Compound callable values and resource-containing copies remain unsupported.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "dotnet-copied-v1", target: "dotnet", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, assembly: model.assembly, files: Object.keys(files), publicFiles, internalFiles, packageFiles, supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "owned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery." }, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);
 };

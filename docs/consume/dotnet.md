@@ -50,7 +50,35 @@ dotnet bin/Release/net8.0/Consumer.dll
 
 Nat and Int use `BigInteger`. Fixed-width numbers use their corresponding C# numeric types. Strings preserve Unicode and embedded NUL; invalid UTF-16 throws. Arrays use `T[]`, byte arrays use `byte[]`, and copied Lean records become sealed C# records. Calls copy nested values; changing a returned array cannot change the input. Unit arguments use `default(Unit)` and Unit results return `void`.
 
-Null strings, arrays and records, negative Nat inputs, and oversized input copies throw before invoking the Lean function. Input and output share a 16 MiB conversion budget, including array slots and record storage. An oversized result throws after Lean returns. Generated code releases temporary input buffers and native results on failure. Native library hashes and runtime compatibility are checked automatically when loading. See the [author guide](../publish/nuget.md#build-an-ordinary-lean-project) for admitted signatures.
+Null strings, arrays and records, negative Nat inputs, and oversized input copies throw before invoking the Lean function. Managed input copying has a 16 MiB accounting budget. Native copying shares a separate 16 MiB budget across inputs and outputs, including array slots and record storage. These budgets do not bound every managed allocation or Lean working memory. An oversized result throws after Lean returns. Generated code releases temporary input buffers and native results on failure. Native library hashes and runtime compatibility are checked automatically when loading. See the [author guide](../publish/nuget.md#build-an-ordinary-lean-project) for admitted signatures.
+
+### Options, results and products
+
+Ordinary-source and reviewed NuGet packages support `Option`, `Except` and binary products, including mixtures with arrays and copied records. The package generates readonly C# value types `Option<T>` and `Result<T, E>`; products use native `(A, B)` tuples. Nested products retain their binary structure.
+
+For the `Lean.Compounds` acceptance package, use its prepared NuGet archive as the project dependency and save this as `Program.cs`:
+
+```csharp
+using System;
+using LeanBridge.Compounds;
+
+var present = Api.OptionUint32(Option<uint>.Some(42));
+Console.WriteLine(present.Value); // 42
+
+var nested = Option<Option<Unit>>.Some(Option<Unit>.None);
+Console.WriteLine(Api.Classify(nested)); // 1, distinct from outer None
+Console.WriteLine(Api.TupleUint32((1, 2))); // (2, 1)
+
+var result = Api.Duplicate(Option<byte[]>.None);
+if (result.IsError)
+    Console.WriteLine(result.Error); // empty
+```
+
+`Option<T>.None` and `default(Option<T>)` mean absence. `Some(default(Unit))` means a present Unit; `Some(Option<U>.None)` preserves the inner absence. Read `Value` only when `IsSome` is true. A null reference payload inside `Some` still fails the payload's conversion rules.
+
+Lean `Except E T` uses `Result<T, E>.Ok(value)` or `.Err(error)`. Check `IsOk` or `IsError`, then read `Value` or `Error`. Domain errors return `Err`; load and conversion failures throw exceptions. An inactive payload property throws `InvalidOperationException`. `default(Result<T, E>)` has no branch and is rejected at the boundary. The wrappers support value equality and safe `ToString()` calls in every state; contained arrays retain C# reference equality.
+
+Calls copy array contents even when an option, result or tuple contains them. Returned arrays do not alias the input or each other. The existing 16 MiB conversion budgets and 32-level type limit also apply to compounds. [Compound acceptance](../evidence/dotnet-compounds-20260920.md) covers installed packages, compiler rejections, runtime-only deployment and separately instrumented cleanup checks. Compound callbacks and resource-containing copies remain unsupported.
 
 ### Callbacks and returned Lean functions
 
@@ -200,9 +228,9 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Strict Unicode conversion preserves embedded NUL. Invalid UTF-16 input throws; null is not an empty string. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `byte[]` (input, result, field, callback input, callback result); `ReadOnlyMemory<byte>` (field) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Copied byte arrays with independent returned storage. Null is rejected. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
 | `Array α` | `T[]` (input, result, field); `ReadOnlyMemory<uint>` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Recursive copied T[] values, including jagged arrays and arrays of records. Input scratch and deep native outputs are released on failure. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Option α` | `Option<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Generated readonly record struct with None and Some factories, IsSome/IsNone and guarded Value. `default(Option<T>)` is None; Some(None) and Some(Some(Unit)) remain distinct. Active null reference payloads reject. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `Result<T, E>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` uses `Result<T, E>.Ok(value)` or `.Err(error)`. IsOk/IsError select guarded Value/Error. `default(Result<T, E>)` has no branch and rejects at the boundary. Domain errors return Err; bridge failures throw exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `(A, B) (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed C# tuple elements, preserving binary nesting. Inputs are copied; returned arrays own independent storage. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated sealed record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated sealed C# records preserve declared fields through compiler-owned constructors and accessors. Arrays inside returned records are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |

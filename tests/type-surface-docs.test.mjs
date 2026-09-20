@@ -192,6 +192,17 @@ test("Rust compound docs distinguish domain results from bridge errors", async (
 	assert.match(source, /Some\(Some\(\(\)\)\)/u);
 });
 
+test("C# compound docs preserve nested options and separate domain errors from bridge failures", async () => {
+	const source = await readFile("docs/consume/dotnet.md", "utf8");
+	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
+		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "Option α"), /`Option<T>`/u);
+	assert.match(row(source, "Except ε α"), /`Result<T, E>`/u);
+	assert.match(source, /IsSome/);
+	assert.match(source, /default\(Result<T, E>\)/);
+	assert.match(source, /Option<Option<Unit>>\.Some\(Option<Unit>\.None\)/);
+});
+
 test("recorded result and arbitrary-integer rejections exercise real generator guards", () => {
 	const apply = constructor => ({ kind: "apply", constructor, arguments: [{ kind: "primitive", name: "uint32" }, { kind: "primitive", name: "string" }] });
 	for(const [generate, type, code] of [

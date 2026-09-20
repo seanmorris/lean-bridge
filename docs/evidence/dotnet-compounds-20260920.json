@@ -1,0 +1,1612 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "1528a239bb518d33d4b24e36aa50edc073f0184e",
+  "compiler": ".NET SDK 8.0.424",
+  "signatures": [
+    {
+      "name": "Compounds.classify",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": "uint32"
+    },
+    {
+      "name": "Compounds.deep",
+      "parameters": [
+        {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "option": {
+                                                          "result": [
+                                                            {
+                                                              "tuple": [
+                                                                "uint32",
+                                                                "unit"
+                                                              ]
+                                                            },
+                                                            "string"
+                                                          ]
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": {
+            "option": {
+              "option": {
+                "option": {
+                  "option": {
+                    "option": {
+                      "option": {
+                        "option": {
+                          "option": {
+                            "option": {
+                              "option": {
+                                "option": {
+                                  "option": {
+                                    "option": {
+                                      "option": {
+                                        "option": {
+                                          "option": {
+                                            "option": {
+                                              "option": {
+                                                "option": {
+                                                  "option": {
+                                                    "option": {
+                                                      "option": {
+                                                        "result": [
+                                                          {
+                                                            "tuple": [
+                                                              "uint32",
+                                                              "unit"
+                                                            ]
+                                                          },
+                                                          "string"
+                                                        ]
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Compounds.duplicate",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": {
+              "array": "bytes"
+            }
+          },
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.flip",
+      "parameters": [
+        {
+          "result": [
+            {
+              "tuple": [
+                "uint32",
+                {
+                  "option": "unit"
+                }
+              ]
+            },
+            {
+              "option": "string"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "option": "string"
+          },
+          {
+            "tuple": [
+              "uint32",
+              {
+                "option": "unit"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Compounds.make",
+      "parameters": [],
+      "result": {
+        "option": {
+          "result": [
+            {
+              "tuple": [
+                "uint64",
+                "unit"
+              ]
+            },
+            "string"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Compounds.next",
+      "parameters": [
+        {
+          "option": {
+            "option": "unit"
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "option": "unit"
+        }
+      }
+    },
+    {
+      "name": "Compounds.option_bool",
+      "parameters": [
+        {
+          "option": "bool"
+        }
+      ],
+      "result": {
+        "option": "bool"
+      }
+    },
+    {
+      "name": "Compounds.option_bytes",
+      "parameters": [
+        {
+          "option": "bytes"
+        }
+      ],
+      "result": {
+        "option": "bytes"
+      }
+    },
+    {
+      "name": "Compounds.option_char",
+      "parameters": [
+        {
+          "option": "char"
+        }
+      ],
+      "result": {
+        "option": "char"
+      }
+    },
+    {
+      "name": "Compounds.option_float32",
+      "parameters": [
+        {
+          "option": "float32"
+        }
+      ],
+      "result": {
+        "option": "float32"
+      }
+    },
+    {
+      "name": "Compounds.option_float64",
+      "parameters": [
+        {
+          "option": "float64"
+        }
+      ],
+      "result": {
+        "option": "float64"
+      }
+    },
+    {
+      "name": "Compounds.option_int",
+      "parameters": [
+        {
+          "option": "int"
+        }
+      ],
+      "result": {
+        "option": "int"
+      }
+    },
+    {
+      "name": "Compounds.option_int16",
+      "parameters": [
+        {
+          "option": "int16"
+        }
+      ],
+      "result": {
+        "option": "int16"
+      }
+    },
+    {
+      "name": "Compounds.option_int32",
+      "parameters": [
+        {
+          "option": "int32"
+        }
+      ],
+      "result": {
+        "option": "int32"
+      }
+    },
+    {
+      "name": "Compounds.option_int64",
+      "parameters": [
+        {
+          "option": "int64"
+        }
+      ],
+      "result": {
+        "option": "int64"
+      }
+    },
+    {
+      "name": "Compounds.option_int8",
+      "parameters": [
+        {
+          "option": "int8"
+        }
+      ],
+      "result": {
+        "option": "int8"
+      }
+    },
+    {
+      "name": "Compounds.option_isize",
+      "parameters": [
+        {
+          "option": "isize"
+        }
+      ],
+      "result": {
+        "option": "isize"
+      }
+    },
+    {
+      "name": "Compounds.option_nat",
+      "parameters": [
+        {
+          "option": "nat"
+        }
+      ],
+      "result": {
+        "option": "nat"
+      }
+    },
+    {
+      "name": "Compounds.option_string",
+      "parameters": [
+        {
+          "option": "string"
+        }
+      ],
+      "result": {
+        "option": "string"
+      }
+    },
+    {
+      "name": "Compounds.option_uint16",
+      "parameters": [
+        {
+          "option": "uint16"
+        }
+      ],
+      "result": {
+        "option": "uint16"
+      }
+    },
+    {
+      "name": "Compounds.option_uint32",
+      "parameters": [
+        {
+          "option": "uint32"
+        }
+      ],
+      "result": {
+        "option": "uint32"
+      }
+    },
+    {
+      "name": "Compounds.option_uint64",
+      "parameters": [
+        {
+          "option": "uint64"
+        }
+      ],
+      "result": {
+        "option": "uint64"
+      }
+    },
+    {
+      "name": "Compounds.option_uint8",
+      "parameters": [
+        {
+          "option": "uint8"
+        }
+      ],
+      "result": {
+        "option": "uint8"
+      }
+    },
+    {
+      "name": "Compounds.option_unit",
+      "parameters": [
+        {
+          "option": "unit"
+        }
+      ],
+      "result": {
+        "option": "unit"
+      }
+    },
+    {
+      "name": "Compounds.option_usize",
+      "parameters": [
+        {
+          "option": "usize"
+        }
+      ],
+      "result": {
+        "option": "usize"
+      }
+    },
+    {
+      "name": "Compounds.result_bool",
+      "parameters": [
+        {
+          "result": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_bytes",
+      "parameters": [
+        {
+          "result": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_char",
+      "parameters": [
+        {
+          "result": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_float32",
+      "parameters": [
+        {
+          "result": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_float64",
+      "parameters": [
+        {
+          "result": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int",
+      "parameters": [
+        {
+          "result": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int16",
+      "parameters": [
+        {
+          "result": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int32",
+      "parameters": [
+        {
+          "result": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int64",
+      "parameters": [
+        {
+          "result": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_int8",
+      "parameters": [
+        {
+          "result": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_isize",
+      "parameters": [
+        {
+          "result": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_nat",
+      "parameters": [
+        {
+          "result": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_string",
+      "parameters": [
+        {
+          "result": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint16",
+      "parameters": [
+        {
+          "result": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint32",
+      "parameters": [
+        {
+          "result": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint64",
+      "parameters": [
+        {
+          "result": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_uint8",
+      "parameters": [
+        {
+          "result": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_unit",
+      "parameters": [
+        {
+          "result": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.result_usize",
+      "parameters": [
+        {
+          "result": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          "usize",
+          "usize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.transform",
+      "parameters": [
+        {
+          "fields": {
+            "choice": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "nat",
+                      "unit"
+                    ]
+                  },
+                  "string"
+                ]
+              }
+            },
+            "nested": {
+              "result": [
+                {
+                  "option": {
+                    "result": [
+                      {
+                        "tuple": [
+                          "uint32",
+                          "unit"
+                        ]
+                      },
+                      "string"
+                    ]
+                  }
+                },
+                {
+                  "option": "nat"
+                }
+              ]
+            },
+            "products": {
+              "tuple": [
+                {
+                  "tuple": [
+                    "uint32",
+                    "string"
+                  ]
+                },
+                {
+                  "tuple": [
+                    "bool",
+                    "char"
+                  ]
+                }
+              ]
+            },
+            "rows": {
+              "array": {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "string",
+                        "uint64"
+                      ]
+                    },
+                    {
+                      "tuple": [
+                        "bytes",
+                        "int"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "record": "Compounds.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "choice": {
+            "option": {
+              "result": [
+                {
+                  "tuple": [
+                    "nat",
+                    "unit"
+                  ]
+                },
+                "string"
+              ]
+            }
+          },
+          "nested": {
+            "result": [
+              {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "uint32",
+                        "unit"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              },
+              {
+                "option": "nat"
+              }
+            ]
+          },
+          "products": {
+            "tuple": [
+              {
+                "tuple": [
+                  "uint32",
+                  "string"
+                ]
+              },
+              {
+                "tuple": [
+                  "bool",
+                  "char"
+                ]
+              }
+            ]
+          },
+          "rows": {
+            "array": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "string",
+                      "uint64"
+                    ]
+                  },
+                  {
+                    "tuple": [
+                      "bytes",
+                      "int"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "record": "Compounds.Packet"
+      }
+    },
+    {
+      "name": "Compounds.tuple_bool",
+      "parameters": [
+        {
+          "tuple": [
+            "bool",
+            "bool"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bool",
+          "bool"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_bytes",
+      "parameters": [
+        {
+          "tuple": [
+            "bytes",
+            "bytes"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "bytes",
+          "bytes"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_char",
+      "parameters": [
+        {
+          "tuple": [
+            "char",
+            "char"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "char",
+          "char"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float32",
+      "parameters": [
+        {
+          "tuple": [
+            "float32",
+            "float32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float32",
+          "float32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_float64",
+      "parameters": [
+        {
+          "tuple": [
+            "float64",
+            "float64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "float64",
+          "float64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int",
+      "parameters": [
+        {
+          "tuple": [
+            "int",
+            "int"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int",
+          "int"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int16",
+      "parameters": [
+        {
+          "tuple": [
+            "int16",
+            "int16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int16",
+          "int16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int32",
+      "parameters": [
+        {
+          "tuple": [
+            "int32",
+            "int32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int32",
+          "int32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int64",
+      "parameters": [
+        {
+          "tuple": [
+            "int64",
+            "int64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int64",
+          "int64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_int8",
+      "parameters": [
+        {
+          "tuple": [
+            "int8",
+            "int8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "int8",
+          "int8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_isize",
+      "parameters": [
+        {
+          "tuple": [
+            "isize",
+            "isize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "isize",
+          "isize"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_nat",
+      "parameters": [
+        {
+          "tuple": [
+            "nat",
+            "nat"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "nat",
+          "nat"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_string",
+      "parameters": [
+        {
+          "tuple": [
+            "string",
+            "string"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "string",
+          "string"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint16",
+      "parameters": [
+        {
+          "tuple": [
+            "uint16",
+            "uint16"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint16",
+          "uint16"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint32",
+      "parameters": [
+        {
+          "tuple": [
+            "uint32",
+            "uint32"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint32",
+          "uint32"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint64",
+      "parameters": [
+        {
+          "tuple": [
+            "uint64",
+            "uint64"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint64",
+          "uint64"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_uint8",
+      "parameters": [
+        {
+          "tuple": [
+            "uint8",
+            "uint8"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "uint8",
+          "uint8"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_unit",
+      "parameters": [
+        {
+          "tuple": [
+            "unit",
+            "unit"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "unit",
+          "unit"
+        ]
+      }
+    },
+    {
+      "name": "Compounds.tuple_usize",
+      "parameters": [
+        {
+          "tuple": [
+            "usize",
+            "usize"
+          ]
+        }
+      ],
+      "result": {
+        "tuple": [
+          "usize",
+          "usize"
+        ]
+      }
+    }
+  ],
+  "runs": [
+    {
+      "bindingIrSha256": "c0a4b5acd184767f27c36274f81a4057ef1366a25a63cc4adf07210b95e3556a",
+      "checks": 41534,
+      "compilerFreePath": true,
+      "consumerSha256": "b5a4c090e04d5c3786ea6e98b95e8f0b5bc57d6b5996bc822fcaedf24301bb02",
+      "faults": {
+        "apiSourceSha256": "ec07b70d9cbd2dea1f10a526129d2322b60394bb732bdf026b7db6b988731a6d",
+        "checks": 94,
+        "flagChecks": 9,
+        "instrumentedRuntimeSha256": "a44f6c72f2aa4932b9ccbb0bb2f360877d74826f19bc0b8e5483b6bac330074a",
+        "isolatedInstrumentedProjection": true,
+        "partialInputChecks": 16,
+        "probeSourceSha256": "0d61ec4523e36a4066cf444377ca5d2bf5073f5affa736dd68aae5d4fc18f1a7",
+        "releaseAssemblyUnchanged": true,
+        "replacements": [
+          250,
+          1,
+          1,
+          1,
+          64,
+          63
+        ],
+        "runtimeSourceSha256": "89c9c2ee6595c9dc42fb373cc7040e86534f057441af412dc66c0c8e72935d16"
+      },
+      "installed": {
+        "assemblySha256": "23eca1e4b6dc3d93d0ada49f6fa11508c6d58e842310d5caa899d68e3d28db80",
+        "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+        "deployment": {
+          "Consumer.deps.json": {
+            "bytes": 1742,
+            "sha256": "4021cae4d954d6bc6063009a557985be933c777ca90424de4e7ab8b809cbff5e"
+          },
+          "Consumer.dll": {
+            "bytes": 23552,
+            "sha256": "8cea97ce6b35ef5ba828d2ea256113120cda64bb10bfd289e7caaa6dd3eb68aa"
+          },
+          "Consumer.pdb": {
+            "bytes": 13344,
+            "sha256": "1669c3a0ef24e3b15463f3042c2676a472ecbec36480dfdd3cf8da51ec3d10eb"
+          },
+          "Consumer.runtimeconfig.json": {
+            "bytes": 257,
+            "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+          },
+          "LeanBridge.Compounds.dll": {
+            "bytes": 96256,
+            "sha256": "23eca1e4b6dc3d93d0ada49f6fa11508c6d58e842310d5caa899d68e3d28db80"
+          },
+          "runtimes/linux-x64/native/libcomponent_b98e04e5612654a9d0b5.so": {
+            "bytes": 259864,
+            "sha256": "ee4b8fdd7594a7d76e10b0dae64340b88f3bd6704db63620de4227702da21d4e"
+          },
+          "runtimes/linux-x64/native/libcompounds.so": {
+            "bytes": 246304,
+            "sha256": "71eb023159d43c25fc8a43ea0b4eac77e7f0f872ca5f406446d6e014b4af17f5"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 17016,
+            "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          }
+        },
+        "fxrVersion": "8.0.30",
+        "onlyPreparedDependency": true,
+        "packageReceiptSha256": "094bd8a2b24dd63c845f25b8779290a1187e66b5ee8f2f385548c5c3bc3f9a41",
+        "rejected": [
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "option-payload",
+            "sourceSha256": "4655db26b492ae55c876f540b6e39cc07fe9662e2d66e373d06d23216622699c"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "option-unit",
+            "sourceSha256": "f37d097165829a161a302abaf2b7f657beb7a702a1011b2d3245e8c1cfcc2b9c"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "result-payload",
+            "sourceSha256": "8bfc50036bcda3ef7cfaf3562ccc02f3b1fe30363ce5385de317445088cabe84"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "bare-payload",
+            "sourceSha256": "37948c417d0ba0ec0772c243b0f445993d0e7022c4393c2a9e932f8c6188dc70"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "nullable-option",
+            "sourceSha256": "bbf695a75468e2de09c5af31a46aa819e5e669b5b28646145d5c851fb7921ba1"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "product-arity",
+            "sourceSha256": "c7fe952e14e55456dd090dd68930bb7b8aba9a2ae9f1372b8e5655b955a3ba7e"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "product-array",
+            "sourceSha256": "5d600654ad5abd5133677f1c701c7c55000c4cf8c74032418265ad50faddcd61"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "nested-option",
+            "sourceSha256": "2172fe6d7e6759db3302b41ae9de3073f6b74fd752599fd9a1bb37d9d905d0e1"
+          },
+          {
+            "codes": [
+              "CS0029"
+            ],
+            "name": "bare-result",
+            "sourceSha256": "920e121b258fb71d4c4cb6b4eff9789b66915110987439026f09b0498c994d85"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "fixed-overflow",
+            "sourceSha256": "95ed2fe1b83c1f821faf3038b677a7b32c129d3257adcfb3e26aff7f6567bf97"
+          },
+          {
+            "codes": [
+              "CS0200"
+            ],
+            "name": "mutable-presence",
+            "sourceSha256": "057c9d431063310f9b96a65483483ee28e0436e2cec983b75bacb267b766955c"
+          },
+          {
+            "codes": [
+              "CS0200"
+            ],
+            "name": "mutable-branch",
+            "sourceSha256": "c9cab771c283ea93128583324c54eb536dedcb1a625c7990e93515786b8467eb"
+          }
+        ],
+        "runtimeVersion": "8.0.30",
+        "sdk": "8.0.424",
+        "sourceFree": true,
+        "sourceFreeChecks": 41534,
+        "sourceFreeExecutions": 2
+      },
+      "modelSha256": "841071ffd5abbf0011a85bf6243b0a13a4f851f79744007b674a6c4ec013b0c0",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51563161,
+              "path": "archives/Lean.Compounds.1.0.0.nupkg",
+              "sha256": "f4eb405a34a6e35f58b7f78f051a9731946d3f6f36d2875126b013cc733d533c"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Lean.Compounds",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "dotnet",
+      "receiptSha256": "dccbc365274d41388bb2c23aeabe7303219134eb5db5796d5ba5f2109b51a401",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "440afbdb49e7506dbbfcb80f5fd6196a7b83520f5919dbaee55bc756b7d74fa6"
+    },
+    {
+      "bindingIrSha256": "b55c8fb7dd8f4920536ed98e9a65628c4f168e0ad0e0d0f874237a883e3527ae",
+      "checks": 41534,
+      "compilerFreePath": true,
+      "consumerSha256": "b5a4c090e04d5c3786ea6e98b95e8f0b5bc57d6b5996bc822fcaedf24301bb02",
+      "faults": {
+        "apiSourceSha256": "a00ae7b690cf10f172b66a6bb6d9dd85071399d0de4b62ddd2ec70db9b90bc95",
+        "checks": 94,
+        "flagChecks": 9,
+        "instrumentedRuntimeSha256": "1d45fac3f5414656389286548338765a4bbb36ce087096caf81e37c14493a3b3",
+        "isolatedInstrumentedProjection": true,
+        "partialInputChecks": 16,
+        "probeSourceSha256": "0d61ec4523e36a4066cf444377ca5d2bf5073f5affa736dd68aae5d4fc18f1a7",
+        "releaseAssemblyUnchanged": true,
+        "replacements": [
+          250,
+          1,
+          1,
+          1,
+          64,
+          63
+        ],
+        "runtimeSourceSha256": "687205acdaf065da57e59b80b8b2904d2a532f90ffd9eb5335519607719a3b84"
+      },
+      "installed": {
+        "assemblySha256": "a5abe1ee724f79db26259b84dc6d2cac23d1ab071a287fc925ca821c2bd1d578",
+        "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+        "deployment": {
+          "Consumer.deps.json": {
+            "bytes": 1742,
+            "sha256": "82005a3a6b273f87d4b658c761ba1784b83cb0981b3b7a797ed17a6aebd23a3f"
+          },
+          "Consumer.dll": {
+            "bytes": 23552,
+            "sha256": "9792fb0b88ec28ee97930deadb8a9b8f6cf38dab36860805876d2253363ce4b5"
+          },
+          "Consumer.pdb": {
+            "bytes": 13344,
+            "sha256": "0236ded47fb768195d8d099cd0349775f68a3f20ebd6934689f218d926948eb4"
+          },
+          "Consumer.runtimeconfig.json": {
+            "bytes": 257,
+            "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+          },
+          "LeanBridge.Compounds.dll": {
+            "bytes": 96256,
+            "sha256": "a5abe1ee724f79db26259b84dc6d2cac23d1ab071a287fc925ca821c2bd1d578"
+          },
+          "runtimes/linux-x64/native/libcomponent_b98e04e5612654a9d0b5.so": {
+            "bytes": 259864,
+            "sha256": "ee4b8fdd7594a7d76e10b0dae64340b88f3bd6704db63620de4227702da21d4e"
+          },
+          "runtimes/linux-x64/native/libcompounds.so": {
+            "bytes": 246304,
+            "sha256": "71eb023159d43c25fc8a43ea0b4eac77e7f0f872ca5f406446d6e014b4af17f5"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 17016,
+            "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          }
+        },
+        "fxrVersion": "8.0.30",
+        "onlyPreparedDependency": true,
+        "packageReceiptSha256": "e31d002d61733320d8e04741535ea0c2d3144a07c880a0fa53e673e2dc059d0d",
+        "rejected": [
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "option-payload",
+            "sourceSha256": "4655db26b492ae55c876f540b6e39cc07fe9662e2d66e373d06d23216622699c"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "option-unit",
+            "sourceSha256": "f37d097165829a161a302abaf2b7f657beb7a702a1011b2d3245e8c1cfcc2b9c"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "result-payload",
+            "sourceSha256": "8bfc50036bcda3ef7cfaf3562ccc02f3b1fe30363ce5385de317445088cabe84"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "bare-payload",
+            "sourceSha256": "37948c417d0ba0ec0772c243b0f445993d0e7022c4393c2a9e932f8c6188dc70"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "nullable-option",
+            "sourceSha256": "bbf695a75468e2de09c5af31a46aa819e5e669b5b28646145d5c851fb7921ba1"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "product-arity",
+            "sourceSha256": "c7fe952e14e55456dd090dd68930bb7b8aba9a2ae9f1372b8e5655b955a3ba7e"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "product-array",
+            "sourceSha256": "5d600654ad5abd5133677f1c701c7c55000c4cf8c74032418265ad50faddcd61"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "nested-option",
+            "sourceSha256": "2172fe6d7e6759db3302b41ae9de3073f6b74fd752599fd9a1bb37d9d905d0e1"
+          },
+          {
+            "codes": [
+              "CS0029"
+            ],
+            "name": "bare-result",
+            "sourceSha256": "920e121b258fb71d4c4cb6b4eff9789b66915110987439026f09b0498c994d85"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "fixed-overflow",
+            "sourceSha256": "95ed2fe1b83c1f821faf3038b677a7b32c129d3257adcfb3e26aff7f6567bf97"
+          },
+          {
+            "codes": [
+              "CS0200"
+            ],
+            "name": "mutable-presence",
+            "sourceSha256": "057c9d431063310f9b96a65483483ee28e0436e2cec983b75bacb267b766955c"
+          },
+          {
+            "codes": [
+              "CS0200"
+            ],
+            "name": "mutable-branch",
+            "sourceSha256": "c9cab771c283ea93128583324c54eb536dedcb1a625c7990e93515786b8467eb"
+          }
+        ],
+        "runtimeVersion": "8.0.30",
+        "sdk": "8.0.424",
+        "sourceFree": true,
+        "sourceFreeChecks": 41534,
+        "sourceFreeExecutions": 2
+      },
+      "modelSha256": "80edca1aecca86788c2424061d0227d6244fb32ba31919397573c9f09c267465",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51574916,
+              "path": "archives/Lean.Compounds.1.0.0.nupkg",
+              "sha256": "34d7527a27823388c1623a03114af12c20050e861d6d9b2387a7d1c8ab9f192b"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Lean.Compounds",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "dotnet",
+      "receiptSha256": "6a3ddccd42c4dbcf2a0bb56b9cc43f0398a5ec44a9953692447ec0d8b24da54b",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "6e22b5654b4cecab9774faace86a54cae4454aca3a4738711a5f2c36b7280dfb"
+    }
+  ]
+}

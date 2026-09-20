@@ -141,7 +141,7 @@ test("native compound evidence promotes exactly C/C++ copied positions on both p
 	}
 });
 
-for(const profile of ["python", "rust"]) test(`${profile} compound evidence promotes exactly eighteen copied positions on both paths`, () => {
+for(const profile of ["python", "rust", "dotnet"]) test(`${profile} compound evidence promotes exactly eighteen copied positions on both paths`, () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes(`${profile}-compounds-installed`));
 	assert.equal(observed.length, 18);
@@ -252,7 +252,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const observed = cells.filter(cell => cell.profile === profile && cell.path === "ordinary-source"
 		&& cell.stages.installedExecution.state === "passed"
 		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
-	const compounds = ["python", "rust"].includes(profile) ? ["option", "result", "tuple"] : [];
+	const compounds = ["python", "rust", "dotnet"].includes(profile) ? ["option", "result", "tuple"] : [];
 	assert.equal(observed.length, 63 + 3 * compounds.length);
 	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds].sort());
 	for(const cell of observed)

@@ -16,13 +16,14 @@ const scalar = { char: "global::System.Text.Rune", unit: "Unit", bool: "bool", u
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedDotnetModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true }), componentName = pascal(surface.prefix);
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true }), componentName = pascal(surface.prefix);
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-dotnet-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
 	};
 	if(!/^[A-Za-z][A-Za-z0-9]*$/.test(componentName) || reserved.has(componentName)) fail(null, "Component name collides with the generated C# namespace");
 	const names = new Set(reserved);
+	if(surface.copies.some(copy => copy.compound)) for(const name of ["Option", "Result"]) names.add(name);
 	for(const copy of surface.copies.filter(copy => copy.record))
 	{
 		copy.publicName = pascal(copy.record.name);
@@ -43,7 +44,10 @@ export const compileCopiedDotnetModel = ir => {
 		if(functionNames.has(fn.publicName)) fail(fn.declaration, `C# function name collides: ${fn.publicName}`);
 		functionNames.add(fn.publicName);
 	}
-	const publicType = copy => copy.type?.callable ? copy.delegateType : copy.record ? copy.publicName : copy.element ? `${publicType(copy.element)}[]` : scalar[copy.scalarName];
+	const publicType = copy => copy.type?.callable ? copy.delegateType : copy.record ? copy.publicName
+		: copy.compound ? copy.compound === "tuple" ? `(${copy.fields.map(field => publicType(field.type)).join(", ")})`
+			: `${copy.compound === "option" ? "Option" : "Result"}<${copy.fields.map(field => publicType(field.type)).join(", ")}>`
+			: copy.element ? `${publicType(copy.element)}[]` : scalar[copy.scalarName];
 	const nativeType = copy => copy.type?.callable ? `B${copy.index}` : copy.aggregate ? `N${copy.index}` : ["unit", "bool"].includes(copy.scalarName) ? "byte" : copy.scalarName === "char" ? "uint" : scalar[copy.scalarName];
 	for(const [index, callback] of [...surface.callbacks.values()].entries())
 	{

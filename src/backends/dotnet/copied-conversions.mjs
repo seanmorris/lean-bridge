@@ -13,8 +13,9 @@ export const copiedNativeTypes = model => model.surface.copies.filter(copy => co
 [StructLayout(LayoutKind.Sequential)]
 internal struct N${copy.index}
 {
-${copy.record ? copy.fields.length ? copy.fields.map((field, index) => `    internal ${model.nativeType(field.type)} F${index};`).join("\n") : "    internal byte Empty;"
-	: `    internal nint Data;
+${copy.compound ? `${copy.compound === "tuple" ? "" : "    internal byte Flag;\n"}${copy.fields.map((field, index) => `    internal ${model.nativeType(field.type)} F${index};`).join("\n")}`
+	: copy.record ? copy.fields.length ? copy.fields.map((field, index) => `    internal ${model.nativeType(field.type)} F${index};`).join("\n") : "    internal byte Empty;"
+		: `    internal nint Data;
     internal nuint Length;
     internal nint Context;
     internal nint Release;${copy.scalarName === "int" ? "\n    internal byte Negative;" : ""}`}
@@ -28,7 +29,27 @@ ${copy.record ? copy.fields.length ? copy.fields.map((field, index) => `    inte
 export const copiedConversions = model => model.surface.copies.map(copy => {
 	const i = copy.index, type = model.publicType(copy), native = model.nativeType(copy);
 	let input, output;
-	if(copy.record)
+	if(copy.compound)
+	{
+		const to = (field, value) => `To${field.type.index}(${value}${field.type.aggregate ? ", scope" : ""})`;
+		const from = (field, index) => `From${field.type.index}(value.F${index})`;
+		input = `scope.Charge(1, sizeof(${native}));\n        `;
+		if(copy.compound === "option")
+		{
+			input += `return value.IsSome ? new ${native} { Flag = 1, F0 = ${to(copy.fields[0], "value.Value")} } : default;`;
+			output = `return value.Flag switch { 0 => ${type}.None, 1 => ${type}.Some(${from(copy.fields[0], 0)}), _ => throw new InvalidOperationException("Invalid native Option flag") };`;
+		} else if(copy.compound === "result")
+		{
+			input += `if (value.IsOk) return new ${native} { Flag = 1, F0 = ${to(copy.fields[0], "value.Value")} };
+        if (value.IsError) return new ${native} { F1 = ${to(copy.fields[1], "value.Error")} };
+        throw new ArgumentException("Lean Except requires Result.Ok or Result.Err; default(Result) has no branch", nameof(value));`;
+			output = `return value.Flag switch { 1 => ${type}.Ok(${from(copy.fields[0], 0)}), 0 => ${type}.Err(${from(copy.fields[1], 1)}), _ => throw new InvalidOperationException("Invalid native Except flag") };`;
+		} else
+		{
+			input += `return new ${native} { ${copy.fields.map((field, index) => `F${index} = ${to(field, `value.Item${index + 1}`)}`).join(", ")} };`;
+			output = `return (${copy.fields.map(from).join(", ")});`;
+		}
+	} else if(copy.record)
 	{
 		input = `ArgumentNullException.ThrowIfNull(value);
         scope.Charge(1, sizeof(${native}));
@@ -41,7 +62,7 @@ export const copiedConversions = model => model.surface.copies.map(copy => {
         var data = scope.Allocate(value.Length, sizeof(${et}), Math.Max(sizeof(${et}), IntPtr.Size));
         for (var index = 0; index < value.Length; index++) ((${et}*)data)[index] = To${e.index}(value[index]${e.aggregate ? ", scope" : ""});
         return new ${native} { Data = data, Length = (nuint)value.Length };`;
-		output = `var result = new ${model.publicType(e).replace(/\[\]/g, "")}[checked((int)value.Length)]${model.publicType(e).includes("[]") ? "[]".repeat(model.publicType(e).split("[]").length - 1) : ""};
+		output = `var result = global::System.GC.AllocateUninitializedArray<${model.publicType(e)}>(checked((int)value.Length));
         for (var index = 0; index < result.Length; index++) result[index] = From${e.index}(((${et}*)value.Data)[index]);
         return result;`;
 	} else switch(copy.scalarName)
@@ -81,6 +102,37 @@ export const copiedConversions = model => model.surface.copies.map(copy => {
         ${output}
     }`;
 }).join("\n");
+
+/** Closed, copied C# compound values. No native discriminants enter the public API. */
+export const copiedCompoundTypes = `/// <summary>A copied Lean Option. Default is None; Some retains its payload, including nested None.</summary>
+public readonly record struct Option<T>
+{
+    private readonly T value;
+    private Option(T value) { this.value = value; IsSome = true; }
+    public bool IsSome { get; }
+    public bool IsNone => !IsSome;
+    public T Value => IsSome ? value : throw new global::System.InvalidOperationException("None has no value");
+    public static Option<T> None => default;
+    public static Option<T> Some(T value) => new(value);
+    public override string ToString() => IsSome ? $"Some({value})" : "None";
+}
+/// <summary>A copied Lean Except. Use Ok or Err; default has no branch and cannot cross the boundary.</summary>
+public readonly record struct Result<T, E>
+{
+    private readonly byte state;
+    private readonly T value;
+    private readonly E error;
+    private Result(byte state, T value, E error) { this.state = state; this.value = value; this.error = error; }
+    public bool IsOk => state == 1;
+    public bool IsError => state == 2;
+    public bool IsInitialized => IsOk || IsError;
+    public T Value => IsOk ? value : throw new global::System.InvalidOperationException("Result has no success value");
+    public E Error => IsError ? error : throw new global::System.InvalidOperationException("Result has no error value");
+    public static Result<T, E> Ok(T value) => new(1, value, default!);
+    public static Result<T, E> Err(E error) => new(2, default!, error);
+    public override string ToString() => IsOk ? $"Ok({value})" : IsError ? $"Err({error})" : "Uninitialized Result";
+}
+`;
 
 /** C# scoped scratch allocation. Native results use their own generated clear functions. */
 export const copiedScope = `internal sealed unsafe class Scope : IDisposable
