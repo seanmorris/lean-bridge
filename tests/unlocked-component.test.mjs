@@ -225,7 +225,12 @@ for(const variant of ["tutorial", "custom", "scalars"]) test(`unlocked ${variant
 	if(variant !== "scalars")
 	{
 		const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
-		assert.match(declarations, /add\(arg0: bigint, arg1: bigint\): bigint/);
+		if(variant === "custom")
+		{
+			assert.match(declarations, /export type Word = bigint;/);
+			assert.match(declarations, /add\(arg0: Word, arg1: Word\): Word/);
+		}
+		else assert.match(declarations, /add\(arg0: bigint, arg1: bigint\): bigint/);
 		assert.match(declarations, /isEmpty\(arg0: string\): boolean/);
 	}
 });
@@ -303,10 +308,13 @@ console.log("finite exports passed");
 		.catch(error => { assert.fail(`${error.message}: ${JSON.stringify(error.details)}`); });
 	assert.equal(installed.stdout.trim(), "finite exports passed");
 	const declarations = await readFile(join(consumer, "node_modules/onboarding-small/index.d.ts"), "utf8");
-	assert.match(declarations, /echoWord\(arg0: number\): number/);
+	assert.match(declarations, /export type Word = number;/);
+	assert.match(declarations, /echoWord\(arg0: Word\): Word/);
 	assert.match(declarations, /echoText\(arg0: string\): string/);
 	assert.match(declarations, /echoNat\(arg0: bigint\): bigint/);
 	assert.match(declarations, /chooseWord\(arg0: boolean, arg1: number\): number/);
+	assert.match(declarations, /firstWord\(arg0: number, arg1: string\): number/);
+	assert.match(declarations, /plainWord\(arg0: number\): number/);
 	assert.doesNotMatch(declarations, /<T>|\bany\b/);
 	await lakeGit(root, "init", "--quiet");
 	await lakeGit(root, "add", ".");

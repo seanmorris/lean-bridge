@@ -175,6 +175,14 @@ test("native finite specializations reproduce and install concrete Perl APIs", {
 	assert.deepEqual(echo.assurance, []);
 	assert.equal(model.exports.find(item => item.publicName === "make_word_adder").result.kind, "callback");
 	assert.equal(model.exports.find(item => item.publicName === "make_word_adder").parameters.length, 1);
+	const unary = metadata.modules[0].declarations.find(item => item.identity === "Sample.echoUnary").projection;
+	for(const type of [unary.parameters[0].type, unary.result])
+	{
+		assert.equal(type.kind, "callback");
+		assert.deepEqual(type.parameters.map(parameter => parameter.kind), ["primitive"]);
+		assert.equal(type.result.kind, "primitive");
+		assert.equal(type.result.name, "uint32");
+	}
 	assert.deepEqual(await lakeInputState(context.projectRoot), before);
 	assert.deepEqual(await lakeInputState(moved), movedBefore);
 	// Installed execution has no author source tree to fall back to.
@@ -402,7 +410,7 @@ test("native shared metadata preserves checked aliases, docs and proof relations
 test("native extraction rejects forged reports, interface drift and ABI disagreement without releasing output", { skip: !enabled, timeout: 300_000 }, async t => {
 	const context = await metadataProject(t), before = await lakeInputState(context.projectRoot);
 	await buildNativeSharedRuntime({ outputRoot: context.runtimeRoot, leanPrefix });
-	for(const mode of ["failure", "json", "identity", "source", "sidecar", "late-sidecar", "abi", "cancel"])
+	for(const mode of ["failure", "json", "identity", "source", "sidecar", "late-sidecar", "alias-abi", "abi", "cancel"])
 		await t.test(mode, async () => {
 			let staging, invoked = false, linked = false;
 			const cancellation = new AbortController();
@@ -422,10 +430,19 @@ test("native extraction rejects forged reports, interface drift and ABI disagree
 					if(mode === "identity") metadata.modules[0].interfaceSha256 = "0".repeat(64);
 					if(mode === "source") await writeFile(join(staging, "source/Sample.lean"), "-- altered after extraction\n");
 					if(mode === "sidecar") await writeFile(join(staging, "olean/Sample.olean.server"), "changed metadata");
-					if(mode === "abi")
+					if(mode === "abi" || mode === "alias-abi")
 					{
 						const item = metadata.modules[0].declarations.find(item => item.identity === "Sample.increment");
-						item.projection.result.abi = { cType: "uint64_t", box: "lean_box_uint64", unbox: "lean_unbox_uint64", heap: false };
+						const forged = { cType: "uint64_t", box: "lean_box_uint64", unbox: "lean_unbox_uint64", heap: false };
+						if(mode === "alias-abi") item.projection.result.abi = forged;
+						else for(const site of [...item.projection.parameters.map(parameter => parameter.type), item.projection.result])
+						{
+							// Keep repeated alias definitions consistent so this probe reaches
+							// the independent prototypes emitted by the Lean compiler.
+							let type = site;
+							while(type)
+							{ type.abi = forged; type = type.kind === "alias" ? type.target : null; }
+						}
 					}
 					return { ...result, stdout: canonicalJson(metadata) };
 				}
@@ -437,6 +454,7 @@ test("native extraction rejects forged reports, interface drift and ABI disagree
 			const outputRoot = join(context.working, mode);
 			await assert.rejects(() => buildNativeComponent({ ...context, outputRoot, runner, signal: cancellation.signal }), error => {
 				if(mode === "cancel") return /Cancelled native extraction/.test(errorText(error));
+				if(mode === "alias-abi") return /alias representation differs from its target/.test(errorText(error));
 				if(mode === "abi") return /conflicting types/.test(errorText(error));
 				const code = ["failure", "json"].includes(mode) ? "lean-metadata-extractor-failed"
 					: mode === "identity" ? "invalid-elaborated-metadata" : "native-elaboration-drift";

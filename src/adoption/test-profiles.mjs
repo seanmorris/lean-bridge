@@ -25,6 +25,7 @@ const profileManifest = Object.freeze({
 		, "compiler-analysis"
 		, "compiler-variant-metadata"
 		, "compiler-alias-metadata"
+		, "compiler-callable-aliases"
 		, "compound-source-history"
 		, "unlocked-component"
 		, "component-consumer-docs"

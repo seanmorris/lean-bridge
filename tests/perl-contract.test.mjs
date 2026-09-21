@@ -200,6 +200,8 @@ test("Perl CI runs four independent ABI jobs and gates its single observation on
 	for(const name of [
 		"lake-workspace", "lake-wasm", "unlocked-component", "elaborated-metadata"
 		, "compiler-analysis", "lake-generators", "lake-generator-prerequisites"
+		, "compiler-variant-metadata", "compiler-alias-metadata"
+		, "compiler-callable-aliases"
 		, "lake-generated-workspace", "lake-generated-packages"
 	]) assert.ok(shared.includes(`tests/${name}.test.mjs`), name);
 	assert.match(summary, /if: always\(\)/);

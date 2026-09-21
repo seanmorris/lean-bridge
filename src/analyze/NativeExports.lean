@@ -71,6 +71,14 @@ def nativeIdentifier (name : String) : Bool :=
     !part.isEmpty && part.toList.head!.isAlpha && part.toList.head!.toNat < 128 &&
       part.toList.all (fun c => c.toNat < 128 && (c.isAlphanum || c == '_'))
 
+-- Callable signatures use the checked value representation. Traverse aliases
+-- only after shape has enforced their definition, cycle and nesting checks.
+def callableTarget (value : Json) : MetaM Json := do
+  let mut value := value
+  while (value.getObjValAs? String "kind").toOption == some "alias" do
+    value ← ofExcept <| value.getObjVal? "target"
+  return value
+
 partial def shape (request : Request) (e : Expr) (seen : List Name := [])
     (depth : Nat := 0) (copied : Bool := false) : MetaM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32"
@@ -86,7 +94,9 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
               if !nativeIdentifier name.toString || !levels.isEmpty || !definition.levelParams.isEmpty ||
                   info.isUnsafe || info.isPartial then reject e "unsupported copied alias definition"
               if seen.contains name then reject e "cyclic copied alias"
-              let target ← shape request definition.value (name :: seen) (depth + 1) true
+              let target ← shape request definition.value (name :: seen) (depth + 1) copied
+              if ["resource", "callback"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
+                return target
               return obj [("kind", str "alias"), ("name", str name.toString),
                 ("lean", str name.toString), ("target", target), ("abi", ← abi e)]
   if (← isDefEq e (mkConst ``Unit)) then
@@ -192,11 +202,11 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
         if parameters.size >= 16 then reject e "native callbacks support at most 16 arguments"
-        parameters := parameters.push (← shape request argument seen (depth + 1))
+        parameters := parameters.push (← callableTarget (← shape request argument seen (depth + 1)))
         result := rest
       | _ => break
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
-      ("result", ← shape request result seen (depth + 1)), ("abi", ← abi e)]
+      ("result", ← callableTarget (← shape request result seen (depth + 1))), ("abi", ← abi e)]
   let reduced ← whnf e
   if reduced != e then return ← shape request reduced seen (depth + 1) copied
   reject e "unsupported native export type"

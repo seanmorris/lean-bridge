@@ -12,6 +12,15 @@ Each declaration records its fully qualified identity, selection status, documen
 
 The printed expressions support inspection. Binding IR copies the structural types from `projection.parameters` and `projection.result`; JavaScript never parses the printed type strings. Lean resolves aliases and inferred types before assigning those runtime types.
 
+Concrete copied aliases retain named targets and chains. Function aliases keep
+the callback contract and its borrow/lease ownership; configured resource aliases
+keep the resource contract. Primitive callable payloads use their checked target
+representation after alias validation. Definition, cycle and nesting checks run
+before normalization. A callback or resource hidden inside a copied alias,
+container or record still requires an explicit retention or ownership policy.
+The [callable alias regression checks](../evidence/callable-alias-repair-20260921.md)
+cover both compiler profiles and installed Perl specializations.
+
 The extractor also describes concrete, non-recursive user-defined variants.
 Both profiles retain constructor order, names and typed fields; the native
 profile additionally records each qualified constructor and the compiler's C
