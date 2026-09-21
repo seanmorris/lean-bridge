@@ -113,6 +113,48 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
           ("type", ← shape request fieldType (name :: seen) (depth + 1) true)])
       return obj [("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
+    if let .inductInfo induct ← getConstInfo name then
+      if seen.contains name then reject e "recursive copied variants require a bounded graph representation"
+      if !nativeIdentifier name.toString || induct.numParams != 0 || induct.numIndices != 0 then
+        reject e "generic or indexed variants require a checked specialization"
+      if induct.ctors.isEmpty || induct.ctors.length > 1024 || (← isProp e) then
+        reject e "copied variants require between 1 and 1024 value constructors"
+      let mut cases := #[]
+      for constructor in induct.ctors do
+        if !nativeIdentifier constructor.toString then reject e "unsupported variant constructor identifier"
+        let .str owner caseName := constructor | reject e "unnamed variant constructor"
+        if owner != name then reject e "variant constructor belongs to a different type"
+        let constructorInfo ← getConstInfoCtor constructor
+        let mut pending := constructorInfo.type
+        let mut declared : List String := []
+        while let .forallE fieldName _ body _ := pending do
+          if !fieldName.isAnonymous && !fieldName.hasMacroScopes then
+            declared := fieldName.toString :: declared
+          pending := body
+        let mut rest := constructorInfo.type
+        let mut fields := #[]
+        let mut names : List String := []
+        while let .forallE fieldName fieldType body binder := rest do
+          if binder != .default || fields.size >= 1024 || (← isProp fieldType) then
+            reject e "implicit, proof or oversized variant fields require a reviewed representation"
+          -- Arrow-only constructor fields have compiler-generated hygienic
+          -- names. Publish stable positional names, not internal macro scopes.
+          let generated := fieldName.isAnonymous || fieldName.hasMacroScopes
+          let mut fieldName := if generated then s!"arg{fields.size}" else fieldName.toString
+          if generated then
+            while declared.contains fieldName || names.contains fieldName do
+              fieldName := fieldName ++ "_"
+          if !nativeIdentifier fieldName || (fieldName.splitOn ".").length != 1 ||
+              ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].contains fieldName || names.contains fieldName then
+            reject e s!"invalid, reserved or duplicate variant field name {fieldName}"
+          fields := fields.push (obj [("name", str fieldName),
+            ("type", ← shape request fieldType (name :: seen) (depth + 1) true)])
+          names := fieldName :: names
+          rest := body
+        unless ← isDefEq rest e do reject e "variant constructor has a dependent result"
+        cases := cases.push (obj [("name", str caseName), ("constructor", str constructor.toString), ("fields", toJson fields)])
+      return obj [("kind", str "variant"), ("name", str name.toString),
+        ("lean", str name.toString), ("cases", toJson cases), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
     return obj [("kind", str "array"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
   if e.isAppOfArity ``List 1 then
@@ -221,7 +263,16 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
       pure <| obj [("name", ← ofExcept <| field.getObjVal? "name"),
         ("type", ← componentCopiedType (← ofExcept <| field.getObjVal? "type"))]
     return obj [("kind", str "record"), ("name", ← ofExcept <| value.getObjVal? "name"), ("fields", toJson fields)]
-  throwError "component copied values require primitives, arrays, lists, records, Option, Except or Prod"
+  if kind == "variant" then
+    let cases ← ofExcept <| value.getObjValAs? (Array Json) "cases"
+    let cases ← cases.mapM fun (item : Json) => do
+      let fields ← ofExcept <| item.getObjValAs? (Array Json) "fields"
+      let fields ← fields.mapM fun (field : Json) => do
+        pure <| obj [("name", ← ofExcept <| field.getObjVal? "name"),
+          ("type", ← componentCopiedType (← ofExcept <| field.getObjVal? "type"))]
+      pure <| obj [("name", ← ofExcept <| item.getObjVal? "name"), ("fields", toJson fields)]
+    return obj [("kind", str kind), ("name", ← ofExcept <| value.getObjVal? "name"), ("cases", toJson cases)]
+  throwError "component copied values require primitives, arrays, lists, records, variants, Option, Except or Prod"
 
 def componentType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption != some "callback" then

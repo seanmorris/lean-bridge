@@ -4,6 +4,30 @@
   "title": "Compiler-owned native-library-v1 type and representation",
   "oneOf": [
     {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "name", "lean", "cases", "abi"],
+      "properties": {
+        "kind": { "const": "variant" },
+        "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+        "lean": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+        "cases": { "type": "array", "minItems": 1, "maxItems": 1024, "items": {
+          "type": "object", "additionalProperties": false, "required": ["name", "constructor", "fields"],
+          "properties": {
+            "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+            "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+            "fields": { "type": "array", "maxItems": 1024, "items": {
+              "type": "object", "additionalProperties": false, "required": ["name", "type"],
+              "properties": {
+                "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+                "type": { "$ref": "#" }
+              }
+            } }
+          }
+        } },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
       "type": "object",
       "additionalProperties": false,
       "required": [

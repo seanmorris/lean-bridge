@@ -59,7 +59,7 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 	const selected = metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "supported");
 	if(include && (new Set(include).size !== include.length || include.some(name => !selected.some(item => item.identity === name))))
 		throw new TypeError("Semantic lowering can select only admitted compiler declarations");
-	const definitions = new Map();
+	const definitions = new Map(), namedFacts = new Map();
 	const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
 	const site = (type, result = false) => ({ type: reference(type), ...exportContractOwnership(type, result) });
 	const parameter = (type, index) => ({ name: `arg${index}`, ...site(type), mutability: "immutable", optional: false, default: null });
@@ -71,6 +71,12 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 		const signature = type.kind === "callback" ? { parameters: type.parameters.map(reference), result: reference(type.result) } : null;
 		const callbackName = signature && `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
 		const id = callbackName ? `bridge:${callbackName}` : `lean:${type.name}`;
+		if(!callbackName)
+		{
+			const facts = canonicalJson(type);
+			if(namedFacts.has(id) && namedFacts.get(id) !== facts) throw new TypeError(`Conflicting compiler type definitions: ${id}`);
+			namedFacts.set(id, facts);
+		}
 		if(!definitions.has(id))
 		{
 			const definition = { id, name: callbackName || type.name.split(".").at(-1)
@@ -82,6 +88,9 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 				, source: source(type.name ?? callbackName), assurance: [] };
 			definitions.set(id, definition);
 			if(type.kind === "record") definition.fields = type.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }));
+			if(type.kind === "variant") definition.cases = type.cases.map(item => ({ name: item.name
+				, fields: item.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }))
+				, documentation: doc(item.name) }));
 			if(type.kind === "resource") definition.resource = { kindId: `resource:${type.name}`, disposal: "required", fallback: "queued-finalizer", cycles: "explicit-cut" };
 			if(type.kind === "callback") definition.callable = {
 				parameters: type.parameters.map(parameter), result: site(type.result, true)

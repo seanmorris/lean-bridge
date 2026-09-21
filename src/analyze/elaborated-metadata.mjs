@@ -145,6 +145,29 @@ export const validateElaboratedMetadata = (report, request) => {
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
 				const copied = (type, depth = 0) => {
 					if(depth > 32) fail("Component copied type nesting exceeds 32");
+					if(type?.kind === "variant")
+					{
+						closed(type, ["kind", "name", "cases"]);
+						if(typeof type.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.name)
+							|| !Array.isArray(type.cases) || !type.cases.length || type.cases.length > 1024) fail("Invalid component variant");
+						const names = new Set();
+						for(const item of type.cases)
+						{
+							closed(item, ["name", "fields"]);
+							if(typeof item.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(item.name) || names.has(item.name)
+								|| !Array.isArray(item.fields) || item.fields.length > 1024) fail("Invalid variant constructor");
+							names.add(item.name);
+							const fields = new Set();
+							for(const field of item.fields)
+							{
+								closed(field, ["name", "type"]);
+								if(typeof field.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || fields.has(field.name)
+									|| ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("Invalid variant field");
+								fields.add(field.name); copied(field.type, depth + 1);
+							}
+						}
+						return;
+					}
 					if(["result", "tuple"].includes(type?.kind))
 					{
 						closed(type, ["kind", "arguments"]);
@@ -184,6 +207,7 @@ export const validateElaboratedMetadata = (report, request) => {
 						if(["array", "list", "option"].includes(value.kind)) check(value.element);
 						if(["result", "tuple"].includes(value.kind)) value.arguments.forEach(check);
 						if(value.kind === "record") value.fields.forEach(field => check(field.type));
+						if(value.kind === "variant") value.cases.forEach(item => item.fields.forEach(field => check(field.type)));
 						if(value.kind === "callback")
 						{ value.parameters.forEach(check); check(value.result); }
 					};

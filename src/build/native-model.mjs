@@ -122,6 +122,7 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 	const allTypes = new Map();
 	const visit = type => {
 		validateNativeType(type);
+		if(type.kind === "variant") fail("copied variants require typed native adapters before compilation");
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
 		if(["array", "list", "option"].includes(type.kind)) visit(type.element);

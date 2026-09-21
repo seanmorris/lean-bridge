@@ -90,10 +90,12 @@ const checkReview = document => {
 			continue;
 		}
 		source(definition);
-		reject(definition.kind !== "record" || definition.representation !== "copied" || definition.mutability !== "immutable"
+		reject(!["record", "variant"].includes(definition.kind) || definition.representation !== "copied" || definition.mutability !== "immutable"
 			|| definition.typeParameters.length || definition.target !== null || definition.resource !== null
-			|| definition.callable !== null || definition.cases.length || definition.host !== null, definition.id);
-		for(const field of definition.fields)
+			|| definition.callable !== null || definition.host !== null
+			|| (definition.kind === "record" ? definition.cases.length : definition.fields.length), definition.id);
+		const fields = definition.kind === "record" ? definition.fields : definition.cases.flatMap(item => item.fields);
+		for(const field of fields)
 		{
 			reject(field.mutability !== "immutable", `${definition.id}.${field.name}.mutability`);
 			type(field.type, `${definition.id}.${field.name}.type`);

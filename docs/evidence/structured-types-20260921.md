@@ -88,3 +88,45 @@ site passes 111 tests. Lint, repository/site type checks, generated-reference
 checks and the production site build pass. Running the same cyclic-alias fixture
 against the preceding commit reproduces its acceptance; the changed validator
 rejects it with `alias-cycle`. Historical archive inventories are unchanged.
+
+## Compiler-owned variant facts
+
+The extractor now reads concrete, non-recursive variant constructors from Lean's
+environment. Both metadata profiles preserve named constructors, their order,
+field names and nested copied types. Native metadata also retains qualified
+constructor names and the compiler-selected C representation. It does not use
+those names as guessed runtime tags. Tests cover both a small scalar enum and
+an object-valued payload variant.
+
+Arrow-only fields receive stable positional names; generated names avoid
+colliding with declared fields. The shared model rejects conflicting compiler
+definitions with the same nominal identity. Independently written reviewed IR
+must match every constructor and field in order. Reordering, renaming or changing
+a field type fails reconciliation.
+
+```sh
+LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 \
+  node --test tests/compiler-variant-metadata.test.mjs
+```
+
+These checks compile fresh Lean interfaces and run the production extractor in
+both profiles. Fixtures include all nineteen primitive payloads, empty cases,
+Unit fields, unnamed fields, enums, records, nested variants, arrays, Lists,
+options, results and products. Recursive, generic/indexed, proof-bearing,
+dependent, callback-containing and reserved-field variants have rejection cases.
+The uninhabited type also rejects. Schemas and semantic validators check the
+reports before lowering them. CI runs this suite with compiler checks enabled.
+
+Compiler extraction still resolves aliases to their targets. Named alias
+preservation and typed variant/alias adapters are the next integration work.
+The native model and npm private ABI still reject compiled variant signatures;
+these compiler tests do not promote installed cells.
+
+Validation for this compiler stage: three variant-metadata checks pass with
+compiler execution enabled. The existing compiler-analysis and metadata suites
+exercise 34 checks: 32 passed on the first run; two detected extractor edits
+during execution or between relocation comparisons. Both passed when rerun
+against the settled source. Full contracts pass 1,523 tests with 63 gated skips;
+the site passes 111. Lint, repository/site type checks, generated references and
+the production site build pass. All 54 nonempty historical artifact inventories
+and the installed coverage matrix remain unchanged.

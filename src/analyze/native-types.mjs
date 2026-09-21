@@ -28,6 +28,7 @@ export const validateNativeType = (type, depth = 0, copied = false) => {
 		, result: ["kind", "arguments", "abi"]
 		, tuple: ["kind", "arguments", "abi"]
 		, record: ["kind", "name", "lean", "constructor", "fields", "abi"]
+		, variant: ["kind", "name", "lean", "cases", "abi"]
 		, resource: ["kind", "name", "lean", "module", "abi"]
 		, callback: ["kind", "parameters", "result", "abi"] }[type.kind];
 	if(!fields) fail("unknown native type");
@@ -63,6 +64,25 @@ export const validateNativeType = (type, depth = 0, copied = false) => {
 			if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || !identifier.test(field.projection)
 	      || ["new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved record field");
 			recurse(field.type, true);
+		}
+	} else if(type.kind === "variant")
+	{
+		if(typeof type.name !== "string" || !identifier.test(type.name) || type.name !== type.lean) fail("invalid variant identity");
+		if(!Array.isArray(type.cases) || !type.cases.length || type.cases.length > 1024
+			|| new Set(type.cases.map(item => item.name)).size !== type.cases.length) fail("invalid variant cases");
+		for(const item of type.cases)
+		{
+			closed(item, ["name", "constructor", "fields"], "variant case");
+			if(typeof item.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(item.name) || item.constructor !== `${type.name}.${item.name}`) fail("invalid variant constructor");
+			if(!Array.isArray(item.fields) || item.fields.length > 1024
+				|| new Set(item.fields.map(field => field.name)).size !== item.fields.length) fail("invalid variant fields");
+			for(const field of item.fields)
+			{
+				closed(field, ["name", "type"], "variant field");
+				if(typeof field.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name)
+					|| ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved variant field");
+				recurse(field.type, true);
+			}
 		}
 	} else if(type.kind === "resource")
 	{

@@ -12,6 +12,22 @@ Each declaration records its fully qualified identity, selection status, documen
 
 The printed expressions support inspection. Binding IR copies the structural types from `projection.parameters` and `projection.result`; JavaScript never parses the printed type strings. Lean resolves aliases and inferred types before assigning those runtime types.
 
+The extractor also describes concrete, non-recursive user-defined variants.
+Both profiles retain constructor order, names and typed fields; the native
+profile additionally records each qualified constructor and the compiler's C
+representation. Empty constructors remain separate cases. Named fields retain
+their names; arrow-only fields receive positional names such as `arg0`. If a
+declared name collides, the generated name gains underscores until it is unique.
+No internal hygienic name enters the public type graph. Semantic lowering rejects
+conflicting definitions for the same nominal identity, and reviewed contracts
+must match constructor order and field types exactly.
+
+This metadata stage does not enable compiled variant packages. The npm private
+ABI and native model still require the forthcoming typed adapters. Recursive,
+generic/indexed, proof-bearing and identity-containing variants remain rejected
+by extraction. The [structured-type record](../evidence/structured-types-20260921.md)
+separates these compiler checks from installed acceptance.
+
 The historically named `component-scalars-v1` profile supports zero to 32 explicit arguments. Parameters and results can contain primitives, nested arrays, acyclic copied records, Option, Except and nested binary products. A separate callable ABI accepts synchronous functions with one to sixteen primitive arguments and a primitive result. `arities` identifies the outer argument count for an export returning a function. Scalar-only packages retain private ABI 2; callable packages use ABI 3, array-only packages ABI 4 and record packages ABI 5. Packages with Option, Except or products use ABI 6, with a nominal record table that may be empty. Lean constructs and inspects every branch and field through typed helpers; C never guesses constructor layouts. Result arguments use canonical [success, error] order. Copied containers and callables cannot share one component yet. Unresolved implicit, instance, dependent, generic, asynchronous and other unimplemented signatures receive unsupported reasons. Explicit selections of proof-only or type-valued declarations fail; automatic discovery omits them. Selected implementations also pass the existing unsafe, foreign-call and admitted-proof checks. Duplicate unqualified host names require an export-selection or wrapper decision.
 
 Configured [finite specializations](../lean/existing-package.md#export-concrete-specializations) bind one to eight leading type parameters to named closed types. Lean resolves their universe levels and following instance dictionaries, then checks the remaining signature against the scalar or native profile. Each specialization appears under its configured identity in the original source module, with a `specialization` record containing the original declaration, configured types and compiler-rendered application. The application is null when elaboration fails. The original declaration keeps its own unspecialized type and selection state. Source ranges, documentation and theorem references continue to refer to that original declaration.

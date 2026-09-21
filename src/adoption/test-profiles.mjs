@@ -23,6 +23,7 @@ const profileManifest = Object.freeze({
 		, "source-notices"
 		, "package-metadata"
 		, "compiler-analysis"
+		, "compiler-variant-metadata"
 		, "unlocked-component"
 		, "component-consumer-docs"
 		, "component-runtime"
