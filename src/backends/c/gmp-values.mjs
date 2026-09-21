@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { cVariantTag } from "./generate.mjs";
 /**
  * Identify a public GMP integer.
  *
@@ -57,7 +58,7 @@ export const renderGmpValues = surface => {
 	{
 		const n = gmpName(surface, copy), id = copy.index, raw = copy.name;
 		const pointer = gmpInteger(copy) ? "mpz_ptr" : `${n}*`, input = gmpInteger(copy) ? "mpz_srcptr" : `${n} const*`;
-		const init = [], clear = [], swap = [], to = [], from = [], extra = [];
+		const init = [], clear = [], swap = [], to = [], from = [], extra = [], before = [];
 		const pubChild = (child, value) => gmpAddress(child, value);
 		if(gmpInteger(copy))
 		{
@@ -72,6 +73,36 @@ export const renderGmpValues = surface => {
 			from.push("if (!lb_gmp_charge(budget, value->length, sizeof(uint32_t))) return 0;"
 				, "mpz_import(out, value->length, -1, sizeof(uint32_t), 0, 0, value->data);");
 			if(copy.scalarName === "int") from.push("if (value->negative) mpz_neg(out, out);");
+		} else if(copy.variant)
+		{
+			declarations.push(`typedef enum ${n}_tag { ${copy.cases.map((branch, i) => `${cVariantTag(n, branch.name)} = ${i}`).join(", ")} } ${n}_tag;`
+				, `struct ${n} { uint32_t kind; union {\n${copy.cases.map(branch => `  struct { ${branch.fields.map(field => `${gmpName(surface, field.type)} ${field.name};`).join(" ") || "uint8_t empty;"} } ${branch.name};`).join("\n")}\n} cases; };`);
+			const initialize = (branch, expression) => branch.fields.map(field => `lb_gmp_init${field.type.index}(${pubChild(field.type, `${expression}->cases.${branch.name}.${field.name}`)});`);
+			const reset = [`static inline void lb_gmp_reset${id}(${n}* value, uint32_t kind) {`, "  switch (value->kind) {"];
+			copy.cases.forEach((branch, i) => reset.push(`  case ${i}:`
+				, ...branch.fields.map(field => `    lb_gmp_clear${field.type.index}(${pubChild(field.type, `value->cases.${branch.name}.${field.name}`)});`), "    break;"));
+			reset.push("  default: break;", "  }", "  memset(value, 0, sizeof(*value)); value->kind = kind;", "  switch (kind) {");
+			copy.cases.forEach((branch, i) => reset.push(`  case ${i}:`, ...initialize(branch, "value").map(line => `    ${line}`), "    break;"));
+			reset.push("  default: break;", "  }", "}"); before.push(reset.join("\n"));
+			init.push("memset(value, 0, sizeof(*value));", ...initialize(copy.cases[0], "value"));
+			clear.push(`lb_gmp_reset${id}(value, 0);`);
+			swap.push(`${n} temporary = *left; *left = *right; *right = temporary;`);
+			to.push(`if (value->kind >= ${copy.cases.length} || !lb_gmp_charge(budget, 1, sizeof(${raw}))) return 0;`, "out->kind = value->kind;", "switch (value->kind) {");
+			from.push(`if (value->kind >= ${copy.cases.length} || !lb_gmp_charge(budget, 1, sizeof(${n}))) return 0;`, `lb_gmp_reset${id}(out, value->kind);`, "switch (value->kind) {");
+			copy.cases.forEach((branch, i) => {
+				for(const lines of [to, from]) lines.push(`case ${i}: {`);
+				branch.fields.forEach((field, j) => {
+					const child = field.type, slot = `cases.${branch.name}.${field.name}`;
+					to.push(`  int status${j} = lb_gmp_to${child.index}(${pubChild(child, `value->${slot}`)}, &out->${slot}, budget);`, `  if (status${j} != 1) return status${j};`);
+					from.push(`  int status${j} = lb_gmp_from${child.index}(&value->${slot}, ${pubChild(child, `out->${slot}`)}, budget);`, `  if (status${j} != 1) return status${j};`);
+				});
+				for(const lines of [to, from]) lines.push("  break;", "}");
+			});
+			for(const lines of [to, from]) lines.push("default: return 0;", "}");
+			declarations.push(`${surface.prefix}_gmp_status ${n}_select(${n}* value, uint32_t kind);`);
+			extra.push(`${surface.prefix}_gmp_status ${n}_select(${n}* value, uint32_t kind) {`
+				, `  if (!value || kind >= ${copy.cases.length} || value->kind >= ${copy.cases.length}) return ${surface.prefix.toUpperCase()}_GMP_STATUS_INVALID_ARGUMENT;`
+				, `  lb_gmp_reset${id}(value, kind); return ${surface.prefix.toUpperCase()}_GMP_STATUS_OK;`, "}");
 		} else if(copy.record || copy.compound)
 		{
 			const flag = { option: "has_value", result: "is_ok" }[copy.compound];
@@ -141,7 +172,7 @@ export const renderGmpValues = surface => {
 			to.push("*out = *value;"); from.push("*out = *value;");
 		}
 		const functionBody = lines => lines.map(line => `  ${line}`).join("\n");
-		definitions.push(`static inline void lb_gmp_init${id}(${pointer} value) { (void)value;\n${functionBody(init)}\n}`
+		definitions.push(...before, `static inline void lb_gmp_init${id}(${pointer} value) { (void)value;\n${functionBody(init)}\n}`
 			, `static inline void lb_gmp_clear${id}(${pointer} value) { (void)value;\n${functionBody(clear)}\n}`
 			, `static inline void lb_gmp_swap${id}(${pointer} left, ${pointer} right) { (void)left; (void)right;\n${functionBody(swap)}\n}`
 			, ...extra

@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { cIdentifier } from "./generate.mjs";
+import { cIdentifier, cVariantTag } from "./generate.mjs";
 import { compilePrimitiveCSurface, rejectPrimitiveSurface } from "./primitive-surface.mjs";
 import { gmpAddress, gmpInput, gmpInteger, gmpName, gmpOutput, renderGmpValues } from "./gmp-values.mjs";
 
@@ -18,6 +18,20 @@ export const validateGmpSurface = surface => {
 	const initializers = new Set(surface.copies.filter(copy => copy.aggregate).map(copy => `${copy.name}_init`));
 	for(const fn of surface.functions) if(initializers.has(fn.name)) rejectPrimitiveSurface(fn.declaration, "C export collides with a generated GMP aggregate initializer");
 	for(const copy of surface.copies) if(initializers.has(copy.name)) rejectPrimitiveSurface(surface.functions[0]?.declaration, "C record name collides with a generated GMP aggregate initializer");
+	const rawNames = new Set(["status", "error_code", "error"].map(name => `${surface.prefix}_${name}`));
+	for(const fn of surface.functions) rawNames.add(fn.name);
+	for(const copy of surface.copies.filter(copy => copy.aggregate))
+		for(const name of [copy.name, `${copy.name}_clear`, ...copy.variant ? [`${copy.name}_init`, `${copy.name}_select`, `${copy.name}_tag`, ...copy.cases.map(branch => cVariantTag(copy.name, branch.name))] : []]) rawNames.add(name);
+	for(const callback of surface.callbacks.values())
+		for(const name of [callback.name, `${callback.name}_fn`, ...["", "_call", "_dispose"].map(suffix => `${surface.prefix}_owned_${callback.field}${suffix}`)]) rawNames.add(name);
+	const projectedNames = [...rawNames, ...initializers];
+	for(const alias of surface.aliases)
+		for(const name of [alias.name, ...alias.copy.aggregate ? [`${alias.name}_init`, `${alias.name}_clear`] : []]) rawNames.add(name);
+	for(const name of projectedNames)
+	{
+		const projected = name.startsWith(`${surface.prefix}_`) ? name.replace(`${surface.prefix}_`, `${surface.prefix}_gmp_`) : name.replace(`${surface.prefix.toUpperCase()}_`, `${surface.prefix.toUpperCase()}_GMP_`);
+		if(rawNames.has(projected)) rejectPrimitiveSurface(surface.functions[0]?.declaration, `C public GMP name collides with the private C transport: ${projected}`);
+	}
 };
 
 /**
@@ -26,7 +40,7 @@ export const validateGmpSurface = surface => {
  * @param ir - Compiler-checked Binding IR.
  */
 export const generateGmpProjection = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true }), p = surface.prefix, g = `${p}_gmp`, m = p.toUpperCase(), gm = g.toUpperCase();
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true }), p = surface.prefix, g = `${p}_gmp`, m = p.toUpperCase(), gm = g.toUpperCase();
 	validateGmpSurface(surface);
 	const copied = renderGmpValues(surface), functions = [], implementations = [], callbacks = [];
 	const site = ref => surface.callbacks.get(ref.id) ?? surface.copy(ref);
@@ -124,6 +138,9 @@ export const generateGmpProjection = ir => {
 	{
 		const n = gmpName(surface, copy); aliases.push(`typedef ${n} ${copy.name};`);
 		for(const action of ["init", "clear"]) aliases.push(`static inline void ${copy.name}_${action}(${gmpOutput(surface, copy, "value")}) { ${n}_${action}(value); }`);
+		if(copy.variant) aliases.push(`typedef ${n}_tag ${copy.name}_tag;`
+			, ...copy.cases.map(branch => `#define ${cVariantTag(copy.name, branch.name)} ${cVariantTag(n, branch.name)}`)
+			, `static inline ${p}_status ${copy.name}_select(${copy.name}* value, uint32_t kind) { return ${n}_select(value, kind); }`);
 	}
 	for(const alias of surface.aliases)
 	{

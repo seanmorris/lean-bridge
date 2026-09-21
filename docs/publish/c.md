@@ -65,8 +65,32 @@ Aliases can name supported primitives, copied records and nested containers.
 Chains retain their contract identities. Reviewed IR must match the compiler's
 names and targets exactly. Alias cycles, excessive nesting and collisions with
 public functions or generated types fail before packaging. Generic, recursive,
-variant and identity-bearing alias targets remain outside the current native
+and identity-bearing alias targets remain outside the current native
 profile. See the [installed alias checks](../evidence/native-aliases-20260921.md).
+
+## Copied tagged variants
+
+Concrete, non-recursive Lean inductives use named C constructor tags and unions
+of named payload fields. Empty constructors remain distinct. Payloads may contain
+supported copied primitives, records, containers and other variants. Both
+ordinary-source and compiler-checked reviewed builds accept these types.
+
+Each variant provides `_init`, `_select` and `_clear`. Selection releases the old
+payload and initializes the new one; consumers do not assign constructor numbers
+or initialize union fields by hand. GMP packages initialize nested `mpz_t`
+members. Generated Lean helpers construct and inspect each case without exposing
+compiler object tags or field offsets.
+
+Only the selected case crosses the boundary. The 16 MiB copy budget includes
+the variant struct and active payload; type nesting remains limited to 32.
+Malformed tags and conversion failures leave the output slot unchanged, and
+partial results are released. Generated type, tag and selector names must be
+distinct. C/GMP also rejects names that collide with its private C transport.
+
+Choose `--target c`; adding `--target cpp` builds the C++ representation from the
+same captured API. C packages without arbitrary integers need no GMP dependency.
+See the [consumer example](../consume/c.md#tagged-variants) and
+[installed plain C/C-GMP evidence](../evidence/c-variants-20260921.md).
 
 ## Export callbacks and closures
 

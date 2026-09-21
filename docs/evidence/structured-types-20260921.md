@@ -322,3 +322,23 @@ the leak report matches the startup-only GMP baseline. See the
 C/GMP, the other native hosts, PHP-Wasm and WIT still need their variant
 projections. Bounded recursive values, compound callables and explicitly owned
 identity aggregates remain open.
+
+## Compiled C and C/GMP variants
+
+Prepared C11 archives now expose named constructor tags, payload unions and
+active-case `_init`, `_select` and `_clear` functions. Typed Lean helpers retain
+the compiler-independent conversion used by C++.
+
+Both ordinary-source and reviewed-IR GMP packages pass 46,234 assertions per
+execution, covering all nineteen primitive payloads, eighteen constructors and
+nested copied values. Plain C archives without GMP pass 1,815 assertions on each
+source path. Each installation runs twice after producer removal and relocation.
+
+The native and public GMP probes exercise 242 and 448 allocation failures,
+respectively. They check partial cleanup, preservation of existing output values
+on failure and release of old owned values on success. Sanitizer reports match
+the startup-only runtime baseline. See the [C variant evidence](c-variants-20260921.md).
+
+Tagged variant acceptance now covers the five npm profiles, C++ and C. Ten
+profiles still need variant projections. Bounded recursion, compound callable
+payloads and explicitly owned identity aggregates remain part of VO1219.

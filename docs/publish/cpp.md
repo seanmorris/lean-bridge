@@ -43,10 +43,11 @@ collisions fail during generation; C++ keywords in fields gain a trailing
 underscore. Recursive values, callable payloads and retained identities remain
 outside this copied profile.
 
-Select `--target cpp` for these packages. The prepared C/GMP, other native host,
-PHP-Wasm and WIT variant projections are still pending; requesting those targets
-with a variant API rejects before compilation. The C transport included in a
-C++ archive is an implementation layer, not a separately accepted C/GMP package.
+Select `--target cpp` for these packages. Add `--target c` for the
+[public C/C-GMP representation](c.md#copied-tagged-variants). Other native host,
+PHP-Wasm and WIT variant projections remain pending. The C transport included
+in a C++ archive is an implementation layer; use the C target for its public API
+and GMP integer handling.
 See the [consumer example](../consume/cpp.md#tagged-variants) and
 [installed evidence](../evidence/cpp-variants-20260921.md).
 

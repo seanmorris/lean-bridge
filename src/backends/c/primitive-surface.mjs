@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { cIdentifier, cKeywords as keywords, cVariantIdentifier, compileCProjectionModel, describeCFunction, describeCType, describeCopiedCAliases } from "./generate.mjs";
+import { cIdentifier, cKeywords as keywords, cVariantIdentifier, cVariantTag, compileCProjectionModel, describeCFunction, describeCType, describeCopiedCAliases } from "./generate.mjs";
 import { componentScalarTypes, fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 
 const safe = name => /^[a-z][a-z0-9_]*$/.test(name) && !name.includes("__") && !keywords.has(name);
@@ -101,8 +101,9 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 		const copy = { ref, scalarName: fixedPlatformInteger(ref.name, wordBits), ...describeCType(ir, ref), fields, element, record, compound, ...(variant ? { variant, cases } : {}), index: copies.size };
 		if(copy.aggregate)
 		{
-			if(cTypeNames.has(copy.name) || cTypeNames.has(`${copy.name}_clear`)) rejectPrimitiveSurface(declaration, "C/C++ copied type name collides with another generated type");
-			cTypeNames.add(copy.name); cTypeNames.add(`${copy.name}_clear`);
+			const generated = [copy.name, `${copy.name}_clear`, ...copy.variant ? [`${copy.name}_init`, `${copy.name}_select`, `${copy.name}_tag`, ...copy.cases.map(branch => cVariantTag(copy.name, branch.name))] : []];
+			if(generated.some(name => cTypeNames.has(name))) rejectPrimitiveSurface(declaration, "C/C++ copied type name collides with another generated type");
+			for(const name of generated) cTypeNames.add(name);
 		}
 		copies.set(key, copy);
 		return copy;
@@ -150,7 +151,7 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 			callbacks.set(type.id, { ...describeCType(ir, site.type), field: cIdentifier(type.name), type });
 		}
 	}
-	const names = new Set([...copies.values()].filter(copy => copy.aggregate).flatMap(copy => [copy.name, `${copy.name}_clear`]));
+	const names = new Set(cTypeNames);
 	const functions = ir.declarations.map(declaration => {
 		const surface = describeCFunction(ir, declaration);
 		if(!safe(surface.prefix) || !safe(surface.field) || reserved.has(surface.field) || names.has(surface.name)

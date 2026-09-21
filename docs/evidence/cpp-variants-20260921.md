@@ -43,7 +43,7 @@ Each execution passes 36,091 assertions across 2,372 calls. These cover all
 nineteen primitive payloads, 5,121-bit integers, fixed-width and platform-word
 limits, IEEE special values, Unicode, embedded NUL and binary data. Lean checks
 all nineteen fields independently, including eighteen changed-field negatives.
-Other checks cover every constructor, nested records, Lists and arrays, optional
+Other checks cover empty and populated constructors, nested records, Lists and arrays, optional
 variants, both result branches, products, single-constructor arithmetic and
 Lean-created output variants. Mutation and destruction tests verify independent
 payload ownership.
@@ -89,6 +89,6 @@ No registry package was published.
 ## Scope
 
 This milestone covers C++ copied variant parameters, results and fields on both
-source paths. It does not advance C/GMP or the other native host projections,
-PHP-Wasm or WIT variants. Those targets still reject variant APIs. Recursive
+source paths. [C/C-GMP acceptance](c-variants-20260921.md) is recorded separately.
+The other native host projections, PHP-Wasm and WIT still reject variant APIs. Recursive
 values, compound callable payloads and identity-bearing aggregates remain open.

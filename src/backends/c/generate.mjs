@@ -54,6 +54,13 @@ export const cVariantIdentifier = value => {
 	const name = value.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase();
 	return cKeywords.has(name) ? `${name}_` : name;
 };
+/**
+ * Name a public constructor tag without exposing Lean's runtime representation.
+ *
+ * @param name - Generated C type name.
+ * @param branch - Source constructor name.
+ */
+export const cVariantTag = (name, branch) => `${name.toUpperCase()}_KIND_${cVariantIdentifier(branch).toUpperCase()}`;
 const valueFields = type => type.kind === "variant" ? type.cases.flatMap(branch => branch.fields) : type.fields;
 const packageName = ir => ir.component.id.slice(0, ir.component.id.lastIndexOf("@"));
 const packageStem = ir => snake(packageName(ir).split("/").at(-1));
@@ -646,6 +653,7 @@ const emitPublicHeader = ir => {
 	for(const type of records)
 	{
 		const name = cType(ir, type.ref ?? { kind: "named", id: type.id });
+		if(type.kind === "variant") lines.push(`typedef enum ${name}_tag { ${type.cases.map((branch, i) => `${cVariantTag(name, branch.name)} = ${i}`).join(", ")} } ${name}_tag;`);
 		lines.push(`typedef struct ${name} {`);
 		if(type.kind === "variant")
 		{
@@ -657,7 +665,8 @@ const emitPublicHeader = ir => {
 				for(const field of branch.fields) lines.push(`      ${cType(ir, field.type)} ${cVariantIdentifier(field.name)};`);
 				lines.push(`    } ${cVariantIdentifier(branch.name)};`);
 			}
-			lines.push("  } cases;", `} ${name};`, "", `void ${name}_clear(${name} *value);`, "");
+			lines.push("  } cases;", `} ${name};`, "", `void ${name}_init(${name} *value);`, `void ${name}_clear(${name} *value);`
+				, `${p}_status ${name}_select(${name} *value, uint32_t kind);`, "");
 			continue;
 		}
 		if(compoundFlag(type.ref?.constructor)) lines.push(`  uint8_t ${compoundFlag(type.ref.constructor)};`);
@@ -880,6 +889,7 @@ const emitImplementation = ir => {
 		const name = cType(ir, type.ref ?? { kind: "named", id: type.id });
 		if(type.kind === "variant")
 		{
+			lines.push(`void ${name}_init(${name} *value) { if (value) memset(value, 0, sizeof(*value)); }`);
 			lines.push(`void ${name}_clear(${name} *value) {`, "  if (value == NULL) return;", "  switch (value->kind) {");
 			type.cases.forEach((branch, i) => {
 				lines.push(`    case ${i}:`);
@@ -888,6 +898,9 @@ const emitImplementation = ir => {
 				lines.push("      break;");
 			});
 			lines.push("    default: break;", "  }", "  memset(value, 0, sizeof(*value));", "}", "");
+			lines.push(`${p}_status ${name}_select(${name} *value, uint32_t kind) {`
+				, `  if (!value || kind >= ${type.cases.length} || value->kind >= ${type.cases.length}) return ${macro}_STATUS_INVALID_ARGUMENT;`
+				, `  ${name}_clear(value); value->kind = kind; return ${macro}_STATUS_OK;`, "}", "");
 			continue;
 		}
 		const clearable = type.fields.filter(field => {
