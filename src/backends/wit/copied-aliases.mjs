@@ -47,6 +47,8 @@ export const compileCopiedWitAliases = ({ ir, surface, admit, admitAlias, fail }
 				, type: visit(base.record ? base.record.fields[index].type : ref.arguments[index]) }));
 			const element = base.element ? visit(ref.arguments[0]) : null;
 			value = { ...base, ref, fields, element };
+			if(base.variant) value.cases = base.cases.map((branch, index) => ({ ...branch
+				, fields: branch.fields.map((field, position) => ({ ...field, type: visit(base.variant.cases[index].fields[position].type) })) }));
 			if(key(ref) !== key(base.ref))
 			{
 				const witIndex = next++, witName = admit(`bridge-alias-value-${witIndex}`, ir.declarations[0]);
@@ -78,7 +80,7 @@ export const witAliasReadme = model => {
 	return `
 ## Copied Lean aliases
 
-The WIT source and compiled component retain named aliases, their chains and original parameter, result and record-field references. binding-manifest.json records each Lean name and original target. Callers pass ordinary target values; aliases introduce no wrapper objects or resources. Conversion rules, independent result ownership and existing copy limits apply unchanged. USize and ISize use this native profile's 64-bit widths. Alias payloads inside callback signatures, native variants, recursive copied values and identity-bearing alias targets remain unsupported.
+The WIT source and compiled component retain named aliases, their chains and original parameter, result, record-field and variant-field references. binding-manifest.json records each Lean name and original target. Callers pass ordinary target values; aliases introduce no wrapper objects or resources. Conversion rules, independent result ownership and existing copy limits apply unchanged. USize and ISize use this native profile's 64-bit widths. Alias payloads inside callback signatures, recursive copied values and identity-bearing alias targets remain unsupported.
 
 | Lean alias | Original target | WIT name |
 | --- | --- | --- |

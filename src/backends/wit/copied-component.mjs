@@ -21,12 +21,15 @@ const leaf = {
 const layout = (copy, cache) => {
 	if(copy.resource) return { flat: ["i32"], size: 4, alignment: 4 };
 	if(cache.has(copy)) return cache.get(copy);
-	if(copy.compound === "option" || copy.compound === "result")
+	if(copy.variant || copy.compound === "option" || copy.compound === "result")
 	{
-		const cases = copy.fields.map(field => layout(field.type, cache));
-		const alignment = Math.max(...cases.map(value => value.alignment));
-		// Canonical variants place their payload after an aligned one-byte tag.
-		const size = align(align(1, alignment) + Math.max(...cases.map(value => value.size)), alignment);
+		const cases = copy.variant ? copy.cases.map(branch => branch.fields.length
+			? layout({ payloadRecord: true, fields: branch.fields }, cache) : { flat: [], size: 0, alignment: 1 })
+			: copy.fields.map(field => layout(field.type, cache));
+		const tagSize = !copy.variant || copy.cases.length <= 256 ? 1 : copy.cases.length <= 65536 ? 2 : 4;
+		const payloadAlignment = Math.max(1, ...cases.map(value => value.alignment));
+		const alignment = Math.max(tagSize, payloadAlignment);
+		const size = align(align(tagSize, payloadAlignment) + Math.max(0, ...cases.map(value => value.size)), alignment);
 		if(!Number.isSafeInteger(size) || size > 16 * 1024 * 1024) throw new TypeError("WIT variant layout exceeds the 16 MiB copied-value limit");
 		const payload = [];
 		for(const value of cases) for(const [index, type] of value.flat.entries())
@@ -38,7 +41,7 @@ const layout = (copy, cache) => {
 		const result = { flat: ["i32", ...payload].slice(0, 17), alignment, size };
 		cache.set(copy, result); return result;
 	}
-	if((copy.record && copy.fields.length) || copy.compound === "tuple")
+	if((copy.record && copy.fields.length) || copy.payloadRecord || copy.compound === "tuple")
 	{
 		const fields = copy.fields.map(field => layout(field.type, cache));
 		const alignment = Math.max(...fields.map(field => field.alignment));

@@ -844,6 +844,27 @@ CI requires `build/lists/wit.json` and `build/lists/wit-conversions.json`.
 The [List evidence](../evidence/wit-lists-20260921.md) records exact packages
 and checks.
 
+Run named copied variants with the same toolchain:
+
+```sh
+LEAN_BRIDGE_WIT_VARIANT_TEST=1 node --test --test-concurrency=1 \
+  tests/wit-variants.test.mjs \
+  tests/wit-variant-contract.test.mjs \
+  tests/wit-variant-conversions.test.mjs
+node --test tests/wit-variant-evidence.test.mjs
+```
+
+Both source paths compile nineteen exports and exercise 281 constructors,
+including empty cases, Unit payloads, named aliases and mixed integer/float
+cases. A 257-case family checks the wider WIT discriminant. Independent parsed
+text and binary checks preserve family, constructor and field names. Original
+archives relocate and execute twice without producer files or compilers.
+Separate sanitizer probes check partial conversion, allocation failures,
+copy budgets and poisoned inactive payloads. CI requires
+`build/variants/wit.json` and `build/variants/wit-conversions.json`.
+The [variant evidence](../evidence/wit-variants-20260921.md) records exact counts,
+reproduced archives and the Lean constructor-tag boundary.
+
 ### Alpha bundle
 
 Build the universal bundle and project its WIT/WASI archive into a new directory:

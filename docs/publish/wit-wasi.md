@@ -6,7 +6,7 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 ## Build an ordinary Lean project
 
-The `wit-wasi` target accepts copied primitives, arrays, Lists, acyclic records, options, results and binary products, plus synchronous primitive callbacks and returned Lean functions. Consumers receive the compiled component, a generated Wasmtime embedding library, headers, shared native runtime, compiler evidence and dependency licenses. The target builds for Linux x86-64 with glibc 2.38 or newer.
+The `wit-wasi` target accepts copied primitives, arrays, Lists, acyclic records, options, results, binary products, aliases and concrete tagged variants, plus synchronous primitive callbacks and returned Lean functions. Consumers receive the compiled component, a generated Wasmtime embedding library, headers, shared native runtime, compiler evidence and dependency licenses. The target builds for Linux x86-64 with glibc 2.38 or newer.
 
 Callable signatures support all nineteen primitives and one through sixteen arguments. Use an [arity decision](../lean/export-decisions.md) when an export returns a partially applied function. Host callbacks are call-borrowed; returned Lean functions have explicit leases. Arrays, Lists, records, options, results, products and nested callbacks inside callable signatures, retained host borrows and asynchronous results remain unsupported. The [consumer guide](../consume/wit-wasi.md#callbacks-and-returned-lean-functions) describes the owning session API and cleanup.
 
@@ -61,7 +61,7 @@ end Scores
 ```
 
 The archive preserves the alias names and chains in its WIT source, compiled
-component, binding manifest and README. API sites and record fields retain
+component, binding manifest and README. API sites, record fields and variant payloads retain
 their original references. Consumers pass
 [ordinary target values](../consume/wit-wasi.md#named-copied-aliases).
 
@@ -71,8 +71,40 @@ review with fresh Lean metadata. Aliases must remain concrete, immutable copied
 values within the existing depth bound. When an alias's WIT spelling matches
 a function, the alias receives an `alias-` prefix until its name is distinct.
 Other duplicate or reserved type spellings reject at build time.
-Callback alias payloads, native variants, recursive copies and
+Callback alias payloads, recursive copies and
 identity-bearing alias targets need separate support.
+
+## Export copied variants
+
+Select functions using concrete copied inductives in `exports`. For example:
+
+```lean
+namespace Events
+inductive Signal where
+  | idle
+  | data (count : UInt32) (label : String)
+  | marker (value : Unit)
+def echo (value : Signal) : Signal := value
+end Events
+```
+
+The generated WIT declares `variant signal` with named `idle`, `data` and
+`marker` cases. Nonempty constructors carry named records such as
+`signal-data-fields`. A Unit field stays present; it does not collapse into an
+empty case. The component binary, binding manifest and README preserve the
+same contract. Consumers use [named Wasmtime values](../consume/wit-wasi.md#named-copied-variants).
+
+Reviewed IR must retain each family, constructor, field name and original
+field type, including aliases. The build compares this contract with fresh
+compiler metadata. Payloads can nest copied primitives, arrays, Lists, records,
+options, results, products and other acyclic variants. Existing depth and copy
+limits apply. Callback payloads, recursive variants and identity-bearing
+fields still need separate support.
+
+The Lean compiler's datatype limits also apply. Lean 4.32.2 supports boxed
+constructor tags through 243. Empty constructors can use higher tags. The
+installed acceptance fixture uses 257 constructors, with empty cases above
+that boundary, to exercise WIT's two-byte canonical tag.
 
 ## Check the build inputs
 

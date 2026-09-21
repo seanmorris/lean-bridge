@@ -13,6 +13,7 @@ import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifact
 import { ordinaryWitEvidence, wasmtimeCapiIdentity } from "../build/native-wit-artifacts.mjs";
 import { renderWitHostHeader, renderWitHostSource } from "../backends/wit/copied-host.mjs";
 import { witAliasReadme } from "../backends/wit/copied-aliases.mjs";
+import { witVariantReadme } from "../backends/wit/copied-variants.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 
 /**
@@ -44,7 +45,7 @@ export const packageOrdinaryWasi = async options => {
 	const { name, version } = projection, archiveRoot = `${name}-${version}-wit-wasi`, root = join(working, "packages/wit-wasi", archiveRoot);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (from, path) => save(path, await readFile(from));
-	const saveReadme = bytes => save("README.md", (projection.resources.length ? callableReadme(projection, glibcMinimumVersion) : bytes) + witAliasReadme(projection));
+	const saveReadme = bytes => save("README.md", (projection.resources.length ? callableReadme(projection, glibcMinimumVersion) : bytes) + witAliasReadme(projection) + witVariantReadme(projection));
 	for(const path of await nativeArtifactPaths(witRoot))
 		await copy(join(witRoot, path), path === "wasmtime/LICENSE" ? "share/lean-bridge/licenses/Wasmtime-LICENSE" : path.startsWith("wasmtime/") ? path.slice(9) : path);
 	await copy(join(adapterRoot, "lib", adapter.library), `lib/${adapter.library}`);

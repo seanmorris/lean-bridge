@@ -160,7 +160,8 @@ unsupported.
 ### Named copied aliases
 
 Prepared packages preserve concrete Lean alias names and chains in both the WIT
-source and compiled component. Function signatures and record fields refer to
+source and compiled component. Function signatures, record fields and variant
+payloads refer to
 the original named types. The installed `binding-manifest.json` records their
 Lean names and targets; the package README lists their WIT names.
 
@@ -176,8 +177,72 @@ Lean `USize` and `ISize` use 64-bit values in this native profile. The existing
 
 The [installed alias checks](../evidence/wit-aliases-20260921.md) cover ordinary
 source and reviewed IR, including aliases used only as return types. Aliases
-inside callback signatures, native variants, recursive copied values and
+inside callback signatures, recursive copied values and
 identity-bearing alias targets remain unsupported.
+
+### Named copied variants
+
+Prepared ordinary-source and reviewed-IR packages expose concrete Lean
+inductives as named WIT variants. Each nonempty constructor has a named payload
+record that preserves its fields and their order. Constructor numbers and Lean
+object layouts stay private.
+
+For the `Signal` family in the variant acceptance package:
+
+| Lean constructor | WIT case | Wasmtime payload |
+| --- | --- | --- |
+| `Signal.idle` | `idle` | No payload, `.of.variant.val = NULL` |
+| `Signal.stopped` | `stopped` | No payload, distinct from `idle` |
+| `Signal.data count label` | `data(signal-data-fields)` | Record fields `count: u32`, `label: string` |
+| `Signal.marker ()` | `marker(signal-marker-fields)` | Record field `value`, containing enum `unit` |
+
+After opening a `variants_wasmtime` session, construct and call the Unit-bearing
+case using the public Wasmtime API:
+
+```c
+wasmtime_component_val_t payload = {.kind = WASMTIME_COMPONENT_RECORD};
+wasmtime_component_valrecord_new_uninit(&payload.of.record, 1);
+wasm_name_new(&payload.of.record.data[0].name, 5, "value");
+payload.of.record.data[0].val =
+    (wasmtime_component_val_t){.kind = WASMTIME_COMPONENT_ENUM};
+wasm_name_new(&payload.of.record.data[0].val.of.enumeration, 4, "unit");
+
+wasmtime_component_val_t input = {.kind = WASMTIME_COMPONENT_VARIANT};
+wasm_name_new(&input.of.variant.discriminant, 6, "marker");
+input.of.variant.val = wasmtime_component_val_new(&payload);
+wasmtime_component_val_t output = {0};
+wasmtime_error_t *error = variants_wasmtime_call(
+    session, "echo", &input, 1, &output);
+wasmtime_component_val_delete(&input);
+if (error) {
+    wasmtime_error_delete(error);
+} else {
+    /* output owns its marker payload independently of input. */
+    wasmtime_component_val_delete(&output);
+}
+```
+
+The outer variant owns the transferred payload. Delete it once, without also
+deleting the transferred local `payload`. Use `wasmtime_component_val_clone`
+for an independent copy. Returned values survive session closure. Compare
+constructor names and selected fields recursively, not pointer addresses.
+
+Read the package's WIT file and `binding-manifest.json` for exact names.
+Constructor and field names use lowercase kebab-case. WIT keywords use a `%`
+escape in source, but Wasmtime discriminants and record names omit that escape.
+Labels that cannot use kebab-case receive an unambiguous encoded spelling;
+normalization collisions reject at build time.
+
+Variants compose with aliases, arrays, Lists, records, options, results and
+products, under the existing 32-level type limit and conversion budgets.
+Unknown cases, absent or extra payloads, wrong field order, names and types
+fail without changing the output slot. Caller pointers must still refer to
+valid C storage. Recursive copied values and identity-bearing fields remain
+unsupported, as do variant payloads inside callbacks.
+
+The [installed variant checks](../evidence/wit-variants-20260921.md) cover both
+source paths, empty and Unit cases, mixed integer/float payloads, a 257-case
+family, malformed inputs, independent copies and recovery after failure.
 
 ### Callbacks and returned Lean functions
 
@@ -307,7 +372,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Prod α β / tuples` | `tuple<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two ordered WIT tuple entries preserve binary nesting and per-position types. All compounds compose with copied arrays and acyclic records. Conversion accounts for slots and payloads with a 16 MiB limit; C callers supply valid borrowed storage. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated WIT record (empty: single-case enum)` (input, result, field); `Generated WIT record` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary packages use WIT field order and compiler-owned Lean accessors. Empty records use a single-case enum; returned values remain valid after closing the session. The Alpha executable adapter does not expose this type. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Named WIT alias; ordinary target Wasmtime value` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Text WIT and the compiled component preserve original alias names and chains, API references and record fields. The manifest and README document target mappings; callers use ordinary Wasmtime values without wrapper resources. Native target conversions, branch presence, independent result ownership, 64-bit USize/ISize and existing copy budgets remain unchanged. An alias whose WIT name conflicts with a function receives an alias- prefix; other duplicate or reserved type names reject. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | `Generated WIT variant` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `Named WIT variant with named constructor payload records` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Constructor names and selected record fields preserve identity, order, empty cases and Unit payloads. Named aliases and all nineteen primitive payloads compose with admitted copied containers. Native USize and ISize are 64-bit. Input tags, payload presence, exact fields and scalar ranges reject before native entry; results own independent copies and survive session close. Only the selected native payload is read. Use WIT names, not Lean constructor numbers or pointer identity. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `borrow<function-*> through a session token` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Generation rejected (result, field, callback input, callback result) | The adapter checks the session, generation and signature before borrowing a callback for one Lean call. Failures return an owned Wasmtime error. The Alpha executable adapter does not expose this type. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `list<T> (owned Wasmtime component values)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Canonical WIT lists preserve empty sequences, order, duplicates and nesting; Lean List and Array retain distinct IR and native types. Public Wasmtime values borrow inputs and return independent owned copies, including nested branches, fields and bytes. Delete results with wasmtime_component_val_delete; they remain valid after closing the session. Preflight rejects wrong element types, missing buffers, excessive counts and invalid branches before Wasmtime copies input. Errors leave the output slot unchanged; trapped stores are replaced before reuse. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |

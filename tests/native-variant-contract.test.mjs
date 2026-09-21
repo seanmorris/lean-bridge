@@ -88,9 +88,9 @@ test("native variant aliases keep target semantics and original alias contracts"
 	assert.match(generateCBindingPackage(ir)["include/variants.h"], /typedef variants_mode variants_mode_view_t;/);
 });
 
-test("unimplemented host projections still reject variants before generation", () => {
+test("variant admission stays explicit for opt-in projections", () => {
 	const ir = nativeVariantReviewedIr();
-	for(const build of [compileCopiedPhpModel, compileCopiedWitModel])
-		assert.throws(() => build(ir), /copied primitives, arrays or acyclic records/);
+	assert.throws(() => compileCopiedPhpModel(ir), /copied primitives, arrays or acyclic records/);
+	assert.equal(compileCopiedWitModel(ir).manifest.contracts.variants.length, 7);
 	assert.throws(() => compilePrimitiveCSurface(ir, { ...options, variants: false }), /copied primitives, arrays or acyclic records/);
 });
