@@ -4,6 +4,7 @@
  * @file
  */
 import { phpValue, phpCallableDefinitions } from "./callables.mjs";
+import { phpVariantDefinition, phpVariantChecks, phpVariantConversions } from "./copied-variants.mjs";
 
 /**
  * Declare C layouts and calls without preprocessing or Lean layout assumptions.
@@ -13,7 +14,7 @@ import { phpValue, phpCallableDefinitions } from "./callables.mjs";
 export const copiedPhpDefinitions = model => {
 	const { surface } = model;
 	return ["typedef struct { int code; void *message; size_t message_length; } BridgeError;"
-		, ...surface.copies.filter(copy => copy.aggregate).map(copy => `typedef struct { ${copy.compound === "option" ? "uint8_t has_value; " : copy.compound === "result" ? "uint8_t is_ok; " : ""}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " bool negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
+		, ...surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? phpVariantDefinition(copy) : `typedef struct { ${copy.compound === "option" ? "uint8_t has_value; " : copy.compound === "result" ? "uint8_t is_ok; " : ""}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " bool negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
 		, ...surface.callbacks.size ? [phpCallableDefinitions(model)] : []
 		, ...surface.functions.map(fn => { const result = phpValue(model, fn.declaration.result.type); return `int ${fn.name}(${fn.declaration.parameters.map(site => { const copy = phpValue(model, site.type); return copy.ctype + (copy.aggregate || copy.type?.callable ? " *" : ""); }).concat(fn.resultType === "void" ? [] : [result.type?.callable ? `${result.ownedType} **` : `${result.ctype} *`]).concat("BridgeError *").join(", ")});`; })
 	].join("\n");
@@ -58,9 +59,10 @@ export const copiedPhpChecks = model => model.surface.copies.map(copy => {
 			, "$budget->charge(2, 32);"
 			, `return [${copy.fields.map((field, i) => `self::check${field.type.index}($value[${i}], $budget)`).join(", ")}];`);
 	}
+	else if(copy.variant) lines.push(...phpVariantChecks(model, copy));
 	else if(copy.record) lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected ${copy.publicType}');`, ...copy.fields.map(field => `self::check${field.type.index}($value->${field.name}, $budget);`));
 	else lines.push("if (!is_array($value) || !array_is_list($value)) throw new \\TypeError('Expected a list with consecutive integer keys');", "$budget->charge(count($value), 32);", "$result = [];", `foreach ($value as $item) $result[] = self::check${copy.element.index}($item, $budget);`, "return $result;");
-	if(!copy.element && !copy.compound) lines.push("return $value;");
+	if(!copy.element && !copy.compound && !copy.variant) lines.push("return $value;");
 	return `    public static function check${copy.index}(mixed $value, Budget $budget): mixed {\n        $budget->charge(1, 16);\n${lines.map(line => `        ${line}`).join("\n")}\n    }`;
 }).join("\n");
 
@@ -115,6 +117,10 @@ export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 			input.push("$scope->budget->charge(2, 32);", ...copy.fields.flatMap((field, i) => to(field, `$value[${i}]`)));
 			output.push("$scope->budget->charge(2, 32);", `return [${copy.fields.map(from).join(", ")}];`);
 		}
+	} else if(copy.variant)
+	{
+		const variant = phpVariantConversions(model, copy);
+		input.push(...variant.input); output.push(...variant.output);
 	} else if(copy.record)
 	{
 		for(const field of copy.fields) input.push(`$field${field.type.index}_${field.name} = self::to${field.type.index}($value->${field.name}, $scope);`, `$out->${field.name} = $field${field.type.index}_${field.name}${field.type.aggregate ? "" : "->cdata"};`);

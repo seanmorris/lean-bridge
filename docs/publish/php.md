@@ -40,7 +40,7 @@ lean-bridge build --project ./clover --target php-native --output ./release-php
 
 The build compiles Lean and the shared C adapter, generates and syntax-checks PHP, verifies the native artifacts, then produces `release-php/archives/example-clover-api-2.0.0-RC.1-linux-x86_64.zip`. The ZIP includes `composer.json`, PHP sources, compiled libraries, license notices, source identities and `lean-bridge/package-receipt.json`. Repeat another supported `--target` to share compilation. Every requested target must succeed before the release directory appears.
 
-Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, acyclic records, options, results, nested binary products and synchronous primitive callables. FPM, ZTS, resources, asynchronous delivery and compound callables remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [callable record](../evidence/php-callables-20260919.md) record installed checks and archive identities.
+Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, acyclic records, concrete copied variants, options, results, nested binary products and synchronous primitive callables. FPM, ZTS, resources, asynchronous delivery and compound callables remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [callable record](../evidence/php-callables-20260919.md) record installed checks and archive identities.
 
 Native PHP maps `Option` to `null` or a generated `Some`, `Except` to `Ok` or
 `Err`, and each `Prod` to exactly two consecutive array elements. Branch classes
@@ -96,8 +96,45 @@ A reviewed Binding IR contract must preserve alias definitions and references,
 not replace them with flattened primitives. The builder compares them with
 fresh Lean metadata before packaging. Targets must remain concrete, immutable
 copied values within the existing 32-level depth bound. Recursive copied types,
-native variants, compound callable payloads and identity-bearing alias targets
+compound callable payloads and identity-bearing alias targets
 need separate support. Alias payloads in callbacks also remain separate work.
+
+### Export native copied variants
+
+Native Composer builds accept concrete, non-recursive copied variants from
+ordinary Lean source or a compiler-checked reviewed contract:
+
+```lean
+namespace Variants
+inductive Signal where
+  | idle
+  | stopped
+  | data (count : UInt32) (label : String)
+  | marker (value : Unit)
+def echo_signal (value : Signal) : Signal := value
+end Variants
+```
+
+Select `Variants.echo_signal` in `exports`, then build with
+`--target php-native`. Distribute the original Composer ZIP and its receipt.
+Generated PHP contains an abstract readonly `Signal` family and final readonly
+`SignalIdle`, `SignalStopped`, `SignalData` and `SignalMarker` classes. Payload
+names remain `count`, `label` and `value`. Consumers construct these classes
+without native tags or FFI declarations. The
+[consumer example](../php.md#named-copied-variants) shows the installed API.
+
+Payloads may mix primitives, admitted copied containers, records and variants.
+Selected signatures must fit the existing schema-depth and conversion budgets.
+PHP reserved names and case-insensitive class/function collisions reject before
+generation. Use a Lean wrapper such as `echo_signal` for a function named
+`echo`, which PHP reserves. Reviewed contracts must select that real wrapper;
+changing only the reviewed metadata is not sufficient.
+
+PHP-Wasm variants are not enabled, so this API cannot yet target both PHP
+transports in one build. Generic, indexed, proof-bearing, recursive, callable
+and identity-bearing payloads remain separate work. The
+[installed variant record](../evidence/php-native-variants-20260921.md) covers
+both source paths, weak and strict callers, relocation and conversion cleanup.
 
 ### Export native callbacks and returned functions
 

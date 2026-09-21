@@ -54,7 +54,7 @@ echo '42; exact integers and copied arrays', PHP_EOL;
 
 Run `php main.php`. Expected output is `42; exact integers and copied arrays`. You do not need Lean, C headers, a package-specific extension or runtime paths. Keep the installed package directory intact; it can move with your application.
 
-Ordinary native packages support pure functions over 19 primitive types, arrays, Lists, acyclic records, options, results and nested binary products. `Unit` is `null`, and `Char` is a UTF-8 string containing exactly one Unicode scalar. Fixed-width integers use PHP `int`, except `UInt64`, which uses `BigInteger`; `Nat`, `Int`, and `USize` use it too. `ISize` uses PHP `int`. Platform words follow the compiled Lean target: 64 bits for native PHP and 32 bits for PHP-Wasm. Composer installs the pinned `brick/math` 1.0.0 dependency. Use `Brick\Math\BigInteger::of` to construct exact integers. Lean Bridge accepts values up to 16,384 decimal digits. `Bytes::fromString` preserves arbitrary binary data. Arrays are consecutive-key lists, and records are final readonly classes. Results own independent copied values.
+Ordinary native packages support pure functions over 19 primitive types, arrays, Lists, acyclic records, concrete copied variants, options, results and nested binary products. `Unit` is `null`, and `Char` is a UTF-8 string containing exactly one Unicode scalar. Fixed-width integers use PHP `int`, except `UInt64`, which uses `BigInteger`; `Nat`, `Int`, and `USize` use it too. `ISize` uses PHP `int`. Platform words follow the compiled Lean target: 64 bits for native PHP and 32 bits for PHP-Wasm. Composer installs the pinned `brick/math` 1.0.0 dependency. Use `Brick\Math\BigInteger::of` to construct exact integers. Lean Bridge accepts values up to 16,384 decimal digits. `Bytes::fromString` preserves arbitrary binary data. Arrays are consecutive-key lists, and records are final readonly classes. Results own independent copied values.
 
 Parameters use `mixed` with precise PHPDoc so generated checks can reject numeric coercion even in weak caller mode. Invalid types raise `TypeError`; range and conversion limits raise `ValueError`; native failures raise the package's `LeanBridgeError`. `Float32` rounds PHP floats to binary32; floating-point conversions preserve NaN classification, infinities and signed zero.
 
@@ -100,10 +100,52 @@ comparison rules, not a generated Lean equality operation.
 
 These constructors compose with supported primitives, arrays, records and each
 other. Type nesting stops at 32 levels; the existing conversion budgets apply.
-Compound callables, resource-containing copies, arbitrary variants and
-recursive copied types remain unsupported. See the
+Native PHP also accepts the [named variants](#named-copied-variants) below.
+PHP-Wasm variants, compound callables, resource-containing copies and recursive
+copied types remain unsupported. See the
 [native compound checks](evidence/php-native-compounds-20260920.md) and
 [PHP-Wasm compound checks](evidence/php-wasm-compounds-20260920.md).
+
+### Named copied variants
+
+Native Composer packages expose a copied Lean variant as an abstract readonly
+family class and a final readonly class for each constructor. For the
+`LeanVariants` acceptance package, save this as `variants.php`:
+
+```php
+<?php
+require 'vendor/autoload.php';
+
+use LeanVariants\{SignalData, SignalIdle};
+use function LeanVariants\echo_signal;
+
+$result = echo_signal(new SignalData(count: 42, label: 'ready'));
+if (!$result instanceof SignalData || $result->count !== 42
+    || $result->label !== 'ready') {
+    throw new RuntimeException('Unexpected Signal payload');
+}
+$idle = echo_signal(new SignalIdle());
+echo $result->label, PHP_EOL;
+```
+
+Run `php variants.php`. Constructor arguments can be named or positional, with
+the original Lean field names. The family itself cannot be constructed.
+Calls accept exact generated cases and reject unknown subclasses and objects
+with uninitialized fields, including objects made through reflection. Weak
+callers receive the same type and range checks as strict callers. An empty case
+and a case containing `Unit` remain distinct.
+
+Payloads can contain all nineteen primitives and the admitted copied arrays,
+Lists, records, options, results, products and other variants. Returned values
+have independent storage. Readonly properties cannot be reassigned; contained
+objects still follow their own PHP semantics. `===` compares object identity,
+and `==` applies PHP's comparison rules. PHP does not check match exhaustiveness.
+
+Native tags and union layouts stay private. The 32-level schema limit and
+separate 16 MiB conversion budgets still apply. Generic, indexed, proof-bearing,
+recursive, callable and identity-bearing payloads need further support.
+PHP-Wasm variants are not enabled yet. See the
+[installed native PHP variant checks](evidence/php-native-variants-20260921.md).
 
 ### Lean Lists
 
@@ -719,7 +761,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Prod α β / tuples` | `Two-element consecutive-key array (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two consecutive integer-key array elements preserve binary nesting and per-position validation. Nested arrays, records and branch payloads are copied independently. Validation, host conversion and native copying each have a 16 MiB accounting limit, not a bound on all PHP or Lean allocations. Payloads use the selected target's integer mappings. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated readonly class` (input, result, field); `Generated value class (Alpha: LeanAlpha\Payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Final readonly typed classes, including empty and scalar-represented records. Input checks also validate objects made without their constructors.; PHP-Wasm: Final readonly typed classes, including empty and scalar-represented records. Nested fields are checked and results own independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | Native PHP: `PHP target value; named Lean contract in installed manifest and PHPDoc` (input, result, field); `Resolved target type` (callback input, callback result); PHP-Wasm: `PHP target value; named Lean contract in installed catalog and PHPDoc` (input, result, field); `Resolved target type` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Native PHP: Aliases preserve exact target conversion rules, original names and independently copied results. Weak and strict callers get the same checks: Nat requires nonnegative Brick\Math\BigInteger, integer ranges remain enforced, Unit uses null and Char requires one Unicode scalar. List/Array identity, Option/Result presence, 32-level schema depth and existing 16 MiB conversion budgets remain unchanged.; PHP-Wasm: Aliases retain exact wasm32 target rules and independent copies. UInt32, UInt64, Int64, Nat, Int and USize use Brick\Math\BigInteger; ISize uses a 32-bit PHP int. Weak and strict callers get the same checks. Unit uses null and Char requires one Unicode scalar. List/Array identity, Option/Result presence, 32-level schema depth and existing 16 MiB conversion budgets remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | Native PHP: `abstract readonly family and final readonly constructor classes` (input, result, field); PHP-Wasm: No host mapping recorded | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited | Native PHP: Construct named cases with positional or named payloads using original Lean field names. All nineteen primitive and admitted copied compound payloads preserve their checks in weak and strict callers. Empty cases and Unit payloads stay distinct. Calls require exact initialized generated cases and return independent copies. Native discriminants and union layouts remain private; invalid output tags reject before payload reads. Scoped cleanup releases partial conversions and clears owned output on failure. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `LeanAlpha\Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `callable` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Synchronous PHP callable with generated signature PHPDoc. Mixed bridge parameters prevent weak-caller coercion; callback failures preserve the same Throwable, trace and previous exception after cleanup. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `list<T> (consecutive-key PHP array)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Consecutive-key PHP arrays preserve empty Lists, order, duplicates and nesting. Element-specific PHPDoc accompanies recursively checked mixed parameters, preventing weak-mode coercion. Results own independent mutable copies. Calls reject associative or sparse arrays, iterator objects, invalid payloads and oversized copies. Typed Lean helpers avoid cons-cell layout assumptions. Native output lengths, missing buffers and alignment are checked before element reads; finally clears owned results after conversion errors.; PHP-Wasm: Consecutive-key PHP arrays preserve empty Lists, order, duplicates and nesting. Element-specific PHPDoc accompanies recursively checked mixed parameters, preventing weak-mode coercion. UInt32, UInt64, Int64, Nat, Int and USize payloads use Brick\Math\BigInteger on wasm32; ISize uses a 32-bit PHP integer. Results own independent mutable copies. Typed Lean helpers retain distinct List/Array identities without cons-cell layout assumptions. Native sequence lengths, null buffers, element alignment and Wasm memory bounds are checked before allocation or element reads. Native owners are released after conversion errors and PHP bailouts. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |

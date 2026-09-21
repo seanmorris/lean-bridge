@@ -53,7 +53,7 @@ export const phpAliasContract = (model, ref) => comment(contractType(model, ref)
 export const phpAliasReadme = model => !model.surface.aliases.length ? "" : `
 ## Copied Lean aliases
 
-Pass ordinary PHP target values. The binding manifest and installed public source retain alias names, original targets and chains. PHPDoc keeps the PHP target type; lean-bridge annotations record the original Lean contract at parameters, results and record fields. Aliases create no PHP wrapper classes or runtime type aliases. Nat requires a nonnegative Brick\\Math\\BigInteger, Unit uses null and Char requires one Unicode scalar. Weak and strict callers receive the same target checks. Copied values keep independent storage, the existing copy budgets and the 32-level type-depth bound. Native variants, recursive copied types, compound callable payloads and identity-bearing alias targets remain unsupported.
+Pass ordinary PHP target values. The binding manifest and installed public source retain alias names, original targets and chains. PHPDoc keeps the PHP target type; lean-bridge annotations record the original Lean contract at parameters, results and record fields. Aliases create no PHP wrapper classes or runtime type aliases. Nat requires a nonnegative Brick\\Math\\BigInteger, Unit uses null and Char requires one Unicode scalar. Weak and strict callers receive the same target checks. Copied values keep independent storage, the existing copy budgets and the 32-level type-depth bound. Recursive copied types, compound callable payloads and identity-bearing alias targets remain unsupported.
 
 | Lean alias | Contract target | PHP value |
 | --- | --- | --- |

@@ -16,15 +16,17 @@ import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs"
  * @param output - Fresh native release.
  * @param working - Isolated probe directory.
  * @param environment - Explicit compiler selection.
+ * @param options - Optional independent consumer for a source-authenticated wrapper.
+ * @param options.consumerSource - C consumer bytes, otherwise the shared fixture.
  */
-export const checkNativeVariantFaults = async (output, working, environment) => {
+export const checkNativeVariantFaults = async (output, working, environment, { consumerSource } = {}) => {
 	const binding = join(output, "native/c-binding"), component = join(output, "native/component"), runtime = join(output, "native/runtime");
 	const receipt = JSON.parse(await readFile(join(component, "native-component.json")));
 	const source = await readFile(join(binding, "src/native.c"), "utf8");
 	const tagged = source.replace(/uint32_t kind = (lb_t\w+_tag\(value\));/g, "uint32_t kind = $1; if (probe_bad_tag) kind = UINT32_MAX;");
 	assert.notEqual(source, tagged);
 	const adapter = "#include <stddef.h>\nextern int probe_bad_tag;\nvoid *probe_malloc(size_t);\nvoid *probe_calloc(size_t,size_t);\nvoid *probe_realloc(void*,size_t);\nvoid probe_free(void*);\n" + tagged.replace(/\b(malloc|calloc|realloc|free)\b/g, "probe_$1");
-	const consumer = await readFile("tests/fixtures/variant-consumers/native-probe.c", "utf8");
+	const consumer = consumerSource ?? await readFile("tests/fixtures/variant-consumers/native-probe.c", "utf8");
 	await saveLakeFile(working, "adapter.c", adapter); await saveLakeFile(working, "probe.c", consumer);
 	const executable = join(working, "probe");
 	await runCopied("/usr/bin/cc", ["-std=c11"

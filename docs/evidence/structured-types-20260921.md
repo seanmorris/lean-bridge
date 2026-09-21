@@ -466,3 +466,26 @@ mutable payload semantics, cleanup checks and installed identities.
 Fourteen of seventeen profiles now have installed tagged-variant acceptance.
 Native PHP, PHP-Wasm and WIT/WASI remain. Bounded recursive values, compound
 callable payloads and explicitly owned identity aggregates remain assigned work.
+
+## Compiled native PHP variants
+
+Native Composer packages now expose abstract readonly variant families and
+final readonly constructor classes with original payload names. Both source
+paths pass 37,686 public assertions over 4,460 calls per weak or strict caller,
+covering seven families, eighteen constructors and all nineteen primitives.
+The original archives install offline, relocate after author removal and run
+without compilers. Independent rebuilds reproduce both ZIPs and all twenty-five
+package-owned files; all sixty-seven deployment files remain unchanged during
+each execution.
+
+Separate in-memory probes recover from 460 injected exceptions and sixty-four
+partial-input failures, check two native-budget failures, reject seven invalid
+tags and five malformed payloads, and ignore six poisoned inactive cases.
+Public callers run again after the probe. Shared native allocation and
+sanitizer checks retain the unchanged startup-only baseline. See the
+[native PHP variant record](php-native-variants-20260921.md).
+
+Fifteen of seventeen profiles now have installed tagged-variant acceptance.
+PHP-Wasm and WIT/WASI variants remain, followed by bounded recursion, compound
+callable payloads, explicit identity-aggregate ownership and the older reviewed
+array/record audit. This milestone does not complete the structured-type goal.
