@@ -12,6 +12,7 @@ import test from "node:test";
 import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { createNativeModel, validateNativeType, generateNativeLeanAdapters, nativeCallbackDefault } from "../src/build/native-model.mjs";
 import { generatePerlBindingPackage } from "../src/backends/perl/generate.mjs";
+import { perlAliasApiDocs } from "../src/backends/perl/copied-aliases.mjs";
 import { validateNativeElf } from "../src/build/native-artifacts.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "../src/release/deterministic-archive.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
@@ -30,6 +31,21 @@ const fixture = () => createNativeModel({
 	component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" }
 	, moduleName: "LeanBridge::Sample"
 	, ...nativeMetadataFixture()
+});
+
+test("Perl alias documentation selects the exact specialized export identity", () => {
+	const model = fixture(), base = model.bindingIr.declarations[0];
+	const declaration = (name, type) => ({ ...structuredClone(base), id: `lean:Sample.${name}`
+		, source: { ...base.source, declaration: "Sample.echo" }
+		, parameters: [{ ...base.parameters[0], name: "value", type }]
+		, result: { ...base.result, type } });
+	model.bindingIr.declarations = [
+		declaration("echoText", { kind: "primitive", name: "string" })
+		, declaration("echoWord", { kind: "primitive", name: "uint32" })
+	];
+	assert.equal(perlAliasApiDocs(model, { name: "Sample.echoWord" }), "Parameter C<value>: C<uint32>. Returns C<uint32>.");
+	assert.equal(perlAliasApiDocs(model, { name: "Sample.echoText" }), "Parameter C<value>: C<string>. Returns C<string>.");
+	assert.throws(() => perlAliasApiDocs(model, { name: "Sample.echo" }), /missing Perl alias declaration/);
 });
 
 const matrixFixture = async t => {

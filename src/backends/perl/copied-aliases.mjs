@@ -61,7 +61,7 @@ export const perlCopiedAliases = model => model.bindingIr.types.filter(type => t
  * @param item - Native export with its source identity.
  */
 export const perlAliasApiDocs = (model, item) => {
-	const declaration = model.bindingIr.declarations.find(d => d.source.declaration === item.name);
+	const declaration = model.bindingIr.declarations.find(d => d.id === `lean:${item.name}`);
 	if(!declaration) throw new TypeError(`missing Perl alias declaration: ${item.name}`);
 	return [...declaration.parameters.map(p => `Parameter ${code(p.name)}: ${code(contractType(model, p.type))}.`)
 		, `Returns ${code(contractType(model, declaration.result.type))}.`].join(" ");
