@@ -62,7 +62,9 @@ use primitive or reference arrays from the same prepared Maven JAR on both paths
 both paths, with installed checks on all four pinned Perl ABIs.
 [Native PHP packages](../evidence/php-native-lists-20260921.md) use consecutive-key
 arrays on both paths, with weak and strict callers checked separately.
-PHP-Wasm and WIT/WASI List adapters, aliases,
+[PHP-Wasm packages](../evidence/php-wasm-lists-20260921.md) use consecutive-key
+arrays with 32-bit PHP integer mappings in Node and Chromium on both paths.
+WIT/WASI List adapters, aliases,
 arbitrary and recursive variants, and compound callables remain open.
 
 ## Shared configuration and Perl cutover

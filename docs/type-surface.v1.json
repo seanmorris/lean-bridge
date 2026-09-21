@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.41.0",
+  "contractVersion": "0.42.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,23 +157,23 @@
   ],
   "evidence": [
     {
-      "id": "php-native-lists-installed",
+      "id": "php-wasm-lists-installed",
       "kind": "installed",
-      "revision": "78406dba84fe3e4dfee355d664e84589174b5c2c",
-      "command": "LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs; node --test tests/php-list-contract.test.mjs tests/php-list-evidence.test.mjs",
-      "scope": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted.",
+      "revision": "d840880ef4b4b4cbb61dfc04a952fe7ac1d9c45e",
+      "command": "LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-zend.test.mjs; node --test tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-evidence.test.mjs",
+      "scope": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence.",
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
-          "path": "docs/evidence/php-native-lists-20260921.json",
-          "sha256": "21efff90c20b0ae8696205b91ded545dfd899e4943593ae8b5eebe5b2594fb87"
+          "path": "docs/evidence/php-wasm-lists-20260921.json",
+          "sha256": "17edea749eef526b2a181ab6a56f6b8a3c4807b9088ef02fe51a6af6f56f9589"
         },
         {
-          "path": "docs/evidence/php-native-lists-20260921.md",
-          "sha256": "960c639df2fbc1fe2c45bdd9534e4111129c074c241e384d25a8323ae329afab"
+          "path": "docs/evidence/php-wasm-lists-20260921.md",
+          "sha256": "3f15f9b474d4b3f582ab2ed0665d45bf6e0279b432e49efac830a0ed2525e532"
         },
         {
           "path": "schema/native-metadata-type.schema.json",
@@ -181,7 +181,246 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
+        },
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "fec3a0f5a025d93c4e4dc9ac3d2e1fc68aee5995728f2c88b086a6f3e9d4b048"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "96ad0c1eb9c062bbf0164eb03f3fab7a9029bde75cd006f33be39970a63c0036"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "c471836195e5cd29915e94b6023659b276b947b57715129a9485b3c1969e7974"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "7ab0d6c15caf440db88af321359224526566c942f08a6e634947b6a7f507ed50"
+        },
+        {
+          "path": "src/backends/php/copied-conversions.mjs",
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
+        },
+        {
+          "path": "src/backends/php/copied-model.mjs",
+          "sha256": "9b1143f9d8685d91fc2fbd7de7a0fe34238a83609bfda94c7b028fa644368b64"
+        },
+        {
+          "path": "src/backends/php/copied-values.mjs",
+          "sha256": "1fe808682d7adc69a679d450360944d916658f526189ba56048bee3a431e3ec0"
+        },
+        {
+          "path": "src/backends/php/copied-zend-conversions.mjs",
+          "sha256": "45fa5651cef8b85432cf5c5c8e4d94024f6902651d334e2727ead540f0a80509"
+        },
+        {
+          "path": "src/backends/php/copied-zend-support.mjs",
+          "sha256": "0749c00f3c575e9d45c751c91a3b02aec82957e4ab1b9e691e67cb792f4b4809"
+        },
+        {
+          "path": "src/backends/php/copied-zend.mjs",
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
+        },
+        {
+          "path": "src/backends/php/php-wasm-copied-host.mjs",
+          "sha256": "4a5e24246d0f4908b179d3f06c1ca11a20ae365ad66bf8d9824f48b9dcd30fe0"
+        },
+        {
+          "path": "src/backends/php/php-wasm-copied-loader.mjs",
+          "sha256": "7913fdc01bda4bb1147781922c052d5d06228cb78d168e4987b23b6fc716dc7a"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
+        },
+        {
+          "path": "src/build/php-wasm-copied-artifacts.mjs",
+          "sha256": "0fd9d83967e52bfa25da901dc0a6acfedfb861707ad154639128334b3fe273f2"
+        },
+        {
+          "path": "src/build/php-wasm-copied-component.mjs",
+          "sha256": "caa7bee5b490ef00a9545d2c458d5ccf6911129b5669d67192889e0bb40af122"
+        },
+        {
+          "path": "src/build/php-wasm-project.mjs",
+          "sha256": "f8c9ad85c91fedd1945bdb67a6fb431022a930f126939e0d37a7de6decd6fef9"
+        },
+        {
+          "path": "src/release/php-wasm-copied-package.mjs",
+          "sha256": "34b56ea5ba5598bbb6ea7578f2155027103a2e6fdfe1057815b54147a615ebba"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/php-wasm.php",
+          "sha256": "9a3613c213bbd69c1ba3cf1d6e77a5e65d439353d5c14c276e3ee2c08162d07d"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/Lists.lean",
+          "sha256": "410007916439f78046c9fcb45672ceab64b8020d66e19f940dd58e787888ee38"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/lakefile.toml",
+          "sha256": "15b55c2569ab80e5d5cdde5e50f55800b06a80dba48bcebc6a664bbbcfec80d4"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/package.json",
+          "sha256": "6e15912b4c0824b727f128749fcbd80f2cf45b97727236ee46a85dc6ed33f657"
+        },
+        {
+          "path": "tests/fixtures/type-corpus/consumers/php-wasm-browser.mjs",
+          "sha256": "131bb94535ea817056a1218fd74a7a77ba21675e3e7abe4bd86ab75057cc4301"
+        },
+        {
+          "path": "tests/fixtures/type-corpus/consumers/php-wasm-node.mjs",
+          "sha256": "49fb787db69cff257d85dde2275449a0010897c73fc6e928e371859662ec960a"
+        },
+        {
+          "path": "tests/fixtures/type-corpus/consumers/php-wasm.mjs",
+          "sha256": "e881e52e87a80cb844c6482670b36c98269d6fb79920f39b56b0ce8e2d1d7d78"
+        },
+        {
+          "path": "tests/helpers/brick-math.mjs",
+          "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/list-fixture.mjs",
+          "sha256": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c"
+        },
+        {
+          "path": "tests/helpers/php-copied-zend.mjs",
+          "sha256": "af204757dbeec1d900f41ffabb21f78431306d63adf9b9c94f2a124b459d6422"
+        },
+        {
+          "path": "tests/helpers/php-wasm-list-faults.mjs",
+          "sha256": "74a185cb9fe46991375793c913c628f92d4ba7c8ed1bbd76a00bb7bebc60c36a"
+        },
+        {
+          "path": "tests/helpers/php-wasm-list-fixture.mjs",
+          "sha256": "7be4324523cd32f1b3c7e8655c195e4262d4b5b348ca3e133be590f3b93ade5f"
+        },
+        {
+          "path": "tests/helpers/type-corpus-php-wasm-browser.mjs",
+          "sha256": "2a561bf2aefc1820954ed2ed14c80ba774d253b461d1b59809c1b494fb1e3e8a"
+        },
+        {
+          "path": "tests/helpers/type-corpus-php-wasm-evidence.mjs",
+          "sha256": "708809054b1af4ff864a8cf04343c79fc783f60ce770325131d7004006a03aa1"
+        },
+        {
+          "path": "tests/helpers/type-corpus-php-wasm-install.mjs",
+          "sha256": "1231106d14bf66afeffa79ee9c999867e90359f6cc82c8ed117c84beb13d20dc"
+        },
+        {
+          "path": "tests/php-wasm-list-contract.test.mjs",
+          "sha256": "d3ce75d0cdcac15f1ee38c490d8a3bcee451785d4810460be7948d4d7be00510"
+        },
+        {
+          "path": "tests/php-wasm-list-evidence.test.mjs",
+          "sha256": "7b76caddacadee8a861fb79c8bff1a397de4216c40f921f483291a757366d8b5"
+        },
+        {
+          "path": "tests/php-wasm-list-zend.test.mjs",
+          "sha256": "34c199c4a6bfac4338d8ff9fdfa2757cc6a0ebbead33b6cbf8741db024851707"
+        },
+        {
+          "path": "tests/php-wasm-lists.test.mjs",
+          "sha256": "7ce3094c75e1bfaadf065cc128d61dc616a276ba6010f3b3c9e750357333bd32"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "php-wasm/ordinary-source/packages/php-wasm/archives/lean-bridge-lists-wasm-1.0.0-php-wasm.zip",
+          "sha256": "530e7b929986429f3a322277ec2d07980ab3a1e57adf26485bf8406e5945f832"
+        },
+        {
+          "path": "php-wasm/ordinary-source/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.a7cbc54e56bd31758c620194771fab2cb7d7b01edfeb95219260bd82907987fd.tgz",
+          "sha256": "e7928d107dd5916396ffc385bb66ce665e113e9216b353fbde16644fd9d922ae"
+        },
+        {
+          "path": "php-wasm/ordinary-source/packages/php-wasm/archives/lean-bridge-lists-wasm-1.0.0.tgz",
+          "sha256": "516c13270833cb5be42b2bdcdd9e529ceecb5e8a6e8ac26d3718dcbf844d98a4"
+        },
+        {
+          "path": "php-wasm/reviewed-ir/packages/php-wasm/archives/lean-bridge-lists-wasm-1.0.0-php-wasm.zip",
+          "sha256": "51e613e3d934667389ab72a373b66906af71336de70c55a84905babaa037a43d"
+        },
+        {
+          "path": "php-wasm/reviewed-ir/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.a7cbc54e56bd31758c620194771fab2cb7d7b01edfeb95219260bd82907987fd.tgz",
+          "sha256": "e7928d107dd5916396ffc385bb66ce665e113e9216b353fbde16644fd9d922ae"
+        },
+        {
+          "path": "php-wasm/reviewed-ir/packages/php-wasm/archives/lean-bridge-lists-wasm-1.0.0.tgz",
+          "sha256": "df9f4f8a1cb1592ca39c670283dc96fd8890224c419bc7035c057ad6c52bbcd1"
+        },
+        {
+          "path": "php-wasm/probe/synthetic-list-zend.so",
+          "sha256": "9f8d723718d9130c93e583449d0f1c4054e78a0c606757d468b72efe90b7f127"
+        }
+      ]
+    },
+    {
+      "id": "php-native-lists-ffi-installed",
+      "kind": "installed",
+      "revision": "d840880ef4b4b4cbb61dfc04a952fe7ac1d9c45e",
+      "command": "LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs; node --test tests/php-list-contract.test.mjs tests/php-list-evidence.test.mjs",
+      "scope": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
+        },
+        {
+          "path": "docs/evidence/php-native-lists-ffi-20260921.json",
+          "sha256": "a610ce89a4fb838bfade7bbe81f9dea2329a20fac00a9c7ae4812161fff49ef1"
+        },
+        {
+          "path": "docs/evidence/php-native-lists-ffi-20260921.md",
+          "sha256": "94bb7a77cd927256a9fbc5c4609a330b70a24d8c1b67f6a53fb2bc093223bd1a"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -233,7 +472,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
@@ -249,7 +488,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "50362221f7273074823fed33a9469074315b668cdfa8e733b26915283a52e569"
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
         },
         {
           "path": "src/backends/php/generate.mjs",
@@ -265,7 +504,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-php-artifacts.mjs",
@@ -277,7 +516,7 @@
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
-          "sha256": "02af57c5aa1d471c0a3246503299a20a80bb0ba27748a10d800525f070f69871"
+          "sha256": "caa7bee5b490ef00a9545d2c458d5ccf6911129b5669d67192889e0bb40af122"
         },
         {
           "path": "src/release/native-composer.mjs",
@@ -285,11 +524,11 @@
         },
         {
           "path": "src/release/php-wasm-copied-package.mjs",
-          "sha256": "aa4fdc3eaa7031cef8237db43d43706abd7475685cb8e8cbd684b4cb7e96589e"
+          "sha256": "34b56ea5ba5598bbb6ea7578f2155027103a2e6fdfe1057815b54147a615ebba"
         },
         {
           "path": "tests/fixtures/list-consumers/php-faults.php",
-          "sha256": "b76ecb28bb9a7b791344cd37092a8ca4aa9942faed658805b9c68644d2e997d6"
+          "sha256": "97dc3e035cda00470700667034783fac607bc6754ff3680cc25a20977efbbc15"
         },
         {
           "path": "tests/fixtures/list-consumers/php.php",
@@ -341,11 +580,218 @@
         },
         {
           "path": "tests/php-list-contract.test.mjs",
-          "sha256": "5e96979f2b4565c9517bbd99693817643205fec9310cbb09ef2e7c6d29423a23"
+          "sha256": "cab39002dc18c8ee1d14759e1476581540397628af4f7329952931fcf3bc320e"
         },
         {
           "path": "tests/php-list-evidence.test.mjs",
-          "sha256": "94166df2f35e992ad119535488f4e3d93d91e19d67af0bd20ed244b63467b9bf"
+          "sha256": "c127e879a3e2b2c2d6901dc6cabfe0964882b42de2c38ea01b6aa3b4ebe89e30"
+        },
+        {
+          "path": "tests/php-lists.test.mjs",
+          "sha256": "d9b13ace79dafb5c44f77290768b6e703c9188667bb529bf5ec05d4a96668248"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "php-native/ordinary-source/archives/lean-bridge-lists-api-1.0.0-linux-x86_64.zip",
+          "sha256": "b15b1de00ae1c441349b8ae07d90697d278d6d28aae3f5971bc7f0fed24cc7d0"
+        },
+        {
+          "path": "php-native/reviewed-ir/archives/lean-bridge-lists-api-1.0.0-linux-x86_64.zip",
+          "sha256": "58fb901b45a589c27a25829ae5140a4e58bf072fd528558b1cb39cf3e2b2a6d2"
+        }
+      ]
+    },
+    {
+      "id": "php-native-lists-installed",
+      "kind": "installed",
+      "revision": "78406dba84fe3e4dfee355d664e84589174b5c2c",
+      "command": "LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs; node --test tests/php-list-contract.test.mjs tests/php-list-evidence.test.mjs",
+      "scope": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
+        },
+        {
+          "path": "docs/evidence/php-native-lists-20260921.json",
+          "sha256": "21efff90c20b0ae8696205b91ded545dfd899e4943593ae8b5eebe5b2594fb87"
+        },
+        {
+          "path": "docs/evidence/php-native-lists-20260921.md",
+          "sha256": "960c639df2fbc1fe2c45bdd9534e4111129c074c241e384d25a8323ae329afab"
+        },
+        {
+          "path": "schema/native-metadata-type.schema.json",
+          "sha256": "8f75152eb807d0bea75631c2f6b873baacf466df11d069748a5b85456ec82488"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "d14874ddbc078adb90c00bf313e03ee864aad4664ae9b566f6d6036457d43f4d"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "8624b16beaeebf5d1f8ebf9648417d2a5965d4cb3634c9ff1e21260a57862cc2"
+        },
+        {
+          "path": "src/analyze/native-metadata.mjs",
+          "sha256": "4ac6a25c36ae2ebdf87bd519202271d9ca631fd150036b539a1128dcf718c89e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "f2107303f5250215bd0464a792f8c25eeda13fb1499a6946ea8fb2869f6c2e79"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "d0b062332c83d5a77f5bbdef119d1f5dc22c9bc259cfb9212fbdd6863781261c"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "c1ed40235ace6d238327e9dc8f1636aba3c62830491459312613621e089afb4d"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "fec3a0f5a025d93c4e4dc9ac3d2e1fc68aee5995728f2c88b086a6f3e9d4b048"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "96ad0c1eb9c062bbf0164eb03f3fab7a9029bde75cd006f33be39970a63c0036"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "c471836195e5cd29915e94b6023659b276b947b57715129a9485b3c1969e7974"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "7ab0d6c15caf440db88af321359224526566c942f08a6e634947b6a7f507ed50"
+        },
+        {
+          "path": "src/backends/php/callables.mjs",
+          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+        },
+        {
+          "path": "src/backends/php/copied-assets.mjs",
+          "sha256": "7c17badd4f5232adc70fb13dea0a06d9bdcf929cd20fe10d7f63762f3afc1de1"
+        },
+        {
+          "path": "src/backends/php/copied-conversions.mjs",
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
+        },
+        {
+          "path": "src/backends/php/copied-model.mjs",
+          "sha256": "9b1143f9d8685d91fc2fbd7de7a0fe34238a83609bfda94c7b028fa644368b64"
+        },
+        {
+          "path": "src/backends/php/copied-support.mjs",
+          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+        },
+        {
+          "path": "src/backends/php/copied-values.mjs",
+          "sha256": "1fe808682d7adc69a679d450360944d916658f526189ba56048bee3a431e3ec0"
+        },
+        {
+          "path": "src/backends/php/copied-zend.mjs",
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
+        },
+        {
+          "path": "src/backends/php/generate.mjs",
+          "sha256": "99a62205b9b671f142fc86d6f7068775a076f4a3141634274669899bd755ed7e"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "0e363363c13a21810f9b45a57c06fdbc3806d1547602dc2dda4525bad5a3823f"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "c0a9857f09b804e2036911c5ba5da325dffe56332ceb74bce9bdb0900f6f7465"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
+        },
+        {
+          "path": "src/build/native-php-artifacts.mjs",
+          "sha256": "bc6fb8630c062a22fde165a01ff0c021ccf46f7c1abd723018d2bf52c07d7562"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "19f60cb44f3756b888722b8129c61ecba820a9994da7307db95df416929c347f"
+        },
+        {
+          "path": "src/build/php-wasm-copied-component.mjs",
+          "sha256": "caa7bee5b490ef00a9545d2c458d5ccf6911129b5669d67192889e0bb40af122"
+        },
+        {
+          "path": "src/release/native-composer.mjs",
+          "sha256": "4c57149cd083a8484fcefaadb5bea3e3f84826044e2316a562658454bf3473ec"
+        },
+        {
+          "path": "src/release/php-wasm-copied-package.mjs",
+          "sha256": "34b56ea5ba5598bbb6ea7578f2155027103a2e6fdfe1057815b54147a615ebba"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/php-faults.php",
+          "sha256": "97dc3e035cda00470700667034783fac607bc6754ff3680cc25a20977efbbc15"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/php.php",
+          "sha256": "1bb451367a26ca4f6b6bb322194443b4a18e1e541024562cf43cdd97c458f8a8"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/Lists.lean",
+          "sha256": "410007916439f78046c9fcb45672ceab64b8020d66e19f940dd58e787888ee38"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/lakefile.toml",
+          "sha256": "15b55c2569ab80e5d5cdde5e50f55800b06a80dba48bcebc6a664bbbcfec80d4"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-lists/package.json",
+          "sha256": "6e15912b4c0824b727f128749fcbd80f2cf45b97727236ee46a85dc6ed33f657"
+        },
+        {
+          "path": "tests/helpers/brick-math.mjs",
+          "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/list-fixture.mjs",
+          "sha256": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c"
+        },
+        {
+          "path": "tests/helpers/php-list-fixture.mjs",
+          "sha256": "545114eb872d1560b0bf5dba67d0193cd5fd6d53385b6f30e661120f437f2485"
+        },
+        {
+          "path": "tests/helpers/php-list-probe.mjs",
+          "sha256": "419ee3cc642543bbdf68c01af2a3cf876d092f2fc38fea16207d1079dee79463"
+        },
+        {
+          "path": "tests/helpers/type-corpus-php.mjs",
+          "sha256": "46f9428900f9a81c536f3d46accb633838d2778e43e62b5f78f84dafeeecc502"
+        },
+        {
+          "path": "tests/php-list-contract.test.mjs",
+          "sha256": "cab39002dc18c8ee1d14759e1476581540397628af4f7329952931fcf3bc320e"
+        },
+        {
+          "path": "tests/php-list-evidence.test.mjs",
+          "sha256": "c127e879a3e2b2c2d6901dc6cabfe0964882b42de2c38ea01b6aa3b4ebe89e30"
         },
         {
           "path": "tests/php-lists.test.mjs",
@@ -388,7 +834,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -448,7 +894,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -599,7 +1045,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -615,7 +1061,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -695,7 +1141,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -778,7 +1224,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -794,7 +1240,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -882,7 +1328,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -985,7 +1431,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -1001,7 +1447,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1085,7 +1531,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1252,7 +1698,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1427,7 +1873,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1582,7 +2028,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -1677,7 +2123,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -1709,7 +2155,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -1753,7 +2199,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/release/component-copied-codec.mjs",
@@ -1761,7 +2207,7 @@
         },
         {
           "path": "tests/component-list-contract.test.mjs",
-          "sha256": "a358ec66e0e89595411089f71c897363656717b13f42a92ffac53dbcd10c20eb"
+          "sha256": "5a25133d17d5321baa78839843b42faa38eeafc72d0181dbecb7ab1504b6d947"
         },
         {
           "path": "tests/component-lists.test.mjs",
@@ -1816,7 +2262,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -1832,7 +2278,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1876,7 +2322,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
@@ -1888,7 +2334,7 @@
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
-          "sha256": "a6f8eb1610c10b7fca2865906582c724dc4ab26f30a4be7204b8942d026b407f"
+          "sha256": "45fa5651cef8b85432cf5c5c8e4d94024f6902651d334e2727ead540f0a80509"
         },
         {
           "path": "src/backends/php/copied-zend-support.mjs",
@@ -1896,7 +2342,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "50362221f7273074823fed33a9469074315b668cdfa8e733b26915283a52e569"
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
         },
         {
           "path": "src/backends/php/php-wasm-copied-host.mjs",
@@ -1908,7 +2354,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/php-wasm-copied-artifacts.mjs",
@@ -1916,7 +2362,7 @@
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
-          "sha256": "02af57c5aa1d471c0a3246503299a20a80bb0ba27748a10d800525f070f69871"
+          "sha256": "caa7bee5b490ef00a9545d2c458d5ccf6911129b5669d67192889e0bb40af122"
         },
         {
           "path": "src/build/php-wasm-project.mjs",
@@ -1924,7 +2370,7 @@
         },
         {
           "path": "src/release/php-wasm-copied-package.mjs",
-          "sha256": "aa4fdc3eaa7031cef8237db43d43706abd7475685cb8e8cbd684b4cb7e96589e"
+          "sha256": "34b56ea5ba5598bbb6ea7578f2155027103a2e6fdfe1057815b54147a615ebba"
         },
         {
           "path": "tests/fixtures/compound-consumers/php-wasm.php",
@@ -2035,7 +2481,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -2051,7 +2497,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2103,7 +2549,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
@@ -2119,7 +2565,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "50362221f7273074823fed33a9469074315b668cdfa8e733b26915283a52e569"
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2131,7 +2577,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -2139,7 +2585,7 @@
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
-          "sha256": "02af57c5aa1d471c0a3246503299a20a80bb0ba27748a10d800525f070f69871"
+          "sha256": "caa7bee5b490ef00a9545d2c458d5ccf6911129b5669d67192889e0bb40af122"
         },
         {
           "path": "src/release/native-composer.mjs",
@@ -2147,7 +2593,7 @@
         },
         {
           "path": "src/release/php-wasm-copied-package.mjs",
-          "sha256": "aa4fdc3eaa7031cef8237db43d43706abd7475685cb8e8cbd684b4cb7e96589e"
+          "sha256": "34b56ea5ba5598bbb6ea7578f2155027103a2e6fdfe1057815b54147a615ebba"
         },
         {
           "path": "tests/fixtures/compound-consumers/php-faults.php",
@@ -2250,7 +2696,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2310,7 +2756,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -2461,7 +2907,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -2477,7 +2923,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2557,7 +3003,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -2640,7 +3086,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -2656,7 +3102,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2744,7 +3190,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -2847,7 +3293,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -2863,7 +3309,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2947,7 +3393,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -3114,7 +3560,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -3285,7 +3731,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -3436,7 +3882,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -3531,7 +3977,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -3734,7 +4180,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -3897,7 +4343,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -3937,7 +4383,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "6303faa0d6df8e388b425e32dc4f7cad7d0e9ffe3de98267348275be348649df"
+          "sha256": "c1e32031068d9146925f1c17c4030041a8d20e8c41b695b46208aa3820b20852"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -3945,7 +4391,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4168,11 +4614,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -4307,11 +4753,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -4346,7 +4792,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "50362221f7273074823fed33a9469074315b668cdfa8e733b26915283a52e569"
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
@@ -4358,7 +4804,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -4374,7 +4820,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/php-wasm-project.mjs",
@@ -4382,11 +4828,11 @@
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
-          "sha256": "02af57c5aa1d471c0a3246503299a20a80bb0ba27748a10d800525f070f69871"
+          "sha256": "caa7bee5b490ef00a9545d2c458d5ccf6911129b5669d67192889e0bb40af122"
         },
         {
           "path": "src/release/php-wasm-copied-package.mjs",
-          "sha256": "aa4fdc3eaa7031cef8237db43d43706abd7475685cb8e8cbd684b4cb7e96589e"
+          "sha256": "34b56ea5ba5598bbb6ea7578f2155027103a2e6fdfe1057815b54147a615ebba"
         },
         {
           "path": "tests/php-wasm-callable-contract.test.mjs",
@@ -4426,7 +4872,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -4434,7 +4880,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -4462,7 +4908,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -4593,7 +5039,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
@@ -4609,7 +5055,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "50362221f7273074823fed33a9469074315b668cdfa8e733b26915283a52e569"
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
@@ -4665,7 +5111,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -4673,7 +5119,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -4701,7 +5147,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -4856,11 +5302,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -4884,7 +5330,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -5079,11 +5525,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -5103,7 +5549,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -5278,15 +5724,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "flake.nix",
@@ -5489,15 +5935,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -5684,15 +6130,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -5815,15 +6261,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -5946,15 +6392,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -6005,7 +6451,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -6065,15 +6511,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -6128,7 +6574,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -6176,15 +6622,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "76e2ddc662217b8f89c34f7032d2f7d9d7a9cff9705882c0e3f345dbd3200b26"
+          "sha256": "524c07d1f9a6bee3a3757743b00e28c4c54794b233062655db42fb72f11ae65e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -6275,7 +6721,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -6315,7 +6761,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "6303faa0d6df8e388b425e32dc4f7cad7d0e9ffe3de98267348275be348649df"
+          "sha256": "c1e32031068d9146925f1c17c4030041a8d20e8c41b695b46208aa3820b20852"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -6323,7 +6769,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -6387,7 +6833,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
@@ -6395,11 +6841,11 @@
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
-          "sha256": "a6f8eb1610c10b7fca2865906582c724dc4ab26f30a4be7204b8942d026b407f"
+          "sha256": "45fa5651cef8b85432cf5c5c8e4d94024f6902651d334e2727ead540f0a80509"
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "50362221f7273074823fed33a9469074315b668cdfa8e733b26915283a52e569"
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
@@ -6451,7 +6897,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/release/component-npm-package.mjs",
@@ -6475,7 +6921,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "76e2ddc662217b8f89c34f7032d2f7d9d7a9cff9705882c0e3f345dbd3200b26"
+          "sha256": "524c07d1f9a6bee3a3757743b00e28c4c54794b233062655db42fb72f11ae65e"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -6579,7 +7025,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "3c91eb45d02dabe128c798c09df5fba958f6c1a3984263868ef5bb5cfac7f70a"
+          "sha256": "2d833dc5b93425346a98404a2584b2c6771f8726011ca98b23b02d1a6e1a18a6"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -6654,7 +7100,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -6666,7 +7112,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -6706,7 +7152,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
@@ -6718,7 +7164,7 @@
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
-          "sha256": "a6f8eb1610c10b7fca2865906582c724dc4ab26f30a4be7204b8942d026b407f"
+          "sha256": "45fa5651cef8b85432cf5c5c8e4d94024f6902651d334e2727ead540f0a80509"
         },
         {
           "path": "src/backends/php/copied-zend-support.mjs",
@@ -6762,7 +7208,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "tests/fixtures/char-consumers/c.c",
@@ -7024,7 +7470,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -7040,7 +7486,7 @@
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
-          "sha256": "02af57c5aa1d471c0a3246503299a20a80bb0ba27748a10d800525f070f69871"
+          "sha256": "caa7bee5b490ef00a9545d2c458d5ccf6911129b5669d67192889e0bb40af122"
         },
         {
           "path": "src/build/php-wasm-copied-artifacts.mjs",
@@ -7048,7 +7494,7 @@
         },
         {
           "path": "src/release/php-wasm-copied-package.mjs",
-          "sha256": "aa4fdc3eaa7031cef8237db43d43706abd7475685cb8e8cbd684b4cb7e96589e"
+          "sha256": "34b56ea5ba5598bbb6ea7578f2155027103a2e6fdfe1057815b54147a615ebba"
         },
         {
           "path": "src/release/php-wasm-compiler-inputs.mjs",
@@ -7068,11 +7514,11 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "50362221f7273074823fed33a9469074315b668cdfa8e733b26915283a52e569"
+          "sha256": "f7673e5fd9fe4776d4ac98dfdf6c7c0443c95e049a2947d1b80712853d6cbec9"
         },
         {
           "path": "src/backends/php/copied-zend-support.mjs",
@@ -7080,7 +7526,7 @@
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
-          "sha256": "a6f8eb1610c10b7fca2865906582c724dc4ab26f30a4be7204b8942d026b407f"
+          "sha256": "45fa5651cef8b85432cf5c5c8e4d94024f6902651d334e2727ead540f0a80509"
         },
         {
           "path": "src/backends/php/php-wasm-copied-loader.mjs",
@@ -7215,7 +7661,7 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "6baed5c48efafadcf71233387e3b5d7279f54a44da792c154add94edc7cd5fff"
+          "sha256": "ffb037de96d2dea5cbe85eef3ffeadfd0ada851d76cbc33e8ad48f7846a041de"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
@@ -7472,7 +7918,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e8177fe932b7de43208c2aaaf26e169a6df72fb0e4627efa9987508088daa616"
+          "sha256": "308cda7c06be7bd7cb191f7da05c1a4ed6cceee5ac14408bd4e8ddf2178895c2"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -7488,7 +7934,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "f576ad81fd4fcfb23c361bf112b777acc9e0bdf7a3ed90fe8ba7822ab399ce49"
+          "sha256": "90d0719ef76877217d953d3a14923fb05a19cc4e50ab76018187acfa1a36a84b"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7556,7 +8002,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -8091,7 +8537,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -8162,7 +8608,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -8389,7 +8835,7 @@
         },
         {
           "path": "src/build/native-model.mjs",
-          "sha256": "0ea330ed08bd828b7807e9c6582cf7f22cec35d19dea05a1329e901b971b7d81"
+          "sha256": "3603b8e203d535421b50bb80d7cd35c840e90485a29de6831f794d11a4691248"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -8910,6 +9356,142 @@
   ],
   "observations": [
     {
+      "id": "php-wasm-lists-ordinary-source",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence.",
+      "hostTypes": {
+        "list": {
+          "parameter": "list<T> (consecutive-key PHP array)",
+          "result": "list<T> (consecutive-key PHP array)",
+          "field": "list<T> (consecutive-key PHP array)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0 / PHP 8.4.1 wasm32 in Node and Chromium; both startup and first-call loading are tested.",
+        "Types are limited to 32 levels. Validation, Zend conversion and native copying each have a 16 MiB accounting limit, not a bound on all host allocations or Lean working memory.",
+        "List callback payloads remain unsupported. Copied values cannot contain resources or callbacks."
+      ],
+      "conversionNotes": {
+        "list": "Consecutive-key PHP arrays preserve empty Lists, order, duplicates and nesting. Element-specific PHPDoc accompanies recursively checked mixed parameters, preventing weak-mode coercion. UInt32, UInt64, Int64, Nat, Int and USize payloads use Brick\\Math\\BigInteger on wasm32; ISize uses a 32-bit PHP integer. Results own independent mutable copies. Typed Lean helpers retain distinct List/Array identities without cons-cell layout assumptions. Native sequence lengths, null buffers, element alignment and Wasm memory bounds are checked before allocation or element reads. Native owners are released after conversion errors and PHP bailouts."
+      }
+    },
+    {
+      "id": "php-wasm-lists-reviewed-ir",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "list"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence.",
+      "hostTypes": {
+        "list": {
+          "parameter": "list<T> (consecutive-key PHP array)",
+          "result": "list<T> (consecutive-key PHP array)",
+          "field": "list<T> (consecutive-key PHP array)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-wasm-lists-installed"
+          ],
+          "note": "Prepared PHP-Wasm npm and Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Both paths run twelve Node/Chromium, embedded/Composer/bundled, startup/lazy and weak/strict combinations twice each, with 86992 public assertions per run. Installed files and browser request hashes remain unchanged. Separate synthetic Zend providers pass 61 injected allocation failures, sixteen partial inputs, ten malformed outputs, an empty poison pointer and two bailout recoveries per caller mode. PHP 8.4.1 has 32-bit integers. Synthetic probes are not Lean execution evidence."
+        }
+      },
+      "limitations": [
+        "Pinned PHP-Wasm 0.1.0 / PHP 8.4.1 wasm32 in Node and Chromium; both startup and first-call loading are tested.",
+        "Types are limited to 32 levels. Validation, Zend conversion and native copying each have a 16 MiB accounting limit, not a bound on all host allocations or Lean working memory.",
+        "List callback payloads remain unsupported. Copied values cannot contain resources or callbacks."
+      ],
+      "conversionNotes": {
+        "list": "Consecutive-key PHP arrays preserve empty Lists, order, duplicates and nesting. Element-specific PHPDoc accompanies recursively checked mixed parameters, preventing weak-mode coercion. UInt32, UInt64, Int64, Nat, Int and USize payloads use Brick\\Math\\BigInteger on wasm32; ISize uses a 32-bit PHP integer. Results own independent mutable copies. Typed Lean helpers retain distinct List/Array identities without cons-cell layout assumptions. Native sequence lengths, null buffers, element alignment and Wasm memory bounds are checked before allocation or element reads. Native owners are released after conversion errors and PHP bailouts."
+      }
+    },
+    {
       "id": "php-native-lists-ordinary-source",
       "profiles": [
         "php-native"
@@ -8923,7 +9505,7 @@
         "field"
       ],
       "path": "ordinary-source",
-      "scope": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted.",
+      "scope": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory.",
       "hostTypes": {
         "list": {
           "parameter": "list<T> (consecutive-key PHP array)",
@@ -8935,43 +9517,43 @@
         "analysis": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         },
         "generation": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         },
         "compilation": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         },
         "packaging": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         },
         "installedExecution": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         }
       },
       "limitations": [
         "PHP 8.2+ NTS CLI on Linux x86-64 with FFI; FPM, Apache, cli-server and ZTS are not admitted by this profile.",
         "Type nesting is limited to 32 levels. Validation, PHP conversion and native copying each have a 16 MiB accounting limit. These limits do not bound every PHP allocation or Lean working memory.",
-        "PHP-Wasm Lists and List callback payloads remain unsupported. Copied values cannot contain resources or callbacks."
+        "List callback payloads remain unsupported. Copied values cannot contain resources or callbacks."
       ],
       "conversionNotes": {
         "list": "Consecutive-key PHP arrays preserve empty Lists, order, duplicates and nesting. Element-specific PHPDoc accompanies recursively checked mixed parameters, preventing weak-mode coercion. Results own independent mutable copies. Calls reject associative or sparse arrays, iterator objects, invalid payloads and oversized copies. Typed Lean helpers avoid cons-cell layout assumptions. Native output lengths, missing buffers and alignment are checked before element reads; finally clears owned results after conversion errors."
@@ -8991,7 +9573,7 @@
         "field"
       ],
       "path": "reviewed-ir",
-      "scope": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted.",
+      "scope": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory.",
       "hostTypes": {
         "list": {
           "parameter": "list<T> (consecutive-key PHP array)",
@@ -9003,43 +9585,43 @@
         "analysis": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         },
         "generation": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         },
         "compilation": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         },
         "packaging": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         },
         "installedExecution": {
           "state": "passed",
           "evidence": [
-            "php-native-lists-installed"
+            "php-native-lists-ffi-installed"
           ],
-          "note": "Prepared native Composer packages preserve copied List inputs, results and record fields with all nineteen primitives, nested arrays/Lists/Option/Except/products, 24-level values, exact integers, IEEE values, independent mutable results and copy-budget recovery. Ordinary-source and independently reviewed packages install offline after producer removal. Weak and strict callers each pass 86983 public assertions three times from a relocated installation after handoff removal. Separate in-memory probes inject 591 conversion failures per path, exercise twenty real cleanup failures and reject nine malformed output buffers. Installed files and mapped libraries remain unchanged. PHP 8.2.33 NTS CLI, Linux x86-64; local glibc floor 2.36, CI 2.38. PHP-Wasm Lists remain unpromoted."
+          "note": "Rebuilt native Composer List packages after replacing deprecated static FFI casts with instance casts. Both source paths retain all nineteen primitive Lists, nested arrays/Lists/Option/Except/products, 24-level values, copy-budget failures and recovery. Weak and strict public callers each pass 86983 assertions three times from relocated offline installations after producer and handoff removal. Each path injects 591 conversion failures, exercises twenty real cleanup failures and rejects nine malformed outputs. Installed files and mapped libraries remain unchanged. Installed execution uses PHP 8.2.33 NTS CLI, Linux x86-64, glibc floor 2.36; separate syntax and pointer-guard contracts pass on PHP 8.2.33 and 8.5.10. This follow-up preserves the original machine record and artifact inventory."
         }
       },
       "limitations": [
         "PHP 8.2+ NTS CLI on Linux x86-64 with FFI; FPM, Apache, cli-server and ZTS are not admitted by this profile.",
         "Type nesting is limited to 32 levels. Validation, PHP conversion and native copying each have a 16 MiB accounting limit. These limits do not bound every PHP allocation or Lean working memory.",
-        "PHP-Wasm Lists and List callback payloads remain unsupported. Copied values cannot contain resources or callbacks."
+        "List callback payloads remain unsupported. Copied values cannot contain resources or callbacks."
       ],
       "conversionNotes": {
         "list": "Consecutive-key PHP arrays preserve empty Lists, order, duplicates and nesting. Element-specific PHPDoc accompanies recursively checked mixed parameters, preventing weak-mode coercion. Results own independent mutable copies. Calls reject associative or sparse arrays, iterator objects, invalid payloads and oversized copies. Typed Lean helpers avoid cons-cell layout assumptions. Native output lengths, missing buffers and alignment are checked before element reads; finally clears owned results after conversion errors."

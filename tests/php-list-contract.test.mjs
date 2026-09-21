@@ -43,13 +43,13 @@ test("PHP List output validates length and pointer alignment before element read
 		assert.ok(body.indexOf("$scope->budget->charge($value->length") < body.indexOf("if (!$value->length)"));
 		assert.ok(body.indexOf("missing buffer") < body.indexOf("$memory ="));
 		assert.ok(body.indexOf("misaligned buffer") < body.indexOf("$memory ="));
-		assert.match(body, /FFI::cast\('uintptr_t \*', \\FFI::addr\(\$value->data\)\)\[0\]/);
+		assert.match(body, /\$scope->ffi->cast\('uintptr_t \*', \\FFI::addr\(\$value->data\)\)\[0\]/);
 		assert.ok(body.includes(`FFI::alignof($scope->ffi->type('${copy.element.ctype}'))`));
 	}
 });
 
-test("PHP List admission keeps untested Zend transport and compound callables closed", () => {
-	assert.throws(() => generateCopiedPhpZendAdapter(listReviewedIr()), { code: "unsupported-native-c-signature" });
+test("PHP List admission includes Zend transport but keeps compound callables closed", () => {
+	assert.doesNotThrow(() => generateCopiedPhpZendAdapter(listReviewedIr()));
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
@@ -85,7 +85,7 @@ reject(fn() => Checks::check${copy.index}([1, '2'], new Budget()), TypeError::cl
 $ffi = FFI::cdef('typedef struct { void *data; size_t length; void *owner; void (*release)(void *); } ${copy.ctype};');
 $value = $ffi->new('${copy.ctype}');
 $method = new ReflectionMethod(Native::class, 'from${copy.index}');
-$value->data = FFI::cast('void *', 1);
+$value->data = $ffi->cast('void *', 1);
 check($method->invoke(null, $value, new Scope($ffi)) === []);
 $value->length = 1;
 reject(fn() => $method->invoke(null, $value, new Scope($ffi)), RuntimeException::class);

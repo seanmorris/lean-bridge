@@ -413,6 +413,9 @@ jobs:
           LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs
           test -s build/compounds/php-wasm.json
           test -s build/compounds/php-wasm-zend-faults.json
+          LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs
+          test -s build/lists/php-wasm.json
+          test -s build/lists/php-wasm-zend-faults.json
           test -s build/type-corpus/php-wasm.json
           test -s build/type-corpus/reviewed-wasm-php-wasm.json
       - name: Upload PHP-Wasm corpus evidence
@@ -428,6 +431,8 @@ jobs:
             build/callables/php-wasm.json
             build/compounds/php-wasm.json
             build/compounds/php-wasm-zend-faults.json
+            build/lists/php-wasm.json
+            build/lists/php-wasm-zend-faults.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -463,7 +468,7 @@ jobs:
             wasm_executed=false
           fi
           node scripts/consumer-ci.mjs record --consumer php-native --output build/consumer-ci/results/php-native.json --performance build/consumer-ci/performance/php-native.json --test-result "$native_result" --package-installation "$native_executed" --real-lean-execution "$native_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_NATIVE_PHP_TEST=1 node --test tests/native-php.test.mjs && npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs && LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests/php-compounds.test.mjs tests/php-compound-contract.test.mjs && LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests/php-lists.test.mjs tests/php-list-contract.test.mjs"
-          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$wasm_result" --package-installation "$wasm_executed" --real-lean-execution "$wasm_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs"
+          node scripts/consumer-ci.mjs record --consumer php-wasm --output build/consumer-ci/results/php-wasm.json --performance build/consumer-ci/performance/php-wasm.json --test-result "$wasm_result" --package-installation "$wasm_executed" --real-lean-execution "$wasm_executed" --command "npm run test:consumer:php && LEAN_BRIDGE_PHP_WASM_ZEND_TEST=1 node --test tests/php-copied-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST=1 LEAN_BRIDGE_PHP_WASM_BROWSER_TEST=1 node --test tests/php-wasm-ordinary.test.mjs && LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs && LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests/php-wasm-multi-profile.test.mjs && npm run test:type-corpus:php-wasm && npm run test:type-corpus:reviewed-php-wasm && LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs && LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs && LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs"
       - name: Upload PHP observations
         if: always()
         uses: actions/upload-artifact@v7

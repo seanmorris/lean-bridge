@@ -319,8 +319,9 @@ as do [Python](evidence/python-lists-20260920.md) and
 [Java/Kotlin](evidence/jvm-lists-20260920.md), along with
 [Ruby](evidence/ruby-lists-20260921.md) and
 [Perl](evidence/perl-lists-20260921.md) and
-[native PHP](evidence/php-native-lists-20260921.md). PHP-Wasm and WIT/WASI
-remain pending. Lists cannot contain callbacks
+[native PHP](evidence/php-native-lists-20260921.md) and
+[PHP-Wasm](evidence/php-wasm-lists-20260921.md). WIT/WASI remains pending.
+Lists cannot contain callbacks
 or resources, or share a component with callable exports yet.
 
 ### Copied records

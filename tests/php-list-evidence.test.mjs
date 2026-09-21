@@ -11,8 +11,8 @@ import { listPrimitives, listSignatures } from "./helpers/list-fixture.mjs";
 import { phpListConsumer, phpListRequest } from "./helpers/php-list-fixture.mjs";
 import { phpIsolationFlags } from "./helpers/type-corpus-php.mjs";
 
-test("native PHP List evidence preserves both paths without promoting PHP-Wasm", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/php-native-lists-20260921.json"));
+test("native PHP List FFI compatibility evidence preserves both source paths", async () => {
+	const record = JSON.parse(await readFile("docs/evidence/php-native-lists-ffi-20260921.json"));
 	assert.deepEqual(record.profiles, ["php-native"]); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, listSignatures);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);

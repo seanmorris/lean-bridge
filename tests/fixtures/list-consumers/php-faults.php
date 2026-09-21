@@ -108,7 +108,7 @@ $malformed = 0; $empty = 0;
 foreach (['reverse_uint32', 'mix'] as $name) {
     $value = $ffi->new($request[$name]['ctype']); $value->length = 1;
     bad(fn() => decode($request, $name, $value, new Scope($ffi))); ++$malformed;
-    $value->data = \FFI::cast('void *', 1);
+    $value->data = $ffi->cast('void *', 1);
     bad(fn() => decode($request, $name, $value, new Scope($ffi))); ++$malformed;
     $value->length = PHP_INT_MAX;
     bad(fn() => decode($request, $name, $value, new Scope($ffi)), \ValueError::class); ++$malformed;
@@ -127,7 +127,7 @@ $record = $ffi->new($request['transform']['ctype']);
 $elementType = $ffi->type('lists_tuple_bool_char_value');
 ensure(\FFI::alignof($elementType) === 4);
 $storage = $ffi->new('uint64_t[2]');
-$address = \FFI::cast('uint8_t *', \FFI::addr($storage[0]));
+$address = $ffi->cast('uint8_t *', \FFI::addr($storage[0]));
 $pair = $ffi->cast('lists_tuple_bool_char_value *', \FFI::addr($address[4]));
 $pair[0]->fst = 1; $pair[0]->snd = 65;
 $row = $ffi->new('lists_list_tuple_bool_char_span');

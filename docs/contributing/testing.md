@@ -628,6 +628,22 @@ consumer from a relocated installation without compilers. Separate in-memory
 instrumentation injects conversion failures and tests malformed native output
 buffers without changing installed files. CI retains `build/lists/php-native.json`.
 
+Run the PHP-Wasm List checks with the [PHP-Wasm author toolchain](author-toolchain.md#php-wasm),
+the pinned host package and Chromium:
+
+```sh
+LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-zend.test.mjs
+node --test tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-evidence.test.mjs
+```
+
+The [PHP-Wasm List suite](../evidence/php-wasm-lists-20260921.md) builds both
+source paths, installs the exact npm and Composer archives offline, removes
+producer inputs and the handoff, and repeats weak/strict callers in Node and
+Chromium. Startup and lazy loading retain separate checks. Synthetic Zend
+providers test allocation failures, malformed sequence buffers and PHP bailouts;
+they are not Lean execution evidence. CI retains `build/lists/php-wasm.json`
+and `build/lists/php-wasm-zend-faults.json`.
+
 Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
 
 C executes 94 positive catalog cases, rejects four negative-Nat cases at runtime, and rejects 26 invalid programs at compile time. C++ executes 92 positive cases, rejects four negative-Nat cases at runtime, and rejects 28 invalid programs at compile time. Both check all 19 public function signatures per library. C11 uses fatal conversion warnings for invalid fixed-width inputs; C++20 uses list-initialization narrowing checks. These are compiler policies, not dynamic range checks by the installed API. Both languages permit integer/boolean and integer/float conversions; C also permits the corpus's zero-valued unit marker as a `uint32_t`. Each accepted conversion must match the corresponding Lean call.

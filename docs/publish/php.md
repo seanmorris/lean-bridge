@@ -51,12 +51,14 @@ support these shapes. See the [consumer mappings](../php.md#options-results-and-
 PHP-Wasm also supports these constructors with its 32-bit payload mappings.
 Every selected target must admit the whole API in a combined build.
 
-Native builds also accept `List` parameters, results and record fields, including
+Native and PHP-Wasm builds also accept `List` parameters, results and record fields, including
 combinations with the other copied types. Consumers use consecutive-key PHP
 arrays with `list<T>` PHPDoc. Typed Lean helpers convert Lists without depending
 on cons-cell layouts. [Installed List checks](../evidence/php-native-lists-20260921.md)
-cover ordinary source and reviewed contracts. PHP-Wasm Lists and List callback
-payloads are not yet admitted, so a List API cannot target both PHP transports.
+cover ordinary source and reviewed contracts. The [PHP-Wasm List checks](../evidence/php-wasm-lists-20260921.md)
+cover the same shapes in Node and Chromium, including startup/lazy loading and
+embedded/Composer PHP files. A List API can target both PHP transports; each
+uses its own integer mappings. List callback payloads remain unsupported.
 
 Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Supply the release-root `package-set-receipt.json`, its `.json.sha256` sidecar, and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
 
@@ -82,7 +84,7 @@ The PHP-Wasm Zend adapter accepts the same primitive signatures and `arities` se
 
 ## Build an ordinary PHP-Wasm package
 
-PHP-Wasm compiles copied options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings. Compound callables remain unsupported.
+PHP-Wasm compiles copied Lists, options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings. Compound callables remain unsupported.
 
 Install a [prepared CLI](../lean/setup.md#install-a-prepared-cli) whose inventory has `phpWasmInputsIncluded: true`. It contains the prebuilt PHP-Wasm runtime and configured PHP 8.4.1 headers. Leave `LEAN_BRIDGE_PHP_INPUTS` unset to use those bundled inputs.
 

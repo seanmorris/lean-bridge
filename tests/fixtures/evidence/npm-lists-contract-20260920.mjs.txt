@@ -69,7 +69,7 @@ test("typed List adapters never inspect cons tags and bound intermediate output"
 	}
 });
 
-test("native and PHP-Wasm models preserve Lists; host projections opt in and callable admission stays closed", () => {
+test("native Lists require an implemented host; PHP-Wasm and callable admission stays closed", () => {
 	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
 	const type = { kind: "list", element: projection.result, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } };
 	validateNativeType(type);
@@ -79,7 +79,7 @@ test("native and PHP-Wasm models preserve Lists; host projections opt in and cal
 		const semantic = createElaboratedSemanticModel({ metadata: input.metadata, request: input.sourceIdentity.request, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" }, elaborationSha256: "1".repeat(64) });
 		assert.ok(JSON.stringify(semantic.document).includes('"constructor":"list"'));
 		assert.ok(createNativeModel({ ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } }).types.some(value => value.kind === "list"));
-		assert.ok(createPhpWasmCopiedModel({ ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } }).types.some(value => value.kind === "list"));
+		assert.throws(() => createPhpWasmCopiedModel({ ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } }), { code: "unsupported-php-wasm-signature" });
 	}
 	assert.throws(() => compilePrimitiveCSurface(listReviewedIr(), { compounds: true, callables: true }), { code: "unsupported-native-c-signature" });
 	for(const position of ["parameter", "result"])
@@ -170,14 +170,7 @@ test("List arenas clean partial inputs; budget errors recover and traps retire t
 
 test("List evidence binds installed archives, all five npm profiles and both source paths", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/npm-lists-20260920.json", "utf8"));
-	for(const [path, hash] of Object.entries(record.sourceHashes))
-	{
-		// Preserve the recorded admission contract now that another host admits Lists.
-		// Executed consumer, build driver, Lean fixture and signature hashes stay current.
-		const source = path === "tests/component-list-contract.test.mjs"
-			? "tests/fixtures/evidence/npm-lists-contract-20260920.mjs.txt" : path;
-		assert.equal(sha256(await readFile(source)), hash, path);
-	}
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
 	assert.deepEqual(record.runs.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	const expected = { checks: 30226, primitives: 19, rejections: 25 };
 	for(const run of record.runs)

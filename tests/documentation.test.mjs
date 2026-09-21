@@ -398,9 +398,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests\/php-compounds\.test\.mjs tests\/php-compound-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests\/php-lists\.test\.mjs tests\/php-list-contract\.test\.mjs/);
   assert.ok(workflow.includes("test -s build/lists/php-native.json"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs"));
+  assert.ok(workflow.includes("test -s build/lists/php-wasm.json"));
+  assert.ok(workflow.includes("test -s build/lists/php-wasm-zend-faults.json"));
   assert.match(workflow, /LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests\/php-wasm-compounds\.test\.mjs tests\/php-wasm-compound-contract\.test\.mjs tests\/php-wasm-compound-zend\.test\.mjs/);
   assert.match(workflow, /test -s build\/compounds\/php-wasm\.json/);
-  assert.match(workflow, /build\/callables\/php-wasm\.json\n\s*build\/compounds\/php-wasm\.json\n\s*build\/compounds\/php-wasm-zend-faults\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/callables\/php-wasm\.json\n\s*build\/compounds\/php-wasm\.json\n\s*build\/compounds\/php-wasm-zend-faults\.json\n\s*build\/lists\/php-wasm\.json\n\s*build\/lists\/php-wasm-zend-faults\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:php-wasm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=php-wasm node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: type_corpus_php_wasm\n\s*continue-on-error: true/);
   assert.match(workflow, /steps\.type_corpus_php_wasm\.outcome != 'success'/);
@@ -408,7 +411,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /node --test tests\/php-wasm-multi-profile\.test\.mjs && npm run test:type-corpus:php-wasm/);
   assert.match(workflow, /name: type-corpus-php-wasm-\$\{\{ github\.sha \}\}/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests\/php-wasm-callables\.test\.mjs tests\/php-wasm-callable-contract\.test\.mjs/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-wasm\.json\n\s*build\/type-corpus\/reviewed-wasm-php-wasm\.json\n\s*build\/char-native\/php-wasm\.json\n\s*build\/word-native\/php-wasm\.json\n\s*build\/callables\/php-wasm\.json\n\s*build\/compounds\/php-wasm\.json\n\s*build\/compounds\/php-wasm-zend-faults\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-wasm\.json\n\s*build\/type-corpus\/reviewed-wasm-php-wasm\.json\n\s*build\/char-native\/php-wasm\.json\n\s*build\/word-native\/php-wasm\.json\n\s*build\/callables\/php-wasm\.json\n\s*build\/compounds\/php-wasm\.json\n\s*build\/compounds\/php-wasm-zend-faults\.json\n\s*build\/lists\/php-wasm\.json\n\s*build\/lists\/php-wasm-zend-faults\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:java"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=java node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:kotlin"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=kotlin node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:jvm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=java,kotlin node --test tests/type-corpus.test.mjs");

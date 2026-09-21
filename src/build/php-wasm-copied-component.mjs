@@ -126,12 +126,12 @@ export const buildPhpWasmCopiedComponent = async options => {
 	return buildElaboratedComponent({ ...options, targets: ["php-wasm"]
 		, moduleName: undefined, profile, receiptName: "php-wasm-component.json"
 		, createModel: createPhpWasmCopiedModel
-		, validateModel: model => { compileCopiedPhpModel(model.bindingIr, { integerBits: 32 }); options.validateModel?.(model); }
+		, validateModel: model => { compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true }); options.validateModel?.(model); }
 		, compileComponent: async ({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace }) => {
 			if(lakeWorkspace && lakeNativeInputs(lakeWorkspace.resolution).length) throw new Error("PHP-Wasm copied compilation does not yet admit Lake native C inputs");
 			for(const path of Object.keys(phpHeaders)) await save(staging, `c/php/${path}`, await readFile(join(php, path)));
 			const zend = generateCopiedPhpZendAdapter(model.bindingIr), c = generateCBindingPackage(model.bindingIr);
-			const manifest = JSON.parse(zend["copied-zend-manifest.json"]), { surface } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32 });
+			const manifest = JSON.parse(zend["copied-zend-manifest.json"]), { surface } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true });
 			if(surface.callbacks.size && !(await readFile(join(runtime, "include/lean_bridge_native_runtime.h"), "utf8")).includes(nativeCallbackHeader)) throw new Error("PHP-Wasm callables require compiler inputs rebuilt with callback registry support");
 			for(const [path, source] of Object.entries(zend)) await save(staging, path, source);
 			for(const path of [surface.paths.publicHeader, surface.paths.internalHeader, surface.paths.implementation]) await save(staging, `c/binding/${path}`, c[path]);

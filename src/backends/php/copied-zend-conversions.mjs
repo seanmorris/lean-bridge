@@ -84,7 +84,12 @@ export const copiedZendConversions = model => model.surface.copies.map(copy => {
 		} else
 		{
 			input.push("size_t count = zend_hash_num_elements(Z_ARRVAL_P(value));", "if (!lb_charge(s, count, 32)) return 0;", `${copy.element.ctype} *data = lb_allocate(s, count, sizeof(*data)); if (!data) return 0;`, "out->data = data; out->length = count;", `for (size_t i = 0; i < count; i++) if (!lb_to${copy.element.index}(zend_hash_index_find(Z_ARRVAL_P(value), i), &data[i], s)) return 0;`);
-			output.push('if (!lb_charge(s, value->length, 32) || (value->length && !value->data)) return lb_fail(s, "Invalid array output", 0);', "array_init_size(out, (uint32_t)value->length);", "for (size_t i = 0; i < value->length; i++) {", "  zval item; ZVAL_NULL(&item);", `  if (!lb_from${copy.element.index}(&value->data[i], &item, s)) { zval_ptr_dtor(&item); return 0; }`, "  add_next_index_zval(out, &item);", "}");
+			output.push('if (!lb_charge(s, value->length, 32) || (value->length && !value->data)) return lb_fail(s, "Invalid array output", 0);'
+				, `if (value->length && (uintptr_t)value->data % _Alignof(${copy.element.ctype})) return lb_fail(s, "Misaligned sequence output", 0);`
+				, "#ifdef __wasm__"
+				, 'if (value->length && ((uint64_t)(uintptr_t)value->data + (uint64_t)value->length * sizeof(*value->data) > (uint64_t)__builtin_wasm_memory_size(0) * 65536)) return lb_fail(s, "Sequence output exceeds Wasm memory", 0);'
+				, "#endif"
+				, "array_init_size(out, (uint32_t)value->length);", "for (size_t i = 0; i < value->length; i++) {", "  zval item; ZVAL_NULL(&item);", `  if (!lb_from${copy.element.index}(&value->data[i], &item, s)) { zval_ptr_dtor(&item); return 0; }`, "  add_next_index_zval(out, &item);", "}");
 		}
 	}
 	return `static int lb_to${copy.index}(zval *value, ${copy.ctype} *out, lb_scope *s) {
