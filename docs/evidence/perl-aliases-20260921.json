@@ -1,0 +1,5078 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "26157a4933eab719eb8879322184293f62359765",
+  "profiles": [
+    "perl"
+  ],
+  "wordBits": 64,
+  "perlAbis": [
+    "5.36.3-threaded",
+    "5.36.3-unthreaded",
+    "5.38.2-threaded",
+    "5.38.2-unthreaded"
+  ],
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "reportSha256": "8b527ac323de0320726c3321c354f6f4f50051b495b2eca72fb265d8c1e118f5",
+  "sourceHashes": {
+    "tests/perl-aliases.test.mjs": "2972b609153716b794750ae9d92a74b9d85f51c0b3db8212f29dbc08b48d62df",
+    "tests/perl-alias-contract.test.mjs": "19a3882bb6b679dfd46737e5bbc2fea28ecc766bf4b49e21b1522044d1ac3357",
+    "tests/helpers/perl-alias-fixture.mjs": "64578df5a3dc5310bbf79b73e97fbcf992c28b6b41cd8ead1375e3cec5c8e9bc",
+    "tests/helpers/perl-alias-install.mjs": "2a83efdd67f8ce80a1ca2f3162eab0bb6090f8a68cd051295c4148fe9d73796e",
+    "tests/fixtures/alias-consumers/perl.pl": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+    "tests/fixtures/alias-consumers/perl-faults.pl": "b030aca2af0b388324b52d690dd1a9293088fa72132422dd4d5881ffd47f6e10",
+    "tests/fixtures/list-consumers/perl-probe.h": "f41222979379e7c12a0f4345c1eef9fd26d455efaf2b02641ad6ab7407a0b766",
+    "tests/fixtures/list-consumers/perl-probe-build.pl": "d80752da6f3fc271dcb2020ef93d492025409ffaed7352f88eeba59f7a2acd69",
+    "tests/helpers/alias-fixture.mjs": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8",
+    "tests/helpers/native-alias-fixture.mjs": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/fixtures/onboarding/native-aliases/Aliases.lean": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b",
+    "tests/fixtures/onboarding/native-aliases/lakefile.toml": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f",
+    "tests/fixtures/onboarding/native-aliases/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-aliases/package.json": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd",
+    "tests/fixtures/onboarding/native-aliases/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "primitives": {
+    "AUnit": "unit",
+    "ABool": "bool",
+    "AU8": "uint8",
+    "AU16": "uint16",
+    "AU32": "uint32",
+    "AU64": "uint64",
+    "AI8": "int8",
+    "AI16": "int16",
+    "AI32": "int32",
+    "AI64": "int64",
+    "ANat": "nat",
+    "AInt": "int",
+    "AF32": "float32",
+    "AF64": "float64",
+    "AText": "string",
+    "ABytes": "bytes",
+    "AChar": "char",
+    "AWord": "usize",
+    "ASignedWord": "isize"
+  },
+  "signatures": [
+    {
+      "name": "Aliases.echo_unit",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AUnit"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AUnit"
+      }
+    },
+    {
+      "name": "Aliases.echo_bool",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABool"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABool"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU8"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU16"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU32"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU64"
+      }
+    },
+    {
+      "name": "Aliases.echo_int8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI8"
+      }
+    },
+    {
+      "name": "Aliases.echo_int16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI16"
+      }
+    },
+    {
+      "name": "Aliases.echo_int32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI32"
+      }
+    },
+    {
+      "name": "Aliases.echo_int64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI64"
+      }
+    },
+    {
+      "name": "Aliases.echo_nat",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ANat"
+      }
+    },
+    {
+      "name": "Aliases.echo_int",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AInt"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AInt"
+      }
+    },
+    {
+      "name": "Aliases.echo_float32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF32"
+      }
+    },
+    {
+      "name": "Aliases.echo_float64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF64"
+      }
+    },
+    {
+      "name": "Aliases.echo_string",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AText"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.echo_bytes",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    },
+    {
+      "name": "Aliases.echo_char",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AChar"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AChar"
+      }
+    },
+    {
+      "name": "Aliases.echo_usize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_isize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ASignedWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ASignedWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ScalarsView"
+      }
+    },
+    {
+      "name": "Aliases.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Aliases.increment",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Count"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.OtherCount"
+      }
+    },
+    {
+      "name": "Aliases.make",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Count"
+      }
+    },
+    {
+      "name": "Aliases.label",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.change_packet",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.PacketView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.PacketView"
+      }
+    },
+    {
+      "name": "Aliases.reverse_packets",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Packets"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Packets"
+      }
+    },
+    {
+      "name": "Aliases.reverse_rows",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Rows"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Rows"
+      }
+    },
+    {
+      "name": "Aliases.echo_maybe",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Maybe"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Maybe"
+      }
+    },
+    {
+      "name": "Aliases.echo_outcome",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Outcome"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.duplicate",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.produce",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    }
+  ],
+  "reviewedIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+  "executions": [
+    {
+      "bindingIrSha256": "07b217823ea9589178b8306cb629c9737c66d475e22dc8af875a8697bd85cd05",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "perlType": "true() | false()",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "perlType": "octet string",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "perlType": "single-scalar text",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "perlType": "Math::BigInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "perlType": "Math::BigInt (nonnegative)",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "perlType": "text scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "perlType": "undef",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "perlType": "undef | Some<undef | Some<undef>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "perlType": "Ok<[unsigned integer scalar, octet string]> | Err<text scalar>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "perlType": "array reference<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "perlType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "perlType": "array reference<array reference<unsigned integer scalar>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "perlType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 11732,
+      "compilerFreeExecution": true,
+      "consumerSha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+      "faults": {
+        "checks": 574,
+        "conversion_checkpoints": 506,
+        "host_exceptions": 4,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Aliases.pm": {
+          "bytes": 12530,
+          "sha256": "4548ed61636c4356fad24df56930297387cc315f34a4e750cf23714fa6d415fb"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "7607dab72c24c14d0a0eb4c432e9afc94e718c91d3e449bd0de09117437fe7ab"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4ce932a5df9594ae5dcd227adae167d8544405ef03061ee0065d24eda612934b"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/.packlist": {
+          "bytes": 544,
+          "sha256": "2907b1008b0c0aa8e8ca1fa367e770b2f50ad03f28b5fb6d819f52f0a3b04eb8"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/Aliases.so": {
+          "bytes": 83832,
+          "sha256": "21b36a243cbb1afd3b062b3fd068e383c07c9596f9e454c5279bc5fd16dc5519"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2295,
+          "sha256": "02376e6ea222c20fb2bfdf9d9a9a1775a702c0003aa1331d6f9b4e6177b1bda3"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27712,
+          "sha256": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 651,
+          "sha256": "5e5b868511f740253a770671d0f3f3c0ff51fbd4cbf8a2abac52e0b78ed96871"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "67157512f0c5861db3d2e46841218f919bb45684a20c11181d6131b836adb6ec",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/Aliases.so": "21b36a243cbb1afd3b062b3fd068e383c07c9596f9e454c5279bc5fd16dc5519",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 217635,
+              "path": "archives/LeanBridge-Aliases-1.000.tar.gz",
+              "sha256": "18a6b6023d8ed7a55cafd185e21edfdfc921456b09c8463636cfc935f1987559"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Aliases",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.36.3",
+      "perlSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "primitives": [
+        {
+          "checks": 58,
+          "name": "unit",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 108,
+          "name": "bool",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 332,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 410,
+          "name": "uint64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "nat",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "int",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 970,
+          "name": "float32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 810,
+          "name": "float64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 574,
+          "name": "string",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 348,
+          "name": "bytes",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 914,
+          "name": "char",
+          "rejected_cases": 9
+        },
+        {
+          "checks": 410,
+          "name": "usize",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "isize",
+          "rejected_cases": 5
+        }
+      ],
+      "probeSha256": "ba09c4e7ba6141ca7c38ef49faa00b8d6fd8fef381871bf1ed1350bdd2f35b29",
+      "probeSourceSha256": "bf3b736f0b130922bae71614a051b04f73c5838f3e848fbc3deb6668cdd75a61",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "44698bc01eb147f4d59feef1bb1dbdf4d08c7bc05da6bf94fe66ed05c59a7c03",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "874799daa0fc5c684684822d5804687543c8ef173514c4789d440140620f71a7",
+      "threaded": true,
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77"
+    },
+    {
+      "bindingIrSha256": "07b217823ea9589178b8306cb629c9737c66d475e22dc8af875a8697bd85cd05",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "perlType": "true() | false()",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "perlType": "octet string",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "perlType": "single-scalar text",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "perlType": "Math::BigInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "perlType": "Math::BigInt (nonnegative)",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "perlType": "text scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "perlType": "undef",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "perlType": "undef | Some<undef | Some<undef>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "perlType": "Ok<[unsigned integer scalar, octet string]> | Err<text scalar>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "perlType": "array reference<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "perlType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "perlType": "array reference<array reference<unsigned integer scalar>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "perlType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 11732,
+      "compilerFreeExecution": true,
+      "consumerSha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+      "faults": {
+        "checks": 574,
+        "conversion_checkpoints": 506,
+        "host_exceptions": 4,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Aliases.pm": {
+          "bytes": 12530,
+          "sha256": "4548ed61636c4356fad24df56930297387cc315f34a4e750cf23714fa6d415fb"
+        },
+        "x86_64-linux/LeanBridge/Aliases/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "91d6c7b099aaaa8ecd33afc66c248cc0e8ad1be0e8b84a949f0cddb86dbb36e7"
+        },
+        "x86_64-linux/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "1f6a67f6b5e1df4b98fa036a4ae3f9b78064dcce26a7cdc2cdabb6ff3ca98b0b"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/auto/LeanBridge/Aliases/.packlist": {
+          "bytes": 492,
+          "sha256": "627311b0d1e67bcee6d2a2cfd965ecd9028a7acca47febec5d68be6570e1daf6"
+        },
+        "x86_64-linux/auto/LeanBridge/Aliases/Aliases.so": {
+          "bytes": 71400,
+          "sha256": "1fc2b3d2db75b5f6641a48dd18f7f40600ed1c26b177d9b51eaa6f7a2f05987a"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2074,
+          "sha256": "66bf41d17a0c9adaed6a429492bca6b0855e5ed57f072ad6f90545818a0b4066"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28064,
+          "sha256": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 651,
+          "sha256": "5d03ba166195734e94ec8a13b1ec0a1cd28cc809ea2a4399ab4ecb881fbcc32b"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "67157512f0c5861db3d2e46841218f919bb45684a20c11181d6131b836adb6ec",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/Aliases/Aliases.so": "1fc2b3d2db75b5f6641a48dd18f7f40600ed1c26b177d9b51eaa6f7a2f05987a",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 217635,
+              "path": "archives/LeanBridge-Aliases-1.000.tar.gz",
+              "sha256": "18a6b6023d8ed7a55cafd185e21edfdfc921456b09c8463636cfc935f1987559"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Aliases",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.36.3",
+      "perlSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "primitives": [
+        {
+          "checks": 58,
+          "name": "unit",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 108,
+          "name": "bool",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 332,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 410,
+          "name": "uint64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "nat",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "int",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 970,
+          "name": "float32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 810,
+          "name": "float64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 574,
+          "name": "string",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 348,
+          "name": "bytes",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 914,
+          "name": "char",
+          "rejected_cases": 9
+        },
+        {
+          "checks": 410,
+          "name": "usize",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "isize",
+          "rejected_cases": 5
+        }
+      ],
+      "probeSha256": "b74f3da4e147633103c47183dac800705bb3890a1ff3713d7516a3a58e865b62",
+      "probeSourceSha256": "bf3b736f0b130922bae71614a051b04f73c5838f3e848fbc3deb6668cdd75a61",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "44698bc01eb147f4d59feef1bb1dbdf4d08c7bc05da6bf94fe66ed05c59a7c03",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "874799daa0fc5c684684822d5804687543c8ef173514c4789d440140620f71a7",
+      "threaded": false,
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77"
+    },
+    {
+      "bindingIrSha256": "07b217823ea9589178b8306cb629c9737c66d475e22dc8af875a8697bd85cd05",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "perlType": "true() | false()",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "perlType": "octet string",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "perlType": "single-scalar text",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "perlType": "Math::BigInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "perlType": "Math::BigInt (nonnegative)",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "perlType": "text scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "perlType": "undef",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "perlType": "undef | Some<undef | Some<undef>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "perlType": "Ok<[unsigned integer scalar, octet string]> | Err<text scalar>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "perlType": "array reference<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "perlType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "perlType": "array reference<array reference<unsigned integer scalar>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "perlType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 11732,
+      "compilerFreeExecution": true,
+      "consumerSha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+      "faults": {
+        "checks": 574,
+        "conversion_checkpoints": 506,
+        "host_exceptions": 4,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Aliases.pm": {
+          "bytes": 12530,
+          "sha256": "4548ed61636c4356fad24df56930297387cc315f34a4e750cf23714fa6d415fb"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4eae68f0d82fb8eff8be30cc4747781b8ef317e86348696d5daccadd42e1493f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "ce7426dfb3170ebbad1e24946fdb423d9a7300bec112b764c73265c2393abcfe"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/.packlist": {
+          "bytes": 544,
+          "sha256": "0526dd812a2f00d6af41421f1f483a86bda334c1043150cc12d722b21bb77a4e"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/Aliases.so": {
+          "bytes": 83832,
+          "sha256": "a11c3b4fb3a692966b2978efbfd4621b8b614e4c06dcd157c5f793c31941f8d4"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2295,
+          "sha256": "1f86c42ecd41c2d4e160d9cbd99c4677055284989ca94780730e5f072bf65395"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27760,
+          "sha256": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 651,
+          "sha256": "893a57649baa13f41de1734d7e227dcb82c5210a34e2250b90fd0d8dcb8986ee"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "67157512f0c5861db3d2e46841218f919bb45684a20c11181d6131b836adb6ec",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/Aliases.so": "a11c3b4fb3a692966b2978efbfd4621b8b614e4c06dcd157c5f793c31941f8d4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 217635,
+              "path": "archives/LeanBridge-Aliases-1.000.tar.gz",
+              "sha256": "18a6b6023d8ed7a55cafd185e21edfdfc921456b09c8463636cfc935f1987559"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Aliases",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.38.2",
+      "perlSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "primitives": [
+        {
+          "checks": 58,
+          "name": "unit",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 108,
+          "name": "bool",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 332,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 410,
+          "name": "uint64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "nat",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "int",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 970,
+          "name": "float32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 810,
+          "name": "float64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 574,
+          "name": "string",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 348,
+          "name": "bytes",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 914,
+          "name": "char",
+          "rejected_cases": 9
+        },
+        {
+          "checks": 410,
+          "name": "usize",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "isize",
+          "rejected_cases": 5
+        }
+      ],
+      "probeSha256": "520c33e14d9ded6879462e72b1aec0e9fd46fa7f2bc0d952f7feb0d422cff1bd",
+      "probeSourceSha256": "bf3b736f0b130922bae71614a051b04f73c5838f3e848fbc3deb6668cdd75a61",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "44698bc01eb147f4d59feef1bb1dbdf4d08c7bc05da6bf94fe66ed05c59a7c03",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "874799daa0fc5c684684822d5804687543c8ef173514c4789d440140620f71a7",
+      "threaded": true,
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77"
+    },
+    {
+      "bindingIrSha256": "07b217823ea9589178b8306cb629c9737c66d475e22dc8af875a8697bd85cd05",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "perlType": "true() | false()",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "perlType": "octet string",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "perlType": "single-scalar text",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "perlType": "Math::BigInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "perlType": "Math::BigInt (nonnegative)",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "perlType": "text scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "perlType": "undef",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "perlType": "undef | Some<undef | Some<undef>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "perlType": "Ok<[unsigned integer scalar, octet string]> | Err<text scalar>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "perlType": "array reference<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "perlType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "perlType": "array reference<array reference<unsigned integer scalar>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "perlType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 11732,
+      "compilerFreeExecution": true,
+      "consumerSha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+      "faults": {
+        "checks": 574,
+        "conversion_checkpoints": 506,
+        "host_exceptions": 4,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Aliases.pm": {
+          "bytes": 12530,
+          "sha256": "4548ed61636c4356fad24df56930297387cc315f34a4e750cf23714fa6d415fb"
+        },
+        "x86_64-linux/LeanBridge/Aliases/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "a420202e804e16fc60b515c98396b9cc1c9851cc2c071f86f53f33e7d6d16526"
+        },
+        "x86_64-linux/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "4bc67542bca7200e7073a1d7e3d3c3007181e4b8badd5387f84ca14adbe4ee94"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/auto/LeanBridge/Aliases/.packlist": {
+          "bytes": 492,
+          "sha256": "48928158e0678aba255640e0c30f3c3800a3293980589c92914ba1193d2f0296"
+        },
+        "x86_64-linux/auto/LeanBridge/Aliases/Aliases.so": {
+          "bytes": 75528,
+          "sha256": "d5a0f9d52e627f44df1dd11543eb423a117ed3ec2b68228dfa11e9acfa3a20c2"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2074,
+          "sha256": "6b6c382fd6238647962da718d2637e365dabae77ecfa45760f7360a99d12c81a"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28104,
+          "sha256": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 651,
+          "sha256": "88a3fc531f6bea238a6520a697d0c4b66e91d3b19172e46738fa1a50138845cc"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "67157512f0c5861db3d2e46841218f919bb45684a20c11181d6131b836adb6ec",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/Aliases/Aliases.so": "d5a0f9d52e627f44df1dd11543eb423a117ed3ec2b68228dfa11e9acfa3a20c2",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 217635,
+              "path": "archives/LeanBridge-Aliases-1.000.tar.gz",
+              "sha256": "18a6b6023d8ed7a55cafd185e21edfdfc921456b09c8463636cfc935f1987559"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Aliases",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "ordinary-source",
+      "perl": "v5.38.2",
+      "perlSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "primitives": [
+        {
+          "checks": 58,
+          "name": "unit",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 108,
+          "name": "bool",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 332,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 410,
+          "name": "uint64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "nat",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "int",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 970,
+          "name": "float32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 810,
+          "name": "float64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 574,
+          "name": "string",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 348,
+          "name": "bytes",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 914,
+          "name": "char",
+          "rejected_cases": 9
+        },
+        {
+          "checks": 410,
+          "name": "usize",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "isize",
+          "rejected_cases": 5
+        }
+      ],
+      "probeSha256": "2a65e5cabcec891e3adcd4a120fda8789a829c5c7eb756796f17c1a0f21e2504",
+      "probeSourceSha256": "bf3b736f0b130922bae71614a051b04f73c5838f3e848fbc3deb6668cdd75a61",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "44698bc01eb147f4d59feef1bb1dbdf4d08c7bc05da6bf94fe66ed05c59a7c03",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "874799daa0fc5c684684822d5804687543c8ef173514c4789d440140620f71a7",
+      "threaded": false,
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77"
+    },
+    {
+      "bindingIrSha256": "ad0dbb2651f0b4ddef0a42070d1d0c8b16162a414fb6b57f88693517bc715de4",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "perlType": "true() | false()",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "perlType": "octet string",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "perlType": "single-scalar text",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "perlType": "Math::BigInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "perlType": "Math::BigInt (nonnegative)",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "perlType": "text scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "perlType": "undef",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "perlType": "undef | Some<undef | Some<undef>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "perlType": "Ok<[unsigned integer scalar, octet string]> | Err<text scalar>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "perlType": "array reference<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "perlType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "perlType": "array reference<array reference<unsigned integer scalar>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "perlType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 11732,
+      "compilerFreeExecution": true,
+      "consumerSha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+      "faults": {
+        "checks": 574,
+        "conversion_checkpoints": 506,
+        "host_exceptions": 4,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Aliases.pm": {
+          "bytes": 12588,
+          "sha256": "07f7fcb6cd024cafd5829621d65db290152588300b3b37557715ab6bf2e3f842"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "7607dab72c24c14d0a0eb4c432e9afc94e718c91d3e449bd0de09117437fe7ab"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4ce932a5df9594ae5dcd227adae167d8544405ef03061ee0065d24eda612934b"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/.packlist": {
+          "bytes": 544,
+          "sha256": "ea13221ff183f617a2105ff1649cc3d477f239d33d151e067bf5fc8129d1398c"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/Aliases.so": {
+          "bytes": 83832,
+          "sha256": "21b36a243cbb1afd3b062b3fd068e383c07c9596f9e454c5279bc5fd16dc5519"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2295,
+          "sha256": "a8e139aceeeaed3efe77284e65f0bf1a5523bcc593b449dc3aff7e3af24edcd3"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27712,
+          "sha256": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 651,
+          "sha256": "2279db1f53a870b142bfb3e7245f49ebde0f80d78b56d4e47a6f17bfc5c72ee4"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "9c7ec2cf289483690c40b5257aa81730b48fb5e1966afd6fe21ae3e100753783",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/Aliases.so": "21b36a243cbb1afd3b062b3fd068e383c07c9596f9e454c5279bc5fd16dc5519",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "ad45870a69c676ba61a195b0a563f929ec0da36718f6a6cc9f31e27f38f3b6a0"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 222898,
+              "path": "archives/LeanBridge-Aliases-1.000.tar.gz",
+              "sha256": "8578ce752739719a44c55e59c9f312cda586495981bff6a779a44bfa33adf824"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Aliases",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.36.3",
+      "perlSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "primitives": [
+        {
+          "checks": 58,
+          "name": "unit",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 108,
+          "name": "bool",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 332,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 410,
+          "name": "uint64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "nat",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "int",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 970,
+          "name": "float32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 810,
+          "name": "float64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 574,
+          "name": "string",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 348,
+          "name": "bytes",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 914,
+          "name": "char",
+          "rejected_cases": 9
+        },
+        {
+          "checks": 410,
+          "name": "usize",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "isize",
+          "rejected_cases": 5
+        }
+      ],
+      "probeSha256": "ba09c4e7ba6141ca7c38ef49faa00b8d6fd8fef381871bf1ed1350bdd2f35b29",
+      "probeSourceSha256": "bf3b736f0b130922bae71614a051b04f73c5838f3e848fbc3deb6668cdd75a61",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "702719e607451424789aea275ab464f38576209b0d3783c4a0fa2a70cfb89800",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "c161b1d125bd7ed22be0e2b888c6a00b9a72d2387aaf69051b6da656f8175cb2",
+      "threaded": true,
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77"
+    },
+    {
+      "bindingIrSha256": "ad0dbb2651f0b4ddef0a42070d1d0c8b16162a414fb6b57f88693517bc715de4",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "perlType": "true() | false()",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "perlType": "octet string",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "perlType": "single-scalar text",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "perlType": "Math::BigInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "perlType": "Math::BigInt (nonnegative)",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "perlType": "text scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "perlType": "undef",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "perlType": "undef | Some<undef | Some<undef>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "perlType": "Ok<[unsigned integer scalar, octet string]> | Err<text scalar>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "perlType": "array reference<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "perlType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "perlType": "array reference<array reference<unsigned integer scalar>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "perlType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 11732,
+      "compilerFreeExecution": true,
+      "consumerSha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+      "faults": {
+        "checks": 574,
+        "conversion_checkpoints": 506,
+        "host_exceptions": 4,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Aliases.pm": {
+          "bytes": 12588,
+          "sha256": "07f7fcb6cd024cafd5829621d65db290152588300b3b37557715ab6bf2e3f842"
+        },
+        "x86_64-linux/LeanBridge/Aliases/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "91d6c7b099aaaa8ecd33afc66c248cc0e8ad1be0e8b84a949f0cddb86dbb36e7"
+        },
+        "x86_64-linux/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "1f6a67f6b5e1df4b98fa036a4ae3f9b78064dcce26a7cdc2cdabb6ff3ca98b0b"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/auto/LeanBridge/Aliases/.packlist": {
+          "bytes": 492,
+          "sha256": "bf800802dff76b942aa90dcf66d1d54700372073d401fe1f99a1ba2eb4405afe"
+        },
+        "x86_64-linux/auto/LeanBridge/Aliases/Aliases.so": {
+          "bytes": 71400,
+          "sha256": "1fc2b3d2db75b5f6641a48dd18f7f40600ed1c26b177d9b51eaa6f7a2f05987a"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2074,
+          "sha256": "5ab8afeb5dd4dfefc5095578f0573b7f7b40d942a8337d727df9064ae600e3d1"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28064,
+          "sha256": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 651,
+          "sha256": "bb2755b725585aa487091aac389088273ae5062423936fa3ed354a8be8b6d8e3"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "9c7ec2cf289483690c40b5257aa81730b48fb5e1966afd6fe21ae3e100753783",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/Aliases/Aliases.so": "1fc2b3d2db75b5f6641a48dd18f7f40600ed1c26b177d9b51eaa6f7a2f05987a",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d27b66a33aeacda07faeda1e4976c89713cb1627135e858e70a167b48a93c6ac"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 222898,
+              "path": "archives/LeanBridge-Aliases-1.000.tar.gz",
+              "sha256": "8578ce752739719a44c55e59c9f312cda586495981bff6a779a44bfa33adf824"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Aliases",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.36.3",
+      "perlSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "primitives": [
+        {
+          "checks": 58,
+          "name": "unit",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 108,
+          "name": "bool",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 332,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 410,
+          "name": "uint64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "nat",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "int",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 970,
+          "name": "float32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 810,
+          "name": "float64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 574,
+          "name": "string",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 348,
+          "name": "bytes",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 914,
+          "name": "char",
+          "rejected_cases": 9
+        },
+        {
+          "checks": 410,
+          "name": "usize",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "isize",
+          "rejected_cases": 5
+        }
+      ],
+      "probeSha256": "b74f3da4e147633103c47183dac800705bb3890a1ff3713d7516a3a58e865b62",
+      "probeSourceSha256": "bf3b736f0b130922bae71614a051b04f73c5838f3e848fbc3deb6668cdd75a61",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "702719e607451424789aea275ab464f38576209b0d3783c4a0fa2a70cfb89800",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "c161b1d125bd7ed22be0e2b888c6a00b9a72d2387aaf69051b6da656f8175cb2",
+      "threaded": false,
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77"
+    },
+    {
+      "bindingIrSha256": "ad0dbb2651f0b4ddef0a42070d1d0c8b16162a414fb6b57f88693517bc715de4",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "perlType": "true() | false()",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "perlType": "octet string",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "perlType": "single-scalar text",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "perlType": "Math::BigInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "perlType": "Math::BigInt (nonnegative)",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "perlType": "text scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "perlType": "undef",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "perlType": "undef | Some<undef | Some<undef>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "perlType": "Ok<[unsigned integer scalar, octet string]> | Err<text scalar>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "perlType": "array reference<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "perlType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "perlType": "array reference<array reference<unsigned integer scalar>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "perlType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 11732,
+      "compilerFreeExecution": true,
+      "consumerSha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+      "faults": {
+        "checks": 574,
+        "conversion_checkpoints": 506,
+        "host_exceptions": 4,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "x86_64-linux-thread-multi/LeanBridge/Aliases.pm": {
+          "bytes": 12588,
+          "sha256": "07f7fcb6cd024cafd5829621d65db290152588300b3b37557715ab6bf2e3f842"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "4eae68f0d82fb8eff8be30cc4747781b8ef317e86348696d5daccadd42e1493f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 531,
+          "sha256": "ce7426dfb3170ebbad1e24946fdb423d9a7300bec112b764c73265c2393abcfe"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/.packlist": {
+          "bytes": 544,
+          "sha256": "1377a273e7439e67602e249f2d6cfc802011f967bfdc9a20ad9ee0e788244ea3"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/Aliases.so": {
+          "bytes": 83832,
+          "sha256": "a11c3b4fb3a692966b2978efbfd4621b8b614e4c06dcd157c5f793c31941f8d4"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2295,
+          "sha256": "460e3c157b357fcb72d8af1e46eab62786eb6157c340ae70de2b2addef29aafe"
+        },
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 27760,
+          "sha256": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+        },
+        "x86_64-linux-thread-multi/perllocal.pod": {
+          "bytes": 651,
+          "sha256": "a49a1d34551f9e73034ab9e300917942232d73de5edf9d3a0749c57f1126fab8"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "9c7ec2cf289483690c40b5257aa81730b48fb5e1966afd6fe21ae3e100753783",
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Aliases/Aliases.so": "a11c3b4fb3a692966b2978efbfd4621b8b614e4c06dcd157c5f793c31941f8d4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "0ccd541f7770a1429be9062879c3b8d79a2f944ff1c5d83fd18d703fc5128e51"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 222898,
+              "path": "archives/LeanBridge-Aliases-1.000.tar.gz",
+              "sha256": "8578ce752739719a44c55e59c9f312cda586495981bff6a779a44bfa33adf824"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Aliases",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.38.2",
+      "perlSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "primitives": [
+        {
+          "checks": 58,
+          "name": "unit",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 108,
+          "name": "bool",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 332,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 410,
+          "name": "uint64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "nat",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "int",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 970,
+          "name": "float32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 810,
+          "name": "float64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 574,
+          "name": "string",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 348,
+          "name": "bytes",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 914,
+          "name": "char",
+          "rejected_cases": 9
+        },
+        {
+          "checks": 410,
+          "name": "usize",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "isize",
+          "rejected_cases": 5
+        }
+      ],
+      "probeSha256": "520c33e14d9ded6879462e72b1aec0e9fd46fa7f2bc0d952f7feb0d422cff1bd",
+      "probeSourceSha256": "bf3b736f0b130922bae71614a051b04f73c5838f3e848fbc3deb6668cdd75a61",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "702719e607451424789aea275ab464f38576209b0d3783c4a0fa2a70cfb89800",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "c161b1d125bd7ed22be0e2b888c6a00b9a72d2387aaf69051b6da656f8175cb2",
+      "threaded": true,
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77"
+    },
+    {
+      "bindingIrSha256": "ad0dbb2651f0b4ddef0a42070d1d0c8b16162a414fb6b57f88693517bc715de4",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "perlType": "true() | false()",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "perlType": "octet string",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "perlType": "single-scalar text",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "perlType": "numeric scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "perlType": "Math::BigInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "perlType": "Math::BigInt (nonnegative)",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "perlType": "signed integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "perlType": "text scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "perlType": "undef",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "perlType": "undef | Some<undef | Some<undef>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "perlType": "unsigned integer scalar",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "perlType": "Ok<[unsigned integer scalar, octet string]> | Err<text scalar>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "perlType": "array reference<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "perlType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "perlType": "array reference<array reference<unsigned integer scalar>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "perlType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 11732,
+      "compilerFreeExecution": true,
+      "consumerSha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601",
+      "faults": {
+        "checks": 574,
+        "conversion_checkpoints": 506,
+        "host_exceptions": 4,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "x86_64-linux/LeanBridge/Aliases.pm": {
+          "bytes": 12588,
+          "sha256": "07f7fcb6cd024cafd5829621d65db290152588300b3b37557715ab6bf2e3f842"
+        },
+        "x86_64-linux/LeanBridge/Aliases/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "a420202e804e16fc60b515c98396b9cc1c9851cc2c071f86f53f33e7d6d16526"
+        },
+        "x86_64-linux/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "x86_64-linux/LeanBridge/Runtime.pm": {
+          "bytes": 3008,
+          "sha256": "a515c476204ab4526598333430788f7625d0406398c1284cf07b7f204825ef8f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/Platform.pm": {
+          "bytes": 1824,
+          "sha256": "c53b3995723b9b4f1651dd3833c311f0b433b8853117ab9b9d2489455d091306"
+        },
+        "x86_64-linux/LeanBridge/Runtime/binding.json": {
+          "bytes": 483,
+          "sha256": "af71efba461cf236ff36c1fb1697b7ffba53205635fa3ecd03d67e4f4c39f3a2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/config.h": {
+          "bytes": 253,
+          "sha256": "9db920de13a0936da07bf8c32cb5103774323a6570b63adcfd4d0aa4d99436c9"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean.h": {
+          "bytes": 131189,
+          "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_gmp.h": {
+          "bytes": 578,
+          "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/lean_libuv.h": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/mimalloc.h": {
+          "bytes": 39953,
+          "sha256": "55c84879fd326e866ba8e61e245343d3b09bf3c9defcced1a6667b5beb51ab97"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean/version.h": {
+          "bytes": 400,
+          "sha256": "06311f7bc1d9e908d10e2b1eab50e26bfc1c2d5b4e9c3d934152f2bf3a7caaa5"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/lean_bridge_native_runtime.h": {
+          "bytes": 1830,
+          "sha256": "286bfd49795b53a07903ac769690d43b417db2738038540516c9cee91e166321"
+        },
+        "x86_64-linux/LeanBridge/Runtime/include/runtime.h": {
+          "bytes": 3561,
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        "x86_64-linux/LeanBridge/Runtime/install-receipt.json": {
+          "bytes": 506,
+          "sha256": "4bc67542bca7200e7073a1d7e3d3c3007181e4b8badd5387f84ca14adbe4ee94"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "x86_64-linux/LeanBridge/Runtime/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "x86_64-linux/LeanBridge/Runtime/target.json": {
+          "bytes": 36,
+          "sha256": "852dc589659e3e16deb98360f40c4442e2caa2daae435173727b5d12d9e4100d"
+        },
+        "x86_64-linux/auto/LeanBridge/Aliases/.packlist": {
+          "bytes": 492,
+          "sha256": "3d19bdbb81d45829cd6beb4bab618e523f9d324212dfe6ee7d66eeaa039f37dc"
+        },
+        "x86_64-linux/auto/LeanBridge/Aliases/Aliases.so": {
+          "bytes": 75528,
+          "sha256": "d5a0f9d52e627f44df1dd11543eb423a117ed3ec2b68228dfa11e9acfa3a20c2"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/.packlist": {
+          "bytes": 2074,
+          "sha256": "d3f4f67d7c735a3234b75e3400d7ff3ba3ed3a28ca193ecd8235201509ef54e0"
+        },
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": {
+          "bytes": 28104,
+          "sha256": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+        },
+        "x86_64-linux/perllocal.pod": {
+          "bytes": 651,
+          "sha256": "cf49b47fc26910ea1d4f82f822f3adaea11fbdb9af4fd94bce3e0cc32d213bd8"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "isolatedCompiledFaultProbe": true,
+      "modelSha256": "9c7ec2cf289483690c40b5257aa81730b48fb5e1966afd6fe21ae3e100753783",
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/Aliases/native/libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/Aliases/Aliases.so": "d5a0f9d52e627f44df1dd11543eb423a117ed3ec2b68228dfa11e9acfa3a20c2",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "eb222b00c7acbd3c4035b7b437c53463a33be00da39f9cbdb84f6effa292b856"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 222898,
+              "path": "archives/LeanBridge-Aliases-1.000.tar.gz",
+              "sha256": "8578ce752739719a44c55e59c9f312cda586495981bff6a779a44bfa33adf824"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Aliases",
+          "profile": "native-library-v1",
+          "requires": [
+            {
+              "ecosystem": "cpan",
+              "name": "LeanBridge-Runtime",
+              "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+            }
+          ],
+          "role": "component",
+          "runtimeDelivery": "dependency",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "1.000"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51371173,
+              "path": "archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+              "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+            }
+          ],
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "runtime",
+          "runtimeDelivery": "provided",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cpan",
+          "version": "0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211"
+        }
+      ],
+      "path": "reviewed-ir",
+      "perl": "v5.38.2",
+      "perlSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "primitives": [
+        {
+          "checks": 58,
+          "name": "unit",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 108,
+          "name": "bool",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint8",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 252,
+          "name": "uint16",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 332,
+          "name": "uint32",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 410,
+          "name": "uint64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int8",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int16",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 330,
+          "name": "int32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "int64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "nat",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 154,
+          "name": "int",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 970,
+          "name": "float32",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 810,
+          "name": "float64",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 574,
+          "name": "string",
+          "rejected_cases": 7
+        },
+        {
+          "checks": 348,
+          "name": "bytes",
+          "rejected_cases": 6
+        },
+        {
+          "checks": 914,
+          "name": "char",
+          "rejected_cases": 9
+        },
+        {
+          "checks": 410,
+          "name": "usize",
+          "rejected_cases": 5
+        },
+        {
+          "checks": 410,
+          "name": "isize",
+          "rejected_cases": 5
+        }
+      ],
+      "probeSha256": "2a65e5cabcec891e3adcd4a120fda8789a829c5c7eb756796f17c1a0f21e2504",
+      "probeSourceSha256": "bf3b736f0b130922bae71614a051b04f73c5838f3e848fbc3deb6668cdd75a61",
+      "producerHandoffRemoved": true,
+      "profile": "perl",
+      "publicApiOnly": true,
+      "receiptSha256": "702719e607451424789aea275ab464f38576209b0d3783c4a0fa2a70cfb89800",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "c161b1d125bd7ed22be0e2b888c6a00b9a72d2387aaf69051b6da656f8175cb2",
+      "threaded": false,
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77"
+    }
+  ]
+}

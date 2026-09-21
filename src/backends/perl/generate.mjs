@@ -5,6 +5,7 @@
  */
 import { nativeCType, nativeObjectType, nativeTypeKey, validateNativeType, nativeCallbackDefault } from "../../build/native-model.mjs";
 import { fixedPlatformInteger } from "../../abi/component-scalars.mjs";
+import { perlCopiedAliases, perlAliasApiDocs, perlAliasPod } from "./copied-aliases.mjs";
 
 const q = JSON.stringify;
 const read = type => `lb_read_${nativeTypeKey(type)}`;
@@ -284,6 +285,7 @@ export const validatePerlModel = model => {
  */
 export const generatePerlBindingPackage = (model, receipt) => {
 	const branches = validatePerlModel(model);
+	const aliases = perlCopiedAliases(model);
 	const lines = ['#include "runtime.h"', '#include "component.h"', ""];
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
@@ -370,7 +372,12 @@ _callback_${type.key}(...)
 		} else pm.push("our @ISA = ('LeanBridge::Runtime::Resource');", "sub CLONE_SKIP { 1 }");
 	}
 	pm.push("1;", "", "__END__", "=head1 NAME", "", `${model.moduleName} - Generated functions from ${model.component.name}`, "", "=head1 API", "");
-	for(const item of model.exports) pm.push(`=head2 ${item.publicName}`, "", `Calls C<${item.name}> in the compiled Lean component.`, "");
+	for(const item of model.exports)
+	{
+		pm.push(`=head2 ${item.publicName}`, "", `Calls C<${item.name}> in the compiled Lean component.`, "");
+		if(aliases.length) pm.push(perlAliasApiDocs(model, item), "");
+	}
+	if(aliases.length) pm.push(...perlAliasPod(model, aliases));
 	if(branches.length) pm.push("=head1 COPIED VALUES", ""
 		, "Option uses undef for None and Some->new($value) for Some, including Some->new(undef). Unit uses undef. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested."
 		, "", "Branches are mutable one-field hashes. Calls check the exact class and field set, reject tied branches and products, and copy their contents. Returned arrays, records and payloads are independent of input values. Perl reference equality is not deep value equality. The shared per-call copied-value limit is 16 MiB; schema nesting is limited to 32 levels. Compound callbacks and resources inside copied values are unsupported.", "");
@@ -388,6 +395,7 @@ _callback_${type.key}(...)
 			, bindingIrSha256: model.bindingIrSha256
 			, publicModule
 			, runtimeIdentity: receipt.runtimeIdentity
+			, ...aliases.length ? { aliases } : {}
 		}, null, 2) + "\n"
 	};
 };

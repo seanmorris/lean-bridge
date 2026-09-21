@@ -137,6 +137,36 @@ Array remain distinct Lean and IR types even though both use array references.
 List callback payloads remain unsupported. The [installed checks](../evidence/perl-lists-20260921.md)
 cover both source paths and all four pinned Perl ABIs.
 
+### Named copied aliases
+
+Lean aliases use their target's ordinary Perl values. A `Count := UInt32`
+argument takes an integer scalar; a `Values := List Count` argument takes an
+array reference. The prepared archive retains alias names, original targets
+and chains in `binding-manifest.json`. Installed POD documents the alias
+catalog and the original parameter, result and record-field types. Aliases
+do not create separate Perl packages or wrapper classes.
+
+For the [author example](../publish/cpan.md#export-named-copied-aliases), save
+`aliases.pl`:
+
+```perl
+use strict;
+use warnings;
+use LeanBridge::Scores;
+
+my $scores = [10, 20, 30];
+my $next = LeanBridge::Scores::increment_all($scores);
+print join(', ', @$next), "\n";   # 11, 21, 31
+print join(', ', @$scores), "\n"; # 10, 20, 30
+```
+
+Run `perl aliases.pl`. Target checks still apply: a Nat alias requires a
+nonnegative `Math::BigInt`, Unit uses `undef`, and Char requires one Unicode
+scalar. Integer aliases use the existing integer-scalar checks, which also
+accept native Perl booleans as 0 or 1. Containers and record payloads copy
+independently. Aliases retain the existing copy budget and schema-depth bound. See the
+[installed alias checks](../evidence/perl-aliases-20260921.md).
+
 ## Values and cleanup
 
 ### Type conversions
@@ -168,7 +198,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `Ok or Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean Except E T becomes Ok->new(value) or Err->new(error), both exposing ->value. Exact classes preserve the success/error branch, including same-typed payloads. Payloads are copied and checked against the concrete Lean type. Domain errors return Err; bridge failures throw. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `Plain two-element array reference (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two dense elements in an unblessed, untied array reference, preserving binary nesting and per-position validation. Inputs and outputs share a 16 MiB copied-value budget. Returned arrays, records, branch payloads and Math::BigInt values are independently owned. Perl reference equality is not deep value equality. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated blessed record with named fields` (input, result, field, callback input, callback result) | Ordinary source: Installed checks: limited. Reviewed IR: Not audited | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `Perl target value; named Lean contract in archive metadata and installed POD` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases preserve exact target conversion rules, original type names and independent copied storage. Nat requires nonnegative Math::BigInt; Unit uses undef; Char requires one Unicode scalar. Integer-scalar inputs include Perl native Boolean scalars as 0 or 1, matching the existing integer target checks. List/Array identity, Option/Result presence, 32-level schema depth and the 16 MiB shared copy budget remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Generated resource object with close/closed and canonical identity` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `CODE reference, valid for the synchronous call` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

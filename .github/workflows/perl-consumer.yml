@@ -144,10 +144,12 @@ jobs:
           LEAN_BRIDGE_PERL_CALLABLE_TEST=1 node --test tests/perl-callables.test.mjs
           LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs
           LEAN_BRIDGE_PERL_LIST_TEST=1 node --test tests/perl-lists.test.mjs tests/perl-list-contract.test.mjs
+          LEAN_BRIDGE_PERL_ALIAS_TEST=1 node --test tests/perl-aliases.test.mjs tests/perl-alias-contract.test.mjs
           test -s build/type-corpus/perl.json
           test -s build/type-corpus/reviewed-native-perl.json
           test -s build/compounds/perl.json
           test -s build/lists/perl.json
+          test -s build/aliases/perl.json
       - name: Upload this configuration's real-Lean corpus report
         if: always()
         uses: actions/upload-artifact@v7
@@ -161,6 +163,7 @@ jobs:
             build/callables/perl.json
             build/compounds/perl.json
             build/lists/perl.json
+            build/aliases/perl.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

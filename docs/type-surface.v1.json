@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.51.0",
+  "contractVersion": "0.52.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,153 @@
   ],
   "evidence": [
     {
+      "id": "perl-aliases-installed",
+      "kind": "installed",
+      "revision": "26157a4933eab719eb8879322184293f62359765",
+      "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_ALIAS_TEST=1 node --test tests/perl-aliases.test.mjs; node --test tests/perl-alias-contract.test.mjs",
+      "scope": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged.",
+      "files": [
+        {
+          "path": ".github/workflows/perl-consumer.yml",
+          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
+        },
+        {
+          "path": "docs/evidence/perl-aliases-20260921.json",
+          "sha256": "c0ac8ce7c47f0466701bb34d78415dbc908906691816f819261cf786e689559a"
+        },
+        {
+          "path": "docs/evidence/perl-aliases-20260921.md",
+          "sha256": "b9f9848cca04cc8ae020af1e6d6b041d7df0cb54f4668a23dea4a2713f803ef6"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/perl/Runtime.xs",
+          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+        },
+        {
+          "path": "src/backends/perl/copied-aliases.mjs",
+          "sha256": "864bb5c9e049126e9aaade3c0eb5d996ebd4abc9cb21c82d594507b2ad075572"
+        },
+        {
+          "path": "src/backends/perl/generate.mjs",
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
+        },
+        {
+          "path": "src/backends/perl/runtime.h",
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "5c7acb52a06bf9c5dab3fd72b2adc3a45c0d673e8e48e6e8333a4246d464f88d"
+        },
+        {
+          "path": "src/release/cpan-install.mjs",
+          "sha256": "1b19d72d6926f9b23ff7d5b6f325bc21c60934214d28cdd3f53e2c1fd819a10f"
+        },
+        {
+          "path": "src/release/cpan-package.mjs",
+          "sha256": "85299faf4476621826c9c9adeff0a76c650b88080c1124aa7395fc63dc84d289"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/perl-faults.pl",
+          "sha256": "b030aca2af0b388324b52d690dd1a9293088fa72132422dd4d5881ffd47f6e10"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/perl.pl",
+          "sha256": "470401e26e4f89d033563f384e675df093a1ceabedaa10c3ef894278d74b8601"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/perl-probe-build.pl",
+          "sha256": "d80752da6f3fc271dcb2020ef93d492025409ffaed7352f88eeba59f7a2acd69"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/perl-probe.h",
+          "sha256": "f41222979379e7c12a0f4345c1eef9fd26d455efaf2b02641ad6ab7407a0b766"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/Aliases.lean",
+          "sha256": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lakefile.toml",
+          "sha256": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/package.json",
+          "sha256": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd"
+        },
+        {
+          "path": "tests/helpers/alias-fixture.mjs",
+          "sha256": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/native-alias-fixture.mjs",
+          "sha256": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6"
+        },
+        {
+          "path": "tests/helpers/perl-alias-fixture.mjs",
+          "sha256": "64578df5a3dc5310bbf79b73e97fbcf992c28b6b41cd8ead1375e3cec5c8e9bc"
+        },
+        {
+          "path": "tests/helpers/perl-alias-install.mjs",
+          "sha256": "2a83efdd67f8ce80a1ca2f3162eab0bb6090f8a68cd051295c4148fe9d73796e"
+        },
+        {
+          "path": "tests/perl-alias-contract.test.mjs",
+          "sha256": "19a3882bb6b679dfd46737e5bbc2fea28ecc766bf4b49e21b1522044d1ac3357"
+        },
+        {
+          "path": "tests/perl-aliases.test.mjs",
+          "sha256": "2972b609153716b794750ae9d92a74b9d85f51c0b3db8212f29dbc08b48d62df"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/LeanBridge-Aliases-1.000.tar.gz",
+          "sha256": "18a6b6023d8ed7a55cafd185e21edfdfc921456b09c8463636cfc935f1987559"
+        },
+        {
+          "path": "ordinary-source/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "reviewed-ir/archives/LeanBridge-Aliases-1.000.tar.gz",
+          "sha256": "8578ce752739719a44c55e59c9f312cda586495981bff6a779a44bfa33adf824"
+        },
+        {
+          "path": "reviewed-ir/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        }
+      ]
+    },
+    {
       "id": "ruby-aliases-installed",
       "kind": "installed",
       "revision": "fa60097b42b713ad9663ae54c5d47b3c6c1e8239",
@@ -177,7 +324,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -328,7 +475,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -515,11 +662,11 @@
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "b3fa18fc305d3b168377e319abf605ff08cabf0171787d3116145fabc237ec5c"
+          "sha256": "46e6db56774303ce68f757f764ba5505f3893db33695570fddedf8deed664922"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "279c71b4fd86498af07908f6792a268820dd43309d460220ee2f91a06ffb6cc5"
+          "sha256": "34d13b4ce6e293fdd2fdcc0703dabaef79e94ce7538c7b7a49127c55cbd9b829"
         },
         {
           "path": "docs/evidence/dotnet-aliases-20260921.json",
@@ -531,15 +678,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "688987c5a98dc01d2a2d57f9a7e853a221c3870ad809f35b9573a1daa95a270e"
+          "sha256": "f9556ad221ad84fee0337dc8388e8f1fa4259bd94138155e2b56372c4d986377"
         },
         {
           "path": "package.json",
-          "sha256": "ded9db2bedbb0398583096a099865869ebe050e827427086092a15d527da4bb1"
+          "sha256": "6ed5d9aa47a6d1fdf8e1dba36f6866943c9b23c08bdd99f2f38e54b7d6726a05"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -599,7 +746,7 @@
         },
         {
           "path": "tests/cli-npm-package.test.mjs",
-          "sha256": "9968fecbddd3b1aae4f443e2538c0eef8fe8bc401f0db0179e0b14615b4d1724"
+          "sha256": "77753c9a133c28276293d4c8ba3014e5bf0f0c46b737e0b5c99cd54162adb64a"
         },
         {
           "path": "tests/dotnet-alias-contract.test.mjs",
@@ -698,7 +845,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -841,7 +988,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -976,7 +1123,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1103,7 +1250,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "3552840474aeeb7a470c75835ae7fc3c0bef7bd914a463b4d19150d3a7429f20"
+          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
         },
         {
           "path": "docs/evidence/npm-aliases-20260921.json",
@@ -1127,7 +1274,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1278,7 +1425,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1417,7 +1564,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1612,7 +1759,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1851,7 +1998,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2058,7 +2205,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2249,7 +2396,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "3552840474aeeb7a470c75835ae7fc3c0bef7bd914a463b4d19150d3a7429f20"
+          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
         },
         {
           "path": "docs/evidence/perl-lists-20260921.json",
@@ -2265,7 +2412,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2305,7 +2452,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "daabbdeaab0bafa4083d8291bc5efbd619b5cc0c39115502203ebe8815a9ac7c"
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
         },
         {
           "path": "src/backends/perl/naming.mjs",
@@ -2492,7 +2639,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2671,7 +2818,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2878,7 +3025,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3447,7 +3594,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "daabbdeaab0bafa4083d8291bc5efbd619b5cc0c39115502203ebe8815a9ac7c"
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -3586,7 +3733,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -3709,7 +3856,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3928,7 +4075,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4111,7 +4258,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "3552840474aeeb7a470c75835ae7fc3c0bef7bd914a463b4d19150d3a7429f20"
+          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
         },
         {
           "path": "docs/evidence/perl-compounds-20260920.json",
@@ -4127,7 +4274,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4167,7 +4314,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "daabbdeaab0bafa4083d8291bc5efbd619b5cc0c39115502203ebe8815a9ac7c"
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
         },
         {
           "path": "src/backends/perl/naming.mjs",
@@ -4354,7 +4501,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4533,7 +4680,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4740,7 +4887,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5301,7 +5448,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "daabbdeaab0bafa4083d8291bc5efbd619b5cc0c39115502203ebe8815a9ac7c"
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5822,7 +5969,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6045,7 +6192,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -6184,7 +6331,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -6311,7 +6458,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -6550,7 +6697,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -6737,7 +6884,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -6960,7 +7107,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -7159,7 +7306,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -7370,7 +7517,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -7565,7 +7712,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -7696,7 +7843,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -7827,7 +7974,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -7946,7 +8093,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -8013,7 +8160,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "daabbdeaab0bafa4083d8291bc5efbd619b5cc0c39115502203ebe8815a9ac7c"
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -8057,15 +8204,15 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "153cb41aeff003866613ec13adf7edfc1eb67d98f05ffca9c14c50eb22acf0c2"
+          "sha256": "c8cfcfe5f6bf8e1ef68b2c0d12a2ceff64afbd7078ec6c02df4151dcbf2325fe"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "3552840474aeeb7a470c75835ae7fc3c0bef7bd914a463b4d19150d3a7429f20"
+          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
         },
         {
           "path": "docs/evidence/perl-callables-20260918.json",
@@ -8156,7 +8303,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "3552840474aeeb7a470c75835ae7fc3c0bef7bd914a463b4d19150d3a7429f20"
+          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
         },
         {
           "path": "docs/evidence/platform-words-20260918.json",
@@ -8200,7 +8347,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -8260,7 +8407,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "daabbdeaab0bafa4083d8291bc5efbd619b5cc0c39115502203ebe8815a9ac7c"
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -8352,7 +8499,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "153cb41aeff003866613ec13adf7edfc1eb67d98f05ffca9c14c50eb22acf0c2"
+          "sha256": "c8cfcfe5f6bf8e1ef68b2c0d12a2ceff64afbd7078ec6c02df4151dcbf2325fe"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -8535,7 +8682,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "3552840474aeeb7a470c75835ae7fc3c0bef7bd914a463b4d19150d3a7429f20"
+          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
         },
         {
           "path": "docs/evidence/char-native-20260918.md",
@@ -8543,7 +8690,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -8579,7 +8726,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "daabbdeaab0bafa4083d8291bc5efbd619b5cc0c39115502203ebe8815a9ac7c"
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -9365,7 +9512,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+          "sha256": "a4bff6009f38830d3f1af6a5143649597eb3dbf600dffa5948040cd47c902863"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10286,7 +10433,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "daabbdeaab0bafa4083d8291bc5efbd619b5cc0c39115502203ebe8815a9ac7c"
+          "sha256": "c6dfb39fab315679d2896a645843c16d0a68e286e444296791eb026b0d6bc142"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -10425,7 +10572,7 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "4ba10e32aef0f8dbc021c75a0e9d062fa1561208bf3ad56ef07065bbf178affe"
+          "sha256": "ce337cb690bbb5c2a706b96cbc0f84a98dfac7055aca9528777a0ac0f07f352e"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
@@ -10786,6 +10933,142 @@
     }
   ],
   "observations": [
+    {
+      "id": "perl-aliases-ordinary-source",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Perl target value; named Lean contract in archive metadata and installed POD",
+          "result": "Perl target value; named Lean contract in archive metadata and installed POD",
+          "field": "Perl target value; named Lean contract in archive metadata and installed POD"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "Alias names and targets are preserved in the prepared archive manifest and installed POD, not separate Perl packages or wrapper classes.",
+        "Native variants, recursion, compound callable payloads and identity-bearing alias targets require separate compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Aliases preserve exact target conversion rules, original type names and independent copied storage. Nat requires nonnegative Math::BigInt; Unit uses undef; Char requires one Unicode scalar. Integer-scalar inputs include Perl native Boolean scalars as 0 or 1, matching the existing integer target checks. List/Array identity, Option/Result presence, 32-level schema depth and the 16 MiB shared copy budget remain unchanged."
+      }
+    },
+    {
+      "id": "perl-aliases-reviewed-ir",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Perl target value; named Lean contract in archive metadata and installed POD",
+          "result": "Perl target value; named Lean contract in archive metadata and installed POD",
+          "field": "Perl target value; named Lean contract in archive metadata and installed POD"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-aliases-installed"
+          ],
+          "note": "Prepared CPAN archives retain 27 copied alias names, original targets and chains in their manifest and installed POD. Perl callers use transparent target values. Four pinned Perl ABIs each pass both ordinary-source and independently reviewed builds: 11732 public assertions, 506 injected conversion failures, 64 partial-input failures and four host exceptions. Each consumer installs offline after producer removal and runs twice after relocation with no compiler or runtime override. The isolated compiled XS probe never changes installed files; all native and installed receipt hashes remain unchanged."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "Alias names and targets are preserved in the prepared archive manifest and installed POD, not separate Perl packages or wrapper classes.",
+        "Native variants, recursion, compound callable payloads and identity-bearing alias targets require separate compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Aliases preserve exact target conversion rules, original type names and independent copied storage. Nat requires nonnegative Math::BigInt; Unit uses undef; Char requires one Unicode scalar. Integer-scalar inputs include Perl native Boolean scalars as 0 or 1, matching the existing integer target checks. List/Array identity, Option/Result presence, 32-level schema depth and the 16 MiB shared copy budget remain unchanged."
+      }
+    },
     {
       "id": "ruby-aliases-ordinary-source",
       "profiles": [

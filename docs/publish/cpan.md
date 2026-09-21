@@ -170,6 +170,38 @@ covers all four pinned Perl ABIs, independent output storage, malformed inputs,
 copy limits, exceptions during conversion and recovery. List callback payloads
 and copied resource identities remain unsupported.
 
+## Export named copied aliases
+
+Add `Scores.lean`:
+
+```lean
+namespace Scores
+abbrev Count := UInt32
+abbrev Values := List Count
+def increment_all (values : Values) : Values := values.map (· + 1)
+end Scores
+```
+
+Select `Scores` in `modules`, `Scores.increment_all` in `exports`, and set
+`targets.cpan.module` to `LeanBridge::Scores`. Build with the CPAN command
+above. No alias-specific configuration is required. The
+[consumer example](../consume/perl.md#named-copied-aliases) calls the installed
+function with an array reference.
+
+Concrete copied aliases retain their names, original targets and chains in
+the package's `binding-manifest.json` and generated POD. Parameter, result
+and record-field documentation preserves the original contract types. Perl
+callers use target values, without new packages or wrapper classes. Target
+ranges, exact integers, Unicode, branch presence, independent copies and
+existing limits still apply.
+
+An independently reviewed contract must retain the same aliases and references;
+replacing every alias with its target does not reproduce the source API.
+Generic aliases, native variants, recursive copies, compound callable payloads
+and identity-bearing alias targets require further work. The
+[installed acceptance record](../evidence/perl-aliases-20260921.md) covers both
+source paths and all four pinned Perl ABIs.
+
 ## Verify the release candidate
 
 Before publication:

@@ -161,10 +161,11 @@ records, variants and nested containers. See the
 [alias implementation and evidence](npm-aliases-20260921.md).
 
 Native private conversion helpers use the checked target representation while
-Binding IR retains alias names. C/C++, Python, Rust, .NET, Java/Kotlin and Ruby
-now have the installed checks below. Installed alias acceptance for the other four consumer
-profiles remain open. Generic aliases, bounded recursion, compound callables and
-explicitly owned identity aggregates remain in the full structured-types goal.
+Binding IR retains alias names. C/C++, Python, Rust, .NET, Java/Kotlin, Ruby and
+Perl now have the installed checks below. Installed alias acceptance for the
+other three consumer profiles remains open. Generic aliases, bounded recursion,
+compound callables and explicitly owned identity aggregates remain in the full
+structured-types goal.
 
 ## Compiled C/C++ aliases
 
@@ -247,7 +248,21 @@ Both source paths pass 4,509 public assertions, 317 injected conversion failures
 consumer runs twice after gem relocation and producer removal without compilers.
 See the [Ruby alias evidence](ruby-aliases-20260921.md).
 
-Alias parameters, results and fields now have installed acceptance in thirteen of
-seventeen profiles. Perl, native PHP, PHP-Wasm and WIT/WASI remain. Native
+## Compiled Perl aliases
+
+Prepared CPAN archives preserve 27 alias names, original targets and chains in
+metadata and installed POD. Parameters, results and record fields retain their
+original contract names. Callers use target values, with no extra packages or
+wrapper classes. The generated XS conversion code remains unchanged.
+
+Both source paths pass on all four pinned Perl ABIs. Each combination runs
+11,732 public assertions twice after offline installation, relocation and
+producer removal. A separate instrumented XS process exercises 506 injected
+conversion failures, 64 partial-input failures and four host exceptions while
+leaving installed files unchanged. See the
+[Perl alias evidence](perl-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in fourteen of
+seventeen profiles. Native PHP, PHP-Wasm and WIT/WASI remain. Native
 variants, bounded recursion, compound callables and explicitly owned identity
 aggregates also remain part of VO1219.

@@ -144,6 +144,13 @@ calling Lean, including Nat's nonnegative range. The
 [installed Ruby alias checks](../evidence/ruby-aliases-20260921.md) verify both
 source paths, failure cleanup and relocated compiler-free execution.
 
+Perl callers also use transparent target values. Prepared CPAN archives retain
+the alias catalog in `binding-manifest.json`; installed POD preserves names,
+original targets, chains and parameter/result/record-field contracts. No extra
+Perl packages or wrapper identities are generated. Aliases retain exact target
+checks and the existing XS conversion path. See the
+[installed Perl alias checks](../evidence/perl-aliases-20260921.md).
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:
