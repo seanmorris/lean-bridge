@@ -22,7 +22,20 @@ export const readRubyValue = (copy, value) => read(copy, value);
  */
 export const copiedRubyConversions = model => model.surface.copies.map(copy => {
 	let input, output;
-	if(copy.compound)
+	if(copy.variant)
+	{
+		input = `raise TypeError, "Expected an exact ${copy.publicName} constructor" unless ${copy.cases.map(branch => `value.instance_of?(${branch.publicName})`).join(" || ")}
+        result = scope.allocate(${copy.size})
+${copy.cases.map((branch, index) => `        ${index ? "elsif" : "if"} value.instance_of?(${branch.publicName})
+          result[0, 4] = [${index}].pack("L<")
+${branch.fields.map(field => `          ${write(field.type, "result", copy.payloadOffset + field.offset, `to${field.type.index}(value.${field.name}${field.type.aggregate ? ", scope" : ""})`)}`).join("\n")}`).join("\n")}
+        end
+        result`;
+		output = `case value[0, 4].unpack1("L<")
+${copy.cases.map((branch, index) => `        when ${index} then ${branch.publicName}.new(${branch.fields.map(field => `${field.name}: from${field.type.index}(${read(field.type, "value", copy.payloadOffset + field.offset)})`).join(", ")})`).join("\n")}
+        else raise RangeError, "Invalid native ${copy.publicName} constructor"
+        end`;
+	} else if(copy.compound)
 	{
 		const to = (field, expression) => write(field.type, "result", field.offset, `to${field.type.index}(${expression}${field.type.aggregate ? ", scope" : ""})`);
 		const from = field => `from${field.type.index}(${read(field.type, "value", field.offset)})`;

@@ -11,6 +11,22 @@ import { rubyCopiedAliases, rubyAliasCatalogDocs, rubyAliasSiteDocs, rubyAliasRe
 import { rubyValue, rubyClosurePublic, rubyNativeCall, rubyCallableTypes, rubyCallableSupport } from "./callables.mjs";
 
 const args = fn => fn.declaration.parameters.map((_, index) => `arg${index}`);
+const variants = model => model.surface.copies.filter(copy => copy.variant).map(copy => `
+    class ${copy.publicName}
+      private_class_method :new
+    end
+${copy.cases.map((branch, index) => `    class ${branch.publicName} < ${copy.publicName}
+      public_class_method :new
+${rubyAliasSiteDocs(model, copy.variant.cases[index].fields.map((field, i) => ({ name: branch.fields[i].name, type: field.type })), null, "      ")}\
+      ${branch.fields.length ? `attr_reader ${branch.fields.map(field => `:${field.name}`).join(", ")}` : ""}
+      def initialize(${branch.fields.map(field => `${field.name}:`).join(", ")})
+${branch.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
+        freeze
+      end
+      def deconstruct_keys(_keys)
+        { ${branch.fields.map(field => `${field.name}: @${field.name}`).join(", ")} }
+      end
+    end`).join("\n")}`).join("");
 const publicSource = model => `# frozen_string_literal: true
 module LeanBridge
   module ${model.componentName}
@@ -27,7 +43,7 @@ ${rubyAliasSiteDocs(model, copy.record.fields, null, "      ")}\
 ${copy.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
         freeze
       end
-    end`).join("\n")}
+    end`).join("\n")}${variants(model)}
     module_function
 ${model.surface.functions.map((fn, index) => {
 	const parameters = args(fn), last = parameters.at(-1);
@@ -108,6 +124,8 @@ export const renderCopiedRubyPackage = (model, evidence = null) => {
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs, results and record fields use copied Ruby Array values. Exact Array instances are required; no implicit to_ary conversion is used. Empty Lists, order, duplicates and nesting are preserved. Returned arrays and mutable payloads own independent storage. List and Array retain distinct IR/native identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
 	files["README.md"] += rubyAliasReadme(model);
+	if(model.surface.copies.some(copy => copy.variant))
+		files["README.md"] += "\nConcrete copied Lean variants use named constructor classes such as Signal::Data.new(count: 42, label: \"ready\"). Constructor payloads use required keyword arguments and read-only accessors; deconstruct_keys supports Ruby pattern matching. Constructor objects are frozen, but contained strings and arrays remain mutable and are copied at the boundary. The abstract family cannot be constructed with new. Unknown subclasses, nil cases, wrong field values and invalid native tags reject. Only the active payload is converted. Empty constructors and UNIT payloads remain distinct. Ruby does not check match exhaustiveness, and ordinary generated object equality is identity-based; compare payload contents for copied-value equality. Generic, indexed, recursive, proof-bearing, callable and identity-bearing payloads remain unsupported.\n";
 	if(model.surface.aliases.length)
 		files["binding-manifest.json"] = `${JSON.stringify({ ...JSON.parse(files["binding-manifest.json"]), aliases: rubyCopiedAliases(model) }, null, 2)}\n`;
 	return Object.freeze(files);

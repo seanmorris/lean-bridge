@@ -1,6 +1,6 @@
 # Build and publish Ruby packages
 
-Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, acyclic copied records, options, results, nested binary products, named copied aliases, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, acyclic copied records, tagged variants, options, results, nested binary products, named copied aliases, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/willow --target rubygems \
 
 The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `native-release.json` with its hash. The gem includes Ruby sources, compiled native libraries, compiler evidence and dependency license notices. Its README lists the Lean-derived module and function names. Changing the gem coordinate does not rename that module.
 
-Copied types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Ruby conversion scratch has a separate 16 MiB budget. Arbitrary variants, resources, compound callbacks and asynchronous effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Callable packages can combine RubyGems, C, CPAN, PyPI and Cargo; adding an unsupported target fails the whole build. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
+Copied types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Ruby conversion scratch has a separate 16 MiB budget. Recursive values, resources, compound callbacks and asynchronous effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
@@ -63,9 +63,33 @@ Ordinary-source and reviewed-IR builds share this behavior. A reviewed contract
 must retain named alias references and their definitions; replacing them with
 flattened primitive or container types fails compiler reconciliation. See the
 [consumer example](../consume/ruby.md#named-copied-aliases) and
-[installed evidence](../evidence/ruby-aliases-20260921.md). Native variants,
-bounded recursion, compound callable payloads and identity-bearing alias targets
+[installed evidence](../evidence/ruby-aliases-20260921.md). Bounded recursion,
+compound callable payloads and identity-bearing alias targets
 remain separate work.
+
+## Export copied tagged variants
+
+Select concrete, non-recursive Lean inductives through the normal export
+configuration or a reviewed contract. Lean checks each source constructor and
+payload before generation. No Ruby-specific variant configuration is required.
+
+Each family becomes a Ruby class with nested constructor classes, such as
+`Signal::Data`. Constructors take required keyword arguments and expose
+read-only accessors and `deconstruct_keys` for pattern matching. Objects are
+frozen, while contained arrays and strings remain mutable copied values. Calls
+reject unknown subclasses, invalid fields and null cases. The private Fiddle
+adapter checks aligned C union layouts and converts only the active payload.
+Generated Lean helpers keep runtime tags and object offsets private.
+
+Payloads can contain all nineteen primitives and supported copied containers,
+records and other admitted variants. Generic, indexed, recursive, proof-bearing,
+callable and identity-bearing payloads remain outside this copied profile.
+Combined native variant builds admit C, C++, Python, Rust, .NET, JVM and Ruby
+when every selected target accepts the complete API.
+
+Use the [consumer example](../consume/ruby.md#tagged-variants) and inspect the
+[installed acceptance record](../evidence/ruby-variants-20260921.md) before
+publishing the original gem.
 
 ## Export Lists
 

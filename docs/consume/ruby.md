@@ -40,6 +40,48 @@ Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact 
 
 Calls copy nested values. Invalid types, numeric ranges and encodings raise exceptions. `nil` is valid only at an `Option` position. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
 
+### Tagged variants
+
+Concrete copied Lean inductives use a named family and one constructor class per
+case. Payloads use required keyword arguments and read-only accessors. For the
+prepared `variants-api` acceptance gem, save `variants.rb`:
+
+```ruby
+require "lean_bridge/variants"
+
+API = LeanBridge::Variants
+input = API::Signal::Data.new(count: 42, label: "ready")
+result = API.next(input)
+
+case result
+in API::Signal::Data(count:, label:)
+  puts "#{count}: #{label}" # 43: ready!
+in API::Signal::Idle
+  puts "idle"
+in API::Signal::Stopped
+  puts "stopped"
+in API::Signal::Marker(value:)
+  puts "marker" if value.equal?(API::UNIT)
+end
+```
+
+Run `ruby variants.rb`. `deconstruct_keys` supports pattern matching; Ruby does
+not check exhaustiveness. Constructor families stay inside the package module,
+so this `Signal` does not replace Ruby's standard `::Signal` module.
+
+Calls accept only the exact generated case classes, not unknown subclasses,
+hashes with tags or `nil`. Only the active payload is converted. Empty cases
+and cases carrying `UNIT` remain distinct. Payloads can contain all nineteen
+primitives, supported copied containers, records and other admitted variants.
+
+Constructor objects are frozen. Contained strings and arrays remain mutable,
+and the bridge copies them at the boundary. Generated object equality is
+identity-based; compare payload contents when checking copied values. The
+existing 32-level type limit and conversion budgets apply. Scoped cleanup
+releases partial conversions on failure. See the
+[installed variant checks](../evidence/ruby-variants-20260921.md).
+Recursive, callable and identity-bearing payloads remain separate work.
+
 ### Named copied aliases
 
 An alias uses its target's Ruby value. Pass an `Integer` to an alias of Nat or
@@ -276,7 +318,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Prod α β / tuples` | `Array (exactly two elements, nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two Array elements, preserving binary nesting and per-position validation. Inputs are copied; returned arrays and strings own independent storage. Branch wrapper fields are frozen, but nested mutable payloads are not. Generated record classes retain object-identity equality. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated Ruby record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated keyword-initialized record classes preserve field order through compiler-owned accessors. Nested returned arrays and strings are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Ruby target value; named Lean contract in gem metadata and API comments` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases retain exact target checks and independent copied storage. Nat rejects negative Integer values; Int accepts them. Char requires a one-scalar string, Unit uses UNIT rather than nil, and fixed-width and machine-word integers retain their ranges. List/Array identities, Option/Result presence, type depth and copy limits remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `named Ruby constructor class with keyword payloads` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Construct values with Family::Case.new(field: value) and match using deconstruct_keys. Empty constructors and UNIT payloads stay distinct. Only exact generated case classes are accepted; nil and tagged hashes reject. Inputs and outputs have independent copied payload storage. Native tags and union layouts remain private, and invalid tags reject before active payload reads. Scoped scratch and output cleanup release partial conversions on errors. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Proc, method, callable object or block` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `Array` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Exact Ruby Arrays preserve empty Lists, order, duplicates and nesting; frozen inputs are accepted. Returned arrays and mutable payloads own independent storage. Subclasses, coercion objects, nil containers, invalid payloads and oversized copies reject. Native lengths, missing buffers and alignment are checked before allocation or reads; scratch and native output cleanup runs on conversion failure. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |

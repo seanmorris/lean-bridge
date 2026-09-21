@@ -83,7 +83,7 @@ Payloads may contain all nineteen primitives and supported copied containers,
 records and other non-recursive variants. Null cases and active null payloads
 reject. Generic, indexed, recursive, proof-bearing, callable and identity-bearing
 payloads are not admitted. Combined native variant builds currently accept C,
-C++, Python, Rust, .NET and JVM when every selected target accepts the entire API.
+C++, Python, Rust, .NET, JVM and Ruby when every selected target accepts the entire API.
 
 Review the [Java](../consume/java.md#tagged-variants) and
 [Kotlin](../consume/kotlin.md#tagged-variants) examples and the

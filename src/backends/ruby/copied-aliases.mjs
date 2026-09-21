@@ -12,7 +12,7 @@
 const contractType = (model, ref) => ref.kind === "primitive" ? ref.name
 	: ref.kind === "named" ? model.ir.types.find(type => type.id === ref.id).name
 		: `${ref.constructor}<${ref.arguments.map(argument => contractType(model, argument)).join(", ")}>`;
-const rubyType = (model, copy) => copy.record ? `${model.namespace}::${copy.publicName}`
+const rubyType = (model, copy) => copy.record || copy.variant ? `${model.namespace}::${copy.publicName}`
 	: copy.compound === "option" ? `nil | Some<${rubyType(model, copy.fields[0].type)}>`
 		: copy.compound === "result" ? `Ok<${rubyType(model, copy.fields[0].type)}> | Err<${rubyType(model, copy.fields[1].type)}>`
 			: copy.compound === "tuple" ? `[${copy.fields.map(field => rubyType(model, field.type)).join(", ")}]`
@@ -61,7 +61,7 @@ export const rubyAliasSiteDocs = (model, sites, result = null, indent = "    ") 
 export const rubyAliasReadme = model => !model.surface.aliases.length ? "" : `
 ## Copied Lean aliases
 
-Call with ordinary Ruby target values. Alias names, original targets and chains remain in the binding manifest and public Ruby source comments. They do not create Ruby constants, wrapper classes or RBS declarations. Parameters, results and record fields retain the target checks: Nat rejects negative Integer values; fixed-width and machine-word integers retain their range; Char requires one Unicode scalar. Unit is the generated UNIT singleton, not nil. Arrays, strings and record contents copy independently. The existing copy budgets, type-depth bound and ownership rules apply. Native variants, recursion, compound callable payloads and identity-bearing targets remain unsupported.
+Call with ordinary Ruby target values. Alias names, original targets and chains remain in the binding manifest and public Ruby source comments. They do not create Ruby constants, wrapper classes or RBS declarations. Parameters, results and record fields retain the target checks: Nat rejects negative Integer values; fixed-width and machine-word integers retain their range; Char requires one Unicode scalar. Unit is the generated UNIT singleton, not nil. Arrays, strings and record contents copy independently. The existing copy budgets, type-depth bound and ownership rules apply. Recursion, compound callable payloads and identity-bearing targets remain unsupported.
 
 | Lean alias | Contract target | Ruby value |
 | --- | --- | --- |

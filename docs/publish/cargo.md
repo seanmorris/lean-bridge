@@ -89,7 +89,7 @@ Payloads may contain all nineteen primitives and supported copied containers,
 records and other non-recursive variants. Generic, indexed, recursive,
 proof-bearing, callable and identity-bearing payloads are not admitted by this
 profile. Native multi-target variant builds currently admit C, C++, Python,
-Rust, .NET, Java and Kotlin when every selected target accepts the complete API.
+Rust, .NET, Java, Kotlin and Ruby when every selected target accepts the complete API.
 Other targets retain their own admission checks.
 
 ## Export callbacks and closures

@@ -423,3 +423,24 @@ constructor naming and exact installed identities.
 Twelve of seventeen profiles now have installed tagged-variant acceptance. Ruby,
 Perl, native PHP, PHP-Wasm and WIT/WASI remain. Bounded recursive values, compound
 callable payloads and explicitly owned identity aggregates remain assigned work.
+
+## Compiled Ruby variants
+
+Prepared gems now expose named constructor families with required keyword
+payloads and Ruby pattern matching. Both source paths pass 35,904 public
+assertions over 4,410 calls per execution, including eighty-one rejected inputs
+with recovery. Original gems install offline after author removal, relocate and
+run twice without compiler access after archive handoff and gem-cache removal.
+Independent rebuilds reproduce both gems and all twenty-four installed files.
+
+Separate in-memory probes recover from 315 conversion, allocation and constructor
+failures and sixty-four partial-input rejections. Seven malformed native tags
+reject before payload reads, and six cases ignore poisoned inactive storage.
+Scoped native buffers are released and installed gem files stay unchanged. The
+shared native probes retain the startup-only GMP sanitizer baseline. See the
+[Ruby variant record](ruby-variants-20260921.md) for exact-class validation,
+copied payload semantics and installed identities.
+
+Thirteen of seventeen profiles now have installed tagged-variant acceptance.
+Perl, native PHP, PHP-Wasm and WIT/WASI remain. Bounded recursive values, compound
+callable payloads and explicitly owned identity aggregates remain assigned work.
