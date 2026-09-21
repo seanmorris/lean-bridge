@@ -64,8 +64,10 @@ both paths, with installed checks on all four pinned Perl ABIs.
 arrays on both paths, with weak and strict callers checked separately.
 [PHP-Wasm packages](../evidence/php-wasm-lists-20260921.md) use consecutive-key
 arrays with 32-bit PHP integer mappings in Node and Chromium on both paths.
-WIT/WASI List adapters, aliases,
-arbitrary and recursive variants, and compound callables remain open.
+[WIT/WASI packages](../evidence/wit-lists-20260921.md) use canonical lists through
+the packaged Wasmtime host on both paths. Copied Lists now cover all seventeen
+consumer profiles. Aliases, arbitrary and recursive variants, and compound
+callables remain open.
 
 ## Shared configuration and Perl cutover
 

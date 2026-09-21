@@ -320,7 +320,8 @@ as do [Python](evidence/python-lists-20260920.md) and
 [Ruby](evidence/ruby-lists-20260921.md) and
 [Perl](evidence/perl-lists-20260921.md) and
 [native PHP](evidence/php-native-lists-20260921.md) and
-[PHP-Wasm](evidence/php-wasm-lists-20260921.md). WIT/WASI remains pending.
+[PHP-Wasm](evidence/php-wasm-lists-20260921.md) and
+[WIT/WASI](evidence/wit-lists-20260921.md).
 Lists cannot contain callbacks
 or resources, or share a component with callable exports yet.
 

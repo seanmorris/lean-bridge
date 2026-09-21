@@ -115,6 +115,48 @@ The [compound acceptance record](../evidence/wit-compounds-20260920.md) includes
 both installed source paths, malformed inputs, copy independence and trap
 recovery. Compound payloads inside callback signatures remain unsupported.
 
+### Lean Lists
+
+Prepared packages accept `List T` in parameters, results and record fields on
+ordinary-source and reviewed-IR paths. WIT uses `list<T>` for both Lean Lists
+and Arrays; the source IR and native C types retain their separate identities.
+Empty sequences, order, duplicates and nesting are preserved.
+
+Construct List arguments with Wasmtime's public list values. For the List
+acceptance package, after opening a `lists_wasmtime` session:
+
+```c
+wasmtime_component_val_t input = {.kind = WASMTIME_COMPONENT_LIST};
+wasmtime_component_vallist_new_uninit(&input.of.list, 3);
+for (size_t i = 0; i < 3; ++i)
+    input.of.list.data[i] = (wasmtime_component_val_t){
+        .kind = WASMTIME_COMPONENT_U32, .of.u32 = (uint32_t)(i + 1)
+    };
+wasmtime_component_val_t output = {0};
+wasmtime_error_t *error = lists_wasmtime_call(
+    session, "reverse-uint32", &input, 1, &output);
+wasmtime_component_val_delete(&input);
+if (error) {
+    wasmtime_error_delete(error);
+} else {
+    /* output contains 3, 2, 1 and owns its storage. */
+    wasmtime_component_val_delete(&output);
+}
+```
+
+Lists compose with every supported primitive, arrays, records, options, results
+and binary products. `Nat` and `Int` elements retain arbitrary precision;
+`USize` and `ISize` retain the native Lean target's 64-bit range. Results do not
+share mutable storage with inputs or sibling results and survive session close.
+
+The same 32-level type limit and conversion budgets apply. Callers must supply
+valid Wasmtime C storage. The adapter rejects wrong element types, missing
+buffers and excessive counts before Wasmtime copies them. A failed call leaves
+the output slot unchanged; the session can accept the next valid call.
+The [installed List checks](../evidence/wit-lists-20260921.md) cover both source
+paths, nested values, copy limits and cleanup. List callback payloads remain
+unsupported.
+
 ### Callbacks and returned Lean functions
 
 Callable packages add a checked session API. Each callable signature has a WIT `resource function-*` type and an `invoke-function-*` export. Lean borrows host callbacks for one exporting call. Returned Lean functions remain available until you close their tokens or their session.
@@ -246,7 +288,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Inductive sum` | `Generated WIT variant` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `borrow<function-*> through a session token` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Generation rejected (result, field, callback input, callback result) | The adapter checks the session, generation and signature before borrowing a callback for one Lean call. Failures return an owned Wasmtime error. The Alpha executable adapter does not expose this type. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `list<T> (owned Wasmtime component values)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Canonical WIT lists preserve empty sequences, order, duplicates and nesting; Lean List and Array retain distinct IR and native types. Public Wasmtime values borrow inputs and return independent owned copies, including nested branches, fields and bytes. Delete results with wasmtime_component_val_delete; they remain valid after closing the session. Preflight rejects wrong element types, missing buffers, excessive counts and invalid branches before Wasmtime copies input. Errors leave the output slot unchanged; trapped stores are replaced before reuse. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `char` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. A Unicode scalar value, including NUL and supplementary values; surrogates reject. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `u64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Unsigned u64 for the 64-bit compiled Lean target. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `s64` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Signed s64 for the 64-bit compiled Lean target. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |

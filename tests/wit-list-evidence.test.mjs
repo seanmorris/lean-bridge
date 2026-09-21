@@ -1,0 +1,67 @@
+/**
+ * Verify installed list receipts separately from synthetic converter evidence.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
+import { renderWitConversions, witConversionPrelude } from "../src/backends/wit/copied-conversions.mjs";
+import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
+import { listSignatures } from "./helpers/list-fixture.mjs";
+import { validateWitEvidence } from "./helpers/type-corpus-wit-evidence.mjs";
+import { validateWitListSignatures, witListConsumer } from "./helpers/wit-list-fixture.mjs";
+import { witListFaultIr, witListFaultSource } from "./helpers/wit-list-faults.mjs";
+
+test("WIT list evidence binds both source paths to installed packages and parsed declarations", async () => {
+	const record = JSON.parse(await readFile("docs/evidence/wit-lists-20260921.json"));
+	assert.deepEqual(record.profiles, ["wit-wasi"]); assert.equal(record.wordBits, 64);
+	assert.deepEqual(record.signatures, listSignatures);
+	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
+	const source = await witListConsumer(), sort = values => [...values].sort((a, b) => a.name.localeCompare(b.name));
+	const fixture = { source
+		, validateSignatures: validateWitListSignatures
+		, validateObservation: observation => {
+			assert.equal(observation.checks, 721296); assert.equal(observation.rejections, 60);
+			assert.equal(observation.primitives, 19); assert.equal(observation.calls, 2651);
+			assert.equal(observation.copiesSurviveSessionClose, true);
+		}
+	};
+	for(const run of record.executions)
+	{
+		assert.equal(run.profile, "wit-wasi"); assert.deepEqual(sort(run.signatures), sort(listSignatures));
+		assert.equal(run.sourceRemovedBeforeInstallation, true); assert.equal(run.handoffRemovedBeforeExecution, true);
+		assert.equal(run.packages.length, 1);
+		const pkg = run.packages[0]; assert.equal(pkg.target, "wit-wasi"); assert.equal(pkg.role, "component");
+		assert.equal(pkg.artifacts.length, 1);
+		for(const name of ["receiptSha256", "bindingIrSha256", "sourceTreeSha256", "modelSha256"]) assert.match(run[name], /^[a-f0-9]{64}$/);
+		assert.equal(run.wit.componentReceipt.sourceIdentity.sourceTreeSha256, run.sourceTreeSha256);
+		const checked = { ...run, archive: pkg
+			, archiveSha256: pkg.artifacts[0].sha256
+			, runtimeIdentity: pkg.runtimeIdentity
+			, declarationEvidence: { modelSha256: run.modelSha256 } };
+		validateWitEvidence(checked, { cModule: "lists" }, fixture);
+		for(const mutate of [
+			value => { value.wit.repeatExecutions = 0; }
+			, value => { value.wit.packageReceipt.files["lib/liblists_wasmtime.so"].sha256 = "f".repeat(64); }
+			, value => { value.wit.declarations.component.document.interfaces.find(iface => iface.name === "api").functions["reverse-unit"].result = "bool"; }
+			, value => { value.observation.rejections = 0; }
+		]) {
+			const mutant = structuredClone(checked); mutate(mutant);
+			assert.throws(() => validateWitEvidence(mutant, { cModule: "lists" }, fixture));
+		}
+	}
+	assert.doesNotMatch(source, /#include "lists\.h"|lean_ctor_|lb_in_|lb_out_|dlopen|dlsym/);
+	const faults = record.faultProbe, ir = witListFaultIr(), model = compileCopiedWitModel(ir);
+	assert.equal(faults.synthetic, true);
+	assert.deepEqual(faults.sanitizers, ["address", "undefined", "leak"]);
+	assert.ok(faults.compilerOptions.includes("-fsanitize=address,undefined"));
+	assert.equal(faults.sourceSha256, sha256(witListFaultSource(model)));
+	assert.equal(faults.conversionsSha256, sha256(witConversionPrelude + renderWitConversions(model)));
+	assert.equal(faults.headerSha256, sha256(generateCBindingPackage(ir)["include/probe.h"]));
+	assert.deepEqual(faults.observation, { checks: 15006, scratchFailures: 4, budgetFailures: 812, inputBudgetFailures: 1172, malformedOutputs: 11, malformedInputs: 2, emptyPoisonPointers: 1, inactivePayloads: 3, liveAllocations: 0 });
+});

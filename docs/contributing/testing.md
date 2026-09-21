@@ -825,6 +825,25 @@ claim Lean execution. Required WIT CI retains `build/compounds/wit.json` and
 `build/compounds/wit-conversions.json`. The [acceptance record](../evidence/wit-compounds-20260920.md)
 identifies the installed archives and probe results.
 
+Run copied Lists through the same installed WIT host:
+
+```sh
+LEAN_BRIDGE_WIT_LIST_TEST=1 node --test \
+  tests/wit-lists.test.mjs \
+  tests/wit-list-contract.test.mjs \
+  tests/wit-list-conversions.test.mjs
+node --test tests/wit-list-evidence.test.mjs
+```
+
+Both source paths compile 27 Lean exports. Independent parsed-WIT and binary
+signature checks preserve all nineteen primitive List payloads and nested
+copied fields. Relocated offline consumers repeat after removing the producer,
+handoff and build tools. Separate sanitizer probes exercise partial conversion,
+copy budgets, malformed buffers and cleanup; they do not claim Lean execution.
+CI requires `build/lists/wit.json` and `build/lists/wit-conversions.json`.
+The [List evidence](../evidence/wit-lists-20260921.md) records exact packages
+and checks.
+
 ### Alpha bundle
 
 Build the universal bundle and project its WIT/WASI archive into a new directory:

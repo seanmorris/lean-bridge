@@ -107,22 +107,22 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 	}
 });
 
-test("List evidence covers npm, C/C++, Python, Rust, C#, JVM, Ruby, Perl and both PHP transports copied values without promoting other hosts or callables", () => {
+test("List evidence covers all seventeen copied profiles on both paths without promoting callback payloads", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 96);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 102);
 	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
 	for(const cell of cells)
 	{
 		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile), native = ["c", "cpp"].includes(cell.profile), python = cell.profile === "python", rust = cell.profile === "rust", dotnet = cell.profile === "dotnet";
-		const jvm = ["java", "kotlin"].includes(cell.profile);
+		const jvm = ["java", "kotlin"].includes(cell.profile), wit = cell.profile === "wit-wasi";
 		const ruby = cell.profile === "ruby", perl = cell.profile === "perl", php = ["php-native", "php-wasm"].includes(cell.profile);
-		if((npm || native || python || rust || dotnet || jvm || ruby || perl || php) && copied)
+		if((npm || native || python || rust || dotnet || jvm || ruby || perl || php || wit) && copied)
 		{
 			const pythonType = { parameter: "tuple[T, ...] | list[T]", result: "tuple[T, ...]", field: "tuple[T, ...] | list[T] (input); tuple[T, ...] (output)" };
-			assert.equal(cell.hostType, php ? "list<T> (consecutive-key PHP array)" : perl ? "Plain array reference" : ruby ? "Array" : jvm ? cell.profile === "java" ? "T[] (primitive arrays for primitive elements)" : "primitive arrays or Array<T>" : dotnet ? "T[]" : rust ? cell.position === "parameter" ? "&[T]" : "Vec<T>" : python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
+			assert.equal(cell.hostType, wit ? "list<T> (owned Wasmtime component values)" : php ? "list<T> (consecutive-key PHP array)" : perl ? "Plain array reference" : ruby ? "Array" : jvm ? cell.profile === "java" ? "T[] (primitive arrays for primitive elements)" : "primitive arrays or Array<T>" : dotnet ? "T[]" : rust ? cell.position === "parameter" ? "&[T]" : "Vec<T>" : python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
 			for(const stage of Object.values(cell.stages))
-			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [php ? cell.profile === "php-native" ? "php-native-lists-ffi-installed" : "php-wasm-lists-installed" : perl ? "perl-lists-installed" : ruby ? "ruby-lists-installed" : jvm ? "jvm-lists-installed" : dotnet ? "dotnet-lists-installed" : rust ? "rust-lists-installed" : python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
+			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [wit ? "wit-wasi-lists-installed" : php ? cell.profile === "php-native" ? "php-native-lists-ffi-installed" : "php-wasm-lists-installed" : perl ? "perl-lists-installed" : ruby ? "ruby-lists-installed" : jvm ? "jvm-lists-installed" : dotnet ? "dotnet-lists-installed" : rust ? "rust-lists-installed" : python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
 		} else
 		{
 			assert.equal(cell.stages.installedExecution.state, "unreviewed");
@@ -278,7 +278,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		&& cell.stages.installedExecution.state === "passed"
 		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
 	const compounds = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["option", "result", "tuple"] : [];
-	const lists = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm"].includes(profile) ? ["list"] : [];
+	const lists = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["list"] : [];
 	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
 	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length));
 	assert.deepEqual([...new Set(observed.map(cell => cell.shape))].sort(), [...document.irFacets.primitive, "array", "record", ...compounds, ...lists].sort());

@@ -30,7 +30,7 @@ export const validateOrdinaryWasiSettings = (settings = {}) => {
  * @param options.callables - Admit the primitive callable resource contract.
  */
 export const compileCopiedWitModel = (ir, settings = {}, { callables = false } = {}) => {
-	const surface = compilePrimitiveCSurface(ir, { callables, compounds: true });
+	const surface = compilePrimitiveCSurface(ir, { callables, compounds: true, lists: true });
 	const name = settings.name ?? kebab(surface.prefix), version = settings.version ?? ir.component.version;
 	validateOrdinaryWasiSettings({ name, version });
 	const fail = (declaration, message) => {
