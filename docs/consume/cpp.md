@@ -96,6 +96,19 @@ The package enforces the same [copy budget and nesting limit](../publish/c.md#co
 
 Lean `List T` uses owned `std::vector<T>`, including `std::vector<bool>`. Lists preserve order, duplicates and nested copied values. Inputs stay alive for the call, and returned vectors own independent copies. The contract retains the distinction between Lean Lists and Arrays. The [installed List checks](../evidence/native-lists-20260920.md) cover both source paths. List callback payloads remain unsupported.
 
+### Named aliases
+
+Concrete Lean aliases become source-named C++ `using` declarations. For example,
+`abbrev Count := UInt32` produces `using Count = uint32_t` in the package namespace.
+Aliases of copied records and containers reuse their generated C++ types, so an
+alias of `Array (List UInt32)` uses `std::vector<std::vector<uint32_t>>`.
+
+Use aliases as their target values. They add no wrapper or conversion and keep
+the target's validation, copying and automatic cleanup. An alias of `Nat` still
+rejects a negative input. The
+[installed alias checks](../evidence/native-aliases-20260921.md) cover all nineteen
+primitives, chains, records and nested containers on both build paths.
+
 ### Exact integers and callable APIs
 
 Ordinary-source and reviewed primitive packages use `boost::multiprecision::cpp_int` for both `Nat` and `Int`. The generated namespace also provides `Nat` and `Int` aliases. A negative value passed as `Nat`, including a record field or callback result, raises `Error`. Arithmetic uses ordinary Boost operations; there are no public limb buffers to construct.
@@ -167,7 +180,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `Result<T, E> = std::variant<Ok<T>, Err<E>>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | `Ok<T>` and `Err<E>` wrappers each hold value, preserving branch identity even for equal payload types. Domain errors do not throw boundary exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `std::pair<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | std::pair retains binary nesting, per-position types and owned copied contents. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `generated record struct` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated structs with owned fields and deep result cleanup on exceptions. Empty records use empty structs. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `Source-named using declaration for the owned C++ target type` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Transparent target values, validation and ownership. Aliases add no wrapper; returned C++ containers and records own their copies. Aliased Nat still rejects negative input. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `typed C++ callable` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Call-scoped borrow; typed owned callback arguments; original C++ exceptions rethrow after native cleanup. Same-thread nested calls are supported. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

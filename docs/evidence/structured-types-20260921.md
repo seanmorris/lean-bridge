@@ -161,7 +161,24 @@ records, variants and nested containers. See the
 [alias implementation and evidence](npm-aliases-20260921.md).
 
 Native private conversion helpers use the checked target representation while
-Binding IR retains alias names. Installed alias acceptance and public declarations
-for the other consumer profiles remain open. Generic aliases, bounded recursion,
-compound callables and explicitly owned identity aggregates remain in the full
-structured-types goal.
+Binding IR retains alias names. C/C++ now have the installed checks below.
+Installed alias acceptance and public declarations for the other ten consumer
+profiles remain open. Generic aliases, bounded recursion, compound callables and
+explicitly owned identity aggregates remain in the full structured-types goal.
+
+## Compiled C/C++ aliases
+
+C exposes `<prefix>_<snake_name>_t` typedefs and aggregate initialization/cleanup
+helpers. C++ exposes source-named `using` declarations. Both reuse their target's
+storage and conversion rules. Public-name collisions fail before packaging.
+
+Independent ordinary-source and reviewed-IR builds each pass 720 C and 366 C++
+checks through their prepared archives. The fixtures cover 27 aliases over all
+nineteen primitives, chains, copied records and nested containers. Applications
+repeat the same checks after installation relocation, with producer sources
+removed and no compiler or loader-path override in their execution environment.
+Package file hashes remain unchanged. See
+[native alias implementation and evidence](native-aliases-20260921.md).
+
+Native variants, the remaining profiles' aliases, bounded recursion, compound
+callables and explicitly owned identity aggregates remain open.

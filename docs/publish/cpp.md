@@ -16,6 +16,13 @@ C++ arrays use `std::vector<T>` and records use generated structs with owned fie
 
 `Option T` uses `std::optional<T>`, including `std::optional<std::monostate>` for `Option Unit` and nested optionals for nested options. `Except E T` uses `Result<T, E>`, an alias for `std::variant<Ok<T>, Err<E>>`. Construct `Ok<T>{value}` or `Err<E>{error}` and read its `value` member with `std::get` or `std::visit`. Products use `std::pair<A, B>` and retain their binary nesting. All three can contain supported primitives, arrays, copied records and each other. These constructors are not admitted in callback signatures. The [installed compound checks](../evidence/native-compounds-20260920.md) cover ordinary-source and reviewed-IR packages.
 
+Concrete copied aliases export source-named `using` declarations for the target's
+C++ type. Alias chains and aliases of supported primitives, records and containers
+preserve their compiler-checked identities without adding value wrappers. Public
+name collisions fail before packaging. See
+[named copied aliases](c.md#named-copied-aliases) for admission rules and
+[consumer examples](../consume/cpp.md#named-aliases).
+
 C++ results own their data. Scoped input views keep nested buffers alive through the call. Generated wrappers free intermediate C results on success and exceptions, including allocation failures partway through a nested result. Invalid UTF-8 or an exceeded copy budget raises the generated `Error` with the underlying status and code. C++ allocation failures propagate as `std::bad_alloc`. The [type conversion table](../consume/cpp.md#type-conversions) records installed coverage by position.
 
 Set `targets.cpp.name` and `targets.cpp.version` in `lean-bridge.exports.json` to choose archive coordinates. The package includes the C API, native libraries, matching runtime, CMake and pkg-config metadata. C++ does not require a separately installed C package or Lean runtime.

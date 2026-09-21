@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { cIdentifier, compileCProjectionModel, describeCFunction, describeCType } from "./generate.mjs";
+import { cIdentifier, compileCProjectionModel, describeCFunction, describeCType, describeCopiedCAliases } from "./generate.mjs";
 import { componentScalarTypes, fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 
 const keywords = new Set(("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new noexcept not not_eq nullptr operator or or_eq private protected public register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch template this thread_local throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq restrict _Alignas _Alignof _Atomic _Bool _Complex _Generic _Imaginary _Noreturn _Static_assert _Thread_local").split(" "));
@@ -145,5 +145,10 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 		}
 		return { ...surface, declaration };
 	});
-	return { ...compileCProjectionModel(ir), prefix: functions[0].prefix, functions, callbacks, copies: [...copies.values()], copy: ref => copies.get(typeKey(representation(ref))) };
+	const projection = compileCProjectionModel(ir);
+	const aliases = describeCopiedCAliases(ir).map(alias => {
+		if(!safe(cIdentifier(alias.definition.name))) rejectPrimitiveSurface(functions[0].declaration, "C/C++ alias name collides with a reserved identifier");
+		return { ...alias, copy: visit(alias.definition.target, functions[0].declaration) };
+	});
+	return { ...projection, prefix: functions[0].prefix, functions, callbacks, aliases, copies: [...copies.values()], copy: ref => copies.get(typeKey(representation(ref))) };
 };

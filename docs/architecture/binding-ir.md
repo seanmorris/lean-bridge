@@ -100,6 +100,13 @@ names and targets. Aliases add no wire tag or ownership wrapper. See
 [installed variants](../evidence/npm-variants-20260921.md) and
 [installed aliases](../evidence/npm-aliases-20260921.md).
 
+Native private conversion helpers normalize copied aliases to their checked
+target representation while canonical Binding IR retains each named link.
+C headers export `<prefix>_<snake_name>_t` typedefs with aggregate initialization
+and cleanup helpers; C++ exports source-named `using` declarations. Public-name
+collisions fail before packaging. See the
+[installed C/C++ alias checks](../evidence/native-aliases-20260921.md).
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:

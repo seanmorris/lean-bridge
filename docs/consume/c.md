@@ -135,6 +135,20 @@ The package enforces a shared 16 MiB input/output conversion budget and a maximu
 
 Prepared packages accept Lean `List T` as typed `<prefix>_list_<element>_span` values. Set `data` and `length` to borrow contiguous input elements for the call; returned spans own copied storage and use the same initialization and cleanup rules above. Lists preserve order, duplicates and nesting, and can contain the supported copied types. `List` and `Array` remain distinct in the contract and generated C names. The [installed List checks](../evidence/native-lists-20260920.md) cover both source paths. List callback payloads remain unsupported.
 
+### Named aliases
+
+Concrete Lean aliases retain public names as `<prefix>_<snake_name>_t` typedefs.
+For example, `abbrev Count := UInt32` exports `sample_count_t`, which you can pass
+to the generated functions as an ordinary `uint32_t`. The `_t` suffix keeps the
+type name distinct from a function named `count`.
+
+Aliases use their target's storage, validation and ownership rules. Aggregate
+aliases provide `<alias>_init` and `<alias>_clear`; aliases of `Nat` and `Int` use
+the packaged GMP `mpz_t`. Initialize owning values before use and clear them
+afterward. An alias does not make an owning value safe to shallow-copy. Chains,
+copied records and nested containers have
+[installed acceptance](../evidence/native-aliases-20260921.md) on both build paths.
+
 ## Exact integers
 
 Prepared C packages expose Lean `Nat` and `Int` as GMP `mpz_t`, including array elements and record fields. The archive supplies GMP 6.3.0 and configures it through CMake and pkg-config. You do not install a separate dependency or construct limb buffers.
@@ -205,7 +219,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `Generated struct with uint8_t is_ok, typed ok and error` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | is_ok=1 selects ok; 0 selects error. Only the selected payload crosses into Lean, but initialize both fields for cleanup. Domain errors return values with successful boundary status. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `Generated struct with typed fst and snd` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | fst/snd retain arity, types and binary nesting. GMP packages supply recursive init/clear; other packages use zero initialization and clear-before-reuse. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `<prefix>_<record>` (input, result, field); `Generated copied struct (Alpha: lean_alpha_payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Generated structs and deep clear functions. Packages exposing Nat/Int require the generated _init before first use; other packages use zero-initialized outputs. Empty records contain a placeholder byte; Lean constructors/accessors preserve compiler layout. Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free(). Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `<prefix>_<snake_name>_t typedef of copied target storage` (input, result, field); `Resolved target type` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Transparent target storage and validation. Aggregate aliases supply init/clear helpers; Nat/Int use initialized GMP mpz_t. Copy and cleanup rules follow the target. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `opaque resource pointer` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `generated typed callback struct` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Host context and function pointer borrow the synchronous call. Primitive arguments use the checked C value representations. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

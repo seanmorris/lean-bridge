@@ -125,6 +125,12 @@ export const generateGmpProjection = ir => {
 		const n = gmpName(surface, copy); aliases.push(`typedef ${n} ${copy.name};`);
 		for(const action of ["init", "clear"]) aliases.push(`static inline void ${copy.name}_${action}(${gmpOutput(surface, copy, "value")}) { ${n}_${action}(value); }`);
 	}
+	for(const alias of surface.aliases)
+	{
+		aliases.push(`typedef ${alias.copy.name} ${alias.name};`);
+		if(alias.copy.aggregate) for(const action of ["init", "clear"])
+			aliases.push(`static inline void ${alias.name}_${action}(${gmpInteger(alias.copy) ? "mpz_ptr" : `${alias.name}*`} value) { ${alias.copy.name}_${action}(value); }`);
+	}
 	for(const callback of converters) for(const [raw, name] of [[callback.name, gmpName(surface, callback)], [`${callback.name}_fn`, `${gmpName(surface, callback)}_fn`], [owned(callback), publicOwned(callback)]]) aliases.push(`typedef ${name} ${raw};`);
 	for(const fn of functions) aliases.push(`static inline ${fn.result.replace(`${g}_`, `${p}_`)} ${fn.name.replace(`${g}_`, `${p}_`)}(${fn.parameters.join(", ").replaceAll(`${g}_`, `${p}_`)}) { ${fn.result === "void" ? "" : "return "}${fn.name}(${fn.args.join(", ")}); }`);
 	const header = `#pragma once

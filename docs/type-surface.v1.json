@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.45.0",
+  "contractVersion": "0.46.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,141 @@
   ],
   "evidence": [
     {
+      "id": "native-aliases-installed",
+      "kind": "installed",
+      "revision": "00e6380a6afdc1b2352d9e4c4092b7d7cd95b359",
+      "command": "LEAN_BRIDGE_NATIVE_ALIAS_TEST=1 node --test tests/native-aliases.test.mjs; node --test tests/native-alias-contract.test.mjs; LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test tests/compiler-alias-metadata.test.mjs",
+      "scope": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+        },
+        {
+          "path": "docs/evidence/native-aliases-20260921.json",
+          "sha256": "4b041d304c81bb915baae5eb2d3c0305a52c630423ddf5a2b8ce1b524d04bcb2"
+        },
+        {
+          "path": "docs/evidence/native-aliases-20260921.md",
+          "sha256": "896a86b3f0b7c3cf1445fe21e9f782a0953320f29e2da2e92ca5afe5edb65a87"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "c5614b0dbb1a02533ab74c61fc035872c4ed0de797d231d16782089525d9c60f"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
+        },
+        {
+          "path": "src/backends/c/gmp-projection.mjs",
+          "sha256": "d6c9916aa0eda9a78526b9ca599ce4a79efa0af2c1efb6796467ba4cba090035"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "96ad0c1eb9c062bbf0164eb03f3fab7a9029bde75cd006f33be39970a63c0036"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
+        },
+        {
+          "path": "src/backends/cpp/copied-values.mjs",
+          "sha256": "79e2116f34055cc0f36e82cd6ab75df6e252ae3a4e00e98cb5082bfeb5086d31"
+        },
+        {
+          "path": "src/backends/cpp/primitives.mjs",
+          "sha256": "106753b1078a7c51785869af117351d9da8ae9afd2c2040a65ba91b0cb686f9f"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "bab95d12d5c08acf3507ec5dfa36aaf6fabcdf8915436809cff29be0ca4a1b51"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "5c7acb52a06bf9c5dab3fd72b2adc3a45c0d673e8e48e6e8333a4246d464f88d"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "b09d0269bac3701c3a13ea47c224ed586f735d9886c2502804361d74e9950e12"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/Aliases.lean",
+          "sha256": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lakefile.toml",
+          "sha256": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/package.json",
+          "sha256": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd"
+        },
+        {
+          "path": "tests/helpers/alias-fixture.mjs",
+          "sha256": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/native-alias-consumers.mjs",
+          "sha256": "01ce831dad40531ee076bbd4cc70a5d282b9dbb709bbad680fc282b49311f5f4"
+        },
+        {
+          "path": "tests/helpers/native-alias-fixture.mjs",
+          "sha256": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6"
+        },
+        {
+          "path": "tests/native-alias-contract.test.mjs",
+          "sha256": "de7c3b6f7ab18dd0b46f471f808d2c6615ac25ee6fb2244feed11f685529b913"
+        },
+        {
+          "path": "tests/native-aliases.test.mjs",
+          "sha256": "0afc062610343417daa598435d702e4f91d8fc8df977f11ac2575032cda8ed03"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "c/ordinary-source/archives/aliases-1.0.0-c.tar.gz",
+          "sha256": "757526be92bcf05270f6ca361219773dbd5f4128ec9f6f29e7607e0807f1bf25"
+        },
+        {
+          "path": "cpp/ordinary-source/archives/aliases-1.0.0-cpp.tar.gz",
+          "sha256": "9c2ca2d76c6735715d47e97ba810fad0ec66b19de546209b3dcd4f55b1f207d7"
+        },
+        {
+          "path": "c/reviewed-ir/archives/aliases-1.0.0-c.tar.gz",
+          "sha256": "640b301e1d202429db045626d874e6f2eda5643d070b1a7b9d9433bfdd4fad72"
+        },
+        {
+          "path": "cpp/reviewed-ir/archives/aliases-1.0.0-cpp.tar.gz",
+          "sha256": "baaf5a65088e85fce43279d25b3605ac831d17a3282c3c7dfc00b43f1b80726d"
+        }
+      ]
+    },
+    {
       "id": "npm-aliases-installed",
       "kind": "installed",
       "revision": "fa9fc05842ee3204e6594f9eb832dde04fceceeb",
@@ -165,7 +300,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -193,7 +328,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -217,11 +352,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
@@ -308,7 +443,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -344,7 +479,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -467,7 +602,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -483,7 +618,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -511,7 +646,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -523,7 +658,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
@@ -662,7 +797,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -678,7 +813,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -706,7 +841,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -718,7 +853,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -901,7 +1036,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -917,7 +1052,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -945,7 +1080,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -957,7 +1092,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -1108,7 +1243,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -1124,7 +1259,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1152,7 +1287,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1164,7 +1299,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -1331,7 +1466,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1542,7 +1677,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -1558,7 +1693,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1586,7 +1721,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1598,7 +1733,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
@@ -1721,7 +1856,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -1737,7 +1872,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1765,7 +1900,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1777,7 +1912,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -1928,7 +2063,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -1944,7 +2079,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1972,7 +2107,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1984,7 +2119,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/dotnet/callables.mjs",
@@ -2151,7 +2286,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -2163,7 +2298,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/rust/callables.mjs",
@@ -2318,7 +2453,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -2330,7 +2465,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/python/callables.mjs",
@@ -2481,11 +2616,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/gmp-projection.mjs",
-          "sha256": "79f28b4839448e34e44985e7ba40e3022b4240f5b8ff6fb07240950af74868b6"
+          "sha256": "d6c9916aa0eda9a78526b9ca599ce4a79efa0af2c1efb6796467ba4cba090035"
         },
         {
           "path": "src/backends/c/gmp-values.mjs",
@@ -2501,7 +2636,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -2509,7 +2644,7 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "387b66969efef4770904c6d40e1a26d8d9aed06bad45bb9066eb6721bc7953ee"
+          "sha256": "106753b1078a7c51785869af117351d9da8ae9afd2c2040a65ba91b0cb686f9f"
         },
         {
           "path": "src/backends/perl/generate.mjs",
@@ -2620,7 +2755,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -2652,7 +2787,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -2759,7 +2894,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -2775,7 +2910,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2803,7 +2938,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -2815,7 +2950,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -2978,7 +3113,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -2994,7 +3129,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3022,7 +3157,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -3034,7 +3169,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -3193,7 +3328,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3404,7 +3539,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -3420,7 +3555,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3448,7 +3583,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -3460,7 +3595,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
@@ -3583,7 +3718,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -3599,7 +3734,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3627,7 +3762,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -3639,7 +3774,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -3790,7 +3925,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -3806,7 +3941,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3834,7 +3969,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -3846,7 +3981,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/dotnet/callables.mjs",
@@ -4013,7 +4148,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -4025,7 +4160,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/rust/callables.mjs",
@@ -4176,7 +4311,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -4188,7 +4323,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/python/callables.mjs",
@@ -4335,11 +4470,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/gmp-projection.mjs",
-          "sha256": "79f28b4839448e34e44985e7ba40e3022b4240f5b8ff6fb07240950af74868b6"
+          "sha256": "d6c9916aa0eda9a78526b9ca599ce4a79efa0af2c1efb6796467ba4cba090035"
         },
         {
           "path": "src/backends/c/gmp-values.mjs",
@@ -4355,7 +4490,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -4363,7 +4498,7 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "387b66969efef4770904c6d40e1a26d8d9aed06bad45bb9066eb6721bc7953ee"
+          "sha256": "106753b1078a7c51785869af117351d9da8ae9afd2c2040a65ba91b0cb686f9f"
         },
         {
           "path": "src/backends/perl/generate.mjs",
@@ -4474,7 +4609,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -4677,7 +4812,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -4840,7 +4975,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -4888,7 +5023,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5111,11 +5246,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -5250,11 +5385,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -5377,7 +5512,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -5405,7 +5540,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -5616,7 +5751,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -5644,7 +5779,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -5803,7 +5938,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -5827,7 +5962,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -6026,7 +6161,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -6046,7 +6181,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -6121,11 +6256,11 @@
         },
         {
           "path": "src/backends/c/gmp-projection.mjs",
-          "sha256": "79f28b4839448e34e44985e7ba40e3022b4240f5b8ff6fb07240950af74868b6"
+          "sha256": "d6c9916aa0eda9a78526b9ca599ce4a79efa0af2c1efb6796467ba4cba090035"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
@@ -6225,11 +6360,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "flake.nix",
@@ -6332,7 +6467,7 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "387b66969efef4770904c6d40e1a26d8d9aed06bad45bb9066eb6721bc7953ee"
+          "sha256": "106753b1078a7c51785869af117351d9da8ae9afd2c2040a65ba91b0cb686f9f"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -6348,7 +6483,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -6436,11 +6571,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -6547,7 +6682,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -6631,11 +6766,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -6694,7 +6829,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -6762,11 +6897,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -6825,7 +6960,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -6893,11 +7028,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -6928,11 +7063,11 @@
       "files": [
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -7012,11 +7147,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -7123,11 +7258,11 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "bf547a3ca124c26ef76ee658a0bc09f31e9b12d77d8437cb4d7e1625b89cdb4b"
+          "sha256": "42f9ccf9adb784f3d9972e48b0ea3977d47a6175b8444d04a509aa954861662b"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7218,7 +7353,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7266,7 +7401,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -7286,7 +7421,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -7298,7 +7433,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -7418,7 +7553,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "bf547a3ca124c26ef76ee658a0bc09f31e9b12d77d8437cb4d7e1625b89cdb4b"
+          "sha256": "42f9ccf9adb784f3d9972e48b0ea3977d47a6175b8444d04a509aa954861662b"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -7597,7 +7732,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7609,11 +7744,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -7621,7 +7756,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -7955,7 +8090,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -8106,7 +8241,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -8225,7 +8360,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -8332,7 +8467,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -8415,7 +8550,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "06bc7d603fa4dcc3ccada2c230af1c7295c3539fd7afed55d416cb63118fe727"
+          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -8431,7 +8566,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e9a24692fcc51c1e59b5747c992197f731d26e84994a1fceb793e2e813b9fe52"
+          "sha256": "88356b9b9606a50f729703c290a8d7635fd4126dd8c0967ff46a9898848c1763"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8459,7 +8594,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -8471,7 +8606,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
@@ -8598,7 +8733,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -8689,7 +8824,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -8784,7 +8919,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -8891,7 +9026,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -8986,7 +9121,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -8998,7 +9133,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
@@ -9010,7 +9145,7 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "387b66969efef4770904c6d40e1a26d8d9aed06bad45bb9066eb6721bc7953ee"
+          "sha256": "106753b1078a7c51785869af117351d9da8ae9afd2c2040a65ba91b0cb686f9f"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -9125,11 +9260,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"
+          "sha256": "7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "ae327eb5975ccd3fce181b5915aad78330754477120260ebd0bf10d898c03596"
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -9141,7 +9276,7 @@
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
-          "sha256": "387b66969efef4770904c6d40e1a26d8d9aed06bad45bb9066eb6721bc7953ee"
+          "sha256": "106753b1078a7c51785869af117351d9da8ae9afd2c2040a65ba91b0cb686f9f"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -9491,7 +9626,7 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "6fab0b44e930ec562236cde217139ac25cc4cdafaac6bf33d99d17c07c1421d9"
+          "sha256": "1f2f3018ebef8a88183e91f8bd3091642cffcf5ce273289e086555ad0d6a7141"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
@@ -9771,7 +9906,7 @@
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
       "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection. The Char milestone adds an explicit unsupported-primitive guard for native C. Existing sixteen-scalar branches are unchanged; Char npm evidence does not promote native C support. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
-        {"path":"src/backends/c/generate.mjs","sha256":"24f591a3d0e7d48707a66385af2fc93127917f5f75a363dc8f699fe627a3b368"}
+        {"path":"src/backends/c/generate.mjs","sha256":"7930d7244c723132f17e4e0f36b340fcd10950477cbe3b7723dff10fa31b004b"}
       ],
       "artifacts": []
     },
@@ -9852,6 +9987,278 @@
     }
   ],
   "observations": [
+    {
+      "id": "native-aliases-c-ordinary-source",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "<prefix>_<snake_name>_t typedef of copied target storage",
+          "result": "<prefix>_<snake_name>_t typedef of copied target storage",
+          "field": "<prefix>_<snake_name>_t typedef of copied target storage"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "No native variant, recursive, callable or identity-bearing alias targets in this installed fixture.",
+        "Alias payloads in callbacks and returned closures still require compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Transparent target storage and validation. Aggregate aliases supply init/clear helpers; Nat/Int use initialized GMP mpz_t. Copy and cleanup rules follow the target."
+      }
+    },
+    {
+      "id": "native-aliases-c-reviewed-ir",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "<prefix>_<snake_name>_t typedef of copied target storage",
+          "result": "<prefix>_<snake_name>_t typedef of copied target storage",
+          "field": "<prefix>_<snake_name>_t typedef of copied target storage"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "No native variant, recursive, callable or identity-bearing alias targets in this installed fixture.",
+        "Alias payloads in callbacks and returned closures still require compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Transparent target storage and validation. Aggregate aliases supply init/clear helpers; Nat/Int use initialized GMP mpz_t. Copy and cleanup rules follow the target."
+      }
+    },
+    {
+      "id": "native-aliases-cpp-ordinary-source",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Source-named using declaration for the owned C++ target type",
+          "result": "Source-named using declaration for the owned C++ target type",
+          "field": "Source-named using declaration for the owned C++ target type"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "No native variant, recursive, callable or identity-bearing alias targets in this installed fixture.",
+        "Alias payloads in callbacks and returned closures still require compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Transparent target values, validation and ownership. Aliases add no wrapper; returned C++ containers and records own their copies. Aliased Nat still rejects negative input."
+      }
+    },
+    {
+      "id": "native-aliases-cpp-reviewed-ir",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Source-named using declaration for the owned C++ target type",
+          "result": "Source-named using declaration for the owned C++ target type",
+          "field": "Source-named using declaration for the owned C++ target type"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-aliases-installed"
+          ],
+          "note": "Prepared C/GMP and C++ archives preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Both ordinary-source and independently reviewed builds pass 720 C and 366 C++ checks before and after installation relocation, without producer sources, compilers or loader-path overrides. Installed files retain their receipt hashes."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "No native variant, recursive, callable or identity-bearing alias targets in this installed fixture.",
+        "Alias payloads in callbacks and returned closures still require compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Transparent target values, validation and ownership. Aliases add no wrapper; returned C++ containers and records own their copies. Aliased Nat still rejects negative input."
+      }
+    },
     {
       "id": "npm-aliases-ordinary-source",
       "profiles": [
@@ -32936,25 +33343,129 @@
     },
     {
       "id": "c-values-c-1",
-      "profiles": ["c"],
-      "shapes": ["array","record","alias"],
-      "positions": ["parameter","result","field","callback-parameter","callback-result"],
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field",
+        "callback-parameter",
+        "callback-result"
+      ],
       "path": "reviewed-ir",
       "scope": "C copied records and fixed-width primitive spans.",
       "hostTypes": {
-        "array": {"parameter":"<prefix>_array_<primitive>_span","result":"<prefix>_array_<primitive>_span","field":"<prefix>_array_<primitive>_span","callback-parameter":"<prefix>_array_<primitive>_span","callback-result":"<prefix>_array_<primitive>_span"},
-        "record": {"parameter":"Generated copied struct (Alpha: lean_alpha_payload)","result":"Generated copied struct (Alpha: lean_alpha_payload)","field":"Generated copied struct (Alpha: lean_alpha_payload)","callback-parameter":"Generated copied struct (Alpha: lean_alpha_payload)","callback-result":"Generated copied struct (Alpha: lean_alpha_payload)"},
-        "alias": {"parameter":"Resolved target type","result":"Resolved target type","field":"Resolved target type","callback-parameter":"Resolved target type","callback-result":"Resolved target type"}
+        "array": {
+          "parameter": "<prefix>_array_<primitive>_span",
+          "result": "<prefix>_array_<primitive>_span",
+          "field": "<prefix>_array_<primitive>_span",
+          "callback-parameter": "<prefix>_array_<primitive>_span",
+          "callback-result": "<prefix>_array_<primitive>_span"
+        },
+        "record": {
+          "parameter": "Generated copied struct (Alpha: lean_alpha_payload)",
+          "result": "Generated copied struct (Alpha: lean_alpha_payload)",
+          "field": "Generated copied struct (Alpha: lean_alpha_payload)",
+          "callback-parameter": "Generated copied struct (Alpha: lean_alpha_payload)",
+          "callback-result": "Generated copied struct (Alpha: lean_alpha_payload)"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["c-mapping-audit"],"note":"C copied records and fixed-width primitive spans."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "c-mapping-audit"
+          ],
+          "note": "C copied records and fixed-width primitive spans."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
-      "limitations": ["Use generated clear functions for dynamic outputs, not free().","Copied-record cycles are rejected."],
-      "conversionNotes": {"array":"Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free().","record":"Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free()."}
+      "limitations": [
+        "Use generated clear functions for dynamic outputs, not free().",
+        "Copied-record cycles are rejected."
+      ],
+      "conversionNotes": {
+        "array": "Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free().",
+        "record": "Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free()."
+      }
+    },
+    {
+      "id": "c-values-c-1-alias-callables",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Alias payloads in callbacks and returned closures still require compiled and installed acceptance.",
+      "hostTypes": {
+        "alias": {
+          "callback-parameter": "Resolved target type",
+          "callback-result": "Resolved target type"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "c-mapping-audit"
+          ],
+          "note": "C copied records and fixed-width primitive spans."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Use generated clear functions for dynamic outputs, not free().",
+        "Copied-record cycles are rejected."
+      ]
     },
     {
       "id": "native-compounds-c-ordinary-source",

@@ -61,6 +61,12 @@ const wrapper = (surface, fn) => {
 export const compilePrimitiveCppModel = ir => {
 	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true });
 	if(surface.copies.some(copy => ["LeanClosure", "Ok", "Err", "Result"].includes(copy.record?.name))) throw new TypeError("C++ record name collides with a generated callable or compound type");
+	const occupied = new Set(["LeanClosure", "Ok", "Err", "Result", "Nat", "Int"
+		, "Error", "detail", "std", "boost"
+		, ...surface.copies.filter(copy => copy.record).map(copy => copy.record.name)
+		, ...surface.functions.map(fn => fn.field)]);
+	if(surface.aliases.some(alias => occupied.has(alias.definition.name)))
+		throw new TypeError("C++ alias name collides with a generated type or namespace");
 	for(const [index, callback] of [...surface.callbacks.values()].entries()) callback.cppIndex = index;
 	return { kind: "copied-primitives", surface };
 };
@@ -101,7 +107,7 @@ ${surface.copies.some(copy => copy.compound === "result") ? `template<class T> s
 template<class E> struct Err { E value; friend bool operator==(const Err&, const Err&) = default; };
 template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;` : ""}
 ${bigint ? "using Nat = boost::multiprecision::cpp_int;\nusing Int = boost::multiprecision::cpp_int;" : ""}
-${values.records}
+${values.records}${surface.aliases.length ? `\n${surface.aliases.map(alias => `using ${alias.definition.name} = ${copiedCppType(alias.copy)};`).join("\n")}` : ""}
 class Error final : public std::runtime_error {
 public:
   ${p}_status status;

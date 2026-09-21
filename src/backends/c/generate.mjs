@@ -84,6 +84,7 @@ const resolveAlias = (ir, ref, seen = new Set()) => {
 	const type = namedType(ir, ref.id);
 	if(type?.kind !== "alias") return ref;
 	if(seen.has(type.id)) fail("alias-cycle", `C projection found an alias cycle at ${type.id}`);
+	if(seen.size >= 32) fail("alias-depth", "C copied aliases may be at most 32 types deep");
 	seen.add(type.id);
 	return resolveAlias(ir, type.target, seen);
 };
@@ -189,6 +190,9 @@ const validateCoverage = ir => {
 	};
 	for(const type of ir.types)
 	{
+		if(type.kind === "alias" && (type.representation !== "copied" || type.mutability !== "immutable"
+			|| !/^[A-Za-z][A-Za-z0-9_]*$/.test(type.name) || type.name.includes("__")))
+			fail("unsupported-alias", `${type.id} requires a concrete immutable copied alias with a valid C name`);
 		if(type.typeParameters.length > 0)
 		{
 			fail("unsupported-generic-type", `${type.id} requires a generic C type projection`, {
@@ -346,6 +350,27 @@ const validateCoverage = ir => {
 		visited.add(id);
 	};
 	dependencies.forEach((_, id) => visit(id));
+	const aliases = describeCopiedCAliases(ir);
+	if(aliases.length)
+	{
+		const occupied = new Set(["status", "error_code", "error", "initialize", "runtime", "runtime_v1", "runtime_install_v1", "ready", "fail", "attempted_runtime", "initialization_failure", "detail"].map(name => `${prefix(ir)}_${name}`));
+		for(const ref of [...collectUsedTypes(ir), ...ir.types.filter(type => type.kind !== "alias").map(type => ({ kind: "named", id: type.id }))])
+		{
+			const name = cType(ir, ref);
+			for(const value of [name, `${name}_init`, `${name}_clear`]) occupied.add(value);
+		}
+		for(const alias of aliases)
+		{
+			const ref = resolveAlias(ir, alias.definition.target);
+			if(ref.kind === "named" && namedType(ir, ref.id)?.kind !== "record")
+				fail("unsupported-alias-target", `${alias.definition.id} requires a copied primitive, container or record target`);
+			for(const name of [alias.name, ...alias.target.aggregate ? [`${alias.name}_init`, `${alias.name}_clear`] : []])
+			{
+				if(occupied.has(name) || names.has(name)) fail("public-name-collision", `C alias name collision: ${name}`, { type: alias.definition.id });
+				occupied.add(name);
+			}
+		}
+	}
 };
 
 const cType = (ir, ref) => {
@@ -388,6 +413,16 @@ const isUnit = (ir, ref) => {
  * @param ref - Validated type reference.
  */
 export const describeCType = (ir, ref) => ({ name: cType(ir, ref), aggregate: isAggregate(ir, ref) });
+
+/**
+ * Preserve public alias names while sharing their targets' storage and converters.
+ *
+ * @param ir - Canonical Binding IR with checked alias graphs.
+ */
+export const describeCopiedCAliases = ir => ir.types.filter(type => type.kind === "alias").map(definition => ({
+	definition, name: `${prefix(ir)}_${snake(definition.name)}_t`
+	, target: describeCType(ir, definition.target)
+}));
 
 /**
  * Normalize a public C identifier.
@@ -517,6 +552,7 @@ const emitPublicHeader = ir => {
 		, "#include <stdbool.h>"
 		, "#include <stddef.h>"
 		, "#include <stdint.h>"
+		, ...ir.types.some(type => type.kind === "alias") ? ["#include <string.h>"] : []
 		, ""
 		, "#ifdef __cplusplus"
 		, 'extern "C" {'
@@ -637,6 +673,14 @@ const emitPublicHeader = ir => {
 		);
 	}
 
+	for(const alias of describeCopiedCAliases(ir))
+	{
+		lines.push(`typedef ${alias.target.name} ${alias.name};`);
+		if(alias.target.aggregate) lines.push(
+			`static inline void ${alias.name}_init(${alias.name} *value) { if (value) memset(value, 0, sizeof(*value)); }`
+			, `static inline void ${alias.name}_clear(${alias.name} *value) { ${alias.target.name}_clear(value); }`);
+		lines.push("");
+	}
 	const exports = [];
 	for(const declaration of ir.declarations)
 	{

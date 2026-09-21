@@ -10,7 +10,7 @@ Install Node 22, Lean 4.32.2, a C11 compiler, Make, m4, tar, xz, and `readelf` f
 
 Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Both C and C++ accept synchronous primitive callbacks and returned closures. Resources and asynchronous signatures remain unsupported in these adapters; the build reports the rejected Lean declaration and location.
 
-`Option`, `Except` and binary products also compile through both ordinary-source and reviewed-IR builds. They may contain supported primitives, arrays, records and each other, but not callbacks or resources. Other native targets and PHP-Wasm still reject these constructors. Select only C, C++ and/or npm for a combined compound-value release.
+`Option`, `Except`, binary products and `List` also compile through both ordinary-source and reviewed-IR builds. They may contain supported primitives, arrays, records and each other, but not callbacks or resources. All seventeen consumer profiles have installed acceptance for these copied constructors. Check each target's guide for its host representation and toolchain requirements before selecting a combined release.
 
 For a Lake project named `sample` at version `1.0.0`, select both native targets:
 
@@ -52,6 +52,21 @@ The 16 MiB per-call budget covers input and output payloads together, array slot
 Compound structs use `has_value` plus `value` for options, `is_ok` plus `ok` and `error` for results, and `fst`/`snd` for products. Flags must be 0 or 1. Lean's `Except E T` maps to success type `T` and error type `E`. Only the active branch crosses into Lean; both fields must be initialized for cleanup. The conversion budget charges compound struct storage and the active payload. GMP packages also budget the public-to-private conversion. Returned inactive fields remain initialized and empty. `_clear` traverses both fields, including nested GMP integers. C++ maps these types to `std::optional`, tagged `Result` and `std::pair`; see the [consumer guide](../consume/cpp.md#options-results-and-products).
 
 Lean generates the record constructors and field accessors used by the adapter. Consumers do not depend on Lean's object layout. See the [installed array and record acceptance](../evidence/native-c-copied-20260914.md) for nested structures, exact values and allocation-failure checks.
+
+## Named copied aliases
+
+Concrete `abbrev` and type-valued `def` aliases retain their names and targets in
+the compiler-checked contract. C exports `<prefix>_<snake_name>_t` typedefs, with
+`_init` and `_clear` helpers for aggregate targets. C++ exports source-named
+`using` declarations. Aliases reuse the target's storage and conversion rules;
+GMP integer aliases still require initialized owning values.
+
+Aliases can name supported primitives, copied records and nested containers.
+Chains retain their contract identities. Reviewed IR must match the compiler's
+names and targets exactly. Alias cycles, excessive nesting and collisions with
+public functions or generated types fail before packaging. Generic, recursive,
+variant and identity-bearing alias targets remain outside the current native
+profile. See the [installed alias checks](../evidence/native-aliases-20260921.md).
 
 ## Export callbacks and closures
 
