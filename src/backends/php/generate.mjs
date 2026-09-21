@@ -1122,7 +1122,7 @@ export const compilePhpPackageModel = (ir, options = {}) => {
 		&& ordinary)
 		fail("unsupported-copied-php-profile", "Use the compiled PHP-Wasm copied adapter for 32-bit copied packages");
 	if(ordinary)
-		return Object.freeze({ ir, copied: compileCopiedPhpModel(ir) });
+		return Object.freeze({ ir, copied: compileCopiedPhpModel(ir, { lists: true }) });
 	validateCoverage(ir);
 	const projection = compilePhpProjection(ir, options);
 	const support = supportProfile(projection);

@@ -86,7 +86,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, validateModel: model => {
 				if(targets.includes("cpan")) validatePerlModel(model);
 				if(!cTargets.length) return;
-				const cSurface = compilePrimitiveCSurface(model.bindingIr, { lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
+				const cSurface = compilePrimitiveCSurface(model.bindingIr, { lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 				if(targets.includes("c")) validateGmpSurface(cSurface);
 				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);
 				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);
@@ -94,7 +94,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 				if(targets.includes("wit-wasi")) compileCopiedWitModel(model.bindingIr, config.targets?.["wit-wasi"], { callables: true });
 				if(targets.includes("pypi")) compileCopiedPythonModel(model.bindingIr);
 				if(targets.includes("cargo")) compileCopiedRustModel(model.bindingIr);
-				if(targets.includes("php-native")) compileCopiedPhpModel(model.bindingIr);
+				if(targets.includes("php-native")) compileCopiedPhpModel(model.bindingIr, { lists: true });
 			}
 			, signal });
 		const projections = cTargets.length ? await projectNativeCFamily({

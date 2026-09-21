@@ -122,7 +122,9 @@ export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 	} else if(copy.element)
 	{
 		input.push("$scope->budget->charge(count($value), 32);", `$memory = $scope->allocate('${copy.element.ctype}', count($value), true);`, `foreach ($value as $i => $item) { $entry = self::to${copy.element.index}($item, $scope); $memory[$i] = $entry${copy.element.aggregate ? "" : "->cdata"}; }`, "$out->data = count($value) ? \\FFI::addr($memory[0]) : null;", "$out->length = count($value);");
-		output.push(`$scope->budget->charge($value->length, max(32, \\FFI::sizeof($scope->ffi->type('${copy.element.ctype}'))));`, "if (!$value->length) return [];", "if ($value->data === null || \\FFI::isNull($value->data)) throw new \\RuntimeException('Native array has a missing buffer');", `$memory = $scope->ffi->cast('${copy.element.ctype} *', $value->data);`, "$items = [];", `for ($i = 0; $i < $value->length; $i++) $items[] = self::from${copy.element.index}($memory[$i], $scope);`, "return $items;");
+		output.push(`$scope->budget->charge($value->length, max(32, \\FFI::sizeof($scope->ffi->type('${copy.element.ctype}'))));`, "if (!$value->length) return [];", "if ($value->data === null || \\FFI::isNull($value->data)) throw new \\RuntimeException('Native array has a missing buffer');"
+			, `if (\\FFI::cast('uintptr_t *', \\FFI::addr($value->data))[0] % \\FFI::alignof($scope->ffi->type('${copy.element.ctype}')) !== 0) throw new \\RuntimeException('Native array has a misaligned buffer');`
+			, `$memory = $scope->ffi->cast('${copy.element.ctype} *', $value->data);`, "$items = [];", `for ($i = 0; $i < $value->length; $i++) $items[] = self::from${copy.element.index}($memory[$i], $scope);`, "return $items;");
 	} else
 	{ input.push("$out->cdata = $value;"); output.push("return $value;"); }
 	input.push("return $out;");

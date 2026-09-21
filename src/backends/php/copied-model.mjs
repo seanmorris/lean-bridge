@@ -28,10 +28,11 @@ export const validateOrdinaryPhpSettings = (settings = {}) => {
  * @param options.wordBits - Compiled Lean target width, independent of PHP's integer width.
  * @param options.callables - Admit synchronous primitive callables for FFI or Zend.
  * @param options.compounds - Admit copied options, results and binary products.
+ * @param options.lists - Admit copied Lists for a validated transport.
  */
-export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits, callables = true, compounds = true } = {}) => {
+export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integerBits, callables = true, compounds = true, lists = false } = {}) => {
 	if(![32, 64].includes(integerBits)) throw new TypeError("PHP integer width must be 32 or 64");
-	const surface = compilePrimitiveCSurface(ir, { wordBits, callables, compounds });
+	const surface = compilePrimitiveCSurface(ir, { wordBits, callables, compounds, lists });
 	const namespace = `Lean${surface.prefix.split("_").map(word => word[0].toUpperCase() + word.slice(1)).join("")}`;
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];

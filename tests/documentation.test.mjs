@@ -393,9 +393,11 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-php-native-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*build\/compounds\/php-native\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*build\/compounds\/php-native\.json\n\s*build\/lists\/php-native\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests\/php-callables\.test\.mjs tests\/php-callable-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests\/php-compounds\.test\.mjs tests\/php-compound-contract\.test\.mjs/);
+  assert.match(workflow, /LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests\/php-lists\.test\.mjs tests\/php-list-contract\.test\.mjs/);
+  assert.ok(workflow.includes("test -s build/lists/php-native.json"));
   assert.match(workflow, /LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests\/php-wasm-compounds\.test\.mjs tests\/php-wasm-compound-contract\.test\.mjs tests\/php-wasm-compound-zend\.test\.mjs/);
   assert.match(workflow, /test -s build\/compounds\/php-wasm\.json/);
   assert.match(workflow, /build\/callables\/php-wasm\.json\n\s*build\/compounds\/php-wasm\.json\n\s*build\/compounds\/php-wasm-zend-faults\.json\n\s*if-no-files-found: error/);
