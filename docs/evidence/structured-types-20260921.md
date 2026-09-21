@@ -162,8 +162,8 @@ records, variants and nested containers. See the
 
 Native private conversion helpers use the checked target representation while
 Binding IR retains alias names. C/C++, Python, Rust, .NET, Java/Kotlin, Ruby and
-Perl now have the installed checks below. Installed alias acceptance for the
-other three consumer profiles remains open. Generic aliases, bounded recursion,
+Perl and native PHP now have the installed checks below. Installed alias acceptance
+for the other two consumer profiles remains open. Generic aliases, bounded recursion,
 compound callables and explicitly owned identity aggregates remain in the full
 structured-types goal.
 
@@ -262,7 +262,21 @@ conversion failures, 64 partial-input failures and four host exceptions while
 leaving installed files unchanged. See the
 [Perl alias evidence](perl-aliases-20260921.md).
 
-Alias parameters, results and fields now have installed acceptance in fourteen of
-seventeen profiles. Native PHP, PHP-Wasm and WIT/WASI remain. Native
+## Compiled native PHP aliases
+
+Prepared Composer archives preserve 27 alias names, original targets and chains
+in metadata and installed PHPDoc. PHP callers pass ordinary target values.
+Parameters, results and record fields retain their original contracts without
+alias wrapper classes. The public generator routes these APIs through the
+copied adapter, and package audits check alias metadata against source types.
+
+Both source paths pass 12,532 public assertions in weak and strict caller modes
+after offline installation, relocation and producer removal. An isolated
+in-memory probe covers 567 injected conversion failures, 64 partial-input
+failures and fifteen malformed native outputs. Installed files remain unchanged.
+See the [native PHP alias evidence](php-native-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in fifteen of
+seventeen profiles. PHP-Wasm and WIT/WASI remain. Native
 variants, bounded recursion, compound callables and explicitly owned identity
 aggregates also remain part of VO1219.

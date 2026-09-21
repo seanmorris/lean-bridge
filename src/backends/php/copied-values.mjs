@@ -6,6 +6,7 @@
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { compileCopiedPhpModel } from "./copied-model.mjs";
+import { phpCopiedAliases, phpAliasCatalogDocs, phpAliasContract, phpAliasReadme } from "./copied-aliases.mjs";
 import { copiedPhpAssets, copiedPhpLoader } from "./copied-assets.mjs";
 import { copiedPhpValues, copiedPhpHelpers } from "./copied-support.mjs";
 import { copiedPhpChecks, copiedPhpConversions, copiedPhpDefinitions } from "./copied-conversions.mjs";
@@ -20,7 +21,7 @@ export const copiedPhpPublicSource = model => `<?php
 declare(strict_types=1);
 namespace ${model.namespace};
 
-${copiedPhpValues}
+${phpAliasCatalogDocs(model)}${copiedPhpValues}
 ${model.branches.map(name => `/** @template T */
 final readonly class ${name}
 {
@@ -35,7 +36,7 @@ final readonly class ${name}
 ${model.surface.callbacks.size ? phpClosurePublic : ""}
 ${model.surface.copies.filter(copy => copy.record).map(copy => `final readonly class ${copy.publicName}
 {
-${copy.fields.map(field => `    /** @var ${field.type.docType} */\n    public ${field.type.publicType} $${field.name};`).join("\n")}
+${copy.fields.map((field, index) => `    /** @var ${field.type.docType}${model.surface.aliases.length ? `\n     * @lean-bridge-contract ${phpAliasContract(model, copy.record.fields[index].type)}\n    ` : " "}*/\n    public ${field.type.publicType} $${field.name};`).join("\n")}
     public function __construct(${copy.fields.map(field => `mixed $${field.name}`).join(", ")}) {
         $__lbBudget = new Internal\\Budget();
 ${copy.fields.map(field => `        $this->${field.name} = Internal\\Checks::check${field.type.index}($${field.name}, $__lbBudget);`).join("\n")}
@@ -45,8 +46,8 @@ ${copy.fields.map(field => `        $this->${field.name} = Internal\\Checks::che
 require_once __DIR__ . '/Internal/Native.php';
 
 ${model.surface.functions.map((fn, index) => `/**
-${fn.parameters.map((parameter, i) => ` * @param ${phpValue(model, fn.declaration.parameters[i].type).docType} $${parameter.name}`).join("\n")}
- * @return ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).docType}
+${fn.parameters.map((parameter, i) => ` * @param ${phpValue(model, fn.declaration.parameters[i].type).docType} $${parameter.name}${model.surface.aliases.length ? `\n * @lean-bridge-param ${phpAliasContract(model, fn.declaration.parameters[i].type)} $${parameter.name}` : ""}`).join("\n")}
+ * @return ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).docType}${model.surface.aliases.length ? `\n * @lean-bridge-return ${phpAliasContract(model, fn.declaration.result.type)}` : ""}
  */
 function ${fn.field}(${fn.parameters.map(parameter => `mixed $${parameter.name}`).join(", ")}): ${phpValue(model, fn.declaration.result.type).type?.callable ? "LeanClosure" : phpValue(model, fn.declaration.result.type).publicType} {
     return Internal\\Native::call${index}(${fn.parameters.map(parameter => `$${parameter.name}`).join(", ")});
@@ -103,7 +104,8 @@ export const renderCopiedPhpPackage = (model, evidence = null) => {
 	}
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\n## Lean Lists\n\nList inputs, results and record fields use consecutive-key PHP arrays with precise list<T> PHPDoc. Empty Lists, order, duplicates and nesting are preserved. Mutable array values and Bytes results are independently copied. List and Array keep distinct IR/native identities. Weak and strict callers get the same element and copy-budget checks. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1, generator: { id: "lean-wasm/php-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, publicFiles: ["src/Api.php"], exports: ["Bytes", "LeanBridgeError", ...model.branches, ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.functions.map(fn => fn.field)].map(name => `${model.namespace}\\${name}`), files: [...Object.keys(files), "binding-manifest.json"], filesSha256: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) });
+	files["README.md"] += phpAliasReadme(model);
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1, generator: { id: "lean-wasm/php-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, publicFiles: ["src/Api.php"], ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: ["Bytes", "LeanBridgeError", ...model.branches, ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.functions.map(fn => fn.field)].map(name => `${model.namespace}\\${name}`), files: [...Object.keys(files), "binding-manifest.json"], filesSha256: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) });
 	return Object.freeze(files);
 };
 

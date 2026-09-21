@@ -64,6 +64,34 @@ Distribute the original ZIP through a controlled release channel or a Composer r
 
 Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
 
+### Export named copied aliases
+
+Native Composer builds preserve concrete copied alias names, targets and chains
+from ordinary source or a compiler-checked reviewed contract:
+
+```lean
+namespace Scores
+abbrev Count := UInt32
+abbrev Counts := List Count
+def increment (value : Count) : Count := value + 1
+def reverse (values : Counts) : Counts := values.reverse
+end Scores
+```
+
+Select `Scores.increment` and `Scores.reverse` in `exports`, then build with
+`--target php-native`. Distribute the generated ZIP unchanged. Its manifest
+contains both aliases, and its installed PHP source documents the original
+parameter, result and record-field contracts. PHPDoc uses PHP target types;
+the aliases create no wrapper classes. Consumers use the
+[ordinary PHP values](../php.md#named-copied-aliases).
+
+A reviewed Binding IR contract must preserve alias definitions and references,
+not replace them with flattened primitives. The builder compares them with
+fresh Lean metadata before packaging. Targets must remain concrete, immutable
+copied values within the existing 32-level depth bound. Recursive copied types,
+native variants, compound callable payloads and identity-bearing alias targets
+need separate support. PHP-Wasm alias acceptance remains pending.
+
 ### Export native callbacks and returned functions
 
 Select the callable exports alongside the other functions in `lean-bridge.exports.json`:

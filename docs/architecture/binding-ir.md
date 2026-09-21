@@ -151,6 +151,13 @@ Perl packages or wrapper identities are generated. Aliases retain exact target
 checks and the existing XS conversion path. See the
 [installed Perl alias checks](../evidence/perl-aliases-20260921.md).
 
+Native PHP callers use transparent target values. Composer archives retain
+alias names, original targets and chains in the binding manifest. Installed
+PHPDoc records target types and original Lean contracts at parameter, result
+and record-field sites, without alias wrapper classes. Weak and strict callers
+receive the same target checks. See the
+[installed native PHP alias checks](../evidence/php-native-aliases-20260921.md).
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:

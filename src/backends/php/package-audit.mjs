@@ -116,13 +116,16 @@ export const auditPhpPackage = (ir, files, options = {}) => {
 		const expected = generateCopiedPhpPackage(ir), manifest = parseJson(files, "binding-manifest.json");
 		const reference = parseJson(expected, "binding-manifest.json");
 		if(files["src/Api.php"] !== expected["src/Api.php"]
-			|| ["schemaVersion", "generator", "component", "bindingIrSha256", "namespace", "publicFiles", "exports", "files"].some(key => JSON.stringify(manifest[key]) !== JSON.stringify(reference[key]))
+			|| ["schemaVersion", "generator", "component", "bindingIrSha256", "namespace", "publicFiles", "aliases", "exports", "files"].some(key => JSON.stringify(manifest[key]) !== JSON.stringify(reference[key]))
 			|| JSON.stringify(sorted(Object.keys(files))) !== JSON.stringify(sorted(Object.keys(expected)))
 			|| JSON.stringify(sorted(Object.keys(manifest.filesSha256 ?? {}))) !== JSON.stringify(sorted(Object.keys(expected).filter(path => path !== "binding-manifest.json"))))
 			fail("copied-surface-drift", "PHP copied package differs from the admitted source API");
 		for(const [path, digest] of Object.entries(manifest.filesSha256))
 			if(sha256(requireFile(files, path)) !== digest) fail("generated-file-drift", `${path} differs from its generated hash`);
-		assertCleanPublicSurface(files["src/Api.php"], "src/Api.php");
+		// The source must exactly match the generator above. Alias documentation
+		// may name Pointer or WebAssembly without exposing either as PHP state.
+		const declarations = files["src/Api.php"].replace(/\/\*\*[\s\S]*?\*\//g, comment => comment.replace(/[^\r\n]/g, " "));
+		assertCleanPublicSurface(declarations, "src/Api.php");
 		return true;
 	}
 	const projection = compilePhpProjection(ir, options);

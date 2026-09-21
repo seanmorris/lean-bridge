@@ -73,6 +73,7 @@ test("CLI archives are deterministic, dependency-free, and contain the complete 
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedDotnetPackage } from './src/backends/dotnet/copied-values.mjs'; if (typeof generateCopiedDotnetPackage !== 'function') throw new Error('Missing .NET generator');"], { cwd: first.directory });
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedJvmPackage } from './src/backends/jvm/copied-values.mjs'; if (typeof generateCopiedJvmPackage !== 'function') throw new Error('Missing JVM generator');"], { cwd: first.directory });
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedRubyPackage } from './src/backends/ruby/copied-values.mjs'; if (typeof generateCopiedRubyPackage !== 'function') throw new Error('Missing Ruby generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedPhpPackage } from './src/backends/php/copied-values.mjs'; if (typeof generateCopiedPhpPackage !== 'function') throw new Error('Missing PHP generator');"], { cwd: first.directory });
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generatePerlBindingPackage } from './src/backends/perl/generate.mjs'; if (typeof generatePerlBindingPackage !== 'function') throw new Error('Missing Perl generator');"], { cwd: first.directory });
 		assert.equal(first.report.productionApproved, false);
 		assert.equal(first.report.externalRegistryWrites, false);

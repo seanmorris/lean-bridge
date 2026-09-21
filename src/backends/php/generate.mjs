@@ -1117,7 +1117,7 @@ const publicExports = (projection, support) => [
  */
 export const compilePhpPackageModel = (ir, options = {}) => {
 	validateBindingIr(ir);
-	const ordinary = ir.declarations.every(declaration => declaration.kind === "function") && (ir.types.every(type => type.kind === "record") || ir.types.some(type => type.kind === "callback" && type.callable.failure.errors.includes("error:native-callback")));
+	const ordinary = ir.declarations.every(declaration => declaration.kind === "function") && (ir.types.every(type => ["record", "alias"].includes(type.kind)) || ir.types.some(type => type.kind === "callback" && type.callable.failure.errors.includes("error:native-callback")));
 	if(options.integerBits !== undefined && options.integerBits !== 64
 		&& ordinary)
 		fail("unsupported-copied-php-profile", "Use the compiled PHP-Wasm copied adapter for 32-bit copied packages");
