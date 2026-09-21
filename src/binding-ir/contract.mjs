@@ -464,6 +464,46 @@ const representationOf = (typeRef, typeMap, typeParameters) => {
 	return undefined;
 };
 
+// Alias expansion must terminate before a nominal record, variant or identity.
+// A named recursive variant is valid; a cycle of aliases, even through a
+// container, is not a declaration of such a recursive type. Use an explicit
+// stack so a long alias chain cannot overflow the validator's JavaScript stack.
+const validateAliasGraph = typeMap => {
+	const edges = new Map();
+	for(const type of typeMap.values())
+	{
+		if(type.kind !== "alias") continue;
+		const pending = [type.target], targets = new Set();
+		while(pending.length)
+		{
+			const ref = pending.pop();
+			if(ref.kind === "apply") for(const argument of ref.arguments) pending.push(argument);
+			else if(ref.kind === "named" && typeMap.get(ref.id)?.kind === "alias") targets.add(ref.id);
+		}
+		edges.set(type.id, [...targets]);
+	}
+	const done = new Set(), active = new Set();
+	for(const id of edges.keys())
+	{
+		if(done.has(id)) continue;
+		const stack = [{ id, index: 0 }]; active.add(id);
+		while(stack.length)
+		{
+			const frame = stack.at(-1), children = edges.get(frame.id);
+			if(frame.index === children.length)
+			{ active.delete(frame.id); done.add(frame.id); stack.pop(); continue; }
+			const child = children[frame.index++];
+			if(active.has(child))
+			{
+				const cycle = [...stack.slice(stack.findIndex(frame => frame.id === child)).map(frame => frame.id), child];
+				fail("alias-cycle", `Type aliases contain a cycle: ${cycle.join(" -> ")}`, { path: `${frame.id}.target`, cycle });
+			}
+			if(!done.has(child))
+			{ active.add(child); stack.push({ id: child, index: 0 }); }
+		}
+	}
+};
+
 const checkOwnershipRepresentation = (site, path, typeMap, typeParameters) => {
 	assertKnownTypeRef(site.type, `${path}.type`, typeMap);
 	const representation = representationOf(site.type, typeMap, typeParameters);
@@ -844,6 +884,8 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 			}
 		}
 	}
+
+	validateAliasGraph(typeMap);
 
 	array(ir.errors, `${path}.errors`);
 	unique(ir.errors, error => error.id, `${path}.errors`);

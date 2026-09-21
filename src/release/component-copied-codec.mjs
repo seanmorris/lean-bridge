@@ -1,6 +1,7 @@
 /**
  * Recursive copied slots, reusing the installed primitive wire codecs.
- * Arrays and Lists share sequence slots; records, tuples, Option and Except compose.
+ * Arrays and Lists share sequence slots; named data and compound values compose.
+ * Compiled ABI admission is checked separately from this descriptor codec.
  *
  * @file
  */
@@ -57,6 +58,7 @@ export const compileComponentCopiedCodec = descriptor => {
 		const active = new Set();
 		const visit = (type, slot, value) => {
 			span(module, slot, scalarSlotBytes);
+			if(type.kind === "alias") return visit(type.target, slot, value);
 			if(type.kind === "primitive")
 			{
 				validateComponentScalar(type.name, value);
@@ -72,9 +74,20 @@ export const compileComponentCopiedCodec = descriptor => {
 			active.add(value);
 			try
 			{
-				const kind = type.kind === "record" ? "record" : type.constructor;
+				const kind = ["record", "variant"].includes(type.kind) ? type.kind : type.constructor;
 				let count, branch = 0, childValue, childType;
-				if(kind === "record")
+				if(kind === "variant")
+				{
+					if(!value || typeof value !== "object") throw new TypeError("Expected a tagged variant");
+					const name = dataField(value, "kind"), index = type.cases.findIndex(item => item.name === name);
+					if(index < 0) throw new TypeError("Invalid variant constructor");
+					const fields = type.cases[index].fields;
+					count = fields.length; branch = index * 4;
+					budget.charge(count * scalarSlotBytes);
+					const values = record(value, ["kind", ...fields.map(field => field.name)]);
+					childValue = index => values[index + 1]; childType = index => fields[index].type;
+				}
+				else if(kind === "record")
 				{
 					count = type.fields.length;
 					budget.charge(count * scalarSlotBytes);
@@ -128,17 +141,19 @@ export const compileComponentCopiedCodec = descriptor => {
 		const active = new Set();
 		const visit = (type, slot) => {
 			span(module, slot, scalarSlotBytes);
+			if(type.kind === "alias") return visit(type.target, slot);
 			if(active.has(slot)) throw new TypeError("Cyclic copied wire value");
 			if(type.kind === "primitive") return readComponentScalarSlot(module, slot, type.name, budget.charge);
 			active.add(slot);
 			try
 			{
-				const data = view(module), kind = type.kind === "record" ? "record" : type.constructor;
+				const data = view(module), kind = ["record", "variant"].includes(type.kind) ? type.kind : type.constructor;
 				if(data.getUint32(slot, true) !== componentCopiedTags[kind]) throw new TypeError("Component copied type mismatch");
 				const flags = data.getUint32(slot + 4, true), branch = flags & 1;
 				const pointer = data.getUint32(slot + 8, true), count = data.getUint32(slot + 12, true);
-				if(flags & ~(kind === "option" || kind === "result" ? 3 : 2)) throw new TypeError("Invalid component copied flags");
+				if(kind === "variant" ? (flags & 1) || (flags >>> 2) >= type.cases.length : flags & ~(kind === "option" || kind === "result" ? 3 : 2)) throw new TypeError("Invalid component copied flags");
 				if((kind === "record" && count !== type.fields.length) || (kind === "tuple" && count !== type.arguments.length)
+					|| (kind === "variant" && count !== type.cases[flags >>> 2].fields.length)
 					|| (kind === "option" && count !== branch) || (kind === "result" && count !== 1)
 					|| (!count && (pointer || (flags & 2)))) throw new TypeError("Invalid component copied shape");
 				const bytes = count * scalarSlotBytes;
@@ -146,6 +161,11 @@ export const compileComponentCopiedCodec = descriptor => {
 				if(kind === "option") return branch ? { tag: "some", value: visit(type.arguments[0], pointer) } : { tag: "none" };
 				if(kind === "result") return { [branch ? "error" : "ok"]: visit(type.arguments[branch], pointer) };
 				if(kind === "record") return Object.fromEntries(type.fields.map((field, index) => [field.name, visit(field.type, pointer + index * scalarSlotBytes)]));
+				if(kind === "variant")
+				{
+					const selected = type.cases[flags >>> 2];
+					return { kind: selected.name, ...Object.fromEntries(selected.fields.map((field, index) => [field.name, visit(field.type, pointer + index * scalarSlotBytes)])) };
+				}
 				const values = new Array(count);
 				for(let index = 0; index < count; index++) values[index] = visit(type.arguments[kind === "tuple" ? index : 0], pointer + index * scalarSlotBytes);
 				return values;

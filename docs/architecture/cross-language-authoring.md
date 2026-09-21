@@ -69,6 +69,13 @@ the packaged Wasmtime host on both paths. Copied Lists now cover all seventeen
 consumer profiles. Aliases, arbitrary and recursive variants, and compound
 callables remain open.
 
+The [structured-type implementation record](../evidence/structured-types-20260921.md)
+tracks the remaining compiler, transport, ownership and installed-package work.
+Shared validation now rejects alias-only cycles, including cycles inside
+containers. A staged codec preserves alias identities and tagged variants in
+bounded copied descriptors. These transport tests do not advance installed
+coverage; compiler adapters and per-profile package checks must follow.
+
 ## Shared configuration and Perl cutover
 
 `lean-bridge.exports.json` holds language-neutral author intent. Module and export selection apply before host-language projection. Package-specific names and versions belong under canonical target keys. Machine paths and credentials stay outside source configuration.
@@ -81,7 +88,7 @@ The [contract acceptance record](../evidence/export-contracts-20260914.md) cover
 
 Perl uses the [shared configuration](../lean/existing-package.md#configure-exports). Native compilation, generated XS, the shared runtime, CPAN archives, and supplied-XS installation remain in use.
 
-Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its compiler-free analysis path. [Reviewed builds](../lean/existing-package.md#compile-a-reviewed-contract) require explicit source modules and reconcile the contract with fresh metadata before generating adapters: copied primitives, nested arrays, acyclic records, Option, Except, nested products and synchronous primitive callables for npm, C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl and native PHP; copied primitives/arrays/records and primitive callables for other native targets and PHP-Wasm. npm copied containers and callables currently require separate components. Combined builds check the same reviewed input and source API across profiles. Native projections retain their compiler-checked C representations, resource selection and closure arities. Source-configured builds also accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis projects the npm copied-value shapes and synchronous primitive callables.
+Public analysis, ordinary npm builds and native CPAN use fresh elaboration through the shared compiler report, including projects without a Lake lockfile. Explicit reviewed Binding IR keeps its compiler-free analysis path. [Reviewed builds](../lean/existing-package.md#compile-a-reviewed-contract) require explicit source modules and reconcile the contract with fresh metadata before generating adapters. Copied primitives, nested arrays and Lists, acyclic records, Option, Except, nested products and synchronous primitive callables have installed checks across all seventeen consumer profiles, including PHP-Wasm and WIT/WASI. npm copied containers and callables currently require separate components. Combined builds check the same reviewed input and source API across profiles. Native projections retain their compiler-checked C representations, resource selection and closure arities. Source-configured builds also accept [named concrete specializations](../lean/existing-package.md#export-concrete-specializations) with compiler-resolved type arguments and instance dictionaries. Public analysis projects the npm copied-value shapes and synchronous primitive callables.
 
 ## Shared semantic model and combined builds
 

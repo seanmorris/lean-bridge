@@ -1,5 +1,5 @@
 /**
- * Bounded copied-slot shapes and closed compiled-array admission.
+ * Bounded copied-slot shapes and versioned compiled-array admission.
  *
  * @file
  */
@@ -7,11 +7,12 @@ import { componentScalarTypes, scalarCopyLimit } from "./component-scalars.mjs";
 
 // Leave space for additional primitive tags without renumbering scalar ABI 2.
 // Lists retain their semantic constructor but share the ordered sequence wire layout.
-export const componentCopiedTags = Object.freeze({ array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36 });
+export const componentCopiedTags = Object.freeze({ array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36, variant: 37 });
 export const componentCopiedDepth = 32;
 export const componentCopiedAbi = 4;
 export const componentCopiedDispatch = "copied-array-frame-v1";
 const maximumTypeNodes = 4096;
+const nominal = /^lean:[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/;
 
 const invalid = message => { throw new TypeError(`Invalid component copied type: ${message}`); };
 const fields = (value, keys) => {
@@ -21,16 +22,35 @@ const fields = (value, keys) => {
 	if(own.length !== keys.length || own.some(key => !keys.includes(key))) invalid("descriptor fields must be closed");
 	for(const key of keys) if(!Object.hasOwn(Object.getOwnPropertyDescriptor(value, key), "value")) invalid("accessors are unsupported");
 };
+const dense = (values, maximum, label) => {
+	if(!Array.isArray(values) || values.length > maximum || Reflect.ownKeys(values).length !== values.length + 1) invalid(`invalid ${label}`);
+	for(let index = 0; index < values.length; index++)
+		if(!Object.hasOwn(Object.getOwnPropertyDescriptor(values, index) ?? {}, "value")) invalid(`${label} must be dense data values`);
+};
 
 /**
  * Snapshot a bounded semantic type tree without trusting names or host coercions.
- * Records use expanded nominal descriptors; identity and recursion are rejected.
+ * Records, aliases and variants use expanded nominal descriptors. Identity and
+ * recursion require separate representations. Descriptor support alone does
+ * not enable a shape in a compiled component's versioned ABI.
  *
- * @param type - Semantic primitive or applied Binding IR type reference.
+ * @param type - Primitive, applied or expanded named semantic descriptor.
  */
 export const snapshotComponentCopiedType = type => {
 	let nodes = 0;
-	const active = new Set();
+	const active = new Set(), aliases = new Set();
+	const copyFields = (values, depth, variant = false) => {
+		dense(values, 1024, "record fields");
+		const names = new Set();
+		return Object.freeze(values.map(field => {
+			fields(field, ["name", "type"]);
+			if(typeof field.name !== "string" || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(field.name)
+				|| ["__proto__", "prototype", "constructor"].includes(field.name) || names.has(field.name)
+				|| variant && field.name === "kind") invalid("invalid record field name");
+			names.add(field.name);
+			return Object.freeze({ name: field.name, type: visit(field.type, depth + 1) });
+		}));
+	};
 	const visit = (value, depth) => {
 		if(depth > componentCopiedDepth || ++nodes > maximumTypeNodes) invalid("type nesting or node limit exceeded");
 		if(active.has(value)) invalid("cyclic type descriptor");
@@ -42,29 +62,45 @@ export const snapshotComponentCopiedType = type => {
 			if(!componentScalarTypes.includes(value.name)) invalid("unknown primitive");
 			return Object.freeze({ kind: "primitive", name: value.name });
 		}
+		if(kind.value === "alias")
+		{
+			fields(value, ["kind", "id", "target"]);
+			if(typeof value.id !== "string" || !nominal.test(value.id)) invalid("invalid alias identity");
+			if(aliases.has(value.id)) invalid("cyclic alias descriptor");
+			active.add(value); aliases.add(value.id);
+			try
+			{ return Object.freeze({ kind: "alias", id: value.id, target: visit(value.target, depth + 1) }); }
+			finally
+			{ active.delete(value); aliases.delete(value.id); }
+		}
+		if(kind.value === "variant")
+		{
+			fields(value, ["kind", "id", "cases"]);
+			if(typeof value.id !== "string" || !nominal.test(value.id)) invalid("invalid variant identity");
+			dense(value.cases, 1024, "variant cases");
+			if(!value.cases.length) invalid("variant cases must be nonempty");
+			active.add(value);
+			try
+			{
+				const names = new Set();
+				const cases = value.cases.map(item => {
+					fields(item, ["name", "fields"]);
+					if(typeof item.name !== "string" || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(item.name) || names.has(item.name)) invalid("invalid variant case name");
+					names.add(item.name);
+					return Object.freeze({ name: item.name, fields: copyFields(item.fields, depth, true) });
+				});
+				return Object.freeze({ kind: "variant", id: value.id, cases: Object.freeze(cases) });
+			} finally
+			{ active.delete(value); }
+		}
 		if(kind.value === "record")
 		{
 			fields(value, ["kind", "id", "fields"]);
 			if(typeof value.id !== "string" || !/^lean:[A-Za-z_][A-Za-z0-9_'.]*$/.test(value.id)) invalid("invalid record identity");
-			if(!Array.isArray(value.fields) || value.fields.length > 1024
-				|| Reflect.ownKeys(value.fields).length !== value.fields.length + 1) invalid("invalid record fields");
 			active.add(value);
 			try
-			{
-				const names = new Set(), result = [];
-				for(let index = 0; index < value.fields.length; index++)
-				{
-					const property = Object.getOwnPropertyDescriptor(value.fields, index);
-					if(!property || !Object.hasOwn(property, "value")) invalid("record fields must be dense data values");
-					const field = property.value;
-					fields(field, ["name", "type"]);
-					if(typeof field.name !== "string" || !/^[A-Za-z_][A-Za-z0-9_]*$/.test(field.name)
-						|| ["__proto__", "prototype", "constructor"].includes(field.name) || names.has(field.name)) invalid("invalid record field name");
-					names.add(field.name);
-					result.push(Object.freeze({ name: field.name, type: visit(field.type, depth + 1) }));
-				}
-				return Object.freeze({ kind: "record", id: value.id, fields: Object.freeze(result) });
-			} finally
+			{ return Object.freeze({ kind: "record", id: value.id, fields: copyFields(value.fields, depth) }); }
+			finally
 			{ active.delete(value); }
 		}
 		fields(value, ["kind", "constructor", "arguments"]);

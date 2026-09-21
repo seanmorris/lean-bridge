@@ -78,7 +78,15 @@ with exactly one type argument. `list` and `array` remain different source types
 even when a host represents both with an array. Reviewed-source reconciliation
 rejects substituting one for the other. npm's copied transport uses the same
 ordered sequence slot layout for both; typed Lean adapters perform the List
-conversion. Other compiled targets reject List until their adapters are available.
+conversion. Copied Lists have installed-package checks across all seventeen
+consumer profiles on both source paths. See the [List acceptance audit](../evidence/lists-acceptance-20260921.md).
+
+Alias expansion must terminate at a primitive or a nominal definition. The
+validator rejects direct alias cycles and cycles hidden inside containers.
+Recursion through a named record or variant is a distinct type graph and remains
+valid IR. Valid IR does not establish compiled support: the
+[structured-type implementation record](../evidence/structured-types-20260921.md)
+tracks adapters and installed acceptance separately.
 
 ## Language-neutral core and producer metadata
 

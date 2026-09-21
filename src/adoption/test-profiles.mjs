@@ -9,6 +9,7 @@ const profileManifest = Object.freeze({
 	contract: Object.freeze([
 		"archive-subjects"
 		, "binding-ir-contract"
+		, "binding-ir-structured"
 		, "binding-semantic-parity"
 		, "callback-runtime"
 		, "checked-javascript"
@@ -27,6 +28,7 @@ const profileManifest = Object.freeze({
 		, "component-runtime"
 		, "component-scalar-codec"
 		, "component-copied-codec"
+		, "component-structured-codec"
 		, "component-array-contract"
 		, "component-record-contract"
 		, "component-compound-contract"

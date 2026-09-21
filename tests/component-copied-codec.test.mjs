@@ -280,7 +280,7 @@ test("partial input failures leave every allocation with the caller's arena", ()
 });
 
 test("the independent slot layout keeps constructor tags private", () => {
-	assert.deepEqual(componentCopiedTags, { array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36 });
+	assert.deepEqual(componentCopiedTags, { array: 32, list: 32, tuple: 33, option: 34, result: 35, record: 36, variant: 37 });
 	const f = fixture(), codec = compileComponentCopiedCodec(option(u32));
 	try
 	{
