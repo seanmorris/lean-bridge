@@ -84,7 +84,7 @@ Generated Lean helpers keep runtime tags and object offsets private.
 Payloads can contain all nineteen primitives and supported copied containers,
 records and other admitted variants. Generic, indexed, recursive, proof-bearing,
 callable and identity-bearing payloads remain outside this copied profile.
-Combined native variant builds admit C, C++, Python, Rust, .NET, JVM and Ruby
+Combined native variant builds admit C, C++, Python, Rust, .NET, JVM, Ruby and Perl
 when every selected target accepts the complete API.
 
 Use the [consumer example](../consume/ruby.md#tagged-variants) and inspect the

@@ -145,7 +145,34 @@ Select `Compounds` in `modules` and its three functions in `exports`. Set `targe
 
 Perl uses `undef` or `Some` for options, distinct `Ok` and `Err` wrappers for results, and two-element array references for binary products. Constructors appear under the component namespace when needed; record or resource names that collide with them are rejected before linking. All nineteen primitives work inside these copied types, including `Math::BigInt`, Unit, Unicode strings and octet strings. Fields and arrays may contain compounds.
 
-Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32. Recursive copied types, arbitrary variants and compound callback signatures require further adapter work. Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
+Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32. Recursive copied types and compound callback signatures require further adapter work. Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
+
+## Export copied tagged variants
+
+Select concrete, non-recursive Lean inductives through the ordinary export
+configuration or a reviewed contract. Lean checks the source constructors and
+payloads before generation. No Perl-specific variant configuration is required.
+
+Each family becomes a Perl package with named constructor classes, such as
+`Signal::Data`. Constructors take named fields, reject duplicate or mismatched
+field sets, and expose payload accessors. The native adapter checks exact case
+classes, rejects tied constructor hashes, and pins all fields before child
+conversion can invoke Perl. Generated Lean helpers construct and inspect the
+active payload without exposing runtime constructor numbers or object offsets.
+
+Payloads can contain all nineteen primitives and supported copied containers,
+records and other admitted variants. Constructors and payloads remain mutable;
+the bridge copies their contents at each call. Recursive, generic, indexed,
+proof-bearing, callable and identity-bearing payloads are not admitted by this
+copied profile. Names that collide with Perl object methods or phase hooks such
+as `BEGIN` and `END` reject before compilation.
+
+Use the [consumer example](../consume/perl.md#tagged-variants). The build compiles
+Lean once for all selected Perl interpreters and produces a matching XS binary
+for each ABI. Combined native variant builds can select CPAN, C, C++, Python,
+Rust, .NET, JVM and Ruby when every selected target accepts the full API.
+The [installed variant record](../evidence/perl-variants-20260921.md) covers both
+source paths, all four pinned Perl ABIs and failure cleanup.
 
 ## Export Lists
 
@@ -197,7 +224,7 @@ existing limits still apply.
 
 An independently reviewed contract must retain the same aliases and references;
 replacing every alias with its target does not reproduce the source API.
-Generic aliases, native variants, recursive copies, compound callable payloads
+Generic aliases, recursive copies, compound callable payloads
 and identity-bearing alias targets require further work. The
 [installed acceptance record](../evidence/perl-aliases-20260921.md) covers both
 source paths and all four pinned Perl ABIs.

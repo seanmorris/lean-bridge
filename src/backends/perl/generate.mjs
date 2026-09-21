@@ -6,6 +6,7 @@
 import { nativeCType, nativeObjectType, nativeTypeKey, validateNativeType, nativeCallbackDefault } from "../../build/native-model.mjs";
 import { fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 import { perlCopiedAliases, perlAliasApiDocs, perlAliasPod } from "./copied-aliases.mjs";
+import { validatePerlVariants, perlVariantConversions, perlVariantClasses, perlVariantPod } from "./copied-variants.mjs";
 
 const q = JSON.stringify;
 const read = type => `lb_read_${nativeTypeKey(type)}`;
@@ -100,6 +101,7 @@ const conversion = (model, type) => {
 	let from, to;
 	if(type.kind === "primitive")
 	{ from = fromPrimitive(type); to = toPrimitive(type); }
+	if(type.kind === "variant") ({ from, to } = perlVariantConversions(model, type));
 	if(type.kind === "option" || type.kind === "result")
 	{
 		const optional = type.kind === "option";
@@ -256,12 +258,11 @@ ${name}(...)
  */
 export const validatePerlModel = model => {
 	if(model?.profile !== "native-library-v1" || model.pointerBits !== 64) throw new TypeError("Perl requires the checked native-library-v1 model");
-	const containsCompound = type => ["option", "result", "tuple", "list"].includes(type.kind)
+	const containsCompound = type => ["option", "result", "tuple", "list", "variant"].includes(type.kind)
 		|| (type.kind === "array" && containsCompound(type.element))
 		|| (type.kind === "record" && type.fields.some(field => containsCompound(field.type)));
 	model.types.forEach(({ key, ...type }) => {
     validateNativeType(type);
-    if(type.kind === "variant") throw Object.assign(new TypeError("Perl copied variants are not implemented"), { code: "unsupported-perl-signature" });
     if(type.kind === "callback" && [...type.parameters, type.result].some(containsCompound))
       throw Object.assign(new TypeError("Perl compound callbacks are not implemented"), { code: "unsupported-perl-signature" });
     if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
@@ -269,12 +270,13 @@ export const validatePerlModel = model => {
 	const branches = [...(model.types.some(type => type.kind === "option") ? ["Some"] : [])
 		, ...(model.types.some(type => type.kind === "result") ? ["Ok", "Err"] : [])];
 	const classes = new Set(branches.map(name => `${model.moduleName}::${name}`));
-	for(const type of model.types.filter(type => ["record", "resource", "callback"].includes(type.kind)))
+	for(const type of model.types.filter(type => ["record", "resource", "callback", "variant"].includes(type.kind)))
 	{
 		const name = typeClass(model, type);
 		if(classes.has(name)) throw new TypeError(`Perl class name collision: ${name}`);
 		classes.add(name);
 	}
+	validatePerlVariants(model, classes);
 	return branches;
 };
 
@@ -372,6 +374,7 @@ _callback_${type.key}(...)
 			for(const field of type.fields) pm.push(`sub ${field.name} { $_[0]->{${field.name}} }`);
 		} else pm.push("our @ISA = ('LeanBridge::Runtime::Resource');", "sub CLONE_SKIP { 1 }");
 	}
+	pm.push(...perlVariantClasses(model));
 	pm.push("1;", "", "__END__", "=head1 NAME", "", `${model.moduleName} - Generated functions from ${model.component.name}`, "", "=head1 API", "");
 	for(const item of model.exports)
 	{
@@ -379,6 +382,7 @@ _callback_${type.key}(...)
 		if(aliases.length) pm.push(perlAliasApiDocs(model, item), "");
 	}
 	if(aliases.length) pm.push(...perlAliasPod(model, aliases));
+	pm.push(...perlVariantPod(model));
 	if(branches.length) pm.push("=head1 COPIED VALUES", ""
 		, "Option uses undef for None and Some->new($value) for Some, including Some->new(undef). Unit uses undef. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested."
 		, "", "Branches are mutable one-field hashes. Calls check the exact class and field set, reject tied branches and products, and copy their contents. Returned arrays, records and payloads are independent of input values. Perl reference equality is not deep value equality. The shared per-call copied-value limit is 16 MiB; schema nesting is limited to 32 levels. Compound callbacks and resources inside copied values are unsupported.", "");

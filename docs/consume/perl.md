@@ -108,6 +108,57 @@ Branch classes live under the generated component namespace. They are mutable bl
 
 Input and output conversion share a 16 MiB copied-value budget. Type nesting is limited to 32 levels. These limits cover conversion payloads and slots, not all Perl allocations or Lean working memory. Resources and callbacks cannot appear inside copied values; compound callback arguments and results remain unsupported. The [installed checks](../evidence/perl-compounds-20260920.md) cover both source paths and all four pinned Perl ABIs.
 
+### Tagged variants
+
+Concrete copied Lean inductives use a named family and one Perl class per
+constructor. Pass payloads as named fields and read them through the generated
+accessors. For the prepared acceptance package, save `variants.pl`:
+
+```perl
+use strict;
+use warnings;
+use LeanBridge::Variants;
+
+my $input = LeanBridge::Variants::Signal::Data->new(
+  count => 42, label => 'ready'
+);
+my $result = LeanBridge::Variants::next($input);
+
+if (ref($result) eq 'LeanBridge::Variants::Signal::Data') {
+  print $result->count, ': ', $result->label, "\n"; # 43: ready!
+} elsif (ref($result) eq 'LeanBridge::Variants::Signal::Idle') {
+  print "idle\n";
+} elsif (ref($result) eq 'LeanBridge::Variants::Signal::Stopped') {
+  print "stopped\n";
+} elsif (ref($result) eq 'LeanBridge::Variants::Signal::Marker') {
+  die "Invalid Unit payload" if defined($result->value);
+  print "marker\n";
+} else {
+  die "Unexpected constructor";
+}
+```
+
+Run `perl variants.pl`. The family itself has no usable `new`; construct a named
+case. Constructors reject missing, extra and duplicate fields. Calls check the
+exact generated class, the field set and each payload type. Unknown subclasses,
+unblessed hashes and tied constructor hashes reject. Empty constructors and a
+constructor carrying `undef` for Unit remain distinct.
+
+Payloads can contain all nineteen primitives, copied arrays and Lists, records,
+options, results, products and other admitted variants. Calls convert only the
+active payload through compiler-generated Lean helpers. Application code uses
+no native constructor numbers or object layouts.
+
+Fields and contained arrays remain mutable. Returned values own independent
+copied storage; Perl reference equality does not compare payload contents.
+Perl does not check that every constructor has a matching branch. Input fields
+are pinned before converters can invoke Perl code, and scoped cleanup releases
+partial conversions on failure. The existing 32-level schema limit and 16 MiB
+conversion budget apply; they do not bound the entire Perl heap or Lean working
+memory. Recursive, callable and identity-bearing payloads remain separate work.
+The [installed variant checks](../evidence/perl-variants-20260921.md) cover both
+source paths and all four pinned Perl ABIs.
+
 ### Lists
 
 Lean `List T` uses a plain array reference for inputs, results and record fields.
@@ -199,7 +250,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Prod α β / tuples` | `Plain two-element array reference (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two dense elements in an unblessed, untied array reference, preserving binary nesting and per-position validation. Inputs and outputs share a 16 MiB copied-value budget. Returned arrays, records, branch payloads and Math::BigInt values are independently owned. Perl reference equality is not deep value equality. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated blessed record with named fields` (input, result, field, callback input, callback result) | Ordinary source: Installed checks: limited. Reviewed IR: Not audited | Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Perl target value; named Lean contract in archive metadata and installed POD` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases preserve exact target conversion rules, original type names and independent copied storage. Nat requires nonnegative Math::BigInt; Unit uses undef; Char requires one Unicode scalar. Integer-scalar inputs include Perl native Boolean scalars as 0 or 1, matching the existing integer target checks. List/Array identity, Option/Result presence, 32-level schema depth and the 16 MiB shared copy budget remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `named Perl constructor class with keyword payloads` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Construct values with Family::Case->new(field => value). Calls require exact generated classes and fields. Empty constructors and undef Unit payloads stay distinct. Inputs and outputs own independent copied storage. Input fields are pinned before child conversion can invoke Perl. Compiler-owned helpers construct variants and read active payloads without exposing native constructor numbers or object layouts. Invalid tags reject before getters; scoped cleanup releases partial conversions on exceptions. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Generated resource object with close/closed and canonical identity` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `CODE reference, valid for the synchronous call` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `Plain array reference` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Plain dense unblessed, untied array references preserve empty Lists, order, duplicates and nesting. Returned arrays and mutable payloads own independent storage. Calls reject invalid containers, sparse elements, malformed payloads and oversized copies. Typed Lean helpers avoid cons-cell layout assumptions. Sequence slots are pinned before element conversion can invoke Perl code; exceptions release temporary values and preserve the original host error. Weak references to input arrays do not affect admission. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |

@@ -48,8 +48,9 @@ Select `--target cpp` for these packages. Add `--target c` for the
 variant builds also admit [Python](pypi.md#export-tagged-variants),
 [Rust](cargo.md#export-copied-tagged-variants),
 [.NET](nuget.md#export-copied-tagged-variants),
-[Java/Kotlin](maven.md#export-copied-tagged-variants) and
-[Ruby](rubygems.md#export-copied-tagged-variants) when each selected target accepts
+[Java/Kotlin](maven.md#export-copied-tagged-variants),
+[Ruby](rubygems.md#export-copied-tagged-variants) and
+[Perl](cpan.md#export-copied-tagged-variants) when each selected target accepts
 the full API. Other native hosts, PHP-Wasm and WIT variants remain pending.
 The C transport included
 in a C++ archive is an implementation layer; use the C target for its public API

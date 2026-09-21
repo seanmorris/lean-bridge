@@ -31,9 +31,9 @@ const perlType = (model, ref, seen = new Set()) => {
 		const type = definition(model, ref.id);
 		if(seen.has(type.id) || seen.size > 32) throw new TypeError("cyclic or deeply nested Perl alias contract");
 		if(type.kind === "alias") return perlType(model, type.target, new Set([...seen, type.id]));
-		if(type.kind !== "record") throw new TypeError("Perl aliases require copied target values");
-		const native = model.types.find(item => item.kind === "record" && item.name === type.source.declaration);
-		if(!native) throw new TypeError(`missing native Perl record: ${type.name}`);
+		if(!["record", "variant"].includes(type.kind)) throw new TypeError("Perl aliases require copied target values");
+		const native = model.types.find(item => item.kind === type.kind && item.name === type.source.declaration);
+		if(!native) throw new TypeError(`missing native Perl ${type.kind}: ${type.name}`);
 		return `${model.moduleName}::${native.name.split(".").at(-1)}`;
 	}
 	const children = ref.arguments.map(argument => perlType(model, argument, seen));
@@ -74,7 +74,7 @@ export const perlAliasApiDocs = (model, item) => {
  * @param aliases - Admitted alias catalog.
  */
 export const perlAliasPod = (model, aliases) => ["=head1 COPIED ALIASES", ""
-	, "Alias names, original targets and chains remain in the binding manifest and this POD. Call with ordinary Perl target values; aliases do not create separate packages or wrapper classes. Nat requires a nonnegative Math::BigInt; Int accepts negative values. Fixed-width and machine-word integers retain their ranges. Char requires one Unicode scalar. Unit uses undef. Copied payloads own independent storage. Existing copy budgets, schema depth and ownership checks apply. Variants, recursive copies, compound callables and identity-bearing alias targets remain unsupported."
+	, "Alias names, original targets and chains remain in the binding manifest and this POD. Call with ordinary Perl target values; aliases do not create separate packages or wrapper classes. Nat requires a nonnegative Math::BigInt; Int accepts negative values. Fixed-width and machine-word integers retain their ranges. Char requires one Unicode scalar. Unit uses undef. Copied payloads own independent storage. Existing copy budgets, schema depth and ownership checks apply. Recursive copies, compound callables and identity-bearing alias targets remain unsupported."
 	, "", "=over 4", ""
 	, ...aliases.flatMap(alias => [`=item ${code(alias.name)}`, "", `Contract: ${code(contractType(model, alias.target))}. Perl value: ${code(alias.perlType)}.`, ""])
 	, "=back", "", "=head1 RECORD FIELD CONTRACTS", ""

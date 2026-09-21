@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.62.0",
+  "contractVersion": "0.63.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,185 @@
   ],
   "evidence": [
     {
+      "id": "perl-variants-installed",
+      "kind": "installed",
+      "revision": "cd0e8c28abcd60c4eeaab42e9be8d27a1015f53c",
+      "command": "LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PERL_VARIANT_TEST=1 node --test tests/perl-variants.test.mjs; node --test tests/perl-variant-contract.test.mjs tests/perl-variant-evidence.test.mjs",
+      "scope": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps.",
+      "files": [
+        {
+          "path": ".github/workflows/perl-consumer.yml",
+          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+        },
+        {
+          "path": "docs/evidence/perl-variants-20260921.json",
+          "sha256": "7cf78040e757d3ebc805225def53797236fee73268674d6df8e0e12a18d1846d"
+        },
+        {
+          "path": "docs/evidence/perl-variants-20260921.md",
+          "sha256": "a3076f391dca48e23d27ac74f893be470d944b89567b22a8c0c20174e0e06d83"
+        },
+        {
+          "path": "nix/perl-engine-source-boundary.json",
+          "sha256": "f32dcd41b791708b0ed80b883715c5d6e61e18d1e8bd9c7b50d3b4882606101f"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/perl/Runtime.xs",
+          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+        },
+        {
+          "path": "src/backends/perl/copied-aliases.mjs",
+          "sha256": "1edfe52c00c5320d00f2b43fa84b783ad106e87a378c16b9e982e614ad623148"
+        },
+        {
+          "path": "src/backends/perl/copied-variants.mjs",
+          "sha256": "9331f4b7cbd781d633a2e04987c80cdd0f35507fd28ee828fc8f21725e2e5b32"
+        },
+        {
+          "path": "src/backends/perl/generate.mjs",
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+        },
+        {
+          "path": "src/backends/perl/runtime.h",
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "98616ea71e85e063d0e7112c90ebf2266f78628f378760147b22082df194b22e"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "e5f0e48af10bb3bbaf2cc7d69fd5604fbdd2972f934aafa8751f197ee9c9f396"
+        },
+        {
+          "path": "src/release/cpan-install.mjs",
+          "sha256": "1b19d72d6926f9b23ff7d5b6f325bc21c60934214d28cdd3f53e2c1fd819a10f"
+        },
+        {
+          "path": "src/release/cpan-package.mjs",
+          "sha256": "85299faf4476621826c9c9adeff0a76c650b88080c1124aa7395fc63dc84d289"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/perl-probe-build.pl",
+          "sha256": "d80752da6f3fc271dcb2020ef93d492025409ffaed7352f88eeba59f7a2acd69"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/perl-probe.h",
+          "sha256": "f41222979379e7c12a0f4345c1eef9fd26d455efaf2b02641ad6ab7407a0b766"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/Variants.lean",
+          "sha256": "b1ea2c169d60cb150f5f875067f6e872157e58c66a511cef052ba9ddf5630255"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/lakefile.toml",
+          "sha256": "b8f22b2c53854c50e791640dc7353c58c534478e48f0508f9365df5a1f789d31"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/package.json",
+          "sha256": "592387c172d140512602ddf70a9eb84391334c65f41c2e913f81ce9ff4bb9c85"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/Extra.lean",
+          "sha256": "e2974d8f0073ea7f7241e3c676824c911714a0cf6d6cc812f4f4c1c97b7e5968"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/perl-faults.pl",
+          "sha256": "d8cc57cb4a6719f6d0086ca720c2072b5ab893161874d554ab2e04e48cdaca71"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/perl.pl",
+          "sha256": "65e0ca1508cfe2270c605e96a41b8c2ad90cf84ec1a556a4b6c428d9c24d0271"
+        },
+        {
+          "path": "tests/helpers/c-variant-fixture.mjs",
+          "sha256": "f6446818fd57352ea8f2b6212c0ce0b8e0e984592bab8da7f9a393ae12b696f9"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/native-variant-fixture.mjs",
+          "sha256": "e95e4263f216c2ae1e4a6afad017af23fa229358d696a02633ca5e5702167d5e"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/perl-variant-install.mjs",
+          "sha256": "63bdc2c1a45bffc768ee08d6c2ea44d4034bac1bf4d7c31fb2452ee684fa1387"
+        },
+        {
+          "path": "tests/helpers/perl-variant-probe.mjs",
+          "sha256": "abc3d9415e12156081785187673d7add09dacc84207245be40b95cdd9a3f4511"
+        },
+        {
+          "path": "tests/helpers/variant-fixture.mjs",
+          "sha256": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754"
+        },
+        {
+          "path": "tests/perl-variant-contract.test.mjs",
+          "sha256": "f9a05835e894d3da217fa674951dd527c9ea316b6649edccdb15bc86231d7df6"
+        },
+        {
+          "path": "tests/perl-variant-evidence.test.mjs",
+          "sha256": "d60d8cc65a507e6a0638eae34d477cebfda3e374db28c04b7d5c2c6cfda1c06e"
+        },
+        {
+          "path": "tests/perl-variants.test.mjs",
+          "sha256": "dd80da25efca1e992570921d0eb7f25ce8aad3fd38ac446f4cd45ba6f1c347b3"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "ordinary-source/archives/LeanBridge-Variants-1.000.tar.gz",
+          "sha256": "59b9b65d0b95f125ab8a1fa4de69bc2d664841868380771192db90cfc821e951"
+        },
+        {
+          "path": "reviewed-ir/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "reviewed-ir/archives/LeanBridge-Variants-1.000.tar.gz",
+          "sha256": "6c6f2f2af0c0c1813c277a755ad559f750b6c932fc65c6b193f431f65ce30551"
+        }
+      ]
+    },
+    {
       "id": "ruby-variants-installed",
       "kind": "installed",
       "revision": "1ff88cb44fbcc9472333c9a747dc40e82f4c131a",
@@ -177,7 +356,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -368,7 +547,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -607,7 +786,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -802,7 +981,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -997,7 +1176,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1188,7 +1367,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1367,7 +1546,7 @@
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.json",
-          "sha256": "62fd3ac262ea925dce2decac048b0957dc0d315c999f88eeadf427788e52b486"
+          "sha256": "e907f6a19cfc5608aa9e7c64ffbea70afc8ccf1852e1879181636b3fc5d319bc"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.md",
@@ -1375,7 +1554,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1491,7 +1670,7 @@
         },
         {
           "path": "tests/native-variant-contract.test.mjs",
-          "sha256": "99f3422b284f2e740e5922059786efa645b3c31d609565c63b1ff50e65951f78"
+          "sha256": "696b1e87b02ce31070f522c26c091f199bfe4e4f7d4754097c1534e6f7243551"
         }
       ],
       "artifacts": [
@@ -1526,7 +1705,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1697,7 +1876,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1924,7 +2103,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2063,7 +2242,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
+          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
         },
         {
           "path": "docs/evidence/perl-aliases-20260921.json",
@@ -2075,7 +2254,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2095,11 +2274,11 @@
         },
         {
           "path": "src/backends/perl/copied-aliases.mjs",
-          "sha256": "aa965f24986b88f00f0c17d5845260e4aa0ae4514e893f735ca1ab8fa9cba438"
+          "sha256": "1edfe52c00c5320d00f2b43fa84b783ad106e87a378c16b9e982e614ad623148"
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -2222,7 +2401,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2373,7 +2552,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2560,11 +2739,11 @@
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "51527865f74a2bb628ce20149ffff3e53a175464764a9ad0f52ac9ab5adab0a2"
+          "sha256": "f748a992ff0c68fb80c3b0673870936cae5be850102e85af338f7d3d444c7aba"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "d6afda30c5b12841393075212d8d9c1d3e3c44fbf91a6dc97f7828db8e4e1ffe"
+          "sha256": "a7d7c97b3960b1d3373f308eae8c2e7cc281085fb0dd399febd025ee390c8ce2"
         },
         {
           "path": "docs/evidence/dotnet-aliases-20260921.json",
@@ -2576,15 +2755,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "3038873236752bb0117ea30bf2cc3608c5c00f8b9a380d86170dca2bc6b833dd"
+          "sha256": "f32dcd41b791708b0ed80b883715c5d6e61e18d1e8bd9c7b50d3b4882606101f"
         },
         {
           "path": "package.json",
-          "sha256": "e158f9d8e20ed949c6621c4863974e071e2061466ea98f1fb0150496c54fbb7e"
+          "sha256": "e7586ba956863245f67e6b3d04443cd356213ae968e53958c1421224604ca71e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2743,7 +2922,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2886,7 +3065,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3021,7 +3200,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3148,7 +3327,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
+          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
         },
         {
           "path": "docs/evidence/npm-aliases-20260921.json",
@@ -3172,7 +3351,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3323,7 +3502,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3462,7 +3641,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3657,7 +3836,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3896,7 +4075,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4103,7 +4282,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4294,7 +4473,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
+          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
         },
         {
           "path": "docs/evidence/perl-lists-20260921.json",
@@ -4310,7 +4489,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4350,7 +4529,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/backends/perl/naming.mjs",
@@ -4537,7 +4716,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4716,7 +4895,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4923,7 +5102,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5492,7 +5671,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5631,7 +5810,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -5754,7 +5933,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5973,7 +6152,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6156,7 +6335,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
+          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
         },
         {
           "path": "docs/evidence/perl-compounds-20260920.json",
@@ -6172,7 +6351,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6212,7 +6391,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/backends/perl/naming.mjs",
@@ -6399,7 +6578,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6578,7 +6757,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6785,7 +6964,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7346,7 +7525,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -7859,7 +8038,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "c8856c5692f1b1ce42b0eacedb1bba2793da401c4177a11fc78c4299b558be7b"
+          "sha256": "c13fcc5d7844afebe587942f1cb8d4146203e7d5a1155d77d70f4270f790b57a"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -7867,7 +8046,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8090,7 +8269,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -8229,7 +8408,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -8356,7 +8535,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -8595,7 +8774,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -8782,7 +8961,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -9005,7 +9184,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -9204,7 +9383,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -9415,7 +9594,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -9610,7 +9789,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -9741,7 +9920,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -9872,7 +10051,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -9991,7 +10170,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -10058,7 +10237,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -10102,15 +10281,15 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "122f45befaac2e3db38ae56882408225768e9ebc4e8c291eee423a7a8cb8c837"
+          "sha256": "524b683ec623266f198b5de00942d3734036d9440a1a5125dd1482e6f43696c8"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
+          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
         },
         {
           "path": "docs/evidence/perl-callables-20260918.json",
@@ -10201,7 +10380,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
+          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
         },
         {
           "path": "docs/evidence/platform-words-20260918.json",
@@ -10237,7 +10416,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "c8856c5692f1b1ce42b0eacedb1bba2793da401c4177a11fc78c4299b558be7b"
+          "sha256": "c13fcc5d7844afebe587942f1cb8d4146203e7d5a1155d77d70f4270f790b57a"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -10245,7 +10424,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -10305,7 +10484,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -10397,7 +10576,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "122f45befaac2e3db38ae56882408225768e9ebc4e8c291eee423a7a8cb8c837"
+          "sha256": "524b683ec623266f198b5de00942d3734036d9440a1a5125dd1482e6f43696c8"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -10580,7 +10759,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "a0dfe242a39ddcfb540003b20aaeb62d70c5dd6630c2e012026bf1160c37457d"
+          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
         },
         {
           "path": "docs/evidence/char-native-20260918.md",
@@ -10588,7 +10767,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -10624,7 +10803,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -11410,7 +11589,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "c4f71968a4059bb94aa2d3bb384e65b88a5fef3bdcacb0188e5e83236794fcdf"
+          "sha256": "112cf7a2ee0c8b0bfeb2a1c5b41f09181ab59028d41c404b6390d9ddcb97f265"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -12331,7 +12510,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "fe82668afdd30706c70405af02b4d7c9fecbd0908dfb087ed8d2012b0d4b09e3"
+          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -12831,6 +13010,144 @@
     }
   ],
   "observations": [
+    {
+      "id": "perl-variants-ordinary-source",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps.",
+      "hostTypes": {
+        "variant": {
+          "parameter": "named Perl constructor class with keyword payloads",
+          "result": "named Perl constructor class with keyword payloads",
+          "field": "named Perl constructor class with keyword payloads"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        }
+      },
+      "limitations": [
+        "Concrete non-recursive copied variants only; generic, indexed, proof-bearing, callable and identity-bearing payloads are not admitted.",
+        "32-level schema nesting and the shared 16 MiB per-call copy budget do not bound all Perl allocations or Lean working memory.",
+        "Constructor hashes and contained arrays remain mutable. Perl reference equality is not deep value equality, and Perl does not check pattern exhaustiveness. Unknown subclasses and tied or magical hashes reject.",
+        "The record covers pinned Perl 5.36.3 and 5.38.2, threaded and unthreaded, on Linux x86-64 with local glibc 2.36. It does not cover other architectures or weaken the normal release floor."
+      ],
+      "conversionNotes": {
+        "variant": "Construct values with Family::Case->new(field => value). Calls require exact generated classes and fields. Empty constructors and undef Unit payloads stay distinct. Inputs and outputs own independent copied storage. Input fields are pinned before child conversion can invoke Perl. Compiler-owned helpers construct variants and read active payloads without exposing native constructor numbers or object layouts. Invalid tags reject before getters; scoped cleanup releases partial conversions on exceptions."
+      }
+    },
+    {
+      "id": "perl-variants-reviewed-ir",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps.",
+      "hostTypes": {
+        "variant": {
+          "parameter": "named Perl constructor class with keyword payloads",
+          "result": "named Perl constructor class with keyword payloads",
+          "field": "named Perl constructor class with keyword payloads"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-variants-installed"
+          ],
+          "note": "Prepared CPAN archives expose named constructor classes with keyword payloads. Both ordinary-source and independently reviewed builds install offline across all four pinned Perl ABIs, relocate and execute twice without compilers after author and handoff removal. Each execution passes 53,680 assertions over 4,226 calls with 116 rejected inputs and recovery. Isolated compiled XS probes exercise all eighteen constructors, recover from 494 conversion failures and 64 partial-input rejections, preserve four host exceptions, reject seven malformed tags before accessors and handle three reentrant field mutations. All twenty-four installed files retain their hashes through relocation and execution. Independent builds reproduce original archives and installed payloads; Perl installation metadata contains local paths and timestamps."
+        }
+      },
+      "limitations": [
+        "Concrete non-recursive copied variants only; generic, indexed, proof-bearing, callable and identity-bearing payloads are not admitted.",
+        "32-level schema nesting and the shared 16 MiB per-call copy budget do not bound all Perl allocations or Lean working memory.",
+        "Constructor hashes and contained arrays remain mutable. Perl reference equality is not deep value equality, and Perl does not check pattern exhaustiveness. Unknown subclasses and tied or magical hashes reject.",
+        "The record covers pinned Perl 5.36.3 and 5.38.2, threaded and unthreaded, on Linux x86-64 with local glibc 2.36. It does not cover other architectures or weaken the normal release floor."
+      ],
+      "conversionNotes": {
+        "variant": "Construct values with Family::Case->new(field => value). Calls require exact generated classes and fields. Empty constructors and undef Unit payloads stay distinct. Inputs and outputs own independent copied storage. Input fields are pinned before child conversion can invoke Perl. Compiler-owned helpers construct variants and read active payloads without exposing native constructor numbers or object layouts. Invalid tags reject before getters; scoped cleanup releases partial conversions on exceptions."
+      }
+    },
     {
       "id": "ruby-variants-ordinary-source",
       "profiles": [

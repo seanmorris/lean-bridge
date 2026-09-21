@@ -444,3 +444,25 @@ copied payload semantics and installed identities.
 Thirteen of seventeen profiles now have installed tagged-variant acceptance.
 Perl, native PHP, PHP-Wasm and WIT/WASI remain. Bounded recursive values, compound
 callable payloads and explicitly owned identity aggregates remain assigned work.
+
+## Compiled Perl variants
+
+Prepared CPAN archives expose named constructor classes with keyword payloads.
+Both source paths pass 53,680 public assertions over 4,226 calls per execution,
+including 116 rejected inputs with recovery, on all four pinned Perl ABIs.
+Original runtime/component archives install offline after author removal,
+relocate and run twice without compiler access after handoff removal.
+Independent builds reproduce the archives and installed package payloads;
+Perl's path- and timestamp-bearing installation metadata is recorded separately.
+
+Isolated compiled XS probes exercise all eighteen constructors, recover from
+494 injected conversion failures and sixty-four partial-input rejections, and
+preserve four host exceptions. Seven malformed tags reject before accessors.
+Three reentrant field mutations check input pinning, and 1,132 payload reads
+use the correct constructor. Installed files remain unchanged. See the
+[Perl variant record](perl-variants-20260921.md) for exact-class validation,
+mutable payload semantics, cleanup checks and installed identities.
+
+Fourteen of seventeen profiles now have installed tagged-variant acceptance.
+Native PHP, PHP-Wasm and WIT/WASI remain. Bounded recursive values, compound
+callable payloads and explicitly owned identity aggregates remain assigned work.

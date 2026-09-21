@@ -13,7 +13,6 @@ import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-value
 import { createNativeModel, createPhpWasmCopiedModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
-import { validatePerlModel } from "../src/backends/perl/generate.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { nativeVariantReviewedIr } from "./helpers/native-variant-fixture.mjs";
 
@@ -90,5 +89,4 @@ test("unimplemented host projections still reject variants before generation", (
 		assert.throws(() => build(ir), /copied primitives, arrays or acyclic records/);
 	assert.throws(() => compilePrimitiveCSurface(ir, { ...options, variants: false }), /copied primitives, arrays or acyclic records/);
 	assert.throws(() => createPhpWasmCopiedModel(synthetic()), /PHP-Wasm compilation admits/);
-	assert.throws(() => validatePerlModel(createNativeModel(synthetic())), /Perl copied variants are not implemented/);
 });
