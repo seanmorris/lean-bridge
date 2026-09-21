@@ -55,6 +55,21 @@ See the [consumer example](../consume/rust.md#lists) and
 callbacks remain unsupported. Combined packages require every selected target
 to accept the same API.
 
+## Export named copied aliases
+
+Use concrete `abbrev` declarations or type-valued `def` declarations in your
+selected signatures. The compiler preserves their names and targets, and a
+reviewed contract must match them. Cargo packages export `pub type` declarations
+for supported copied primitives, containers and records, including alias chains.
+Generated names cannot collide with Rust types, public exports or runtime
+helpers. Alias inputs keep the target's borrowing rules; results own their data.
+
+No Cargo-specific alias configuration is needed. See the
+[consumer example](../consume/rust.md#named-aliases) and
+[installed crate checks](../evidence/rust-aliases-20260921.md). Native variants,
+recursive targets, compound callables and identity-bearing aggregates remain
+separate work. All selected targets must accept an alias's complete type graph.
+
 ## Export callbacks and closures
 
 Add concrete callable exports to your Lean module:

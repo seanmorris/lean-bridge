@@ -631,6 +631,8 @@ jobs:
           test -s build/compounds/rust.json
           LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs
           test -s build/lists/rust.json
+          LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs
+          test -s build/aliases/rust.json
           test -s build/type-corpus/rust.json
           test -s build/type-corpus/reviewed-native-rust.json
       - name: Upload installed Rust corpus observations
@@ -646,6 +648,7 @@ jobs:
             build/callables/rust.json
             build/compounds/rust.json
             build/lists/rust.json
+            build/aliases/rust.json
           if-no-files-found: error
           retention-days: 30
       - name: Record native consumer observations
@@ -685,6 +688,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"
               if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ]; then
                 result=failed
                 installed=false

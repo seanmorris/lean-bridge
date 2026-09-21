@@ -1,0 +1,907 @@
+{
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "tests/rust-aliases.test.mjs": "bb78330c697c6ac97db0b26a8057a615705a329da36e24c8637988b40d87f483",
+    "tests/rust-alias-contract.test.mjs": "bf53c1f6eb9a99ddc3feb96b352c3f67901225fde3df9eb8a998612d18b2b752",
+    "tests/fixtures/alias-consumers/rust.rs": "79f6a6d2b5c75e6a6a2317ec3cb9a3aee139dc6cf4840f3b307a8092df99abbf",
+    "tests/fixtures/alias-consumers/rust-invalid.json": "565fcd037eb2ed621332d1c75aa74f1ebe5efbe339137ff898867668ff758ae1",
+    "tests/fixtures/alias-consumers/rust-faults.rs": "39360cfb6ddaf2d646afe502c51db2447291b33838b8961f5b90064fcf865c66",
+    "tests/helpers/rust-alias-install.mjs": "e97ecb9bb2b47c3499b705abfc8fa9e1df2b09e6ca4292ef848717e524741f7c",
+    "tests/helpers/alias-fixture.mjs": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8",
+    "tests/helpers/native-alias-fixture.mjs": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/type-corpus-rust.mjs": "7203661ed2553808eba8d3b36af92c1cd3b881f0ec5158cb37ea34b247b8ea53",
+    "tests/fixtures/onboarding/native-aliases/Aliases.lean": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b",
+    "tests/fixtures/onboarding/native-aliases/lakefile.toml": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f",
+    "tests/fixtures/onboarding/native-aliases/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-aliases/package.json": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd",
+    "tests/fixtures/onboarding/native-aliases/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "primitives": {
+    "AUnit": "unit",
+    "ABool": "bool",
+    "AU8": "uint8",
+    "AU16": "uint16",
+    "AU32": "uint32",
+    "AU64": "uint64",
+    "AI8": "int8",
+    "AI16": "int16",
+    "AI32": "int32",
+    "AI64": "int64",
+    "ANat": "nat",
+    "AInt": "int",
+    "AF32": "float32",
+    "AF64": "float64",
+    "AText": "string",
+    "ABytes": "bytes",
+    "AChar": "char",
+    "AWord": "usize",
+    "ASignedWord": "isize"
+  },
+  "signatures": [
+    {
+      "name": "Aliases.echo_unit",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AUnit"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AUnit"
+      }
+    },
+    {
+      "name": "Aliases.echo_bool",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABool"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABool"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU8"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU16"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU32"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU64"
+      }
+    },
+    {
+      "name": "Aliases.echo_int8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI8"
+      }
+    },
+    {
+      "name": "Aliases.echo_int16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI16"
+      }
+    },
+    {
+      "name": "Aliases.echo_int32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI32"
+      }
+    },
+    {
+      "name": "Aliases.echo_int64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI64"
+      }
+    },
+    {
+      "name": "Aliases.echo_nat",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ANat"
+      }
+    },
+    {
+      "name": "Aliases.echo_int",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AInt"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AInt"
+      }
+    },
+    {
+      "name": "Aliases.echo_float32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF32"
+      }
+    },
+    {
+      "name": "Aliases.echo_float64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF64"
+      }
+    },
+    {
+      "name": "Aliases.echo_string",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AText"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.echo_bytes",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    },
+    {
+      "name": "Aliases.echo_char",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AChar"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AChar"
+      }
+    },
+    {
+      "name": "Aliases.echo_usize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_isize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ASignedWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ASignedWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ScalarsView"
+      }
+    },
+    {
+      "name": "Aliases.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Aliases.increment",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Count"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.OtherCount"
+      }
+    },
+    {
+      "name": "Aliases.make",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Count"
+      }
+    },
+    {
+      "name": "Aliases.label",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.change_packet",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.PacketView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.PacketView"
+      }
+    },
+    {
+      "name": "Aliases.reverse_packets",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Packets"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Packets"
+      }
+    },
+    {
+      "name": "Aliases.reverse_rows",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Rows"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Rows"
+      }
+    },
+    {
+      "name": "Aliases.echo_maybe",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Maybe"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Maybe"
+      }
+    },
+    {
+      "name": "Aliases.echo_outcome",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Outcome"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.duplicate",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.produce",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    }
+  ],
+  "reviewedIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+  "runs": [
+    {
+      "bindingIrSha256": "3a36a85c26bb8f1eb96ec0aeaaf1da983422d5bb6f7b6d63b7949d3de4c76e13",
+      "checks": 1278,
+      "compilerFreePath": true,
+      "consumerSha256": "79f6a6d2b5c75e6a6a2317ec3cb9a3aee139dc6cf4840f3b307a8092df99abbf",
+      "declarationsSha256": "109231ff069758d7f019eebeadd3858dd97254296a9bc3dd3e65fb8f54375ae8",
+      "dependencies": {
+        "archive": "rust-dependencies.tar.gz",
+        "lockSha256": "4b35b386926a376314cba9755d4ec398b1e2de01271dbfd7c6fbee56def8cf5f",
+        "packages": [
+          {
+            "checksum": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+            "directory": "autocfg-1.5.1",
+            "files": 22,
+            "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+          },
+          {
+            "checksum": "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71",
+            "directory": "block-buffer-0.10.4",
+            "files": 10,
+            "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+          },
+          {
+            "checksum": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+            "directory": "cfg-if-1.0.4",
+            "files": 13,
+            "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+          },
+          {
+            "checksum": "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280",
+            "directory": "cpufeatures-0.2.17",
+            "files": 16,
+            "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+          },
+          {
+            "checksum": "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a",
+            "directory": "crypto-common-0.1.7",
+            "files": 9,
+            "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+          },
+          {
+            "checksum": "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292",
+            "directory": "digest-0.10.7",
+            "files": 21,
+            "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+          },
+          {
+            "checksum": "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a",
+            "directory": "generic-array-0.14.7",
+            "files": 16,
+            "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+          },
+          {
+            "checksum": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+            "directory": "libc-0.2.189",
+            "files": 403,
+            "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+          },
+          {
+            "checksum": "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9",
+            "directory": "num-bigint-0.4.6",
+            "files": 50,
+            "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+          },
+          {
+            "checksum": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+            "directory": "num-integer-0.1.47",
+            "files": 16,
+            "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+          },
+          {
+            "checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+            "directory": "num-traits-0.2.19",
+            "files": 28,
+            "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+          },
+          {
+            "checksum": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+            "directory": "sha2-0.10.9",
+            "files": 31,
+            "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+          },
+          {
+            "checksum": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+            "directory": "typenum-1.20.1",
+            "files": 24,
+            "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+          },
+          {
+            "checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+            "directory": "version_check-0.9.5",
+            "files": 12,
+            "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+          }
+        ],
+        "sha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd"
+      },
+      "emptyCargoHome": true,
+      "executableSha256": "ea3b4d4d7aa403c43b992f15eae6238281a2d7058c36ad1284605a4c646d1e8d",
+      "faultChecks": 202,
+      "faultSourceSha256": "39360cfb6ddaf2d646afe502c51db2447291b33838b8961f5b90064fcf865c66",
+      "faultTests": 2,
+      "installedFilesSha256": "f0eb834e7947843daec1d1dd35a7603c4449ed22110777ecfbbcbe655c54b842",
+      "installedFilesUnchanged": true,
+      "installedSourcesRemoved": true,
+      "linkOnly": true,
+      "linkerSha256": "efc815dfc425e8ae1d86c67648082d3356bfe9a3817274b017b2f9175c1d4d0a",
+      "malformedSourceSha256": "b4a59a89f6971d5084bca6927b9372a41621087e6a23c92afd08ce95a2e2022e",
+      "modelSha256": "72490bd836c3b6ed3768a07db50d8df0925136c31e6182a40b658d4e46cbdf3b",
+      "nativeLibraries": {
+        "native/linux-x64/libaliases.so": {
+          "bytes": 78912,
+          "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+        },
+        "native/linux-x64/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "normalExitCleanup": true,
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51410220,
+              "path": "archives/aliases-api-1.0.0.crate",
+              "sha256": "93391b0f59846d75a9d18f6fd4d211cb0966888d0be26928f725218682125d05"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "aliases-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "rust",
+      "receiptSha256": "c24142b7379fd725a336ffa306a6547643136e0c68fac39fb2212b4354705a09",
+      "rejected": [
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "alias-scalar",
+          "sourceSha256": "9316ba8968a3679c505fa65820d5751e4b9a5d59e248e21be8fe8cd52814c1c1"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "alias-nat",
+          "sourceSha256": "ad68f4d2257b8b036dffff41cfa90afbbc18a586e95e03315d734f3df53583b5"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "alias-unit",
+          "sourceSha256": "cb0d5fb9dfdefba0b36e3c8d4c91e0927c35b2eb8a0d2a4710f5dceece58ba04"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "missing-borrow",
+          "sourceSha256": "23dcba0d7338b8164cb73c886f4da4e47c5181ce6db0ae288229aa211f948bea"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-option",
+          "sourceSha256": "374a7d612bd57c8c9d4abbdb6fe6da8d494d0ee1826ac6b735c07ae58ae52692"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-result",
+          "sourceSha256": "d4e81600eb5822213782bb4098f24c8da3568d6022abee9ec4b85de27f55c42a"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-field",
+          "sourceSha256": "883d2d7524cd48f58ee8fc5171b75d9907581dba71bf4ac7c1b8ac0e233ab36a"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-row",
+          "sourceSha256": "d946c0a0088444007cbffcbb7d636564690728413cf2ec5c0a589c9b2661d3cc"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-byte",
+          "sourceSha256": "3651c062a7ebde480177433b08f0eed2de96ecbb241d1cf8fd4de51885369729"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "domain-versus-boundary",
+          "sourceSha256": "38bd5209e55af6c5eb65a6ec19ebd8d277e865d3a2e583101cb6d2181c6e0e18"
+        },
+        {
+          "code": "overflowing_literals",
+          "diagnostics": 1,
+          "name": "fixed-overflow",
+          "sourceSha256": "ac45b54960274932e57824d6354e57e8f41aa422d4c10f30ca4b83b9f8df31f7"
+        },
+        {
+          "code": "overflowing_literals",
+          "diagnostics": 1,
+          "name": "word-overflow",
+          "sourceSha256": "9d00938440667b8b3c21c936dc97503fdecfc46cc636a24bd4d0b8372caedbe7"
+        }
+      ],
+      "rejectionSourceSha256": "565fcd037eb2ed621332d1c75aa74f1ebe5efbe339137ff898867668ff758ae1",
+      "relocatedExecutable": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "bcac52a18b0a2c07666a3c3d5895bf5c9eae1ec8dd31981fb047da8904ec308f",
+      "version": "rustc 1.90.0 (1159e78c4 2025-09-14)"
+    },
+    {
+      "bindingIrSha256": "831a719c3f9d40c5bb8bc80fc677ae30e795557cc782e4e3f9f03e437b7415e2",
+      "checks": 1278,
+      "compilerFreePath": true,
+      "consumerSha256": "79f6a6d2b5c75e6a6a2317ec3cb9a3aee139dc6cf4840f3b307a8092df99abbf",
+      "declarationsSha256": "365346ea131a36343a8e3798227c6697fef74256b4641db11d5bb808fdf44c81",
+      "dependencies": {
+        "archive": "rust-dependencies.tar.gz",
+        "lockSha256": "4b35b386926a376314cba9755d4ec398b1e2de01271dbfd7c6fbee56def8cf5f",
+        "packages": [
+          {
+            "checksum": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+            "directory": "autocfg-1.5.1",
+            "files": 22,
+            "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+          },
+          {
+            "checksum": "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71",
+            "directory": "block-buffer-0.10.4",
+            "files": 10,
+            "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+          },
+          {
+            "checksum": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+            "directory": "cfg-if-1.0.4",
+            "files": 13,
+            "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+          },
+          {
+            "checksum": "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280",
+            "directory": "cpufeatures-0.2.17",
+            "files": 16,
+            "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+          },
+          {
+            "checksum": "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a",
+            "directory": "crypto-common-0.1.7",
+            "files": 9,
+            "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+          },
+          {
+            "checksum": "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292",
+            "directory": "digest-0.10.7",
+            "files": 21,
+            "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+          },
+          {
+            "checksum": "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a",
+            "directory": "generic-array-0.14.7",
+            "files": 16,
+            "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+          },
+          {
+            "checksum": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+            "directory": "libc-0.2.189",
+            "files": 403,
+            "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+          },
+          {
+            "checksum": "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9",
+            "directory": "num-bigint-0.4.6",
+            "files": 50,
+            "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+          },
+          {
+            "checksum": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+            "directory": "num-integer-0.1.47",
+            "files": 16,
+            "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+          },
+          {
+            "checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+            "directory": "num-traits-0.2.19",
+            "files": 28,
+            "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+          },
+          {
+            "checksum": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+            "directory": "sha2-0.10.9",
+            "files": 31,
+            "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+          },
+          {
+            "checksum": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+            "directory": "typenum-1.20.1",
+            "files": 24,
+            "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+          },
+          {
+            "checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+            "directory": "version_check-0.9.5",
+            "files": 12,
+            "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+          }
+        ],
+        "sha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd"
+      },
+      "emptyCargoHome": true,
+      "executableSha256": "f679fc28621f7421ff8aefab27eb6e18b775ddbab8e9357ddbc2d579c6a3c63b",
+      "faultChecks": 202,
+      "faultSourceSha256": "39360cfb6ddaf2d646afe502c51db2447291b33838b8961f5b90064fcf865c66",
+      "faultTests": 2,
+      "installedFilesSha256": "ef032ab2b28a72731cc38dcb5af8cab0407a047c500018b0484e847f909acf23",
+      "installedFilesUnchanged": true,
+      "installedSourcesRemoved": true,
+      "linkOnly": true,
+      "linkerSha256": "efc815dfc425e8ae1d86c67648082d3356bfe9a3817274b017b2f9175c1d4d0a",
+      "malformedSourceSha256": "b4a59a89f6971d5084bca6927b9372a41621087e6a23c92afd08ce95a2e2022e",
+      "modelSha256": "03e547d76ef60562ff198a55077ae7b2a87c8b5b3a0810d2cacc903937e0a4ae",
+      "nativeLibraries": {
+        "native/linux-x64/libaliases.so": {
+          "bytes": 78912,
+          "sha256": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996"
+        },
+        "native/linux-x64/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 90864,
+          "sha256": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2"
+        },
+        "native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "normalExitCleanup": true,
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51416508,
+              "path": "archives/aliases-api-1.0.0.crate",
+              "sha256": "1a5d22e01a6afc97cf2bb13e11400f791ccd207161284355919ba250a87df715"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "aliases-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "rust",
+      "receiptSha256": "565a447ade8bd03cc419059021a2ca0766e1610ce9c6a1be22a92d6444384eef",
+      "rejected": [
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "alias-scalar",
+          "sourceSha256": "9316ba8968a3679c505fa65820d5751e4b9a5d59e248e21be8fe8cd52814c1c1"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "alias-nat",
+          "sourceSha256": "ad68f4d2257b8b036dffff41cfa90afbbc18a586e95e03315d734f3df53583b5"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "alias-unit",
+          "sourceSha256": "cb0d5fb9dfdefba0b36e3c8d4c91e0927c35b2eb8a0d2a4710f5dceece58ba04"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "missing-borrow",
+          "sourceSha256": "23dcba0d7338b8164cb73c886f4da4e47c5181ce6db0ae288229aa211f948bea"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-option",
+          "sourceSha256": "374a7d612bd57c8c9d4abbdb6fe6da8d494d0ee1826ac6b735c07ae58ae52692"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-result",
+          "sourceSha256": "d4e81600eb5822213782bb4098f24c8da3568d6022abee9ec4b85de27f55c42a"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-field",
+          "sourceSha256": "883d2d7524cd48f58ee8fc5171b75d9907581dba71bf4ac7c1b8ac0e233ab36a"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-row",
+          "sourceSha256": "d946c0a0088444007cbffcbb7d636564690728413cf2ec5c0a589c9b2661d3cc"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-byte",
+          "sourceSha256": "3651c062a7ebde480177433b08f0eed2de96ecbb241d1cf8fd4de51885369729"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "domain-versus-boundary",
+          "sourceSha256": "38bd5209e55af6c5eb65a6ec19ebd8d277e865d3a2e583101cb6d2181c6e0e18"
+        },
+        {
+          "code": "overflowing_literals",
+          "diagnostics": 1,
+          "name": "fixed-overflow",
+          "sourceSha256": "ac45b54960274932e57824d6354e57e8f41aa422d4c10f30ca4b83b9f8df31f7"
+        },
+        {
+          "code": "overflowing_literals",
+          "diagnostics": 1,
+          "name": "word-overflow",
+          "sourceSha256": "9d00938440667b8b3c21c936dc97503fdecfc46cc636a24bd4d0b8372caedbe7"
+        }
+      ],
+      "rejectionSourceSha256": "565fcd037eb2ed621332d1c75aa74f1ebe5efbe339137ff898867668ff758ae1",
+      "relocatedExecutable": true,
+      "repeatExecution": true,
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "28d6b87403dfd924af5b4ebbc60a63e2317a9379963ac52ba069b89777529bc1",
+      "version": "rustc 1.90.0 (1159e78c4 2025-09-14)"
+    }
+  ]
+}

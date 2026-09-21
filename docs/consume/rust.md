@@ -103,6 +103,39 @@ and unwinding. [Installed List checks](../evidence/rust-lists-20260920.md) cover
 both source paths, including executables moved away from their crate sources.
 List callback payloads remain unsupported.
 
+### Named aliases
+
+Concrete copied Lean aliases become public Rust `type` declarations. `Count`
+can name a `u32`, `ANat` a `BigUint`, and `Rows` a `Vec<Vec<Count>>`. Alias chains
+and record fields retain their names. Rust aliases share their target's type;
+they do not introduce a newtype, constructor or runtime wrapper.
+
+For the `aliases-api` acceptance package, use its prepared crate as your
+dependency and save this as `src/main.rs`:
+
+```rust
+use aliases_api::{echo_maybe, increment, make, reverse_rows, Count, Error, Maybe, OtherCount, Rows};
+
+fn main() -> Result<(), Error> {
+    let count: Count = make()?;
+    let next: OtherCount = increment(count)?;
+    assert_eq!(next, 42);
+
+    let rows: Rows = vec![vec![1, 2, 3], vec![]];
+    assert_eq!(reverse_rows(&rows)?, vec![vec![3, 2, 1], vec![]]);
+    let present: Maybe = Some(Some(()));
+    assert_eq!(echo_maybe(&present)?, present);
+    Ok(())
+}
+```
+
+Run `cargo run --release`. String aliases still accept `&str`; byte, Array and
+List aliases accept slices. Other aggregate inputs borrow their named type.
+Results own independent copies. An alias of `Nat` uses `BigUint`, so Rust rejects
+negative integers before the call. The [installed alias checks](../evidence/rust-aliases-20260921.md)
+cover both source paths, compile-time rejections, cleanup after errors and
+panics, and executables moved away from their crate sources.
+
 ### Callbacks and returned Lean closures
 
 Ordinary-source and reviewed-IR Cargo packages support synchronous callbacks and returned closures over all 19 primitives. Pass a Rust closure or function that returns `Result<T, Error>`. Callback arguments are owned Rust values, including `String`, `Vec<u8>`, `BigUint` and `BigInt`. The callback may borrow local state; Lean borrows the callback only for that call.
@@ -246,7 +279,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `&Result<T, E>` (input); `Result<T, E>` (result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | The inner `Result<T, E>` carries Lean Except. The function returns `Result<Result<T, E>, Error>` to distinguish bridge failures. One `?` propagates only the bridge error. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `&(A, B) (nested binary products)` (input); `(A, B) (nested binary products)` (result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed elements, preserving binary nesting. Inputs borrow the tuple; returned tuples own their payloads. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `&Generated struct` (input); `Generated struct` (result, field); `Generated owned struct (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Named typed structs use borrowed inputs and owned outputs, including empty and scalar-represented records. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Legacy Alpha aliases resolve to their target types; this inspection does not establish installed support for additional copied shapes. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `Source-named pub type of the ordinary Rust target value` (input, result, field); `Resolved target type` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Public type declarations, signatures and fields preserve alias names without newtype wrappers. Strings and sequences retain str and slice borrows; other aggregates borrow their alias. Results own independent copies. Alias targets retain exact widths, BigUint/BigInt and 16 MiB copy budgets. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Generated enum` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box / generated owned wrapper` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `FnMut(owned primitives) -> Result<T, Error>` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Call-scoped borrow; typed owned callback arguments; original errors and unwinding panic payloads return after native cleanup. Same-thread nested calls are supported. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

@@ -1,0 +1,14 @@
+[
+  {"name":"alias-scalar","statement":"let _: api::Count = true;","code":"E0308"},
+  {"name":"alias-nat","statement":"api::echo_nat(&api::BigInt::from(-1));","code":"E0308"},
+  {"name":"alias-unit","statement":"api::echo_unit(0u8);","code":"E0308"},
+  {"name":"missing-borrow","statement":"api::echo_maybe(Some(None));","code":"E0308"},
+  {"name":"wrong-option","statement":"api::echo_maybe(&Some(()));","code":"E0308"},
+  {"name":"wrong-result","statement":"api::echo_outcome(&Ok((1, true)));","code":"E0308"},
+  {"name":"wrong-field","statement":"let mut p: api::PacketView = todo!(); p.count = true;","code":"E0308"},
+  {"name":"wrong-row","statement":"api::reverse_rows(&[vec![true]]);","code":"E0308"},
+  {"name":"wrong-byte","statement":"api::echo_bytes(&[1u32]);","code":"E0308"},
+  {"name":"domain-versus-boundary","statement":"let _: Result<api::Count, api::Error> = api::echo_outcome(&Ok((1, vec![])));","code":"E0308"},
+  {"name":"fixed-overflow","statement":"let _: api::AU8 = 256;","code":"overflowing_literals"},
+  {"name":"word-overflow","statement":"let _: api::AWord = 18446744073709551616;","code":"overflowing_literals"}
+]

@@ -7,7 +7,7 @@ import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
 const reserved = new Set("dispatch invoke handle token __runtime std num_bigint sha2 as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while abstract become box do final gen macro override priv typeof unsized virtual yield try union Error Result Ok Err Vec String BigUint BigInt Sign Option Some None Drop Copy Clone Send Sync Default".split(" "));
 const scalars = { char: "char", unit: "()", bool: "bool", uint8: "u8", uint16: "u16", uint32: "u32", uint64: "u64", int8: "i8", int16: "i16", int32: "i32", int64: "i64", float32: "f32", float64: "f64", string: "String", bytes: "Vec<u8>", nat: "BigUint", int: "BigInt" };
-const privateTypes = new Set("Native NativeError Scope Owner Output OnceLock AtomicU32 Ordering assets LeanClosure Lease CallGuard CallbackState CallbackFailure u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64 str usize isize char".split(" "));
+const privateTypes = new Set("Native NativeError Scope Owner Output OnceLock AtomicU32 Ordering assets LeanClosure Lease CallGuard CallbackState CallbackFailure Box FnMut bool u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64 str usize isize char".split(" "));
 
 /**
  * Validate canonical Cargo coordinates without silently renaming them.
@@ -46,6 +46,12 @@ export const compileCopiedRustModel = ir => {
 				: copy.element ? `Vec<${copy.element.publicType}>` : scalars[copy.scalarName];
 		copy.ctype = copy.aggregate ? `T${copy.index}` : copy.scalarName === "unit" ? "u8" : copy.scalarName === "char" ? "u32" : copy.publicType;
 		copy.inputType = copy.scalarName === "string" ? "&str" : copy.scalarName === "bytes" ? "&[u8]" : copy.element ? `&[${copy.element.publicType}]` : copy.aggregate ? `&${copy.publicType}` : copy.publicType;
+	}
+	for(const alias of surface.aliases)
+	{
+		const name = alias.definition.name;
+		if(names.has(name) || privateTypes.has(name) || /^(?:T|B|Context)\d+$/.test(name)) fail(alias.definition, `Rust alias name collides: ${name}`);
+		names.add(name);
 	}
 	const signatures = new Map();
 	for(const [index, callback] of [...surface.callbacks.values()].entries())

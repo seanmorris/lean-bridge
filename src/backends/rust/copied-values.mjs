@@ -11,7 +11,28 @@ import { copiedRustAssets } from "./copied-assets.mjs";
 import { copiedRustConversions, copiedRustHelpers, copiedRustTypes } from "./copied-conversions.mjs";
 import { rustSite, rustSignature, rustCallablePublic, rustCallableSymbols, rustNativeFunction, rustCallableNative } from "./callables.mjs";
 
-const exported = model => ["Error", "BigInt", "BigUint", ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.functions.map(fn => fn.field)];
+const exported = model => ["Error", "BigInt", "BigUint", ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.aliases.map(alias => alias.definition.name), ...model.surface.functions.map(fn => fn.field)];
+const publicType = (model, ref, input = false) => {
+	const value = rustSite(model, ref), alias = ref.kind === "named" && model.surface.aliases.find(item => item.definition.id === ref.id);
+	if(value.type?.callable) return value[input ? "inputType" : "publicType"];
+	if(input)
+	{
+		if(["string", "bytes"].includes(value.scalarName)) return value.inputType;
+		if(value.element)
+		{
+			let target = ref;
+			while(target.kind === "named") target = model.ir.types.find(type => type.id === target.id).target;
+			return `&[${publicType(model, target.arguments[0])}]`;
+		}
+		return `${value.aggregate ? "&" : ""}${publicType(model, ref)}`;
+	}
+	if(alias) return alias.definition.name;
+	if(ref.kind !== "apply") return value.publicType;
+	const children = ref.arguments.map(argument => publicType(model, argument)).join(", ");
+	return ref.constructor === "tuple" ? `(${children})`
+		: `${{ array: "Vec", list: "Vec", option: "Option", result: "Result" }[ref.constructor]}<${children}>`;
+};
+const publicAliases = model => !model.surface.aliases.length ? "" : `\n${model.surface.aliases.map(alias => `pub type ${alias.definition.name} = ${publicType(model, alias.definition.target)};`).join("\n")}\n`;
 const publicSource = model => `//! Typed copied-value functions from ${model.ir.component.id}.
 #[cfg(not(all(target_os = "linux", target_arch = "x86_64", target_env = "gnu")))]
 compile_error!("This Lean crate requires Linux x86-64 with glibc");
@@ -44,11 +65,11 @@ ${rustCallablePublic(model)}
 
 ${model.surface.copies.filter(copy => copy.record).map(copy => `#[derive(Clone, Debug, PartialEq)]
 pub struct ${copy.publicName} {
-${copy.fields.map(field => `    pub ${field.name}: ${field.type.publicType},`).join("\n")}
+${copy.fields.map((field, index) => `    pub ${field.name}: ${publicType(model, copy.record.fields[index].type)},`).join("\n")}
 }
-`).join("\n")}
+`).join("\n")}${publicAliases(model)}
 ${model.surface.functions.map((fn, index) => `/// Lean export: ${fn.declaration.id}.
-pub fn ${fn.field}(${fn.parameters.map((parameter, i) => `${parameter.name}: ${rustSite(model, fn.declaration.parameters[i].type).inputType}`).join(", ")}) -> Result<${rustSite(model, fn.declaration.result.type).publicType}, Error> {
+pub fn ${fn.field}(${fn.parameters.map((parameter, i) => `${parameter.name}: ${publicType(model, fn.declaration.parameters[i].type, true)}`).join(", ")}) -> Result<${publicType(model, fn.declaration.result.type)}, Error> {
     __runtime::call${index}(${fn.parameters.map(parameter => parameter.name).join(", ")})
 }
 `).join("\n")}`;
@@ -112,6 +133,8 @@ export const renderCopiedRustPackage = (model, evidence = null, settings = {}) =
 	files["README.md"] += "\nLean Option uses Rust Option, Except E T uses Result<T, E>, and binary products use (A, B), preserving their nesting. None, Some(()) and Some(None) retain presence. Compound inputs are borrowed; returned contents are owned independent copies. An exported Except result has two Result layers: the outer Result reports bridge failures, while the inner Result preserves the Lean domain success or error. These copied types can nest with arrays and records; they cannot contain callbacks or resources.\n";
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs borrow Rust slices and return owned Vec values, including nested copied values and record fields. Empty Lists, order and duplicates are preserved. List and Array retain distinct contract identities. List callback payloads remain unsupported.\n";
+	if(model.surface.aliases.length)
+		files["README.md"] += "\nConcrete copied Lean aliases export named pub type declarations, retaining alias chains and named record fields. They use their targets' Rust values without newtype wrappers. String and byte inputs still borrow str and u8 slices; Array and List inputs borrow slices. Other aggregate inputs borrow their named aliases. Results own their copied contents. Aliases of Nat use BigUint, so negative inputs do not typecheck. Native variants, recursive and identity-bearing alias targets, and compound callable payloads remain unsupported.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: { id: "lean-wasm/rust-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), publicModule: "src/lib.rs", internalModule: "src/__runtime.rs", exports: exported(model), files: [...Object.keys(files), "binding-manifest.json"], capabilityGaps: [{ feature: "identity-and-effects", reason: "Cargo supports copied values and synchronous primitive callables; resources, compound callables and asynchronous operations remain outside this profile." }, { feature: "additional-platforms", reason: "The native profile requires Rust 1.90+ on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);
 };

@@ -161,8 +161,8 @@ records, variants and nested containers. See the
 [alias implementation and evidence](npm-aliases-20260921.md).
 
 Native private conversion helpers use the checked target representation while
-Binding IR retains alias names. C/C++ and Python now have the installed checks below.
-Installed alias acceptance and public declarations for the other nine consumer
+Binding IR retains alias names. C/C++, Python and Rust now have the installed checks below.
+Installed alias acceptance and target-language projections for the other eight consumer
 profiles remain open. Generic aliases, bounded recursion, compound callables and
 explicitly owned identity aggregates remain in the full structured-types goal.
 
@@ -194,7 +194,21 @@ installation, consumer execution has no compiler on PATH, and installed files
 retain their receipt hashes. See the
 [Python alias implementation and evidence](python-aliases-20260921.md).
 
-Alias parameters, results and fields now have installed acceptance in eight of
-seventeen profiles. The other nine profiles, remaining variants, bounded
+## Compiled Rust aliases
+
+Cargo crates export 27 public `type` declarations, retaining chains, compound
+targets and record fields. Strings and sequences keep borrowed `str` and slice
+inputs; other aggregates borrow their named type. Alias values reuse the
+target's ownership and validation without newtype wrappers.
+
+Ordinary-source and independently reviewed crates each pass 1,278 public checks,
+twelve compiler rejection cases and 202 injected error/panic cleanup cases.
+Consumers compile offline with a link-only C driver and no producer files.
+The executable runs twice more after relocation and removal of installed crate
+sources. Only six Rust alias cells gain installed evidence. See the
+[Rust alias implementation and evidence](rust-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in nine of
+seventeen profiles. The other eight profiles, remaining variants, bounded
 recursion, compound callables and explicitly owned identity aggregates remain
 part of VO1219.

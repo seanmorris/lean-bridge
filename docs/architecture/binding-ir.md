@@ -114,6 +114,13 @@ results, and an alias of Nat still rejects negative input. The
 [installed Python alias checks](../evidence/python-aliases-20260921.md) include
 strict checking and repeated execution after installation relocation.
 
+Rust exposes source-named `pub type` declarations, retaining alias chains and
+aliases inside compound targets and record fields. Strings and sequences keep
+`&str` and slice inputs; other aggregate inputs borrow their alias. Returned
+values own their copied data. The [installed Rust alias checks](../evidence/rust-aliases-20260921.md)
+verify both source paths, static rejection, error and panic cleanup, and
+source-free executables.
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:
