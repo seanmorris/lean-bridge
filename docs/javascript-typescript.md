@@ -317,7 +317,8 @@ as do [Python](evidence/python-lists-20260920.md) and
 [Rust](evidence/rust-lists-20260920.md), plus
 [C#](evidence/dotnet-lists-20260920.md) and
 [Java/Kotlin](evidence/jvm-lists-20260920.md), along with
-[Ruby](evidence/ruby-lists-20260921.md). Other native hosts and
+[Ruby](evidence/ruby-lists-20260921.md) and
+[Perl](evidence/perl-lists-20260921.md). Other native hosts and
 PHP-Wasm remain pending. Lists cannot contain callbacks
 or resources, or share a component with callable exports yet.
 

@@ -598,6 +598,22 @@ consumer twice without compilers. A separately compiled test-only XS copy inject
 conversion failures and exercises cleanup. Installed files remain unchanged.
 CI runs this suite for all four pinned ABIs and retains `build/compounds/perl.json`.
 
+Run the copied Perl List checks with the same interpreter selection:
+
+```sh
+LEAN_BRIDGE_PERL_LIST_TEST=1 node --test tests/perl-lists.test.mjs
+node --test tests/perl-list-contract.test.mjs
+```
+
+The [Perl List suite](../evidence/perl-lists-20260921.md) checks both source paths,
+all nineteen primitive elements, nested Lists and arrays, copied record fields,
+24-level Lists, invalid values and copy-limit recovery. It installs and relocates
+both CPAN archives, removes producer sources and the handoff, and repeats public
+execution without compilers. Separate test-only XS injects conversion failures,
+checks partial-input cleanup, preserves host exceptions and tests input mutation
+during element conversion. Installed files remain unchanged. CI runs all four
+pinned ABIs and retains `build/lists/perl.json`.
+
 Rust's generated callers independently check all 19 public function types per library, including borrowed inputs and owned `Result` values. Wrong types, signed `BigInt` values passed to `Nat` parameters and out-of-range fixed-width literals must fail compilation with the expected diagnostic at the consumer's input. These compiler checks stay separate from executed-case counts and runtime coverage. Additional installed calls reject over-budget strings with `Error::Limit` and recover on a valid call; copied records retain independent nested storage after either side is changed.
 
 C executes 94 positive catalog cases, rejects four negative-Nat cases at runtime, and rejects 26 invalid programs at compile time. C++ executes 92 positive cases, rejects four negative-Nat cases at runtime, and rejects 28 invalid programs at compile time. Both check all 19 public function signatures per library. C11 uses fatal conversion warnings for invalid fixed-width inputs; C++20 uses list-initialization narrowing checks. These are compiler policies, not dynamic range checks by the installed API. Both languages permit integer/boolean and integer/float conversions; C also permits the corpus's zero-valued unit marker as a `uint32_t`. Each accepted conversion must match the corresponding Lean call.

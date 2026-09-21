@@ -108,6 +108,35 @@ Branch classes live under the generated component namespace. They are mutable bl
 
 Input and output conversion share a 16 MiB copied-value budget. Type nesting is limited to 32 levels. These limits cover conversion payloads and slots, not all Perl allocations or Lean working memory. Resources and callbacks cannot appear inside copied values; compound callback arguments and results remain unsupported. The [installed checks](../evidence/perl-compounds-20260920.md) cover both source paths and all four pinned Perl ABIs.
 
+### Lists
+
+Lean `List T` uses a plain array reference for inputs, results and record fields.
+Pass `[]` for an empty List. Elements keep their existing mappings, including
+`Math::BigInt` for Nat/Int, `undef` for Unit and octet strings for ByteArray.
+For the package in the [author example](../publish/cpan.md#export-lists), save
+`lists.pl`:
+
+```perl
+use strict;
+use warnings;
+use LeanBridge::Lists;
+
+my $input = [1, 2, 1, 3];
+my $output = LeanBridge::Lists::reverse_uint32($input);
+print join(', ', @$output), "\n"; # 3, 1, 2, 1
+$output->[0] = 99;
+print join(', ', @$input), "\n";  # 1, 2, 1, 3
+```
+
+Run `perl lists.pl`. Lists preserve order, duplicates and nesting with arrays,
+records, options, results and products. Calls reject blessed, tied and sparse
+array references, invalid elements and over-budget copies. Returned arrays and
+mutable payloads own independent storage. Input and output conversion share the
+16 MiB copied-value budget; schema nesting is limited to 32 levels. List and
+Array remain distinct Lean and IR types even though both use array references.
+List callback payloads remain unsupported. The [installed checks](../evidence/perl-lists-20260921.md)
+cover both source paths and all four pinned Perl ABIs.
+
 ## Values and cleanup
 
 ### Type conversions
@@ -143,7 +172,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Generated resource object with close/closed and canonical identity` (input, result) | Ordinary source: Installed checks passed (input, result); Not audited (field, callback input, callback result). Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `CODE reference, valid for the synchronous call` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `Plain array reference` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Plain dense unblessed, untied array references preserve empty Lists, order, duplicates and nesting. Returned arrays and mutable payloads own independent storage. Calls reject invalid containers, sparse elements, malformed payloads and oversized copies. Typed Lean helpers avoid cons-cell layout assumptions. Sequence slots are pinned before element conversion can invoke Perl code; exceptions release temporary values and preserve the original host error. Weak references to input arrays do not affect admission. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `text scalar` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Inputs must be text scalars; numeric-only values and references are rejected. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `unsigned integer scalar (UV)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `signed integer scalar (IV)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |

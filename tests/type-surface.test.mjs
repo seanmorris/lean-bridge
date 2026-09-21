@@ -107,22 +107,22 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 	}
 });
 
-test("List evidence covers npm, C/C++, Python, Rust, C#, JVM and Ruby copied values without promoting other hosts or callables", () => {
+test("List evidence covers npm, C/C++, Python, Rust, C#, JVM, Ruby and Perl copied values without promoting other hosts or callables", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 78);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 84);
 	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
 	for(const cell of cells)
 	{
 		const copied = ["parameter", "result", "field"].includes(cell.position), npm = profiles.includes(cell.profile), native = ["c", "cpp"].includes(cell.profile), python = cell.profile === "python", rust = cell.profile === "rust", dotnet = cell.profile === "dotnet";
 		const jvm = ["java", "kotlin"].includes(cell.profile);
-		const ruby = cell.profile === "ruby";
-		if((npm || native || python || rust || dotnet || jvm || ruby) && copied)
+		const ruby = cell.profile === "ruby", perl = cell.profile === "perl";
+		if((npm || native || python || rust || dotnet || jvm || ruby || perl) && copied)
 		{
 			const pythonType = { parameter: "tuple[T, ...] | list[T]", result: "tuple[T, ...]", field: "tuple[T, ...] | list[T] (input); tuple[T, ...] (output)" };
-			assert.equal(cell.hostType, ruby ? "Array" : jvm ? cell.profile === "java" ? "T[] (primitive arrays for primitive elements)" : "primitive arrays or Array<T>" : dotnet ? "T[]" : rust ? cell.position === "parameter" ? "&[T]" : "Vec<T>" : python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
+			assert.equal(cell.hostType, perl ? "Plain array reference" : ruby ? "Array" : jvm ? cell.profile === "java" ? "T[] (primitive arrays for primitive elements)" : "primitive arrays or Array<T>" : dotnet ? "T[]" : rust ? cell.position === "parameter" ? "&[T]" : "Vec<T>" : python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
 			for(const stage of Object.values(cell.stages))
-			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [ruby ? "ruby-lists-installed" : jvm ? "jvm-lists-installed" : dotnet ? "dotnet-lists-installed" : rust ? "rust-lists-installed" : python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
+			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [perl ? "perl-lists-installed" : ruby ? "ruby-lists-installed" : jvm ? "jvm-lists-installed" : dotnet ? "dotnet-lists-installed" : rust ? "rust-lists-installed" : python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
 		} else
 		{
 			assert.equal(cell.stages.installedExecution.state, "unreviewed");

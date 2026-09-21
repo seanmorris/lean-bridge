@@ -146,24 +146,34 @@ const conversion = (model, type) => {
       av_push(output, SvREFCNT_inc(${write(child)}(aTHX_ scope, a${i})));`).join("\n      ")}
       return lbp_mortal(newRV_inc((SV *)output));`;
 	}
-	if(type.kind === "array")
+	if(type.kind === "array" || type.kind === "list")
 	{
+		const list = type.kind === "list";
 		from = `
-      if (!SvROK(value) || SvTYPE(SvRV(value)) != SVt_PVAV) croak("Array requires an array reference");
+      ${list ? "SvGETMAGIC(value);" : ""}
+      if (!SvROK(value) || SvTYPE(SvRV(value)) != SVt_PVAV${list ? " || SvOBJECT(SvRV(value)) || (SvMAGICAL(SvRV(value)) && mg_find(SvRV(value), PERL_MAGIC_tied))" : ""}) croak("${list ? "List requires a plain array reference" : "Array requires an array reference"}");
       AV *array = (AV *)sv_2mortal(SvREFCNT_inc(SvRV(value))); size_t length = av_count(array);
       if (length > 16 * 1024 * 1024 / sizeof(void *)) croak("native copied array exceeds the 16 MiB per-call limit");
       lbp_budget(scope, length * sizeof(void *));
+      ${list ? `/* Pin the sequence before an element converter can invoke Perl code. */
+      AV *slots = (AV *)sv_2mortal((SV *)newAV());
+      if (length) av_extend(slots, length - 1);
+      for (size_t i = 0; i < length; ++i) {
+        SV **entry = av_fetch(array, i, 0); if (!entry) croak("sparse Perl Lists are unsupported");
+        av_push(slots, SvREFCNT_inc(*entry));
+      }` : ""}
       lean_object *result = lean_alloc_array(length, length);
       /* Registration can fail and release result; every slot must already be valid. */
       for (size_t i = 0; i < length; ++i) lean_array_set_core(result, i, lean_box(0));
       lbp_keep(scope, result);
       for (size_t i = 0; i < length; ++i) {
-        SV **entry = av_fetch(array, i, 0); if (!entry) croak("sparse Perl arrays are unsupported");
+        SV **entry = av_fetch(${list ? "slots" : "array"}, i, 0); if (!entry) croak("sparse Perl arrays are unsupported");
         ${nativeCType(type.element)} item = ${read(type.element)}(aTHX_ scope, sv_2mortal(SvREFCNT_inc(*entry)));
         lean_array_set_core(result, i, ${box(type.element, "item")});
       }
-      return result;`;
+      ${list ? `lean_inc(result); return ${keep(`lb_t${type.key}_from_array(result)`)};` : "return result;"}`;
 		to = `
+      ${list ? `lean_inc(value); value = ${keep(`lb_t${type.key}_to_array(value)`)};` : ""}
       size_t length = lean_array_size(value);
       if (length > 16 * 1024 * 1024 / sizeof(void *)) croak("native copied array exceeds the 16 MiB per-call limit");
       lbp_budget(scope, length * sizeof(void *));
@@ -245,12 +255,11 @@ ${name}(...)
  */
 export const validatePerlModel = model => {
 	if(model?.profile !== "native-library-v1" || model.pointerBits !== 64) throw new TypeError("Perl requires the checked native-library-v1 model");
-	const containsCompound = type => ["option", "result", "tuple"].includes(type.kind)
+	const containsCompound = type => ["option", "result", "tuple", "list"].includes(type.kind)
 		|| (type.kind === "array" && containsCompound(type.element))
 		|| (type.kind === "record" && type.fields.some(field => containsCompound(field.type)));
 	model.types.forEach(({ key, ...type }) => {
     validateNativeType(type);
-    if(type.kind === "list") throw Object.assign(new TypeError("Perl List adapters are not implemented"), { code: "unsupported-perl-signature" });
     if(type.kind === "callback" && [...type.parameters, type.result].some(containsCompound))
       throw Object.assign(new TypeError("Perl compound callbacks are not implemented"), { code: "unsupported-perl-signature" });
     if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
@@ -365,6 +374,8 @@ _callback_${type.key}(...)
 	if(branches.length) pm.push("=head1 COPIED VALUES", ""
 		, "Option uses undef for None and Some->new($value) for Some, including Some->new(undef). Unit uses undef. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested."
 		, "", "Branches are mutable one-field hashes. Calls check the exact class and field set, reject tied branches and products, and copy their contents. Returned arrays, records and payloads are independent of input values. Perl reference equality is not deep value equality. The shared per-call copied-value limit is 16 MiB; schema nesting is limited to 32 levels. Compound callbacks and resources inside copied values are unsupported.", "");
+	if(model.types.some(type => type.kind === "list")) pm.push("=head1 LISTS", ""
+		, "Lean List inputs, results and record fields use copied plain array references. Calls reject blessed, tied and sparse arrays. Empty Lists, order, duplicates and nesting are preserved. Slots are pinned before element conversion can invoke Perl code. Returned arrays and mutable payloads own independent storage. List and Array retain distinct IR/native identities. Typed Lean helpers perform List conversion without inspecting cons-cell layouts. The shared per-call copied-value limit is 16 MiB; List callback payloads remain unsupported.", "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
 	return {

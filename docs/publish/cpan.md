@@ -145,7 +145,30 @@ Select `Compounds` in `modules` and its three functions in `exports`. Set `targe
 
 Perl uses `undef` or `Some` for options, distinct `Ok` and `Err` wrappers for results, and two-element array references for binary products. Constructors appear under the component namespace when needed; record or resource names that collide with them are rejected before linking. All nineteen primitives work inside these copied types, including `Math::BigInt`, Unit, Unicode strings and octet strings. Fields and arrays may contain compounds.
 
-Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32. Lists, recursive copied types, arbitrary variants and compound callback signatures require further adapter work. Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
+Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32. Recursive copied types, arbitrary variants and compound callback signatures require further adapter work. Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
+
+## Export Lists
+
+Add this definition to `Lists.lean`:
+
+```lean
+namespace Lists
+def reverse_uint32 (values : List UInt32) : List UInt32 := values.reverse
+end Lists
+```
+
+Select `Lists` in `modules`, `Lists.reverse_uint32` in `exports`, and set
+`targets.cpan.module` to `LeanBridge::Lists`. Build with the ordinary CPAN command
+above. No List-specific configuration is required. The [consumer example](../consume/perl.md#lists)
+calls the installed package with a plain array reference.
+
+Copied Lists work in parameters, results and record fields on both source paths.
+They retain order, duplicates and nesting with all nineteen primitives, arrays,
+options, results, products and acyclic records. Typed Lean helpers convert Lists
+without inspecting cons-cell layouts. The [installed record](../evidence/perl-lists-20260921.md)
+covers all four pinned Perl ABIs, independent output storage, malformed inputs,
+copy limits, exceptions during conversion and recovery. List callback payloads
+and copied resource identities remain unsupported.
 
 ## Verify the release candidate
 

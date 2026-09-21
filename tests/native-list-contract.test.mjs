@@ -13,7 +13,6 @@ import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mj
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
 import { generateGmpProjection } from "../src/backends/c/gmp-projection.mjs";
 import { compilePrimitiveCppModel, renderPrimitiveCppPackage } from "../src/backends/cpp/primitives.mjs";
-import { validatePerlModel } from "../src/backends/perl/generate.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { listReviewedIr, listSignatures } from "./helpers/list-fixture.mjs";
 import { nativeListConsumer } from "./helpers/native-list-consumers.mjs";
@@ -72,7 +71,6 @@ test("C and C++ keep List and Array identities with shared copied sequence stora
 
 test("unimplemented native List hosts and copied List callbacks fail closed", () => {
 	assert.throws(() => compilePrimitiveCSurface(listReviewedIr(), { compounds: true }), { code: "unsupported-native-c-signature" });
-	assert.throws(() => validatePerlModel(model()), { code: "unsupported-perl-signature" });
 	const ir = listReviewedIr(), declaration = ir.declarations.find(item => item.name === "reverse_uint32");
 	declaration.parameters[0].ownership = "borrow";
 	assert.throws(() => compilePrimitiveCSurface(ir, { lists: true, compounds: true }), /copy ownership/);
