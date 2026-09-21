@@ -71,6 +71,7 @@ test("CLI archives are deterministic, dependency-free, and contain the complete 
 		assert.deepEqual(first.report, second.report);
 		assert.equal(first.report.runtimeIncluded, false);
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedDotnetPackage } from './src/backends/dotnet/copied-values.mjs'; if (typeof generateCopiedDotnetPackage !== 'function') throw new Error('Missing .NET generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedJvmPackage } from './src/backends/jvm/copied-values.mjs'; if (typeof generateCopiedJvmPackage !== 'function') throw new Error('Missing JVM generator');"], { cwd: first.directory });
 		assert.equal(first.report.productionApproved, false);
 		assert.equal(first.report.externalRegistryWrites, false);
 		const manifest = JSON.parse(await readFile(join(first.directory, "package.json"), "utf8"));

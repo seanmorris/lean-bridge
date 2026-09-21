@@ -48,6 +48,22 @@ Ordinary-source and reviewed-IR builds support `List T` in inputs, results and c
 
 Java callers use typed arrays; Kotlin uses the corresponding primitive or reference arrays. `List UInt32`, for example, uses Java `long[]` and Kotlin `LongArray`. The generated conversions preserve order, duplicates, nesting and independent result storage. The existing copy budgets and 32-level type limit apply. List callback payloads remain unsupported. See the [Java](../consume/java.md#lists) and [Kotlin](../consume/kotlin.md#lists) examples and the [installed Maven evidence](../evidence/jvm-lists-20260920.md).
 
+## Export named copied aliases
+
+Ordinary-source and reviewed-IR builds preserve concrete copied aliases over
+supported primitives, containers and records. Keep alias names and targets in
+a reviewed contract; flattening them changes that contract and fails compiler
+reconciliation. The generated Java API uses transparent target values. Its
+manifest, README and source documentation retain alias identities and chains,
+including their use at parameters, results and record components.
+
+Java and Kotlin consume the same JAR. This profile does not export wrapper
+classes or separate Kotlin `typealias` declarations. Aliasing retains target
+checks: UInt32 uses range-checked `long`/`Long`, and Nat still rejects negative
+`BigInteger` values. See the [Java](../consume/java.md#named-copied-aliases) and
+[Kotlin](../consume/kotlin.md#named-copied-aliases) examples and the
+[installed Maven evidence](../evidence/jvm-aliases-20260921.md).
+
 ## Export callbacks and returned functions
 
 Select primitive callable exports in `lean-bridge.exports.json`:

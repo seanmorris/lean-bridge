@@ -222,7 +222,20 @@ Both source paths pass 3,876 public checks, twelve compiler rejection cases,
 .NET runtime, no SDK or producer sources. See the
 [.NET alias implementation and evidence](dotnet-aliases-20260921.md).
 
-Alias parameters, results and fields now have installed acceptance in ten of
-seventeen profiles. The other seven profiles, remaining variants, bounded
-recursion, compound callables and explicitly owned identity aggregates remain
-part of VO1219.
+## Compiled Java and Kotlin aliases
+
+Prepared Maven packages preserve 27 copied alias names, targets and chains in
+their binding manifest and generated Java source documentation. Both languages
+use the same Java API with ordinary target values. The profile adds no wrapper
+classes or separate Kotlin typealias declarations.
+
+Both source paths pass 3,711 checks per language, twelve compiler rejection
+programs per language, 237 injected conversion failures, eighteen malformed
+native-value checks and 64 partial-input failures. Consumers install offline
+after producer removal and run twice after relocation using only a private JVM.
+See the [Java/Kotlin alias evidence](jvm-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in twelve of
+seventeen profiles. Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI remain. Native
+variants, bounded recursion, compound callables and explicitly owned identity
+aggregates also remain part of VO1219.

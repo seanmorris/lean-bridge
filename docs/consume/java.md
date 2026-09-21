@@ -73,6 +73,37 @@ class Example {
 
 Compile and run using the [prepared JAR commands](#call-an-ordinary-lean-package). Pass arrays, not `java.util.List`, boxed numeric arrays or streams. Copies preserve order, duplicates and every nesting level; returned mutable values have independent storage. Nulls, invalid payloads and oversized copies throw. Native sequence lengths and buffer alignment are checked before allocation or element reads. The existing budgets and 32-level type limit apply. [Installed List checks](../evidence/jvm-lists-20260920.md) cover both source paths, compiler rejections, cleanup and runtime-only deployment. List callback payloads remain unsupported.
 
+### Named copied aliases
+
+Copied Lean aliases use ordinary Java target types. An alias of UInt32 uses
+checked `long`, an alias of Nat uses `BigInteger`, and an alias of
+`Array (List UInt32)` uses `long[][]`. The prepared JAR retains alias names,
+original targets and chains in its manifest, README and generated Java source
+documentation. Parameters, results and record components retain their contract
+names. Aliases add no wrapper classes.
+
+For the `org.leanbridge:aliases:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import java.math.BigInteger;
+import org.leanbridge.aliases.Api;
+
+class Example {
+    public static void main(String[] args) {
+        long count = Api.make();
+        System.out.println(Api.increment(count)); // 42
+        System.out.println(Api.echoNat(BigInteger.ONE.shiftLeft(200)));
+        long[][] rows = Api.reverseRows(new long[][] {{1, 2, 3}, {}});
+        System.out.println(rows[0][0]); // 3
+    }
+}
+```
+
+Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package).
+Nat still rejects negative `BigInteger` values while Int accepts them; UInt32
+rejects values outside `0..4294967295`. Arrays and record contents remain copied.
+See the [installed alias checks](../evidence/jvm-aliases-20260921.md).
+
 ### Options, results and products
 
 Ordinary-source and reviewed Maven packages support `Option`, `Except` and nested binary products, including mixtures with arrays, Lists and copied records. The JAR supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches, plus a `Pair<A, B>` record.
@@ -266,7 +297,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `Result<T, E>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` uses success-first `Result<T, E>.ok(value)` or `.err(error)`. Generated sealed Ok/Err records support exhaustive matching. isOk() selects guarded value()/error(). Domain errors return Err; bridge failures throw exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `Pair<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed generated Pair elements, preserving binary nesting. Kotlin uses this generated record, not kotlin.Pair. Inputs are copied; returned arrays own independent storage. Record equality compares array fields by reference. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated Java record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `Java target value; named Lean contract in Maven metadata and Java source docs` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases retain exact target ranges and copied storage. Nat rejects negative BigInteger while Int accepts it; UInt32 uses range-checked long/Long. Generic compound payloads box primitives; arrays retain primitive storage. Generated Unit inputs and void outputs stay distinct. The original List/Array identities, nested Option/Result presence and copy limits remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Typed Fn...To... functional interface` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous functional interfaces accept Java and Kotlin lambdas. Call-scoped native stubs retain their targets. Callback failures preserve the same Throwable, stack and suppressed exceptions after cleanup. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

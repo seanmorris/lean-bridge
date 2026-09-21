@@ -7,6 +7,7 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { compileCopiedJvmModel } from "./copied-model.mjs";
 import { copiedJvmAssets } from "./copied-assets.mjs";
 import { copiedJvmConversions, copiedJvmHelpers, copiedJvmScope } from "./copied-conversions.mjs";
+import { jvmCopiedAliases, jvmAliasCatalogDocs, jvmAliasSiteDocs, jvmAliasReadme } from "./copied-aliases.mjs";
 import { jvmValue, jvmResult, jvmNativeCall, jvmCallableState, jvmCallablePublic, jvmCallableRuntime } from "./callables.mjs";
 
 const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(jvmValue(model, site.type))} arg${index}`).join(", ");
@@ -47,10 +48,10 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
 	const files = {
 		[`${prefix}/Unit.java`]: `package ${model.namespace};\npublic enum Unit { INSTANCE }\n`
 		, [`${prefix}/LeanBridgeException.java`]: `package ${model.namespace};\npublic final class LeanBridgeException extends RuntimeException {\n    private static final long serialVersionUID = 1L;\n    LeanBridgeException(String message, Throwable cause) { super(message, cause); }\n}\n`
-		, [`${prefix}/Api.java`]: `package ${model.namespace};\npublic final class Api {\n    private Api() { }\n${model.surface.functions.map((fn, index) => `    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) { ${fn.resultType === "void" ? "" : "return "}Runtime.call${index}(${fn.declaration.parameters.map((_, n) => `arg${n}`).join(", ")}); }`).join("\n")}\n}\n`
+		, [`${prefix}/Api.java`]: `package ${model.namespace};\n${jvmAliasCatalogDocs(model)}public final class Api {\n    private Api() { }\n${model.surface.functions.map((fn, index) => `${jvmAliasSiteDocs(model, fn.declaration.parameters.map((site, n) => ({ name: `arg${n}`, type: site.type })), fn.declaration.result.type, fn.resultType === "void")}    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) { ${fn.resultType === "void" ? "" : "return "}Runtime.call${index}(${fn.declaration.parameters.map((_, n) => `arg${n}`).join(", ")}); }`).join("\n")}\n}\n`
 	};
 	for(const copy of model.surface.copies.filter(copy => copy.record))
-		files[`${prefix}/${copy.publicName}.java`] = `package ${model.namespace};\npublic record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) { }\n`;
+		files[`${prefix}/${copy.publicName}.java`] = `package ${model.namespace};\n${jvmAliasSiteDocs(model, copy.record.fields.map((field, index) => ({ name: copy.fields[index].publicName, type: field.type })))}public record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) { }\n`;
 	for(const callback of model.surface.callbacks.values())
 		files[`${prefix}/${callback.publicName}.java`] = jvmCallablePublic(model, callback);
 	if(model.surface.copies.some(copy => copy.compound))
@@ -60,9 +61,12 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
 	files[internalFiles[2]] = `package ${model.namespace};\nimport java.lang.foreign.*;\n${copiedJvmScope}\n`;
 	files["README.md"] = `# ${model.namespace}\n\nCall ${model.namespace}.Api from Java or Kotlin. Requires Java 22 or newer with --enable-native-access=ALL-UNNAMED on Linux x86-64. Prepared Maven JARs contain their native adapter, component and shared Lean runtime. No compiler, JNI declarations or runtime-path settings are needed by the consumer.\n\nUInt8/UInt16 use checked int, UInt32 uses checked long, and UInt64/Nat/Int use java.math.BigInteger. Signed values use corresponding JVM primitives. Unit parameters use Unit.INSTANCE; Unit results return void. Arrays, byte arrays and record contents are copied on calls. Null, invalid unsigned ranges and malformed UTF-16 are rejected. Pure acyclic copied values are bounded to 32 type levels and a 16 MiB native input/output conversion budget. Native assets are verified and extracted into private process-lifetime temporary directories, removed at normal JVM shutdown.\n`;
 	if(model.surface.copies.some(copy => copy.compound)) files["README.md"] += "\nOption<T> is a sealed None/Some hierarchy with none()/some(value) factories and isSome()/value(). Result<T,E> preserves Lean Except through ok(value)/err(error), isOk()/value()/error(). Inactive payload access throws; null containers and payloads reject. Nested Unit options remain distinct. Domain errors return Err; bridge failures throw exceptions. Pair<A,B> retains binary product nesting. These generic types box primitive payloads and compose with copied arrays and records. Import the generated Pair explicitly in Kotlin; it is not kotlin.Pair. Java record equality keeps reference equality for array payloads.\n";
+	files["README.md"] += jvmAliasReadme(model);
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "jvm-copied-v1", target: "jvm", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, files: Object.keys(files), publicFiles, internalFiles, packageFiles: [], supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "owned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary Maven admits copied values and synchronous primitive callables, not resources, compound callables or async delivery." }, { feature: "additional-platforms", reason: "The compiled native profile is Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean Lists use copied Java arrays and the corresponding Kotlin array types in inputs, results and record fields. Primitive arrays retain their primitive element type. Empty Lists, order, duplicates and nesting are preserved; returned arrays own independent storage. List and Array retain distinct IR/native identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
+	if(model.surface.aliases.length)
+		files["binding-manifest.json"] = `${JSON.stringify({ ...JSON.parse(files["binding-manifest.json"]), aliases: jvmCopiedAliases(model) }, null, 2)}\n`;
 	return Object.freeze(files);
 };
 

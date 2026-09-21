@@ -1,0 +1,3217 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "d347dc3dc40e0fb151eb6fdb55950b5e1d3138aa",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "wordBits": 64,
+  "jdk": "22.0.2",
+  "kotlin": "2.2.0",
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "reportSha256": "25083f011518c009e762ffaf49623cdacc8e9f72e065b2648225709d9efeb5cf",
+  "sourceHashes": {
+    "tests/jvm-aliases.test.mjs": "43fe714350d24a0e704a2983ae80b27bc66606e0cbd5a87e7e7c84110871f32d",
+    "tests/jvm-alias-contract.test.mjs": "d04f456c2c7fe612d38f6d59956c9031cd27d85da38702ed8a870e0d9ce175be",
+    "tests/helpers/jvm-alias-fixture.mjs": "461d4e4ebbc45e79a6694e3eaaa34ba9d3604f1db3fe4063c997b732cab63229",
+    "tests/helpers/jvm-alias-install.mjs": "4b7e34bf5e937b464e6adf1048ab2fcd56aa932e996f87e5e46cc917527c55b0",
+    "tests/helpers/jvm-alias-faults.mjs": "c975c6f4e3062a0317e2a2d1c62b51be744ad51ade3c5cf73deba285f7038870",
+    "tests/helpers/type-corpus-jvm.mjs": "ae6da42425c8d6a14688f1477e257e2dec8b0e66a0b7fa284b456c3d1966ffb3",
+    "tests/helpers/type-corpus-jvm-tools.mjs": "33cea0cde3652ccccb073b445d19e294485e83a4fd60aa9152f80612287af91c",
+    "tests/helpers/type-corpus-compiler.mjs": "020290f8ed04a935b51fb1a2b53e3b213884d36d891c5eacba8850194f181fa0",
+    "tests/fixtures/alias-consumers/java.java": "2a8fac37bd12dd89de4f9dd464e7f8bf941d8d12c3b077540efeee7f0243a768",
+    "tests/fixtures/alias-consumers/kotlin.kt": "c6955a295a1ec201c28aadc040ce04cccdfef4103bb5c2a47fae9aea62b63190",
+    "tests/fixtures/alias-consumers/jvm-faults.java": "afaae411c79a22990aa28e8e80d4cc3a712fab06b848bd00c37ce0c1f35ed0ef",
+    "tests/fixtures/type-corpus/consumers/Wire.java": "7f06af43999b7d3b62b415ee30c212735cae26a889f4fc360b670ea7dbeda8b6",
+    "tests/helpers/alias-fixture.mjs": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8",
+    "tests/helpers/native-alias-fixture.mjs": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/fixtures/onboarding/native-aliases/Aliases.lean": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b",
+    "tests/fixtures/onboarding/native-aliases/lakefile.toml": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f",
+    "tests/fixtures/onboarding/native-aliases/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-aliases/package.json": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd",
+    "tests/fixtures/onboarding/native-aliases/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "consumerHashes": {
+    "java": "1a50440fb0dfa5e1f88ea7cd0116b0e0c0e60658aab0d3c2baac2bdb6e97350a",
+    "kotlin": "7aa13ffcedfc3d930199c03cdd34c82bdda37114b3da8d36ad7b71e69bca562c"
+  },
+  "primitives": {
+    "AUnit": "unit",
+    "ABool": "bool",
+    "AU8": "uint8",
+    "AU16": "uint16",
+    "AU32": "uint32",
+    "AU64": "uint64",
+    "AI8": "int8",
+    "AI16": "int16",
+    "AI32": "int32",
+    "AI64": "int64",
+    "ANat": "nat",
+    "AInt": "int",
+    "AF32": "float32",
+    "AF64": "float64",
+    "AText": "string",
+    "ABytes": "bytes",
+    "AChar": "char",
+    "AWord": "usize",
+    "ASignedWord": "isize"
+  },
+  "signatures": [
+    {
+      "name": "Aliases.echo_unit",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AUnit"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AUnit"
+      }
+    },
+    {
+      "name": "Aliases.echo_bool",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABool"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABool"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU8"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU16"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU32"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU64"
+      }
+    },
+    {
+      "name": "Aliases.echo_int8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI8"
+      }
+    },
+    {
+      "name": "Aliases.echo_int16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI16"
+      }
+    },
+    {
+      "name": "Aliases.echo_int32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI32"
+      }
+    },
+    {
+      "name": "Aliases.echo_int64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI64"
+      }
+    },
+    {
+      "name": "Aliases.echo_nat",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ANat"
+      }
+    },
+    {
+      "name": "Aliases.echo_int",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AInt"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AInt"
+      }
+    },
+    {
+      "name": "Aliases.echo_float32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF32"
+      }
+    },
+    {
+      "name": "Aliases.echo_float64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF64"
+      }
+    },
+    {
+      "name": "Aliases.echo_string",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AText"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.echo_bytes",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    },
+    {
+      "name": "Aliases.echo_char",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AChar"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AChar"
+      }
+    },
+    {
+      "name": "Aliases.echo_usize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_isize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ASignedWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ASignedWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ScalarsView"
+      }
+    },
+    {
+      "name": "Aliases.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Aliases.increment",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Count"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.OtherCount"
+      }
+    },
+    {
+      "name": "Aliases.make",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Count"
+      }
+    },
+    {
+      "name": "Aliases.label",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.change_packet",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.PacketView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.PacketView"
+      }
+    },
+    {
+      "name": "Aliases.reverse_packets",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Packets"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Packets"
+      }
+    },
+    {
+      "name": "Aliases.reverse_rows",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Rows"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Rows"
+      }
+    },
+    {
+      "name": "Aliases.echo_maybe",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Maybe"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Maybe"
+      }
+    },
+    {
+      "name": "Aliases.echo_outcome",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Outcome"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.duplicate",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.produce",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    }
+  ],
+  "reviewedIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+  "executions": [
+    {
+      "bindingIrSha256": "8393e965fb647de178caa611b6ab4ddb659f57ed2be03ec0e3efb33c2db28276",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "javaType": "boolean",
+            "kotlinType": "Boolean",
+            "name": "ABool",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "javaType": "byte[]",
+            "kotlinType": "ByteArray",
+            "name": "ABytes",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AChar",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "javaType": "float",
+            "kotlinType": "Float",
+            "name": "AF32",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "javaType": "double",
+            "kotlinType": "Double",
+            "name": "AF64",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "javaType": "short",
+            "kotlinType": "Short",
+            "name": "AI16",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AI32",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "AI64",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "javaType": "byte",
+            "kotlinType": "Byte",
+            "name": "AI8",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "ANat",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "ASignedWord",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "javaType": "String",
+            "kotlinType": "String",
+            "name": "AText",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AU16",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "AU32",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AU64",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AU8",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "javaType": "Unit",
+            "kotlinType": "Unit",
+            "name": "AUnit",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AWord",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "Count",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "javaType": "Option<Option<Unit>>",
+            "kotlinType": "Option<Option<Unit>>",
+            "name": "Maybe",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "OtherCount",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "javaType": "Result<Pair<Long, byte[]>, String>",
+            "kotlinType": "Result<Pair<Long, ByteArray>, String>",
+            "name": "Outcome",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "javaType": "Packet[]",
+            "kotlinType": "Array<Packet>",
+            "name": "Packets",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "javaType": "Packet",
+            "kotlinType": "Packet",
+            "name": "PacketView",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "javaType": "long[][]",
+            "kotlinType": "Array<LongArray>",
+            "name": "Rows",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "javaType": "Scalars",
+            "kotlinType": "Scalars",
+            "name": "ScalarsView",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "files": {
+          "README.md": "f19e7d0693274de9eda5e89ac5058e67cda556003910cebc791842fd235f6d12",
+          "binding-manifest.json": "7d0200f4dafcf1412ea1b519b1bf7aebfa709dfd1b1c8ec14fa74e43d2a528b3",
+          "src/main/java/org/leanbridge/aliases/Api.java": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+          "src/main/java/org/leanbridge/aliases/Packet.java": "2176436070d5b04bb78a3d0e9c98af4190d231c555baa8fdd012b2f114772f15",
+          "src/main/java/org/leanbridge/aliases/Scalars.java": "ecab4d4f0d5d8a5aa14f175a22e176b9f416e44780d67b75b3777bc3b383fd50"
+        },
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetTypes": true
+      },
+      "checks": 3711,
+      "jvm": {
+        "archiveSha256": "1926fed75b5b4137b27d249493632f6401d73be598c336d3a4612286185bb532",
+        "bindingIrSha256": "8393e965fb647de178caa611b6ab4ddb659f57ed2be03ec0e3efb33c2db28276",
+        "classpathSha256": "18142563bbdc19aeb814b72e46a9a83729f621dfeb896d25375222f9809606d5",
+        "compiledProjectionSha256": "16e5feaa253aec083def5fa1ea3c6dce8b081fda817246ee7e6d6014774c43c9",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "--release",
+          "22",
+          "-g:none",
+          "-proc:none",
+          "-encoding",
+          "UTF-8",
+          "-Xlint:all",
+          "-Werror",
+          "-implicit:none"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "1a50440fb0dfa5e1f88ea7cd0116b0e0c0e60658aab0d3c2baac2bdb6e97350a",
+        "declarationsSha256": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "fileCount": 452,
+          "inventorySha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        },
+        "deployment": {
+          "classes/Consumer.class": {
+            "bytes": 17477,
+            "sha256": "05b44879f41c27afefd029bb313a952fa394d544d605cd916b9375b4303c6941"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "package.jar": {
+            "bytes": 51446019,
+            "sha256": "1926fed75b5b4137b27d249493632f6401d73be598c336d3a4612286185bb532"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libaliases.so": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996",
+          "libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "d54c875fc1cefe0d190b2628033bbd4945a39e81474d6cfa98bfeba9e345f866",
+        "pomSha256": "77420d5970707757810a92dc0840cd73db19b044a03a9bd65367e5de37e8a38c",
+        "projectSourceSha256": "cc970961a3ce6cb59475bd864dbe4e6c77b565d6e1af507575e623a31a7ddcad",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "ff90f5803166bed329107f3e858a5250792927d24d44b73c993f3396c481ada1",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a"
+      },
+      "modelSha256": "9ab7618961198ae2fc5091c4c0a56e9d324d855a9f7fb9efab3d6ff074709697",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51446019,
+              "path": "archives/aliases-1.0.0.jar",
+              "sha256": "1926fed75b5b4137b27d249493632f6401d73be598c336d3a4612286185bb532"
+            },
+            {
+              "bytes": 462,
+              "path": "archives/aliases-1.0.0.pom",
+              "sha256": "77420d5970707757810a92dc0840cd73db19b044a03a9bd65367e5de37e8a38c"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "5c2b7c56b072cfe5596244780787801f9b16494afeab7570e06f1f655fbee278",
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "233054d808207c1406b31d61475f2033e01a4070e8998bc8ac4665d0c1e90775",
+      "observationSha256": "a9e1c2557f800d23c977f198a7f0bdc81591070f6e1241bc01787c7e91438e9a",
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-scalar-type.java",
+              "line": 3,
+              "message": "kindname.method, increment, long, java.lang.String, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, long))"
+            }
+          ],
+          "id": "aliases/scalar-type",
+          "sourceSha256": "149f1b31093a506bfcd8969e4cd2326acf0a743e2fb3cba40512153f45b58a21",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-exact-integer.java",
+              "line": 3,
+              "message": "kindname.method, echoNat, java.math.BigInteger, long, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long, java.math.BigInteger))"
+            }
+          ],
+          "id": "aliases/exact-integer",
+          "sourceSha256": "62dd850169814d1d6bb304be3543e82ca520f828a5940af29c1180d9b4274697",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-unit-type.java",
+              "line": 3,
+              "message": "kindname.method, echoUnit, org.leanbridge.aliases.Unit, byte, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: byte, org.leanbridge.aliases.Unit))"
+            }
+          ],
+          "id": "aliases/unit-type",
+          "sourceSha256": "8e6ababb0d7e5a2cff4d42ae4daa22c6bb43cf61c8edb516f819205be5c3659c",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-char-type.java",
+              "line": 3,
+              "message": "kindname.method, echoChar, int, java.lang.String, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, int))"
+            }
+          ],
+          "id": "aliases/char-type",
+          "sourceSha256": "eb0b702de2750595f4891a635fd56b429b42dc924a292e5f6410085a719bfde8",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-array-nesting.java",
+              "line": 3,
+              "message": "kindname.method, reverseRows, long[][], long[], kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long[], long[][]))"
+            }
+          ],
+          "id": "aliases/array-nesting",
+          "sourceSha256": "0e5f753271cd0281b655211a336d4decc0273b521f04cb111939be62cbdf6464",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-array-element.java",
+              "line": 3,
+              "message": "kindname.method, reverseRows, long[][], int[][], kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: int[][], long[][]))"
+            }
+          ],
+          "id": "aliases/array-element",
+          "sourceSha256": "206c99de72dac2b56d8ae5d81fee54044c205dd9c3b02f516203fc0a5c6e4f74",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-boxed-array.java",
+              "line": 3,
+              "message": "kindname.method, reverseRows, long[][], java.lang.Long[][], kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.Long[][], long[][]))"
+            }
+          ],
+          "id": "aliases/boxed-array",
+          "sourceSha256": "0705bdf602381bb6dafa73713f6a4ce4f5de143245ae18389027e104523fed44",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-option-type.java",
+              "line": 3,
+              "message": "kindname.method, echoMaybe, org.leanbridge.aliases.Option<org.leanbridge.aliases.Option<org.leanbridge.aliases.Unit>>, org.leanbridge.aliases.Option<java.lang.Boolean>, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.bounds: T, (compiler.misc.eq.bounds: org.leanbridge.aliases.Option<org.leanbridge.aliases.Unit>), (compiler.misc.lower.bounds: java.lang.Boolean)))"
+            }
+          ],
+          "id": "aliases/option-type",
+          "sourceSha256": "52f3d429b5274bee8970531a085b8a3a639ef7dcf05bae8c061d112ee6707025",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-result-type.java",
+              "line": 3,
+              "message": "kindname.method, echoOutcome, org.leanbridge.aliases.Result<org.leanbridge.aliases.Pair<java.lang.Long,byte[]>,java.lang.String>, org.leanbridge.aliases.Result<java.lang.String,java.lang.Object>, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.bounds: T, (compiler.misc.eq.bounds: org.leanbridge.aliases.Pair<java.lang.Long,byte[]>), (compiler.misc.lower.bounds: java.lang.String)))"
+            }
+          ],
+          "id": "aliases/result-type",
+          "sourceSha256": "2e504fbeed3ed0766c6bcd8c47b3996c6b1a5d12bbb67a21263b403ab3a9f175",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-record-type.java",
+              "line": 3,
+              "message": "kindname.method, changePacket, org.leanbridge.aliases.Packet, java.lang.String, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, org.leanbridge.aliases.Packet))"
+            }
+          ],
+          "id": "aliases/record-type",
+          "sourceSha256": "79c890d962777a36645ebf69d73d2aa808ddfd620c37b6f70ed28d3b610a4c95",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.prob.found.req",
+              "column": 24,
+              "file": "src/reject-result-value.java",
+              "line": 3,
+              "message": "(compiler.misc.inconvertible.types: long, java.lang.String)"
+            }
+          ],
+          "id": "aliases/result-value",
+          "sourceSha256": "89b1d761cdc84b9d43abf10aa1ae7161d1ca86371cd21ec2b285d7e9d87ec895",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-fixed-overflow.java",
+              "line": 3,
+              "message": "kindname.method, echoInt8, byte, int, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.possible.loss.of.precision: int, byte))"
+            }
+          ],
+          "id": "aliases/fixed-overflow",
+          "sourceSha256": "cb56c851e235c9f0574debe6c2281b4fb978408eb8c78e75db85cf4808580bba",
+          "status": "rejected-at-compile-time"
+        }
+      ],
+      "faultProbe": "ordinary-source"
+    },
+    {
+      "bindingIrSha256": "8393e965fb647de178caa611b6ab4ddb659f57ed2be03ec0e3efb33c2db28276",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "javaType": "boolean",
+            "kotlinType": "Boolean",
+            "name": "ABool",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "javaType": "byte[]",
+            "kotlinType": "ByteArray",
+            "name": "ABytes",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AChar",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "javaType": "float",
+            "kotlinType": "Float",
+            "name": "AF32",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "javaType": "double",
+            "kotlinType": "Double",
+            "name": "AF64",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "javaType": "short",
+            "kotlinType": "Short",
+            "name": "AI16",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AI32",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "AI64",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "javaType": "byte",
+            "kotlinType": "Byte",
+            "name": "AI8",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "ANat",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "ASignedWord",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "javaType": "String",
+            "kotlinType": "String",
+            "name": "AText",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AU16",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "AU32",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AU64",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AU8",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "javaType": "Unit",
+            "kotlinType": "Unit",
+            "name": "AUnit",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AWord",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "Count",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "javaType": "Option<Option<Unit>>",
+            "kotlinType": "Option<Option<Unit>>",
+            "name": "Maybe",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "OtherCount",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "javaType": "Result<Pair<Long, byte[]>, String>",
+            "kotlinType": "Result<Pair<Long, ByteArray>, String>",
+            "name": "Outcome",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "javaType": "Packet[]",
+            "kotlinType": "Array<Packet>",
+            "name": "Packets",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "javaType": "Packet",
+            "kotlinType": "Packet",
+            "name": "PacketView",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "javaType": "long[][]",
+            "kotlinType": "Array<LongArray>",
+            "name": "Rows",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "javaType": "Scalars",
+            "kotlinType": "Scalars",
+            "name": "ScalarsView",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "files": {
+          "README.md": "f19e7d0693274de9eda5e89ac5058e67cda556003910cebc791842fd235f6d12",
+          "binding-manifest.json": "7d0200f4dafcf1412ea1b519b1bf7aebfa709dfd1b1c8ec14fa74e43d2a528b3",
+          "src/main/java/org/leanbridge/aliases/Api.java": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+          "src/main/java/org/leanbridge/aliases/Packet.java": "2176436070d5b04bb78a3d0e9c98af4190d231c555baa8fdd012b2f114772f15",
+          "src/main/java/org/leanbridge/aliases/Scalars.java": "ecab4d4f0d5d8a5aa14f175a22e176b9f416e44780d67b75b3777bc3b383fd50"
+        },
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetTypes": true
+      },
+      "checks": 3711,
+      "jvm": {
+        "archiveSha256": "1926fed75b5b4137b27d249493632f6401d73be598c336d3a4612286185bb532",
+        "bindingIrSha256": "8393e965fb647de178caa611b6ab4ddb659f57ed2be03ec0e3efb33c2db28276",
+        "classpathSha256": "41f85830f64ee0e23a715b774341373182d937260aadfda5b7c10e91b65608db",
+        "compiledProjectionSha256": "16e5feaa253aec083def5fa1ea3c6dce8b081fda817246ee7e6d6014774c43c9",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "-jvm-target",
+          "22",
+          "-no-stdlib",
+          "-no-reflect",
+          "-Werror",
+          "-Xrender-internal-diagnostic-names"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "7aa13ffcedfc3d930199c03cdd34c82bdda37114b3da8d36ad7b71e69bca562c",
+        "declarationsSha256": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "fileCount": 452,
+          "inventorySha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        },
+        "deployment": {
+          "classes/ConsumerKt$main$1.class": {
+            "bytes": 1242,
+            "sha256": "3a7f33d1abb92802b924e7b8e4987608093f93a864887a13532ea91356a35402"
+          },
+          "classes/ConsumerKt$main$10.class": {
+            "bytes": 1278,
+            "sha256": "f1ab159a2d7067cd416fb879d5e8d2f7974b4bd21f857ea7166a7a72752b6530"
+          },
+          "classes/ConsumerKt$main$11.class": {
+            "bytes": 1253,
+            "sha256": "e68398509abd700f15ace049957802311de3f25e480e65b05f5fe4f58d561f72"
+          },
+          "classes/ConsumerKt$main$12.class": {
+            "bytes": 1262,
+            "sha256": "39882786fe9b99755226ddcb192ba154859524e0e8ebbb272468efaeca988aea"
+          },
+          "classes/ConsumerKt$main$13.class": {
+            "bytes": 1267,
+            "sha256": "1d4ce8e3bb121e79fe27a77f4c841242e8825fb48fdabc025288e09678f14b7e"
+          },
+          "classes/ConsumerKt$main$14.class": {
+            "bytes": 1248,
+            "sha256": "9a3915bdaa6575cfb10069284bc92a1df259f4e5c0126fd10461b8870844c860"
+          },
+          "classes/ConsumerKt$main$15.class": {
+            "bytes": 1115,
+            "sha256": "bfaddd85e43ba4912d55c58de460c11f03d225234c05e158e763fc34f5b21bd6"
+          },
+          "classes/ConsumerKt$main$16.class": {
+            "bytes": 1262,
+            "sha256": "e7b136d8dc25451442989c6adddcd01c7a567ddca8afda61f4c791350df7ec9c"
+          },
+          "classes/ConsumerKt$main$17.class": {
+            "bytes": 1274,
+            "sha256": "2a54300008156120260ecfed07dff4adfedde6a0246e3b8ca2a0f6e5289eeef5"
+          },
+          "classes/ConsumerKt$main$18.class": {
+            "bytes": 1274,
+            "sha256": "02e1f5f5e52187b0a3caa70058a9853e9aaa2e503d0fa2a8e8f56eb8c01f5566"
+          },
+          "classes/ConsumerKt$main$2.class": {
+            "bytes": 1262,
+            "sha256": "5a9d22fb08a6b91c280ec7f7ab764f78f42df90cd7a60fbab7aa6bb0c4df5972"
+          },
+          "classes/ConsumerKt$main$3.class": {
+            "bytes": 1264,
+            "sha256": "0cb2f6ea3465bd3a7990e07f48d5936efe6be442cf0dc264b6ad0fd4e1d8b572"
+          },
+          "classes/ConsumerKt$main$4.class": {
+            "bytes": 1253,
+            "sha256": "5d1216f8087fefdd72b61812763f71dc3e67229ad8a5848ca69ca217371d39f9"
+          },
+          "classes/ConsumerKt$main$5.class": {
+            "bytes": 1278,
+            "sha256": "881eb198a118abbdc3589fce52f42ebd33c368d6f9417b9670bbd35c9969dce5"
+          },
+          "classes/ConsumerKt$main$6.class": {
+            "bytes": 1249,
+            "sha256": "e85ef085388d4a998ca9ef85820a6e1a59c120300c7911d6b01ae0adc998f6c9"
+          },
+          "classes/ConsumerKt$main$7.class": {
+            "bytes": 1256,
+            "sha256": "8868e0db2ed7a78e31ccfa53dcc0df21835845fd4d760fc3c2ef3db48b811884"
+          },
+          "classes/ConsumerKt$main$8.class": {
+            "bytes": 1262,
+            "sha256": "32bb65bf1691a826af0f3b4180dd33560323532856b0ddd51ac2cbabc2796d04"
+          },
+          "classes/ConsumerKt$main$9.class": {
+            "bytes": 1251,
+            "sha256": "be17a32454b3f12b8ef4237b2ff32a32418830b90b10f7c1517be95fc3480e0f"
+          },
+          "classes/ConsumerKt$main$increment$1.class": {
+            "bytes": 1271,
+            "sha256": "c741dabdd6a06109aa556d5a96a2513deb4fee244a06658cb5ca8c9c35c88b15"
+          },
+          "classes/ConsumerKt$main$unit$1.class": {
+            "bytes": 1314,
+            "sha256": "5698b09ce59c1b282192bec1813f7e3db8eb2bb77ae37484f78e34cbc3902c2d"
+          },
+          "classes/ConsumerKt.class": {
+            "bytes": 26147,
+            "sha256": "360d054f0348892868f7f020fe0bf469761b1c1fe2453f417e7cbec8473ef7a6"
+          },
+          "classes/META-INF/main.kotlin_module": {
+            "bytes": 40,
+            "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "kotlin-stdlib.jar": {
+            "bytes": 1750373,
+            "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+          },
+          "package.jar": {
+            "bytes": 51446019,
+            "sha256": "1926fed75b5b4137b27d249493632f6401d73be598c336d3a4612286185bb532"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "kotlin": {
+          "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+          "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "compilerFilesSha256": "7dee96621e852b43e8c4b9c41a7cac5da25bd6c8e87e27a31d058d2b6086fa65"
+        },
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libaliases.so": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996",
+          "libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "d54c875fc1cefe0d190b2628033bbd4945a39e81474d6cfa98bfeba9e345f866",
+        "pomSha256": "77420d5970707757810a92dc0840cd73db19b044a03a9bd65367e5de37e8a38c",
+        "projectSourceSha256": "cc970961a3ce6cb59475bd864dbe4e6c77b565d6e1af507575e623a31a7ddcad",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "0317c728331e2d5c1417be04eb08ca8987fb24af0749e3aaa6c7f642c79024e5",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a"
+      },
+      "modelSha256": "9ab7618961198ae2fc5091c4c0a56e9d324d855a9f7fb9efab3d6ff074709697",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51446019,
+              "path": "archives/aliases-1.0.0.jar",
+              "sha256": "1926fed75b5b4137b27d249493632f6401d73be598c336d3a4612286185bb532"
+            },
+            {
+              "bytes": 462,
+              "path": "archives/aliases-1.0.0.pom",
+              "sha256": "77420d5970707757810a92dc0840cd73db19b044a03a9bd65367e5de37e8a38c"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "5c2b7c56b072cfe5596244780787801f9b16494afeab7570e06f1f655fbee278",
+      "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "233054d808207c1406b31d61475f2033e01a4070e8998bc8ac4665d0c1e90775",
+      "observationSha256": "e6604e389a85399b96fc5854210d42fb2ea4dcc93b11952121ac47c010696ed4",
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 15,
+              "file": "src/reject-scalar-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'String', but 'Long' was expected."
+            }
+          ],
+          "id": "aliases/scalar-type",
+          "sourceSha256": "e838777286f0ea2dde04b81f875565f69f4cacece935edcd0d448944fc06169e",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 13,
+              "file": "src/reject-exact-integer.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Long', but 'BigInteger!' was expected."
+            }
+          ],
+          "id": "aliases/exact-integer",
+          "sourceSha256": "23f65ef6823c2732f48348f32a5929f684d27d3590f5d6f24afb4557358db3c1",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 14,
+              "file": "src/reject-unit-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Byte', but 'Unit!' was expected."
+            }
+          ],
+          "id": "aliases/unit-type",
+          "sourceSha256": "e6a6468e56fccd69879dbab7ee86ff5a15ca3eb6da7db436d72e4df0045a2494",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 14,
+              "file": "src/reject-char-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'String', but 'Int' was expected."
+            }
+          ],
+          "id": "aliases/char-type",
+          "sourceSha256": "61f4e5d783260a468f73f084c572818fe45212e926f334e7f1bb8acc25d7a0e0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-array-nesting.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'LongArray', but 'Array<(out) LongArray!>!' was expected."
+            }
+          ],
+          "id": "aliases/array-nesting",
+          "sourceSha256": "311f4c9a13546e1f7356eb9a70ef8e8c3d32b57ef07b4bc2a30daf99b06d1669",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-array-element.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Array<IntArray>', but 'Array<(out) LongArray!>!' was expected."
+            }
+          ],
+          "id": "aliases/array-element",
+          "sourceSha256": "d9bb4e4e293409c9a5adfab2999d9f4b324cdc31f69935df2e3e6eed4f52b322",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-boxed-array.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Array<Array<Long>>', but 'Array<(out) LongArray!>!' was expected."
+            }
+          ],
+          "id": "aliases/boxed-array",
+          "sourceSha256": "bcdb295c6f1662005713899a4f0591bc1144ab0a92c40d3f555d26cd82d69545",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 15,
+              "file": "src/reject-option-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Option<Boolean!>!', but 'Option<Option<Unit!>!>!' was expected."
+            }
+          ],
+          "id": "aliases/option-type",
+          "sourceSha256": "cf08db4927a2cf7434011cd804c0a96c7734f25219016f6fb12bdab4d82c3a50",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-result-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Result<String!, String!>!', but 'Result<Pair<Long!, ByteArray!>!, String!>!' was expected."
+            }
+          ],
+          "id": "aliases/result-type",
+          "sourceSha256": "5ebaa118da10dd594a3ca264626e6a0795a5d98b5003b51d23e8d8c9252a723d",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 18,
+              "file": "src/reject-record-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'String', but 'Packet!' was expected."
+            }
+          ],
+          "id": "aliases/record-type",
+          "sourceSha256": "c648bbaebd08a9673f7c6c7a64e8801be98c7f8be1544d780dd1086148ef86f8",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INITIALIZER_TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-result-value.kt",
+              "line": 3,
+              "message": "Initializer type mismatch: expected 'String', actual 'Long'."
+            },
+            {
+              "code": "TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-result-value.kt",
+              "line": 3,
+              "message": "Type mismatch: inferred type is 'Long', but 'String' was expected."
+            }
+          ],
+          "id": "aliases/result-value",
+          "sourceSha256": "a4c67cb82afeb6e9854101fe65767362034c63d54beae4d1f719707cc2ef7c91",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 14,
+              "file": "src/reject-fixed-overflow.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Int', but 'Byte' was expected."
+            }
+          ],
+          "id": "aliases/fixed-overflow",
+          "sourceSha256": "d7440a7cabed1b5fe0f46af3c72a07306cf6ee073aa97e0fabbcdbcaffb87ac7",
+          "status": "rejected-at-compile-time"
+        }
+      ],
+      "faultProbe": "ordinary-source"
+    },
+    {
+      "bindingIrSha256": "116823499ac4d2f6b17d978f14d8aa89d1e03f47fcdd9a6b378f212230828831",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "javaType": "boolean",
+            "kotlinType": "Boolean",
+            "name": "ABool",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "javaType": "byte[]",
+            "kotlinType": "ByteArray",
+            "name": "ABytes",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AChar",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "javaType": "float",
+            "kotlinType": "Float",
+            "name": "AF32",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "javaType": "double",
+            "kotlinType": "Double",
+            "name": "AF64",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "javaType": "short",
+            "kotlinType": "Short",
+            "name": "AI16",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AI32",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "AI64",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "javaType": "byte",
+            "kotlinType": "Byte",
+            "name": "AI8",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "ANat",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "ASignedWord",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "javaType": "String",
+            "kotlinType": "String",
+            "name": "AText",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AU16",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "AU32",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AU64",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AU8",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "javaType": "Unit",
+            "kotlinType": "Unit",
+            "name": "AUnit",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AWord",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "Count",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "javaType": "Option<Option<Unit>>",
+            "kotlinType": "Option<Option<Unit>>",
+            "name": "Maybe",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "OtherCount",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "javaType": "Result<Pair<Long, byte[]>, String>",
+            "kotlinType": "Result<Pair<Long, ByteArray>, String>",
+            "name": "Outcome",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "javaType": "Packet[]",
+            "kotlinType": "Array<Packet>",
+            "name": "Packets",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "javaType": "Packet",
+            "kotlinType": "Packet",
+            "name": "PacketView",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "javaType": "long[][]",
+            "kotlinType": "Array<LongArray>",
+            "name": "Rows",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "javaType": "Scalars",
+            "kotlinType": "Scalars",
+            "name": "ScalarsView",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "files": {
+          "README.md": "f19e7d0693274de9eda5e89ac5058e67cda556003910cebc791842fd235f6d12",
+          "binding-manifest.json": "b2308000bc7bc10438a8a94e950967d4ffb6f050521bb492252f83f56402f6e6",
+          "src/main/java/org/leanbridge/aliases/Api.java": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+          "src/main/java/org/leanbridge/aliases/Packet.java": "2176436070d5b04bb78a3d0e9c98af4190d231c555baa8fdd012b2f114772f15",
+          "src/main/java/org/leanbridge/aliases/Scalars.java": "ecab4d4f0d5d8a5aa14f175a22e176b9f416e44780d67b75b3777bc3b383fd50"
+        },
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetTypes": true
+      },
+      "checks": 3711,
+      "jvm": {
+        "archiveSha256": "e73030ae418542dfad927896ed86cc448e6bea3de6f9d94e0baeee7a1fcf91fc",
+        "bindingIrSha256": "116823499ac4d2f6b17d978f14d8aa89d1e03f47fcdd9a6b378f212230828831",
+        "classpathSha256": "aefe7246fc7f926f4fd65ad8f0791363894eeded858b70e2a71277a8ecc20293",
+        "compiledProjectionSha256": "93962e9729903bba3cc29064dc93b1df2b062d9c460e122a872cc433bedbfc44",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "--release",
+          "22",
+          "-g:none",
+          "-proc:none",
+          "-encoding",
+          "UTF-8",
+          "-Xlint:all",
+          "-Werror",
+          "-implicit:none"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "1a50440fb0dfa5e1f88ea7cd0116b0e0c0e60658aab0d3c2baac2bdb6e97350a",
+        "declarationsSha256": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "fileCount": 452,
+          "inventorySha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        },
+        "deployment": {
+          "classes/Consumer.class": {
+            "bytes": 17477,
+            "sha256": "05b44879f41c27afefd029bb313a952fa394d544d605cd916b9375b4303c6941"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "package.jar": {
+            "bytes": 51453840,
+            "sha256": "e73030ae418542dfad927896ed86cc448e6bea3de6f9d94e0baeee7a1fcf91fc"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libaliases.so": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996",
+          "libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "7cddc153da4c8cbc734d398d59769322f11573cee760c6ed59b74f38547dd6fe",
+        "pomSha256": "77420d5970707757810a92dc0840cd73db19b044a03a9bd65367e5de37e8a38c",
+        "projectSourceSha256": "cc970961a3ce6cb59475bd864dbe4e6c77b565d6e1af507575e623a31a7ddcad",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "ff90f5803166bed329107f3e858a5250792927d24d44b73c993f3396c481ada1",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a"
+      },
+      "modelSha256": "92f537c12d7b6e6432a2e73781b06658727019d69e3c6ed688d9af4ccfcfbe74",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51453840,
+              "path": "archives/aliases-1.0.0.jar",
+              "sha256": "e73030ae418542dfad927896ed86cc448e6bea3de6f9d94e0baeee7a1fcf91fc"
+            },
+            {
+              "bytes": 462,
+              "path": "archives/aliases-1.0.0.pom",
+              "sha256": "77420d5970707757810a92dc0840cd73db19b044a03a9bd65367e5de37e8a38c"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "java",
+      "receiptSha256": "7114b26ef80ef11391016d719f76438ca4abe116c33c79b50ed1f5cde091250d",
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d1231e2a2e586426958f83ee0f5a761cd7d1f054c24bb4df0d6b317ce9af1d4f",
+      "observationSha256": "54c112ccbb7bdfd9136cd85c14408b3aaeb6c27d65b8f15fd776d48decdd553d",
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-scalar-type.java",
+              "line": 3,
+              "message": "kindname.method, increment, long, java.lang.String, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, long))"
+            }
+          ],
+          "id": "aliases/scalar-type",
+          "sourceSha256": "149f1b31093a506bfcd8969e4cd2326acf0a743e2fb3cba40512153f45b58a21",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-exact-integer.java",
+              "line": 3,
+              "message": "kindname.method, echoNat, java.math.BigInteger, long, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long, java.math.BigInteger))"
+            }
+          ],
+          "id": "aliases/exact-integer",
+          "sourceSha256": "62dd850169814d1d6bb304be3543e82ca520f828a5940af29c1180d9b4274697",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-unit-type.java",
+              "line": 3,
+              "message": "kindname.method, echoUnit, org.leanbridge.aliases.Unit, byte, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: byte, org.leanbridge.aliases.Unit))"
+            }
+          ],
+          "id": "aliases/unit-type",
+          "sourceSha256": "8e6ababb0d7e5a2cff4d42ae4daa22c6bb43cf61c8edb516f819205be5c3659c",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-char-type.java",
+              "line": 3,
+              "message": "kindname.method, echoChar, int, java.lang.String, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, int))"
+            }
+          ],
+          "id": "aliases/char-type",
+          "sourceSha256": "eb0b702de2750595f4891a635fd56b429b42dc924a292e5f6410085a719bfde8",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-array-nesting.java",
+              "line": 3,
+              "message": "kindname.method, reverseRows, long[][], long[], kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: long[], long[][]))"
+            }
+          ],
+          "id": "aliases/array-nesting",
+          "sourceSha256": "0e5f753271cd0281b655211a336d4decc0273b521f04cb111939be62cbdf6464",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-array-element.java",
+              "line": 3,
+              "message": "kindname.method, reverseRows, long[][], int[][], kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: int[][], long[][]))"
+            }
+          ],
+          "id": "aliases/array-element",
+          "sourceSha256": "206c99de72dac2b56d8ae5d81fee54044c205dd9c3b02f516203fc0a5c6e4f74",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-boxed-array.java",
+              "line": 3,
+              "message": "kindname.method, reverseRows, long[][], java.lang.Long[][], kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.Long[][], long[][]))"
+            }
+          ],
+          "id": "aliases/boxed-array",
+          "sourceSha256": "0705bdf602381bb6dafa73713f6a4ce4f5de143245ae18389027e104523fed44",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-option-type.java",
+              "line": 3,
+              "message": "kindname.method, echoMaybe, org.leanbridge.aliases.Option<org.leanbridge.aliases.Option<org.leanbridge.aliases.Unit>>, org.leanbridge.aliases.Option<java.lang.Boolean>, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.bounds: T, (compiler.misc.eq.bounds: org.leanbridge.aliases.Option<org.leanbridge.aliases.Unit>), (compiler.misc.lower.bounds: java.lang.Boolean)))"
+            }
+          ],
+          "id": "aliases/option-type",
+          "sourceSha256": "52f3d429b5274bee8970531a085b8a3a639ef7dcf05bae8c061d112ee6707025",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-result-type.java",
+              "line": 3,
+              "message": "kindname.method, echoOutcome, org.leanbridge.aliases.Result<org.leanbridge.aliases.Pair<java.lang.Long,byte[]>,java.lang.String>, org.leanbridge.aliases.Result<java.lang.String,java.lang.Object>, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.incompatible.bounds: T, (compiler.misc.eq.bounds: org.leanbridge.aliases.Pair<java.lang.Long,byte[]>), (compiler.misc.lower.bounds: java.lang.String)))"
+            }
+          ],
+          "id": "aliases/result-type",
+          "sourceSha256": "2e504fbeed3ed0766c6bcd8c47b3996c6b1a5d12bbb67a21263b403ab3a9f175",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-record-type.java",
+              "line": 3,
+              "message": "kindname.method, changePacket, org.leanbridge.aliases.Packet, java.lang.String, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: java.lang.String, org.leanbridge.aliases.Packet))"
+            }
+          ],
+          "id": "aliases/record-type",
+          "sourceSha256": "79c890d962777a36645ebf69d73d2aa808ddfd620c37b6f70ed28d3b610a4c95",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.prob.found.req",
+              "column": 24,
+              "file": "src/reject-result-value.java",
+              "line": 3,
+              "message": "(compiler.misc.inconvertible.types: long, java.lang.String)"
+            }
+          ],
+          "id": "aliases/result-value",
+          "sourceSha256": "89b1d761cdc84b9d43abf10aa1ae7161d1ca86371cd21ec2b285d7e9d87ec895",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-fixed-overflow.java",
+              "line": 3,
+              "message": "kindname.method, echoInt8, byte, int, kindname.class, org.leanbridge.aliases.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.possible.loss.of.precision: int, byte))"
+            }
+          ],
+          "id": "aliases/fixed-overflow",
+          "sourceSha256": "cb56c851e235c9f0574debe6c2281b4fb978408eb8c78e75db85cf4808580bba",
+          "status": "rejected-at-compile-time"
+        }
+      ],
+      "faultProbe": "reviewed-ir"
+    },
+    {
+      "bindingIrSha256": "116823499ac4d2f6b17d978f14d8aa89d1e03f47fcdd9a6b378f212230828831",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "javaType": "boolean",
+            "kotlinType": "Boolean",
+            "name": "ABool",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "javaType": "byte[]",
+            "kotlinType": "ByteArray",
+            "name": "ABytes",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AChar",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "javaType": "float",
+            "kotlinType": "Float",
+            "name": "AF32",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "javaType": "double",
+            "kotlinType": "Double",
+            "name": "AF64",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "javaType": "short",
+            "kotlinType": "Short",
+            "name": "AI16",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AI32",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "AI64",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "javaType": "byte",
+            "kotlinType": "Byte",
+            "name": "AI8",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AInt",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "ANat",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "ASignedWord",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "javaType": "String",
+            "kotlinType": "String",
+            "name": "AText",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AU16",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "AU32",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AU64",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "javaType": "int",
+            "kotlinType": "Int",
+            "name": "AU8",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "javaType": "Unit",
+            "kotlinType": "Unit",
+            "name": "AUnit",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "javaType": "java.math.BigInteger",
+            "kotlinType": "java.math.BigInteger",
+            "name": "AWord",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "Count",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "javaType": "Option<Option<Unit>>",
+            "kotlinType": "Option<Option<Unit>>",
+            "name": "Maybe",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "javaType": "long",
+            "kotlinType": "Long",
+            "name": "OtherCount",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "javaType": "Result<Pair<Long, byte[]>, String>",
+            "kotlinType": "Result<Pair<Long, ByteArray>, String>",
+            "name": "Outcome",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "javaType": "Packet[]",
+            "kotlinType": "Array<Packet>",
+            "name": "Packets",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "javaType": "Packet",
+            "kotlinType": "Packet",
+            "name": "PacketView",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "javaType": "long[][]",
+            "kotlinType": "Array<LongArray>",
+            "name": "Rows",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "javaType": "Scalars",
+            "kotlinType": "Scalars",
+            "name": "ScalarsView",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "files": {
+          "README.md": "f19e7d0693274de9eda5e89ac5058e67cda556003910cebc791842fd235f6d12",
+          "binding-manifest.json": "b2308000bc7bc10438a8a94e950967d4ffb6f050521bb492252f83f56402f6e6",
+          "src/main/java/org/leanbridge/aliases/Api.java": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+          "src/main/java/org/leanbridge/aliases/Packet.java": "2176436070d5b04bb78a3d0e9c98af4190d231c555baa8fdd012b2f114772f15",
+          "src/main/java/org/leanbridge/aliases/Scalars.java": "ecab4d4f0d5d8a5aa14f175a22e176b9f416e44780d67b75b3777bc3b383fd50"
+        },
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetTypes": true
+      },
+      "checks": 3711,
+      "jvm": {
+        "archiveSha256": "e73030ae418542dfad927896ed86cc448e6bea3de6f9d94e0baeee7a1fcf91fc",
+        "bindingIrSha256": "116823499ac4d2f6b17d978f14d8aa89d1e03f47fcdd9a6b378f212230828831",
+        "classpathSha256": "fb40d415131f4d95c59654f8e5698c3c90f812db95a54cfe8559348e9c8b15a6",
+        "compiledProjectionSha256": "93962e9729903bba3cc29064dc93b1df2b062d9c460e122a872cc433bedbfc44",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "-jvm-target",
+          "22",
+          "-no-stdlib",
+          "-no-reflect",
+          "-Werror",
+          "-Xrender-internal-diagnostic-names"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "7aa13ffcedfc3d930199c03cdd34c82bdda37114b3da8d36ad7b71e69bca562c",
+        "declarationsSha256": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "fileCount": 452,
+          "inventorySha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        },
+        "deployment": {
+          "classes/ConsumerKt$main$1.class": {
+            "bytes": 1242,
+            "sha256": "3a7f33d1abb92802b924e7b8e4987608093f93a864887a13532ea91356a35402"
+          },
+          "classes/ConsumerKt$main$10.class": {
+            "bytes": 1278,
+            "sha256": "f1ab159a2d7067cd416fb879d5e8d2f7974b4bd21f857ea7166a7a72752b6530"
+          },
+          "classes/ConsumerKt$main$11.class": {
+            "bytes": 1253,
+            "sha256": "e68398509abd700f15ace049957802311de3f25e480e65b05f5fe4f58d561f72"
+          },
+          "classes/ConsumerKt$main$12.class": {
+            "bytes": 1262,
+            "sha256": "39882786fe9b99755226ddcb192ba154859524e0e8ebbb272468efaeca988aea"
+          },
+          "classes/ConsumerKt$main$13.class": {
+            "bytes": 1267,
+            "sha256": "1d4ce8e3bb121e79fe27a77f4c841242e8825fb48fdabc025288e09678f14b7e"
+          },
+          "classes/ConsumerKt$main$14.class": {
+            "bytes": 1248,
+            "sha256": "9a3915bdaa6575cfb10069284bc92a1df259f4e5c0126fd10461b8870844c860"
+          },
+          "classes/ConsumerKt$main$15.class": {
+            "bytes": 1115,
+            "sha256": "bfaddd85e43ba4912d55c58de460c11f03d225234c05e158e763fc34f5b21bd6"
+          },
+          "classes/ConsumerKt$main$16.class": {
+            "bytes": 1262,
+            "sha256": "e7b136d8dc25451442989c6adddcd01c7a567ddca8afda61f4c791350df7ec9c"
+          },
+          "classes/ConsumerKt$main$17.class": {
+            "bytes": 1274,
+            "sha256": "2a54300008156120260ecfed07dff4adfedde6a0246e3b8ca2a0f6e5289eeef5"
+          },
+          "classes/ConsumerKt$main$18.class": {
+            "bytes": 1274,
+            "sha256": "02e1f5f5e52187b0a3caa70058a9853e9aaa2e503d0fa2a8e8f56eb8c01f5566"
+          },
+          "classes/ConsumerKt$main$2.class": {
+            "bytes": 1262,
+            "sha256": "5a9d22fb08a6b91c280ec7f7ab764f78f42df90cd7a60fbab7aa6bb0c4df5972"
+          },
+          "classes/ConsumerKt$main$3.class": {
+            "bytes": 1264,
+            "sha256": "0cb2f6ea3465bd3a7990e07f48d5936efe6be442cf0dc264b6ad0fd4e1d8b572"
+          },
+          "classes/ConsumerKt$main$4.class": {
+            "bytes": 1253,
+            "sha256": "5d1216f8087fefdd72b61812763f71dc3e67229ad8a5848ca69ca217371d39f9"
+          },
+          "classes/ConsumerKt$main$5.class": {
+            "bytes": 1278,
+            "sha256": "881eb198a118abbdc3589fce52f42ebd33c368d6f9417b9670bbd35c9969dce5"
+          },
+          "classes/ConsumerKt$main$6.class": {
+            "bytes": 1249,
+            "sha256": "e85ef085388d4a998ca9ef85820a6e1a59c120300c7911d6b01ae0adc998f6c9"
+          },
+          "classes/ConsumerKt$main$7.class": {
+            "bytes": 1256,
+            "sha256": "8868e0db2ed7a78e31ccfa53dcc0df21835845fd4d760fc3c2ef3db48b811884"
+          },
+          "classes/ConsumerKt$main$8.class": {
+            "bytes": 1262,
+            "sha256": "32bb65bf1691a826af0f3b4180dd33560323532856b0ddd51ac2cbabc2796d04"
+          },
+          "classes/ConsumerKt$main$9.class": {
+            "bytes": 1251,
+            "sha256": "be17a32454b3f12b8ef4237b2ff32a32418830b90b10f7c1517be95fc3480e0f"
+          },
+          "classes/ConsumerKt$main$increment$1.class": {
+            "bytes": 1271,
+            "sha256": "c741dabdd6a06109aa556d5a96a2513deb4fee244a06658cb5ca8c9c35c88b15"
+          },
+          "classes/ConsumerKt$main$unit$1.class": {
+            "bytes": 1314,
+            "sha256": "5698b09ce59c1b282192bec1813f7e3db8eb2bb77ae37484f78e34cbc3902c2d"
+          },
+          "classes/ConsumerKt.class": {
+            "bytes": 26147,
+            "sha256": "360d054f0348892868f7f020fe0bf469761b1c1fe2453f417e7cbec8473ef7a6"
+          },
+          "classes/META-INF/main.kotlin_module": {
+            "bytes": 40,
+            "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "kotlin-stdlib.jar": {
+            "bytes": 1750373,
+            "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+          },
+          "package.jar": {
+            "bytes": 51453840,
+            "sha256": "e73030ae418542dfad927896ed86cc448e6bea3de6f9d94e0baeee7a1fcf91fc"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "kotlin": {
+          "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+          "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "compilerFilesSha256": "7dee96621e852b43e8c4b9c41a7cac5da25bd6c8e87e27a31d058d2b6086fa65"
+        },
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libaliases.so": "cbab2b45fb74d6ad4053c6bcf35ed4c8c1eda9c2263746e673a64a69e4dfe996",
+          "libcomponent_415b536a11d7304fc0bd.so": "af98e841117705a44a12ad6089716ecd613f98697d29ce6f7e1a0e52a6dd12f2",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "7cddc153da4c8cbc734d398d59769322f11573cee760c6ed59b74f38547dd6fe",
+        "pomSha256": "77420d5970707757810a92dc0840cd73db19b044a03a9bd65367e5de37e8a38c",
+        "projectSourceSha256": "cc970961a3ce6cb59475bd864dbe4e6c77b565d6e1af507575e623a31a7ddcad",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "0317c728331e2d5c1417be04eb08ca8987fb24af0749e3aaa6c7f642c79024e5",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a"
+      },
+      "modelSha256": "92f537c12d7b6e6432a2e73781b06658727019d69e3c6ed688d9af4ccfcfbe74",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51453840,
+              "path": "archives/aliases-1.0.0.jar",
+              "sha256": "e73030ae418542dfad927896ed86cc448e6bea3de6f9d94e0baeee7a1fcf91fc"
+            },
+            {
+              "bytes": 462,
+              "path": "archives/aliases-1.0.0.pom",
+              "sha256": "77420d5970707757810a92dc0840cd73db19b044a03a9bd65367e5de37e8a38c"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:aliases",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "kotlin",
+      "receiptSha256": "7114b26ef80ef11391016d719f76438ca4abe116c33c79b50ed1f5cde091250d",
+      "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "d1231e2a2e586426958f83ee0f5a761cd7d1f054c24bb4df0d6b317ce9af1d4f",
+      "observationSha256": "096406600de742d4dda625c2d7a5858d3729de4d1d96e563b2c5b41d3bf6956e",
+      "contractSha256": "e0a3e72e109380feaccc7f2290815421e8bc06dc14e15e9f72d9371359ce9c77",
+      "rejected": [
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 15,
+              "file": "src/reject-scalar-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'String', but 'Long' was expected."
+            }
+          ],
+          "id": "aliases/scalar-type",
+          "sourceSha256": "e838777286f0ea2dde04b81f875565f69f4cacece935edcd0d448944fc06169e",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 13,
+              "file": "src/reject-exact-integer.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Long', but 'BigInteger!' was expected."
+            }
+          ],
+          "id": "aliases/exact-integer",
+          "sourceSha256": "23f65ef6823c2732f48348f32a5929f684d27d3590f5d6f24afb4557358db3c1",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 14,
+              "file": "src/reject-unit-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Byte', but 'Unit!' was expected."
+            }
+          ],
+          "id": "aliases/unit-type",
+          "sourceSha256": "e6a6468e56fccd69879dbab7ee86ff5a15ca3eb6da7db436d72e4df0045a2494",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 14,
+              "file": "src/reject-char-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'String', but 'Int' was expected."
+            }
+          ],
+          "id": "aliases/char-type",
+          "sourceSha256": "61f4e5d783260a468f73f084c572818fe45212e926f334e7f1bb8acc25d7a0e0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-array-nesting.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'LongArray', but 'Array<(out) LongArray!>!' was expected."
+            }
+          ],
+          "id": "aliases/array-nesting",
+          "sourceSha256": "311f4c9a13546e1f7356eb9a70ef8e8c3d32b57ef07b4bc2a30daf99b06d1669",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-array-element.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Array<IntArray>', but 'Array<(out) LongArray!>!' was expected."
+            }
+          ],
+          "id": "aliases/array-element",
+          "sourceSha256": "d9bb4e4e293409c9a5adfab2999d9f4b324cdc31f69935df2e3e6eed4f52b322",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-boxed-array.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Array<Array<Long>>', but 'Array<(out) LongArray!>!' was expected."
+            }
+          ],
+          "id": "aliases/boxed-array",
+          "sourceSha256": "bcdb295c6f1662005713899a4f0591bc1144ab0a92c40d3f555d26cd82d69545",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 15,
+              "file": "src/reject-option-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Option<Boolean!>!', but 'Option<Option<Unit!>!>!' was expected."
+            }
+          ],
+          "id": "aliases/option-type",
+          "sourceSha256": "cf08db4927a2cf7434011cd804c0a96c7734f25219016f6fb12bdab4d82c3a50",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 17,
+              "file": "src/reject-result-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Result<String!, String!>!', but 'Result<Pair<Long!, ByteArray!>!, String!>!' was expected."
+            }
+          ],
+          "id": "aliases/result-type",
+          "sourceSha256": "5ebaa118da10dd594a3ca264626e6a0795a5d98b5003b51d23e8d8c9252a723d",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 18,
+              "file": "src/reject-record-type.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'String', but 'Packet!' was expected."
+            }
+          ],
+          "id": "aliases/record-type",
+          "sourceSha256": "c648bbaebd08a9673f7c6c7a64e8801be98c7f8be1544d780dd1086148ef86f8",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INITIALIZER_TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-result-value.kt",
+              "line": 3,
+              "message": "Initializer type mismatch: expected 'String', actual 'Long'."
+            },
+            {
+              "code": "TYPE_MISMATCH",
+              "column": 21,
+              "file": "src/reject-result-value.kt",
+              "line": 3,
+              "message": "Type mismatch: inferred type is 'Long', but 'String' was expected."
+            }
+          ],
+          "id": "aliases/result-value",
+          "sourceSha256": "a4c67cb82afeb6e9854101fe65767362034c63d54beae4d1f719707cc2ef7c91",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 14,
+              "file": "src/reject-fixed-overflow.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Int', but 'Byte' was expected."
+            }
+          ],
+          "id": "aliases/fixed-overflow",
+          "sourceSha256": "d7440a7cabed1b5fe0f46af3c72a07306cf6ee073aa97e0fabbcdbcaffb87ac7",
+          "status": "rejected-at-compile-time"
+        }
+      ],
+      "faultProbe": "reviewed-ir"
+    }
+  ],
+  "faultProbes": {
+    "ordinary-source": {
+      "checks": 237,
+      "instrumentedSources": {
+        "src/main/java/org/leanbridge/aliases/AliasProbe.java": "443e34b774fc1b0717791d570e6987ac7858c2abda3e5c2d7543e9ba23663235",
+        "src/main/java/org/leanbridge/aliases/Api.java": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+        "src/main/java/org/leanbridge/aliases/Faults.java": "afaae411c79a22990aa28e8e80d4cc3a712fab06b848bd00c37ce0c1f35ed0ef",
+        "src/main/java/org/leanbridge/aliases/LeanBridgeException.java": "b6f784c3a55c8184eb95d362ca84db485227be8fdb24b9c1471f581756cbf94f",
+        "src/main/java/org/leanbridge/aliases/NativeAssets.java": "979e4e9e5ec8368f3b323b6e6d10230bbe656a25d19bf2c347372cd4fc8e5a7d",
+        "src/main/java/org/leanbridge/aliases/Option.java": "28b0d0d2d04198bafcf35c22478ec5285f98b21e32c4eacb604852d257b6137c",
+        "src/main/java/org/leanbridge/aliases/Packet.java": "2176436070d5b04bb78a3d0e9c98af4190d231c555baa8fdd012b2f114772f15",
+        "src/main/java/org/leanbridge/aliases/Pair.java": "4f4cd2b47fb075661a2aee214c85a1b6a48b1307056aa3cf3a8a1af603d101de",
+        "src/main/java/org/leanbridge/aliases/Result.java": "dcae2a5ad54e79fc1e31d3a65396a1b7712ad79fd42ac1e9c1cde1bab5c8f246",
+        "src/main/java/org/leanbridge/aliases/Runtime.java": "373ca2d6b841923dece52b9806f9ba0385148cf06e2dbc3133d77e701d921612",
+        "src/main/java/org/leanbridge/aliases/Scalars.java": "ecab4d4f0d5d8a5aa14f175a22e176b9f416e44780d67b75b3777bc3b383fd50",
+        "src/main/java/org/leanbridge/aliases/Scope.java": "9b6824198990569211b7af451e4a32eaba36d232ef950364b9515cbdaad24d14",
+        "src/main/java/org/leanbridge/aliases/Unit.java": "a6c06fce7eba9bfaee1d570e138acf710f995bd97694eb027dc65e53f6a0c102"
+      },
+      "isolatedInstrumentedProjection": true,
+      "layoutChecks": 18,
+      "normalExitCleanup": true,
+      "originalSources": {
+        "src/main/java/org/leanbridge/aliases/Api.java": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+        "src/main/java/org/leanbridge/aliases/LeanBridgeException.java": "b6f784c3a55c8184eb95d362ca84db485227be8fdb24b9c1471f581756cbf94f",
+        "src/main/java/org/leanbridge/aliases/NativeAssets.java": "979e4e9e5ec8368f3b323b6e6d10230bbe656a25d19bf2c347372cd4fc8e5a7d",
+        "src/main/java/org/leanbridge/aliases/Option.java": "28b0d0d2d04198bafcf35c22478ec5285f98b21e32c4eacb604852d257b6137c",
+        "src/main/java/org/leanbridge/aliases/Packet.java": "2176436070d5b04bb78a3d0e9c98af4190d231c555baa8fdd012b2f114772f15",
+        "src/main/java/org/leanbridge/aliases/Pair.java": "4f4cd2b47fb075661a2aee214c85a1b6a48b1307056aa3cf3a8a1af603d101de",
+        "src/main/java/org/leanbridge/aliases/Result.java": "dcae2a5ad54e79fc1e31d3a65396a1b7712ad79fd42ac1e9c1cde1bab5c8f246",
+        "src/main/java/org/leanbridge/aliases/Runtime.java": "1227c17767950bd0f760a609cea9e492a62115b02cfd88015d7b16199ee981a1",
+        "src/main/java/org/leanbridge/aliases/Scalars.java": "ecab4d4f0d5d8a5aa14f175a22e176b9f416e44780d67b75b3777bc3b383fd50",
+        "src/main/java/org/leanbridge/aliases/Scope.java": "15926e7056d035bfb8b02016cb68698412e2f44252d251e1613a9aa6b3d7f5a3",
+        "src/main/java/org/leanbridge/aliases/Unit.java": "a6c06fce7eba9bfaee1d570e138acf710f995bd97694eb027dc65e53f6a0c102"
+      },
+      "partialInputChecks": 64,
+      "probeSourceSha256": "afaae411c79a22990aa28e8e80d4cc3a712fab06b848bd00c37ce0c1f35ed0ef",
+      "releaseJarUnchanged": true,
+      "replacements": [
+        56,
+        31,
+        65,
+        1,
+        31,
+        13
+      ]
+    },
+    "reviewed-ir": {
+      "checks": 237,
+      "instrumentedSources": {
+        "src/main/java/org/leanbridge/aliases/AliasProbe.java": "443e34b774fc1b0717791d570e6987ac7858c2abda3e5c2d7543e9ba23663235",
+        "src/main/java/org/leanbridge/aliases/Api.java": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+        "src/main/java/org/leanbridge/aliases/Faults.java": "afaae411c79a22990aa28e8e80d4cc3a712fab06b848bd00c37ce0c1f35ed0ef",
+        "src/main/java/org/leanbridge/aliases/LeanBridgeException.java": "b6f784c3a55c8184eb95d362ca84db485227be8fdb24b9c1471f581756cbf94f",
+        "src/main/java/org/leanbridge/aliases/NativeAssets.java": "56082115ee01900024d38fd7c14d6fd7dd4716c8e35d988f2e52d018161e47ab",
+        "src/main/java/org/leanbridge/aliases/Option.java": "28b0d0d2d04198bafcf35c22478ec5285f98b21e32c4eacb604852d257b6137c",
+        "src/main/java/org/leanbridge/aliases/Packet.java": "2176436070d5b04bb78a3d0e9c98af4190d231c555baa8fdd012b2f114772f15",
+        "src/main/java/org/leanbridge/aliases/Pair.java": "4f4cd2b47fb075661a2aee214c85a1b6a48b1307056aa3cf3a8a1af603d101de",
+        "src/main/java/org/leanbridge/aliases/Result.java": "dcae2a5ad54e79fc1e31d3a65396a1b7712ad79fd42ac1e9c1cde1bab5c8f246",
+        "src/main/java/org/leanbridge/aliases/Runtime.java": "373ca2d6b841923dece52b9806f9ba0385148cf06e2dbc3133d77e701d921612",
+        "src/main/java/org/leanbridge/aliases/Scalars.java": "ecab4d4f0d5d8a5aa14f175a22e176b9f416e44780d67b75b3777bc3b383fd50",
+        "src/main/java/org/leanbridge/aliases/Scope.java": "9b6824198990569211b7af451e4a32eaba36d232ef950364b9515cbdaad24d14",
+        "src/main/java/org/leanbridge/aliases/Unit.java": "a6c06fce7eba9bfaee1d570e138acf710f995bd97694eb027dc65e53f6a0c102"
+      },
+      "isolatedInstrumentedProjection": true,
+      "layoutChecks": 18,
+      "normalExitCleanup": true,
+      "originalSources": {
+        "src/main/java/org/leanbridge/aliases/Api.java": "b889754e99d8b6ae40ab0b437d462811b475d7216e273f0ccbbc3c953ce34e1d",
+        "src/main/java/org/leanbridge/aliases/LeanBridgeException.java": "b6f784c3a55c8184eb95d362ca84db485227be8fdb24b9c1471f581756cbf94f",
+        "src/main/java/org/leanbridge/aliases/NativeAssets.java": "56082115ee01900024d38fd7c14d6fd7dd4716c8e35d988f2e52d018161e47ab",
+        "src/main/java/org/leanbridge/aliases/Option.java": "28b0d0d2d04198bafcf35c22478ec5285f98b21e32c4eacb604852d257b6137c",
+        "src/main/java/org/leanbridge/aliases/Packet.java": "2176436070d5b04bb78a3d0e9c98af4190d231c555baa8fdd012b2f114772f15",
+        "src/main/java/org/leanbridge/aliases/Pair.java": "4f4cd2b47fb075661a2aee214c85a1b6a48b1307056aa3cf3a8a1af603d101de",
+        "src/main/java/org/leanbridge/aliases/Result.java": "dcae2a5ad54e79fc1e31d3a65396a1b7712ad79fd42ac1e9c1cde1bab5c8f246",
+        "src/main/java/org/leanbridge/aliases/Runtime.java": "1227c17767950bd0f760a609cea9e492a62115b02cfd88015d7b16199ee981a1",
+        "src/main/java/org/leanbridge/aliases/Scalars.java": "ecab4d4f0d5d8a5aa14f175a22e176b9f416e44780d67b75b3777bc3b383fd50",
+        "src/main/java/org/leanbridge/aliases/Scope.java": "15926e7056d035bfb8b02016cb68698412e2f44252d251e1613a9aa6b3d7f5a3",
+        "src/main/java/org/leanbridge/aliases/Unit.java": "a6c06fce7eba9bfaee1d570e138acf710f995bd97694eb027dc65e53f6a0c102"
+      },
+      "partialInputChecks": 64,
+      "probeSourceSha256": "afaae411c79a22990aa28e8e80d4cc3a712fab06b848bd00c37ce0c1f35ed0ef",
+      "releaseJarUnchanged": true,
+      "replacements": [
+        56,
+        31,
+        65,
+        1,
+        31,
+        13
+      ]
+    }
+  }
+}

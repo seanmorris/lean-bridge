@@ -128,6 +128,14 @@ source-file aliases cannot be exported from a NuGet assembly. The
 both source paths, static rejection, conversion cleanup, and relocated execution
 with a runtime but no SDK. Nat aliases still reject negative `BigInteger` values.
 
+Java and Kotlin consume the same prepared Java API with transparent alias target
+values. The Maven manifest, README and Java source documentation preserve alias
+names, targets and chains at parameters, results and record components. This
+profile adds neither wrapper classes nor separate Kotlin typealias declarations.
+The [installed JVM alias checks](../evidence/jvm-aliases-20260921.md) verify both
+languages on both source paths, exact ranges, conversion failures and relocated
+runtime-only execution.
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:

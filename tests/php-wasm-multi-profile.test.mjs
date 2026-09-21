@@ -17,15 +17,16 @@ import { customLakeRoot, elaboratedLakeApi, lakeInputState, lakeWorkspaceFixture
 import { assertRelocatedPackageSet } from "./helpers/package-set.mjs";
 import { assertPackagedMetadata, packageMetadataFixture } from "./helpers/package-metadata.mjs";
 import { buildPhpWasmCompilerInputs } from "../src/release/php-wasm-compiler-inputs.mjs";
-import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
-import { corpusLibraries } from "./fixtures/type-corpus/cases.mjs";
+import { reviewedTelemetry } from "./helpers/reviewed-telemetry.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { brickMathRepository } from "./helpers/brick-math.mjs";
 
 const reviewed = process.env.LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST === "1";
 const enabled = process.env.LEAN_BRIDGE_PHP_MULTI_PROFILE_TEST === "1" || reviewed;
 const json = async path => JSON.parse(await readFile(path, "utf8"));
-const run = (command, args, cwd, env = process.env) => processBuildRunner.capture({ command, args, cwd, env });
+const run = (command, args, cwd, env = process.env) => processBuildRunner.capture({ command, args, cwd, env }).catch(error => {
+	error.message += `: ${JSON.stringify(error.details)}`; throw error;
+});
 
 test(`${reviewed ? "Reviewed" : "Ordinary"} PHP-Wasm combines atomically with either or both native PHP and JavaScript`, { skip: !enabled, timeout: 900000 }, async t => {
 	const context = await lakeWorkspaceFixture(t, "telemetry"), engineRoot = process.cwd();
@@ -36,11 +37,9 @@ test(`${reviewed ? "Reviewed" : "Ordinary"} PHP-Wasm combines atomically with ei
 	config.targets.npm = { name: "@example/telemetry", version: "2.0.0" };
 	config.targets["php-native"] = { name: "example/telemetry-native", version: "2.0.0" };
 	config.targets["php-wasm"] = { npm: { name: "@example/telemetry-php-wasm", version: "2.0.0" }, composer: { name: "example/telemetry-wasm", version: "2.0.0" } };
-	const review = reviewed ? corpusReviewedIr(corpusLibraries[1], [{ name: "Telemetry.measure", parameters: ["uint32"], result: "uint32" }]) : null;
+	const review = reviewed ? reviewedTelemetry() : null;
 	if(review)
 	{
-		// This lakefile.lean fixture has no independently declared package version.
-		review.component = { id: "telemetry@0.0.0-local", name: "telemetry", version: "0.0.0-local" };
 		await saveLakeFile(context.root, "reviewed.binding-ir.json", canonicalJson(review));
 	}
 	await saveLakeFile(context.root, "lean-bridge.exports.json", canonicalJson(config));
