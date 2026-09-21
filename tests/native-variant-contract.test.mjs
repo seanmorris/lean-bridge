@@ -39,6 +39,11 @@ test("native variants construct, identify and project through typed Lean helpers
 	assert.match(calls, /if \(kind >= 2\) return -3/);
 	assert.match(calls, /default: return 0/);
 	assert.doesNotMatch(calls, /lean_ctor_|lean_obj_tag|lean_alloc_ctor/);
+	const wasm = createPhpWasmCopiedModel(synthetic());
+	assert.equal(wasm.pointerBits, 32);
+	assert.deepEqual(generateNativeLeanAdapters(wasm), {
+		...adapter, header: adapter.header.replace("sizeof(size_t) * 8 == 64", "sizeof(size_t) * 8 == 32")
+	});
 });
 
 test("C++ alternatives preserve empty, unit, anonymous and mixed payload cases", () => {
@@ -88,5 +93,4 @@ test("unimplemented host projections still reject variants before generation", (
 	for(const build of [compileCopiedPhpModel, compileCopiedWitModel])
 		assert.throws(() => build(ir), /copied primitives, arrays or acyclic records/);
 	assert.throws(() => compilePrimitiveCSurface(ir, { ...options, variants: false }), /copied primitives, arrays or acyclic records/);
-	assert.throws(() => createPhpWasmCopiedModel(synthetic()), /PHP-Wasm compilation admits/);
 });

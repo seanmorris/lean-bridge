@@ -12,7 +12,6 @@ import test from "node:test";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
-import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
 import { phpVariantReviewedIr } from "./helpers/php-variant-fixture.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -51,7 +50,7 @@ test("PHP variants preserve source field names and reject tags before reading th
 	assert.match(source, /array_keys\(get_object_vars\(\$value\)\)/);
 });
 
-test("PHP variant naming rejects collisions and keeps disabled transports closed", () => {
+test("PHP variant naming rejects collisions and keeps unsupported payloads closed", () => {
 	for(const rename of ["SignalData", "sIgNaL", "Some"])
 	{
 		const ir = phpVariantReviewedIr(); ir.types.find(type => type.name === "Packet").name = rename;
@@ -66,7 +65,6 @@ test("PHP variant naming rejects collisions and keeps disabled transports closed
 	assert.throws(() => generateCopiedPhpPackage(duplicate), /reserved|duplicated|collision/i);
 	const underscore = phpVariantReviewedIr(); underscore.types.find(type => type.name === "Signal").cases[0].name = "idle_";
 	assert.match(generateCopiedPhpPackage(underscore)["src/Api.php"], /class SignalIdle_ extends Signal/);
-	assert.throws(() => generateCopiedPhpZendAdapter(phpVariantReviewedIr()), /copied primitives, arrays or acyclic records/);
 	assert.throws(() => compileCopiedPhpModel(phpVariantReviewedIr(), { lists: true, variants: false }), /copied primitives, arrays or acyclic records/);
 	for(const position of ["parameter", "result"])
 	{

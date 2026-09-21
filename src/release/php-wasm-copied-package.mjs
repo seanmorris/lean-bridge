@@ -11,6 +11,7 @@ import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { readVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime, verifyPhpWasmCopiedFiles } from "../build/php-wasm-copied-artifacts.mjs";
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
+import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
 import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -52,7 +53,7 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 		, notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) };
 	const loaderIdentity = sha256(json(identityBasis));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
-	const projection = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true });
+	const projection = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true, variants: true });
 	const { namespace } = projection, aliases = phpCopiedAliases(projection);
 	const aliasFiles = aliases.length ? { "lean-bridge/aliases.json": json({ schemaVersion: 1, aliases }) } : {};
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
@@ -97,7 +98,7 @@ For first-call loading, import \`{ lazy as api }\` from this package and pass \`
 
 This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant in Node or Chromium. Register descriptors before constructing the host. Lazy loading requires \`enable_dl=1\`; await each host request before starting another. After an extension-loading failure, create a new PHP instance. No compiler, FFI extension or install script is required. The handoff receipt verifies package bytes; the descriptor checks compatibility identities, not downloaded byte integrity.
 
-Compound exports use null or Some for Option, Ok or Err for Except, and exact two-element lists for Prod. Some(null) retains a present Unit or an outer Some containing None, according to the declared type. Generated branch classes are final readonly and expose one value property. Calls validate payload types without weak-mode coercion and return independent copies, including nested arrays and records. PHP object identity is not Lean value equality. On wasm32, UInt32, UInt64, Int64, Nat, Int and USize use Brick\\Math\\BigInteger; ISize uses a 32-bit PHP int. These mappings apply inside compound payloads. Type nesting stops at 32. Validation, Zend conversion and native copying each have a 16 MiB accounting limit, not a bound on Lean working memory. Compound callables, arbitrary variants and recursive copied types remain unsupported.
+Compound exports use null or Some for Option, Ok or Err for Except, and exact two-element lists for Prod. Some(null) retains a present Unit or an outer Some containing None, according to the declared type. Generated branch classes are final readonly and expose one value property. Calls validate payload types without weak-mode coercion and return independent copies, including nested arrays and records. PHP object identity is not Lean value equality. On wasm32, UInt32, UInt64, Int64, Nat, Int and USize use Brick\\Math\\BigInteger; ISize uses a 32-bit PHP int. These mappings apply inside compound payloads. Type nesting stops at 32. Validation, Zend conversion and native copying each have a 16 MiB accounting limit, not a bound on Lean working memory. Compound callables, generic or indexed variants and recursive copied types remain unsupported.
 
 Lean List inputs, results and record fields use consecutive-key PHP arrays with \`list<T>\` PHPDoc. Empty Lists, order, duplicates and nesting are preserved. List and Array retain distinct IR and native identities. Returned mutable values are independent copies. Weak and strict callers receive the same validation and copy-budget checks. List callback payloads remain unsupported.
 ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks accept PHP callables with one to sixteen primitive arguments and a primitive result. Generated checks enforce exact values even in weak callers. UInt32, UInt64, Int64, Nat, Int and 32-bit USize use Brick\\Math\\BigInteger. Unit is null; Char is one Unicode scalar. Callback arguments are copied. The callable itself borrows one synchronous call; retained calls reject. Throwable failures preserve the original object after Lean cleanup. Reference parameters/returns, generators, compound callables and async reject.\n\nReturned LeanClosure objects are invokable with exactly the declared positional arguments. Call close() in finally; it is idempotent and defers disposal during an active call. isClosed() reports explicit closure, and destruction is a fallback. Saved callable aliases share the same lease. Cloning and serialization reject. Keep closures within their originating PHP instance. The pinned host cannot start Fibers. Each adapter allows 64 nested calls, the runtime allows 4096 closure identities, and existing 16 MiB conversion budgets apply.\n" : ""}
@@ -111,13 +112,13 @@ ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks ac
 			, "runtime/package/package.json": json(runtimePackage)
 			, "component/package/index.mjs": componentIndex
 			, "component/package/package.json": json(componentPackage)
-			, "component/package/README.md": readme + phpAliasReadme(projection)
+			, "component/package/README.md": readme + phpAliasReadme(projection) + phpVariantReadme(projection)
 			, "component/package/lazy-library.txt": definition.library
 			, ...Object.fromEntries(Object.entries(phpDependencies).map(([path, bytes]) => [`component/package/php/${path}`, bytes]))
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity, ...(aliases.length ? { aliases } : {}) })
 			, ...Object.fromEntries(Object.entries(aliasFiles).map(([path, bytes]) => [`composer/${path}`, bytes]))
-			, ...(aliases.length ? { "composer/README.md": readme + phpAliasReadme(projection) } : {})
+			, ...(aliases.length || projection.surface.copies.some(copy => copy.variant) ? { "composer/README.md": readme + phpAliasReadme(projection) + phpVariantReadme(projection) } : {})
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}

@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { zendVariantConversions } from "./copied-zend-variants.mjs";
 
 /**
  * Render C conversions in dependency order; aggregate owners stay with the caller.
@@ -69,6 +70,10 @@ export const copiedZendConversions = model => model.surface.copies.map(copy => {
 			, "if (!lb_charge(s, 2, 32)) return 0;", "array_init_size(out, 2);", "add_next_index_bool(out, value->is_ok);", "zval item; ZVAL_NULL(&item);"
 			, `int valid = value->is_ok ? lb_from${copy.fields[0].type.index}(&value->ok, &item, s) : lb_from${copy.fields[1].type.index}(&value->error, &item, s);`
 			, "if (!valid) { zval_ptr_dtor(&item); return 0; }", "add_next_index_zval(out, &item);");
+	} else if(copy.variant)
+	{
+		const variant = zendVariantConversions(copy);
+		input.push(...variant.input); output.push(...variant.output);
 	} else
 	{
 		input.push('if (Z_TYPE_P(value) != IS_ARRAY || !zend_array_is_list(Z_ARRVAL_P(value))) return lb_fail(s, "Expected a consecutive-key wire list", 1);');

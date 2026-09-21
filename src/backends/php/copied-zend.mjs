@@ -12,10 +12,12 @@ import { copiedPhpPublicSource } from "./copied-values.mjs";
 import { copiedPhpChecks } from "./copied-conversions.mjs";
 import { copiedZendSupport } from "./copied-zend-support.mjs";
 import { copiedZendConversions } from "./copied-zend-conversions.mjs";
+import { phpZendVariantWire } from "./copied-zend-variants.mjs";
 import { copiedPhpWasmLoader } from "./php-wasm-copied-loader.mjs";
 import { phpZendLease, phpZendCall, phpZendCallableMethods, zendCallableOwners, zendCallableTrampolines, zendCallableCalls } from "./zend-callables.mjs";
 
 const phpWire = model => model.surface.copies.map(copy => {
+	if(copy.variant) return phpZendVariantWire(model, copy);
 	const name = copy.scalarName, ns = `\\${model.namespace}\\`;
 	let input = "$value", output = "$value";
 	if(copy.publicType === "\\Brick\\Math\\BigInteger")
@@ -153,7 +155,7 @@ static ZEND_FUNCTION(lb_call${index}) {
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  */
 export const generateCopiedPhpZendAdapter = (ir, { integerBits = 32 } = {}) => {
-	const model = compileCopiedPhpModel(ir, { integerBits, lists: true }), identity = hashBindingIr(ir);
+	const model = compileCopiedPhpModel(ir, { integerBits, lists: true, variants: true }), identity = hashBindingIr(ir);
 	const stem = `lb_${model.surface.prefix}_${identity.slice(0, 16)}`;
 	const transport = `${model.namespace}\\Internal\\Zend${identity.slice(0, 16)}`;
 	const c = generateCBindingPackage(ir);

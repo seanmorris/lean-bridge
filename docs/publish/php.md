@@ -99,9 +99,9 @@ copied values within the existing 32-level depth bound. Recursive copied types,
 compound callable payloads and identity-bearing alias targets
 need separate support. Alias payloads in callbacks also remain separate work.
 
-### Export native copied variants
+### Export copied variants
 
-Native Composer builds accept concrete, non-recursive copied variants from
+Native PHP and PHP-Wasm builds accept concrete, non-recursive copied variants from
 ordinary Lean source or a compiler-checked reviewed contract:
 
 ```lean
@@ -116,7 +116,9 @@ end Variants
 ```
 
 Select `Variants.echo_signal` in `exports`, then build with
-`--target php-native`. Distribute the original Composer ZIP and its receipt.
+`--target php-native` or `--target php-wasm`. Native builds produce a Composer
+ZIP. PHP-Wasm builds produce npm component/runtime archives and a companion
+Composer ZIP. Distribute the original archives and their receipts.
 Generated PHP contains an abstract readonly `Signal` family and final readonly
 `SignalIdle`, `SignalStopped`, `SignalData` and `SignalMarker` classes. Payload
 names remain `count`, `label` and `value`. Consumers construct these classes
@@ -130,11 +132,14 @@ generation. Use a Lean wrapper such as `echo_signal` for a function named
 `echo`, which PHP reserves. Reviewed contracts must select that real wrapper;
 changing only the reviewed metadata is not sufficient.
 
-PHP-Wasm variants are not enabled, so this API cannot yet target both PHP
-transports in one build. Generic, indexed, proof-bearing, recursive, callable
-and identity-bearing payloads remain separate work. The
-[installed variant record](../evidence/php-native-variants-20260921.md) covers
-both source paths, weak and strict callers, relocation and conversion cleanup.
+The same Lean API can target both PHP transports. PHP-Wasm uses `BigInteger`
+for `UInt32` and `Int64` payloads as well as `UInt64`, `Nat`, `Int` and `USize`;
+its `ISize` uses a signed 32-bit PHP integer. Constructor names and field names
+remain the same. Generic, indexed, proof-bearing, recursive, callable and
+identity-bearing payloads remain separate work. The
+[native variant record](../evidence/php-native-variants-20260921.md) and
+[PHP-Wasm variant record](../evidence/php-wasm-variants-20260921.md) cover both
+source paths, weak and strict callers, relocation and conversion cleanup.
 
 ### Export native callbacks and returned functions
 
@@ -156,7 +161,7 @@ The PHP-Wasm Zend adapter accepts the same primitive signatures and `arities` se
 
 ## Build an ordinary PHP-Wasm package
 
-PHP-Wasm compiles copied Lists, options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings. Compound callables remain unsupported.
+PHP-Wasm compiles concrete copied variants, Lists, options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings. Compound callables remain unsupported.
 
 Install a [prepared CLI](../lean/setup.md#install-a-prepared-cli) whose inventory has `phpWasmInputsIncluded: true`. It contains the prebuilt PHP-Wasm runtime and configured PHP 8.4.1 headers. Leave `LEAN_BRIDGE_PHP_INPUTS` unset to use those bundled inputs.
 
