@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { readVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime, verifyPhpWasmCopiedFiles } from "../build/php-wasm-copied-artifacts.mjs";
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
+import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -51,9 +52,11 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 		, notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) };
 	const loaderIdentity = sha256(json(identityBasis));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
-	const { namespace } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true });
+	const projection = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true });
+	const { namespace } = projection, aliases = phpCopiedAliases(projection);
+	const aliasFiles = aliases.length ? { "lean-bridge/aliases.json": json({ schemaVersion: 1, aliases }) } : {};
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
-	const phpDependencies = { ...brickMath, "bootstrap.php": "<?php\ndeclare(strict_types=1);\nrequire_once __DIR__ . '/dependencies/brick-math/autoload.php';\nrequire_once __DIR__ . '/src/Api.php';\n" };
+	const phpDependencies = { ...brickMath, ...aliasFiles, "bootstrap.php": "<?php\ndeclare(strict_types=1);\nrequire_once __DIR__ . '/dependencies/brick-math/autoload.php';\nrequire_once __DIR__ . '/src/Api.php';\n" };
 	const runtimeIndex = `import { createPhpWasmCopiedDescriptor } from './host.mjs';
 const runtime = Object.freeze(${JSON.stringify({ identity: runtime.identity, loaderIdentity, library: basename(runtime.manifest.library) })});
 export const createDescriptor = (component, assets) => createPhpWasmCopiedDescriptor({ ...runtime, url: new URL(${JSON.stringify(`./compiled/${runtime.manifest.library}`)}, import.meta.url) }, component, assets);
@@ -108,11 +111,13 @@ ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks ac
 			, "runtime/package/package.json": json(runtimePackage)
 			, "component/package/index.mjs": componentIndex
 			, "component/package/package.json": json(componentPackage)
-			, "component/package/README.md": readme
+			, "component/package/README.md": readme + phpAliasReadme(projection)
 			, "component/package/lazy-library.txt": definition.library
 			, ...Object.fromEntries(Object.entries(phpDependencies).map(([path, bytes]) => [`component/package/php/${path}`, bytes]))
 			, "composer/composer.json": json(composerPackage)
-			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity })
+			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity, ...(aliases.length ? { aliases } : {}) })
+			, ...Object.fromEntries(Object.entries(aliasFiles).map(([path, bytes]) => [`composer/${path}`, bytes]))
+			, ...(aliases.length ? { "composer/README.md": readme + phpAliasReadme(projection) } : {})
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}

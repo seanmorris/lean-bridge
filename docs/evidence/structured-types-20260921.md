@@ -161,9 +161,9 @@ records, variants and nested containers. See the
 [alias implementation and evidence](npm-aliases-20260921.md).
 
 Native private conversion helpers use the checked target representation while
-Binding IR retains alias names. C/C++, Python, Rust, .NET, Java/Kotlin, Ruby and
-Perl and native PHP now have the installed checks below. Installed alias acceptance
-for the other two consumer profiles remains open. Generic aliases, bounded recursion,
+Binding IR retains alias names. C/C++, Python, Rust, .NET, Java/Kotlin, Ruby,
+Perl, native PHP and PHP-Wasm now have the installed checks below. Installed alias acceptance
+for WIT/WASI remains open. Generic aliases, bounded recursion,
 compound callables and explicitly owned identity aggregates remain in the full
 structured-types goal.
 
@@ -276,7 +276,20 @@ in-memory probe covers 567 injected conversion failures, 64 partial-input
 failures and fifteen malformed native outputs. Installed files remain unchanged.
 See the [native PHP alias evidence](php-native-aliases-20260921.md).
 
-Alias parameters, results and fields now have installed acceptance in fifteen of
-seventeen profiles. PHP-Wasm and WIT/WASI remain. Native
+## Compiled PHP-Wasm aliases
+
+Prepared npm and Composer packages preserve 27 copied alias names, targets and
+chains in manifests, installed catalogs and public PHPDoc. Callers use wasm32
+target values without wrapper classes. The descriptor mounts the catalog with
+embedded declarations; Composer installations carry identical catalog bytes.
+
+Both source paths pass 12,544 public assertions in each of twelve Node/Chromium,
+startup/lazy, embedded/Composer and weak/strict arrangements, repeated after
+relocation and producer removal. A separate synthetic Zend provider checks
+alias-wrapped cleanup, malformed outputs and bailout recovery. See the
+[PHP-Wasm alias evidence](php-wasm-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in sixteen of
+seventeen profiles. WIT/WASI remains. Native
 variants, bounded recursion, compound callables and explicitly owned identity
 aggregates also remain part of VO1219.

@@ -279,7 +279,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		&& !cell.position.startsWith("callback-") && !["callback", "closure"].includes(cell.shape));
 	const compounds = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["option", "result", "tuple"] : [];
 	const lists = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["list"] : [];
-	const aliases = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native"].includes(profile) ? ["alias"] : [];
+	const aliases = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm"].includes(profile) ? ["alias"] : [];
 	const aliasEvidence = ["java", "kotlin"].includes(profile) ? "jvm-aliases-installed" : `${profile}-aliases-installed`;
 	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
 	assert.equal(observed.length, 63 + 3 * (compounds.length + lists.length + aliases.length));

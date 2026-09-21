@@ -57,6 +57,21 @@ test("bundled PHP dependencies mount once without affecting extension-only Compo
 		assert.throws(() => descriptor(runtime, component, { ...assets, php: { ...assets.php, [key]: base.api } }), /Invalid bundled PHP dependencies/);
 });
 
+test("alias catalogs mount once at their exact package-relative path", () => {
+	const php = { "bootstrap.php": base.api, "lean-bridge/aliases.json": new URL("./aliases.json", base.api) };
+	for(const mode of ["startup", "lazy"])
+	{
+		const a = descriptor(runtime, component, { ...base, php });
+		const entry = mode === "lazy" ? a.lazy : a, instance = host();
+		const files = entry.getFiles(instance);
+		assert.deepEqual(files.filter(file => file.path.endsWith("/aliases.json")), [{ path: "/vendor/example/willow/lean-bridge/aliases.json", url: php["lean-bridge/aliases.json"] }]);
+		assert.deepEqual(entry.getFiles(instance), []);
+	}
+	for(const key of ["lean-bridge/other.json", "lean-bridge/../aliases.json", "/lean-bridge/aliases.json", "lean-bridge/aliases.json/escape.php"])
+		assert.throws(() => descriptor(runtime, component, { ...base, php: { ...php, [key]: base.api } }), /Invalid bundled PHP dependencies/);
+	assert.throws(() => descriptor(runtime, component, { ...base, php: { ...php, "lean-bridge/aliases.json": "aliases.json" } }), /Invalid bundled PHP dependencies/);
+});
+
 test("descriptors reject unsupported versions, variants, misplaced modes and late registration", async () => {
 	const a = descriptor(runtime, component, base);
 	for(const php of [null, {}, { ...host(), phpVersion: "8.3" }, { ...host(), phpVariant: "zts" }])

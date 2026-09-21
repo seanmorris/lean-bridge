@@ -140,9 +140,11 @@ the PHP 8.5 deprecation fix and repeated installed checks.
 
 ### Named copied aliases
 
-Native Composer packages preserve Lean alias names and their original targets
-in `binding-manifest.json` and installed API documentation. Callers pass the
-ordinary PHP target value. Aliases do not create wrapper classes.
+Native Composer and PHP-Wasm packages preserve Lean alias names, original targets
+and chains in installed metadata and API documentation. Callers pass ordinary
+PHP target values. Aliases do not create wrapper classes. Native packages use
+`binding-manifest.json`; PHP-Wasm packages also include a shared
+`lean-bridge/aliases.json` catalog in their npm and Composer archives.
 
 For a package exporting `Scores.Count := UInt32` and
 `Scores.Counts := List Count`, save this as `aliases.php`:
@@ -159,17 +161,35 @@ echo increment(41), PHP_EOL;          // 42
 print_r(reverse([1, 2, 1, 3]));       // [3, 1, 2, 1]
 ```
 
-Run `php aliases.php`. Generated PHPDoc records the target types, such as `int`
+For native PHP, run `php aliases.php`. Generated PHPDoc records the target types, such as `int`
 and `list<int>`. The `@lean-bridge-param`, `@lean-bridge-return` and
 `@lean-bridge-contract` annotations retain the original Lean names at API sites
 and record fields. Alias chains remain in the manifest, including aliases used
 only in return types.
 
+In PHP-Wasm, `Count` uses `Brick\Math\BigInteger` because UInt32 does not fit
+the host's signed 32-bit integer. Inside the PHP code loaded by your
+[installed descriptor](#ordinary-php-wasm-packages), call:
+
+```php
+use Brick\Math\BigInteger;
+use function LeanScores\{increment, reverse};
+
+echo increment(BigInteger::of(41));                 // 42
+$counts = array_map(BigInteger::of(...), [1, 2, 1, 3]);
+$reversed = reverse($counts);                      // BigInteger values: 3, 1, 2, 1
+```
+
+The catalog is available beside the mounted package's `src` directory with
+either embedded declarations or Composer. Startup and first-call loading use
+the same declarations and target checks.
+
 Weak and strict callers receive the same checks: Nat requires a nonnegative
 `BigInteger`, integer ranges remain enforced, Unit uses `null` and Char requires
 one Unicode scalar. Copied containers retain their target's ownership and
-conversion limits. The [native PHP alias checks](evidence/php-native-aliases-20260921.md)
-cover both source paths and caller modes. PHP-Wasm alias acceptance remains pending.
+conversion limits. The [native PHP](evidence/php-native-aliases-20260921.md) and
+[PHP-Wasm alias checks](evidence/php-wasm-aliases-20260921.md) cover both source
+paths and caller modes. Alias payloads in callbacks still need separate support.
 
 ### Native callbacks and returned functions
 
@@ -698,7 +718,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Except ε α` | `Ok or Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean Except E T becomes new Ok($value) or new Err($error), each exposing a readonly value property. Branch identity is preserved even for same-typed payloads. Domain errors return Err; bridge failures throw. PHP === compares object identity; PHP == property comparison is not generated Lean equality. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `Two-element consecutive-key array (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two consecutive integer-key array elements preserve binary nesting and per-position validation. Nested arrays, records and branch payloads are copied independently. Validation, host conversion and native copying each have a 16 MiB accounting limit, not a bound on all PHP or Lean allocations. Payloads use the selected target's integer mappings. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated readonly class` (input, result, field); `Generated value class (Alpha: LeanAlpha\Payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Native PHP: Final readonly typed classes, including empty and scalar-represented records. Input checks also validate objects made without their constructors.; PHP-Wasm: Final readonly typed classes, including empty and scalar-represented records. Nested fields are checked and results own independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | Native PHP: `PHP target value; named Lean contract in installed manifest and PHPDoc` (input, result, field); `Resolved target type` (callback input, callback result); PHP-Wasm: `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Not audited (callback input, callback result); PHP-Wasm: Not audited. Reviewed IR: Native PHP: Installed checks passed (input, result, field); Generator inspected (callback input, callback result); PHP-Wasm: Generator inspected | Native PHP: Aliases preserve exact target conversion rules, original names and independently copied results. Weak and strict callers get the same checks: Nat requires nonnegative Brick\Math\BigInteger, integer ranges remain enforced, Unit uses null and Char requires one Unicode scalar. List/Array identity, Option/Result presence, 32-level schema depth and existing 16 MiB conversion budgets remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | Native PHP: `PHP target value; named Lean contract in installed manifest and PHPDoc` (input, result, field); `Resolved target type` (callback input, callback result); PHP-Wasm: `PHP target value; named Lean contract in installed catalog and PHPDoc` (input, result, field); `Resolved target type` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Native PHP: Aliases preserve exact target conversion rules, original names and independently copied results. Weak and strict callers get the same checks: Nat requires nonnegative Brick\Math\BigInteger, integer ranges remain enforced, Unit uses null and Char requires one Unicode scalar. List/Array identity, Option/Result presence, 32-level schema depth and existing 16 MiB conversion budgets remain unchanged.; PHP-Wasm: Aliases retain exact wasm32 target rules and independent copies. UInt32, UInt64, Int64, Nat, Int and USize use Brick\Math\BigInteger; ISize uses a 32-bit PHP int. Weak and strict callers get the same checks. Unit uses null and Char requires one Unicode scalar. List/Array identity, Option/Result presence, 32-level schema depth and existing 16 MiB conversion budgets remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `LeanAlpha\Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `callable` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Synchronous PHP callable with generated signature PHPDoc. Mixed bridge parameters prevent weak-caller coercion; callback failures preserve the same Throwable, trace and previous exception after cleanup. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

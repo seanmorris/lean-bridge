@@ -66,7 +66,7 @@ Review the source library's license and bundled notices before publication; gene
 
 ### Export named copied aliases
 
-Native Composer builds preserve concrete copied alias names, targets and chains
+Native Composer and PHP-Wasm builds preserve concrete copied alias names, targets and chains
 from ordinary source or a compiler-checked reviewed contract:
 
 ```lean
@@ -79,18 +79,25 @@ end Scores
 ```
 
 Select `Scores.increment` and `Scores.reverse` in `exports`, then build with
-`--target php-native`. Distribute the generated ZIP unchanged. Its manifest
-contains both aliases, and its installed PHP source documents the original
+`--target php-native` or `--target php-wasm`. Distribute the generated archives
+unchanged. Their manifests contain both aliases, and the installed PHP source documents the original
 parameter, result and record-field contracts. PHPDoc uses PHP target types;
 the aliases create no wrapper classes. Consumers use the
 [ordinary PHP values](../php.md#named-copied-aliases).
+
+The PHP-Wasm handoff contains the component/runtime npm archives and a companion
+Composer ZIP. The npm component contains `php/lean-bridge/aliases.json`; Composer
+installs the same catalog at `lean-bridge/aliases.json`. The npm descriptor mounts
+it beside its PHP files. UInt32-based aliases use
+`Brick\Math\BigInteger` on wasm32, including inside Lists and record fields.
+No extra publisher settings or consumer wrappers are needed.
 
 A reviewed Binding IR contract must preserve alias definitions and references,
 not replace them with flattened primitives. The builder compares them with
 fresh Lean metadata before packaging. Targets must remain concrete, immutable
 copied values within the existing 32-level depth bound. Recursive copied types,
 native variants, compound callable payloads and identity-bearing alias targets
-need separate support. PHP-Wasm alias acceptance remains pending.
+need separate support. Alias payloads in callbacks also remain separate work.
 
 ### Export native callbacks and returned functions
 
