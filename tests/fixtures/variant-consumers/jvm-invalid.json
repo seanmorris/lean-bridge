@@ -1,0 +1,12 @@
+[
+  {"name":"wrong-variant","java":{"statement":"Api.echo(new ModeFirst());","diagnostic":"compiler.err.cant.apply.symbol"},"kotlin":{"statement":"Api.echo(ModeFirst())","diagnostic":"ARGUMENT_TYPE_MISMATCH"}},
+  {"name":"missing-payload","java":{"statement":"new SignalData(1L);","diagnostic":"compiler.err.cant.apply.symbol"},"kotlin":{"statement":"SignalData(1L)","diagnostic":"NO_VALUE_FOR_PARAMETER"}},
+  {"name":"wrong-payload","java":{"statement":"new SignalData(1L, 42);","diagnostic":"compiler.err.cant.apply.symbol"},"kotlin":{"statement":"SignalData(1L, 42)","diagnostic":"ARGUMENT_TYPE_MISMATCH"}},
+  {"name":"marker-presence","java":{"statement":"new SignalMarker();","diagnostic":"compiler.err.cant.apply.symbol"},"kotlin":{"statement":"SignalMarker()","diagnostic":"NO_VALUE_FOR_PARAMETER"}},
+  {"name":"abstract-base","java":{"statement":"new Signal();","diagnostic":"compiler.err.abstract.cant.be.instantiated"},"kotlin":{"statement":"Signal()","diagnostic":"INTERFACE_AS_FUNCTION"}},
+  {"name":"closed-family","java":{"declaration":"final class Invalid implements Signal { }","diagnostic":"compiler.err.cant.inherit.from.sealed"},"kotlin":{"declaration":"class Invalid : Signal","diagnostic":"CLASS_INHERITS_JAVA_SEALED_CLASS"}},
+  {"name":"incomplete-match","java":{"statement":"int result = switch (Api.make(0)) { case SignalIdle idle -> 0; };","diagnostic":"compiler.err.not.exhaustive"},"kotlin":{"statement":"val result = when (Api.make(0)) { is SignalIdle -> 0 }; println(result)","diagnostic":"NO_ELSE_IN_WHEN"}},
+  {"name":"private-runtime","java":{"statement":"org.leanbridge.variants.Runtime value = null;","diagnostic":"compiler.err.not.def.public.cant.access"},"kotlin":{"statement":"val value: org.leanbridge.variants.Runtime? = null; println(value)","diagnostic":"INVISIBLE_REFERENCE"}},
+  {"name":"immutable-field","java":{"statement":"new SignalData(1L, \"x\").count = 2L;","diagnostic":"compiler.err.report.access"},"kotlin":{"statement":"SignalData(1L, \"x\").count = 2L","diagnostic":"VAL_REASSIGNMENT"}},
+  {"name":"array-shape","java":{"statement":"Api.signals(new Signal[] {new SignalIdle()});","diagnostic":"compiler.err.cant.apply.symbol"},"kotlin":{"statement":"Api.signals(arrayOf<Signal>(SignalIdle()))","diagnostic":"ARGUMENT_TYPE_MISMATCH"}}
+]

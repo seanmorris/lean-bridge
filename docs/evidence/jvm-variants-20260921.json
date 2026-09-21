@@ -1,0 +1,3157 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "f272ed1a43048c7e5c883a19560e53d63b086978",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "wordBits": 64,
+  "jdk": "22.0.2",
+  "kotlin": "2.2.0",
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "reportSha256": "a9b8277ea1a84a1a6e13ba2fca95a020c12342e6418ed475895d4a56f2d49cda",
+  "sourceHashes": {
+    "tests/jvm-variants.test.mjs": "88b5b6ab87f771ceaad439146585c05d6510ad85a4cee8c3958a16b850e3424f",
+    "tests/jvm-variant-contract.test.mjs": "9f379096c7d86335eff26ccc2e9c04a228b90e2dc93ff735b5784857c6e6bbdb",
+    "tests/jvm-variant-evidence.test.mjs": "df52a96708f463c9a94d6bf91fb82e5fbe285c8cfedece1b24469b94d0ab9052",
+    "tests/helpers/jvm-variant-faults.mjs": "ca48f1e4a7b92e297072936d25e9c4284d66a0a26586edc42c337a5e6a1270e0",
+    "tests/helpers/jvm-variant-fixture.mjs": "4e7f31d4f8f056159f36c05dd99d0af72ab441fd9279f3fff34d498bdbe7e6f5",
+    "tests/helpers/type-corpus-jvm.mjs": "9a147486a1e9d91f71cafbd44a4fd493e1319711068fc0a403fc73d4bf3b7058",
+    "tests/helpers/type-corpus-jvm-tools.mjs": "5f21567ed7dfd107bad21bfe3e57a448d1a525890133b684cf6a7758e4a334a7",
+    "tests/helpers/type-corpus-compiler.mjs": "020290f8ed04a935b51fb1a2b53e3b213884d36d891c5eacba8850194f181fa0",
+    "tests/fixtures/type-corpus/consumers/Wire.java": "7f06af43999b7d3b62b415ee30c212735cae26a889f4fc360b670ea7dbeda8b6",
+    "tests/helpers/c-variant-fixture.mjs": "f6446818fd57352ea8f2b6212c0ce0b8e0e984592bab8da7f9a393ae12b696f9",
+    "tests/helpers/native-variant-fixture.mjs": "e95e4263f216c2ae1e4a6afad017af23fa229358d696a02633ca5e5702167d5e",
+    "tests/helpers/variant-fixture.mjs": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754",
+    "tests/helpers/native-variant-faults.mjs": "2dd45473a8faf5ee566dc6a673176c2ca8080dfe1c015d8fd198028faa81cab6",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/fixtures/variant-consumers/java.java": "1037e66b688d1f3f8d3123ff098927f97df71e7cb74bf621916c5575ce03a16c",
+    "tests/fixtures/variant-consumers/kotlin.kt": "07c574558ffaa68576213a237020550fc1d2285529c5badb7fbb8f519f3dc763",
+    "tests/fixtures/variant-consumers/jvm-invalid.json": "44a11841f656a75d9324baa6cf5c042f09d54c9f5ce0277f6a199d5d2ce8e510",
+    "tests/fixtures/variant-consumers/jvm-faults.java": "af925c02e67418bcd6e2d5958a8c92a77fe27ea10d2baf9686abf31efdeb5a5b",
+    "tests/fixtures/variant-consumers/native-probe.c": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84",
+    "tests/fixtures/variant-consumers/Extra.lean": "e2974d8f0073ea7f7241e3c676824c911714a0cf6d6cc812f4f4c1c97b7e5968",
+    "tests/fixtures/onboarding/native-variants/Variants.lean": "b1ea2c169d60cb150f5f875067f6e872157e58c66a511cef052ba9ddf5630255",
+    "tests/fixtures/onboarding/native-variants/lakefile.toml": "b8f22b2c53854c50e791640dc7353c58c534478e48f0508f9365df5a1f789d31",
+    "tests/fixtures/onboarding/native-variants/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-variants/package.json": "592387c172d140512602ddf70a9eb84391334c65f41c2e913f81ce9ff4bb9c85",
+    "tests/fixtures/onboarding/native-variants/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "signatures": [
+    {
+      "name": "Variants.echo",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.echo_mode",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Mode"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Mode"
+      }
+    },
+    {
+      "name": "Variants.echo_nested",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Nested"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Nested"
+      }
+    },
+    {
+      "name": "Variants.signals",
+      "parameters": [
+        {
+          "kind": "apply",
+          "constructor": "array",
+          "arguments": [
+            {
+              "kind": "apply",
+              "constructor": "list",
+              "arguments": [
+                {
+                  "kind": "named",
+                  "id": "lean:Variants.Signal"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "result": {
+        "kind": "apply",
+        "constructor": "array",
+        "arguments": [
+          {
+            "kind": "apply",
+            "constructor": "list",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Variants.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Scalars"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Scalars"
+      }
+    },
+    {
+      "name": "Variants.echo_anonymous",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Anonymous"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Anonymous"
+      }
+    },
+    {
+      "name": "Variants.echo_one",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.One"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.One"
+      }
+    },
+    {
+      "name": "Variants.next",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.code",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "uint32"
+      }
+    },
+    {
+      "name": "Variants.make",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "uint32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Scalars"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Variants.duplicate",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "bytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    },
+    {
+      "name": "Variants.produce",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    },
+    {
+      "name": "Variants.echo_buffers",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Buffers"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    }
+  ],
+  "reviewedIrSha256": "21cba6e0f721d83261c4b21eb7cde9f9e476789dd6c3dad4adf7bd29b72c1069",
+  "types": [
+    {
+      "id": "lean:Variants.Anonymous",
+      "name": "Anonymous",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "number",
+          "fields": [
+            {
+              "name": "arg0",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "pair",
+          "fields": [
+            {
+              "name": "arg0",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "arg1",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "collision",
+          "fields": [
+            {
+              "name": "arg1",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "arg1_",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Anonymous",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Buffers",
+      "name": "Buffers",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "empty",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "pair",
+          "fields": [
+            {
+              "name": "first",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "second",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Buffers",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Mode",
+      "name": "Mode",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "first",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "second",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "third",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Mode",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Nested",
+      "name": "Nested",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "empty",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "packet",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "named",
+                "id": "lean:Variants.Packet"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "outcome",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "apply",
+                "constructor": "result",
+                "arguments": [
+                  {
+                    "kind": "apply",
+                    "constructor": "tuple",
+                    "arguments": [
+                      {
+                        "kind": "named",
+                        "id": "lean:Variants.Signal"
+                      },
+                      {
+                        "kind": "named",
+                        "id": "lean:Variants.Mode"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "primitive",
+                    "name": "string"
+                  }
+                ]
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Nested",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.One",
+      "name": "One",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "only",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.One",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Packet",
+      "name": "Packet",
+      "kind": "record",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [
+        {
+          "name": "current",
+          "type": {
+            "kind": "named",
+            "id": "lean:Variants.Signal"
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "events",
+          "type": {
+            "kind": "apply",
+            "constructor": "list",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "fallback",
+          "type": {
+            "kind": "apply",
+            "constructor": "option",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "modes",
+          "type": {
+            "kind": "apply",
+            "constructor": "array",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Mode"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "cases": [],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Packet",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Scalars",
+      "name": "Scalars",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "absent",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "all",
+          "fields": [
+            {
+              "name": "unit",
+              "type": {
+                "kind": "primitive",
+                "name": "unit"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "bool",
+              "type": {
+                "kind": "primitive",
+                "name": "bool"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u8",
+              "type": {
+                "kind": "primitive",
+                "name": "uint8"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u16",
+              "type": {
+                "kind": "primitive",
+                "name": "uint16"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u32",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u64",
+              "type": {
+                "kind": "primitive",
+                "name": "uint64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i8",
+              "type": {
+                "kind": "primitive",
+                "name": "int8"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i16",
+              "type": {
+                "kind": "primitive",
+                "name": "int16"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i32",
+              "type": {
+                "kind": "primitive",
+                "name": "int32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i64",
+              "type": {
+                "kind": "primitive",
+                "name": "int64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "natural",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "integer",
+              "type": {
+                "kind": "primitive",
+                "name": "int"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "f32",
+              "type": {
+                "kind": "primitive",
+                "name": "float32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "f64",
+              "type": {
+                "kind": "primitive",
+                "name": "float64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "text",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "bytes",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "char",
+              "type": {
+                "kind": "primitive",
+                "name": "char"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "word",
+              "type": {
+                "kind": "primitive",
+                "name": "usize"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "signedWord",
+              "type": {
+                "kind": "primitive",
+                "name": "isize"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Scalars",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Signal",
+      "name": "Signal",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "idle",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "stopped",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "data",
+          "fields": [
+            {
+              "name": "count",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "label",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "marker",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "primitive",
+                "name": "unit"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Signal",
+        "extensions": {}
+      },
+      "assurance": []
+    }
+  ],
+  "executions": [
+    {
+      "bindingIrSha256": "be4b689d1a4bdeb7fb8019315b62bff22e96b3354075f3e4b69703880d0fccef",
+      "calls": 4331,
+      "checks": 209998,
+      "jvm": {
+        "archiveSha256": "4cd71157d5ffc3cd837659d3a0fef875398e3e92a71ce00e2a6ecdc0a3867e0e",
+        "bindingIrSha256": "be4b689d1a4bdeb7fb8019315b62bff22e96b3354075f3e4b69703880d0fccef",
+        "classpathSha256": "465f76f47155e78d61098e5ca5225ce9d274d42137037f95b81333ec8c46f2d5",
+        "compiledProjectionSha256": "a950f2b5c4451d406e6dd3a3dd4a4a59e14752b7843a77ff78602a5649b12b43",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "--release",
+          "22",
+          "-g:none",
+          "-proc:none",
+          "-encoding",
+          "UTF-8",
+          "-Xlint:all",
+          "-Werror",
+          "-implicit:none"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "8a8670a66af65ac205183a33de76f923e50caab70068fad8820be802096b35c6",
+        "declarationsSha256": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "fileCount": 452,
+          "inventorySha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        },
+        "deployment": {
+          "classes/Consumer.class": {
+            "bytes": 23800,
+            "sha256": "95183b97321770323927efd4651d957d864edb7d086d2c339594a650882c8aca"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "package.jar": {
+            "bytes": 51479429,
+            "sha256": "4cd71157d5ffc3cd837659d3a0fef875398e3e92a71ce00e2a6ecdc0a3867e0e"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "handoffRemovedBeforeExecution": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "libvariants.so": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "395ce97ec39736d2f32b17ffe0b1061ee69ab79ffd16767633861a866fe267d4",
+        "pomSha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30",
+        "projectSourceSha256": "4708e91b58a7eac7794309b2964113aa3c59101f1a103aecd4f40e2c686928bb",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "31574b4d36ed754eee6837b9b749dab2ee8d1b2cfef83546b4df6489c2870d59",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a"
+      },
+      "modelSha256": "58a13c3bdf79e7d8c09a5ac32d8038707f63fd3788bc29300bffccff1f5f5c56",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51479429,
+              "path": "archives/variants-1.0.0.jar",
+              "sha256": "4cd71157d5ffc3cd837659d3a0fef875398e3e92a71ce00e2a6ecdc0a3867e0e"
+            },
+            {
+              "bytes": 463,
+              "path": "archives/variants-1.0.0.pom",
+              "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:variants",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "java",
+      "receiptSha256": "670d3141426f4038c8446b098e9602d75008ff9efe6d8c60e21e48b7e480f032",
+      "rejected": 33,
+      "sourceApiSha256": "fbb764ec977521cdbe023a14229d53b453dace8157b4b5147a6e5437e242d9e0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "becab512067425f171e34d264e26e3595887974e6617d2b3aa3d0fa222dc0bba",
+      "observationSha256": "4d32f7fa61bcae5e90cf8e4d42a87edda6a813d388e30b7d607f9d8d0a2c6991",
+      "compilerRejections": [
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-wrong-variant.java",
+              "line": 3,
+              "message": "kindname.method, echo, org.leanbridge.variants.Signal, org.leanbridge.variants.ModeFirst, kindname.class, org.leanbridge.variants.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: org.leanbridge.variants.ModeFirst, org.leanbridge.variants.Signal))"
+            }
+          ],
+          "id": "variants/wrong-variant",
+          "sourceSha256": "f44ea74d794dc8b4bd4daf7af710290655ff92a7dd2d0b9e41c2ba3dfdd61b96",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 1,
+              "file": "src/reject-missing-payload.java",
+              "line": 3,
+              "message": "kindname.constructor, SignalData, long,java.lang.String, long, kindname.record, org.leanbridge.variants.SignalData, (compiler.misc.arg.length.mismatch)"
+            }
+          ],
+          "id": "variants/missing-payload",
+          "sourceSha256": "8fdaccd65258d3b2ac90943d2e9c745182cc4663d9f2187a5e982d1b23384cfc",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 1,
+              "file": "src/reject-wrong-payload.java",
+              "line": 3,
+              "message": "kindname.constructor, SignalData, long,java.lang.String, long,int, kindname.record, org.leanbridge.variants.SignalData, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: int, java.lang.String))"
+            }
+          ],
+          "id": "variants/wrong-payload",
+          "sourceSha256": "a9a9f379357dafc308ec4e737e49cb14f43346e17a07c6bd60925620951893f0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 1,
+              "file": "src/reject-marker-presence.java",
+              "line": 3,
+              "message": "kindname.constructor, SignalMarker, org.leanbridge.variants.Unit, compiler.misc.no.args, kindname.record, org.leanbridge.variants.SignalMarker, (compiler.misc.arg.length.mismatch)"
+            }
+          ],
+          "id": "variants/marker-presence",
+          "sourceSha256": "4430a98da899c734e80ac51a3a0be9617375a5f55e74f2ad8dcd546328fcec3b",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.abstract.cant.be.instantiated",
+              "column": 1,
+              "file": "src/reject-abstract-base.java",
+              "line": 3,
+              "message": "org.leanbridge.variants.Signal"
+            }
+          ],
+          "id": "variants/abstract-base",
+          "sourceSha256": "9e4842d02899c20b0bcfec5939556339ab96f649e085940b34b348ee15a0ead0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.inherit.from.sealed",
+              "column": 7,
+              "file": "src/reject-closed-family.java",
+              "line": 2,
+              "message": "org.leanbridge.variants.Signal"
+            }
+          ],
+          "id": "variants/closed-family",
+          "sourceSha256": "c7def055aa643908f15179b376279951c82973f08f628136a7dd8a48a4b212b8",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.not.exhaustive",
+              "column": 14,
+              "file": "src/reject-incomplete-match.java",
+              "line": 3,
+              "message": ""
+            }
+          ],
+          "id": "variants/incomplete-match",
+          "sourceSha256": "4f08d3d403cbded7fdeb30232dcb1159b2766aaec1c9f2480c904fa4369344dd",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.not.def.public.cant.access",
+              "column": 24,
+              "file": "src/reject-private-runtime.java",
+              "line": 3,
+              "message": "org.leanbridge.variants.Runtime, org.leanbridge.variants"
+            }
+          ],
+          "id": "variants/private-runtime",
+          "sourceSha256": "86dc37ed8f4a1587e77f710508bce0d106851ea85aa97cde1cd6ebda26776480",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.report.access",
+              "column": 24,
+              "file": "src/reject-immutable-field.java",
+              "line": 3,
+              "message": "count, private, org.leanbridge.variants.SignalData"
+            }
+          ],
+          "id": "variants/immutable-field",
+          "sourceSha256": "40db8922530d54d3507c71bae08dc96f689e07ec3258f70ba721367130ac0fd0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-array-shape.java",
+              "line": 3,
+              "message": "kindname.method, signals, org.leanbridge.variants.Signal[][], org.leanbridge.variants.Signal[], kindname.class, org.leanbridge.variants.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: org.leanbridge.variants.Signal[], org.leanbridge.variants.Signal[][]))"
+            }
+          ],
+          "id": "variants/array-shape",
+          "sourceSha256": "0f6a583b1639ed33c6c5097272f9b47480ce196ebf35fe8946f88afc087578a0",
+          "status": "rejected-at-compile-time"
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "be4b689d1a4bdeb7fb8019315b62bff22e96b3354075f3e4b69703880d0fccef",
+      "calls": 4331,
+      "checks": 209998,
+      "jvm": {
+        "archiveSha256": "4cd71157d5ffc3cd837659d3a0fef875398e3e92a71ce00e2a6ecdc0a3867e0e",
+        "bindingIrSha256": "be4b689d1a4bdeb7fb8019315b62bff22e96b3354075f3e4b69703880d0fccef",
+        "classpathSha256": "46103be034834d4105104cb668806d9510a65b8d27848d18f96149c7c056e434",
+        "compiledProjectionSha256": "a950f2b5c4451d406e6dd3a3dd4a4a59e14752b7843a77ff78602a5649b12b43",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "-jvm-target",
+          "22",
+          "-no-stdlib",
+          "-no-reflect",
+          "-Werror",
+          "-Xrender-internal-diagnostic-names"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "62f78a4b672570d4793b66d62cbdc7f06f40161e7aaad1293b92f2931bc53d62",
+        "declarationsSha256": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "fileCount": 452,
+          "inventorySha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        },
+        "deployment": {
+          "classes/ConsumerKt.class": {
+            "bytes": 32398,
+            "sha256": "3e3db70fa316e4f7b9080c29b9fd386768b0cbc623b7486f92fe16c2924d7971"
+          },
+          "classes/META-INF/main.kotlin_module": {
+            "bytes": 40,
+            "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "kotlin-stdlib.jar": {
+            "bytes": 1750373,
+            "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+          },
+          "package.jar": {
+            "bytes": 51479429,
+            "sha256": "4cd71157d5ffc3cd837659d3a0fef875398e3e92a71ce00e2a6ecdc0a3867e0e"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "handoffRemovedBeforeExecution": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "kotlin": {
+          "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+          "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "compilerFilesSha256": "7dee96621e852b43e8c4b9c41a7cac5da25bd6c8e87e27a31d058d2b6086fa65"
+        },
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "libvariants.so": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "395ce97ec39736d2f32b17ffe0b1061ee69ab79ffd16767633861a866fe267d4",
+        "pomSha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30",
+        "projectSourceSha256": "4708e91b58a7eac7794309b2964113aa3c59101f1a103aecd4f40e2c686928bb",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "c3bfc3dea101060ac54058668793f206179b02b89808ae9e0ce00ae54766b6a4",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a"
+      },
+      "modelSha256": "58a13c3bdf79e7d8c09a5ac32d8038707f63fd3788bc29300bffccff1f5f5c56",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51479429,
+              "path": "archives/variants-1.0.0.jar",
+              "sha256": "4cd71157d5ffc3cd837659d3a0fef875398e3e92a71ce00e2a6ecdc0a3867e0e"
+            },
+            {
+              "bytes": 463,
+              "path": "archives/variants-1.0.0.pom",
+              "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:variants",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "kotlin",
+      "receiptSha256": "670d3141426f4038c8446b098e9602d75008ff9efe6d8c60e21e48b7e480f032",
+      "rejected": 33,
+      "sourceApiSha256": "fbb764ec977521cdbe023a14229d53b453dace8157b4b5147a6e5437e242d9e0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "becab512067425f171e34d264e26e3595887974e6617d2b3aa3d0fa222dc0bba",
+      "observationSha256": "dec49f40207a886c574191b2c11559ec6234663c7fb51fbf91e41901cac71c2d",
+      "compilerRejections": [
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 10,
+              "file": "src/reject-wrong-variant.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'ModeFirst', but 'Signal!' was expected."
+            }
+          ],
+          "id": "variants/wrong-variant",
+          "sourceSha256": "fc5c9f063f4e00b63487af83142551aa5e3f138b374f7c1cae0fe3a08df7f7fa",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "NO_VALUE_FOR_PARAMETER",
+              "column": 12,
+              "file": "src/reject-missing-payload.kt",
+              "line": 3,
+              "message": "No value passed for parameter 'label'."
+            }
+          ],
+          "id": "variants/missing-payload",
+          "sourceSha256": "11559e88498dd31c0545ee2d5e08f7548de72b4dbe11e97170920bffad63f21a",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 16,
+              "file": "src/reject-wrong-payload.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Int', but 'String!' was expected."
+            }
+          ],
+          "id": "variants/wrong-payload",
+          "sourceSha256": "dc445135b60a56b644065a05033f05779faf343bc67eeec5bf3c7308e558b7ab",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "NO_VALUE_FOR_PARAMETER",
+              "column": 13,
+              "file": "src/reject-marker-presence.kt",
+              "line": 3,
+              "message": "No value passed for parameter 'value'."
+            }
+          ],
+          "id": "variants/marker-presence",
+          "sourceSha256": "503a8e23a93df8f658821c8941c68c8ae7573d127c513cf783b5c3ea10dd5768",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INTERFACE_AS_FUNCTION",
+              "column": 1,
+              "file": "src/reject-abstract-base.kt",
+              "line": 3,
+              "message": "Interface 'interface Signal : Any' does not have constructors."
+            }
+          ],
+          "id": "variants/abstract-base",
+          "sourceSha256": "01c3dfea2fe91a2cbb1a24f1668131a01d592a64d325cdf4c72889567ac95efd",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "CLASS_INHERITS_JAVA_SEALED_CLASS",
+              "column": 17,
+              "file": "src/reject-closed-family.kt",
+              "line": 2,
+              "message": "Extending Java sealed classes is prohibited."
+            }
+          ],
+          "id": "variants/closed-family",
+          "sourceSha256": "d639c3d367c3cb74df371ebdc8a0c54f726cd1ea2c25817855ad6070a741750d",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "NO_ELSE_IN_WHEN",
+              "column": 14,
+              "file": "src/reject-incomplete-match.kt",
+              "line": 3,
+              "message": "'when' expression must be exhaustive. Add the 'is SignalData', 'is SignalMarker', 'is SignalStopped' branches or an 'else' branch."
+            }
+          ],
+          "id": "variants/incomplete-match",
+          "sourceSha256": "747a876ddfb4cc5168959a5163be385478be023d62f266879592aad4774c2cb5",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INVISIBLE_REFERENCE",
+              "column": 36,
+              "file": "src/reject-private-runtime.kt",
+              "line": 3,
+              "message": "Cannot access 'class Runtime : Any': it is package-private in file."
+            }
+          ],
+          "id": "variants/private-runtime",
+          "sourceSha256": "8920b6ce95cea7d7ac87576bc9ff04ad71d2a28034b72d7f3b3b05bb29dfa064",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "VAL_REASSIGNMENT",
+              "column": 21,
+              "file": "src/reject-immutable-field.kt",
+              "line": 3,
+              "message": "'val' cannot be reassigned."
+            }
+          ],
+          "id": "variants/immutable-field",
+          "sourceSha256": "9845258f42bedfc9cb73ae9820f259730025901a87c704e10fcd4041fd4ec10e",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 13,
+              "file": "src/reject-array-shape.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Array<Signal>', but 'Array<(out) Array<(out) Signal!>!>!' was expected."
+            }
+          ],
+          "id": "variants/array-shape",
+          "sourceSha256": "74ace52a6f5e899394660688fd693481a1fb31d51d158ea041c7c4bcf06e0dbb",
+          "status": "rejected-at-compile-time"
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "71f8e4912776697ef48edf7c5550dbb951bac3b4550164761c0ca6fcb2a16416",
+      "calls": 4331,
+      "checks": 209998,
+      "jvm": {
+        "archiveSha256": "2f7956a8bcba0fb92d9770787b15f7fb38c8e6ab04848eb3df58d94ff1fa547f",
+        "bindingIrSha256": "71f8e4912776697ef48edf7c5550dbb951bac3b4550164761c0ca6fcb2a16416",
+        "classpathSha256": "86d727213bf73aba2c604744f2b7dac8f8641c7b19bfb0ff06a4637671821fd9",
+        "compiledProjectionSha256": "3580558d9317715d5ffabb535de433ad346347fd17513f2ff576f98333c565c2",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "--release",
+          "22",
+          "-g:none",
+          "-proc:none",
+          "-encoding",
+          "UTF-8",
+          "-Xlint:all",
+          "-Werror",
+          "-implicit:none"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "8a8670a66af65ac205183a33de76f923e50caab70068fad8820be802096b35c6",
+        "declarationsSha256": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "fileCount": 452,
+          "inventorySha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        },
+        "deployment": {
+          "classes/Consumer.class": {
+            "bytes": 23800,
+            "sha256": "95183b97321770323927efd4651d957d864edb7d086d2c339594a650882c8aca"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "package.jar": {
+            "bytes": 51486018,
+            "sha256": "2f7956a8bcba0fb92d9770787b15f7fb38c8e6ab04848eb3df58d94ff1fa547f"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "handoffRemovedBeforeExecution": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "libvariants.so": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "e9f68dfe9fd67d91c080410189422fb4f50f4459253ddff720b07910db72399a",
+        "pomSha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30",
+        "projectSourceSha256": "4708e91b58a7eac7794309b2964113aa3c59101f1a103aecd4f40e2c686928bb",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "31574b4d36ed754eee6837b9b749dab2ee8d1b2cfef83546b4df6489c2870d59",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a"
+      },
+      "modelSha256": "0d7dff03e188923f9480a0dc8e2ee2d05db4d120349c32af7b3ba775986c7cc5",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51486018,
+              "path": "archives/variants-1.0.0.jar",
+              "sha256": "2f7956a8bcba0fb92d9770787b15f7fb38c8e6ab04848eb3df58d94ff1fa547f"
+            },
+            {
+              "bytes": 463,
+              "path": "archives/variants-1.0.0.pom",
+              "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:variants",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "java",
+      "receiptSha256": "bf11d5d52fddf55d7cd2827972d39400dba4465aafd84f0253932c6314cf0af9",
+      "rejected": 33,
+      "sourceApiSha256": "e3e4180b471a353cd8b106ee6f80314c52d7baa13e6b54a05ab1ce637d51d9dc",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "a1fe135583c99a5cb8e8692c90aed5d592b460eae9733c6a1b631fc247c8814f",
+      "observationSha256": "ce8a0d78983fc018622922abce1d9cbafa64f85afb7860827a6b4d47501c3e3d",
+      "compilerRejections": [
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-wrong-variant.java",
+              "line": 3,
+              "message": "kindname.method, echo, org.leanbridge.variants.Signal, org.leanbridge.variants.ModeFirst, kindname.class, org.leanbridge.variants.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: org.leanbridge.variants.ModeFirst, org.leanbridge.variants.Signal))"
+            }
+          ],
+          "id": "variants/wrong-variant",
+          "sourceSha256": "f44ea74d794dc8b4bd4daf7af710290655ff92a7dd2d0b9e41c2ba3dfdd61b96",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 1,
+              "file": "src/reject-missing-payload.java",
+              "line": 3,
+              "message": "kindname.constructor, SignalData, long,java.lang.String, long, kindname.record, org.leanbridge.variants.SignalData, (compiler.misc.arg.length.mismatch)"
+            }
+          ],
+          "id": "variants/missing-payload",
+          "sourceSha256": "8fdaccd65258d3b2ac90943d2e9c745182cc4663d9f2187a5e982d1b23384cfc",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 1,
+              "file": "src/reject-wrong-payload.java",
+              "line": 3,
+              "message": "kindname.constructor, SignalData, long,java.lang.String, long,int, kindname.record, org.leanbridge.variants.SignalData, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: int, java.lang.String))"
+            }
+          ],
+          "id": "variants/wrong-payload",
+          "sourceSha256": "a9a9f379357dafc308ec4e737e49cb14f43346e17a07c6bd60925620951893f0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 1,
+              "file": "src/reject-marker-presence.java",
+              "line": 3,
+              "message": "kindname.constructor, SignalMarker, org.leanbridge.variants.Unit, compiler.misc.no.args, kindname.record, org.leanbridge.variants.SignalMarker, (compiler.misc.arg.length.mismatch)"
+            }
+          ],
+          "id": "variants/marker-presence",
+          "sourceSha256": "4430a98da899c734e80ac51a3a0be9617375a5f55e74f2ad8dcd546328fcec3b",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.abstract.cant.be.instantiated",
+              "column": 1,
+              "file": "src/reject-abstract-base.java",
+              "line": 3,
+              "message": "org.leanbridge.variants.Signal"
+            }
+          ],
+          "id": "variants/abstract-base",
+          "sourceSha256": "9e4842d02899c20b0bcfec5939556339ab96f649e085940b34b348ee15a0ead0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.inherit.from.sealed",
+              "column": 7,
+              "file": "src/reject-closed-family.java",
+              "line": 2,
+              "message": "org.leanbridge.variants.Signal"
+            }
+          ],
+          "id": "variants/closed-family",
+          "sourceSha256": "c7def055aa643908f15179b376279951c82973f08f628136a7dd8a48a4b212b8",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.not.exhaustive",
+              "column": 14,
+              "file": "src/reject-incomplete-match.java",
+              "line": 3,
+              "message": ""
+            }
+          ],
+          "id": "variants/incomplete-match",
+          "sourceSha256": "4f08d3d403cbded7fdeb30232dcb1159b2766aaec1c9f2480c904fa4369344dd",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.not.def.public.cant.access",
+              "column": 24,
+              "file": "src/reject-private-runtime.java",
+              "line": 3,
+              "message": "org.leanbridge.variants.Runtime, org.leanbridge.variants"
+            }
+          ],
+          "id": "variants/private-runtime",
+          "sourceSha256": "86dc37ed8f4a1587e77f710508bce0d106851ea85aa97cde1cd6ebda26776480",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.report.access",
+              "column": 24,
+              "file": "src/reject-immutable-field.java",
+              "line": 3,
+              "message": "count, private, org.leanbridge.variants.SignalData"
+            }
+          ],
+          "id": "variants/immutable-field",
+          "sourceSha256": "40db8922530d54d3507c71bae08dc96f689e07ec3258f70ba721367130ac0fd0",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "compiler.err.cant.apply.symbol",
+              "column": 4,
+              "file": "src/reject-array-shape.java",
+              "line": 3,
+              "message": "kindname.method, signals, org.leanbridge.variants.Signal[][], org.leanbridge.variants.Signal[], kindname.class, org.leanbridge.variants.Api, (compiler.misc.no.conforming.assignment.exists: (compiler.misc.inconvertible.types: org.leanbridge.variants.Signal[], org.leanbridge.variants.Signal[][]))"
+            }
+          ],
+          "id": "variants/array-shape",
+          "sourceSha256": "0f6a583b1639ed33c6c5097272f9b47480ce196ebf35fe8946f88afc087578a0",
+          "status": "rejected-at-compile-time"
+        }
+      ]
+    },
+    {
+      "bindingIrSha256": "71f8e4912776697ef48edf7c5550dbb951bac3b4550164761c0ca6fcb2a16416",
+      "calls": 4331,
+      "checks": 209998,
+      "jvm": {
+        "archiveSha256": "2f7956a8bcba0fb92d9770787b15f7fb38c8e6ab04848eb3df58d94ff1fa547f",
+        "bindingIrSha256": "71f8e4912776697ef48edf7c5550dbb951bac3b4550164761c0ca6fcb2a16416",
+        "classpathSha256": "ec8e0ff97727278d48c95d70cb735a79f09680a1b24c74f24df36b46b92e51fa",
+        "compiledProjectionSha256": "3580558d9317715d5ffabb535de433ad346347fd17513f2ff576f98333c565c2",
+        "compilerFreeExecution": true,
+        "compilerOptions": [
+          "-jvm-target",
+          "22",
+          "-no-stdlib",
+          "-no-reflect",
+          "-Werror",
+          "-Xrender-internal-diagnostic-names"
+        ],
+        "compilerSha256": "7d3e3f26e61afe89b815484daaab3e74508761f02060413bb295465354ecd54b",
+        "consumerSourceSha256": "62f78a4b672570d4793b66d62cbdc7f06f40161e7aaad1293b92f2931bc53d62",
+        "declarationsSha256": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e",
+        "dependencies": {
+          "archive": "maven-plugin-closure.tar.gz",
+          "sha256": "6584e1838cb58d1d5ed571c682b077b73fb08ad16fc44afb0b0101daaf7220f0",
+          "fileCount": 452,
+          "inventorySha256": "2bf43f08b522d22d3a82f7facd644d4c5618b8e8706ce008738b1f88c64af42c"
+        },
+        "deployment": {
+          "classes/ConsumerKt.class": {
+            "bytes": 32398,
+            "sha256": "3e3db70fa316e4f7b9080c29b9fd386768b0cbc623b7486f92fe16c2924d7971"
+          },
+          "classes/META-INF/main.kotlin_module": {
+            "bytes": 40,
+            "sha256": "59cf74cc67774dd031e7c72da8d63cc5591a6e6794167ccb8010fe1c6e0fab77"
+          },
+          "classes/Wire.class": {
+            "bytes": 10880,
+            "sha256": "6d75cc142dfd36f6e8ed1da39800ba4ca102c53e5b97713430d3f755952ec7ef"
+          },
+          "kotlin-stdlib.jar": {
+            "bytes": 1750373,
+            "sha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca"
+          },
+          "package.jar": {
+            "bytes": 51486018,
+            "sha256": "2f7956a8bcba0fb92d9770787b15f7fb38c8e6ab04848eb3df58d94ff1fa547f"
+          }
+        },
+        "emptyRepository": true,
+        "emptyUserHome": true,
+        "exactPublicSignatures": true,
+        "handoffRemovedBeforeExecution": true,
+        "installedSourcesRemoved": true,
+        "javaModulesSha256": "6081ef60b480650f662374a8abb42de61dbc7a70d874060427b0ac7cb5ee692b",
+        "javaSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "javaVersion": "openjdk version \"22.0.2\" 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)",
+        "javacVersion": "javac 22.0.2",
+        "kotlin": {
+          "stdlibSha256": "65d12d85a3b865c160db9147851712a64b10dadd68b22eea22a95bf8a8670dca",
+          "version": "info: kotlinc-jvm 2.2.0 (JRE 22.0.2+9)",
+          "compilerFilesSha256": "7dee96621e852b43e8c4b9c41a7cac5da25bd6c8e87e27a31d058d2b6086fa65"
+        },
+        "localLibraries": true,
+        "mavenBootSha256": "1ad3292cd563381e3fd632f3fded1988f9e9b2be7a9f3db63ff4c4cedba13fa5",
+        "mavenVersion": "Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)\nMaven home: /app/.toolchains/apache-maven-3.9.11\nJava version: 22.0.2, vendor: Eclipse Adoptium, runtime: /app/.toolchains/jdk22\nDefault locale: en_US, platform encoding: UTF-8\nOS name: \"linux\", version: \"6.1.0-31-amd64\", arch: \"amd64\", family: \"unix\"",
+        "nativeLibraries": {
+          "libcomponent_ff2699bd8e78670677f5.so": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9",
+          "liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+          "libvariants.so": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+        },
+        "normalExitCleanup": true,
+        "offline": true,
+        "packageReceiptSha256": "e9f68dfe9fd67d91c080410189422fb4f50f4459253ddff720b07910db72399a",
+        "pomSha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30",
+        "projectSourceSha256": "4708e91b58a7eac7794309b2964113aa3c59101f1a103aecd4f40e2c686928bb",
+        "publicApiOnly": true,
+        "repeatExecution": true,
+        "resolvedClasspathOnly": true,
+        "runtimeModules": [
+          "java.base@22.0.2"
+        ],
+        "runtimeOnlyExecution": true,
+        "runtimeOverridesDisabled": true,
+        "settingsSha256": "fbec5aad4fd91a506435f5f33b96dceb64efd8e284533dc5c9cd17c73b3f1450",
+        "signaturesSha256": "c3bfc3dea101060ac54058668793f206179b02b89808ae9e0ce00ae54766b6a4",
+        "runtimeFilesSha256": "222c2c29e794cfa304d474897bebdd8c8e7c5e129f3486a96c99a7b42e798de0",
+        "mavenFilesSha256": "f2a03dd035f8ab39b7509e791740585c70f522e19c83e82a3b410877f59f1d0a"
+      },
+      "modelSha256": "0d7dff03e188923f9480a0dc8e2ee2d05db4d120349c32af7b3ba775986c7cc5",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51486018,
+              "path": "archives/variants-1.0.0.jar",
+              "sha256": "2f7956a8bcba0fb92d9770787b15f7fb38c8e6ab04848eb3df58d94ff1fa547f"
+            },
+            {
+              "bytes": 463,
+              "path": "archives/variants-1.0.0.pom",
+              "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+            }
+          ],
+          "ecosystem": "maven",
+          "name": "org.leanbridge:variants",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "maven",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "kotlin",
+      "receiptSha256": "bf11d5d52fddf55d7cd2827972d39400dba4465aafd84f0253932c6314cf0af9",
+      "rejected": 33,
+      "sourceApiSha256": "e3e4180b471a353cd8b106ee6f80314c52d7baa13e6b54a05ab1ce637d51d9dc",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "a1fe135583c99a5cb8e8692c90aed5d592b460eae9733c6a1b631fc247c8814f",
+      "observationSha256": "136a841fc9cc895f581e566635b025459ac0ee4edb9f45b120f2d8bf4451e7a0",
+      "compilerRejections": [
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 10,
+              "file": "src/reject-wrong-variant.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'ModeFirst', but 'Signal!' was expected."
+            }
+          ],
+          "id": "variants/wrong-variant",
+          "sourceSha256": "fc5c9f063f4e00b63487af83142551aa5e3f138b374f7c1cae0fe3a08df7f7fa",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "NO_VALUE_FOR_PARAMETER",
+              "column": 12,
+              "file": "src/reject-missing-payload.kt",
+              "line": 3,
+              "message": "No value passed for parameter 'label'."
+            }
+          ],
+          "id": "variants/missing-payload",
+          "sourceSha256": "11559e88498dd31c0545ee2d5e08f7548de72b4dbe11e97170920bffad63f21a",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 16,
+              "file": "src/reject-wrong-payload.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Int', but 'String!' was expected."
+            }
+          ],
+          "id": "variants/wrong-payload",
+          "sourceSha256": "dc445135b60a56b644065a05033f05779faf343bc67eeec5bf3c7308e558b7ab",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "NO_VALUE_FOR_PARAMETER",
+              "column": 13,
+              "file": "src/reject-marker-presence.kt",
+              "line": 3,
+              "message": "No value passed for parameter 'value'."
+            }
+          ],
+          "id": "variants/marker-presence",
+          "sourceSha256": "503a8e23a93df8f658821c8941c68c8ae7573d127c513cf783b5c3ea10dd5768",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INTERFACE_AS_FUNCTION",
+              "column": 1,
+              "file": "src/reject-abstract-base.kt",
+              "line": 3,
+              "message": "Interface 'interface Signal : Any' does not have constructors."
+            }
+          ],
+          "id": "variants/abstract-base",
+          "sourceSha256": "01c3dfea2fe91a2cbb1a24f1668131a01d592a64d325cdf4c72889567ac95efd",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "CLASS_INHERITS_JAVA_SEALED_CLASS",
+              "column": 17,
+              "file": "src/reject-closed-family.kt",
+              "line": 2,
+              "message": "Extending Java sealed classes is prohibited."
+            }
+          ],
+          "id": "variants/closed-family",
+          "sourceSha256": "d639c3d367c3cb74df371ebdc8a0c54f726cd1ea2c25817855ad6070a741750d",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "NO_ELSE_IN_WHEN",
+              "column": 14,
+              "file": "src/reject-incomplete-match.kt",
+              "line": 3,
+              "message": "'when' expression must be exhaustive. Add the 'is SignalData', 'is SignalMarker', 'is SignalStopped' branches or an 'else' branch."
+            }
+          ],
+          "id": "variants/incomplete-match",
+          "sourceSha256": "747a876ddfb4cc5168959a5163be385478be023d62f266879592aad4774c2cb5",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "INVISIBLE_REFERENCE",
+              "column": 36,
+              "file": "src/reject-private-runtime.kt",
+              "line": 3,
+              "message": "Cannot access 'class Runtime : Any': it is package-private in file."
+            }
+          ],
+          "id": "variants/private-runtime",
+          "sourceSha256": "8920b6ce95cea7d7ac87576bc9ff04ad71d2a28034b72d7f3b3b05bb29dfa064",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "VAL_REASSIGNMENT",
+              "column": 21,
+              "file": "src/reject-immutable-field.kt",
+              "line": 3,
+              "message": "'val' cannot be reassigned."
+            }
+          ],
+          "id": "variants/immutable-field",
+          "sourceSha256": "9845258f42bedfc9cb73ae9820f259730025901a87c704e10fcd4041fd4ec10e",
+          "status": "rejected-at-compile-time"
+        },
+        {
+          "diagnostics": [
+            {
+              "code": "ARGUMENT_TYPE_MISMATCH",
+              "column": 13,
+              "file": "src/reject-array-shape.kt",
+              "line": 3,
+              "message": "Argument type mismatch: actual type is 'Array<Signal>', but 'Array<(out) Array<(out) Signal!>!>!' was expected."
+            }
+          ],
+          "id": "variants/array-shape",
+          "sourceSha256": "74ace52a6f5e899394660688fd693481a1fb31d51d158ea041c7c4bcf06e0dbb",
+          "status": "rejected-at-compile-time"
+        }
+      ]
+    }
+  ],
+  "installations": {
+    "ordinary-source": {
+      "META-INF/MANIFEST.MF": {
+        "bytes": 23,
+        "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+      },
+      "META-INF/lean-bridge/component/artifacts.json": {
+        "bytes": 1395,
+        "sha256": "904e47cdada471d53ba2a58af8af79bc1fbbe02352d49b5e05315bdd9e7b9399"
+      },
+      "META-INF/lean-bridge/component/binding-ir.json": {
+        "bytes": 42202,
+        "sha256": "8140fb38148a7f23385c8b68d33040e25714e1e4805c3112de93a32cde3dd205"
+      },
+      "META-INF/lean-bridge/component/component.h": {
+        "bytes": 6292,
+        "sha256": "fa85bc4c0d1c16ad08231e1095b1211b442f1567d8fa9cd9c82738291d23ccc8"
+      },
+      "META-INF/lean-bridge/component/generated.lean": {
+        "bytes": 18954,
+        "sha256": "38fa451ac5dab460124d64f11e407309ad08e5f7c4e6a5158eab8fb4549d462e"
+      },
+      "META-INF/lean-bridge/component/metadata.json": {
+        "bytes": 141285,
+        "sha256": "7356e672a9bcb443f74b059dbcf0c98d4227d5d77889c4dcc52dd4dd4c46438c"
+      },
+      "META-INF/lean-bridge/component/model.json": {
+        "bytes": 229612,
+        "sha256": "58a13c3bdf79e7d8c09a5ac32d8038707f63fd3788bc29300bffccff1f5f5c56"
+      },
+      "META-INF/lean-bridge/component/native-component.json": {
+        "bytes": 6052,
+        "sha256": "1549dc5d1291b396ddd7bfa867c430bd25367566a4b7c03f7320b29e811cb8bb"
+      },
+      "META-INF/lean-bridge/jvm/binding-manifest.json": {
+        "bytes": 5011,
+        "sha256": "e94d6d90da687d7048f407acac688551466cadcf2c923f38883e460ed062cd51"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Anonymous.java": {
+        "bytes": 130,
+        "sha256": "78081395700e57be1a71f628fc7710d2c608b15ee7b8fa4b75e9a87a5c237c08"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/AnonymousCollision.java": {
+        "bytes": 116,
+        "sha256": "798b2b8b92a0b4b85418d12192b4ab0bf494416cfa0612263bbf23b14ac7878c"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/AnonymousNumber.java": {
+        "bytes": 99,
+        "sha256": "9013e9099ea6ccd141fd9cbe91b12c3992d1dfab41020cf8f07e5d42de6c4d5e"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/AnonymousPair.java": {
+        "bytes": 110,
+        "sha256": "9c0827b17410c589b937733fe7f9cdc67a662ba30d56d7d6170aee9a6536c966"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Api.java": {
+        "bytes": 1208,
+        "sha256": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Buffers.java": {
+        "bytes": 103,
+        "sha256": "c044dea50895e8285f6b6a188691d192e4fef6112f23384eb229267f57ada158"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/BuffersEmpty.java": {
+        "bytes": 85,
+        "sha256": "4561c5f0747c1206ecb5b32a5f8fed688042ab494c21cd850921a91df17aac16"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/BuffersPair.java": {
+        "bytes": 111,
+        "sha256": "0f3d043727b8e5805b3494fb4f7c3989c1a4a9f37722882ba58294092f871b87"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/LeanBridgeException.java": {
+        "bytes": 238,
+        "sha256": "6db80f0a8db7e2440bff6d59d4d693b6e195e76ea0b577a5aee971cd9d2e13ca"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Mode.java": {
+        "bytes": 107,
+        "sha256": "eb5de93293cdcb454e3ddc9d152c1751cde509b71186c573f58aba1c63a3d865"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ModeFirst.java": {
+        "bytes": 79,
+        "sha256": "27da6c7a4fb9fcd0de4b131ddb5fa09c3c62ca867ff62853216fef02e402ee9d"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ModeSecond.java": {
+        "bytes": 80,
+        "sha256": "0624acaaacc923a2eda8ede0c0b94f9ef4c907da41704928d22ec8fc43e29c6c"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ModeThird.java": {
+        "bytes": 79,
+        "sha256": "f278127cc88222d3091ec7c1f7908a6d8c020821a24bc30ff91c724bd8a51e9b"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/NativeAssets.java": {
+        "bytes": 6082,
+        "sha256": "b7f08f5f36a1883064db9434d3eedff4db10bd84a21731a3d33bdc22d6539498"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Nested.java": {
+        "bytes": 117,
+        "sha256": "3c021715b0f2cde5cff5aaff36f32a45e3c0172187ec5ac021323c1859611105"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/NestedEmpty.java": {
+        "bytes": 83,
+        "sha256": "bf3a037fa53425db1869415ed7a64b9fdf797ccd2a08fed70319d1408a2231c6"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/NestedOutcome.java": {
+        "bytes": 125,
+        "sha256": "3d6eb6bf3d5c3566a1c5a4dd240e4ac86d886ca6d11f75f6526b0ab88c044599"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/NestedPacket.java": {
+        "bytes": 96,
+        "sha256": "45ebdd62a5488b3b65df11fc0c765e8bff59f20dd5d31502e1698728441e196c"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/One.java": {
+        "bytes": 81,
+        "sha256": "fb58b63fed207c383c2ad22cb8406de58dc2771f403e53cd9b0fa4bf05e70af3"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/OneOnly.java": {
+        "bytes": 86,
+        "sha256": "62257f78b3032365e555f82ac28568f6b7a141a3b6a97a782330a478385e18d7"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Option.java": {
+        "bytes": 684,
+        "sha256": "39d7e6d7a8bd173825fdacff390fcfe44173ce389c7c870c27adb9b94cb09ba0"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Packet.java": {
+        "bytes": 130,
+        "sha256": "c15df9139ee931fcc02fd0057b9ef42d25d88e9a5fb4ffdb7c3a65c56e29f52f"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Pair.java": {
+        "bytes": 261,
+        "sha256": "33f99f2f9d3cfda9df0eff4fd39a6977a49fec68614369ab0a69c83a244ff740"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Result.java": {
+        "bytes": 892,
+        "sha256": "3de3ae230b97365ba76da3d82b43ec4f1c2c5ccc575f8a856310532b75e0f3e9"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Runtime.java": {
+        "bytes": 37875,
+        "sha256": "01820281045901ea82ba4a005dae4b12b8abccb9d93f5dd4bd187c0bfb890740"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Scalars.java": {
+        "bytes": 103,
+        "sha256": "af75b37d9bd85e27b2cf958e76e08afe3fabbae40ac26071c1fa0b20aecffa14"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ScalarsAbsent.java": {
+        "bytes": 86,
+        "sha256": "52f07db27e1f7f1757d7e030b30794d33b3997ff273355fdaccbd404b21c0326"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ScalarsAll.java": {
+        "bytes": 363,
+        "sha256": "80c28bca3a82bfb603a6f62ef01cba4f961af79c771992e71985b948fe9dbf71"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Scope.java": {
+        "bytes": 541,
+        "sha256": "26ec6477b71edbe2cebedab24727f9e31d8ef7b8ddf2665140171957c3efcdea"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Signal.java": {
+        "bytes": 128,
+        "sha256": "680320ddfcc87945abe4de1a59f056f975e83cbf4b02a64358f4542fa0816224"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/SignalData.java": {
+        "bytes": 106,
+        "sha256": "e4d723a1ed5b97785fdf172056d0edf304217913696cf7a19942c7e704e80ce5"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/SignalIdle.java": {
+        "bytes": 82,
+        "sha256": "b0fd4bdcefbf03d11ecec5be29e559a8295afe87f7be84607178bb0bf2bbb7cb"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/SignalMarker.java": {
+        "bytes": 94,
+        "sha256": "4fc1e6116bfdb10d098497ec904b3f4da18d2c1b199cdd02e7962b2bb00aaf44"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/SignalStopped.java": {
+        "bytes": 85,
+        "sha256": "8c5f384e026c3c2a20b8eb82b8caf3e5f32b7a13914b14ca27cd12ce24d0f632"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Unit.java": {
+        "bytes": 63,
+        "sha256": "353b6ab3b58ab495ec259dfb67639071f17ae4938145ce23b0ea7b411ab44729"
+      },
+      "META-INF/lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "META-INF/lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "META-INF/lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "META-INF/lean-bridge/licenses/source-notices.json": {
+        "bytes": 2515,
+        "sha256": "4e9bc77c5704ccba88f06b65cba1e65da2941eec37446a7c9768efa304e06c7e"
+      },
+      "META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "META-INF/lean-bridge/native-c-adapter.json": {
+        "bytes": 1349,
+        "sha256": "483869c351cc3d46077801ae06d4abe35126f3ab82d5a82cdd7eb7801557f6ce"
+      },
+      "META-INF/lean-bridge/native-jvm.json": {
+        "bytes": 13777,
+        "sha256": "a950f2b5c4451d406e6dd3a3dd4a4a59e14752b7843a77ff78602a5649b12b43"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libcomponent_ff2699bd8e78670677f5.so": {
+        "bytes": 138584,
+        "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+      },
+      "META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so": {
+        "bytes": 17016,
+        "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libvariants.so": {
+        "bytes": 83416,
+        "sha256": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+      },
+      "META-INF/lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+      },
+      "META-INF/maven/org.leanbridge/variants/pom.xml": {
+        "bytes": 463,
+        "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+      },
+      "README.md": {
+        "bytes": 2803,
+        "sha256": "c228a3cf5e7bd4905316a1e711358d090c13e0b719b2899c43c92c89dbfa98fb"
+      },
+      "org/leanbridge/variants/Anonymous.class": {
+        "bytes": 257,
+        "sha256": "071a7bf148f67b9ec642e8b000e50b21e4e3622e7a6aa8afa4286fa347173708"
+      },
+      "org/leanbridge/variants/AnonymousCollision.class": {
+        "bytes": 1264,
+        "sha256": "3775e7540dc5ea217ae97d8f7bd367f3e9a62cd8dbb0a72fc181c851378b928e"
+      },
+      "org/leanbridge/variants/AnonymousNumber.class": {
+        "bytes": 1122,
+        "sha256": "71b1a0956cf8b4f452df36cf64b74687bd3b7e1b77f949d8c4e86dbe5ecbe775"
+      },
+      "org/leanbridge/variants/AnonymousPair.class": {
+        "bytes": 1242,
+        "sha256": "50fcce469f4a0898a4783932c431fbb8c25ad3930e95b6048bcf0c946966b4c2"
+      },
+      "org/leanbridge/variants/Api.class": {
+        "bytes": 1788,
+        "sha256": "c56b0f54963ef827f92eb83012e313fae4376e053a581e0fa44cd2cb476be540"
+      },
+      "org/leanbridge/variants/Buffers.class": {
+        "bytes": 200,
+        "sha256": "afe73ba68231eb9f6c016d55140b1ab3f25cf0075c3a923ec04bc294e090b28b"
+      },
+      "org/leanbridge/variants/BuffersEmpty.class": {
+        "bytes": 991,
+        "sha256": "af64e3dcdba0c95ce00bd87da900fd2d63f71c13f5bd19103a32dabbdced249b"
+      },
+      "org/leanbridge/variants/BuffersPair.class": {
+        "bytes": 1204,
+        "sha256": "057fdd540fcd89bae1106ac6715ef6f48f3fa8fd4e923feffa7432e5d29232a6"
+      },
+      "org/leanbridge/variants/LeanBridgeException.class": {
+        "bytes": 273,
+        "sha256": "6f97eac8c350a386ba3a2d7301f8a38aa9841d51dd7ff70b7f6a0be36c8da046"
+      },
+      "org/leanbridge/variants/Mode.class": {
+        "bytes": 234,
+        "sha256": "25adca4ab66d579e72214c7dd0cda31bbffa62611f6f8f61aebb36f0ae6212ce"
+      },
+      "org/leanbridge/variants/ModeFirst.class": {
+        "bytes": 976,
+        "sha256": "567209be7c4ad60d5200a1076cbf799f69816670b160dd14141c43d06af507c8"
+      },
+      "org/leanbridge/variants/ModeSecond.class": {
+        "bytes": 980,
+        "sha256": "210d39dd1a5878c264f7f0efd6fe65d660c801c97725ea96e01a4a051b0b56b4"
+      },
+      "org/leanbridge/variants/ModeThird.class": {
+        "bytes": 976,
+        "sha256": "806c45ba921ae13597068513e9b2b8319e2529c7fc79b6a62ce21bb19e1193c0"
+      },
+      "org/leanbridge/variants/NativeAssets.class": {
+        "bytes": 6374,
+        "sha256": "9a35b11254b49d832c4d1a7a4b60ce50d4bea409dfaf69c44191afd4d8263dc1"
+      },
+      "org/leanbridge/variants/Nested.class": {
+        "bytes": 244,
+        "sha256": "318f5ecfcdea7380984976a723165b6bc64bde1e79ec07c1f58a3b8a276aa8f5"
+      },
+      "org/leanbridge/variants/NestedEmpty.class": {
+        "bytes": 986,
+        "sha256": "80525188315517db402975ffea6d11f786655a29e7a4329a2ae6caaa1be1ffa4"
+      },
+      "org/leanbridge/variants/NestedOutcome.class": {
+        "bytes": 1701,
+        "sha256": "4ca91ad74809778bc55130bd38e5035d3c13d86c8f155dfd6a8e71c0fb1b3b87"
+      },
+      "org/leanbridge/variants/NestedPacket.class": {
+        "bytes": 1201,
+        "sha256": "84ddeb45d0267b1471b1f1689a0a5f28988b36da88e2c5cc3d47a2cc90bf509d"
+      },
+      "org/leanbridge/variants/One.class": {
+        "bytes": 148,
+        "sha256": "f08753ce53e906d77f91ba8333f5fc1d9a72458d41de2bb4e3cfea0c61e6af8e"
+      },
+      "org/leanbridge/variants/OneOnly.class": {
+        "bytes": 1085,
+        "sha256": "9ce5ab6f49818954262306300e33ea1a73a5328b0fbc0b73d14e4e3eceaa0e30"
+      },
+      "org/leanbridge/variants/Option$None.class": {
+        "bytes": 1340,
+        "sha256": "116af2105342fb00f16093e772f341361fc230f4cc02f114e6c5fa7c3cc024e9"
+      },
+      "org/leanbridge/variants/Option$Some.class": {
+        "bytes": 1483,
+        "sha256": "74d85bd0866a629b3ece165a781720ab638469b088823157be568f31877deb31"
+      },
+      "org/leanbridge/variants/Option.class": {
+        "bytes": 806,
+        "sha256": "072c6b6df10801fe5bfedc0f65ef7b5f5a2b00f01c4f4256ebc470fc2c91c56a"
+      },
+      "org/leanbridge/variants/Packet.class": {
+        "bytes": 2076,
+        "sha256": "e0dc7c2d8e412ae49d83a8ad5f295a5e0253580df42891395f37e2e2ae3d1451"
+      },
+      "org/leanbridge/variants/Pair.class": {
+        "bytes": 1481,
+        "sha256": "1b1a1be299667e78cc9db78a5e4c289ccfd3765b2e214448fed75410fe4f1aa6"
+      },
+      "org/leanbridge/variants/Result$Err.class": {
+        "bytes": 1660,
+        "sha256": "24a0fc8517a9076e1f13537402dc026f56d57f8a95075093065f1b14b0c3cb23"
+      },
+      "org/leanbridge/variants/Result$Ok.class": {
+        "bytes": 1646,
+        "sha256": "0b079998b5022cf981234424ea9cd93422441fb373e705b609eb4320020607e5"
+      },
+      "org/leanbridge/variants/Result.class": {
+        "bytes": 849,
+        "sha256": "37df65f06feefa92fd7198eceaa3553f1b4a3078c1d9a5903175bfbd6c7f7199"
+      },
+      "org/leanbridge/variants/Runtime.class": {
+        "bytes": 33092,
+        "sha256": "5f560ed373b950f7b391db4615807265ced9018c028349154e68c720edb0c967"
+      },
+      "org/leanbridge/variants/Scalars.class": {
+        "bytes": 200,
+        "sha256": "ae422f59bd7427f755ffe823977a360642cebfb350041c395367608fbad07d13"
+      },
+      "org/leanbridge/variants/ScalarsAbsent.class": {
+        "bytes": 995,
+        "sha256": "5da3e062c1f66924ad9a8e79c99284de440c21ca52b806b34d933053548c090e"
+      },
+      "org/leanbridge/variants/ScalarsAll.class": {
+        "bytes": 2959,
+        "sha256": "c69388492c247719ac23b69ec0fe9eecf1024e25cbbdafeb9f6e6d1ecbd1a019"
+      },
+      "org/leanbridge/variants/Scope.class": {
+        "bytes": 661,
+        "sha256": "cc9438817ef084f0c73991e10831e4edbe74ccd238d78c97b063ac3107d395e6"
+      },
+      "org/leanbridge/variants/Signal.class": {
+        "bytes": 285,
+        "sha256": "88b3fe3fcc6fc67b72fd2ca4f5e26f5a318287bc46312c3a70994014d366dd1e"
+      },
+      "org/leanbridge/variants/SignalData.class": {
+        "bytes": 1231,
+        "sha256": "cc40c830700bbc46206b627e4a9025745608dfc4268f608cd30af6c9aff794de"
+      },
+      "org/leanbridge/variants/SignalIdle.class": {
+        "bytes": 982,
+        "sha256": "5097c8d421e1d83eb693c97fe5a155c0ecef2c147a1b190de1bad3981d9b0ad4"
+      },
+      "org/leanbridge/variants/SignalMarker.class": {
+        "bytes": 1195,
+        "sha256": "7e617d470e1cffdbd1942bce55fe97f2443a7562d1e70ca8dc80d17d78108788"
+      },
+      "org/leanbridge/variants/SignalStopped.class": {
+        "bytes": 994,
+        "sha256": "ac20f9d9299804f84c0968543a1d9a5013bf5af33ca4c285ec2e2d0fcf6246da"
+      },
+      "org/leanbridge/variants/Unit.class": {
+        "bytes": 828,
+        "sha256": "0d69ee324cb0a8907a287e6e9cab47517a5e4f650bda18675e43fed82d9751c0"
+      }
+    },
+    "reviewed-ir": {
+      "META-INF/MANIFEST.MF": {
+        "bytes": 23,
+        "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+      },
+      "META-INF/lean-bridge/component/artifacts.json": {
+        "bytes": 1396,
+        "sha256": "f62da5af5786ff3c74409c3886595c1587ef65b04f2e9f4ce7d099c1bdb821d3"
+      },
+      "META-INF/lean-bridge/component/binding-ir.json": {
+        "bytes": 42380,
+        "sha256": "ee4afa12fa4c8b6b716d68399dfe711b072e0f219789f63f8ef77e4251c98405"
+      },
+      "META-INF/lean-bridge/component/component.h": {
+        "bytes": 6292,
+        "sha256": "fa85bc4c0d1c16ad08231e1095b1211b442f1567d8fa9cd9c82738291d23ccc8"
+      },
+      "META-INF/lean-bridge/component/generated.lean": {
+        "bytes": 18954,
+        "sha256": "38fa451ac5dab460124d64f11e407309ad08e5f7c4e6a5158eab8fb4549d462e"
+      },
+      "META-INF/lean-bridge/component/metadata.json": {
+        "bytes": 141285,
+        "sha256": "bd9fada7104fb7c6754f1740fdac0bc9c3a69a71592f9ab67a9e88ae96198e42"
+      },
+      "META-INF/lean-bridge/component/model.json": {
+        "bytes": 274705,
+        "sha256": "0d7dff03e188923f9480a0dc8e2ee2d05db4d120349c32af7b3ba775986c7cc5"
+      },
+      "META-INF/lean-bridge/component/native-component.json": {
+        "bytes": 50967,
+        "sha256": "45d474cebd469b6a20070f4f674fe535d6ba99e324ba24bee95003c4fb1533b2"
+      },
+      "META-INF/lean-bridge/jvm/binding-manifest.json": {
+        "bytes": 5011,
+        "sha256": "80224f38f7d0145bd410df4f851af947327c63221d01f11464211541f311ada5"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Anonymous.java": {
+        "bytes": 130,
+        "sha256": "78081395700e57be1a71f628fc7710d2c608b15ee7b8fa4b75e9a87a5c237c08"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/AnonymousCollision.java": {
+        "bytes": 116,
+        "sha256": "798b2b8b92a0b4b85418d12192b4ab0bf494416cfa0612263bbf23b14ac7878c"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/AnonymousNumber.java": {
+        "bytes": 99,
+        "sha256": "9013e9099ea6ccd141fd9cbe91b12c3992d1dfab41020cf8f07e5d42de6c4d5e"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/AnonymousPair.java": {
+        "bytes": 110,
+        "sha256": "9c0827b17410c589b937733fe7f9cdc67a662ba30d56d7d6170aee9a6536c966"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Api.java": {
+        "bytes": 1208,
+        "sha256": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Buffers.java": {
+        "bytes": 103,
+        "sha256": "c044dea50895e8285f6b6a188691d192e4fef6112f23384eb229267f57ada158"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/BuffersEmpty.java": {
+        "bytes": 85,
+        "sha256": "4561c5f0747c1206ecb5b32a5f8fed688042ab494c21cd850921a91df17aac16"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/BuffersPair.java": {
+        "bytes": 111,
+        "sha256": "0f3d043727b8e5805b3494fb4f7c3989c1a4a9f37722882ba58294092f871b87"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/LeanBridgeException.java": {
+        "bytes": 238,
+        "sha256": "6db80f0a8db7e2440bff6d59d4d693b6e195e76ea0b577a5aee971cd9d2e13ca"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Mode.java": {
+        "bytes": 107,
+        "sha256": "eb5de93293cdcb454e3ddc9d152c1751cde509b71186c573f58aba1c63a3d865"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ModeFirst.java": {
+        "bytes": 79,
+        "sha256": "27da6c7a4fb9fcd0de4b131ddb5fa09c3c62ca867ff62853216fef02e402ee9d"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ModeSecond.java": {
+        "bytes": 80,
+        "sha256": "0624acaaacc923a2eda8ede0c0b94f9ef4c907da41704928d22ec8fc43e29c6c"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ModeThird.java": {
+        "bytes": 79,
+        "sha256": "f278127cc88222d3091ec7c1f7908a6d8c020821a24bc30ff91c724bd8a51e9b"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/NativeAssets.java": {
+        "bytes": 6082,
+        "sha256": "a51f4a71df9335ae8d464e5ad816284ede332d0418deaa8e223cb3ec27365bf2"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Nested.java": {
+        "bytes": 117,
+        "sha256": "3c021715b0f2cde5cff5aaff36f32a45e3c0172187ec5ac021323c1859611105"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/NestedEmpty.java": {
+        "bytes": 83,
+        "sha256": "bf3a037fa53425db1869415ed7a64b9fdf797ccd2a08fed70319d1408a2231c6"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/NestedOutcome.java": {
+        "bytes": 125,
+        "sha256": "3d6eb6bf3d5c3566a1c5a4dd240e4ac86d886ca6d11f75f6526b0ab88c044599"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/NestedPacket.java": {
+        "bytes": 96,
+        "sha256": "45ebdd62a5488b3b65df11fc0c765e8bff59f20dd5d31502e1698728441e196c"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/One.java": {
+        "bytes": 81,
+        "sha256": "fb58b63fed207c383c2ad22cb8406de58dc2771f403e53cd9b0fa4bf05e70af3"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/OneOnly.java": {
+        "bytes": 86,
+        "sha256": "62257f78b3032365e555f82ac28568f6b7a141a3b6a97a782330a478385e18d7"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Option.java": {
+        "bytes": 684,
+        "sha256": "39d7e6d7a8bd173825fdacff390fcfe44173ce389c7c870c27adb9b94cb09ba0"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Packet.java": {
+        "bytes": 130,
+        "sha256": "c15df9139ee931fcc02fd0057b9ef42d25d88e9a5fb4ffdb7c3a65c56e29f52f"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Pair.java": {
+        "bytes": 261,
+        "sha256": "33f99f2f9d3cfda9df0eff4fd39a6977a49fec68614369ab0a69c83a244ff740"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Result.java": {
+        "bytes": 892,
+        "sha256": "3de3ae230b97365ba76da3d82b43ec4f1c2c5ccc575f8a856310532b75e0f3e9"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Runtime.java": {
+        "bytes": 37875,
+        "sha256": "01820281045901ea82ba4a005dae4b12b8abccb9d93f5dd4bd187c0bfb890740"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Scalars.java": {
+        "bytes": 103,
+        "sha256": "af75b37d9bd85e27b2cf958e76e08afe3fabbae40ac26071c1fa0b20aecffa14"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ScalarsAbsent.java": {
+        "bytes": 86,
+        "sha256": "52f07db27e1f7f1757d7e030b30794d33b3997ff273355fdaccbd404b21c0326"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/ScalarsAll.java": {
+        "bytes": 363,
+        "sha256": "80c28bca3a82bfb603a6f62ef01cba4f961af79c771992e71985b948fe9dbf71"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Scope.java": {
+        "bytes": 541,
+        "sha256": "26ec6477b71edbe2cebedab24727f9e31d8ef7b8ddf2665140171957c3efcdea"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Signal.java": {
+        "bytes": 128,
+        "sha256": "680320ddfcc87945abe4de1a59f056f975e83cbf4b02a64358f4542fa0816224"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/SignalData.java": {
+        "bytes": 106,
+        "sha256": "e4d723a1ed5b97785fdf172056d0edf304217913696cf7a19942c7e704e80ce5"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/SignalIdle.java": {
+        "bytes": 82,
+        "sha256": "b0fd4bdcefbf03d11ecec5be29e559a8295afe87f7be84607178bb0bf2bbb7cb"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/SignalMarker.java": {
+        "bytes": 94,
+        "sha256": "4fc1e6116bfdb10d098497ec904b3f4da18d2c1b199cdd02e7962b2bb00aaf44"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/SignalStopped.java": {
+        "bytes": 85,
+        "sha256": "8c5f384e026c3c2a20b8eb82b8caf3e5f32b7a13914b14ca27cd12ce24d0f632"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/variants/Unit.java": {
+        "bytes": 63,
+        "sha256": "353b6ab3b58ab495ec259dfb67639071f17ae4938145ce23b0ea7b411ab44729"
+      },
+      "META-INF/lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "META-INF/lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "META-INF/lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "META-INF/lean-bridge/licenses/source-notices.json": {
+        "bytes": 2290,
+        "sha256": "9b968cf81cfe74eb33c2fcc9b06fae4adfb9f2ee5addb1ae47112816f0ac262e"
+      },
+      "META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "META-INF/lean-bridge/native-c-adapter.json": {
+        "bytes": 1349,
+        "sha256": "82c5fd49458dd54fff18cc261a709f17d56b6afccf4fac7e8ad8e4f327c037cd"
+      },
+      "META-INF/lean-bridge/native-jvm.json": {
+        "bytes": 13777,
+        "sha256": "3580558d9317715d5ffabb535de433ad346347fd17513f2ff576f98333c565c2"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libcomponent_ff2699bd8e78670677f5.so": {
+        "bytes": 138584,
+        "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+      },
+      "META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so": {
+        "bytes": 17016,
+        "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libvariants.so": {
+        "bytes": 83416,
+        "sha256": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+      },
+      "META-INF/lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+      },
+      "META-INF/maven/org.leanbridge/variants/pom.xml": {
+        "bytes": 463,
+        "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+      },
+      "README.md": {
+        "bytes": 2803,
+        "sha256": "c228a3cf5e7bd4905316a1e711358d090c13e0b719b2899c43c92c89dbfa98fb"
+      },
+      "org/leanbridge/variants/Anonymous.class": {
+        "bytes": 257,
+        "sha256": "071a7bf148f67b9ec642e8b000e50b21e4e3622e7a6aa8afa4286fa347173708"
+      },
+      "org/leanbridge/variants/AnonymousCollision.class": {
+        "bytes": 1264,
+        "sha256": "3775e7540dc5ea217ae97d8f7bd367f3e9a62cd8dbb0a72fc181c851378b928e"
+      },
+      "org/leanbridge/variants/AnonymousNumber.class": {
+        "bytes": 1122,
+        "sha256": "71b1a0956cf8b4f452df36cf64b74687bd3b7e1b77f949d8c4e86dbe5ecbe775"
+      },
+      "org/leanbridge/variants/AnonymousPair.class": {
+        "bytes": 1242,
+        "sha256": "50fcce469f4a0898a4783932c431fbb8c25ad3930e95b6048bcf0c946966b4c2"
+      },
+      "org/leanbridge/variants/Api.class": {
+        "bytes": 1788,
+        "sha256": "c56b0f54963ef827f92eb83012e313fae4376e053a581e0fa44cd2cb476be540"
+      },
+      "org/leanbridge/variants/Buffers.class": {
+        "bytes": 200,
+        "sha256": "afe73ba68231eb9f6c016d55140b1ab3f25cf0075c3a923ec04bc294e090b28b"
+      },
+      "org/leanbridge/variants/BuffersEmpty.class": {
+        "bytes": 991,
+        "sha256": "af64e3dcdba0c95ce00bd87da900fd2d63f71c13f5bd19103a32dabbdced249b"
+      },
+      "org/leanbridge/variants/BuffersPair.class": {
+        "bytes": 1204,
+        "sha256": "057fdd540fcd89bae1106ac6715ef6f48f3fa8fd4e923feffa7432e5d29232a6"
+      },
+      "org/leanbridge/variants/LeanBridgeException.class": {
+        "bytes": 273,
+        "sha256": "6f97eac8c350a386ba3a2d7301f8a38aa9841d51dd7ff70b7f6a0be36c8da046"
+      },
+      "org/leanbridge/variants/Mode.class": {
+        "bytes": 234,
+        "sha256": "25adca4ab66d579e72214c7dd0cda31bbffa62611f6f8f61aebb36f0ae6212ce"
+      },
+      "org/leanbridge/variants/ModeFirst.class": {
+        "bytes": 976,
+        "sha256": "567209be7c4ad60d5200a1076cbf799f69816670b160dd14141c43d06af507c8"
+      },
+      "org/leanbridge/variants/ModeSecond.class": {
+        "bytes": 980,
+        "sha256": "210d39dd1a5878c264f7f0efd6fe65d660c801c97725ea96e01a4a051b0b56b4"
+      },
+      "org/leanbridge/variants/ModeThird.class": {
+        "bytes": 976,
+        "sha256": "806c45ba921ae13597068513e9b2b8319e2529c7fc79b6a62ce21bb19e1193c0"
+      },
+      "org/leanbridge/variants/NativeAssets.class": {
+        "bytes": 6374,
+        "sha256": "4edc97de797f74b93c8d1fb64877082cdf55b50e234a8a68d1953ae48d429960"
+      },
+      "org/leanbridge/variants/Nested.class": {
+        "bytes": 244,
+        "sha256": "318f5ecfcdea7380984976a723165b6bc64bde1e79ec07c1f58a3b8a276aa8f5"
+      },
+      "org/leanbridge/variants/NestedEmpty.class": {
+        "bytes": 986,
+        "sha256": "80525188315517db402975ffea6d11f786655a29e7a4329a2ae6caaa1be1ffa4"
+      },
+      "org/leanbridge/variants/NestedOutcome.class": {
+        "bytes": 1701,
+        "sha256": "4ca91ad74809778bc55130bd38e5035d3c13d86c8f155dfd6a8e71c0fb1b3b87"
+      },
+      "org/leanbridge/variants/NestedPacket.class": {
+        "bytes": 1201,
+        "sha256": "84ddeb45d0267b1471b1f1689a0a5f28988b36da88e2c5cc3d47a2cc90bf509d"
+      },
+      "org/leanbridge/variants/One.class": {
+        "bytes": 148,
+        "sha256": "f08753ce53e906d77f91ba8333f5fc1d9a72458d41de2bb4e3cfea0c61e6af8e"
+      },
+      "org/leanbridge/variants/OneOnly.class": {
+        "bytes": 1085,
+        "sha256": "9ce5ab6f49818954262306300e33ea1a73a5328b0fbc0b73d14e4e3eceaa0e30"
+      },
+      "org/leanbridge/variants/Option$None.class": {
+        "bytes": 1340,
+        "sha256": "116af2105342fb00f16093e772f341361fc230f4cc02f114e6c5fa7c3cc024e9"
+      },
+      "org/leanbridge/variants/Option$Some.class": {
+        "bytes": 1483,
+        "sha256": "74d85bd0866a629b3ece165a781720ab638469b088823157be568f31877deb31"
+      },
+      "org/leanbridge/variants/Option.class": {
+        "bytes": 806,
+        "sha256": "072c6b6df10801fe5bfedc0f65ef7b5f5a2b00f01c4f4256ebc470fc2c91c56a"
+      },
+      "org/leanbridge/variants/Packet.class": {
+        "bytes": 2076,
+        "sha256": "e0dc7c2d8e412ae49d83a8ad5f295a5e0253580df42891395f37e2e2ae3d1451"
+      },
+      "org/leanbridge/variants/Pair.class": {
+        "bytes": 1481,
+        "sha256": "1b1a1be299667e78cc9db78a5e4c289ccfd3765b2e214448fed75410fe4f1aa6"
+      },
+      "org/leanbridge/variants/Result$Err.class": {
+        "bytes": 1660,
+        "sha256": "24a0fc8517a9076e1f13537402dc026f56d57f8a95075093065f1b14b0c3cb23"
+      },
+      "org/leanbridge/variants/Result$Ok.class": {
+        "bytes": 1646,
+        "sha256": "0b079998b5022cf981234424ea9cd93422441fb373e705b609eb4320020607e5"
+      },
+      "org/leanbridge/variants/Result.class": {
+        "bytes": 849,
+        "sha256": "37df65f06feefa92fd7198eceaa3553f1b4a3078c1d9a5903175bfbd6c7f7199"
+      },
+      "org/leanbridge/variants/Runtime.class": {
+        "bytes": 33092,
+        "sha256": "5f560ed373b950f7b391db4615807265ced9018c028349154e68c720edb0c967"
+      },
+      "org/leanbridge/variants/Scalars.class": {
+        "bytes": 200,
+        "sha256": "ae422f59bd7427f755ffe823977a360642cebfb350041c395367608fbad07d13"
+      },
+      "org/leanbridge/variants/ScalarsAbsent.class": {
+        "bytes": 995,
+        "sha256": "5da3e062c1f66924ad9a8e79c99284de440c21ca52b806b34d933053548c090e"
+      },
+      "org/leanbridge/variants/ScalarsAll.class": {
+        "bytes": 2959,
+        "sha256": "c69388492c247719ac23b69ec0fe9eecf1024e25cbbdafeb9f6e6d1ecbd1a019"
+      },
+      "org/leanbridge/variants/Scope.class": {
+        "bytes": 661,
+        "sha256": "cc9438817ef084f0c73991e10831e4edbe74ccd238d78c97b063ac3107d395e6"
+      },
+      "org/leanbridge/variants/Signal.class": {
+        "bytes": 285,
+        "sha256": "88b3fe3fcc6fc67b72fd2ca4f5e26f5a318287bc46312c3a70994014d366dd1e"
+      },
+      "org/leanbridge/variants/SignalData.class": {
+        "bytes": 1231,
+        "sha256": "cc40c830700bbc46206b627e4a9025745608dfc4268f608cd30af6c9aff794de"
+      },
+      "org/leanbridge/variants/SignalIdle.class": {
+        "bytes": 982,
+        "sha256": "5097c8d421e1d83eb693c97fe5a155c0ecef2c147a1b190de1bad3981d9b0ad4"
+      },
+      "org/leanbridge/variants/SignalMarker.class": {
+        "bytes": 1195,
+        "sha256": "7e617d470e1cffdbd1942bce55fe97f2443a7562d1e70ca8dc80d17d78108788"
+      },
+      "org/leanbridge/variants/SignalStopped.class": {
+        "bytes": 994,
+        "sha256": "ac20f9d9299804f84c0968543a1d9a5013bf5af33ca4c285ec2e2d0fcf6246da"
+      },
+      "org/leanbridge/variants/Unit.class": {
+        "bytes": 828,
+        "sha256": "0d69ee324cb0a8907a287e6e9cab47517a5e4f650bda18675e43fed82d9751c0"
+      }
+    }
+  },
+  "faultProbes": {
+    "ordinary-source": {
+      "checks": 212,
+      "inactiveCases": 6,
+      "instrumentedSources": {
+        "src/main/java/org/leanbridge/variants/Anonymous.java": "78081395700e57be1a71f628fc7710d2c608b15ee7b8fa4b75e9a87a5c237c08",
+        "src/main/java/org/leanbridge/variants/AnonymousCollision.java": "798b2b8b92a0b4b85418d12192b4ab0bf494416cfa0612263bbf23b14ac7878c",
+        "src/main/java/org/leanbridge/variants/AnonymousNumber.java": "9013e9099ea6ccd141fd9cbe91b12c3992d1dfab41020cf8f07e5d42de6c4d5e",
+        "src/main/java/org/leanbridge/variants/AnonymousPair.java": "9c0827b17410c589b937733fe7f9cdc67a662ba30d56d7d6170aee9a6536c966",
+        "src/main/java/org/leanbridge/variants/Api.java": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e",
+        "src/main/java/org/leanbridge/variants/Buffers.java": "c044dea50895e8285f6b6a188691d192e4fef6112f23384eb229267f57ada158",
+        "src/main/java/org/leanbridge/variants/BuffersEmpty.java": "4561c5f0747c1206ecb5b32a5f8fed688042ab494c21cd850921a91df17aac16",
+        "src/main/java/org/leanbridge/variants/BuffersPair.java": "0f3d043727b8e5805b3494fb4f7c3989c1a4a9f37722882ba58294092f871b87",
+        "src/main/java/org/leanbridge/variants/Faults.java": "af925c02e67418bcd6e2d5958a8c92a77fe27ea10d2baf9686abf31efdeb5a5b",
+        "src/main/java/org/leanbridge/variants/LeanBridgeException.java": "6db80f0a8db7e2440bff6d59d4d693b6e195e76ea0b577a5aee971cd9d2e13ca",
+        "src/main/java/org/leanbridge/variants/Mode.java": "eb5de93293cdcb454e3ddc9d152c1751cde509b71186c573f58aba1c63a3d865",
+        "src/main/java/org/leanbridge/variants/ModeFirst.java": "27da6c7a4fb9fcd0de4b131ddb5fa09c3c62ca867ff62853216fef02e402ee9d",
+        "src/main/java/org/leanbridge/variants/ModeSecond.java": "0624acaaacc923a2eda8ede0c0b94f9ef4c907da41704928d22ec8fc43e29c6c",
+        "src/main/java/org/leanbridge/variants/ModeThird.java": "f278127cc88222d3091ec7c1f7908a6d8c020821a24bc30ff91c724bd8a51e9b",
+        "src/main/java/org/leanbridge/variants/NativeAssets.java": "b7f08f5f36a1883064db9434d3eedff4db10bd84a21731a3d33bdc22d6539498",
+        "src/main/java/org/leanbridge/variants/Nested.java": "3c021715b0f2cde5cff5aaff36f32a45e3c0172187ec5ac021323c1859611105",
+        "src/main/java/org/leanbridge/variants/NestedEmpty.java": "bf3a037fa53425db1869415ed7a64b9fdf797ccd2a08fed70319d1408a2231c6",
+        "src/main/java/org/leanbridge/variants/NestedOutcome.java": "3d6eb6bf3d5c3566a1c5a4dd240e4ac86d886ca6d11f75f6526b0ab88c044599",
+        "src/main/java/org/leanbridge/variants/NestedPacket.java": "45ebdd62a5488b3b65df11fc0c765e8bff59f20dd5d31502e1698728441e196c",
+        "src/main/java/org/leanbridge/variants/One.java": "fb58b63fed207c383c2ad22cb8406de58dc2771f403e53cd9b0fa4bf05e70af3",
+        "src/main/java/org/leanbridge/variants/OneOnly.java": "62257f78b3032365e555f82ac28568f6b7a141a3b6a97a782330a478385e18d7",
+        "src/main/java/org/leanbridge/variants/Option.java": "39d7e6d7a8bd173825fdacff390fcfe44173ce389c7c870c27adb9b94cb09ba0",
+        "src/main/java/org/leanbridge/variants/Packet.java": "c15df9139ee931fcc02fd0057b9ef42d25d88e9a5fb4ffdb7c3a65c56e29f52f",
+        "src/main/java/org/leanbridge/variants/Pair.java": "33f99f2f9d3cfda9df0eff4fd39a6977a49fec68614369ab0a69c83a244ff740",
+        "src/main/java/org/leanbridge/variants/Result.java": "3de3ae230b97365ba76da3d82b43ec4f1c2c5ccc575f8a856310532b75e0f3e9",
+        "src/main/java/org/leanbridge/variants/Runtime.java": "2cd6a241f394a6e2c1499916a60f0d8b23598a15a5c3c9f57a6159c15318d82f",
+        "src/main/java/org/leanbridge/variants/Scalars.java": "af75b37d9bd85e27b2cf958e76e08afe3fabbae40ac26071c1fa0b20aecffa14",
+        "src/main/java/org/leanbridge/variants/ScalarsAbsent.java": "52f07db27e1f7f1757d7e030b30794d33b3997ff273355fdaccbd404b21c0326",
+        "src/main/java/org/leanbridge/variants/ScalarsAll.java": "80c28bca3a82bfb603a6f62ef01cba4f961af79c771992e71985b948fe9dbf71",
+        "src/main/java/org/leanbridge/variants/Scope.java": "49a4b6a18a05db7bfa8e3b3804e668897c07822044d61876ebf296024d111f15",
+        "src/main/java/org/leanbridge/variants/Signal.java": "680320ddfcc87945abe4de1a59f056f975e83cbf4b02a64358f4542fa0816224",
+        "src/main/java/org/leanbridge/variants/SignalData.java": "e4d723a1ed5b97785fdf172056d0edf304217913696cf7a19942c7e704e80ce5",
+        "src/main/java/org/leanbridge/variants/SignalIdle.java": "b0fd4bdcefbf03d11ecec5be29e559a8295afe87f7be84607178bb0bf2bbb7cb",
+        "src/main/java/org/leanbridge/variants/SignalMarker.java": "4fc1e6116bfdb10d098497ec904b3f4da18d2c1b199cdd02e7962b2bb00aaf44",
+        "src/main/java/org/leanbridge/variants/SignalStopped.java": "8c5f384e026c3c2a20b8eb82b8caf3e5f32b7a13914b14ca27cd12ce24d0f632",
+        "src/main/java/org/leanbridge/variants/Unit.java": "353b6ab3b58ab495ec259dfb67639071f17ae4938145ce23b0ea7b411ab44729",
+        "src/main/java/org/leanbridge/variants/VariantProbe.java": "0d9e6eda1f28324ffeff0f0dd5221d9c2c450b3e02376b10364cf0c29fa1f121"
+      },
+      "isolatedInstrumentedProjection": true,
+      "layoutChecks": 13,
+      "malformedTags": 7,
+      "normalExitCleanup": true,
+      "originalSources": {
+        "src/main/java/org/leanbridge/variants/Anonymous.java": "78081395700e57be1a71f628fc7710d2c608b15ee7b8fa4b75e9a87a5c237c08",
+        "src/main/java/org/leanbridge/variants/AnonymousCollision.java": "798b2b8b92a0b4b85418d12192b4ab0bf494416cfa0612263bbf23b14ac7878c",
+        "src/main/java/org/leanbridge/variants/AnonymousNumber.java": "9013e9099ea6ccd141fd9cbe91b12c3992d1dfab41020cf8f07e5d42de6c4d5e",
+        "src/main/java/org/leanbridge/variants/AnonymousPair.java": "9c0827b17410c589b937733fe7f9cdc67a662ba30d56d7d6170aee9a6536c966",
+        "src/main/java/org/leanbridge/variants/Api.java": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e",
+        "src/main/java/org/leanbridge/variants/Buffers.java": "c044dea50895e8285f6b6a188691d192e4fef6112f23384eb229267f57ada158",
+        "src/main/java/org/leanbridge/variants/BuffersEmpty.java": "4561c5f0747c1206ecb5b32a5f8fed688042ab494c21cd850921a91df17aac16",
+        "src/main/java/org/leanbridge/variants/BuffersPair.java": "0f3d043727b8e5805b3494fb4f7c3989c1a4a9f37722882ba58294092f871b87",
+        "src/main/java/org/leanbridge/variants/LeanBridgeException.java": "6db80f0a8db7e2440bff6d59d4d693b6e195e76ea0b577a5aee971cd9d2e13ca",
+        "src/main/java/org/leanbridge/variants/Mode.java": "eb5de93293cdcb454e3ddc9d152c1751cde509b71186c573f58aba1c63a3d865",
+        "src/main/java/org/leanbridge/variants/ModeFirst.java": "27da6c7a4fb9fcd0de4b131ddb5fa09c3c62ca867ff62853216fef02e402ee9d",
+        "src/main/java/org/leanbridge/variants/ModeSecond.java": "0624acaaacc923a2eda8ede0c0b94f9ef4c907da41704928d22ec8fc43e29c6c",
+        "src/main/java/org/leanbridge/variants/ModeThird.java": "f278127cc88222d3091ec7c1f7908a6d8c020821a24bc30ff91c724bd8a51e9b",
+        "src/main/java/org/leanbridge/variants/NativeAssets.java": "b7f08f5f36a1883064db9434d3eedff4db10bd84a21731a3d33bdc22d6539498",
+        "src/main/java/org/leanbridge/variants/Nested.java": "3c021715b0f2cde5cff5aaff36f32a45e3c0172187ec5ac021323c1859611105",
+        "src/main/java/org/leanbridge/variants/NestedEmpty.java": "bf3a037fa53425db1869415ed7a64b9fdf797ccd2a08fed70319d1408a2231c6",
+        "src/main/java/org/leanbridge/variants/NestedOutcome.java": "3d6eb6bf3d5c3566a1c5a4dd240e4ac86d886ca6d11f75f6526b0ab88c044599",
+        "src/main/java/org/leanbridge/variants/NestedPacket.java": "45ebdd62a5488b3b65df11fc0c765e8bff59f20dd5d31502e1698728441e196c",
+        "src/main/java/org/leanbridge/variants/One.java": "fb58b63fed207c383c2ad22cb8406de58dc2771f403e53cd9b0fa4bf05e70af3",
+        "src/main/java/org/leanbridge/variants/OneOnly.java": "62257f78b3032365e555f82ac28568f6b7a141a3b6a97a782330a478385e18d7",
+        "src/main/java/org/leanbridge/variants/Option.java": "39d7e6d7a8bd173825fdacff390fcfe44173ce389c7c870c27adb9b94cb09ba0",
+        "src/main/java/org/leanbridge/variants/Packet.java": "c15df9139ee931fcc02fd0057b9ef42d25d88e9a5fb4ffdb7c3a65c56e29f52f",
+        "src/main/java/org/leanbridge/variants/Pair.java": "33f99f2f9d3cfda9df0eff4fd39a6977a49fec68614369ab0a69c83a244ff740",
+        "src/main/java/org/leanbridge/variants/Result.java": "3de3ae230b97365ba76da3d82b43ec4f1c2c5ccc575f8a856310532b75e0f3e9",
+        "src/main/java/org/leanbridge/variants/Runtime.java": "01820281045901ea82ba4a005dae4b12b8abccb9d93f5dd4bd187c0bfb890740",
+        "src/main/java/org/leanbridge/variants/Scalars.java": "af75b37d9bd85e27b2cf958e76e08afe3fabbae40ac26071c1fa0b20aecffa14",
+        "src/main/java/org/leanbridge/variants/ScalarsAbsent.java": "52f07db27e1f7f1757d7e030b30794d33b3997ff273355fdaccbd404b21c0326",
+        "src/main/java/org/leanbridge/variants/ScalarsAll.java": "80c28bca3a82bfb603a6f62ef01cba4f961af79c771992e71985b948fe9dbf71",
+        "src/main/java/org/leanbridge/variants/Scope.java": "26ec6477b71edbe2cebedab24727f9e31d8ef7b8ddf2665140171957c3efcdea",
+        "src/main/java/org/leanbridge/variants/Signal.java": "680320ddfcc87945abe4de1a59f056f975e83cbf4b02a64358f4542fa0816224",
+        "src/main/java/org/leanbridge/variants/SignalData.java": "e4d723a1ed5b97785fdf172056d0edf304217913696cf7a19942c7e704e80ce5",
+        "src/main/java/org/leanbridge/variants/SignalIdle.java": "b0fd4bdcefbf03d11ecec5be29e559a8295afe87f7be84607178bb0bf2bbb7cb",
+        "src/main/java/org/leanbridge/variants/SignalMarker.java": "4fc1e6116bfdb10d098497ec904b3f4da18d2c1b199cdd02e7962b2bb00aaf44",
+        "src/main/java/org/leanbridge/variants/SignalStopped.java": "8c5f384e026c3c2a20b8eb82b8caf3e5f32b7a13914b14ca27cd12ce24d0f632",
+        "src/main/java/org/leanbridge/variants/Unit.java": "353b6ab3b58ab495ec259dfb67639071f17ae4938145ce23b0ea7b411ab44729"
+      },
+      "partialInputChecks": 64,
+      "probeSourceSha256": "af925c02e67418bcd6e2d5958a8c92a77fe27ea10d2baf9686abf31efdeb5a5b",
+      "releaseJarUnchanged": true,
+      "replacements": [
+        66,
+        14,
+        32,
+        1,
+        14,
+        12
+      ]
+    },
+    "reviewed-ir": {
+      "checks": 212,
+      "inactiveCases": 6,
+      "instrumentedSources": {
+        "src/main/java/org/leanbridge/variants/Anonymous.java": "78081395700e57be1a71f628fc7710d2c608b15ee7b8fa4b75e9a87a5c237c08",
+        "src/main/java/org/leanbridge/variants/AnonymousCollision.java": "798b2b8b92a0b4b85418d12192b4ab0bf494416cfa0612263bbf23b14ac7878c",
+        "src/main/java/org/leanbridge/variants/AnonymousNumber.java": "9013e9099ea6ccd141fd9cbe91b12c3992d1dfab41020cf8f07e5d42de6c4d5e",
+        "src/main/java/org/leanbridge/variants/AnonymousPair.java": "9c0827b17410c589b937733fe7f9cdc67a662ba30d56d7d6170aee9a6536c966",
+        "src/main/java/org/leanbridge/variants/Api.java": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e",
+        "src/main/java/org/leanbridge/variants/Buffers.java": "c044dea50895e8285f6b6a188691d192e4fef6112f23384eb229267f57ada158",
+        "src/main/java/org/leanbridge/variants/BuffersEmpty.java": "4561c5f0747c1206ecb5b32a5f8fed688042ab494c21cd850921a91df17aac16",
+        "src/main/java/org/leanbridge/variants/BuffersPair.java": "0f3d043727b8e5805b3494fb4f7c3989c1a4a9f37722882ba58294092f871b87",
+        "src/main/java/org/leanbridge/variants/Faults.java": "af925c02e67418bcd6e2d5958a8c92a77fe27ea10d2baf9686abf31efdeb5a5b",
+        "src/main/java/org/leanbridge/variants/LeanBridgeException.java": "6db80f0a8db7e2440bff6d59d4d693b6e195e76ea0b577a5aee971cd9d2e13ca",
+        "src/main/java/org/leanbridge/variants/Mode.java": "eb5de93293cdcb454e3ddc9d152c1751cde509b71186c573f58aba1c63a3d865",
+        "src/main/java/org/leanbridge/variants/ModeFirst.java": "27da6c7a4fb9fcd0de4b131ddb5fa09c3c62ca867ff62853216fef02e402ee9d",
+        "src/main/java/org/leanbridge/variants/ModeSecond.java": "0624acaaacc923a2eda8ede0c0b94f9ef4c907da41704928d22ec8fc43e29c6c",
+        "src/main/java/org/leanbridge/variants/ModeThird.java": "f278127cc88222d3091ec7c1f7908a6d8c020821a24bc30ff91c724bd8a51e9b",
+        "src/main/java/org/leanbridge/variants/NativeAssets.java": "a51f4a71df9335ae8d464e5ad816284ede332d0418deaa8e223cb3ec27365bf2",
+        "src/main/java/org/leanbridge/variants/Nested.java": "3c021715b0f2cde5cff5aaff36f32a45e3c0172187ec5ac021323c1859611105",
+        "src/main/java/org/leanbridge/variants/NestedEmpty.java": "bf3a037fa53425db1869415ed7a64b9fdf797ccd2a08fed70319d1408a2231c6",
+        "src/main/java/org/leanbridge/variants/NestedOutcome.java": "3d6eb6bf3d5c3566a1c5a4dd240e4ac86d886ca6d11f75f6526b0ab88c044599",
+        "src/main/java/org/leanbridge/variants/NestedPacket.java": "45ebdd62a5488b3b65df11fc0c765e8bff59f20dd5d31502e1698728441e196c",
+        "src/main/java/org/leanbridge/variants/One.java": "fb58b63fed207c383c2ad22cb8406de58dc2771f403e53cd9b0fa4bf05e70af3",
+        "src/main/java/org/leanbridge/variants/OneOnly.java": "62257f78b3032365e555f82ac28568f6b7a141a3b6a97a782330a478385e18d7",
+        "src/main/java/org/leanbridge/variants/Option.java": "39d7e6d7a8bd173825fdacff390fcfe44173ce389c7c870c27adb9b94cb09ba0",
+        "src/main/java/org/leanbridge/variants/Packet.java": "c15df9139ee931fcc02fd0057b9ef42d25d88e9a5fb4ffdb7c3a65c56e29f52f",
+        "src/main/java/org/leanbridge/variants/Pair.java": "33f99f2f9d3cfda9df0eff4fd39a6977a49fec68614369ab0a69c83a244ff740",
+        "src/main/java/org/leanbridge/variants/Result.java": "3de3ae230b97365ba76da3d82b43ec4f1c2c5ccc575f8a856310532b75e0f3e9",
+        "src/main/java/org/leanbridge/variants/Runtime.java": "2cd6a241f394a6e2c1499916a60f0d8b23598a15a5c3c9f57a6159c15318d82f",
+        "src/main/java/org/leanbridge/variants/Scalars.java": "af75b37d9bd85e27b2cf958e76e08afe3fabbae40ac26071c1fa0b20aecffa14",
+        "src/main/java/org/leanbridge/variants/ScalarsAbsent.java": "52f07db27e1f7f1757d7e030b30794d33b3997ff273355fdaccbd404b21c0326",
+        "src/main/java/org/leanbridge/variants/ScalarsAll.java": "80c28bca3a82bfb603a6f62ef01cba4f961af79c771992e71985b948fe9dbf71",
+        "src/main/java/org/leanbridge/variants/Scope.java": "49a4b6a18a05db7bfa8e3b3804e668897c07822044d61876ebf296024d111f15",
+        "src/main/java/org/leanbridge/variants/Signal.java": "680320ddfcc87945abe4de1a59f056f975e83cbf4b02a64358f4542fa0816224",
+        "src/main/java/org/leanbridge/variants/SignalData.java": "e4d723a1ed5b97785fdf172056d0edf304217913696cf7a19942c7e704e80ce5",
+        "src/main/java/org/leanbridge/variants/SignalIdle.java": "b0fd4bdcefbf03d11ecec5be29e559a8295afe87f7be84607178bb0bf2bbb7cb",
+        "src/main/java/org/leanbridge/variants/SignalMarker.java": "4fc1e6116bfdb10d098497ec904b3f4da18d2c1b199cdd02e7962b2bb00aaf44",
+        "src/main/java/org/leanbridge/variants/SignalStopped.java": "8c5f384e026c3c2a20b8eb82b8caf3e5f32b7a13914b14ca27cd12ce24d0f632",
+        "src/main/java/org/leanbridge/variants/Unit.java": "353b6ab3b58ab495ec259dfb67639071f17ae4938145ce23b0ea7b411ab44729",
+        "src/main/java/org/leanbridge/variants/VariantProbe.java": "0d9e6eda1f28324ffeff0f0dd5221d9c2c450b3e02376b10364cf0c29fa1f121"
+      },
+      "isolatedInstrumentedProjection": true,
+      "layoutChecks": 13,
+      "malformedTags": 7,
+      "normalExitCleanup": true,
+      "originalSources": {
+        "src/main/java/org/leanbridge/variants/Anonymous.java": "78081395700e57be1a71f628fc7710d2c608b15ee7b8fa4b75e9a87a5c237c08",
+        "src/main/java/org/leanbridge/variants/AnonymousCollision.java": "798b2b8b92a0b4b85418d12192b4ab0bf494416cfa0612263bbf23b14ac7878c",
+        "src/main/java/org/leanbridge/variants/AnonymousNumber.java": "9013e9099ea6ccd141fd9cbe91b12c3992d1dfab41020cf8f07e5d42de6c4d5e",
+        "src/main/java/org/leanbridge/variants/AnonymousPair.java": "9c0827b17410c589b937733fe7f9cdc67a662ba30d56d7d6170aee9a6536c966",
+        "src/main/java/org/leanbridge/variants/Api.java": "5258a7e143c151c5c4e5203362dd4596bd4cc979bc588f7bda2a9ccca60aa72e",
+        "src/main/java/org/leanbridge/variants/Buffers.java": "c044dea50895e8285f6b6a188691d192e4fef6112f23384eb229267f57ada158",
+        "src/main/java/org/leanbridge/variants/BuffersEmpty.java": "4561c5f0747c1206ecb5b32a5f8fed688042ab494c21cd850921a91df17aac16",
+        "src/main/java/org/leanbridge/variants/BuffersPair.java": "0f3d043727b8e5805b3494fb4f7c3989c1a4a9f37722882ba58294092f871b87",
+        "src/main/java/org/leanbridge/variants/LeanBridgeException.java": "6db80f0a8db7e2440bff6d59d4d693b6e195e76ea0b577a5aee971cd9d2e13ca",
+        "src/main/java/org/leanbridge/variants/Mode.java": "eb5de93293cdcb454e3ddc9d152c1751cde509b71186c573f58aba1c63a3d865",
+        "src/main/java/org/leanbridge/variants/ModeFirst.java": "27da6c7a4fb9fcd0de4b131ddb5fa09c3c62ca867ff62853216fef02e402ee9d",
+        "src/main/java/org/leanbridge/variants/ModeSecond.java": "0624acaaacc923a2eda8ede0c0b94f9ef4c907da41704928d22ec8fc43e29c6c",
+        "src/main/java/org/leanbridge/variants/ModeThird.java": "f278127cc88222d3091ec7c1f7908a6d8c020821a24bc30ff91c724bd8a51e9b",
+        "src/main/java/org/leanbridge/variants/NativeAssets.java": "a51f4a71df9335ae8d464e5ad816284ede332d0418deaa8e223cb3ec27365bf2",
+        "src/main/java/org/leanbridge/variants/Nested.java": "3c021715b0f2cde5cff5aaff36f32a45e3c0172187ec5ac021323c1859611105",
+        "src/main/java/org/leanbridge/variants/NestedEmpty.java": "bf3a037fa53425db1869415ed7a64b9fdf797ccd2a08fed70319d1408a2231c6",
+        "src/main/java/org/leanbridge/variants/NestedOutcome.java": "3d6eb6bf3d5c3566a1c5a4dd240e4ac86d886ca6d11f75f6526b0ab88c044599",
+        "src/main/java/org/leanbridge/variants/NestedPacket.java": "45ebdd62a5488b3b65df11fc0c765e8bff59f20dd5d31502e1698728441e196c",
+        "src/main/java/org/leanbridge/variants/One.java": "fb58b63fed207c383c2ad22cb8406de58dc2771f403e53cd9b0fa4bf05e70af3",
+        "src/main/java/org/leanbridge/variants/OneOnly.java": "62257f78b3032365e555f82ac28568f6b7a141a3b6a97a782330a478385e18d7",
+        "src/main/java/org/leanbridge/variants/Option.java": "39d7e6d7a8bd173825fdacff390fcfe44173ce389c7c870c27adb9b94cb09ba0",
+        "src/main/java/org/leanbridge/variants/Packet.java": "c15df9139ee931fcc02fd0057b9ef42d25d88e9a5fb4ffdb7c3a65c56e29f52f",
+        "src/main/java/org/leanbridge/variants/Pair.java": "33f99f2f9d3cfda9df0eff4fd39a6977a49fec68614369ab0a69c83a244ff740",
+        "src/main/java/org/leanbridge/variants/Result.java": "3de3ae230b97365ba76da3d82b43ec4f1c2c5ccc575f8a856310532b75e0f3e9",
+        "src/main/java/org/leanbridge/variants/Runtime.java": "01820281045901ea82ba4a005dae4b12b8abccb9d93f5dd4bd187c0bfb890740",
+        "src/main/java/org/leanbridge/variants/Scalars.java": "af75b37d9bd85e27b2cf958e76e08afe3fabbae40ac26071c1fa0b20aecffa14",
+        "src/main/java/org/leanbridge/variants/ScalarsAbsent.java": "52f07db27e1f7f1757d7e030b30794d33b3997ff273355fdaccbd404b21c0326",
+        "src/main/java/org/leanbridge/variants/ScalarsAll.java": "80c28bca3a82bfb603a6f62ef01cba4f961af79c771992e71985b948fe9dbf71",
+        "src/main/java/org/leanbridge/variants/Scope.java": "26ec6477b71edbe2cebedab24727f9e31d8ef7b8ddf2665140171957c3efcdea",
+        "src/main/java/org/leanbridge/variants/Signal.java": "680320ddfcc87945abe4de1a59f056f975e83cbf4b02a64358f4542fa0816224",
+        "src/main/java/org/leanbridge/variants/SignalData.java": "e4d723a1ed5b97785fdf172056d0edf304217913696cf7a19942c7e704e80ce5",
+        "src/main/java/org/leanbridge/variants/SignalIdle.java": "b0fd4bdcefbf03d11ecec5be29e559a8295afe87f7be84607178bb0bf2bbb7cb",
+        "src/main/java/org/leanbridge/variants/SignalMarker.java": "4fc1e6116bfdb10d098497ec904b3f4da18d2c1b199cdd02e7962b2bb00aaf44",
+        "src/main/java/org/leanbridge/variants/SignalStopped.java": "8c5f384e026c3c2a20b8eb82b8caf3e5f32b7a13914b14ca27cd12ce24d0f632",
+        "src/main/java/org/leanbridge/variants/Unit.java": "353b6ab3b58ab495ec259dfb67639071f17ae4938145ce23b0ea7b411ab44729"
+      },
+      "partialInputChecks": 64,
+      "probeSourceSha256": "af925c02e67418bcd6e2d5958a8c92a77fe27ea10d2baf9686abf31efdeb5a5b",
+      "releaseJarUnchanged": true,
+      "replacements": [
+        66,
+        14,
+        32,
+        1,
+        14,
+        12
+      ]
+    }
+  },
+  "nativeFaultProbes": {
+    "ordinary-source": {
+      "adapterSha256": "e8fb3f40f7ad6baae0d4bee02328f6226950ccde117b5b625d7e66f209809079",
+      "allocationFailures": 242,
+      "checks": 1182,
+      "consumerSha256": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84",
+      "executableSha256": "1f42c47dc6c335ce494a3bded111d02dd5d6c6e11be912e6a9b279d9d0e78abf",
+      "malformedNativeTags": 1,
+      "probeAdapterSha256": "94ce71e3e8afddf9c540123355aa57154bcfdb23bb891f43adc2b770a93521b7",
+      "realLeanExecution": true,
+      "rejected": 70,
+      "sanitizers": [
+        "address",
+        "leak",
+        "undefined"
+      ],
+      "startupLeakBaseline": {
+        "allocations": 12,
+        "bytes": 128,
+        "report": "\n=================================================================\n==PID==ERROR: LeakSanitizer: detected memory leaks\n\nDirect leak of 128 byte(s) in 12 object(s) allocated from:\n    #0 ADDRESS in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n    #1 ADDRESS in __gmp_default_allocate (/tmp/lean-bridge-jvm-variant-author-BaF1Lf/release/native/runtime/lib/libleanshared.so+ADDRESS)\n\nSUMMARY: AddressSanitizer: 128 byte(s) leaked in 12 allocation(s).\n",
+        "unchangedAfterConversions": true
+      },
+      "syntheticTagInjection": true
+    },
+    "reviewed-ir": {
+      "adapterSha256": "e104eb5705f5b666907f00acceec8c2518312ac3a95acff73b32cafeb87129aa",
+      "allocationFailures": 242,
+      "checks": 1182,
+      "consumerSha256": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84",
+      "executableSha256": "0b3669e3eb4dd4263ff9fd0dd0596b80b0ab87982bfa0a4601117f1fa028b319",
+      "malformedNativeTags": 1,
+      "probeAdapterSha256": "223453a763635381da6cf8f39d6dec46eb1f207903c9dbd20c59d092590621d1",
+      "realLeanExecution": true,
+      "rejected": 70,
+      "sanitizers": [
+        "address",
+        "leak",
+        "undefined"
+      ],
+      "startupLeakBaseline": {
+        "allocations": 12,
+        "bytes": 128,
+        "report": "\n=================================================================\n==PID==ERROR: LeakSanitizer: detected memory leaks\n\nDirect leak of 128 byte(s) in 12 object(s) allocated from:\n    #0 ADDRESS in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n    #1 ADDRESS in __gmp_default_allocate (/tmp/lean-bridge-jvm-variant-author-21nKgj/release/native/runtime/lib/libleanshared.so+ADDRESS)\n\nSUMMARY: AddressSanitizer: 128 byte(s) leaked in 12 allocation(s).\n",
+        "unchangedAfterConversions": true
+      },
+      "syntheticTagInjection": true
+    }
+  },
+  "reproduction": {
+    "firstReportSha256": "adc2fba0a5a42fef74e33494cddbcca76e86f5118e5976da3b8a422be0a79f30",
+    "executions": 4,
+    "archivesIdentical": true,
+    "installedFilesIdentical": true,
+    "generatedSourcesIdentical": true
+  }
+}

@@ -846,6 +846,8 @@ jobs:
           test -s build/lists/jvm.json
           LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs
           test -s build/aliases/jvm.json
+          LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs
+          test -s build/variants/jvm.json
           test -s build/type-corpus/java-kotlin.json
           test -s build/type-corpus/reviewed-native-java-kotlin.json
       - name: Upload installed Java and Kotlin corpus observations
@@ -862,6 +864,7 @@ jobs:
             build/compounds/jvm.json
             build/lists/jvm.json
             build/aliases/jvm.json
+            build/variants/jvm.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -940,6 +943,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"
               if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ]; then
                 test_result=failed
                 executed=false

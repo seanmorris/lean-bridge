@@ -144,6 +144,12 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	assert.equal(jvm.deployment["package.jar"].sha256, jar.sha256);
 	await rm(project, { recursive: true, force: true });
 	assert.deepEqual((await readdir(root)).sort(), ["relocated", "runtime-only"]);
+	if(fixture?.removeHandoffBeforeExecution)
+	{
+		await rm(handoff, { recursive: true, force: true });
+		await assert.rejects(() => readdir(handoff), { code: "ENOENT" });
+		Object.assign(jvm, { handoffRemovedBeforeExecution: true });
+	}
 	const runtimeJava = join(runtime, "bin/java"), runtimeEnv = { ...clean, JAVA_HOME: runtime };
 	jvm.runtimeModules = (await jvmRun(runtimeJava, ["--list-modules"], deployment, runtimeEnv)).stdout.trim().split("\n");
 	assert.equal(jvm.runtimeModules.length, 1); assert.match(jvm.runtimeModules[0], /^java\.base@22(?:\.|$)/);

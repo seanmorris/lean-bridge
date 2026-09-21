@@ -20,7 +20,7 @@ const kotlinPrimitives = { unit: "Unit", bool: "Boolean", uint8: "Int"
 	, float32: "Float", float64: "Double"
 	, char: "Int", string: "String", bytes: "ByteArray"
 };
-const kotlinType = copy => copy.record ? copy.publicName
+const kotlinType = copy => copy.record || copy.variant ? copy.publicName
 	: copy.compound ? `${{ option: "Option", result: "Result", tuple: "Pair" }[copy.compound]}<${copy.fields.map(field => kotlinType(field.type)).join(", ")}>`
 		: copy.element ? ["Boolean", "Byte", "Short", "Int", "Long", "Float", "Double"].includes(kotlinType(copy.element))
 			? `${kotlinType(copy.element)}Array` : `Array<${kotlinType(copy.element)}>`
@@ -75,7 +75,7 @@ export const jvmAliasSiteDocs = (model, parameters, result = null, returnsVoid =
 export const jvmAliasReadme = model => !model.surface.aliases.length ? "" : `
 ## Copied Lean aliases
 
-This Maven package exports a Java API, also callable from Kotlin. Pass and receive the target values below. Alias names, original targets and chains remain in the installed binding manifest and generated Java source documentation; they do not introduce JVM classes or exported Kotlin typealias declarations. Alias parameters, results and record fields retain their target validation. Nat rejects negative BigInteger values; Int accepts them. UInt32 uses checked long/Long. Unit inputs use the generated Unit.INSTANCE; Unit outputs return void (kotlin.Unit). Import the generated Unit and Pair explicitly in Kotlin to distinguish them from kotlin.Unit and kotlin.Pair. Native variants, recursive values, identity-bearing targets and compound callable payloads remain unsupported.
+This Maven package exports a Java API, also callable from Kotlin. Pass and receive the target values below. Alias names, original targets and chains remain in the installed binding manifest and generated Java source documentation; they do not introduce JVM classes or exported Kotlin typealias declarations. Alias parameters, results and record fields retain their target validation. Nat rejects negative BigInteger values; Int accepts them. UInt32 uses checked long/Long. Unit inputs use the generated Unit.INSTANCE; Unit outputs return void (kotlin.Unit). Import the generated Unit and Pair explicitly in Kotlin to distinguish them from kotlin.Unit and kotlin.Pair. Recursive values, identity-bearing targets and compound callable payloads remain unsupported.
 
 | Lean alias | Contract target | Java value type | Kotlin value type |
 | --- | --- | --- | --- |

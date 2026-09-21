@@ -402,3 +402,24 @@ Ten of seventeen profiles now have installed tagged-variant acceptance. Java,
 Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI remain. Bounded recursive
 values, compound callable payloads and explicitly owned identity aggregates
 remain assigned work.
+
+## Compiled Java and Kotlin variants
+
+Prepared Maven packages now expose sealed Java interfaces with named constructor
+records, usable directly from Java and Kotlin. Both source paths pass 209,998
+public assertions over 4,331 calls per execution, thirty-three rejected inputs
+and ten intended compiler rejections per language. Consumers install offline
+after author removal and run twice more after source and handoff removal using
+only `java.base`. Independent rebuilds reproduce both original JARs and POMs,
+generated sources and every installed file.
+
+Separate probes recover from 212 conversion/allocation failures and sixty-four
+partial-input failures, reject seven malformed tags and ignore six poisoned
+inactive cases. Scoped arenas close and original release JARs remain unchanged.
+Shared native probes retain the startup-only GMP sanitizer baseline. See the
+[Java/Kotlin variant record](jvm-variants-20260921.md) for copied-array semantics,
+constructor naming and exact installed identities.
+
+Twelve of seventeen profiles now have installed tagged-variant acceptance. Ruby,
+Perl, native PHP, PHP-Wasm and WIT/WASI remain. Bounded recursive values, compound
+callable payloads and explicitly owned identity aggregates remain assigned work.

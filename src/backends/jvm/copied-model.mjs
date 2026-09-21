@@ -20,7 +20,7 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedJvmModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true });
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true });
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-jvm-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -32,7 +32,36 @@ export const compileCopiedJvmModel = ir => {
 	{
 		copy.nativeType = copy.aggregate ? "MemorySegment" : nativeTypes[copy.scalarName];
 		copy.layout = copy.aggregate ? "ADDRESS" : `JAVA_${copy.nativeType.toUpperCase()}`;
-		if(copy.record || copy.compound)
+		if(copy.variant)
+		{
+			copy.publicName = pascal(copy.variant.name);
+			if(names.has(copy.publicName)) fail(ir.declarations[0], `Java variant name collides: ${copy.publicName}`);
+			names.add(copy.publicName);
+			let payloadSize = 1, payloadAlignment = 1;
+			for(const [index, branch] of copy.cases.entries())
+			{
+				const source = copy.variant.cases[index];
+				branch.publicName = copy.publicName + pascal(source.name) + (source.name.match(/_+$/)?.[0] ?? "");
+				if(names.has(branch.publicName)) fail(ir.declarations[0], `Java constructor name collides: ${branch.publicName}`);
+				names.add(branch.publicName);
+				const fields = new Set(); let size = 0, alignment = 1;
+				for(const [i, field] of branch.fields.entries())
+				{
+					const name = source.fields[i].name;
+					field.publicName = camel(name) + (name.match(/_+$/)?.[0] ?? "");
+					if(keywords.has(field.publicName)) field.publicName += "_";
+					if(fields.has(field.publicName) || reserved.has(field.publicName)) fail(ir.declarations[0], `Java variant field name collides: ${field.publicName}`);
+					fields.add(field.publicName);
+					field.offset = align(size, field.type.alignment);
+					size = field.offset + field.type.size; alignment = Math.max(alignment, field.type.alignment);
+				}
+				branch.alignment = alignment; branch.size = Math.max(1, align(size, alignment));
+				payloadSize = Math.max(payloadSize, branch.size); payloadAlignment = Math.max(payloadAlignment, alignment);
+			}
+			copy.payloadOffset = align(4, payloadAlignment);
+			copy.alignment = Math.max(4, payloadAlignment);
+			copy.size = align(copy.payloadOffset + align(payloadSize, payloadAlignment), copy.alignment);
+		} else if(copy.record || copy.compound)
 		{
 			if(copy.record)
 			{
@@ -76,7 +105,7 @@ export const compileCopiedJvmModel = ir => {
 	}
 	const wrapper = copy => ({ option: "Option", result: "Result", tuple: "Pair" })[copy.compound];
 	const boxed = type => ({ boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer", long: "Long", float: "Float", double: "Double" })[type] ?? type;
-	const publicType = copy => copy.type?.callable ? copy.publicName : copy.record ? copy.publicName
+	const publicType = copy => copy.type?.callable ? copy.publicName : copy.record || copy.variant ? copy.publicName
 		: copy.compound ? `${wrapper(copy)}<${copy.fields.map(field => boxed(publicType(field.type))).join(", ")}>`
 			: copy.element ? `${publicType(copy.element)}[]` : publicTypes[copy.scalarName];
 	const erasedType = copy => copy.compound ? wrapper(copy) : copy.element ? `${erasedType(copy.element)}[]` : publicType(copy);

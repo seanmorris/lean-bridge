@@ -30,7 +30,22 @@ const writeValue = (copy, value, offset, source) => copy.aggregate ? `MemorySegm
 export const copiedJvmConversions = model => model.surface.copies.map(copy => {
 	const type = model.publicType(copy), i = copy.index;
 	let input, output;
-	if(copy.compound)
+	if(copy.variant)
+	{
+		input = `Objects.requireNonNull(value);
+        var result = scope.allocate(${copy.size}, ${copy.alignment});
+        switch (value) {
+${copy.cases.map((branch, index) => `            case ${branch.publicName} branch -> {
+                result.set(JAVA_INT, 0, ${index});
+${branch.fields.map(field => `                ${writeValue(field.type, "result", copy.payloadOffset + field.offset, `to${field.type.index}(branch.${field.publicName}()${field.type.aggregate ? ", scope" : ""})`)}`).join("\n")}
+            }`).join("\n")}
+        }
+        return result;`;
+		output = `return switch (value.get(JAVA_INT, 0)) {
+${copy.cases.map((branch, index) => `            case ${index} -> new ${branch.publicName}(${branch.fields.map(field => `from${field.type.index}(${readJvmValue(field.type, "value", copy.payloadOffset + field.offset)})`).join(", ")});`).join("\n")}
+            default -> throw new IllegalStateException("Invalid native ${type} constructor");
+        };`;
+	} else if(copy.compound)
 	{
 		const to = (field, expression) => writeValue(field.type, "result", field.offset, `to${field.type.index}(${expression}${field.type.aggregate ? ", scope" : ""})`);
 		const from = field => `from${field.type.index}(${readJvmValue(field.type, "value", field.offset)})`;

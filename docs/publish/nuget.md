@@ -83,8 +83,8 @@ Payloads may contain all nineteen primitives, supported copied containers,
 records and other non-recursive variants. Unknown derived records, null cases
 and active null payloads reject. Generic, indexed, recursive, proof-bearing,
 callable and identity-bearing payloads are not admitted. Native multi-target
-variant builds currently accept C, C++, Python, Rust and .NET when every selected
-target accepts the entire API.
+variant builds currently accept C, C++, Python, Rust, .NET, Java and Kotlin when
+every selected target accepts the entire API.
 
 No variant-specific author configuration is needed. Run the
 [consumer example](../consume/dotnet.md#tagged-variants) and inspect the

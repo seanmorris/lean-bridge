@@ -126,14 +126,14 @@ export const jvmDiagnostics = (result, entry, profile, root, file) => {
 	const lines = `${result.stdout}\n${result.stderr}`.split("\n"), diagnostics = [];
 	for(const line of lines)
 	{
-		const match = profile === "java" ? /^(.+\.java):(\d+):(\d+): (compiler\.err\.[^:]+): (.+)$/.exec(line)
+		const match = profile === "java" ? /^(.+\.java):(\d+):(\d+): (compiler\.err\.[^:\s]+)(?:: (.*))?$/.exec(line)
 			: /^(.+\.kt):(\d+):(\d+): error: \[([A-Z_]+)\] (.+)$/.exec(line);
 		if(!match)
 		{
 			assert.ok(!line.includes("compiler.err.") && !/\berror:/.test(line), line);
 			continue;
 		}
-		const [, path, row, column, code, message] = match;
+		const [, path, row, column, code, message = ""] = match;
 		assert.equal(code, Array.isArray(entry.expectation.diagnostic) ? entry.expectation.diagnostic[diagnostics.length] : entry.expectation.diagnostic, `${entry.id}: ${line}`);
 		const actual = path.startsWith("file:") ? fileURLToPath(path) : resolve(root, profile === "java" && path === basename(file) ? file : path);
 		assert.equal(actual, join(root, file));

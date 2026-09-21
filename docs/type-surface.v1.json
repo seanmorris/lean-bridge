@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.60.0",
+  "contractVersion": "0.61.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,245 @@
   ],
   "evidence": [
     {
+      "id": "jvm-variants-installed",
+      "kind": "installed",
+      "revision": "f272ed1a43048c7e5c883a19560e53d63b086978",
+      "command": "LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs; node --test tests/jvm-variant-contract.test.mjs tests/jvm-variant-evidence.test.mjs",
+      "scope": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
+        },
+        {
+          "path": "docs/evidence/jvm-variants-20260921.json",
+          "sha256": "5eb7b87b00f13bfb2102cb850d9ab41b74af30e267702050e40f4a8c93b07b10"
+        },
+        {
+          "path": "docs/evidence/jvm-variants-20260921.md",
+          "sha256": "4378ef4d0694b491673fe9506dfb37b140ffc848bd164a2757873b2078b42ead"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "6e3923356ad0ffe4fec71b69934d4042ede334c1d28637c9503df7b37d2694c9"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "1ebe8b5edb40ee42f7893c5dc2d500130a91cf360d63bedb90322348c2c11a99"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+        },
+        {
+          "path": "src/backends/jvm/callables.mjs",
+          "sha256": "9a6177d805ae244fecd58684e29986ac8925920d07673c1a920b8ff3136c58b8"
+        },
+        {
+          "path": "src/backends/jvm/copied-aliases.mjs",
+          "sha256": "1428ce4c2a583668b0d2a835bcf9179082b7b396b065952d0649b157055c637e"
+        },
+        {
+          "path": "src/backends/jvm/copied-conversions.mjs",
+          "sha256": "dfcaae14b9a2afac7a79b564532e0bc01daaa32d282d0b0ebc5f24398cc5a965"
+        },
+        {
+          "path": "src/backends/jvm/copied-model.mjs",
+          "sha256": "1d32732421a2370cbd380f3841f5fa9a20ef5fa0f1faa4482a6f9a298f71e545"
+        },
+        {
+          "path": "src/backends/jvm/copied-values.mjs",
+          "sha256": "16db6a76ef091c108437349b793e266a37ba8cedd1a8af348a6e5d9ed2bb0e02"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
+        },
+        {
+          "path": "src/build/native-jvm-artifacts.mjs",
+          "sha256": "69f360fcd6c7c6e870c683025bc3357deb46c7ef472d061169b2afd93c47dd7a"
+        },
+        {
+          "path": "src/build/native-jvm-projection.mjs",
+          "sha256": "56f01e62c060f8758ad6a036d57d1a05fa0366d590b62abc39fbccded079e59e"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "98616ea71e85e063d0e7112c90ebf2266f78628f378760147b22082df194b22e"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
+        },
+        {
+          "path": "src/release/native-maven.mjs",
+          "sha256": "7b1c145df0ccdda3b7a32a62065c169c7c08ac0cacc38be34f7894ca4e507179"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/Variants.lean",
+          "sha256": "b1ea2c169d60cb150f5f875067f6e872157e58c66a511cef052ba9ddf5630255"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/lakefile.toml",
+          "sha256": "b8f22b2c53854c50e791640dc7353c58c534478e48f0508f9365df5a1f789d31"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-variants/package.json",
+          "sha256": "592387c172d140512602ddf70a9eb84391334c65f41c2e913f81ce9ff4bb9c85"
+        },
+        {
+          "path": "tests/fixtures/type-corpus/consumers/Wire.java",
+          "sha256": "7f06af43999b7d3b62b415ee30c212735cae26a889f4fc360b670ea7dbeda8b6"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/Extra.lean",
+          "sha256": "e2974d8f0073ea7f7241e3c676824c911714a0cf6d6cc812f4f4c1c97b7e5968"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/java.java",
+          "sha256": "1037e66b688d1f3f8d3123ff098927f97df71e7cb74bf621916c5575ce03a16c"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/jvm-faults.java",
+          "sha256": "af925c02e67418bcd6e2d5958a8c92a77fe27ea10d2baf9686abf31efdeb5a5b"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/jvm-invalid.json",
+          "sha256": "44a11841f656a75d9324baa6cf5c042f09d54c9f5ce0277f6a199d5d2ce8e510"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/kotlin.kt",
+          "sha256": "07c574558ffaa68576213a237020550fc1d2285529c5badb7fbb8f519f3dc763"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/native-probe.c",
+          "sha256": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84"
+        },
+        {
+          "path": "tests/helpers/c-variant-fixture.mjs",
+          "sha256": "f6446818fd57352ea8f2b6212c0ce0b8e0e984592bab8da7f9a393ae12b696f9"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/jvm-variant-faults.mjs",
+          "sha256": "ca48f1e4a7b92e297072936d25e9c4284d66a0a26586edc42c337a5e6a1270e0"
+        },
+        {
+          "path": "tests/helpers/jvm-variant-fixture.mjs",
+          "sha256": "4e7f31d4f8f056159f36c05dd99d0af72ab441fd9279f3fff34d498bdbe7e6f5"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/native-variant-faults.mjs",
+          "sha256": "2dd45473a8faf5ee566dc6a673176c2ca8080dfe1c015d8fd198028faa81cab6"
+        },
+        {
+          "path": "tests/helpers/native-variant-fixture.mjs",
+          "sha256": "e95e4263f216c2ae1e4a6afad017af23fa229358d696a02633ca5e5702167d5e"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/type-corpus-compiler.mjs",
+          "sha256": "020290f8ed04a935b51fb1a2b53e3b213884d36d891c5eacba8850194f181fa0"
+        },
+        {
+          "path": "tests/helpers/type-corpus-jvm-tools.mjs",
+          "sha256": "5f21567ed7dfd107bad21bfe3e57a448d1a525890133b684cf6a7758e4a334a7"
+        },
+        {
+          "path": "tests/helpers/type-corpus-jvm.mjs",
+          "sha256": "9a147486a1e9d91f71cafbd44a4fd493e1319711068fc0a403fc73d4bf3b7058"
+        },
+        {
+          "path": "tests/helpers/variant-fixture.mjs",
+          "sha256": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754"
+        },
+        {
+          "path": "tests/jvm-variant-contract.test.mjs",
+          "sha256": "9f379096c7d86335eff26ccc2e9c04a228b90e2dc93ff735b5784857c6e6bbdb"
+        },
+        {
+          "path": "tests/jvm-variant-evidence.test.mjs",
+          "sha256": "df52a96708f463c9a94d6bf91fb82e5fbe285c8cfedece1b24469b94d0ab9052"
+        },
+        {
+          "path": "tests/jvm-variants.test.mjs",
+          "sha256": "88b5b6ab87f771ceaad439146585c05d6510ad85a4cee8c3958a16b850e3424f"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "java/ordinary-source/archives/variants-1.0.0.jar",
+          "sha256": "4cd71157d5ffc3cd837659d3a0fef875398e3e92a71ce00e2a6ecdc0a3867e0e"
+        },
+        {
+          "path": "java/ordinary-source/archives/variants-1.0.0.pom",
+          "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+        },
+        {
+          "path": "kotlin/ordinary-source/archives/variants-1.0.0.jar",
+          "sha256": "4cd71157d5ffc3cd837659d3a0fef875398e3e92a71ce00e2a6ecdc0a3867e0e"
+        },
+        {
+          "path": "kotlin/ordinary-source/archives/variants-1.0.0.pom",
+          "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+        },
+        {
+          "path": "java/reviewed-ir/archives/variants-1.0.0.jar",
+          "sha256": "2f7956a8bcba0fb92d9770787b15f7fb38c8e6ab04848eb3df58d94ff1fa547f"
+        },
+        {
+          "path": "java/reviewed-ir/archives/variants-1.0.0.pom",
+          "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+        },
+        {
+          "path": "kotlin/reviewed-ir/archives/variants-1.0.0.jar",
+          "sha256": "2f7956a8bcba0fb92d9770787b15f7fb38c8e6ab04848eb3df58d94ff1fa547f"
+        },
+        {
+          "path": "kotlin/reviewed-ir/archives/variants-1.0.0.pom",
+          "sha256": "513d68ebfe42f9640cd3dde989114562e32a2db0d148d1bb427f0a8ccf607b30"
+        }
+      ]
+    },
+    {
       "id": "dotnet-variants-installed",
       "kind": "installed",
       "revision": "5c0b42399f7ff9c60b48f98a0625501628592489",
@@ -165,7 +404,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/dotnet-variants-20260921.json",
@@ -177,7 +416,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -229,7 +468,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -245,7 +484,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -360,7 +599,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/rust-variants-20260921.json",
@@ -372,7 +611,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -424,7 +663,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -432,7 +671,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -555,7 +794,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/python-variants-20260921.json",
@@ -567,7 +806,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -623,7 +862,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -631,7 +870,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -746,7 +985,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/c-variants-20260921.json",
@@ -758,7 +997,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -802,7 +1041,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-gmp.mjs",
@@ -814,7 +1053,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -933,11 +1172,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.json",
-          "sha256": "38c3058fa4657b74bebd66a88f52ca20e95d7ead54a1c357b755b3d477a3bca0"
+          "sha256": "b4e639f9c77a1e8131fe31a98852de60b9b5a5cb787c27fc3976ea8fc84ffbbf"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.md",
@@ -945,7 +1184,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -985,7 +1224,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -993,7 +1232,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -1061,7 +1300,7 @@
         },
         {
           "path": "tests/native-variant-contract.test.mjs",
-          "sha256": "1158a9faecc9dcd6f32031ed7bb96452c0964c7d33a9505ae4eecbc242d0c120"
+          "sha256": "96675f68901765eac1ad55ebf1fc5082e20806c085144bca83a2cc0fdc11a605"
         }
       ],
       "artifacts": [
@@ -1084,7 +1323,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/wit-aliases-20260921.json",
@@ -1096,7 +1335,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1255,7 +1494,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-wasm-aliases-20260921.json",
@@ -1267,7 +1506,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1482,7 +1721,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-native-aliases-20260921.json",
@@ -1494,7 +1733,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1645,7 +1884,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1780,7 +2019,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/ruby-aliases-20260921.json",
@@ -1792,7 +2031,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1836,7 +2075,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -1931,11 +2170,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
-          "sha256": "b7f80a4992310dd46f33f7b2327a1f983ab772f399a4387afec6973cc141f96c"
+          "sha256": "ac1eef0d323a6adb619f2c1e6b1b5949f2efc18426bc128dbfcd2520ed8c2368"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.md",
@@ -1943,7 +2182,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1967,23 +2206,23 @@
         },
         {
           "path": "src/backends/jvm/copied-aliases.mjs",
-          "sha256": "52392238a52f1e9f3b67d9c4318b60377df2c38b696c973066df72c16353684d"
+          "sha256": "1428ce4c2a583668b0d2a835bcf9179082b7b396b065952d0649b157055c637e"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
-          "sha256": "ac67d1cc4b08972f2e7fca4570c35a2d678730bef7624f1bd838dcd7a8b84cc9"
+          "sha256": "dfcaae14b9a2afac7a79b564532e0bc01daaa32d282d0b0ebc5f24398cc5a965"
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
-          "sha256": "aa46051d7b4ec513f29aaf9ab50cb686cc4946cc1fd3b53a564d0de58b44e7ac"
+          "sha256": "1d32732421a2370cbd380f3841f5fa9a20ef5fa0f1faa4482a6f9a298f71e545"
         },
         {
           "path": "src/backends/jvm/copied-values.mjs",
-          "sha256": "812c51d3f72b8fef2c7d3cb4d0b4c0a28b431907705112f328b9139de17881ff"
+          "sha256": "16db6a76ef091c108437349b793e266a37ba8cedd1a8af348a6e5d9ed2bb0e02"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -2067,11 +2306,11 @@
         },
         {
           "path": "tests/helpers/type-corpus-jvm-tools.mjs",
-          "sha256": "33cea0cde3652ccccb073b445d19e294485e83a4fd60aa9152f80612287af91c"
+          "sha256": "5f21567ed7dfd107bad21bfe3e57a448d1a525890133b684cf6a7758e4a334a7"
         },
         {
           "path": "tests/helpers/type-corpus-jvm.mjs",
-          "sha256": "ae6da42425c8d6a14688f1477e257e2dec8b0e66a0b7fa284b456c3d1966ffb3"
+          "sha256": "9a147486a1e9d91f71cafbd44a4fd493e1319711068fc0a403fc73d4bf3b7058"
         },
         {
           "path": "tests/jvm-alias-contract.test.mjs",
@@ -2126,7 +2365,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "config/checked-javascript.json",
@@ -2154,7 +2393,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2194,7 +2433,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -2301,7 +2540,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -2313,7 +2552,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2349,7 +2588,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -2444,7 +2683,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -2456,7 +2695,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2492,7 +2731,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -2579,7 +2818,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -2591,7 +2830,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2631,7 +2870,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -2714,7 +2953,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -2742,7 +2981,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2857,7 +3096,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -2893,7 +3132,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3016,7 +3255,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -3032,7 +3271,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3096,7 +3335,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -3104,7 +3343,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -3211,7 +3450,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -3227,7 +3466,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3450,7 +3689,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -3466,7 +3705,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3542,7 +3781,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -3558,7 +3797,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -3657,7 +3896,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -3673,7 +3912,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3749,7 +3988,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -3765,7 +4004,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -3880,7 +4119,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3944,7 +4183,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -4091,7 +4330,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -4107,7 +4346,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4179,7 +4418,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -4191,7 +4430,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -4270,11 +4509,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
-          "sha256": "926a8b81470e7b5171970f24c45e9bb33e0beda22f146692ebdc598674cb6cb1"
+          "sha256": "ab89a6e92339a06602fb2c5a900a56550847c99f445f19256191cb8158173002"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.md",
@@ -4286,7 +4525,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4338,15 +4577,15 @@
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
-          "sha256": "ac67d1cc4b08972f2e7fca4570c35a2d678730bef7624f1bd838dcd7a8b84cc9"
+          "sha256": "dfcaae14b9a2afac7a79b564532e0bc01daaa32d282d0b0ebc5f24398cc5a965"
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
-          "sha256": "aa46051d7b4ec513f29aaf9ab50cb686cc4946cc1fd3b53a564d0de58b44e7ac"
+          "sha256": "1d32732421a2370cbd380f3841f5fa9a20ef5fa0f1faa4482a6f9a298f71e545"
         },
         {
           "path": "src/backends/jvm/copied-values.mjs",
-          "sha256": "812c51d3f72b8fef2c7d3cb4d0b4c0a28b431907705112f328b9139de17881ff"
+          "sha256": "16db6a76ef091c108437349b793e266a37ba8cedd1a8af348a6e5d9ed2bb0e02"
         },
         {
           "path": "src/backends/jvm/generate.mjs",
@@ -4358,7 +4597,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -4378,7 +4617,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -4434,11 +4673,11 @@
         },
         {
           "path": "tests/helpers/type-corpus-jvm-tools.mjs",
-          "sha256": "33cea0cde3652ccccb073b445d19e294485e83a4fd60aa9152f80612287af91c"
+          "sha256": "5f21567ed7dfd107bad21bfe3e57a448d1a525890133b684cf6a7758e4a334a7"
         },
         {
           "path": "tests/helpers/type-corpus-jvm.mjs",
-          "sha256": "ae6da42425c8d6a14688f1477e257e2dec8b0e66a0b7fa284b456c3d1966ffb3"
+          "sha256": "9a147486a1e9d91f71cafbd44a4fd493e1319711068fc0a403fc73d4bf3b7058"
         },
         {
           "path": "tests/jvm-list-contract.test.mjs",
@@ -4477,7 +4716,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -4493,7 +4732,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4561,7 +4800,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -4581,7 +4820,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -4736,7 +4975,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -4748,7 +4987,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -4911,7 +5150,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -4923,7 +5162,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -5066,7 +5305,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -5078,7 +5317,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -5169,7 +5408,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -5201,7 +5440,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -5308,7 +5547,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -5324,7 +5563,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5527,7 +5766,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -5543,7 +5782,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5615,7 +5854,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -5627,7 +5866,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -5742,7 +5981,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5806,7 +6045,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -5953,7 +6192,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -5969,7 +6208,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6041,7 +6280,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -6053,7 +6292,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -6132,11 +6371,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
-          "sha256": "2baf1f6e4f9847b4f9c84f8b75eb586f14c0779d98dbff31231fce715430cd93"
+          "sha256": "efb0b3d87ea13ef28f27e8ff5830502bbec091f40ff56aaddae251d39f34aa8f"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.md",
@@ -6148,7 +6387,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6200,15 +6439,15 @@
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
-          "sha256": "ac67d1cc4b08972f2e7fca4570c35a2d678730bef7624f1bd838dcd7a8b84cc9"
+          "sha256": "dfcaae14b9a2afac7a79b564532e0bc01daaa32d282d0b0ebc5f24398cc5a965"
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
-          "sha256": "aa46051d7b4ec513f29aaf9ab50cb686cc4946cc1fd3b53a564d0de58b44e7ac"
+          "sha256": "1d32732421a2370cbd380f3841f5fa9a20ef5fa0f1faa4482a6f9a298f71e545"
         },
         {
           "path": "src/backends/jvm/copied-values.mjs",
-          "sha256": "812c51d3f72b8fef2c7d3cb4d0b4c0a28b431907705112f328b9139de17881ff"
+          "sha256": "16db6a76ef091c108437349b793e266a37ba8cedd1a8af348a6e5d9ed2bb0e02"
         },
         {
           "path": "src/backends/jvm/generate.mjs",
@@ -6220,7 +6459,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -6240,7 +6479,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -6296,11 +6535,11 @@
         },
         {
           "path": "tests/helpers/type-corpus-jvm-tools.mjs",
-          "sha256": "33cea0cde3652ccccb073b445d19e294485e83a4fd60aa9152f80612287af91c"
+          "sha256": "5f21567ed7dfd107bad21bfe3e57a448d1a525890133b684cf6a7758e4a334a7"
         },
         {
           "path": "tests/helpers/type-corpus-jvm.mjs",
-          "sha256": "ae6da42425c8d6a14688f1477e257e2dec8b0e66a0b7fa284b456c3d1966ffb3"
+          "sha256": "9a147486a1e9d91f71cafbd44a4fd493e1319711068fc0a403fc73d4bf3b7058"
         },
         {
           "path": "tests/jvm-compound-contract.test.mjs",
@@ -6339,7 +6578,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -6355,7 +6594,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6423,7 +6662,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -6443,7 +6682,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -6598,7 +6837,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -6610,7 +6849,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -6769,7 +7008,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -6781,7 +7020,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -6920,7 +7159,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -6932,7 +7171,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -7023,7 +7262,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -7226,7 +7465,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -7389,7 +7628,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -7429,7 +7668,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "f7be9851fdfd1746812c00d4e63dd33c5ecc027523b0e365b0344a8eb890a2bd"
+          "sha256": "07db04eecd3c7c85c853143cf4059c1d0a52b9e57e3749805f25e6dd1d71a595"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -7437,7 +7676,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7660,11 +7899,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -7779,11 +8018,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/release/native-wasi.mjs",
@@ -7799,11 +8038,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -7918,7 +8157,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -7926,7 +8165,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -7954,7 +8193,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -8109,11 +8348,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-php-artifacts.mjs",
@@ -8157,7 +8396,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -8165,7 +8404,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -8193,7 +8432,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -8260,15 +8499,15 @@
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
-          "sha256": "aa46051d7b4ec513f29aaf9ab50cb686cc4946cc1fd3b53a564d0de58b44e7ac"
+          "sha256": "1d32732421a2370cbd380f3841f5fa9a20ef5fa0f1faa4482a6f9a298f71e545"
         },
         {
           "path": "src/backends/jvm/copied-values.mjs",
-          "sha256": "812c51d3f72b8fef2c7d3cb4d0b4c0a28b431907705112f328b9139de17881ff"
+          "sha256": "16db6a76ef091c108437349b793e266a37ba8cedd1a8af348a6e5d9ed2bb0e02"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
-          "sha256": "ac67d1cc4b08972f2e7fca4570c35a2d678730bef7624f1bd838dcd7a8b84cc9"
+          "sha256": "dfcaae14b9a2afac7a79b564532e0bc01daaa32d282d0b0ebc5f24398cc5a965"
         },
         {
           "path": "src/backends/jvm/copied-assets.mjs",
@@ -8284,11 +8523,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-artifacts.mjs",
@@ -8336,11 +8575,11 @@
         },
         {
           "path": "tests/helpers/type-corpus-jvm.mjs",
-          "sha256": "ae6da42425c8d6a14688f1477e257e2dec8b0e66a0b7fa284b456c3d1966ffb3"
+          "sha256": "9a147486a1e9d91f71cafbd44a4fd493e1319711068fc0a403fc73d4bf3b7058"
         },
         {
           "path": "tests/helpers/type-corpus-jvm-tools.mjs",
-          "sha256": "33cea0cde3652ccccb073b445d19e294485e83a4fd60aa9152f80612287af91c"
+          "sha256": "5f21567ed7dfd107bad21bfe3e57a448d1a525890133b684cf6a7758e4a334a7"
         },
         {
           "path": "tests/helpers/type-corpus-jvm-source.mjs",
@@ -8348,11 +8587,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -8376,7 +8615,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -8511,11 +8750,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
@@ -8571,11 +8810,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -8595,7 +8834,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -8686,11 +8925,11 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -8770,15 +9009,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "flake.nix",
@@ -8901,11 +9140,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -8981,15 +9220,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -9100,11 +9339,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-rust-projection.mjs",
@@ -9176,15 +9415,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -9247,11 +9486,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -9307,15 +9546,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -9378,11 +9617,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -9438,15 +9677,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -9505,11 +9744,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -9557,15 +9796,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -9668,15 +9907,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "92a03ee90ab0c04db81b01eba89fa3afaf5493c314c3aa521cc1d436506e86aa"
+          "sha256": "b0a8bf5a9c96cce715c4e829889de4c5e7fef751f18e46d16bd1d6a20c455e21"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -9767,7 +10006,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -9807,7 +10046,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "f7be9851fdfd1746812c00d4e63dd33c5ecc027523b0e365b0344a8eb890a2bd"
+          "sha256": "07db04eecd3c7c85c853143cf4059c1d0a52b9e57e3749805f25e6dd1d71a595"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -9815,7 +10054,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -9867,11 +10106,11 @@
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
-          "sha256": "ac67d1cc4b08972f2e7fca4570c35a2d678730bef7624f1bd838dcd7a8b84cc9"
+          "sha256": "dfcaae14b9a2afac7a79b564532e0bc01daaa32d282d0b0ebc5f24398cc5a965"
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
-          "sha256": "aa46051d7b4ec513f29aaf9ab50cb686cc4946cc1fd3b53a564d0de58b44e7ac"
+          "sha256": "1d32732421a2370cbd380f3841f5fa9a20ef5fa0f1faa4482a6f9a298f71e545"
         },
         {
           "path": "src/backends/perl/generate.mjs",
@@ -9967,7 +10206,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "92a03ee90ab0c04db81b01eba89fa3afaf5493c314c3aa521cc1d436506e86aa"
+          "sha256": "b0a8bf5a9c96cce715c4e829889de4c5e7fef751f18e46d16bd1d6a20c455e21"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -10071,7 +10310,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "7c989067fa6864e6cf7b8db48d28c1d90cf08cb0d1a4914aafe9ab8c80be0f32"
+          "sha256": "b86a522e082f540bae3b864ae2a16986625d2aef8de5c69b9972312843bce47e"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -10146,7 +10385,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -10158,7 +10397,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -10186,11 +10425,11 @@
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
-          "sha256": "ac67d1cc4b08972f2e7fca4570c35a2d678730bef7624f1bd838dcd7a8b84cc9"
+          "sha256": "dfcaae14b9a2afac7a79b564532e0bc01daaa32d282d0b0ebc5f24398cc5a965"
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
-          "sha256": "aa46051d7b4ec513f29aaf9ab50cb686cc4946cc1fd3b53a564d0de58b44e7ac"
+          "sha256": "1d32732421a2370cbd380f3841f5fa9a20ef5fa0f1faa4482a6f9a298f71e545"
         },
         {
           "path": "src/backends/perl/generate.mjs",
@@ -10520,11 +10759,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -10667,11 +10906,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -10814,11 +11053,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -10917,11 +11156,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -10964,7 +11203,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c4ed1a0cd27bcf015df9fcb4e982b2348f7d81bb3ed9f9df5b9a6f4b72ac718f"
+          "sha256": "25093db7d8a8ba55c1cc14bd47517a2e33fce4d3a7145aa3c783ff8a1f2ac77f"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -10980,7 +11219,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "766270271d3e3b8a5e30090d17c3d546267f36394b20981e2640712b16f0f2e2"
+          "sha256": "78ea47c98c8c3554104d3e9ca2a9066e53e6068070bda10c9eaaa0e061340b9d"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11044,7 +11283,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -11052,7 +11291,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -11179,11 +11418,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -11274,11 +11513,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -11345,11 +11584,11 @@
         },
         {
           "path": "src/backends/jvm/copied-model.mjs",
-          "sha256": "aa46051d7b4ec513f29aaf9ab50cb686cc4946cc1fd3b53a564d0de58b44e7ac"
+          "sha256": "1d32732421a2370cbd380f3841f5fa9a20ef5fa0f1faa4482a6f9a298f71e545"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
-          "sha256": "ac67d1cc4b08972f2e7fca4570c35a2d678730bef7624f1bd838dcd7a8b84cc9"
+          "sha256": "dfcaae14b9a2afac7a79b564532e0bc01daaa32d282d0b0ebc5f24398cc5a965"
         },
         {
           "path": "src/backends/jvm/copied-assets.mjs",
@@ -11357,7 +11596,7 @@
         },
         {
           "path": "src/backends/jvm/copied-values.mjs",
-          "sha256": "812c51d3f72b8fef2c7d3cb4d0b4c0a28b431907705112f328b9139de17881ff"
+          "sha256": "16db6a76ef091c108437349b793e266a37ba8cedd1a8af348a6e5d9ed2bb0e02"
         },
         {
           "path": "src/backends/jvm/generate.mjs",
@@ -11369,11 +11608,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -11472,11 +11711,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
@@ -11571,7 +11810,7 @@
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/elaborated-component.mjs",
@@ -11587,7 +11826,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -11662,11 +11901,11 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/native-c-projection.mjs",
-          "sha256": "a2fc0d751f5c9f2b74dd744e8ed9cdefd311a9f208a95d36ed7f222752203b8d"
+          "sha256": "fc4aba0018c9a9b4b2b12edcff8d53939f44b060c01b3a6102bf2ed5cb0ad71c"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -11889,7 +12128,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "46c530b3798db08b5042b9ee907988c54582b6d04a7f92cc163ba17928abef19"
+          "sha256": "78618f71534ec7628a98e4dabda1a455058b6da6164e79b47ec78bdf10f3e657"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -12401,6 +12640,282 @@
     }
   ],
   "observations": [
+    {
+      "id": "jvm-variants-java-ordinary-source",
+      "profiles": [
+        "java"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines.",
+      "hostTypes": {
+        "variant": {
+          "parameter": "sealed Java interface with named constructor records",
+          "result": "sealed Java interface with named constructor records",
+          "field": "sealed Java interface with named constructor records"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        }
+      },
+      "limitations": [
+        "Concrete non-recursive copied variants only; generic, indexed, proof-bearing, callable and identity-bearing payloads are not admitted.",
+        "32-level type nesting and separate 16 MiB managed/native conversion budgets do not bound all JVM allocations or Lean working memory.",
+        "Record components are final, but contained arrays remain mutable and ordinary Java record equality compares array references. Null cases and active null payloads reject.",
+        "This JDK 22 and Kotlin 2.2 Linux x86-64 glibc record does not cover other targets, recursion or compound callable payloads."
+      ],
+      "conversionNotes": {
+        "variant": "Construct named records and match exhaustively with Java switch or Kotlin when. Empty constructors and Unit payloads stay distinct. Numeric tags and native union layouts remain private. Only the active payload is converted; invalid native tags reject before union reads. Scoped arenas and native output guards release partial conversions on errors."
+      }
+    },
+    {
+      "id": "jvm-variants-java-reviewed-ir",
+      "profiles": [
+        "java"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines.",
+      "hostTypes": {
+        "variant": {
+          "parameter": "sealed Java interface with named constructor records",
+          "result": "sealed Java interface with named constructor records",
+          "field": "sealed Java interface with named constructor records"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        }
+      },
+      "limitations": [
+        "Concrete non-recursive copied variants only; generic, indexed, proof-bearing, callable and identity-bearing payloads are not admitted.",
+        "32-level type nesting and separate 16 MiB managed/native conversion budgets do not bound all JVM allocations or Lean working memory.",
+        "Record components are final, but contained arrays remain mutable and ordinary Java record equality compares array references. Null cases and active null payloads reject.",
+        "This JDK 22 and Kotlin 2.2 Linux x86-64 glibc record does not cover other targets, recursion or compound callable payloads."
+      ],
+      "conversionNotes": {
+        "variant": "Construct named records and match exhaustively with Java switch or Kotlin when. Empty constructors and Unit payloads stay distinct. Numeric tags and native union layouts remain private. Only the active payload is converted; invalid native tags reject before union reads. Scoped arenas and native output guards release partial conversions on errors."
+      }
+    },
+    {
+      "id": "jvm-variants-kotlin-ordinary-source",
+      "profiles": [
+        "kotlin"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines.",
+      "hostTypes": {
+        "variant": {
+          "parameter": "sealed Java interface with named constructor records",
+          "result": "sealed Java interface with named constructor records",
+          "field": "sealed Java interface with named constructor records"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        }
+      },
+      "limitations": [
+        "Concrete non-recursive copied variants only; generic, indexed, proof-bearing, callable and identity-bearing payloads are not admitted.",
+        "32-level type nesting and separate 16 MiB managed/native conversion budgets do not bound all JVM allocations or Lean working memory.",
+        "Record components are final, but contained arrays remain mutable and ordinary Java record equality compares array references. Null cases and active null payloads reject.",
+        "This JDK 22 and Kotlin 2.2 Linux x86-64 glibc record does not cover other targets, recursion or compound callable payloads."
+      ],
+      "conversionNotes": {
+        "variant": "Construct named records and match exhaustively with Java switch or Kotlin when. Empty constructors and Unit payloads stay distinct. Numeric tags and native union layouts remain private. Only the active payload is converted; invalid native tags reject before union reads. Scoped arenas and native output guards release partial conversions on errors."
+      }
+    },
+    {
+      "id": "jvm-variants-kotlin-reviewed-ir",
+      "profiles": [
+        "kotlin"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines.",
+      "hostTypes": {
+        "variant": {
+          "parameter": "sealed Java interface with named constructor records",
+          "result": "sealed Java interface with named constructor records",
+          "field": "sealed Java interface with named constructor records"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "jvm-variants-installed"
+          ],
+          "note": "Prepared Maven packages expose sealed Java interfaces and named constructor records, usable directly from Java and Kotlin. Both ordinary-source and independently reviewed IR packages install offline into empty repositories after author removal. Each public execution passes 209,998 assertions over 4,331 calls and 33 rejected inputs; ten invalid programs per language fail for their intended diagnostics. Consumers run twice more using only java.base after source and handoff removal. Isolated probes recover from 212 conversion failures and 64 partial-input rejections, reject seven malformed tags and ignore six poisoned inactive cases. Original release JARs remain unchanged. Shared native probes pass 242 allocation failures and seventy rejected inputs with unchanged startup-only sanitizer baselines."
+        }
+      },
+      "limitations": [
+        "Concrete non-recursive copied variants only; generic, indexed, proof-bearing, callable and identity-bearing payloads are not admitted.",
+        "32-level type nesting and separate 16 MiB managed/native conversion budgets do not bound all JVM allocations or Lean working memory.",
+        "Record components are final, but contained arrays remain mutable and ordinary Java record equality compares array references. Null cases and active null payloads reject.",
+        "This JDK 22 and Kotlin 2.2 Linux x86-64 glibc record does not cover other targets, recursion or compound callable payloads."
+      ],
+      "conversionNotes": {
+        "variant": "Construct named records and match exhaustively with Java switch or Kotlin when. Empty constructors and Unit payloads stay distinct. Numeric tags and native union layouts remain private. Only the active payload is converted; invalid native tags reject before union reads. Scoped arenas and native output guards release partial conversions on errors."
+      }
+    },
     {
       "id": "dotnet-variants-ordinary-source",
       "profiles": [

@@ -1,6 +1,6 @@
 # Build and publish Java and Kotlin packages
 
-Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays and Lists, acyclic copied records, options, results, binary products and synchronous primitive callables. Consumers install the artifacts without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays and Lists, acyclic copied records, tagged variants, options, results, binary products and synchronous primitive callables. Consumers install the artifacts without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/maple --target maven \
 
 The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes compiled Java 22 classes, native libraries, generated sources, compiler evidence and dependency license notices. Its README names the generated Java package and API. Changing the Maven coordinate does not rename the Lean-derived Java package.
 
-Calls accept concrete copied values, synchronous primitive callbacks and returned closures. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Variants, resources, compound callables and asynchronous effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
+Calls accept concrete copied values, synchronous primitive callbacks and returned closures. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Recursive values, resources, compound callables and asynchronous effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
@@ -63,6 +63,32 @@ checks: UInt32 uses range-checked `long`/`Long`, and Nat still rejects negative
 `BigInteger` values. See the [Java](../consume/java.md#named-copied-aliases) and
 [Kotlin](../consume/kotlin.md#named-copied-aliases) examples and the
 [installed Maven evidence](../evidence/jvm-aliases-20260921.md).
+
+## Export copied tagged variants
+
+Select concrete non-recursive Lean inductives through the ordinary export
+configuration or an independently reviewed contract. Lean checks the source
+constructors and payloads before generation. No variant-specific configuration
+is required.
+
+The JAR exposes a sealed Java interface and one named record per constructor.
+Java switches and Kotlin `when` expressions can match all cases exhaustively.
+Constructor names use PascalCase; accessors use camelCase, escape Java keywords
+and preserve distinguishing trailing underscores. Colliding names reject before
+compilation. The private FFM adapter computes aligned C union layouts and reads
+only the active payload. Generated Lean helpers keep runtime object layouts
+private.
+
+Payloads may contain all nineteen primitives and supported copied containers,
+records and other non-recursive variants. Null cases and active null payloads
+reject. Generic, indexed, recursive, proof-bearing, callable and identity-bearing
+payloads are not admitted. Combined native variant builds currently accept C,
+C++, Python, Rust, .NET and JVM when every selected target accepts the entire API.
+
+Review the [Java](../consume/java.md#tagged-variants) and
+[Kotlin](../consume/kotlin.md#tagged-variants) examples and the
+[installed acceptance record](../evidence/jvm-variants-20260921.md) before
+publishing the original JAR and POM.
 
 ## Export callbacks and returned functions
 

@@ -134,6 +134,49 @@ Compile and run using the [prepared JAR commands](#call-an-ordinary-lean-package
 
 Factories and record constructors reject null payloads; calls reject null containers. A `Pair` always has two typed elements and retains product nesting. Returned arrays own independent copies. Java record equality compares array fields by reference, so use content comparisons for arrays. The 32-level type limit and existing copy budgets apply to compounds. See the [installed Java/Kotlin checks](../evidence/jvm-compounds-20260920.md).
 
+### Tagged variants
+
+Concrete copied Lean inductives use a sealed Java interface and one named record
+per constructor. The compiler checks exhaustive switches over these cases.
+Numeric tags and native layouts stay inside the package.
+
+For the `org.leanbridge:variants:1.0.0` acceptance archive, save `Example.java`:
+
+```java
+import org.leanbridge.variants.*;
+
+class Example {
+    public static void main(String[] args) {
+        Signal result = Api.next(new SignalData(42, "ready"));
+        String label = switch (result) {
+            case SignalIdle idle -> "idle";
+            case SignalStopped stopped -> "stopped";
+            case SignalData data -> data.count() + ": " + data.label();
+            case SignalMarker marker -> "marker";
+        };
+        System.out.println(label); // 43: ready!
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package). Constructor
+names use PascalCase; payload accessors use camelCase. Java keywords gain a
+trailing underscore, and existing trailing underscores remain when they
+distinguish source names. Name collisions reject during generation.
+
+Payloads can contain all nineteen primitives, copied records, arrays, Lists,
+options, results, products and other admitted variants. Only the active case
+is converted. Empty cases and cases carrying `Unit.INSTANCE` remain distinct.
+Calls reject null cases, active null fields and invalid primitive values.
+
+Record components are final, but contained arrays remain mutable. Results own
+independent copied storage. Java record equality compares array references;
+compare their contents when checking copied values. The existing 32-level type
+limit and managed/native copy budgets apply. Scoped arenas and native output
+guards release partial conversions on failure. See the
+[installed variant checks](../evidence/jvm-variants-20260921.md).
+Recursive, callable and identity-bearing payloads remain separate work.
+
 ### Callbacks and returned Lean functions
 
 Ordinary-source and compiler-checked reviewed Maven packages support synchronous callbacks and returned functions across all nineteen primitives. Generated functional interfaces carry the exact parameter and result types. Pass a Java lambda directly:
@@ -298,7 +341,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Prod α β / tuples` | `Pair<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed generated Pair elements, preserving binary nesting. Kotlin uses this generated record, not kotlin.Pair. Inputs are copied; returned arrays own independent storage. Record equality compares array fields by reference. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated Java record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Java target value; named Lean contract in Maven metadata and Java source docs` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases retain exact target ranges and copied storage. Nat rejects negative BigInteger while Int accepts it; UInt32 uses range-checked long/Long. Generic compound payloads box primitives; arrays retain primitive storage. Generated Unit inputs and void outputs stay distinct. The original List/Array identities, nested Option/Result presence and copy limits remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `sealed Java interface with named constructor records` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Construct named records and match exhaustively with Java switch or Kotlin when. Empty constructors and Unit payloads stay distinct. Numeric tags and native union layouts remain private. Only the active payload is converted; invalid native tags reject before union reads. Scoped arenas and native output guards release partial conversions on errors. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Typed Fn...To... functional interface` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous functional interfaces accept Java and Kotlin lambdas. Call-scoped native stubs retain their targets. Callback failures preserve the same Throwable, stack and suppressed exceptions after cleanup. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `T[] (primitive arrays for primitive elements)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Typed JVM arrays preserve empty Lists, order, duplicates and nesting. Primitive elements retain primitive array storage; Kotlin uses LongArray for List UInt32, for example. Returned arrays and mutable payloads own independent storage. Nulls, invalid payloads and oversized copies reject. Native lengths, missing buffers and alignment are checked before allocation or reads; scoped arenas and native output clears run on conversion failure. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
