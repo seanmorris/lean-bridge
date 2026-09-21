@@ -44,6 +44,22 @@ Both ordinary-source and reviewed-IR builds compile `Option T`, `Except E T` and
 
 Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract). Both paths receive fresh Lean compiler checks before generating the C# adapter. See the [consumer example](../consume/dotnet.md#options-results-and-products) and [installed NuGet evidence](../evidence/dotnet-compounds-20260920.md). Compound signatures can be combined with C, C++, Python and Rust; every selected target must admit the complete API.
 
+## Export named copied aliases
+
+Select concrete exports that use Lean `abbrev` or reducible type aliases. Both
+source paths preserve compiler-authenticated alias names, targets and chains.
+Aliases can refer to all nineteen primitives, copied records and nested copied
+containers. An independently reviewed contract must match the extracted aliases,
+including their use in parameters, results and fields.
+
+NuGet exposes the target's CLR value type. C# `using` aliases cannot be exported
+from an assembly, so Lean Bridge records alias identities in the installed binding
+manifest, README and XML API documentation. It does not create distinct wrapper
+types or inject `global using` directives into consumer projects. Aliased `Nat`
+keeps its nonnegative-value check even though both `Nat` and `Int` use
+`BigInteger`. See the [consumer example](../consume/dotnet.md#named-aliases)
+and [installed alias evidence](../evidence/dotnet-aliases-20260921.md).
+
 ## Export Lists
 
 Both ordinary-source and reviewed-IR builds accept `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested Lists and arrays, copied records, `Option`, `Except` and binary products. Select concrete Lean exports as usual; no List-specific configuration is required.

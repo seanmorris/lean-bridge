@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.48.0",
+  "contractVersion": "0.49.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,181 @@
   ],
   "evidence": [
     {
+      "id": "dotnet-aliases-installed",
+      "kind": "installed",
+      "revision": "5b1752d2f93e9c8a60f69f09bd56a132b3ee9bf6",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs; node --test tests/dotnet-alias-contract.test.mjs",
+      "scope": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
+        },
+        {
+          "path": "config/checked-javascript.json",
+          "sha256": "d7d150bf2f8e46166db1a53a5e03e0a4aa43aca42ffa1cbf6224a6d49971377c"
+        },
+        {
+          "path": "config/cli-package.v1.json",
+          "sha256": "4a6faba08b8bcbe3d7ca2fa3d0398db30c75631c27fb23ca36f1e9f1f6b0dd75"
+        },
+        {
+          "path": "docs/evidence/dotnet-aliases-20260921.json",
+          "sha256": "738cc6eb99d7618427c79ae04ff5c97489db4e64ee2ea454b13e71a881a548ed"
+        },
+        {
+          "path": "docs/evidence/dotnet-aliases-20260921.md",
+          "sha256": "9d3537704a416df8878e428377875a46a1a0880b6e6cb5eb2c62a9101bdb34a1"
+        },
+        {
+          "path": "nix/perl-engine-source-boundary.json",
+          "sha256": "077f335814e2d51bb370130e0bba1096f14a2ae2a079771985c35691bae32660"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0ccc5e5adb33fc89a8f1b8ff7fd694ee22a789710c5e7d2eb2a0c1083c84ab22"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "96ad0c1eb9c062bbf0164eb03f3fab7a9029bde75cd006f33be39970a63c0036"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
+        },
+        {
+          "path": "src/backends/dotnet/copied-aliases.mjs",
+          "sha256": "453bab9c1b92421005ccd3c74a30fc82c2f72842e74e5b63e7ec52772c429e21"
+        },
+        {
+          "path": "src/backends/dotnet/copied-conversions.mjs",
+          "sha256": "5b1194197eb57b0ae715740334416c9c2cdc90a72569ab4999fdca7fe83b67f6"
+        },
+        {
+          "path": "src/backends/dotnet/copied-model.mjs",
+          "sha256": "593ccefdc81734601d18bdad40ce941f18273fee2f3c7606cb4ffd32b6315c6e"
+        },
+        {
+          "path": "src/backends/dotnet/copied-values.mjs",
+          "sha256": "adf68e3c78ea7ef781a93a3eb87a6d386f0778ebb96b0d187440929df9aebc12"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "bab95d12d5c08acf3507ec5dfa36aaf6fabcdf8915436809cff29be0ca4a1b51"
+        },
+        {
+          "path": "src/build/native-dotnet-artifacts.mjs",
+          "sha256": "7a51ec5953cf43473bd8110401c922a764ee854af39c4bba09a82434bfafa640"
+        },
+        {
+          "path": "src/build/native-dotnet-projection.mjs",
+          "sha256": "0251e2977aa7fabae75b346d73863119057aa82c7640a32780db756c62a22741"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "5c7acb52a06bf9c5dab3fd72b2adc3a45c0d673e8e48e6e8333a4246d464f88d"
+        },
+        {
+          "path": "src/release/native-nuget.mjs",
+          "sha256": "855e9b30a71d53716000e15c297b589294ee9ec9c7b421c325db883c9c565702"
+        },
+        {
+          "path": "tests/cli-npm-package.test.mjs",
+          "sha256": "767b8ba1d0eda43ad6aeabee0223ba9fcb5d0c4a3f119e29111fd0f422e2535e"
+        },
+        {
+          "path": "tests/dotnet-alias-contract.test.mjs",
+          "sha256": "114be041b96634356e23c9886e792922e112c916e336c61538e72e660e9a2d6e"
+        },
+        {
+          "path": "tests/dotnet-aliases.test.mjs",
+          "sha256": "83d7a27f8e0e79372160eec2fbf1743e67d625ecde9d845d08499a4a3e9d23cd"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/dotnet-faults.cs",
+          "sha256": "a787b4b0b4438944bdd8f69d2da5bf74772619bc97472a0ded1f98bcadd5b902"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/dotnet-invalid.json",
+          "sha256": "8a07c16756e51947d2e72185186dfde2c0c8f826585bc70e055fd1b1ba43705e"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/dotnet.cs",
+          "sha256": "e753c68c60db97e13034bdba1c553c9b5f479d838130feb848108c4d8b0d7621"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/Aliases.lean",
+          "sha256": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lakefile.toml",
+          "sha256": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/package.json",
+          "sha256": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd"
+        },
+        {
+          "path": "tests/helpers/alias-fixture.mjs",
+          "sha256": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/dotnet-alias-faults.mjs",
+          "sha256": "7151cb186ba4a08df2d5b7dca242a8db7cb92b33e748bd9d7cd0ba94a3b505d6"
+        },
+        {
+          "path": "tests/helpers/dotnet-alias-install.mjs",
+          "sha256": "52359ebba175668f2812e7964e9e40a18bd867eb927f54ee6f85223ef53b62f2"
+        },
+        {
+          "path": "tests/helpers/dotnet-copied-install.mjs",
+          "sha256": "ba2081792d64254a49a26bd78958a72df90bdd10eff8e945a2969b5dd285d936"
+        },
+        {
+          "path": "tests/helpers/native-alias-fixture.mjs",
+          "sha256": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "dotnet/ordinary-source/archives/Lean.Aliases.1.0.0.nupkg",
+          "sha256": "ad7b51d375441acce021e06d6402e30b524fd7cb0774846d4b5e906893567d4b"
+        },
+        {
+          "path": "dotnet/reviewed-ir/archives/Lean.Aliases.1.0.0.nupkg",
+          "sha256": "ee342cab8148081d9104b8a2ea514727186535023df5b03d35c08a651d47faaf"
+        }
+      ]
+    },
+    {
       "id": "rust-aliases-installed",
       "kind": "installed",
       "revision": "ffb4339bba9f73ea818844aca4d6e38fe8fcbf49",
@@ -165,7 +340,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -177,7 +352,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -308,7 +483,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -320,7 +495,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -443,7 +618,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -455,7 +630,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -578,7 +753,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -606,7 +781,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -721,7 +896,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -757,7 +932,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -880,7 +1055,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -896,7 +1071,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1075,7 +1250,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -1091,7 +1266,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1314,7 +1489,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -1330,7 +1505,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1521,7 +1696,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -1537,7 +1712,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1744,7 +1919,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1955,7 +2130,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -1971,7 +2146,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2134,7 +2309,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -2150,7 +2325,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2341,7 +2516,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -2357,7 +2532,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2413,7 +2588,7 @@
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "f16458e47b9dd13f4373aebbdab37ab12dd975187a131fb7b4cef89b289d0d5e"
+          "sha256": "adf68e3c78ea7ef781a93a3eb87a6d386f0778ebb96b0d187440929df9aebc12"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -3033,7 +3208,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -3065,7 +3240,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -3172,7 +3347,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -3188,7 +3363,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3391,7 +3566,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -3407,7 +3582,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3606,7 +3781,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3817,7 +3992,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -3833,7 +4008,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3996,7 +4171,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -4012,7 +4187,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4203,7 +4378,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -4219,7 +4394,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4275,7 +4450,7 @@
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "f16458e47b9dd13f4373aebbdab37ab12dd975187a131fb7b4cef89b289d0d5e"
+          "sha256": "adf68e3c78ea7ef781a93a3eb87a6d386f0778ebb96b0d187440929df9aebc12"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -4887,7 +5062,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -5090,7 +5265,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -5253,7 +5428,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -5301,7 +5476,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5524,11 +5699,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -5663,11 +5838,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -5782,7 +5957,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -5790,7 +5965,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -5818,7 +5993,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -6021,7 +6196,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -6029,7 +6204,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -6057,7 +6232,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -6212,11 +6387,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -6240,7 +6415,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -6359,7 +6534,7 @@
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "f16458e47b9dd13f4373aebbdab37ab12dd975187a131fb7b4cef89b289d0d5e"
+          "sha256": "adf68e3c78ea7ef781a93a3eb87a6d386f0778ebb96b0d187440929df9aebc12"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
@@ -6435,11 +6610,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -6459,7 +6634,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -6634,15 +6809,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "flake.nix",
@@ -6845,15 +7020,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -7040,15 +7215,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -7171,15 +7346,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -7302,15 +7477,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -7421,15 +7596,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -7532,15 +7707,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "9375ef093b663a9e84a8acf608ab73b5e90ea528f2a14ac99a4d5280423ae680"
+          "sha256": "c97905b56f776468ec311fd54897726545173123535bbc8dbc864d1f3ee307f8"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7631,7 +7806,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7679,7 +7854,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -7831,7 +8006,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "9375ef093b663a9e84a8acf608ab73b5e90ea528f2a14ac99a4d5280423ae680"
+          "sha256": "c97905b56f776468ec311fd54897726545173123535bbc8dbc864d1f3ee307f8"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -7935,7 +8110,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "9024867b5a7c36a8c848f95c041197b6789a82488f5d62917f2f19edd2d19d51"
+          "sha256": "67d4d3d8780038f3839542347be40523e7826d8ce6a942445ed365d499312ba3"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -8010,7 +8185,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -8022,7 +8197,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -8828,7 +9003,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "9137061371de98990df6eafb03083827b4cc1750ea96917f82bc3bfc35093ffd"
+          "sha256": "0d3f3c20d628b1c663aeea45bf7465b4806f4a80b5b2f785ce895e597d90f92a"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -8844,7 +9019,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "01c17db16086b8359206dcd006d792f17be5ee860a678dc3840c88f3dfe8e7d5"
+          "sha256": "336e10a927102c4e9e1b99bea27fe2044d9d959765109d1d0ac600c455e44f38"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9324,7 +9499,7 @@
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "f16458e47b9dd13f4373aebbdab37ab12dd975187a131fb7b4cef89b289d0d5e"
+          "sha256": "adf68e3c78ea7ef781a93a3eb87a6d386f0778ebb96b0d187440929df9aebc12"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -9904,7 +10079,7 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "71ce04edbda2e998278df7a068b83a49e20381927d50ed8078335109a9c50f66"
+          "sha256": "b40c2d658848fce151517737e8656720f74f701db48b0147b89f976ff15ba1e7"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
@@ -10265,6 +10440,142 @@
     }
   ],
   "observations": [
+    {
+      "id": "dotnet-aliases-dotnet-ordinary-source",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "CLR target value; named Lean contract in installed metadata and XML docs",
+          "result": "CLR target value; named Lean contract in installed metadata and XML docs",
+          "field": "CLR target value; named Lean contract in installed metadata and XML docs"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "C# source-file aliases are not exported CLR types; the package retains names and chains in its manifest and API documentation.",
+        "Native variants, recursion, compound callable payloads and identity-bearing alias targets require separate compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Aliases add no wrapper identity or consumer configuration. CLR signatures keep exact widths, BigInteger, Rune, typed arrays and copied records. Nat rejects negatives despite sharing BigInteger with Int. Unit results return void; nested Option/Result presence and existing copy budgets remain unchanged."
+      }
+    },
+    {
+      "id": "dotnet-aliases-dotnet-reviewed-ir",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "CLR target value; named Lean contract in installed metadata and XML docs",
+          "result": "CLR target value; named Lean contract in installed metadata and XML docs",
+          "field": "CLR target value; named Lean contract in installed metadata and XML docs"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-aliases-installed"
+          ],
+          "note": "Prepared NuGet packages preserve 27 copied alias names and exact targets in installed metadata and XML API documentation, using transparent CLR values. Ordinary-source and reviewed-IR builds each pass 3876 runtime checks, twelve compiler rejection cases, 180 injected conversion failures, seventeen malformed native values and 64 partial-input failures. Consumers install offline after producer removal and repeat twice after relocation with only a .NET runtime and no SDK or compilers. Release assembly and deployment hashes remain unchanged."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "C# source-file aliases are not exported CLR types; the package retains names and chains in its manifest and API documentation.",
+        "Native variants, recursion, compound callable payloads and identity-bearing alias targets require separate compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Aliases add no wrapper identity or consumer configuration. CLR signatures keep exact widths, BigInteger, Rune, typed arrays and copied records. Nat rejects negatives despite sharing BigInteger with Int. Unit results return void; nested Option/Result presence and existing copy budgets remain unchanged."
+      }
+    },
     {
       "id": "rust-aliases-rust-ordinary-source",
       "profiles": [

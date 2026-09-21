@@ -161,8 +161,8 @@ records, variants and nested containers. See the
 [alias implementation and evidence](npm-aliases-20260921.md).
 
 Native private conversion helpers use the checked target representation while
-Binding IR retains alias names. C/C++, Python and Rust now have the installed checks below.
-Installed alias acceptance and target-language projections for the other eight consumer
+Binding IR retains alias names. C/C++, Python, Rust and .NET now have the installed checks below.
+Installed alias acceptance and target-language projections for the other seven consumer
 profiles remain open. Generic aliases, bounded recursion, compound callables and
 explicitly owned identity aggregates remain in the full structured-types goal.
 
@@ -208,7 +208,21 @@ The executable runs twice more after relocation and removal of installed crate
 sources. Only six Rust alias cells gain installed evidence. See the
 [Rust alias implementation and evidence](rust-aliases-20260921.md).
 
-Alias parameters, results and fields now have installed acceptance in nine of
-seventeen profiles. The other eight profiles, remaining variants, bounded
+## Compiled .NET aliases
+
+NuGet packages preserve 27 copied aliases through installed manifest entries
+and XML API documentation. C# signatures use ordinary CLR target types;
+source-file aliases cannot be exported from an assembly. Alias metadata retains
+the original names, targets and chains without wrapper identities or injected
+`global using` directives.
+
+Both source paths pass 3,876 public checks, twelve compiler rejection cases,
+180 injected conversion failures, seventeen malformed native-value checks and
+64 partial-input failures. Each consumer repeats after relocation with only a
+.NET runtime, no SDK or producer sources. See the
+[.NET alias implementation and evidence](dotnet-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in ten of
+seventeen profiles. The other seven profiles, remaining variants, bounded
 recursion, compound callables and explicitly owned identity aggregates remain
 part of VO1219.

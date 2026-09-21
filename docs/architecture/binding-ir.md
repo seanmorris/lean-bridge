@@ -121,6 +121,13 @@ values own their copied data. The [installed Rust alias checks](../evidence/rust
 verify both source paths, static rejection, error and panic cleanup, and
 source-free executables.
 
+.NET retains copied alias identities, original targets and chains in installed
+metadata and XML API documentation. C# signatures use the target CLR values;
+source-file aliases cannot be exported from a NuGet assembly. The
+[installed .NET alias checks](../evidence/dotnet-aliases-20260921.md) verify
+both source paths, static rejection, conversion cleanup, and relocated execution
+with a runtime but no SDK. Nat aliases still reject negative `BigInteger` values.
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:

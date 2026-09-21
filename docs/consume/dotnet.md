@@ -52,6 +52,39 @@ Nat and Int use `BigInteger`. Fixed-width numbers use their corresponding C# num
 
 Null strings, arrays and records, negative Nat inputs, and oversized input copies throw before invoking the Lean function. Managed input copying has a 16 MiB accounting budget. Native copying shares a separate 16 MiB budget across inputs and outputs, including array slots and record storage. These budgets do not bound every managed allocation or Lean working memory. An oversized result throws after Lean returns. Generated code releases temporary input buffers and native results on failure. Native library hashes and runtime compatibility are checked automatically when loading. See the [author guide](../publish/nuget.md#build-an-ordinary-lean-project) for admitted signatures.
 
+### Named aliases
+
+Copied Lean aliases use their target's C# values. A `Count` alias of `UInt32`
+accepts and returns `uint`; an alias of a copied record uses that record class.
+Alias chains and aliases nested in arrays, Lists, options, results and record
+fields retain their conversion rules. Aliased `Nat` still rejects negative
+`BigInteger` values, while aliased `Int` accepts them.
+
+C# `using` aliases are local to source files, so a NuGet assembly cannot export
+them as named types. The package keeps Lean alias names, original targets and
+chains in `lean-bridge/dotnet/binding-manifest.json`, its README and XML API
+documentation. Its method and record-field documentation names the original
+contract types. No wrapper objects or consumer configuration are required.
+
+For the `Lean.Aliases` acceptance package, reference its prepared NuGet archive
+and save this as `Program.cs`:
+
+```csharp
+using System;
+using LeanBridge.Aliases;
+
+uint count = Api.Make(); // Lean Count = AU32 = UInt32
+Console.WriteLine(Api.Increment(count)); // 42, Lean OtherCount = UInt32
+uint[][] rows = { new uint[] { 1, 2, 3 }, Array.Empty<uint>() };
+Console.WriteLine(string.Join(", ", Api.ReverseRows(rows)[0])); // 3, 2, 1
+```
+
+`Rows` retains its `Array (List Count)` contract even though C# uses `uint[][]`.
+Returned arrays own independent copies. Alias names are not new CLR identities;
+for example, the assembly does not declare a `LeanBridge.Aliases.Count` type.
+The [installed alias checks](../evidence/dotnet-aliases-20260921.md) cover both
+source paths, exact diagnostics, conversion cleanup and SDK-free execution.
+
 ### Lists
 
 Lean `List T` uses `T[]` in C# inputs, results and record fields. The adapter copies every element, preserves order and duplicates, and returns independent arrays. Lists can nest with arrays, records, `Option`, `Except` and binary products. List and Array remain distinct in the Lean signature and Binding IR, even though both use C# arrays.
@@ -251,7 +284,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `Result<T, E>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` uses `Result<T, E>.Ok(value)` or `.Err(error)`. IsOk/IsError select guarded Value/Error. `default(Result<T, E>)` has no branch and rejects at the boundary. Domain errors return Err; bridge failures throw exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `(A, B) (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed C# tuple elements, preserving binary nesting. Inputs are copied; returned arrays own independent storage. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated sealed record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated sealed C# records preserve declared fields through compiler-owned constructors and accessors. Arrays inside returned records are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `CLR target value; named Lean contract in installed metadata and XML docs` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases add no wrapper identity or consumer configuration. CLR signatures keep exact widths, BigInteger, Rune, typed arrays and copied records. Nat rejects negatives despite sharing BigInteger with Int. Unit results return void; nested Option/Result presence and existing copy budgets remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Func<...> / Action<...>` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous Func/Action delegates borrow the call. Exceptions preserve their original object and stack after cleanup. Async void delegates reject before execution. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

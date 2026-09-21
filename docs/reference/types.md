@@ -4,7 +4,7 @@ Use this reference to choose Lean exports and pass values to prepared packages. 
 
 ## Full type surface
 
-Inventory 0.48.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
+Inventory 0.49.0 covers 48 source forms and 17 consumer profiles. The language tables distinguish ordinary-source packages from reviewed-IR profiles and retain unaudited cells.
 
 | Consumer table | Runtime context | Compiled Lean width |
 | --- | --- | --- |

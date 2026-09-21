@@ -7,6 +7,7 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { compileCopiedDotnetModel } from "./copied-model.mjs";
 import { copiedConversions, copiedNativeTypes, copiedScope, copiedCompoundTypes } from "./copied-conversions.mjs";
 import { dotnetValue, dotnetResult, dotnetNativeCall, dotnetCallableTypes, dotnetCallableState, dotnetCallableSupport, dotnetCallableImports, dotnetClosurePublic } from "./callables.mjs";
+import { dotnetCopiedAliases, dotnetAliasCatalogDocs, dotnetAliasSiteDocs, dotnetAliasReadme } from "./copied-aliases.mjs";
 
 const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(dotnetValue(model, site.type))} @${fn.parameters[index].name}`).join(", ");
 const args = fn => fn.parameters.map(parameter => `@${parameter.name}`).join(", ");
@@ -137,12 +138,12 @@ public sealed class LeanBridgeException : global::System.Exception
     public int Status { get; }
     internal LeanBridgeException(int status, string message) : base(message) => Status = status;
 }
-${model.surface.copies.filter(copy => copy.record).map(copy => `/// <summary>A copied Lean record.</summary>\npublic sealed record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")});`).join("\n")}
+${model.surface.copies.filter(copy => copy.record).map(copy => `/// <summary>A copied Lean record.</summary>\n${dotnetAliasSiteDocs(model, copy.fields.map((field, index) => ({ name: field.publicName, type: copy.record.fields[index].type })))}public sealed record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")});`).join("\n")}
 ${model.surface.callbacks.size ? dotnetClosurePublic : ""}
 /// <summary>The functions selected by the Lean package author.</summary>
-public static class Api
+${dotnetAliasCatalogDocs(model)}public static class Api
 {
-${model.surface.functions.map((fn, index) => `    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) => Interop.Runtime.Call${index}(${args(fn)});`).join("\n")}
+${model.surface.functions.map((fn, index) => `${dotnetAliasSiteDocs(model, fn.declaration.parameters.map((site, index) => ({ name: fn.parameters[index].name, type: site.type })), fn.declaration.result.type, returnsUnit(fn)).replace(/^\/\/\//gm, "    ///")}    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) => Interop.Runtime.Call${index}(${args(fn)});`).join("\n")}
 }
 `
 		, [internalFiles[0]]: runtimeSource(model, evidence)
@@ -169,7 +170,8 @@ ${model.surface.functions.map((fn, index) => `    public static ${resultType(mod
 	files["README.md"] += "\nLean Option uses Option<T>.None or Option<T>.Some(value); default(Option<T>) is None. Except E T uses Result<T, E>.Ok(value) or .Err(error); default(Result<T, E>) is invalid. Branches expose IsSome/Value or IsOk/IsError/Value/Error, and accessing an inactive payload throws. Domain errors return Err; bridge failures throw exceptions. Binary products use C# (A, B) tuples and retain their nesting. These values can nest with arrays and copied records. Active null reference payloads reject; a missing option never reads its inactive payload. Returned arrays own independent storage. Compound callable values and resource-containing copies remain unsupported.\n";
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs, results and record fields use typed C# arrays. Returned arrays own independent storage; empty Lists, order, duplicates and nesting are preserved. List and Array retain distinct contract identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
-	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "dotnet-copied-v1", target: "dotnet", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, assembly: model.assembly, files: Object.keys(files), publicFiles, internalFiles, packageFiles, supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "owned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery." }, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
+	files["README.md"] += dotnetAliasReadme(model);
+	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "dotnet-copied-v1", target: "dotnet", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, assembly: model.assembly, files: Object.keys(files), publicFiles, internalFiles, packageFiles, ...model.surface.aliases.length ? { aliases: dotnetCopiedAliases(model) } : {}, supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "owned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery." }, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);
 };
 
