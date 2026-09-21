@@ -64,6 +64,26 @@ const synthetic = () => {
 	return { ...input, type };
 };
 
+test("variant interfaces retain stable source references across relocated C and metadata builds", { skip: !enabled, timeout: 120000 }, async t => {
+	const root = process.cwd(), directory = await mkdtemp(join(tmpdir(), "lean-bridge-variant-relocation-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const prefix = (await processBuildRunner.capture({ command: join(root, ".toolchains/elan/bin/lean"), args: ["--print-prefix"], cwd: root })).stdout.trim();
+	const identities = [];
+	for(const [index, c] of [false, true, false, true].entries())
+	{
+		const working = await mkdtemp(join(directory, `build-${index}-`));
+		await cp(join(root, "tests/fixtures/onboarding/npm-variants/Variants.lean"), join(working, "Variants.lean"));
+		await processBuildRunner.capture({ command: join(prefix, "bin/lean")
+			, args: ["-R", working, "-o", join(working, "Variants.olean"), ...(c ? ["-c", join(working, "Variants.c")] : []), "Variants.lean"]
+			, cwd: working
+			, env: { ...process.env, LEAN_PATH: working, PATH: `${join(prefix, "bin")}:${process.env.PATH}` }
+			, timeoutMs: 60000 });
+		identities.push(await identifyLeanInterface(join(working, "Variants.olean")));
+		assert.equal((await readFile(join(working, "Variants.olean"))).includes(Buffer.from(directory)), false);
+	}
+	for(const identity of identities) assert.deepEqual(identity, identities[0]);
+});
+
 test("native constructor metadata validates exact identities and copied payloads", async () => {
 	const input = synthetic();
 	assert.equal(validateNativeType(input.type), input.type);
@@ -71,7 +91,7 @@ test("native constructor metadata validates exact identities and copied payloads
 	await assertJsonSchema("elaborated-export-metadata", input.metadata);
 	const ir = lower(input.metadata, input.sourceIdentity.request);
 	assert.deepEqual(constructors(ir.types[0]), [["empty", []], ["some", [["value", "uint32"]]]]);
-	assert.throws(() => createComponentPrivateAbi(ir), /unsupported/);
+	assert.equal(createComponentPrivateAbi(ir).version, 7);
 	assert.throws(() => createNativeModel({ ...input, component }), /variants require typed native adapters/);
 	const drift = synthetic();
 	drift.metadata.modules[0].declarations[0].projection.result = structuredClone(drift.type);

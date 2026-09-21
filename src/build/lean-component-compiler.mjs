@@ -5,7 +5,7 @@
  */
 
 import { mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -197,8 +197,8 @@ export const compileLeanComponentSources = async ({
 			{
 				await runner.capture({
 					command: lean
-					, args: ["-R", leanRoot, "-o", paths.olean, "-c", paths.c, source]
-					, cwd: inputs
+					, args: ["-R", leanRoot, "-o", paths.olean, "-c", paths.c, relative(leanRoot, source)]
+					, cwd: leanRoot
 					, env: compileEnvironment
 					, timeoutMs: 5 * 60 * 1000
 				});
@@ -206,7 +206,7 @@ export const compileLeanComponentSources = async ({
 			{
 				fail("lean-component-compile-failed", `Lean failed to compile ${module}`, { module, cause: error.message, compilerDetails: error.details ?? null });
 			}
-			if(generated) await writeFile(paths.c, `${await readFile(paths.c, "utf8")}\n${([5, 6].includes(adapterPlan.privateAbi.version) ? generateComponentRecordAdapters : adapterPlan.privateAbi.version === 4 ? generateComponentCopiedAdapters : adapterPlan.privateAbi.version === 3 ? generateComponentCallableAdapters : generateComponentScalarAdapters)(adapterPlan.privateAbi)}`);
+			if(generated) await writeFile(paths.c, `${await readFile(paths.c, "utf8")}\n${([5, 6, 7].includes(adapterPlan.privateAbi.version) ? generateComponentRecordAdapters : adapterPlan.privateAbi.version === 4 ? generateComponentCopiedAdapters : adapterPlan.privateAbi.version === 3 ? generateComponentCallableAdapters : generateComponentScalarAdapters)(adapterPlan.privateAbi)}`);
 			const [cBytes, oleanBytes] = await Promise.all([readFile(paths.c), readFile(paths.olean)]);
 			records.push(Object.freeze({
 				module
@@ -261,7 +261,18 @@ export const compileLeanComponentSources = async ({
 						, interfaces
 						, ...(reviewedBindingIr ? { reviewedBindingIr } : {})
 						, metadata: JSON.parse(checked.stdout) };
-					if(expectedBytes.toString() !== canonicalJson(actual)) fail("lean-entry-elaboration-drift", "Freshly compiled public API differs from the elaborated adapter contract");
+					if(expectedBytes.toString() !== canonicalJson(actual))
+					{
+						const differences = [];
+						const compare = (expected, received, path) => {
+							if(differences.length >= 8 || canonicalJson(expected ?? null) === canonicalJson(received ?? null)) return;
+							if(expected && received && typeof expected === "object" && typeof received === "object")
+								for(const key of new Set([...Object.keys(expected), ...Object.keys(received)])) compare(expected[key], received[key], `${path}.${key}`);
+							else differences.push({ path, expected, received });
+						};
+						compare(JSON.parse(expectedBytes.toString()), actual, "report");
+						fail("lean-entry-elaboration-drift", "Freshly compiled public API differs from the elaborated adapter contract", { differences });
+					}
 					if(rich) for(const record of interfaces)
 						if((await identifyLeanInterface(modulePaths(staging, record.module).olean)).interfaceSha256 !== record.interfaceSha256)
 							fail("lean-entry-elaboration-drift", "Lean interface metadata changed during target extraction");

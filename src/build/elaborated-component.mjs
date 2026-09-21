@@ -175,7 +175,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 				}
 			}
 			await save(sourcePath, sourceBytes); await mkdir(dirname(cPath), { recursive: true }); await mkdir(dirname(olean), { recursive: true });
-			await run(lean, ["-R", sourceRoot, "-o", olean, "-c", cPath, sourcePath], { cwd: sourceRoot, env, signal });
+			await run(lean, ["-R", sourceRoot, "-o", olean, "-c", cPath, path], { cwd: sourceRoot, env, signal });
 			const compiledInterface = await identifyLeanInterface(olean, signal);
 			compileOrder.push({ module: name, source: input
 				, interface: { ...await fileIdentity(olean), interfaceSha256: compiledInterface.interfaceSha256 }

@@ -88,6 +88,15 @@ valid IR. Valid IR does not establish compiled support: the
 [structured-type implementation record](../evidence/structured-types-20260921.md)
 tracks adapters and installed acceptance separately.
 
+Compiled npm variants use private ABI 7, with a closed named-type table and
+constructor-specific copied fields. Generated Lean helpers construct and match
+values through typed one-element Array carriers. Native C adapters never inspect
+Lean constructor tags or field offsets. The host discriminator is `kind`; its
+value is the source constructor name. Runtime tag 37 carries the authenticated
+constructor ordinal and only that constructor's fields. ABI 7 admits expanded
+alias descriptors too, but source extraction still reduces aliases to targets.
+See [installed variant checks](../evidence/npm-variants-20260921.md).
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:

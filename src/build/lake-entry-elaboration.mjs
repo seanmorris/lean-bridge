@@ -57,7 +57,9 @@ export const elaborateLakeEntryModules = async ({ inventory, entries, workspace,
 			const relative = `${module.module.replaceAll(".", "/")}.lean`, source = join(workspace.sourceRoot, relative), output = join(working, "olean", relative.replace(/\.lean$/, ".olean"));
 			if(sha256(await readFile(source)) !== module.source.sha256) fail(`Source changed before elaboration: ${module.module}`);
 			await mkdir(dirname(output), { recursive: true });
-			await runner.capture({ command: lean, args: ["-R", workspace.sourceRoot, "-o", output, source], cwd: workspace.sourceRoot, env, signal, timeoutMs: 120000 });
+			// Lean may retain the input spelling in compiled source references.
+			// Keep it module-relative so fresh relocated builds agree byte for byte.
+			await runner.capture({ command: lean, args: ["-R", workspace.sourceRoot, "-o", output, relative], cwd: workspace.sourceRoot, env, signal, timeoutMs: 120000 });
 			interfaces.push({ module: module.module, sourceSha256: module.source.sha256, ...await identifyLeanInterface(output, signal) });
 		}
 		const configuration = inventory.configurationRecord.configuration;

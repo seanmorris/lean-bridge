@@ -8,7 +8,7 @@ import { componentScalarTypes, assertComponentSignature } from "../abi/component
 import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs";
 import { assertComponentCopiedBindings, componentCopiedAbi, componentCopiedDispatch } from "../abi/component-copied.mjs";
 import { sha256 } from "../capsule/node.mjs";
-import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, componentCompoundDispatch, componentRecordDefinitions, assertComponentRecordBindings } from "../abi/component-records.mjs";
+import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, componentCompoundDispatch, componentNominalAbi, componentNominalDispatch, componentRecordDefinitions, assertComponentRecordBindings } from "../abi/component-records.mjs";
 
 /**
  * Admit scalar or primitive callable declarations and derive their private ABI.
@@ -17,6 +17,7 @@ import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, comp
  */
 export const createComponentPrivateAbi = document => {
 	const records = document.types.some(type => type.kind === "record");
+	const nominal = document.types.some(type => ["alias", "variant"].includes(type.kind));
 	const compound = type => type.kind === "apply" && (type.constructor !== "array" || type.arguments.some(compound));
 	const compounds = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(compound))
 		|| document.types.some(type => type.fields.some(field => compound(field.type)));
@@ -26,10 +27,10 @@ export const createComponentPrivateAbi = document => {
 		return { id: type.id, key: sha256(componentCallableSignatureText(signature)).slice(0, 40), ...signature };
 	});
 	const abi = {
-		version: callbacks.length ? 3 : compounds ? componentCompoundAbi : records ? componentRecordAbi : copied ? componentCopiedAbi : 2
-		, dispatch: callbacks.length ? "scalar-callable-frame-v1" : compounds ? componentCompoundDispatch : records ? componentRecordDispatch : copied ? componentCopiedDispatch : "scalar-frame-v2"
+		version: callbacks.length ? 3 : nominal ? componentNominalAbi : compounds ? componentCompoundAbi : records ? componentRecordAbi : copied ? componentCopiedAbi : 2
+		, dispatch: callbacks.length ? "scalar-callable-frame-v1" : nominal ? componentNominalDispatch : compounds ? componentCompoundDispatch : records ? componentRecordDispatch : copied ? componentCopiedDispatch : "scalar-frame-v2"
 		, ...(callbacks.length ? { callbacks } : {})
-		, ...((records || compounds) && !callbacks.length ? { records: componentRecordDefinitions(document) } : {})
+		, ...(!callbacks.length && nominal ? { types: componentRecordDefinitions(document, true) } : (records || compounds) && !callbacks.length ? { records: componentRecordDefinitions(document) } : {})
 		, exports: document.declarations.map(declaration => ({
 			bindingId: declaration.id
 			, symbol: `lean_bridge_${sha256(`${document.component.id}\0${declaration.id}`).slice(0, 24)}`
@@ -38,7 +39,7 @@ export const createComponentPrivateAbi = document => {
 			, resultMode: declaration.resultMode }))
 	};
 	if(callbacks.length) assertComponentCallableBindings(abi, document);
-	else if(records || compounds) assertComponentRecordBindings(abi, document);
+	else if(nominal || records || compounds) assertComponentRecordBindings(abi, document);
 	else if(copied) assertComponentCopiedBindings(abi, document);
 	else for(const declaration of document.declarations) assertComponentSignature(declaration);
 	return abi;

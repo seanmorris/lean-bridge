@@ -155,6 +155,10 @@ BRIDGE_EXPORTS=(
   _bridge_compound_frame_validate
   _bridge_compound_children_validate
   _bridge_compound_children_allocate
+  _bridge_nominal_abi
+  _bridge_nominal_frame_validate
+  _bridge_nominal_children_validate
+  _bridge_nominal_children_allocate
   _bridge_record_frame_validate
   _bridge_record_children_validate
   _bridge_record_children_allocate

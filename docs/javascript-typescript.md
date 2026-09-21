@@ -214,7 +214,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Prod α β / tuples` | `readonly [A, B] (nested binary products)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exact dense ordinary arrays preserve two-element arity and source product nesting. Typed arrays, holes and flattened products reject. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Named readonly interface; copied plain object` (input, result, field); `Generated readonly record (Alpha: Payload)` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Compilation rejected. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | `Generated tagged readonly union` (input, result, field, callback input, callback result) | Ordinary source: Compilation rejected. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `Named readonly discriminated union: { kind: "caseName", ...fields }` (input, result, field); `Generated tagged readonly union` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Exact own data fields and a kind discriminator. Empty constructors remain distinct; Unit fields remain present. Return values are independent copies. Getters, inherited/extra/symbol fields, unknown constructors and malformed payloads reject. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Synchronous JavaScript function` (input) | Ordinary source: Installed checks passed (input); Compilation rejected (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Borrowed until the outer call returns. A Promise result is rejected; the first thrown value is preserved. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `ReadonlyArray<T> (ordinary dense Array)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Preserve order, duplicates and every nesting level. Lists and Arrays remain distinct in the IR. Returned arrays and mutable payloads are independent copies. Dense own data elements only; holes, accessors, extra fields, typed arrays and cycles reject. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
@@ -269,7 +269,7 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
 
-The ordinary component build path accepts primitives, nested arrays and Lists, acyclic copied records, `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+The ordinary component build path accepts primitives, nested arrays and Lists, acyclic copied records, concrete non-recursive tagged variants, `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
 
 ### Nested arrays
 
@@ -329,7 +329,7 @@ or resources, or share a component with callable exports yet.
 
 Lean structures become named TypeScript interfaces with readonly fields and plain
 JavaScript objects. Fields may contain any supported primitive, nested arrays and Lists,
-options, results, products or other acyclic copied records. Empty and single-field
+options, results, products, copied variants or other acyclic copied records. Empty and single-field
 structures work too.
 
 Pass every declared field as an own data property. Missing or extra fields,
@@ -347,6 +347,33 @@ in Node, strict TypeScript and three browser engines, including React and worker
 Generic, inherited, dependent and recursive records are not supported by this
 profile. Records cannot contain callbacks or resources, or share a component
 with callable exports yet.
+
+### Tagged variants
+
+Lean's concrete non-recursive inductive sums become plain objects with a `kind`
+discriminator and the selected constructor's fields:
+
+```ts
+type Signal =
+  | { readonly kind: "idle" }
+  | { readonly kind: "marker"; readonly value: void }
+  | { readonly kind: "data"; readonly count: number; readonly label: string };
+
+const input: Signal = { kind: "data", count: 42, label: "ready" };
+```
+
+Generated packages supply their own named types. Switch on `kind` to narrow a
+result. Empty constructors retain distinct names; an explicit Unit field must
+be present with value `undefined`. Extra fields, inherited fields, getters and
+unknown constructor names reject. Returned objects and buffers are independent
+copies and need no disposal.
+
+Variants compose with records, arrays, Lists, options, results and products.
+The same copied-value budgets apply. `kind` is reserved for the discriminator.
+Generic, indexed, recursive, proof-bearing and identity-bearing variants remain
+unsupported by this npm profile. Both source paths have
+[installed variant checks](evidence/npm-variants-20260921.md) across Node,
+TypeScript, browsers, React and workers.
 
 ### Options, results and products
 

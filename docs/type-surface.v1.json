@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.43.0",
+  "contractVersion": "0.44.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,165 @@
   ],
   "evidence": [
     {
+      "id": "npm-variants-installed",
+      "kind": "installed",
+      "revision": "d115645d029a0d35e3805c978cd31c359517c890",
+      "command": "PLAYWRIGHT_BROWSERS_PATH=/app/.toolchains/playwright LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs; node --test tests/component-variant-contract.test.mjs",
+      "scope": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
+        },
+        {
+          "path": "docs/evidence/npm-variants-20260921.json",
+          "sha256": "d0c3bf39f03aecec94a8077e0134cd875331a38864901ea604d1dbebb9299087"
+        },
+        {
+          "path": "docs/evidence/npm-variants-20260921.md",
+          "sha256": "d5cab7f1d35239677ac304f404e1735a83fba837b84d77fc6eb802c47dc105ad"
+        },
+        {
+          "path": "poc/lean-link-spike/component_scalar.cpp",
+          "sha256": "4c2d5957cfc781135ef0039b70b795deee2d8ae9956f85e62ee7f232da9a22ea"
+        },
+        {
+          "path": "poc/lean-link-spike/component_scalar.h",
+          "sha256": "3fd5b9e82dac0136774e5ed7b5c907fc0538d21c1c799938b9c4d0caacbdc4d7"
+        },
+        {
+          "path": "schema/compiler-adapter-plan.schema.json",
+          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
+        },
+        {
+          "path": "scripts/build-lean-link-spike.sh",
+          "sha256": "b1d175a7e4b96de9dc74e05bc4299e4e8057c6b98d7b9b6a1f24f6895dab0e63"
+        },
+        {
+          "path": "src/abi/component-copied.mjs",
+          "sha256": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599"
+        },
+        {
+          "path": "src/abi/component-records.mjs",
+          "sha256": "f2512547e19eea386b57b5d7187c85d06523f58560b87f3380e6ecb200d7ea2a"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "5f3f563c5856cbbefc0194bac431521f68cbc2ea5adecdfb3883d733dea9cc84"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "1cbbe2fc817f2bb40e8418faedd752d642e8b0bd800fe5dd216df126d7799ab6"
+        },
+        {
+          "path": "src/backends/javascript/generate.mjs",
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+        },
+        {
+          "path": "src/build/compiler-adapters.mjs",
+          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+        },
+        {
+          "path": "src/build/component-callable-adapters.mjs",
+          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
+        },
+        {
+          "path": "src/build/component-record-adapters.mjs",
+          "sha256": "ed15bc514b15ed48fcdcac42180edd1907e29d94c2607212d3b36ee8a572665f"
+        },
+        {
+          "path": "src/build/elaborated-component.mjs",
+          "sha256": "c9e5975181674ea3f8b11989696511f34bb74766d0955fd18ad21d0575d8a0de"
+        },
+        {
+          "path": "src/build/lake-entry-elaboration.mjs",
+          "sha256": "2d216501f0fa2bfdcb5ba6c1b4e1acb2c79480da8c6252ee8a2a5dd1abeb8e85"
+        },
+        {
+          "path": "src/build/lean-component-compiler.mjs",
+          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
+        },
+        {
+          "path": "src/release/component-copied-runtime.mjs",
+          "sha256": "8261ab45cfb85ad73ed794b4acdf5868a53723df76f3f0dd7656213f9e8a7534"
+        },
+        {
+          "path": "src/release/component-npm-package.mjs",
+          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
+        },
+        {
+          "path": "src/release/component-runtime.mjs",
+          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+        },
+        {
+          "path": "tests/component-variant-contract.test.mjs",
+          "sha256": "d67656f36d1eb6b935e3f1a81a6a65ab92a4bb7cc15d090b41ef2f1c3136387f"
+        },
+        {
+          "path": "tests/component-variant-runtime.test.mjs",
+          "sha256": "bb2a8a46923e158018da30906ba0520fabdce8ab2da61f37e61fdd16324dc322"
+        },
+        {
+          "path": "tests/component-variants.test.mjs",
+          "sha256": "c6586cccecf6b437d592f2f55ae815f24a6a550330d658601bfa9578ea843d94"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-variants/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-variants/Variants.lean",
+          "sha256": "223f65daaedc2ccae6a08782dd837481e4e798c36e25ab0fb1fb803332a22a8f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-variants/lakefile.toml",
+          "sha256": "b8f22b2c53854c50e791640dc7353c58c534478e48f0508f9365df5a1f789d31"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-variants/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-variants/package.json",
+          "sha256": "592387c172d140512602ddf70a9eb84391334c65f41c2e913f81ce9ff4bb9c85"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/npm.mjs",
+          "sha256": "f50b8009f1b9db916c8551a1b87334c6035a198a834737848179e09f739c1a3c"
+        },
+        {
+          "path": "tests/helpers/component-scalar-install.mjs",
+          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+        },
+        {
+          "path": "tests/helpers/variant-fixture.mjs",
+          "sha256": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "npm/ordinary-source/variants-1.0.0.tgz",
+          "sha256": "bb993ad73ad076200c8922d773cf62d419685e3765075a9ccbadce35e9b74f6d"
+        },
+        {
+          "path": "npm/ordinary-source/lean-bridge-runtime-0.0.0-abi2.9ae55a74a25f864f0e1e34a40cb4add4600738246d64ceb008a73533a8ddf4d1.tgz",
+          "sha256": "7d6edaa55fa3e285b1fd910a705e5e76ad0eb31efbd85765f3adcaaea857f337"
+        },
+        {
+          "path": "npm/reviewed-ir/variants-1.0.0.tgz",
+          "sha256": "942aa5a89993d3b5c4dd958d3c7b274207e6ff6fede12212529d1536e3d0aab9"
+        },
+        {
+          "path": "npm/reviewed-ir/lean-bridge-runtime-0.0.0-abi2.9ae55a74a25f864f0e1e34a40cb4add4600738246d64ceb008a73533a8ddf4d1.tgz",
+          "sha256": "7d6edaa55fa3e285b1fd910a705e5e76ad0eb31efbd85765f3adcaaea857f337"
+        }
+      ]
+    },
+    {
       "id": "wit-wasi-lists-installed",
       "kind": "installed",
       "revision": "d3c2d5c84a88a79e310abc1dfc0cdcdd05520021",
@@ -165,7 +324,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -181,7 +340,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -360,7 +519,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -376,7 +535,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -599,7 +758,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -615,7 +774,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -806,7 +965,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -822,7 +981,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1029,7 +1188,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1240,7 +1399,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -1256,7 +1415,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1419,7 +1578,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -1435,7 +1594,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1626,7 +1785,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -1642,7 +1801,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2318,7 +2477,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -2346,11 +2505,11 @@
         },
         {
           "path": "src/abi/component-records.mjs",
-          "sha256": "83920ec44e08f9aa9fa9665d63cca52f430fe282500d666857d2f3080959b09a"
+          "sha256": "f2512547e19eea386b57b5d7187c85d06523f58560b87f3380e6ecb200d7ea2a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -2378,7 +2537,7 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
         },
         {
           "path": "src/binding-ir/contract.mjs",
@@ -2386,11 +2545,11 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
+          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
-          "sha256": "13a0f446b85c0222915c7f4093b5a91c4a1d963172b0cf402411fd42875233df"
+          "sha256": "ed15bc514b15ed48fcdcac42180edd1907e29d94c2607212d3b36ee8a572665f"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -2418,7 +2577,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
+          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
         },
         {
           "path": "tests/helpers/list-fixture.mjs",
@@ -2457,7 +2616,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -2473,7 +2632,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2676,7 +2835,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -2692,7 +2851,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2891,7 +3050,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3102,7 +3261,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -3118,7 +3277,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3281,7 +3440,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -3297,7 +3456,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3488,7 +3647,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -3504,7 +3663,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4172,7 +4331,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -4188,15 +4347,15 @@
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "accc1232d3a36023c6d8130f409780c7d993fc9757da9529a6d47a3f7ce6fc46"
+          "sha256": "4c2d5957cfc781135ef0039b70b795deee2d8ae9956f85e62ee7f232da9a22ea"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "2d1d794eec026560cbddcaebd286d4172d13f53799ee954cc0a9454cb66942b1"
+          "sha256": "3fd5b9e82dac0136774e5ed7b5c907fc0538d21c1c799938b9c4d0caacbdc4d7"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "41365b2289a8cd026e0c1474188e8ea1d43f466c1cb6a8e700372c49c56d3142"
+          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
@@ -4204,7 +4363,7 @@
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
-          "sha256": "94d1b0204fa7237437084c1f3d806acdd6f35e91e1818a578ede57ac2ec59ba5"
+          "sha256": "b1d175a7e4b96de9dc74e05bc4299e4e8057c6b98d7b9b6a1f24f6895dab0e63"
         },
         {
           "path": "scripts/lean-runtime-config.sh",
@@ -4216,7 +4375,7 @@
         },
         {
           "path": "src/abi/component-records.mjs",
-          "sha256": "83920ec44e08f9aa9fa9665d63cca52f430fe282500d666857d2f3080959b09a"
+          "sha256": "f2512547e19eea386b57b5d7187c85d06523f58560b87f3380e6ecb200d7ea2a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4240,19 +4399,19 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
+          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "4e6e29552ee32a48b43d921676df2f826cdb32a9e66753b62bac648c82b3f9d3"
+          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
-          "sha256": "13a0f446b85c0222915c7f4093b5a91c4a1d963172b0cf402411fd42875233df"
+          "sha256": "ed15bc514b15ed48fcdcac42180edd1907e29d94c2607212d3b36ee8a572665f"
         },
         {
           "path": "src/build/component-side-linker.mjs",
@@ -4264,11 +4423,11 @@
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "bd2c62a4d6986ab297082763edd3024b66d437d53301c87a4aac6addf1da400e"
+          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
         },
         {
           "path": "src/build/side-module-audit.mjs",
-          "sha256": "68b19dd5789f388fabb422a71a7b902d0b3cff259501dd5c24dca1fd1f4aab04"
+          "sha256": "0448107966944580a043fd8d5224bd3145bf16345b4eff00c65045658bbbc31b"
         },
         {
           "path": "src/release/component-copied-codec.mjs",
@@ -4276,15 +4435,15 @@
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
-          "sha256": "6cc1fecb31bd1dad25545fd3170d3964778670a9615611d9b71a723df989c5e7"
+          "sha256": "8261ab45cfb85ad73ed794b4acdf5868a53723df76f3f0dd7656213f9e8a7534"
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "e899586ad42a9a0ec580aab6d9390810798814c786817070c30c3e7244556c92"
+          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "49d2bc2094c1621f75ef3220bce5b0084e750dbd07c763da8497c6865098f774"
+          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
         },
         {
           "path": "tests/component-compound-contract.test.mjs",
@@ -4320,7 +4479,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
+          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
         },
         {
           "path": "tests/helpers/compound-fixture.mjs",
@@ -4375,7 +4534,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -4391,15 +4550,15 @@
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "accc1232d3a36023c6d8130f409780c7d993fc9757da9529a6d47a3f7ce6fc46"
+          "sha256": "4c2d5957cfc781135ef0039b70b795deee2d8ae9956f85e62ee7f232da9a22ea"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "2d1d794eec026560cbddcaebd286d4172d13f53799ee954cc0a9454cb66942b1"
+          "sha256": "3fd5b9e82dac0136774e5ed7b5c907fc0538d21c1c799938b9c4d0caacbdc4d7"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "41365b2289a8cd026e0c1474188e8ea1d43f466c1cb6a8e700372c49c56d3142"
+          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
@@ -4407,7 +4566,7 @@
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
-          "sha256": "94d1b0204fa7237437084c1f3d806acdd6f35e91e1818a578ede57ac2ec59ba5"
+          "sha256": "b1d175a7e4b96de9dc74e05bc4299e4e8057c6b98d7b9b6a1f24f6895dab0e63"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -4415,7 +4574,7 @@
         },
         {
           "path": "src/abi/component-records.mjs",
-          "sha256": "83920ec44e08f9aa9fa9665d63cca52f430fe282500d666857d2f3080959b09a"
+          "sha256": "f2512547e19eea386b57b5d7187c85d06523f58560b87f3380e6ecb200d7ea2a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4427,27 +4586,27 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
+          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "4e6e29552ee32a48b43d921676df2f826cdb32a9e66753b62bac648c82b3f9d3"
+          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
-          "sha256": "13a0f446b85c0222915c7f4093b5a91c4a1d963172b0cf402411fd42875233df"
+          "sha256": "ed15bc514b15ed48fcdcac42180edd1907e29d94c2607212d3b36ee8a572665f"
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "bd2c62a4d6986ab297082763edd3024b66d437d53301c87a4aac6addf1da400e"
+          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
         },
         {
           "path": "src/build/side-module-audit.mjs",
-          "sha256": "68b19dd5789f388fabb422a71a7b902d0b3cff259501dd5c24dca1fd1f4aab04"
+          "sha256": "0448107966944580a043fd8d5224bd3145bf16345b4eff00c65045658bbbc31b"
         },
         {
           "path": "src/release/component-copied-codec.mjs",
@@ -4455,15 +4614,15 @@
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
-          "sha256": "6cc1fecb31bd1dad25545fd3170d3964778670a9615611d9b71a723df989c5e7"
+          "sha256": "8261ab45cfb85ad73ed794b4acdf5868a53723df76f3f0dd7656213f9e8a7534"
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "e899586ad42a9a0ec580aab6d9390810798814c786817070c30c3e7244556c92"
+          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "49d2bc2094c1621f75ef3220bce5b0084e750dbd07c763da8497c6865098f774"
+          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
         },
         {
           "path": "tests/component-record-contract.test.mjs",
@@ -4499,7 +4658,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
+          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
         },
         {
           "path": "tests/helpers/record-fixture.mjs",
@@ -4538,7 +4697,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -4558,15 +4717,15 @@
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "accc1232d3a36023c6d8130f409780c7d993fc9757da9529a6d47a3f7ce6fc46"
+          "sha256": "4c2d5957cfc781135ef0039b70b795deee2d8ae9956f85e62ee7f232da9a22ea"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "2d1d794eec026560cbddcaebd286d4172d13f53799ee954cc0a9454cb66942b1"
+          "sha256": "3fd5b9e82dac0136774e5ed7b5c907fc0538d21c1c799938b9c4d0caacbdc4d7"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "41365b2289a8cd026e0c1474188e8ea1d43f466c1cb6a8e700372c49c56d3142"
+          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
@@ -4574,7 +4733,7 @@
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
-          "sha256": "94d1b0204fa7237437084c1f3d806acdd6f35e91e1818a578ede57ac2ec59ba5"
+          "sha256": "b1d175a7e4b96de9dc74e05bc4299e4e8057c6b98d7b9b6a1f24f6895dab0e63"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
@@ -4586,7 +4745,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4598,15 +4757,15 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
+          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "4e6e29552ee32a48b43d921676df2f826cdb32a9e66753b62bac648c82b3f9d3"
+          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
         },
         {
           "path": "src/build/component-copied-adapters.mjs",
@@ -4614,11 +4773,11 @@
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "bd2c62a4d6986ab297082763edd3024b66d437d53301c87a4aac6addf1da400e"
+          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
         },
         {
           "path": "src/build/side-module-audit.mjs",
-          "sha256": "68b19dd5789f388fabb422a71a7b902d0b3cff259501dd5c24dca1fd1f4aab04"
+          "sha256": "0448107966944580a043fd8d5224bd3145bf16345b4eff00c65045658bbbc31b"
         },
         {
           "path": "src/release/component-copied-codec.mjs",
@@ -4626,15 +4785,15 @@
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
-          "sha256": "6cc1fecb31bd1dad25545fd3170d3964778670a9615611d9b71a723df989c5e7"
+          "sha256": "8261ab45cfb85ad73ed794b4acdf5868a53723df76f3f0dd7656213f9e8a7534"
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "e899586ad42a9a0ec580aab6d9390810798814c786817070c30c3e7244556c92"
+          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "49d2bc2094c1621f75ef3220bce5b0084e750dbd07c763da8497c6865098f774"
+          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
         },
         {
           "path": "tests/component-array-contract.test.mjs",
@@ -4662,7 +4821,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
+          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
         },
         {
           "path": "tests/helpers/type-corpus-node.mjs",
@@ -4725,7 +4884,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
+          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
         },
         {
           "path": "tests/component-callables.test.mjs",
@@ -4749,15 +4908,15 @@
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "4e6e29552ee32a48b43d921676df2f826cdb32a9e66753b62bac648c82b3f9d3"
+          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
+          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "bd2c62a4d6986ab297082763edd3024b66d437d53301c87a4aac6addf1da400e"
+          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4773,11 +4932,11 @@
         },
         {
           "path": "src/build/lake-entry-elaboration.mjs",
-          "sha256": "a6949425c797fc4160caf777f216fa14709a1f052ef76a17f565b7845e765a88"
+          "sha256": "2d216501f0fa2bfdcb5ba6c1b4e1acb2c79480da8c6252ee8a2a5dd1abeb8e85"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "49d2bc2094c1621f75ef3220bce5b0084e750dbd07c763da8497c6865098f774"
+          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
         },
         {
           "path": "src/release/component-callable-runtime.mjs",
@@ -4785,23 +4944,23 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "e899586ad42a9a0ec580aab6d9390810798814c786817070c30c3e7244556c92"
+          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "accc1232d3a36023c6d8130f409780c7d993fc9757da9529a6d47a3f7ce6fc46"
+          "sha256": "4c2d5957cfc781135ef0039b70b795deee2d8ae9956f85e62ee7f232da9a22ea"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "2d1d794eec026560cbddcaebd286d4172d13f53799ee954cc0a9454cb66942b1"
+          "sha256": "3fd5b9e82dac0136774e5ed7b5c907fc0538d21c1c799938b9c4d0caacbdc4d7"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
-          "sha256": "94d1b0204fa7237437084c1f3d806acdd6f35e91e1818a578ede57ac2ec59ba5"
+          "sha256": "b1d175a7e4b96de9dc74e05bc4299e4e8057c6b98d7b9b6a1f24f6895dab0e63"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "41365b2289a8cd026e0c1474188e8ea1d43f466c1cb6a8e700372c49c56d3142"
+          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
@@ -4809,11 +4968,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -4948,11 +5107,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -5075,7 +5234,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -5103,7 +5262,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -5314,7 +5473,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -5342,7 +5501,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -5501,7 +5660,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -5525,7 +5684,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -5724,7 +5883,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -5744,7 +5903,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -5923,11 +6082,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "flake.nix",
@@ -6134,11 +6293,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -6329,11 +6488,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -6460,11 +6619,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -6591,11 +6750,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -6710,11 +6869,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -6761,11 +6920,11 @@
         },
         {
           "path": "src/build/elaborated-component.mjs",
-          "sha256": "013a4bdf1b822c259630a1db82b878ee7dba158b5f6c3061fca1bf75cd3b7a95"
+          "sha256": "c9e5975181674ea3f8b11989696511f34bb74766d0955fd18ad21d0575d8a0de"
         },
         {
           "path": "src/build/lake-entry-elaboration.mjs",
-          "sha256": "a6949425c797fc4160caf777f216fa14709a1f052ef76a17f565b7845e765a88"
+          "sha256": "2d216501f0fa2bfdcb5ba6c1b4e1acb2c79480da8c6252ee8a2a5dd1abeb8e85"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -6821,11 +6980,11 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "b82da3f650582c4e92ee7be9755efc6b61aa2a5ebebba2a946136963b8d4650f"
+          "sha256": "78bfc3da7cc889ff98ab7d408d9981fc9ed2fe266e6da7f4f4b8a3294db09b1a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -6916,7 +7075,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -6936,11 +7095,11 @@
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "accc1232d3a36023c6d8130f409780c7d993fc9757da9529a6d47a3f7ce6fc46"
+          "sha256": "4c2d5957cfc781135ef0039b70b795deee2d8ae9956f85e62ee7f232da9a22ea"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "2d1d794eec026560cbddcaebd286d4172d13f53799ee954cc0a9454cb66942b1"
+          "sha256": "3fd5b9e82dac0136774e5ed7b5c907fc0538d21c1c799938b9c4d0caacbdc4d7"
         },
         {
           "path": "schema/binding-ir.schema.json",
@@ -6952,7 +7111,7 @@
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
-          "sha256": "94d1b0204fa7237437084c1f3d806acdd6f35e91e1818a578ede57ac2ec59ba5"
+          "sha256": "b1d175a7e4b96de9dc74e05bc4299e4e8057c6b98d7b9b6a1f24f6895dab0e63"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
@@ -6964,7 +7123,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -7012,7 +7171,7 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
@@ -7084,7 +7243,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
+          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
         },
         {
           "path": "src/build/component-scalar-adapters.mjs",
@@ -7096,11 +7255,11 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "e899586ad42a9a0ec580aab6d9390810798814c786817070c30c3e7244556c92"
+          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "49d2bc2094c1621f75ef3220bce5b0084e750dbd07c763da8497c6865098f774"
+          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
         },
         {
           "path": "tests/component-scalars.test.mjs",
@@ -7116,7 +7275,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "b82da3f650582c4e92ee7be9755efc6b61aa2a5ebebba2a946136963b8d4650f"
+          "sha256": "78bfc3da7cc889ff98ab7d408d9981fc9ed2fe266e6da7f4f4b8a3294db09b1a"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -7192,7 +7351,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "36bddbf78b26b5e8fd4bd53e02c7dcb44bc7a646a421f7239d297b2c2627cc1c"
+          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
         },
         {
           "path": "tests/helpers/copied-fixture-install.mjs",
@@ -7295,7 +7454,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7307,7 +7466,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -7550,7 +7709,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "bb5c933a589e4a916d97ee60b64644c8724097ee718037eeccb66d976a1c6eb3"
+          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
         },
         {
           "path": "src/build/component-scalar-adapters.mjs",
@@ -7558,15 +7717,15 @@
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "49d2bc2094c1621f75ef3220bce5b0084e750dbd07c763da8497c6865098f774"
+          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "accc1232d3a36023c6d8130f409780c7d993fc9757da9529a6d47a3f7ce6fc46"
+          "sha256": "4c2d5957cfc781135ef0039b70b795deee2d8ae9956f85e62ee7f232da9a22ea"
         },
         {
           "path": "tests/component-char.test.mjs",
@@ -7677,7 +7836,7 @@
         },
         {
           "path": "src/build/elaborated-component.mjs",
-          "sha256": "013a4bdf1b822c259630a1db82b878ee7dba158b5f6c3061fca1bf75cd3b7a95"
+          "sha256": "c9e5975181674ea3f8b11989696511f34bb74766d0955fd18ad21d0575d8a0de"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -8113,7 +8272,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3dd4bfa8a158d8e761040f4acb810d6a7f906aa86e6f363d88021e147760e3be"
+          "sha256": "3bad713b50ad892699cd8b02332461cd24b721ad70b64b3c1381718de0d3ebab"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -8129,7 +8288,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "599863bc0f6633c27c6bd67d0530fef2edecfa0f9ebd31d3e2104c486a0a3c3c"
+          "sha256": "5f325ef591fa506f7d8942ff8492282269f00746adde075c79fc78884acb69fd"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8724,7 +8883,7 @@
         },
         {
           "path": "src/build/elaborated-component.mjs",
-          "sha256": "013a4bdf1b822c259630a1db82b878ee7dba158b5f6c3061fca1bf75cd3b7a95"
+          "sha256": "c9e5975181674ea3f8b11989696511f34bb74766d0955fd18ad21d0575d8a0de"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -8795,7 +8954,7 @@
         },
         {
           "path": "src/build/elaborated-component.mjs",
-          "sha256": "013a4bdf1b822c259630a1db82b878ee7dba158b5f6c3061fca1bf75cd3b7a95"
+          "sha256": "c9e5975181674ea3f8b11989696511f34bb74766d0955fd18ad21d0575d8a0de"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -9022,7 +9181,7 @@
         },
         {
           "path": "src/build/elaborated-component.mjs",
-          "sha256": "013a4bdf1b822c259630a1db82b878ee7dba158b5f6c3061fca1bf75cd3b7a95"
+          "sha256": "c9e5975181674ea3f8b11989696511f34bb74766d0955fd18ad21d0575d8a0de"
         },
         {
           "path": "src/build/native-component.mjs",
@@ -9189,11 +9348,11 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "c1a6be4ef59e0bb2454dcc08c655f921b5db779ad210700dccb45d42e64c700d"
+          "sha256": "18a2fc84bf8f3123390f8afa4d572f3a0f9135a2735a8477a634551cf8669f98"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -9205,7 +9364,7 @@
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "49d2bc2094c1621f75ef3220bce5b0084e750dbd07c763da8497c6865098f774"
+          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
         },
         {
           "path": "src/release/component-scalar-codec.mjs",
@@ -9213,7 +9372,7 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "e899586ad42a9a0ec580aab6d9390810798814c786817070c30c3e7244556c92"
+          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
         }
       ],
       "artifacts": []
@@ -9413,7 +9572,7 @@
       "files": [
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "71d8cc6e31dfba3ac03d50c00f4b267afcdef4a3fe24e45946f7299e9b593fc3"
+          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
         },
         {
           "path": "src/backends/javascript/coverage.mjs",
@@ -9550,6 +9709,150 @@
     }
   ],
   "observations": [
+    {
+      "id": "npm-variants-ordinary-source",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery.",
+      "hostTypes": {
+        "variant": {
+          "parameter": "Named readonly discriminated union: { kind: \"caseName\", ...fields }",
+          "result": "Named readonly discriminated union: { kind: \"caseName\", ...fields }",
+          "field": "Named readonly discriminated union: { kind: \"caseName\", ...fields }"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        }
+      },
+      "limitations": [
+        "Concrete non-recursive, non-generic copied variants only; no proof-bearing, dependent, indexed or identity-bearing payloads.",
+        "32 levels, 4096 expanded descriptor nodes, up to 1024 cases and 1024 fields per case; 16 MiB shared input/result budget. Lean working memory is outside that limit.",
+        "Native/PHP-Wasm/WIT variants, named alias preservation and compound callable payloads remain separate work."
+      ],
+      "conversionNotes": {
+        "variant": "Exact own data fields and a kind discriminator. Empty constructors remain distinct; Unit fields remain present. Return values are independent copies. Getters, inherited/extra/symbol fields, unknown constructors and malformed payloads reject."
+      }
+    },
+    {
+      "id": "npm-variants-reviewed-ir",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery.",
+      "hostTypes": {
+        "variant": {
+          "parameter": "Named readonly discriminated union: { kind: \"caseName\", ...fields }",
+          "result": "Named readonly discriminated union: { kind: \"caseName\", ...fields }",
+          "field": "Named readonly discriminated union: { kind: \"caseName\", ...fields }"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-variants-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm variants preserve constructor identities, all nineteen primitive payloads, direct copied record fields and nested containers. Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers execute both paths. Each JavaScript context passes 2363 checks and 38 rejection cases with recovery."
+        }
+      },
+      "limitations": [
+        "Concrete non-recursive, non-generic copied variants only; no proof-bearing, dependent, indexed or identity-bearing payloads.",
+        "32 levels, 4096 expanded descriptor nodes, up to 1024 cases and 1024 fields per case; 16 MiB shared input/result budget. Lean working memory is outside that limit.",
+        "Native/PHP-Wasm/WIT variants, named alias preservation and compound callable payloads remain separate work."
+      ],
+      "conversionNotes": {
+        "variant": "Exact own data fields and a kind discriminator. Empty constructors remain distinct; Unit fields remain present. Return values are independent copies. Getters, inherited/extra/symbol fields, unknown constructors and malformed payloads reject."
+      }
+    },
     {
       "id": "wit-wasi-lists-ordinary-source",
       "profiles": [
@@ -30330,8 +30633,7 @@
         "browser-worker"
       ],
       "shapes": [
-        "alias",
-        "variant"
+        "alias"
       ],
       "positions": [
         "parameter",
@@ -30349,11 +30651,62 @@
           "field": "Resolved target type",
           "callback-parameter": "Resolved target type",
           "callback-result": "Resolved target type"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
         },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "javascript-mapping-audit"
+          ],
+          "note": "Reviewed copied-value projections; Alpha does not establish arbitrary nested-element execution."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Array elements must pass the JavaScript coverage guard.",
+        "Copied structures cannot contain unowned identity-bearing values."
+      ]
+    },
+    {
+      "id": "js-values-node-javascript-1-record-remainder-1-variant-callables",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Reviewed copied-value projections; Alpha does not establish arbitrary nested-element execution. Installed npm copied-record and field coverage is recorded separately.",
+      "hostTypes": {
         "variant": {
-          "parameter": "Generated tagged readonly union",
-          "result": "Generated tagged readonly union",
-          "field": "Generated tagged readonly union",
           "callback-parameter": "Generated tagged readonly union",
           "callback-result": "Generated tagged readonly union"
         }
@@ -34195,7 +34548,6 @@
       ],
       "shapes": [
         "alias",
-        "variant",
         "resource"
       ],
       "positions": [
@@ -34215,17 +34567,68 @@
           "callback-parameter": null,
           "callback-result": null
         },
-        "variant": {
+        "resource": {
           "parameter": null,
           "result": null,
           "field": null,
           "callback-parameter": null,
           "callback-result": null
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
         },
-        "resource": {
-          "parameter": null,
-          "result": null,
-          "field": null,
+        "generation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "compilation": {
+          "state": "rejected",
+          "evidence": [
+            "npm-source-pipeline"
+          ],
+          "note": "The ordinary component signature guard does not compile this runtime type or callable shape."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Proof-only declarations require elaborator-guided erasure, not a runtime proof value.",
+        "Reviewed IR profiles are audited separately."
+      ]
+    },
+    {
+      "id": "ordinary-compiler-node-javascript-2-remaining-1-variant-callables",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "variant"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "The ordinary npm compiler does not admit the compound or identity positions listed here. Primitive callable coverage and newly installed primitive input/result coverage are recorded separately. Installed npm copied-record and field coverage is recorded separately.",
+      "hostTypes": {
+        "variant": {
           "callback-parameter": null,
           "callback-result": null
         }

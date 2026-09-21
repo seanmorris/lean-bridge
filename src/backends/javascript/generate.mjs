@@ -696,8 +696,10 @@ const emitValidators = (ir, typeMap) => {
 	{
 		lines.push(`export const assert${type.name} = (value, path) => {`);
 		lines.push(
-			"  if (value === null || typeof value !== \"object\" || Array.isArray(value)) invalid(path, \"variant\");",
-			"  switch (value.kind) {",
+			"  if (value === null || typeof value !== \"object\" || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) invalid(path, \"plain variant\");",
+			"  const kind = Object.getOwnPropertyDescriptor(value, \"kind\");",
+			"  if (!kind || !Object.hasOwn(kind, \"value\")) invalid(path, \"own data discriminator\");",
+			"  switch (kind.value) {",
 		);
 		for(const variantCase of type.cases)
 		{
@@ -705,14 +707,15 @@ const emitValidators = (ir, typeMap) => {
 			lines.push(
 				`    case ${quote(variantCase.name)}: {`,
 				`      const expected = new Set(${JSON.stringify(names)});`,
-				"      const unknown = Object.keys(value).filter(key => !expected.has(key));",
-				"      const missing = [...expected].filter(key => !(key in value));",
+				"      const unknown = Reflect.ownKeys(value).filter(key => !expected.has(key)).map(String);",
+				"      const missing = [...expected].filter(key => !Object.hasOwn(value, key));",
 				`      if (unknown.length || missing.length) throw new TypeError(\`\${path} does not match ${type.name}.${variantCase.name}: missing=\${missing.join(\",\")} unknown=\${unknown.join(\",\")}\`);`,
 			);
 			for(const field of variantCase.fields)
 			{
 				lines.push(
-					`      ${validatorName(field.type, typeMap)}(value.${field.name}, \`\${path}.${field.name}\`);`,
+					`      if (!Object.hasOwn(Object.getOwnPropertyDescriptor(value, ${quote(field.name)}), "value")) invalid(path, "own data fields");`,
+					`      ${validatorName(field.type, typeMap)}(Object.getOwnPropertyDescriptor(value, ${quote(field.name)}).value, \`\${path}.${field.name}\`);`,
 				);
 			}
 			lines.push("      return value;", "    }");

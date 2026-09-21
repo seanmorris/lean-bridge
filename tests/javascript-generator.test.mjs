@@ -348,7 +348,8 @@ test("variants and static methods project as native TypeScript surfaces", () => 
   );
   assert.match(files["index.d.ts"], /static lookup\(payload: Payload\): Lookup/);
   assert.match(files["index.mjs"], /static lookup\(payload\)/);
-  assert.match(files["internal/validators.mjs"], /switch \(value\.kind\)/);
+  assert.match(files["internal/validators.mjs"], /Object\.getOwnPropertyDescriptor\(value, "kind"\)/);
+  assert.match(files["internal/validators.mjs"], /switch \(kind\.value\)/);
   assert.doesNotMatch(files["index.d.ts"], /tag: number|handle|pointer/i);
 });
 

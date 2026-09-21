@@ -6,7 +6,7 @@
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes, scalarCopyLimit, scalarSlotBytes } from "../abi/component-scalars.mjs";
-import { assertComponentRecordAbi, componentCompoundAbi } from "../abi/component-records.mjs";
+import { assertComponentRecordAbi, componentCompoundAbi, componentNominalAbi } from "../abi/component-records.mjs";
 
 const key = id => sha256(id).slice(0, 20);
 const prefix = (abi, id) => `${abi.exports[0].symbol}_record_${key(id)}`;
@@ -14,12 +14,19 @@ const sequence = type => type.kind === "apply" && ["array", "list"].includes(typ
 const compound = type => type.kind === "apply" && !sequence(type);
 const carried = type => type.kind === "named" || compound(type);
 const identity = type => type.kind === "named" ? type.id : canonicalJson(type);
-const childrenOf = (type, records) => type.kind === "apply" ? type.arguments : type.kind === "named" ? records.get(type.id).fields.map(field => field.type) : [];
+const definitions = abi => abi.types ?? abi.records;
+const childrenOf = (type, records) => {
+	if(type.kind === "apply") return type.arguments;
+	if(type.kind !== "named") return [];
+	const definition = records.get(type.id);
+	return definition.kind === "alias" ? [definition.target] : definition.kind === "variant"
+		? definition.cases.flatMap(item => item.fields.map(field => field.type)) : definition.fields.map(field => field.type);
+};
 const allTypes = abi => {
-	const records = new Map(abi.records.map(record => [record.id, record])), types = new Map();
+	const records = new Map(definitions(abi).map(record => [record.id, record])), types = new Map();
 	const add = type => { if(types.has(identity(type))) return; types.set(identity(type), type); childrenOf(type, records).forEach(add); };
 	for(const item of abi.exports) [...item.parameters, item.result].forEach(add);
-	for(const record of abi.records) add({ kind: "named", id: record.id });
+	for(const record of definitions(abi)) add({ kind: "named", id: record.id });
 	return [...types.values()];
 };
 const object = type => type.kind !== "primitive" || ["unit", "nat", "int", "string", "bytes"].includes(type.name);
@@ -43,7 +50,7 @@ const needsConversion = type => carried(type) || type.constructor === "list" || 
  */
 export const componentRecordLeanSource = (abi, exports, leanType) => {
 	assertComponentRecordAbi(abi);
-	const records = new Map(abi.records.map(record => [record.id, record]));
+	const records = new Map(definitions(abi).map(record => [record.id, record]));
 	const sourceType = type => type.kind === "named" ? `_root_.${type.id.slice(5)}` : leanType(type);
 	const transportType = type => carried(type) ? `(_root_.Array ${sourceType(type)})`
 		: type.kind === "apply" ? `(_root_.Array ${transportType(type.arguments[0])})` : leanType(type);
@@ -61,7 +68,9 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
 		: type.kind === "apply" ? type.constructor === "array" ? "#[]" : type.constructor === "list" ? "[]" : type.constructor === "option" ? "_root_.Option.none"
 			: type.constructor === "result" ? `(_root_.Except.ok ${defaultValue(type.arguments[0])})`
 				: `(${defaultValue(type.arguments[0])}, ${defaultValue(type.arguments[1])})`
-			: `({ ${records.get(type.id).fields.map(field => `«${field.name}» := ${defaultValue(field.type)}`).join(", ")} } : ${sourceType(type)})`;
+			: records.get(type.id).kind === "alias" ? defaultValue(records.get(type.id).target)
+				: records.get(type.id).kind === "variant" ? `(${sourceType(type)}.«${records.get(type.id).cases[0].name}» ${records.get(type.id).cases[0].fields.map(field => defaultValue(field.type)).join(" ")})`
+					: `({ ${records.get(type.id).fields.map(field => `«${field.name}» := ${defaultValue(field.type)}`).join(", ")} } : ${sourceType(type)})`;
 	const lines = [];
 	if(allTypes(abi).some(type => type.constructor === "list")) lines.push(
 		"def listToTransportArray {α : Type} (values : _root_.List α) : _root_.Array α :="
@@ -96,9 +105,28 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
 			emit(`field${i}`, input, transportType(child), `match ${unpack} with | .${name} field => ${convert(child, "field", false)} | _ => ${convert(child, defaultValue(child), false)}`);
 		});
 	}
-	for(const record of abi.records)
+	for(const record of definitions(abi))
 	{
 		const type = { kind: "named", id: record.id }, symbol = prefix(abi, record.id);
+		const emit = (name, parameters, result, body) => lines.push(`@[export ${symbol}_${name}]`, `def ${name}${key(record.id)} ${parameters} : ${result} :=`, `  ${body}`, "");
+		const input = `(value : ${transportType(type)})`, unpack = `(unpack${key(record.id)} value)`;
+		if(record.kind === "alias")
+		{
+			emit("make", `(value : ${transportType(record.target)})`, transportType(type), `#[${convert(record.target, "value", true)}]`);
+			emit("field0", input, transportType(record.target), convert(record.target, unpack, false));
+			continue;
+		}
+		if(record.kind === "variant")
+		{
+			emit("branch", input, "_root_.UInt32", `match ${unpack} with ${record.cases.map((item, i) => `| .«${item.name}» ${item.fields.map(() => "_").join(" ")} => ${i}`).join(" ")}`);
+			record.cases.forEach((item, branch) => {
+				const parameters = item.fields.map((field, i) => `(a${i} : ${transportType(field.type)})`).join(" ");
+				emit(`make${branch}`, parameters || "(_bridgeUnit : _root_.Unit)", transportType(type), `#[.«${item.name}» ${item.fields.map((field, i) => convert(field.type, `a${i}`, true)).join(" ")}]`);
+				item.fields.forEach((field, index) => emit(`case${branch}_field${index}`, input, transportType(field.type)
+					, `match ${unpack} with | .«${item.name}» ${item.fields.map((_, i) => i === index ? "field" : "_").join(" ")} => ${convert(field.type, "field", false)}${record.cases.length > 1 ? ` | _ => ${convert(field.type, defaultValue(field.type), false)}` : ""}`));
+			});
+			continue;
+		}
 		const parameters = record.fields.map((field, index) => `(a${index} : ${transportType(field.type)})`).join(" ");
 		const fields = record.fields.map((field, index) => `«${field.name}» := ${convert(field.type, `a${index}`, true)}`).join(", ");
 		lines.push(`@[export ${symbol}_make]`, `def make${key(record.id)} ${parameters || "(_bridgeUnit : _root_.Unit)"} : ${transportType(type)} :=`
@@ -127,14 +155,28 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
  */
 export const generateComponentRecordAdapters = abi => {
 	assertComponentRecordAbi(abi);
-	const records = new Map(abi.records.map(record => [record.id, record]));
+	const records = new Map(definitions(abi).map(record => [record.id, record]));
 	const identify = type => `copied_${key(JSON.stringify(type))}`;
 	const types = new Map(allTypes(abi).map(type => [identify(type), type]));
-	const mode = abi.version === componentCompoundAbi ? "compound" : "record";
+	const mode = abi.version === componentNominalAbi ? "nominal" : abi.version === componentCompoundAbi ? "compound" : "record";
 	const lines = ['#include "component_scalar.h"', '_Static_assert(sizeof(size_t) == 4, "record frames require wasm32 Lean");', ""];
-	for(const record of abi.records)
+	for(const record of definitions(abi))
 	{
 		const symbol = prefix(abi, record.id);
+		if(record.kind === "alias")
+		{
+			lines.push(`extern lean_object *${symbol}_make(${cType(record.target)});`, `extern ${cType(record.target)} ${symbol}_field0(lean_object *);`);
+			continue;
+		}
+		if(record.kind === "variant")
+		{
+			lines.push(`extern uint32_t ${symbol}_branch(lean_object *);`);
+			record.cases.forEach((item, branch) => {
+				lines.push(`extern lean_object *${symbol}_make${branch}(${item.fields.length ? item.fields.map(field => cType(field.type)).join(", ") : "lean_object *"});`);
+				item.fields.forEach((field, index) => lines.push(`extern ${cType(field.type)} ${symbol}_case${branch}_field${index}(lean_object *);`));
+			});
+			continue;
+		}
 		lines.push(`extern lean_object *${symbol}_make(${record.fields.length ? record.fields.map(field => cType(field.type)).join(", ") : "lean_object *"});`);
 		for(const [index, field] of record.fields.entries()) lines.push(`extern ${cType(field.type)} ${symbol}_field${index}(lean_object *);`);
 	}
@@ -164,6 +206,51 @@ export const generateComponentRecordAdapters = abi => {
 			lines.push(`static uint32_t ${id}_validate(bridge_scalar_slot const *slot, uint32_t *budget) { return bridge_copied_validate(slot, ${tag}, 0, budget); }`
 				, `static lean_object *${id}_decode(bridge_scalar_slot const *slot) { return bridge_copied_decode(slot, ${tag}, 0); }`
 				, `static uint32_t ${id}_encode(bridge_scalar_slot *slot, lean_object *value, uint32_t *budget) { return bridge_record_encode_leaf(slot, ${tag}, value, budget); }`);
+			continue;
+		}
+		const definition = type.kind === "named" ? records.get(type.id) : null;
+		const namedSymbol = prefix(abi, identity(type));
+		if(definition?.kind === "alias")
+		{
+			const child = definition.target;
+			lines.push(`static uint32_t ${id}_validate(bridge_scalar_slot const *slot, uint32_t *budget) { return ${identify(child)}_validate(slot, budget); }`
+				, `static lean_object *${id}_decode(bridge_scalar_slot const *slot) {`, ...decode(child, "slot", "value"), `  return ${namedSymbol}_make(value);`, "}"
+				, `static uint32_t ${id}_encode(bridge_scalar_slot *slot, lean_object *value, uint32_t *budget) {`
+				, "  if (!lean_is_array(value) || lean_array_size(value) != 1) { lean_dec(value); return 6; }"
+				, `  ${cType(child)} field = ${namedSymbol}_field0(value);`, `  return ${identify(child)}_encode(slot, ${box(child, "field")}, budget);`, "}");
+			continue;
+		}
+		if(definition?.kind === "variant")
+		{
+			lines.push(`static uint32_t ${id}_validate(bridge_scalar_slot const *slot, uint32_t *budget) {`
+				, "  uint32_t status = bridge_nominal_children_validate(slot, 37, UINT32_MAX, budget);", "  if (status) return status;"
+				, "  bridge_scalar_slot const *children = (bridge_scalar_slot const *)(uintptr_t)(uint32_t)slot->bits;"
+				, "  uint32_t count = slot->bits >> 32;", "  switch (slot->flags >> 2) {");
+			definition.cases.forEach((item, branch) => {
+				lines.push(`  case ${branch}:`, `    if (count != ${item.fields.length}) return 3;`);
+				item.fields.forEach((field, i) => lines.push(`    if ((status = ${identify(field.type)}_validate(children + ${i}, budget))) return status;`));
+				lines.push("    return 0;");
+			});
+			lines.push("  default: return 3;", "  }", "}", `static lean_object *${id}_decode(bridge_scalar_slot const *slot) {`
+				, "  bridge_scalar_slot const *children = (bridge_scalar_slot const *)(uintptr_t)(uint32_t)slot->bits;", "  switch (slot->flags >> 2) {");
+			definition.cases.forEach((item, branch) => {
+				lines.push(`  case ${branch}: {`);
+				item.fields.forEach((field, i) => lines.push(...decode(field.type, `children + ${i}`, `a${i}`)));
+				lines.push(`    return ${namedSymbol}_make${branch}(${item.fields.length ? item.fields.map((_, i) => `a${i}`).join(", ") : "lean_box(0)"});`, "  }");
+			});
+			lines.push("  default: return lean_box(0); /* unreachable after complete input validation */", "  }", "}"
+				, `static uint32_t ${id}_encode(bridge_scalar_slot *slot, lean_object *value, uint32_t *budget) {`
+				, "  if (!lean_is_array(value) || lean_array_size(value) != 1) { lean_dec(value); return 6; }"
+				, "  lean_inc(value);", `  uint32_t branch = ${namedSymbol}_branch(value);`, "  uint32_t status;", "  switch (branch) {");
+			definition.cases.forEach((item, branch) => {
+				lines.push(`  case ${branch}: {`, `    status = bridge_nominal_children_allocate(slot, 37, ${item.fields.length}, branch, budget);`
+					, "    if (status) { lean_dec(value); return status; }", "    bridge_scalar_slot *children = (bridge_scalar_slot *)(uintptr_t)(uint32_t)slot->bits;");
+				item.fields.forEach((field, i) => lines.push("    if (!status) {", "      lean_inc(value);"
+					, `      ${cType(field.type)} field = ${namedSymbol}_case${branch}_field${i}(value);`
+					, `      status = ${identify(field.type)}_encode(children + ${i}, ${box(field.type, "field")}, budget);`, "    }"));
+				lines.push("    break;", "  }");
+			});
+			lines.push("  default: lean_dec(value); return 6;", "  }", "  lean_dec(value);", "  if (status) bridge_record_slot_clear(slot);", "  return status;", "}");
 			continue;
 		}
 		const array = sequence(type), option = type.constructor === "option", sum = option || type.constructor === "result";
@@ -198,7 +285,7 @@ export const generateComponentRecordAdapters = abi => {
 			, `  if (!lean_is_array(value)${array ? "" : " || lean_array_size(value) != 1"}) { lean_dec(value); return 6; }`);
 		if(sum) lines.push("  lean_inc(value);", `  uint32_t branch = ${symbol}_branch(value);`, "  if (branch > 1) { lean_dec(value); return 6; }");
 		lines.push(`  uint32_t count = ${array ? "lean_array_size(value)" : option ? "branch" : count};`
-			, `  uint32_t status = bridge_${mode}_children_allocate(slot, ${tag}, count, ${mode === "compound" ? `${sum ? "branch" : "0"}, ` : ""}budget);`
+			, `  uint32_t status = bridge_${mode}_children_allocate(slot, ${tag}, count, ${mode !== "record" ? `${sum ? "branch" : "0"}, ` : ""}budget);`
 			, "  if (status) { lean_dec(value); return status; }", "  bridge_scalar_slot *children = (bridge_scalar_slot *)(uintptr_t)(uint32_t)slot->bits;");
 		if(array) lines.push("  for (uint32_t i = 0; i < count; ++i) {", "    lean_object *child = lean_array_get_core(value, i); lean_inc(child);"
 			, `    status = ${identify(children[0])}_encode(children + i, child, budget);`, "    if (status) break;", "  }");

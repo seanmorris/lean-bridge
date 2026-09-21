@@ -236,7 +236,7 @@ test("type depth and host or wire cycles reject before recursive traversal", () 
 	assert.throws(() => codec.read(f.module, f.slot), /Cyclic copied wire value/);
 });
 
-test("transport staging does not enable compiled aliases or variants", () => {
+test("named types select their versioned npm ABI without enabling native adapters", () => {
 	const ir = corpusReviewedIr({ id: "shapes" }, [{ name: "Shapes.echo", parameters: ["uint32"], result: "uint32" }]);
 	const documentation = { summary: "Unimplemented compiled shape.", details: "" };
 	const type = {
@@ -253,7 +253,7 @@ test("transport staging does not enable compiled aliases or variants", () => {
 		if(kind === "variant")
 		{ type.kind = kind; type.target = null; type.cases = [{ name: "empty", fields: [], documentation }]; }
 		assert.equal(validateBindingIr(ir), ir);
-		assert.throws(() => createComponentPrivateAbi(ir), /unsupported/);
+		assert.equal(createComponentPrivateAbi(ir).version, 7);
 		assert.throws(() => compilePrimitiveCSurface(ir, { compounds: true, lists: true }), /requires concrete copied/);
 	}
 });

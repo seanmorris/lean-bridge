@@ -6,7 +6,7 @@
 import { scalarCopyLimit, scalarFrameHeaderBytes, scalarSlotBytes } from "../abi/component-scalars.mjs";
 import { componentCopiedAbi, componentArrayShape, createComponentCopyBudget } from "../abi/component-copied.mjs";
 import { compileComponentCopiedCodec } from "./component-copied-codec.mjs";
-import { componentRecordAbi, componentCompoundAbi, resolveComponentRecordType } from "../abi/component-records.mjs";
+import { componentRecordAbi, componentCompoundAbi, componentNominalAbi, resolveComponentRecordType } from "../abi/component-records.mjs";
 
 /**
  * Compile a call's codecs once, sharing input/result limits and runtime poison.
@@ -16,13 +16,13 @@ import { componentRecordAbi, componentCompoundAbi, resolveComponentRecordType } 
  * @param signature - Authenticated copied-value signature.
  * @param poison - Retire the shared runtime after a trap or malformed output.
  * @param version - Validated wire ABI version.
- * @param records - Authenticated nominal record definitions for ABIs five and six.
+ * @param records - Authenticated named definitions for copied ABIs five through seven.
  */
 export const compileComponentCopiedCall = (module, operation, signature, poison, version = componentCopiedAbi, records = []) => {
 	const types = [...signature.parameters, signature.result];
-	if(![componentCopiedAbi, componentRecordAbi, componentCompoundAbi].includes(version)) throw new TypeError("Invalid copied call ABI");
+	if(![componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi].includes(version)) throw new TypeError("Invalid copied call ABI");
 	if(version === componentCopiedAbi) for(const type of types) componentArrayShape(type);
-	const codecs = types.map(type => compileComponentCopiedCodec(version === componentCopiedAbi ? type : resolveComponentRecordType(type, records, version === componentCompoundAbi)));
+	const codecs = types.map(type => compileComponentCopiedCodec(version === componentCopiedAbi ? type : resolveComponentRecordType(type, records, [componentCompoundAbi, componentNominalAbi].includes(version), version === componentNominalAbi)));
 	return args => {
 		if(args.length !== signature.parameters.length) throw new TypeError(`Expected ${signature.parameters.length} arguments`);
 		const allocations = [], budget = createComponentCopyBudget();

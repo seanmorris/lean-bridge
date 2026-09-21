@@ -45,7 +45,7 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, nested arrays and Lists, acyclic copied records, `Option`, `Except` and nested binary products. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
+Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, nested arrays and Lists, acyclic copied records, concrete non-recursive tagged variants, `Option`, `Except` and nested binary products. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
@@ -61,11 +61,12 @@ Ordinary npm components support synchronous functions with zero to 32 arguments.
 | `Array α` | Dense ordinary arrays, declared as `ReadonlyArray<T>` in TypeScript; elements can be any supported copied value |
 | `List α` | The same host array representation, preserving order and nesting; the reviewed contract retains `constructor:list` |
 | Acyclic copied structure | Plain objects with exact own fields; named readonly TypeScript interfaces |
+| Concrete non-recursive inductive sum | `{ kind: "constructorName", ...fields }`; named readonly discriminated unions. Empty constructors retain their names; explicit Unit fields remain present. |
 | `Option α` | `{ tag: "none" }` or `{ tag: "some", value: T }`; Unit payloads and nested options retain their tags |
 | `Except ε α` | `{ ok: T }` or `{ error: E }`, exactly one own branch |
 | `α × β` | Exact two-element ordinary array; readonly TypeScript tuple retaining Lean's product nesting |
 
-Calls use typed binary frames. Integers cross as 32-bit limbs without narrowing; `Float32` rounds to IEEE single precision. Scalar-only calls limit each copied value to 16 MiB. Container calls share a 16 MiB budget across copied slots and payloads in all arguments and the result, with at most 32 container levels. Returned copied values own their storage and need no disposal. C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI also compile options, results and products. Combined builds require every selected target to support the API.
+Calls use typed binary frames. Integers cross as 32-bit limbs without narrowing; `Float32` rounds to IEEE single precision. Scalar-only calls limit each copied value to 16 MiB. Container calls share a 16 MiB budget across copied slots and payloads in all arguments and the result, with at most 32 container levels. Returned copied values own their storage and need no disposal. Variants allow up to 1,024 constructors with at most 1,024 fields each, subject to the 4,096-node descriptor bound. `kind` is reserved for the discriminator. Generic, indexed, recursive and proof-bearing variants need further adapter work. C, C++, Python, Rust, C#, Java, Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI also compile options, results and products; user-defined variants currently compile only for npm. Combined builds require every selected target to support the API.
 
 `Char` is one Unicode scalar, including NUL and supplementary characters. Native and PHP-Wasm packages also support it in copied arrays and record fields. C uses `uint32_t`, C++ `char32_t`, Rust `char`, .NET `System.Text.Rune`, Java/Kotlin `int`/`Int` code points, and WIT `char`. Python, Ruby, Perl and PHP use one-scalar strings. Multi-scalar grapheme clusters require `String`. See the [conversion tables](../reference/types.md).
 

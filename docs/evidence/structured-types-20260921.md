@@ -61,12 +61,9 @@ and 1,024 constructors, each with at most 1,024 fields. Copies retain the shared
 extra fields, coercions, invalid branches, counts and pointers fail validation.
 Input allocations belong to the caller's arena even after partial failure.
 
-These are synthetic transport tests in real `WebAssembly.Memory`, not compiled
-Lean or installed-package acceptance. The current compiler ABI still rejects
-aliases and arbitrary variants. Native output allocation/cleanup for tag 37,
-versioned descriptor authentication and generated host declarations remain part
-of compiler integration. Recursive descriptors and identity values are not yet
-supported by this codec.
+The initial codec tests use synthetic transport in real `WebAssembly.Memory`.
+Compiled npm variants now have separate installed acceptance, described below.
+Named alias preservation, recursive descriptors and identity values remain open.
 
 ## Reproduce the focused checks
 
@@ -79,9 +76,8 @@ node --test tests/binding-ir-structured.test.mjs \
 The 35 tests cover all nineteen primitive payloads, independent copies, memory
 growth, constructor ordinals through 1,023, independent hand-populated wire
 values, limits, malformed descriptors/values, and every allocation failure in
-a mixed nested input. Compiler-admission tests confirm that transport staging
-does not enable unsupported package signatures. Installed coverage remains
-unchanged at inventory version 0.43.0.
+a mixed nested input. Native-admission tests retain the adapter gate. At this
+initial stage, installed coverage remained unchanged at inventory version 0.43.0.
 
 The full contract run passes 1,521 tests with 62 gated integration skips. The
 site passes 111 tests. Lint, repository/site type checks, generated-reference
@@ -118,9 +114,9 @@ The uninhabited type also rejects. Schemas and semantic validators check the
 reports before lowering them. CI runs this suite with compiler checks enabled.
 
 Compiler extraction still resolves aliases to their targets. Named alias
-preservation and typed variant/alias adapters are the next integration work.
-The native model and npm private ABI still reject compiled variant signatures;
-these compiler tests do not promote installed cells.
+preservation remains open. The native model still rejects compiled variant
+signatures; npm has the separate installed checks below. The extraction tests
+alone do not promote installed cells.
 
 Validation for this compiler stage: three variant-metadata checks pass with
 compiler execution enabled. The existing compiler-analysis and metadata suites
@@ -130,3 +126,22 @@ against the settled source. Full contracts pass 1,523 tests with 63 gated skips;
 the site passes 111. Lint, repository/site type checks, generated references and
 the production site build pass. All 54 nonempty historical artifact inventories
 and the installed coverage matrix remain unchanged.
+
+## Compiled npm variants
+
+Private ABI 7 now compiles concrete non-recursive variants using typed Lean
+constructors and projections. It authenticates named definitions, rejects old
+runtimes and clears partially allocated tag-37 output. Plain JavaScript objects
+use a `kind` discriminator; TypeScript receives readonly discriminated unions.
+
+Both source paths pass installed Node, strict TypeScript, Chromium, Firefox and
+WebKit page/React/worker checks. Each JavaScript context executes 2,363 checks
+and 38 rejected calls with recovery. The fixtures cover all nineteen primitives,
+empty constructors, single-constructor types, enums, direct record fields and
+nested mixtures with the existing copied containers. Raw Wasm tests repeat
+partial nested output cleanup 500 times. See the
+[variant implementation and evidence](npm-variants-20260921.md).
+
+This stage does not complete VO1219. Named alias preservation, native/PHP-Wasm/WIT
+variants, bounded recursion, compound callables and explicitly owned identity
+aggregates remain in scope.

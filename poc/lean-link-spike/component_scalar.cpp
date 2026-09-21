@@ -141,6 +141,11 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_copied_frame_validate(bridge_sca
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_abi(void) { return 1; }
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_compound_abi(void) { return 1; }
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_nominal_abi(void) { return 1; }
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_nominal_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
+  return copied_frame_validate(frame, argc, 7);
+}
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_compound_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
   return copied_frame_validate(frame, argc, 6);
@@ -223,7 +228,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE lean_object *bridge_copied_decode(bridge_scalar_
 static void copied_clear(bridge_scalar_slot *slot) {
   if (slot->flags & 2) {
     void *pointer = (void *)(uintptr_t)(uint32_t)slot->bits;
-    if (slot->kind >= 32 && slot->kind <= 36) {
+    if (slot->kind >= 32 && slot->kind <= 37) {
       auto children = (bridge_scalar_slot *)pointer;
       uint32_t count = slot->bits >> 32;
       for (uint32_t i = 0; i < count; ++i) copied_clear(children + i);
@@ -329,6 +334,33 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_encode_leaf(bridge_scalar
   *slot = {};
   if (kind > 18) { lean_dec(value); return 6; }
   return copied_encode_node(slot, kind, 0, value, budget);
+}
+
+/* Variant ordinals are descriptor identities, not Lean constructor tags. Only
+   copied input spans with no ownership bits may enter the generated decoder. */
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_nominal_children_validate(bridge_scalar_slot const *slot, uint32_t kind, uint32_t expected, uint32_t *budget) {
+  if (kind != 37) return bridge_compound_children_validate(slot, kind, expected, budget);
+  if (!slot || (uintptr_t)slot % 8 || !in_heap((uintptr_t)slot, 16)) return 3;
+  if (slot->kind != 37 || (slot->flags & 3u) || (slot->flags >> 2) >= 1024) return 3;
+  uint32_t pointer = (uint32_t)slot->bits, count = slot->bits >> 32;
+  if (count > 1024 || (expected != UINT32_MAX && count != expected) || (!count && pointer) || (count && !pointer) || pointer % 8) return 3;
+  uint64_t bytes = 16ull * count;
+  if (!in_heap(pointer, bytes)) return 3;
+  if (!copied_charge(budget, 16) || bytes > *budget) return 4;
+  return 0;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_nominal_children_allocate(bridge_scalar_slot *slot, uint32_t kind, uint32_t count, uint32_t branch, uint32_t *budget) {
+  if (kind != 37) return bridge_compound_children_allocate(slot, kind, count, branch, budget);
+  *slot = {};
+  if (branch >= 1024 || count > 1024) return 6;
+  if (!copied_charge(budget, 16ull * count)) return 4;
+  void *children = count ? calloc(count, 16) : nullptr;
+  if (count && !children) return 5;
+  slot->kind = 37;
+  slot->flags = (count ? 2 : 0) | (branch << 2);
+  slot->bits = ((uint64_t)count << 32) | (uint32_t)(uintptr_t)children;
+  return 0;
 }
 
 extern "C" EMSCRIPTEN_KEEPALIVE void bridge_record_slot_clear(bridge_scalar_slot *slot) {
