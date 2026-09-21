@@ -25,7 +25,7 @@ export const validateOrdinaryPythonSettings = (settings = {}) => {
  * @param ir - Authoritative compiler-derived Binding IR.
  */
 export const compileCopiedPythonModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true }), packageDir = `lean_${surface.prefix}`;
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true }), packageDir = `lean_${surface.prefix}`;
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-python-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -34,16 +34,32 @@ export const compileCopiedPythonModel = ir => {
 	for(const copy of surface.copies)
 	{
 		copy.ctype = copy.aggregate ? `_T${copy.index}` : `_c.${primitive[copy.scalarName][1]}`;
-		if(copy.record)
+		if(copy.record || copy.variant)
 		{
-			copy.publicName = copy.record.name;
-			if(names.has(copy.publicName)) fail(ir.declarations[0], `Python record name collides: ${copy.publicName}`);
+			copy.publicName = (copy.record || copy.variant).name;
+			if(names.has(copy.publicName)) fail(ir.declarations[0], `Python ${copy.variant ? "variant" : "record"} name collides: ${copy.publicName}`);
 			names.add(copy.publicName);
 			for(const field of copy.fields) if(reserved.has(field.name)) fail(ir.declarations[0], `Python field name is reserved: ${field.name}`);
 		}
+		if(copy.variant)
+		{
+			for(const branch of copy.cases)
+			{
+				branch.publicName = copy.publicName + branch.name.split("_").map(part => part ? part[0].toUpperCase() + part.slice(1) : "_").join("");
+				if(names.has(branch.publicName)) fail(ir.declarations[0], `Python constructor name collides: ${branch.publicName}`);
+				names.add(branch.publicName);
+				const members = new Set();
+				for(const field of branch.fields)
+				{
+					field.publicName = reserved.has(field.name) || field.name === "kind" ? `${field.name}_` : field.name;
+					if(members.has(field.publicName)) fail(ir.declarations[0], `Python variant field name collides: ${field.publicName}`);
+					members.add(field.publicName);
+				}
+			}
+		}
 		const compoundType = field => copy.compound === "option" ? `Option[${copy.fields[0].type[field]}]`
 			: `${copy.compound === "result" ? "Result" : "tuple"}[${copy.fields.map(child => child.type[field]).join(", ")}]`;
-		copy.publicType = copy.record ? copy.publicName : copy.compound ? compoundType("publicType") : copy.element ? `tuple[${copy.element.publicType}, ...]` : primitive[copy.scalarName][0];
+		copy.publicType = copy.record || copy.variant ? copy.publicName : copy.compound ? compoundType("publicType") : copy.element ? `tuple[${copy.element.publicType}, ...]` : primitive[copy.scalarName][0];
 		copy.inputType = copy.element ? `_Array${copy.index}` : copy.compound ? compoundType("inputType") : copy.publicType;
 		copy.inputExpression = copy.element ? `tuple[${copy.element.inputType}, ...] | list[${copy.element.inputType}]` : null;
 	}

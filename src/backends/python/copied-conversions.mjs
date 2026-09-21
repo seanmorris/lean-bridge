@@ -67,6 +67,15 @@ def _check(status, error, scope=None):
  * @param model - Admitted copied Python model.
  */
 export const copiedPythonTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => {
+	if(copy.variant) return `${copy.cases.map((branch, index) => `class _V${copy.index}_${index}(_c.Structure):
+    _fields_ = [${(branch.fields.length ? branch.fields.map(field => [field.publicName, field.type.ctype]) : [["empty", "_c.c_uint8"]]).map(([name, type]) => `(${JSON.stringify(name)}, ${type})`).join(", ")}]
+`).join("\n")}
+class _V${copy.index}(_c.Union):
+    _fields_ = [${copy.cases.map((_, index) => `("case${index}", _V${copy.index}_${index})`).join(", ")}]
+
+class ${copy.ctype}(_c.Structure):
+    _fields_ = [("kind", _c.c_uint32), ("cases", _V${copy.index})]
+`;
 	const fields = copy.compound ? [...copy.compound === "tuple" ? [] : [[copy.compound === "option" ? "has_value" : "is_ok", "_c.c_uint8"]], ...copy.fields.map(field => [field.name, field.type.ctype])]
 		: copy.record ? copy.fields.length ? copy.fields.map(field => [field.name, field.type.ctype]) : [["empty", "_c.c_uint8"]]
 		: [["data", "_c.c_void_p"], ["length", "_c.c_size_t"], ["owner", "_c.c_void_p"], ["release", "_c.c_void_p"], ...(copy.scalarName === "int" ? [["negative", "_c.c_bool"]] : [])];
@@ -125,6 +134,16 @@ export const copiedPythonConversions = model => model.surface.copies.map(copy =>
 	{
 		input.push('if type(value) is not tuple: raise TypeError("Prod requires a two-element tuple")', 'if len(value) != 2: raise ValueError("Prod requires exactly two elements")', `return ${copy.ctype}(${copy.fields.map((field, index) => `_to${field.type.index}(value[${index}], scope)`).join(", ")})`);
 		output.push(`return (${copy.fields.map(field => `_from${field.type.index}(value.${field.name}, scope)`).join(", ")})`);
+	} else if(copy.variant)
+	{
+		copy.cases.forEach((branch, index) => {
+			input.push(`if type(value) is ${branch.publicName}:`
+				, `    return ${copy.ctype}(kind=${index}, cases=_V${copy.index}(case${index}=_V${copy.index}_${index}(${branch.fields.map(field => `${field.publicName}=_to${field.type.index}(value.${field.publicName}, scope)`).join(", ")})))`);
+			output.push(`if value.kind == ${index}:`
+				, `    return ${branch.publicName}(${branch.fields.map(field => `${field.publicName}=_from${field.type.index}(value.cases.case${index}.${field.publicName}, scope)`).join(", ")})`);
+		});
+		input.push(`raise TypeError("Expected a named ${copy.publicName} constructor")`);
+		output.push(`raise LeanBridgeError(5, "Invalid native ${copy.publicName} constructor")`);
 	} else if(copy.record)
 	{
 		input.push(`if type(value) is not ${copy.publicName}: raise TypeError("Expected ${copy.publicName}")`, `return ${copy.ctype}(${copy.fields.map(field => `_to${field.type.index}(value.${field.name}, scope)`).join(", ")})`);

@@ -342,3 +342,22 @@ the startup-only runtime baseline. See the [C variant evidence](c-variants-20260
 Tagged variant acceptance now covers the five npm profiles, C++ and C. Ten
 profiles still need variant projections. Bounded recursion, compound callable
 payloads and explicitly owned identity aggregates remain part of VO1219.
+
+## Compiled Python variants
+
+Prepared Python wheels now expose named frozen constructor dataclasses and
+precise union annotations. Both source paths pass 26,434 public assertions over
+4,383 calls per execution, with sixty-four rejected inputs and recovery. The
+fourteen-export fixture covers all eighteen constructors and nineteen primitive
+payload types, including mixed copied containers and records. Installed wheels
+run twice after relocation and handoff removal. Strict mypy checks pass the
+valid program and reject eight invalid uses.
+
+Separate Python probes exercise eighteen buffer-allocation failures, fifty-eight
+result-conversion failures and invalid native tags. They verify output cleanup
+and scratch release. The real-Lean native probes also pass, with unchanged
+startup-only sanitizer baselines. See the [Python variant evidence](python-variants-20260921.md).
+
+Tagged variants now have installed acceptance on eight of seventeen consumer
+profiles. The remaining nine profiles, bounded recursion, compound callable
+payloads and explicitly owned identity aggregates remain assigned work.

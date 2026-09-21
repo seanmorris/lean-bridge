@@ -8,7 +8,7 @@ Upload the generated platform wheel with Twine, then download and verify that sa
 
 ## Build an ordinary Lean project
 
-Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, concrete copied aliases, arrays, Lists, acyclic records, `Option`, `Except` and nested binary products, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
+Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, concrete copied aliases, arrays, Lists, acyclic records, tagged variants, `Option`, `Except` and nested binary products, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
 
 ```json
 {
@@ -82,8 +82,30 @@ An alias of `Nat` still rejects negative values. Python's numeric annotations do
 not encode fixed-width ranges, so runtime validation remains necessary.
 See the [consumer example](../consume/python.md#named-aliases) and
 [installed wheel and stub checks](../evidence/python-aliases-20260921.md).
-Generic and recursive aliases, native variants, and compound callable payloads
+Generic and recursive aliases, and compound callable payloads
 still need adapter support.
+
+## Export tagged variants
+
+Export functions over concrete, non-recursive Lean inductives without a
+Python-specific annotation. Both source paths compile typed constructor helpers
+and include named frozen dataclasses and union annotations in the wheel.
+For a Lean `Signal.data` constructor, the public class is `SignalData`.
+Case classes support structural pattern matching; consumers do not pass Lean
+constructor numbers or configure the runtime.
+
+Payloads can contain all nineteen primitives and supported copied containers,
+records and other variants. The adapter reads only the active case and releases
+native output even if Python conversion raises. Generated constructor names and
+escaped field names must be unique. Naming collisions fail before compilation.
+Recursive, generic, indexed, callable and identity-bearing payloads remain
+outside this projection.
+
+Run the [variant consumer example](../consume/python.md#tagged-variants) before
+publishing. The [installed acceptance record](../evidence/python-variants-20260921.md)
+covers original offline-installed wheels, independent source contracts, strict
+type checking and failure cleanup. Combined builds require every selected
+target to accept the same signatures.
 
 ## Export callbacks and closures
 
