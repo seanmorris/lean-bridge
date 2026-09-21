@@ -174,6 +174,35 @@ Rust, .NET, JVM and Ruby when every selected target accepts the full API.
 The [installed variant record](../evidence/perl-variants-20260921.md) covers both
 source paths, all four pinned Perl ABIs and failure cleanup.
 
+## Export arrays and records
+
+Add `Parcels.lean`:
+
+```lean
+namespace Parcels
+structure Parcel where
+  label : String
+  counts : Array Nat
+def reverse (value : Parcel) : Parcel :=
+  { value with counts := value.counts.reverse }
+end Parcels
+```
+
+Select `Parcels` in `modules`, `Parcels.reverse` in `exports`, and set
+`targets.cpan.module` to `LeanBridge::Parcels`. Build with the CPAN command above.
+Leave `Parcel` out of `resources` to publish it as a copied record. The
+[consumer example](../consume/perl.md#arrays-and-records) constructs a generated
+`Parcel` containing a plain array reference of `Math::BigInt` values.
+
+All nineteen primitives compose with copied arrays and records. Empty and
+single-field structures keep their named classes; nested arrays and records
+preserve field meaning and independent returned storage. Field names that would
+replace Perl constructors, object methods or phase hooks fail before linking.
+The copied-value budget is 16 MiB per call and schema nesting is limited to
+32 levels. The [installed collection checks](../evidence/perl-collections-20260921.md)
+cover both source paths and all four pinned Perl ABIs. Recursive copied types
+and resources hidden inside copied fields require further adapter work.
+
 ## Export Lists
 
 Add this definition to `Lists.lean`:

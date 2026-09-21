@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.66.0",
+  "contractVersion": "0.67.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,197 @@
   ],
   "evidence": [
     {
+      "id": "perl-collections-installed",
+      "kind": "installed",
+      "revision": "37c2aabec7d656987f9be54cf6a729dafe5153eb",
+      "command": "LEAN_BRIDGE_PERL_COLLECTION_TEST=1 node --test tests/perl-collections.test.mjs tests/perl-collection-contract.test.mjs; node --test tests/perl-collection-evidence.test.mjs",
+      "scope": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison.",
+      "files": [
+        {
+          "path": ".github/workflows/perl-consumer.yml",
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
+        },
+        {
+          "path": "docs/consume/perl.md",
+          "sha256": "b1c69e7b5582492b45ea3f45dc0b373bf10ff5e20b99389c8933c241468e2533"
+        },
+        {
+          "path": "docs/evidence/perl-collections-20260921.json",
+          "sha256": "f599f0a1c148b11255c4215b7febd23d9ad39799e42000eae78271d0c1b85599"
+        },
+        {
+          "path": "docs/evidence/perl-collections-20260921.md",
+          "sha256": "747f710ed7fb1c962e94a135ad0a936e4cf1846970a8e0ca554f23b0bd68ab5c"
+        },
+        {
+          "path": "docs/publish/cpan.md",
+          "sha256": "3d8e8c558d2e1a249cf47c4bc2d8257ac277c95874682ab1360593e0efd2a061"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/perl/generate.mjs",
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
+        },
+        {
+          "path": "src/backends/perl/runtime.h",
+          "sha256": "2eaeaee24dac12ec76e5f2335841dc278141e66e2e2d59ffe05d4c14dd5cc348"
+        },
+        {
+          "path": "src/build/cpan-projection.mjs",
+          "sha256": "cf907d35628abb2f5d56550b986a1ce954c7fd4a2fa006c4dcd885fa4f0214d4"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/Collections.lean",
+          "sha256": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/perl-faults.pl",
+          "sha256": "0cede0ef5a1c70c04e882d328a780025db72d1a902643965ea2e788aaf2ee01e"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/perl.pl",
+          "sha256": "8e413d1dbb177e7785b0da020c7890ed9393e80af91307cef63dff2aa6cb5e89"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/perl-probe-build.pl",
+          "sha256": "d80752da6f3fc271dcb2020ef93d492025409ffaed7352f88eeba59f7a2acd69"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/perl-probe.h",
+          "sha256": "f41222979379e7c12a0f4345c1eef9fd26d455efaf2b02641ad6ab7407a0b766"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/Arrays.lean",
+          "sha256": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/LICENSE",
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/Records.lean",
+          "sha256": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540"
+        },
+        {
+          "path": "tests/helpers/array-fixture.mjs",
+          "sha256": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf"
+        },
+        {
+          "path": "tests/helpers/collection-fixture.mjs",
+          "sha256": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/perl-collection-install.mjs",
+          "sha256": "31032e385f6f813f85b2475f8fd62011d01a4485ba8a353d5d6a735b76771796"
+        },
+        {
+          "path": "tests/helpers/record-fixture.mjs",
+          "sha256": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        },
+        {
+          "path": "tests/perl-collection-contract.test.mjs",
+          "sha256": "b7c5ddf7d87c189c8fcb5bc67bf6eb06acb54750032a267e42eb5974f10f4e4c"
+        },
+        {
+          "path": "tests/perl-collection-evidence.test.mjs",
+          "sha256": "e793d67cd6bb282f87fac07949942809891702689accf32b74fec960e1280eb3"
+        },
+        {
+          "path": "tests/perl-collections.test.mjs",
+          "sha256": "d1545f7d2d3e36cb9daeef3376a018790f8c067a696670c89422fc1b0d3615c5"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/LeanBridge-Collections-1.000.tar.gz",
+          "sha256": "34090625d2b5f9fe3af555a133c0d8d7869a9a31d1751aba8360ca4bd2983c5a"
+        },
+        {
+          "path": "ordinary-source/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/ordinary-source/v5.36.3-threaded/probe",
+          "sha256": "f6928fec0a23c56a0e76db5155048eb3347396bd2e946cf74bf7dbbe1ae5fe08"
+        },
+        {
+          "path": "perl/ordinary-source/v5.36.3-unthreaded/probe",
+          "sha256": "dfea94ed86b96c33bfeef9f889d68729ce8c40645afc30af8c628fd6942c9d14"
+        },
+        {
+          "path": "perl/ordinary-source/v5.38.2-threaded/probe",
+          "sha256": "a8a42be59610035cb731f7a2057f0b3e7f1c53ed4e4c1b7c63094a4cca9465fa"
+        },
+        {
+          "path": "perl/ordinary-source/v5.38.2-unthreaded/probe",
+          "sha256": "b56a65a91188dcd0dd03ef5806c17ae2f283335bbb53592a1fd3e4eca8dda6f2"
+        },
+        {
+          "path": "reviewed-ir/archives/LeanBridge-Collections-1.000.tar.gz",
+          "sha256": "858be02d9705c23f63914dc4765ca2daaf69e0d79c329a5e41db0231999b3967"
+        },
+        {
+          "path": "reviewed-ir/archives/LeanBridge-Runtime-0.0020511880769611659058342897325761667112768181144953186108432899996139677595534211.tar.gz",
+          "sha256": "ccd8387c1e2063d89b0ea892354e99456dd7ba18c1dbfadbe58f608b10ef351f"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.36.3-threaded/probe",
+          "sha256": "f6928fec0a23c56a0e76db5155048eb3347396bd2e946cf74bf7dbbe1ae5fe08"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.36.3-unthreaded/probe",
+          "sha256": "dfea94ed86b96c33bfeef9f889d68729ce8c40645afc30af8c628fd6942c9d14"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.38.2-threaded/probe",
+          "sha256": "a8a42be59610035cb731f7a2057f0b3e7f1c53ed4e4c1b7c63094a4cca9465fa"
+        },
+        {
+          "path": "perl/reviewed-ir/v5.38.2-unthreaded/probe",
+          "sha256": "b56a65a91188dcd0dd03ef5806c17ae2f283335bbb53592a1fd3e4eca8dda6f2"
+        }
+      ]
+    },
+    {
       "id": "wit-wasi-variants-installed",
       "kind": "installed",
       "revision": "e1f76b0010820544f5558bb3758bd48e53f453c9",
@@ -177,7 +368,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -380,7 +571,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -639,7 +830,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -834,7 +1025,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
         },
         {
           "path": "docs/evidence/perl-variants-20260921.json",
@@ -850,7 +1041,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -878,7 +1069,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -1025,7 +1216,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1216,7 +1407,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1455,7 +1646,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1650,7 +1841,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1845,7 +2036,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2036,7 +2227,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2223,7 +2414,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2374,7 +2565,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2545,7 +2736,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2772,7 +2963,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2911,7 +3102,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
         },
         {
           "path": "docs/evidence/perl-aliases-20260921.json",
@@ -2923,7 +3114,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2947,7 +3138,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -3070,7 +3261,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3221,7 +3412,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3432,7 +3623,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3591,7 +3782,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3734,7 +3925,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3869,7 +4060,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3996,7 +4187,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
         },
         {
           "path": "docs/evidence/npm-aliases-20260921.json",
@@ -4020,7 +4211,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4171,7 +4362,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4310,7 +4501,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4505,7 +4696,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4744,7 +4935,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4951,7 +5142,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5142,7 +5333,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
         },
         {
           "path": "docs/evidence/perl-lists-20260921.json",
@@ -5158,7 +5349,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5198,7 +5389,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/backends/perl/naming.mjs",
@@ -5385,7 +5576,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5564,7 +5755,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5771,7 +5962,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6340,7 +6531,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -6479,7 +6670,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -6602,7 +6793,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6821,7 +7012,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7004,7 +7195,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
         },
         {
           "path": "docs/evidence/perl-compounds-20260920.json",
@@ -7020,7 +7211,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7060,7 +7251,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/backends/perl/naming.mjs",
@@ -7247,7 +7438,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7426,7 +7617,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7633,7 +7824,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8194,7 +8385,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -8707,7 +8898,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "bdc8e98c0be0d6702ceeabf309c48f806b9ca63eff7116c8eb8fd55278fd180d"
+          "sha256": "9798a64e3aa43ae0b55ca9a5ce15b2b57d25c3beadb2b912f7dd30850ee4e7ab"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -8715,7 +8906,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8938,7 +9129,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -9077,7 +9268,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -9196,7 +9387,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -9204,7 +9395,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -9435,7 +9626,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -9443,7 +9634,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -9626,11 +9817,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -9849,11 +10040,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -10048,11 +10239,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -10259,11 +10450,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -10454,11 +10645,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -10585,11 +10776,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -10716,11 +10907,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -10835,11 +11026,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -10906,7 +11097,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -10946,19 +11137,19 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "9133b30a56051c962b43bd3c1ff7594474c77a3688eb999e282cfae2cb9bf4f9"
+          "sha256": "7e9c9ff6b269188b7d4de824c7a4e52eceb6e52605b4c8a5ea9ab80996d80190"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
         },
         {
           "path": "docs/evidence/perl-callables-20260918.json",
@@ -11049,7 +11240,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
         },
         {
           "path": "docs/evidence/platform-words-20260918.json",
@@ -11085,7 +11276,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "bdc8e98c0be0d6702ceeabf309c48f806b9ca63eff7116c8eb8fd55278fd180d"
+          "sha256": "9798a64e3aa43ae0b55ca9a5ce15b2b57d25c3beadb2b912f7dd30850ee4e7ab"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -11093,7 +11284,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -11153,7 +11344,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -11245,7 +11436,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "9133b30a56051c962b43bd3c1ff7594474c77a3688eb999e282cfae2cb9bf4f9"
+          "sha256": "7e9c9ff6b269188b7d4de824c7a4e52eceb6e52605b4c8a5ea9ab80996d80190"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -11349,7 +11540,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a2fb8cc76787661f81b7a4d7307d851688e57953133616dcf3c530b79a701f00"
+          "sha256": "ebf1881dfd580b5829c7f4c43a98190e31b570cd82076e84eb03be9447cf7b29"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -11428,7 +11619,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "752adf93887c698276ce97c5bba02d1d5b857ea4533c82a7fec5c1e5124b054e"
+          "sha256": "2923eda03d1202ae713f646be24ab8fdbaca8199aa32a3d6fbbff543e98a9b04"
         },
         {
           "path": "docs/evidence/char-native-20260918.md",
@@ -11436,7 +11627,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -11472,7 +11663,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -12258,7 +12449,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "93ee0949a8c519d4971b20222822c9e9133c50960e648b0bb07baa253b0951ce"
+          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -13179,7 +13370,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "b52cd0534f52665ba6b1666600cbf9f30e38bffd145ee3b0e922a93bcfb31378"
+          "sha256": "bbe6eac280aa81a8d61c454e8c460bc9591bf3cd8037d85dfc3ab69221db1b2a"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
@@ -37361,9 +37552,6 @@
         "record"
       ],
       "positions": [
-        "parameter",
-        "result",
-        "field",
         "callback-parameter",
         "callback-result"
       ],
@@ -37371,16 +37559,10 @@
       "scope": "Installed Array UInt32, Label/Packet/Scalars records, arrays of Packet and the compiler-unboxed Reading record; Packet and Array Packet callbacks.",
       "hostTypes": {
         "array": {
-          "parameter": "Array reference of generated copied element values",
-          "result": "Array reference of generated copied element values",
-          "field": "Array reference of generated copied element values",
           "callback-parameter": "Array reference of generated copied element values",
           "callback-result": "Array reference of generated copied element values"
         },
         "record": {
-          "parameter": "Generated blessed record with named fields",
-          "result": "Generated blessed record with named fields",
-          "field": "Generated blessed record with named fields",
           "callback-parameter": "Generated blessed record with named fields",
           "callback-result": "Generated blessed record with named fields"
         }
@@ -42952,6 +43134,274 @@
       "conversionNotes": {
         "variant": "Constructor names and selected record fields preserve identity, order, empty cases and Unit payloads. Named aliases and all nineteen primitive payloads compose with admitted copied containers. Native USize and ISize are 64-bit. Input tags, payload presence, exact fields and scalar ranges reject before native entry; results own independent copies and survive session close. Only the selected native payload is read. Use WIT names, not Lean constructor numbers or pointer identity."
       }
+    },
+    {
+      "id": "perl-collections-ordinary-source",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison.",
+      "hostTypes": {
+        "array": {
+          "parameter": "Plain dense array reference",
+          "result": "Plain dense array reference",
+          "field": "Plain dense array reference"
+        },
+        "record": {
+          "parameter": "Exact generated record class with named fields",
+          "result": "Exact generated record class with named fields",
+          "field": "Exact generated record class with named fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB conversion budget. These limits do not bound all host allocations or Lean working memory.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Plain unblessed, untied dense array references preserve all nineteen primitive elements, empty arrays, order, duplicates, nested records and independent copied payloads. Input slots are pinned before converters invoke Perl. Calls reject malformed elements, sparse arrays, fixed-schema cycles and over-budget copies, then recover. Weak references do not affect array admission.",
+        "record": "Named generated classes preserve field identity, order and meaning, including empty, one-field and nested records. Record constructor keywords keep Perl last-value-wins hash semantics; missing, extra or unnamed fields reject. Calls require the exact class and plain untied hash; subclasses reject. Fields are pinned before converters invoke Perl. Returned records, arrays, octet strings and Math::BigInt payloads own independent copied storage. Perl reference equality is not deep value equality."
+      }
+    },
+    {
+      "id": "perl-collections-reviewed-ir",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison.",
+      "hostTypes": {
+        "array": {
+          "parameter": "Plain dense array reference",
+          "result": "Plain dense array reference",
+          "field": "Plain dense array reference"
+        },
+        "record": {
+          "parameter": "Exact generated record class with named fields",
+          "result": "Exact generated record class with named fields",
+          "field": "Exact generated record class with named fields"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB conversion budget. These limits do not bound all host allocations or Lean working memory.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Plain unblessed, untied dense array references preserve all nineteen primitive elements, empty arrays, order, duplicates, nested records and independent copied payloads. Input slots are pinned before converters invoke Perl. Calls reject malformed elements, sparse arrays, fixed-schema cycles and over-budget copies, then recover. Weak references do not affect array admission.",
+        "record": "Named generated classes preserve field identity, order and meaning, including empty, one-field and nested records. Record constructor keywords keep Perl last-value-wins hash semantics; missing, extra or unnamed fields reject. Calls require the exact class and plain untied hash; subclasses reject. Fields are pinned before converters invoke Perl. Returned records, arrays, octet strings and Math::BigInt payloads own independent copied storage. Perl reference equality is not deep value equality."
+      }
+    },
+    {
+      "id": "perl-collection-reviewed-fields",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison.",
+      "hostTypes": {
+        "unit": {
+          "field": "undef"
+        },
+        "bool": {
+          "field": "Native Perl boolean scalar; generated true()/false()"
+        },
+        "uint8": {
+          "field": "Exact integer scalar (UV)"
+        },
+        "uint16": {
+          "field": "Exact integer scalar (UV)"
+        },
+        "uint32": {
+          "field": "Exact integer scalar (UV)"
+        },
+        "uint64": {
+          "field": "Exact 64-bit integer scalar (UV)"
+        },
+        "int8": {
+          "field": "Exact integer scalar (IV)"
+        },
+        "int16": {
+          "field": "Exact integer scalar (IV)"
+        },
+        "int32": {
+          "field": "Exact integer scalar (IV)"
+        },
+        "int64": {
+          "field": "Exact 64-bit integer scalar (IV)"
+        },
+        "nat": {
+          "field": "Math::BigInt (nonnegative)"
+        },
+        "int": {
+          "field": "Math::BigInt (signed)"
+        },
+        "float32": {
+          "field": "Numeric scalar (NV), rounded to binary32"
+        },
+        "float64": {
+          "field": "Numeric scalar (NV), binary64"
+        },
+        "string": {
+          "field": "Unicode scalar string"
+        },
+        "bytes": {
+          "field": "Octet scalar string, UTF-8 flag off"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB conversion budget. These limits do not bound all host allocations or Lean working memory.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ]
     }
   ]
 }

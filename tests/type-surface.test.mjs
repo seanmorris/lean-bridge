@@ -246,14 +246,17 @@ test("Perl installed evidence stays scoped to audited source paths and positions
 	for(const scalar of document.irFacets.primitive.filter(name => !["char", "usize", "isize"].includes(name)))
 		for(const position of document.families.primitive.positions)
 			assert.equal(state(scalar, position), "passed", `${scalar}/${position}`);
-	assert.equal(state("record", "field"), "limited");
+	for(const path of document.paths) for(const shape of ["array", "record"])
+		for(const position of ["parameter", "result", "field"])
+			assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
 	assert.equal(state("array", "callback-result"), "limited");
+	assert.equal(state("array", "callback-result", "reviewed-ir"), "unreviewed");
 	assert.equal(state("resource", "result"), "passed");
 	assert.equal(state("resource", "field"), "unreviewed");
 	assert.equal(state("callback", "parameter"), "passed");
 	assert.equal(state("closure", "result"), "passed");
 	assert.equal(state("nat", "parameter", "reviewed-ir"), "passed");
-	assert.equal(state("nat", "field", "reviewed-ir"), "unreviewed");
+	assert.equal(state("nat", "field", "reviewed-ir"), "passed");
 	assert.equal(state("task", "signature"), "unreviewed");
 });
 

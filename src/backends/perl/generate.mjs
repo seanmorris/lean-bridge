@@ -153,24 +153,24 @@ const conversion = (model, type) => {
 	{
 		const list = type.kind === "list";
 		from = `
-      ${list ? "SvGETMAGIC(value);" : ""}
-      if (!SvROK(value) || SvTYPE(SvRV(value)) != SVt_PVAV${list ? " || SvOBJECT(SvRV(value)) || (SvMAGICAL(SvRV(value)) && mg_find(SvRV(value), PERL_MAGIC_tied))" : ""}) croak("${list ? "List requires a plain array reference" : "Array requires an array reference"}");
+      SvGETMAGIC(value);
+      if (!SvROK(value) || SvTYPE(SvRV(value)) != SVt_PVAV || SvOBJECT(SvRV(value)) || (SvMAGICAL(SvRV(value)) && mg_find(SvRV(value), PERL_MAGIC_tied))) croak("${list ? "List" : "Array"} requires a plain array reference");
       AV *array = (AV *)sv_2mortal(SvREFCNT_inc(SvRV(value))); size_t length = av_count(array);
       if (length > 16 * 1024 * 1024 / sizeof(void *)) croak("native copied array exceeds the 16 MiB per-call limit");
       lbp_budget(scope, length * sizeof(void *));
-      ${list ? `/* Pin the sequence before an element converter can invoke Perl code. */
+      /* Pin the sequence before an element converter can invoke Perl code. */
       AV *slots = (AV *)sv_2mortal((SV *)newAV());
       if (length) av_extend(slots, length - 1);
       for (size_t i = 0; i < length; ++i) {
-        SV **entry = av_fetch(array, i, 0); if (!entry) croak("sparse Perl Lists are unsupported");
+        SV **entry = av_fetch(array, i, 0); if (!entry) croak("sparse Perl ${list ? "Lists" : "arrays"} are unsupported");
         av_push(slots, SvREFCNT_inc(*entry));
-      }` : ""}
+      }
       lean_object *result = lean_alloc_array(length, length);
       /* Registration can fail and release result; every slot must already be valid. */
       for (size_t i = 0; i < length; ++i) lean_array_set_core(result, i, lean_box(0));
       lbp_keep(scope, result);
       for (size_t i = 0; i < length; ++i) {
-        SV **entry = av_fetch(${list ? "slots" : "array"}, i, 0); if (!entry) croak("sparse Perl arrays are unsupported");
+        SV **entry = av_fetch(slots, i, 0); if (!entry) croak("sparse Perl arrays are unsupported");
         ${nativeCType(type.element)} item = ${read(type.element)}(aTHX_ scope, sv_2mortal(SvREFCNT_inc(*entry)));
         lean_array_set_core(result, i, ${box(type.element, "item")});
       }
@@ -191,11 +191,14 @@ const conversion = (model, type) => {
 	{
 		const packageName = typeClass(model, type);
 		from = `
-      if (!SvROK(value) || SvTYPE(SvRV(value)) != SVt_PVHV || !sv_derived_from(value, ${q(packageName)})) croak("expected ${packageName}");
+      SvGETMAGIC(value);
+      if (!lbp_is_branch(value, ${q(packageName)})) croak("expected ${packageName} with an exact class and plain untied hash");
       if (HvUSEDKEYS((HV *)SvRV(value)) != ${type.fields.length}) croak("record fields do not match the generated schema");
       HV *input = (HV *)sv_2mortal(SvREFCNT_inc(SvRV(value)));
       lbp_budget(scope, ${type.fields.length} * sizeof(void *));
-      ${type.fields.map((field, i) => `${nativeCType(field.type)} a${i} = ${read(field.type)}(aTHX_ scope, lbp_field(aTHX_ input, ${q(field.name)}, ${field.name.length}));`).join("\n      ")}
+      /* Pin every field before a child converter can invoke Perl code. */
+      ${type.fields.map((field, i) => `SV *slot${i} = lbp_field(aTHX_ input, ${q(field.name)}, ${field.name.length});`).join("\n      ")}
+      ${type.fields.map((field, i) => `${nativeCType(field.type)} a${i} = ${read(field.type)}(aTHX_ scope, slot${i});`).join("\n      ")}
       ${type.fields.map((field, i) => retain(field.type, `a${i}`)).join(" ")}
       return ${nativeObjectType(type) ? "lbp_keep(scope, " : ""}lb_t${type.key}_make(${type.fields.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"})${nativeObjectType(type) ? ")" : ""};`;
 		to = `
@@ -270,11 +273,14 @@ export const validatePerlModel = model => {
 	const branches = [...(model.types.some(type => type.kind === "option") ? ["Some"] : [])
 		, ...(model.types.some(type => type.kind === "result") ? ["Ok", "Err"] : [])];
 	const classes = new Set(branches.map(name => `${model.moduleName}::${name}`));
+	const reservedFields = new Set(["new", "DESTROY", "CLONE", "CLONE_SKIP", "can", "isa", "DOES", "VERSION", "import", "unimport", "AUTOLOAD", "BEGIN", "UNITCHECK", "CHECK", "INIT", "END"]);
 	for(const type of model.types.filter(type => ["record", "resource", "callback", "variant"].includes(type.kind)))
 	{
 		const name = typeClass(model, type);
 		if(classes.has(name)) throw new TypeError(`Perl class name collision: ${name}`);
 		classes.add(name);
+		if(type.kind === "record") for(const field of type.fields)
+			if(reservedFields.has(field.name)) throw new TypeError(`Perl reserved record field: ${field.name}`);
 	}
 	validatePerlVariants(model, classes);
 	return branches;
@@ -368,9 +374,15 @@ _callback_${type.key}(...)
 		pm.push(`package ${typeClass(model, type)};`);
 		if(type.kind === "record")
 		{
-			pm.push("sub new {", "  my ($class, %fields) = @_;", `  my @required = qw(${type.fields.map(f => f.name).join(" ")});`,
+			const name = typeClass(model, type);
+			pm.push("sub new {"
+				, `  die "${name}->new expects named fields\\n" unless @_ % 2 == 1 && $_[0] eq '${name}';`
+				, "  shift; my %fields;", "  while (@_) {"
+				, "    my ($key, $value) = splice @_, 0, 2;"
+				, '    die "invalid record field\\n" if !defined($key) || ref($key);'
+				, "    $fields{$key} = $value;", "  }", `  my @required = qw(${type.fields.map(f => f.name).join(" ")});`,
 				'  die "record fields do not match the generated schema\\n" if keys(%fields) != @required || grep { !exists $fields{$_} } @required;',
-				"  return bless \\%fields, $class;", "}");
+				`  return bless \\%fields, '${name}';`, "}");
 			for(const field of type.fields) pm.push(`sub ${field.name} { $_[0]->{${field.name}} }`);
 		} else pm.push("our @ISA = ('LeanBridge::Runtime::Resource');", "sub CLONE_SKIP { 1 }");
 	}
@@ -388,6 +400,9 @@ _callback_${type.key}(...)
 		, "", "Branches are mutable one-field hashes. Calls check the exact class and field set, reject tied branches and products, and copy their contents. Returned arrays, records and payloads are independent of input values. Perl reference equality is not deep value equality. The shared per-call copied-value limit is 16 MiB; schema nesting is limited to 32 levels. Compound callbacks and resources inside copied values are unsupported.", "");
 	if(model.types.some(type => type.kind === "list")) pm.push("=head1 LISTS", ""
 		, "Lean List inputs, results and record fields use copied plain array references. Calls reject blessed, tied and sparse arrays. Empty Lists, order, duplicates and nesting are preserved. Slots are pinned before element conversion can invoke Perl code. Returned arrays and mutable payloads own independent storage. List and Array retain distinct IR/native identities. Typed Lean helpers perform List conversion without inspecting cons-cell layouts. The shared per-call copied-value limit is 16 MiB; List callback payloads remain unsupported.", "");
+	if(model.types.some(type => type.kind === "array" || type.kind === "record")) pm.push("=head1 ARRAYS AND RECORDS", ""
+		, "Lean Array values use plain dense array references. Calls reject blessed, tied and sparse arrays. Copied records use generated classes with named fields and accessors. Record keyword arguments keep Perl's last-value-wins hash semantics, including new(%old_fields, field => $replacement). Constructors reject missing, extra or unnamed fields; calls require the exact generated class and reject tied hashes and subclasses. Empty records and one-field records retain their named types."
+		, "", "Array slots and record fields are pinned before conversion can invoke Perl code. Returned arrays, records, octet strings and Math::BigInt payloads own independent copied storage. Reference equality is not deep value equality. Nested copied values share a 16 MiB conversion budget and a 32-level schema limit; these are not limits on all Perl allocations or Lean working memory. Recursive copied types remain unsupported.", "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
 	return {
