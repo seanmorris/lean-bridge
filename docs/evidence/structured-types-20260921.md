@@ -361,3 +361,23 @@ startup-only sanitizer baselines. See the [Python variant evidence](python-varia
 Tagged variants now have installed acceptance on eight of seventeen consumer
 profiles. The remaining nine profiles, bounded recursion, compound callable
 payloads and explicitly owned identity aggregates remain assigned work.
+
+## Compiled Rust variants
+
+Prepared Cargo crates now expose named Rust enums. Unit cases and named payload
+cases retain constructor identity; inputs borrow their enum and outputs own
+independent copies. Both source paths pass 4,936 public assertions over 4,274
+calls per execution, plus eight intended compile-time rejections. Offline
+consumers compile with Rust and link-only C access, then run twice more after
+relocation and removal of installed sources, dependencies and archive handoff.
+Independent rebuilds reproduce both original crates and all installed files.
+
+Private probes recover from 208 injected errors and unwinding panics, reject
+seven invalid tags before accessing their payloads and ignore six poisoned
+inactive cases. Scoped owners return to zero and native output clears run once
+per failed call. Shared native sanitizer probes retain their startup-only GMP
+baseline. See the [Rust variant evidence](rust-variants-20260921.md).
+
+Nine of seventeen profiles now have installed tagged-variant acceptance. The
+remaining eight profiles, bounded recursive values, compound callable payloads
+and explicitly owned identity aggregates remain assigned work.

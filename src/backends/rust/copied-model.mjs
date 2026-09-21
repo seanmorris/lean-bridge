@@ -25,7 +25,7 @@ export const validateOrdinaryCargoSettings = (settings = {}) => {
  * @param ir - Compiler-derived Binding IR.
  */
 export const compileCopiedRustModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true }), names = new Set(reserved);
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true }), names = new Set(reserved);
 	if(surface.callbacks.size) names.add("LeanClosure");
 	const fail = (declaration, message) => {
 		const source = declaration.source?.extensions?.["lean-lang.org/source-position"];
@@ -33,15 +33,33 @@ export const compileCopiedRustModel = ir => {
 	};
 	for(const copy of surface.copies)
 	{
-		if(copy.record)
+		if(copy.record || copy.variant)
 		{
-			copy.publicName = copy.record.name;
-			if(names.has(copy.publicName) || privateTypes.has(copy.publicName) || /^(?:T|B|Context)\d+$/.test(copy.publicName)) fail(ir.declarations[0], `Rust record name collides: ${copy.publicName}`);
+			copy.publicName = (copy.record || copy.variant).name;
+			if(names.has(copy.publicName) || privateTypes.has(copy.publicName) || /^(?:(?:T|B|V|Context)\d+|B\d+_\d+)$/.test(copy.publicName)) fail(ir.declarations[0], `Rust ${copy.variant ? "variant" : "record"} name collides: ${copy.publicName}`);
 			names.add(copy.publicName);
 			for(const field of copy.fields) if(reserved.has(field.name)) fail(ir.declarations[0], `Rust field is reserved: ${field.name}`);
 		}
+		if(copy.variant)
+		{
+			const branches = new Set();
+			for(const branch of copy.cases)
+			{
+				const name = branch.name.split("_").map(part => part ? part[0].toUpperCase() + part.slice(1) : "_").join("");
+				branch.publicName = reserved.has(name) ? `${name}_` : name;
+				if(branches.has(branch.publicName)) fail(ir.declarations[0], `Rust constructor name collides: ${branch.publicName}`);
+				branches.add(branch.publicName);
+				const members = new Set();
+				for(const field of branch.fields)
+				{
+					field.publicName = reserved.has(field.name) ? `${field.name}_` : field.name;
+					if(members.has(field.publicName)) fail(ir.declarations[0], `Rust variant field name collides: ${field.publicName}`);
+					members.add(field.publicName);
+				}
+			}
+		}
 		const children = copy.fields?.map(field => field.type.publicType).join(", ");
-		copy.publicType = copy.record ? copy.publicName : copy.compound === "option" ? `Option<${children}>`
+		copy.publicType = copy.record || copy.variant ? copy.publicName : copy.compound === "option" ? `Option<${children}>`
 			: copy.compound === "result" ? `Result<${children}>` : copy.compound === "tuple" ? `(${children})`
 				: copy.element ? `Vec<${copy.element.publicType}>` : scalars[copy.scalarName];
 		copy.ctype = copy.aggregate ? `T${copy.index}` : copy.scalarName === "unit" ? "u8" : copy.scalarName === "char" ? "u32" : copy.publicType;
@@ -50,7 +68,7 @@ export const compileCopiedRustModel = ir => {
 	for(const alias of surface.aliases)
 	{
 		const name = alias.definition.name;
-		if(names.has(name) || privateTypes.has(name) || /^(?:T|B|Context)\d+$/.test(name)) fail(alias.definition, `Rust alias name collides: ${name}`);
+		if(names.has(name) || privateTypes.has(name) || /^(?:(?:T|B|V|Context)\d+|B\d+_\d+)$/.test(name)) fail(alias.definition, `Rust alias name collides: ${name}`);
 		names.add(name);
 	}
 	const signatures = new Map();

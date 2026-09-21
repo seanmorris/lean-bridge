@@ -43,7 +43,7 @@ fn main() -> Result<(), cedar_api::Error> {
 
 Run `cargo run --release`. Cargo resolves the crate's normal Rust dependencies, `num-bigint` and `sha2`; it does not compile Lean or a C extension. For an offline build, cache or vendor the dependencies first and use `--offline`. For a registry release, replace the path dependency with your publisher's exact version and registry settings. See [Cargo publication and installation](../publish/cargo.md#verify-the-published-crate-and-consumer).
 
-Ordinary packages support pure functions over 19 primitive types, arrays, Lists, acyclic records, options, results and nested binary products. Fixed-width integers use Rust's matching integer types, and Lean `Char` uses Rust `char`. Native Lean `USize` and `ISize` use `u64` and `i64`, matching the compiled core rather than Rust's pointer-sized types. `Nat` uses `BigUint`, and `Int` uses `BigInt`, both re-exported from `num-bigint`. Strings, slices, records, compounds and big integers are borrowed as inputs. Results own their `String`, `Vec` and generated struct values. Calls return `Result<T, Error>`; propagate bridge failures with `?`.
+Ordinary packages support pure functions over 19 primitive types, arrays, Lists, acyclic records, tagged variants, options, results and nested binary products. Fixed-width integers use Rust's matching integer types, and Lean `Char` uses Rust `char`. Native Lean `USize` and `ISize` use `u64` and `i64`, matching the compiled core rather than Rust's pointer-sized types. `Nat` uses `BigUint`, and `Int` uses `BigInt`, both re-exported from `num-bigint`. Strings, slices, records, compounds and big integers are borrowed as inputs. Results own their `String`, `Vec` and generated struct values. Calls return `Result<T, Error>`; propagate bridge failures with `?`.
 
 Rust conversion and native copying each use a 16 MiB accounting budget. Array and List conversion count at least eight bytes per element. These budgets do not bound every Rust allocation or Lean working memory. Native results and temporary buffers are released on errors and Rust unwinding. Process abort cannot run destructors.
 
@@ -135,6 +135,46 @@ Results own independent copies. An alias of `Nat` uses `BigUint`, so Rust reject
 negative integers before the call. The [installed alias checks](../evidence/rust-aliases-20260921.md)
 cover both source paths, compile-time rejections, cleanup after errors and
 panics, and executables moved away from their crate sources.
+
+### Tagged variants
+
+Concrete copied Lean inductives become Rust enums. Empty constructors are unit
+variants; constructors with payloads have named fields. Inputs borrow the enum,
+and results own independent copies. Rust checks constructor names, payload types
+and exhaustive matches before your program runs.
+
+For the `variants-api` acceptance package, use its prepared crate as your
+dependency and save this as `src/main.rs`:
+
+```rust
+use variants_api::{echo, next, Error, Signal};
+
+fn main() -> Result<(), Error> {
+    let value = Signal::Data { count: 42, label: "ready".into() };
+    assert_eq!(echo(&value)?, value);
+    assert_eq!(next(&Signal::Idle)?, Signal::Stopped);
+
+    match next(&value)? {
+        Signal::Idle => println!("Idle"),
+        Signal::Stopped => println!("Stopped"),
+        Signal::Data { count, label } => println!("{count}: {label}"),
+        Signal::Marker { value: () } => println!("Marker"),
+    }
+    Ok(())
+}
+```
+
+Run `cargo run --release`. Payloads can contain the nineteen supported primitives,
+copied records, arrays, Lists, options, results, products and other admitted
+variants. Only the active payload is converted. Empty constructors and a
+constructor carrying `Unit` remain distinct. Constructor names use PascalCase;
+fields use snake_case, with reserved words gaining a trailing underscore.
+
+The existing 32-level type bound and separate Rust/native 16 MiB conversion
+budgets apply. Conversion failures and unwinding release temporary buffers and
+native outputs. See the [installed variant checks](../evidence/rust-variants-20260921.md).
+Recursive variants, compound callables and identity-bearing payloads remain
+separate work.
 
 ### Callbacks and returned Lean closures
 
@@ -280,7 +320,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Prod α β / tuples` | `&(A, B) (nested binary products)` (input); `(A, B) (nested binary products)` (result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed elements, preserving binary nesting. Inputs borrow the tuple; returned tuples own their payloads. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `&Generated struct` (input); `Generated struct` (result, field); `Generated owned struct (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Named typed structs use borrowed inputs and owned outputs, including empty and scalar-represented records. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Source-named pub type of the ordinary Rust target value` (input, result, field); `Resolved target type` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Public type declarations, signatures and fields preserve alias names without newtype wrappers. Strings and sequences retain str and slice borrows; other aggregates borrow their alias. Results own independent copies. Alias targets retain exact widths, BigUint/BigInt and 16 MiB copy budgets. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | `Generated enum` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `named Rust enum with owned payloads (borrowed input)` (input, result, field); `Generated enum` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Construct and exhaustively match named enum cases without numeric tags or unsafe code. Empty cases and Unit payloads stay distinct. Inputs borrow values; outputs own independent copies. Only the active payload is converted. Invalid native tags reject before reading union storage. Scoped Rust ownership and native output guards release partial conversions on errors and unwinding. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box / generated owned wrapper` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `FnMut(owned primitives) -> Result<T, Error>` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Call-scoped borrow; typed owned callback arguments; original errors and unwinding panic payloads return after native cleanup. Same-thread nested calls are supported. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `&[T]` (input); `Vec<T>` (result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Inputs borrow typed slices; outputs and record fields use owned `Vec<T>` values. Preserve order, duplicates and nesting; copies remain independent. Types reject invalid elements and shapes; runtime budgets reject oversized copies. RAII releases native output and scratch after errors or unwinding, but not process abort. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |

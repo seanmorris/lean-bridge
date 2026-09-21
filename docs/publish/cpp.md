@@ -44,8 +44,11 @@ underscore. Recursive values, callable payloads and retained identities remain
 outside this copied profile.
 
 Select `--target cpp` for these packages. Add `--target c` for the
-[public C/C-GMP representation](c.md#copied-tagged-variants). Other native host,
-PHP-Wasm and WIT variant projections remain pending. The C transport included
+[public C/C-GMP representation](c.md#copied-tagged-variants). Combined native
+variant builds also admit [Python](pypi.md#export-tagged-variants) and
+[Rust](cargo.md#export-copied-tagged-variants) when each selected target accepts
+the full API. Other native hosts, PHP-Wasm and WIT variants remain pending.
+The C transport included
 in a C++ archive is an implementation layer; use the C target for its public API
 and GMP integer handling.
 See the [consumer example](../consume/cpp.md#tagged-variants) and

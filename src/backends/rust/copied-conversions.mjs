@@ -88,7 +88,27 @@ unsafe fn checked_slice<'a, T>(data: *const T, length: usize) -> Result<&'a [T],
  *
  * @param model - Admitted Rust projection.
  */
-export const copiedRustTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => `#[repr(C)]
+export const copiedRustTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? `${copy.cases.map((branch, index) => `#[repr(C)]
+#[derive(Clone, Copy, Default)]
+struct B${copy.index}_${index} {
+${branch.fields.length ? branch.fields.map(field => `    ${field.publicName}: ${field.type.ctype},`).join("\n") : "    empty: u8,"}
+}
+`).join("\n")}
+#[repr(C)]
+#[derive(Clone, Copy)]
+union V${copy.index} {
+${copy.cases.map((_, index) => `    case${index}: B${copy.index}_${index},`).join("\n")}
+}
+impl Default for V${copy.index} {
+    fn default() -> Self {
+        // Every private ABI field admits zero; there are no Rust references or owning values.
+        unsafe { std::mem::zeroed() }
+    }
+}
+#[repr(C)]
+#[derive(Clone, Copy, Default)]
+struct ${copy.ctype} { kind: u32, cases: V${copy.index} }
+` : `#[repr(C)]
 #[derive(Clone, Copy, Default)]
 struct ${copy.ctype} {
 ${copy.compound ? `${copy.compound === "tuple" ? "" : `    ${copy.compound === "option" ? "has_value" : "is_ok"}: u8,\n`}${copy.fields.map(field => `    ${field.name}: ${field.type.ctype},`).join("\n")}`
@@ -138,6 +158,15 @@ export const copiedRustConversions = model => model.surface.copies.map(copy => {
 	{
 		input.push(`Ok(${copy.ctype} { ${copy.fields.map((field, i) => `${field.name}: to${field.type.index}(&value.${i}, scope)?`).join(", ")} })`);
 		output.push(`Ok((${copy.fields.map(field => `from${field.type.index}(&value.${field.name}, scope)?`).join(", ")}))`);
+	} else if(copy.variant)
+	{
+		input.push("match value {"); output.push("match value.kind {");
+		copy.cases.forEach((branch, index) => {
+			const fields = branch.fields.map((field, i) => `${field.publicName}: field${i}`).join(", ");
+			input.push(`    crate::${copy.publicName}::${branch.publicName}${fields ? ` { ${fields} }` : ""} => Ok(${copy.ctype} { kind: ${index}, cases: V${copy.index} { case${index}: B${copy.index}_${index} { ${branch.fields.length ? branch.fields.map((field, i) => `${field.publicName}: to${field.type.index}(field${i}, scope)?`).join(", ") : "empty: 0"} } } }),`);
+			output.push(`    ${index} => ${branch.fields.length ? `{\n        // Read this union member only after validating its matching tag.\n        let active = unsafe { &value.cases.case${index} };\n        Ok(crate::${copy.publicName}::${branch.publicName} { ${branch.fields.map(field => `${field.publicName}: from${field.type.index}(&active.${field.publicName}, scope)?`).join(", ")} })\n    }` : `Ok(crate::${copy.publicName}::${branch.publicName})`},`);
+		});
+		input.push("}"); output.push("    _ => Err(Error::InvalidNative)", "}");
 	} else if(copy.record)
 	{
 		input.push(`Ok(${copy.ctype} { ${copy.fields.length ? copy.fields.map(field => `${field.name}: to${field.type.index}(&value.${field.name}, scope)?`).join(", ") : "empty: 0"} })`);

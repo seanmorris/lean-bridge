@@ -87,7 +87,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, validateModel: model => {
 				if(targets.includes("cpan")) validatePerlModel(model);
 				if(!cTargets.length) return;
-				const cSurface = compilePrimitiveCSurface(model.bindingIr, { variants: cTargets.every(target => ["c", "cpp", "pypi"].includes(target)), lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
+				const cSurface = compilePrimitiveCSurface(model.bindingIr, { variants: cTargets.every(target => ["c", "cpp", "pypi", "cargo"].includes(target)), lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 				if(targets.includes("c")) validateGmpSurface(cSurface);
 				if(targets.includes("cpp")) compilePrimitiveCppModel(model.bindingIr);
 				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);

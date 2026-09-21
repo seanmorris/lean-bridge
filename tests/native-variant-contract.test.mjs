@@ -11,7 +11,6 @@ import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { compilePrimitiveCppModel, renderPrimitiveCppPackage } from "../src/backends/cpp/primitives.mjs";
 import { generateCopiedNativeCalls } from "../src/backends/c/native-copied-values.mjs";
 import { createNativeModel, createPhpWasmCopiedModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
-import { compileCopiedRustModel } from "../src/backends/rust/copied-model.mjs";
 import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { compileCopiedRubyModel } from "../src/backends/ruby/copied-model.mjs";
@@ -90,7 +89,7 @@ test("native variant aliases keep target semantics and original alias contracts"
 
 test("unimplemented host projections still reject variants before generation", () => {
 	const ir = nativeVariantReviewedIr();
-	for(const build of [compileCopiedRustModel, compileCopiedDotnetModel, compileCopiedJvmModel, compileCopiedRubyModel, compileCopiedPhpModel, compileCopiedWitModel])
+	for(const build of [compileCopiedDotnetModel, compileCopiedJvmModel, compileCopiedRubyModel, compileCopiedPhpModel, compileCopiedWitModel])
 		assert.throws(() => build(ir), /copied primitives, arrays or acyclic records/);
 	assert.throws(() => compilePrimitiveCSurface(ir, { ...options, variants: false }), /copied primitives, arrays or acyclic records/);
 	assert.throws(() => createPhpWasmCopiedModel(synthetic()), /PHP-Wasm compilation admits/);

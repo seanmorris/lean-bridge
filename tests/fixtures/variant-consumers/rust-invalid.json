@@ -1,0 +1,10 @@
+[
+  { "name": "wrong-enum", "statement": "let _ = api::echo(&api::Mode::First);", "code": "E0308" },
+  { "name": "missing-payload", "statement": "let _ = api::Signal::Data { count: 3 };", "code": "E0063" },
+  { "name": "wrong-payload", "statement": "let _ = api::Signal::Data { count: true, label: String::new() };", "code": "E0308" },
+  { "name": "fixed-overflow", "statement": "let _ = api::Signal::Data { count: 4294967296, label: String::new() };", "code": "overflowing_literals" },
+  { "name": "marker-presence", "statement": "let _ = api::Signal::Marker;", "code": "E0533" },
+  { "name": "non-exhaustive", "statement": "match api::make(0).unwrap() { api::Signal::Idle => {} }", "code": "E0004" },
+  { "name": "native-tag", "statement": "let _ = api::Signal { kind: 0 };", "code": "E0574" },
+  { "name": "private-runtime", "statement": "let _: Option<api::__runtime::Scope> = None;", "code": "E0603" }
+]

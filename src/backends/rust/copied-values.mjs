@@ -11,7 +11,7 @@ import { copiedRustAssets } from "./copied-assets.mjs";
 import { copiedRustConversions, copiedRustHelpers, copiedRustTypes } from "./copied-conversions.mjs";
 import { rustSite, rustSignature, rustCallablePublic, rustCallableSymbols, rustNativeFunction, rustCallableNative } from "./callables.mjs";
 
-const exported = model => ["Error", "BigInt", "BigUint", ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.aliases.map(alias => alias.definition.name), ...model.surface.functions.map(fn => fn.field)];
+const exported = model => ["Error", "BigInt", "BigUint", ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record || copy.variant).map(copy => copy.publicName), ...model.surface.aliases.map(alias => alias.definition.name), ...model.surface.functions.map(fn => fn.field)];
 const publicType = (model, ref, input = false) => {
 	const value = rustSite(model, ref), alias = ref.kind === "named" && model.surface.aliases.find(item => item.definition.id === ref.id);
 	if(value.type?.callable) return value[input ? "inputType" : "publicType"];
@@ -63,7 +63,11 @@ ${model.surface.callbacks.size ? '            Self::Closed => formatter.write_st
 impl std::error::Error for Error {}
 ${rustCallablePublic(model)}
 
-${model.surface.copies.filter(copy => copy.record).map(copy => `#[derive(Clone, Debug, PartialEq)]
+${model.surface.copies.filter(copy => copy.record || copy.variant).map(copy => copy.variant ? `#[derive(Clone, Debug, PartialEq)]
+pub enum ${copy.publicName} {
+${copy.cases.map((branch, i) => `    ${branch.publicName}${branch.fields.length ? ` { ${branch.fields.map((field, j) => `${field.publicName}: ${publicType(model, copy.variant.cases[i].fields[j].type)}`).join(", ")} }` : ""},`).join("\n")}
+}
+` : `#[derive(Clone, Debug, PartialEq)]
 pub struct ${copy.publicName} {
 ${copy.fields.map((field, index) => `    pub ${field.name}: ${publicType(model, copy.record.fields[index].type)},`).join("\n")}
 }
@@ -134,7 +138,9 @@ export const renderCopiedRustPackage = (model, evidence = null, settings = {}) =
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs borrow Rust slices and return owned Vec values, including nested copied values and record fields. Empty Lists, order and duplicates are preserved. List and Array retain distinct contract identities. List callback payloads remain unsupported.\n";
 	if(model.surface.aliases.length)
-		files["README.md"] += "\nConcrete copied Lean aliases export named pub type declarations, retaining alias chains and named record fields. They use their targets' Rust values without newtype wrappers. String and byte inputs still borrow str and u8 slices; Array and List inputs borrow slices. Other aggregate inputs borrow their named aliases. Results own their copied contents. Aliases of Nat use BigUint, so negative inputs do not typecheck. Native variants, recursive and identity-bearing alias targets, and compound callable payloads remain unsupported.\n";
+		files["README.md"] += "\nConcrete copied Lean aliases export named pub type declarations, retaining alias chains and named record fields. They use their targets' Rust values without newtype wrappers. String and byte inputs still borrow str and u8 slices; Array and List inputs borrow slices. Other aggregate inputs borrow their named aliases. Results own their copied contents. Aliases of Nat use BigUint, so negative inputs do not typecheck. Recursive and identity-bearing alias targets, and compound callable payloads remain unsupported.\n";
+	if(model.surface.copies.some(copy => copy.variant))
+		files["README.md"] += "\nConcrete copied Lean variants export named Rust enums. Empty cases are unit variants; payload cases have named fields. Construct and match these cases without numeric tags or unsafe code. Constructor names use PascalCase and fields use snake_case, with reserved words gaining a trailing underscore. Inputs borrow the enum and outputs own independent copied contents. Only the active payload is converted. Variants can contain supported copied records, containers and other non-recursive variants. Conversion errors and unwinding release temporary storage and native outputs through RAII. Recursive, callable and identity-bearing payloads remain unsupported.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: { id: "lean-wasm/rust-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), publicModule: "src/lib.rs", internalModule: "src/__runtime.rs", exports: exported(model), files: [...Object.keys(files), "binding-manifest.json"], capabilityGaps: [{ feature: "identity-and-effects", reason: "Cargo supports copied values and synchronous primitive callables; resources, compound callables and asynchronous operations remain outside this profile." }, { feature: "additional-platforms", reason: "The native profile requires Rust 1.90+ on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);
 };

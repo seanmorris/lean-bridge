@@ -31,7 +31,7 @@ The build compiles Lean and its C adapter, checks the generated Rust with a pinn
 
 The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). Set [shared license terms](../publishing.md#declare-license-terms) in `package.license` to populate Cargo's `license` field. Without a declaration, the field remains unset; it never borrows Lean Bridge's MIT license.
 
-This path supports pure copied primitives, nested arrays and Lists, acyclic records, options, results, binary products and synchronous primitive callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. All 19 primitives are tested on ordinary-source and reviewed-IR callable paths. Compound callables, resources and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
+This path supports pure copied primitives, nested arrays and Lists, acyclic records, tagged variants, options, results, binary products and synchronous primitive callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. All 19 primitives are tested on ordinary-source and reviewed-IR callable paths. Compound callables, resources and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
@@ -66,9 +66,31 @@ helpers. Alias inputs keep the target's borrowing rules; results own their data.
 
 No Cargo-specific alias configuration is needed. See the
 [consumer example](../consume/rust.md#named-aliases) and
-[installed crate checks](../evidence/rust-aliases-20260921.md). Native variants,
-recursive targets, compound callables and identity-bearing aggregates remain
+[installed crate checks](../evidence/rust-aliases-20260921.md). Recursive targets,
+compound callables and identity-bearing aggregates remain
 separate work. All selected targets must accept an alias's complete type graph.
+
+## Export copied tagged variants
+
+Select functions over concrete, non-recursive Lean inductives in your ordinary
+export configuration or independently reviewed contract. No numeric tag mapping
+or Rust-specific variant configuration is needed. The compiler records the
+constructors and payload types; generated Lean helpers construct and inspect
+values without exposing compiler object layouts.
+
+Cargo packages export named Rust enums with unit cases or named payload fields.
+Generated constructor names use PascalCase and fields use snake_case. Reserved
+words gain a trailing underscore; collisions fail before native compilation.
+Inputs borrow their enum; returned values own independent copies. Use the
+[consumer example](../consume/rust.md#tagged-variants) and
+[installed acceptance record](../evidence/rust-variants-20260921.md).
+
+Payloads may contain all nineteen primitives and supported copied containers,
+records and other non-recursive variants. Generic, indexed, recursive,
+proof-bearing, callable and identity-bearing payloads are not admitted by this
+profile. Native multi-target variant builds currently admit C, C++, Python and
+Rust when every selected target accepts the complete API. Other targets retain
+their own admission checks.
 
 ## Export callbacks and closures
 
