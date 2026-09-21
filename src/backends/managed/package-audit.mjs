@@ -69,7 +69,9 @@ export const auditManagedBindingPackage = (ir, files, target) => {
 	{
 		const source = files[path];
 		if(typeof source !== "string") fail("missing-public-file", `the generated ${target} package is missing public source ${path}`);
-		if(forbiddenPublic[target].test(source)) fail("private-ffi-public", `${path} exposes private ${target} FFI terms`);
+		// Ruby contract comments may name a copied alias Pointer or Fiddle. They are not declarations.
+		const declarations = target === "ruby" ? source.replace(/^[\t ]*#[^\r\n]*/gm, "") : source;
+		if(forbiddenPublic[target].test(declarations)) fail("private-ffi-public", `${path} exposes private ${target} FFI terms`);
 	}
 	if(!Array.isArray(manifest.capabilityGaps) || manifest.capabilityGaps.length === 0)
 	{

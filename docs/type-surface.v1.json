@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.50.0",
+  "contractVersion": "0.51.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,157 @@
   ],
   "evidence": [
     {
+      "id": "ruby-aliases-installed",
+      "kind": "installed",
+      "revision": "fa60097b42b713ad9663ae54c5d47b3c6c1e8239",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs; node --test tests/ruby-alias-contract.test.mjs",
+      "scope": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
+        },
+        {
+          "path": "docs/evidence/ruby-aliases-20260921.json",
+          "sha256": "c97939ca59e73d5f3aae5b1e8ce14d85fdae8fa3c20e6f53c618bd839d9fa79d"
+        },
+        {
+          "path": "docs/evidence/ruby-aliases-20260921.md",
+          "sha256": "ac1beb706af1a160b7c4cb49797353afaff68b95d582b7b3cb2305154caa3a0c"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "96ad0c1eb9c062bbf0164eb03f3fab7a9029bde75cd006f33be39970a63c0036"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
+        },
+        {
+          "path": "src/backends/managed/package-audit.mjs",
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
+        },
+        {
+          "path": "src/backends/ruby/copied-aliases.mjs",
+          "sha256": "17da3d56f1bfaf2be741c17bd20c489e9c334b99f9504dc1981aba1046eb68a1"
+        },
+        {
+          "path": "src/backends/ruby/copied-conversions.mjs",
+          "sha256": "2484e4ef10cf2aa7714cf61ea833eb24793a47d9b2c9ed073590d5cc39e8dc9a"
+        },
+        {
+          "path": "src/backends/ruby/copied-model.mjs",
+          "sha256": "e80badd8af26fb2277da865fa8804b4a09cd3f590b7a56e515f66f67c0482c85"
+        },
+        {
+          "path": "src/backends/ruby/copied-values.mjs",
+          "sha256": "637e87b3e655a883ad53fb96a9b173695c8c3b2bfcc6b4f0a0167e0fb367da13"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "bab95d12d5c08acf3507ec5dfa36aaf6fabcdf8915436809cff29be0ca4a1b51"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "5c7acb52a06bf9c5dab3fd72b2adc3a45c0d673e8e48e6e8333a4246d464f88d"
+        },
+        {
+          "path": "src/build/native-ruby-artifacts.mjs",
+          "sha256": "87cff3625465333a8e4bf45a2b98dca2e70ba405673bc9acf3820dd015834b5e"
+        },
+        {
+          "path": "src/release/native-rubygems.mjs",
+          "sha256": "96bd8d7d0780ab2b831529bf8ba67a465d056738b032b27395430f377a3111ab"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/RubyAliases.lean",
+          "sha256": "c6d7c00fae916081d1cc01d6630fc91fe117406f37b40672240537a034ff32b7"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/ruby-faults.rb",
+          "sha256": "d976bc5e2728e470b94c19c460c3ac5d96927de6046854e403563b324730ccd4"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/ruby.rb",
+          "sha256": "e24d31035875fabb3fc2e4118353be57718fbc729d8d55d9f72ecf64ad1b3b96"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/Aliases.lean",
+          "sha256": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lakefile.toml",
+          "sha256": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/package.json",
+          "sha256": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd"
+        },
+        {
+          "path": "tests/helpers/alias-fixture.mjs",
+          "sha256": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/native-alias-fixture.mjs",
+          "sha256": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6"
+        },
+        {
+          "path": "tests/helpers/ruby-alias-fixture.mjs",
+          "sha256": "7c9c23dc2efe094b056824ec7b8a195fe0bb9df6b202bfed04e32975e7a0e57e"
+        },
+        {
+          "path": "tests/helpers/ruby-alias-install.mjs",
+          "sha256": "f16f926a895b2c9993d72619fa5b82ebdc4259450fdc459dbfac5080236940c8"
+        },
+        {
+          "path": "tests/ruby-alias-contract.test.mjs",
+          "sha256": "dac7d28d4181094a967e64eecfe21074693c8705e6b9e76ff38a205f2b740c8e"
+        },
+        {
+          "path": "tests/ruby-aliases.test.mjs",
+          "sha256": "d4a165f8f20eb2fd72933a65b8f066116247e9a2808aec39a1e894eaa7ebbf18"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/aliases-api-1.0.0-x86_64-linux.gem",
+          "sha256": "b2dc4fa2c3f54f65fc1423bb80917b2ca15db824fc72cd8aa55c7d3f77d816e4"
+        },
+        {
+          "path": "reviewed-ir/archives/aliases-api-1.0.0-x86_64-linux.gem",
+          "sha256": "31e3c29d1104512f5abf0b1ef842f7d258d7a45c205a33dbc9311cd8bcd76a09"
+        }
+      ]
+    },
+    {
       "id": "jvm-aliases-installed",
       "kind": "installed",
       "revision": "d347dc3dc40e0fb151eb6fdb55950b5e1d3138aa",
@@ -165,7 +316,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
@@ -177,7 +328,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -360,15 +511,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "e6c82a5691d56fe090e787d3770c7a4d3e83b8295e0500b9a2ed852e2a9bf429"
+          "sha256": "b3fa18fc305d3b168377e319abf605ff08cabf0171787d3116145fabc237ec5c"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "005b364ffd70954357da5725e0c260c027e12de6f45714bf2a6e1296ed0f704a"
+          "sha256": "279c71b4fd86498af07908f6792a268820dd43309d460220ee2f91a06ffb6cc5"
         },
         {
           "path": "docs/evidence/dotnet-aliases-20260921.json",
@@ -380,15 +531,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "79b767c4647851a22c036acba67b5bec19dd607071315ba7a1bad66314454b43"
+          "sha256": "688987c5a98dc01d2a2d57f9a7e853a221c3870ad809f35b9573a1daa95a270e"
         },
         {
           "path": "package.json",
-          "sha256": "c3d55b86b365ad296203144558928947ddc9a660a6fd57a45c9cfc5f622138e1"
+          "sha256": "ded9db2bedbb0398583096a099865869ebe050e827427086092a15d527da4bb1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -448,7 +599,7 @@
         },
         {
           "path": "tests/cli-npm-package.test.mjs",
-          "sha256": "e7cf02c9443f645662e71014e164887ec852d53842569aad946b9a44befe7629"
+          "sha256": "9968fecbddd3b1aae4f443e2538c0eef8fe8bc401f0db0179e0b14615b4d1724"
         },
         {
           "path": "tests/dotnet-alias-contract.test.mjs",
@@ -535,7 +686,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -547,7 +698,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -678,7 +829,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -690,7 +841,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -813,7 +964,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -825,7 +976,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -948,7 +1099,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -976,7 +1127,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1091,7 +1242,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -1127,7 +1278,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1250,7 +1401,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -1266,7 +1417,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1445,7 +1596,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -1461,7 +1612,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1684,7 +1835,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -1700,7 +1851,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1891,7 +2042,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -1907,7 +2058,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2114,7 +2265,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2325,7 +2476,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -2341,7 +2492,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2385,7 +2536,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/backends/ruby/callables.mjs",
@@ -2405,7 +2556,7 @@
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "9e680f80bc80b13a37368408ad38fe10c885b62804fc77d315f06a2390651300"
+          "sha256": "637e87b3e655a883ad53fb96a9b173695c8c3b2bfcc6b4f0a0167e0fb367da13"
         },
         {
           "path": "src/backends/ruby/generate.mjs",
@@ -2504,7 +2655,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -2520,7 +2671,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2588,7 +2739,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2711,7 +2862,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -2727,7 +2878,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2791,7 +2942,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -3403,7 +3554,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -3435,7 +3586,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -3542,7 +3693,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -3558,7 +3709,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3761,7 +3912,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -3777,7 +3928,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3976,7 +4127,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4187,7 +4338,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -4203,7 +4354,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4247,7 +4398,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/backends/ruby/callables.mjs",
@@ -4267,7 +4418,7 @@
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "9e680f80bc80b13a37368408ad38fe10c885b62804fc77d315f06a2390651300"
+          "sha256": "637e87b3e655a883ad53fb96a9b173695c8c3b2bfcc6b4f0a0167e0fb367da13"
         },
         {
           "path": "src/backends/ruby/generate.mjs",
@@ -4366,7 +4517,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -4382,7 +4533,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4450,7 +4601,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -4573,7 +4724,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -4589,7 +4740,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4653,7 +4804,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -5257,7 +5408,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -5460,7 +5611,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -5623,7 +5774,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -5671,7 +5822,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5894,11 +6045,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -6033,11 +6184,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -6152,7 +6303,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -6160,7 +6311,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -6188,7 +6339,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -6391,7 +6542,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -6399,7 +6550,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -6427,7 +6578,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -6582,11 +6733,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -6610,7 +6761,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -6805,11 +6956,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -6829,7 +6980,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -7004,15 +7155,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "flake.nix",
@@ -7215,15 +7366,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -7410,15 +7561,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -7457,7 +7608,7 @@
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "9e680f80bc80b13a37368408ad38fe10c885b62804fc77d315f06a2390651300"
+          "sha256": "637e87b3e655a883ad53fb96a9b173695c8c3b2bfcc6b4f0a0167e0fb367da13"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -7541,15 +7692,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -7672,15 +7823,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -7791,15 +7942,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -7902,15 +8053,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "f010aa56ed3a853e7e1881cc27438641b37052bacd418357c5541bc3c9d7f4b4"
+          "sha256": "153cb41aeff003866613ec13adf7edfc1eb67d98f05ffca9c14c50eb22acf0c2"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -8001,7 +8152,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -8049,7 +8200,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -8201,7 +8352,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "f010aa56ed3a853e7e1881cc27438641b37052bacd418357c5541bc3c9d7f4b4"
+          "sha256": "153cb41aeff003866613ec13adf7edfc1eb67d98f05ffca9c14c50eb22acf0c2"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -8305,7 +8456,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "bf016c4bf933b89adbea26e6d708dfe496e8115f8e1fffc5fffbabdd8b9e0d3e"
+          "sha256": "2623fcb05f7345f0fc505d521c583f0d47d6f1fd8086ef234c9caa61cc4cfac3"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -8380,7 +8531,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -8392,7 +8543,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -9198,7 +9349,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "89bc1d09e660879ddd293ca38604d70a8e1441000a85bc65b617d56db5664d3e"
+          "sha256": "e28b555d435378e8a329731dec789c1ffc8dd6feef0b90f0c913178fc34c3d83"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -9214,7 +9365,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "1815f7fe2d0f637aaebab0c8b372146ae185944b9761f0d042cf1d5886907b12"
+          "sha256": "9f7e7d3339eb693c6ee02524e4cd21e2b40d7055701c28228b7592b8f4aa808c"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9496,7 +9647,7 @@
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "9e680f80bc80b13a37368408ad38fe10c885b62804fc77d315f06a2390651300"
+          "sha256": "637e87b3e655a883ad53fb96a9b173695c8c3b2bfcc6b4f0a0167e0fb367da13"
         },
         {
           "path": "src/backends/ruby/generate.mjs",
@@ -9504,7 +9655,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -9532,7 +9683,7 @@
         },
         {
           "path": "tests/native-ruby.test.mjs",
-          "sha256": "3f94fbf0246e774a43d48d6564f03f6120ea517e0ae66bfb68dfdb93b7fc14ee"
+          "sha256": "3ae6947005400f3a16b03574cb5880538fe2d37361e493ca14c3ea4a01b6a10d"
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
@@ -9599,7 +9750,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -9702,7 +9853,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "2bd62d38beae6cb7b29c0e36fed588499e05e0e4b33ff1475382a1240da1e142"
+          "sha256": "f80c145669e0ccd6b035905de39161ff1ebec1f4c9052bf5e772cc1ee737f7b4"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -10274,7 +10425,7 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "c81757fa3c21fb2d4e51abd8a23320e7e959cd46d49dff159834a059a0d281b2"
+          "sha256": "4ba10e32aef0f8dbc021c75a0e9d062fa1561208bf3ad56ef07065bbf178affe"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
@@ -10635,6 +10786,142 @@
     }
   ],
   "observations": [
+    {
+      "id": "ruby-aliases-ordinary-source",
+      "profiles": [
+        "ruby"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Ruby target value; named Lean contract in gem metadata and API comments",
+          "result": "Ruby target value; named Lean contract in gem metadata and API comments",
+          "field": "Ruby target value; named Lean contract in gem metadata and API comments"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "Alias names and targets are preserved in installed metadata and API comments, not separate Ruby constants, wrapper classes or RBS declarations.",
+        "Native variants, recursion, compound callable payloads and identity-bearing alias targets require separate compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Aliases retain exact target checks and independent copied storage. Nat rejects negative Integer values; Int accepts them. Char requires a one-scalar string, Unit uses UNIT rather than nil, and fixed-width and machine-word integers retain their ranges. List/Array identities, Option/Result presence, type depth and copy limits remain unchanged."
+      }
+    },
+    {
+      "id": "ruby-aliases-reviewed-ir",
+      "profiles": [
+        "ruby"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Ruby target value; named Lean contract in gem metadata and API comments",
+          "result": "Ruby target value; named Lean contract in gem metadata and API comments",
+          "field": "Ruby target value; named Lean contract in gem metadata and API comments"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "ruby-aliases-installed"
+          ],
+          "note": "Prepared RubyGems retain 27 copied alias names, original targets and chains in their manifest, README and public API comments. Ruby callers use transparent target values. Both ordinary-source and independently reviewed builds pass 4509 public checks, 317 injected conversion failures, 22 malformed native-value checks and 64 partial-input failures. Each consumer installs offline after producer removal and runs twice after gem relocation with no compilers or runtime overrides. Native libraries and all installed files retain their receipt hashes."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "Alias names and targets are preserved in installed metadata and API comments, not separate Ruby constants, wrapper classes or RBS declarations.",
+        "Native variants, recursion, compound callable payloads and identity-bearing alias targets require separate compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Aliases retain exact target checks and independent copied storage. Nat rejects negative Integer values; Int accepts them. Char requires a one-scalar string, Unit uses UNIT rather than nil, and fixed-width and machine-word integers retain their ranges. List/Array identities, Option/Result presence, type depth and copy limits remain unchanged."
+      }
+    },
     {
       "id": "jvm-aliases-java-ordinary-source",
       "profiles": [

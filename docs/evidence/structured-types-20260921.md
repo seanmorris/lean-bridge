@@ -161,8 +161,8 @@ records, variants and nested containers. See the
 [alias implementation and evidence](npm-aliases-20260921.md).
 
 Native private conversion helpers use the checked target representation while
-Binding IR retains alias names. C/C++, Python, Rust and .NET now have the installed checks below.
-Installed alias acceptance and target-language projections for the other seven consumer
+Binding IR retains alias names. C/C++, Python, Rust, .NET, Java/Kotlin and Ruby
+now have the installed checks below. Installed alias acceptance for the other four consumer
 profiles remain open. Generic aliases, bounded recursion, compound callables and
 explicitly owned identity aggregates remain in the full structured-types goal.
 
@@ -235,7 +235,19 @@ native-value checks and 64 partial-input failures. Consumers install offline
 after producer removal and run twice after relocation using only a private JVM.
 See the [Java/Kotlin alias evidence](jvm-aliases-20260921.md).
 
-Alias parameters, results and fields now have installed acceptance in twelve of
-seventeen profiles. Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI remain. Native
+## Compiled Ruby aliases
+
+Prepared gems preserve 27 copied aliases in installed metadata and public API
+comments, retaining original names, targets, chains and record-field types.
+Ruby callers use ordinary target values, with no separate alias constants or
+wrapper classes. Nat, integer ranges, Unit and Unicode checks remain enforced.
+
+Both source paths pass 4,509 public assertions, 317 injected conversion failures,
+22 malformed-native-value checks and 64 partial-input failures. Each installed
+consumer runs twice after gem relocation and producer removal without compilers.
+See the [Ruby alias evidence](ruby-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in thirteen of
+seventeen profiles. Perl, native PHP, PHP-Wasm and WIT/WASI remain. Native
 variants, bounded recursion, compound callables and explicitly owned identity
 aggregates also remain part of VO1219.

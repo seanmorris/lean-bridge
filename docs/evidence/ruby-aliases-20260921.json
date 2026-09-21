@@ -1,0 +1,1356 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "fa60097b42b713ad9663ae54c5d47b3c6c1e8239",
+  "profile": "ruby",
+  "wordBits": 64,
+  "ruby": "3.3.12",
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "reportSha256": "54b2e7094122e6be9cd3516a0171814b20e78fa71ae11c82f38e42fd748a7652",
+  "sourceHashes": {
+    "tests/ruby-aliases.test.mjs": "d4a165f8f20eb2fd72933a65b8f066116247e9a2808aec39a1e894eaa7ebbf18",
+    "tests/ruby-alias-contract.test.mjs": "dac7d28d4181094a967e64eecfe21074693c8705e6b9e76ff38a205f2b740c8e",
+    "tests/helpers/ruby-alias-fixture.mjs": "7c9c23dc2efe094b056824ec7b8a195fe0bb9df6b202bfed04e32975e7a0e57e",
+    "tests/helpers/ruby-alias-install.mjs": "f16f926a895b2c9993d72619fa5b82ebdc4259450fdc459dbfac5080236940c8",
+    "tests/fixtures/alias-consumers/ruby.rb": "e24d31035875fabb3fc2e4118353be57718fbc729d8d55d9f72ecf64ad1b3b96",
+    "tests/fixtures/alias-consumers/ruby-faults.rb": "d976bc5e2728e470b94c19c460c3ac5d96927de6046854e403563b324730ccd4",
+    "tests/fixtures/alias-consumers/RubyAliases.lean": "c6d7c00fae916081d1cc01d6630fc91fe117406f37b40672240537a034ff32b7",
+    "tests/helpers/alias-fixture.mjs": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8",
+    "tests/helpers/native-alias-fixture.mjs": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/fixtures/onboarding/native-aliases/Aliases.lean": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b",
+    "tests/fixtures/onboarding/native-aliases/lakefile.toml": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f",
+    "tests/fixtures/onboarding/native-aliases/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-aliases/package.json": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd",
+    "tests/fixtures/onboarding/native-aliases/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "primitives": {
+    "AUnit": "unit",
+    "ABool": "bool",
+    "AU8": "uint8",
+    "AU16": "uint16",
+    "AU32": "uint32",
+    "AU64": "uint64",
+    "AI8": "int8",
+    "AI16": "int16",
+    "AI32": "int32",
+    "AI64": "int64",
+    "ANat": "nat",
+    "AInt": "int",
+    "AF32": "float32",
+    "AF64": "float64",
+    "AText": "string",
+    "ABytes": "bytes",
+    "AChar": "char",
+    "AWord": "usize",
+    "ASignedWord": "isize"
+  },
+  "signatures": [
+    {
+      "name": "Aliases.echo_unit",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AUnit"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AUnit"
+      }
+    },
+    {
+      "name": "Aliases.echo_bool",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABool"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABool"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU8"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU16"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU32"
+      }
+    },
+    {
+      "name": "Aliases.echo_uint64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AU64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AU64"
+      }
+    },
+    {
+      "name": "Aliases.echo_int8",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI8"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI8"
+      }
+    },
+    {
+      "name": "Aliases.echo_int16",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI16"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI16"
+      }
+    },
+    {
+      "name": "Aliases.echo_int32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI32"
+      }
+    },
+    {
+      "name": "Aliases.echo_int64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AI64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AI64"
+      }
+    },
+    {
+      "name": "Aliases.echo_nat",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ANat"
+      }
+    },
+    {
+      "name": "Aliases.echo_int",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AInt"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AInt"
+      }
+    },
+    {
+      "name": "Aliases.echo_float32",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF32"
+      }
+    },
+    {
+      "name": "Aliases.echo_float64",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AF64"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AF64"
+      }
+    },
+    {
+      "name": "Aliases.echo_string",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AText"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.echo_bytes",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    },
+    {
+      "name": "Aliases.echo_char",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AChar"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AChar"
+      }
+    },
+    {
+      "name": "Aliases.echo_usize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.AWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_isize",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ASignedWord"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ASignedWord"
+      }
+    },
+    {
+      "name": "Aliases.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ScalarsView"
+      }
+    },
+    {
+      "name": "Aliases.inspect_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ScalarsView"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Aliases.increment",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Count"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.OtherCount"
+      }
+    },
+    {
+      "name": "Aliases.make",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Count"
+      }
+    },
+    {
+      "name": "Aliases.label",
+      "parameters": [],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.AText"
+      }
+    },
+    {
+      "name": "Aliases.change_packet",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.PacketView"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.PacketView"
+      }
+    },
+    {
+      "name": "Aliases.reverse_packets",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Packets"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Packets"
+      }
+    },
+    {
+      "name": "Aliases.reverse_rows",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Rows"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Rows"
+      }
+    },
+    {
+      "name": "Aliases.echo_maybe",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Maybe"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Maybe"
+      }
+    },
+    {
+      "name": "Aliases.echo_outcome",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.Outcome"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.duplicate",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ABytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.Outcome"
+      }
+    },
+    {
+      "name": "Aliases.produce",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Aliases.ANat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Aliases.ABytes"
+      }
+    }
+  ],
+  "reviewedIrSha256": "0a8f0cfc124a40b08605bcadcdafd82e913574fac03d3512c7ab7f0b0c9ac964",
+  "executions": [
+    {
+      "bindingIrSha256": "3d3f948aefe93a6f7ceae79da16c3f323bf3a7914e3e721999705ebf98f98f98",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "rubyType": "true | false",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "rubyType": "binary String",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "rubyType": "single-scalar String",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "rubyType": "Float",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "rubyType": "Float",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "rubyType": "UTF-8 String",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "rubyType": "LeanBridge::Aliases::UNIT",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "rubyType": "Integer",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "rubyType": "nil | Some<nil | Some<LeanBridge::Aliases::UNIT>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "rubyType": "Ok<[Integer, binary String]> | Err<UTF-8 String>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "rubyType": "Array<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "rubyType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "rubyType": "Array<Array<Integer>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "rubyType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 4509,
+      "compilerFreeExecution": true,
+      "consumerSha256": "e24d31035875fabb3fc2e4118353be57718fbc729d8d55d9f72ecf64ad1b3b96",
+      "faults": {
+        "checks": 317,
+        "conversion_probes": 56,
+        "layouts": 22,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "README.md": {
+          "bytes": 5900,
+          "sha256": "b6e0c98550623b5469656c2d2e0363c2ab8869c894209aff00375b76a88ef6eb"
+        },
+        "binding-manifest.json": {
+          "bytes": 7316,
+          "sha256": "0637ce57013c8caf43526d5fe4555810b87ef02a8f2fbf29c40a479d9bfa250e"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1394,
+          "sha256": "298e877889af034a83e588a5f362ba77ca3bbce7c7c08b6d9a95e99b35194a4a"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 71605,
+          "sha256": "d37ab45dc67133e03c016d239aef871902a426b31088d61eddcc425a05332702"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5230,
+          "sha256": "f6dbccaaf6a15f7dadfe0ae7b2ed472f2124c0161aa65de2979373a91572d9c2"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 14847,
+          "sha256": "94568bbcf425b75b1fa26571f96343c199f5012bba1a255a9247fc15dbb8bbd0"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 252953,
+          "sha256": "ee839388c3b804f21e93a1c34e09556864c9b4863d48a73607a16240952e3016"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 194280,
+          "sha256": "e18c91db492ab9da25d7d317fefed18db93142598c89effe3a00ad52bef66b2a"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 8802,
+          "sha256": "53a34ba9494f727331c82742a03a209e0e97a5ebd813011a3dc0dfc03b449ef5"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 3009,
+          "sha256": "bf8bf188cd52491799c9408000cb26e2225bc3ea010416305defc100b45f5a05"
+        },
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1345,
+          "sha256": "2f983fad6712c64fae00c8bd00e7706cef59c2cee786dade1662a2ad880e344c"
+        },
+        "lean-bridge/platform.json": {
+          "bytes": 117,
+          "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/lean_bridge/aliases.rb": {
+          "bytes": 6692,
+          "sha256": "659ab847fb4d86f40abcec6c10436f4ff0229673740950f622411ddf588654ff"
+        },
+        "lib/lean_bridge/aliases/native.rb": {
+          "bytes": 39332,
+          "sha256": "05c0fa6f640d93eb089c47ff006682162819d7209582f8cdbe2b4dcc41ec0088"
+        },
+        "lib/lean_bridge/aliases/native/linux-x64/libaliases.so": {
+          "bytes": 78928,
+          "sha256": "92f52ba4ead08655e9e0ebbb21a00a62eafe4d1e2e3372009fbedd4a43ec2a2a"
+        },
+        "lib/lean_bridge/aliases/native/linux-x64/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 91088,
+          "sha256": "60b762416a02ddd5443d7baa0099ef926c3fe977fc1cd7183274f31ea79d2145"
+        },
+        "lib/lean_bridge/aliases/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/lean_bridge/aliases/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 198,
+          "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "8be6a093fea05692259aa8597337c593a0053e2523f0428dd61a85a80b729a2f",
+      "isolatedInMemoryFaultProbe": true,
+      "modelSha256": "e18c91db492ab9da25d7d317fefed18db93142598c89effe3a00ad52bef66b2a",
+      "nativeLibraries": {
+        "lib/lean_bridge/aliases/native/linux-x64/libaliases.so": "92f52ba4ead08655e9e0ebbb21a00a62eafe4d1e2e3372009fbedd4a43ec2a2a",
+        "lib/lean_bridge/aliases/native/linux-x64/libcomponent_415b536a11d7304fc0bd.so": "60b762416a02ddd5443d7baa0099ef926c3fe977fc1cd7183274f31ea79d2145",
+        "lib/lean_bridge/aliases/native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "lib/lean_bridge/aliases/native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50151936,
+              "path": "archives/aliases-api-1.0.0-x86_64-linux.gem",
+              "sha256": "b2dc4fa2c3f54f65fc1423bb80917b2ca15db824fc72cd8aa55c7d3f77d816e4"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "aliases-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "probeSha256": "d976bc5e2728e470b94c19c460c3ac5d96927de6046854e403563b324730ccd4",
+      "producerHandoffRemoved": true,
+      "profile": "ruby",
+      "publicApiOnly": true,
+      "receiptSha256": "b719556fd9fe724ea49fee5d87ca7f1b588ce865b5aaea1761073027ea584d2a",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+      "sourceApiSha256": "fab5629e2603ff238e7f682f75fa4918173681e6e10f0cadf796c57dafdb89ac",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "3117deca403bd9ce429500b47e74725fd1bd456f1a1d902f4da464278262dd68",
+      "contractSha256": "b85c98672baa5541794aed0c20fcef62e8173c66a10c661f16893d9797e7fcae"
+    },
+    {
+      "bindingIrSha256": "285efbf22c3410e7490a76a68a50a29ace9c7767af7db14ac56344a85a209ea0",
+      "catalog": {
+        "aliases": [
+          {
+            "id": "lean:Aliases.ABool",
+            "name": "ABool",
+            "rubyType": "true | false",
+            "target": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          },
+          {
+            "id": "lean:Aliases.ABytes",
+            "name": "ABytes",
+            "rubyType": "binary String",
+            "target": {
+              "kind": "primitive",
+              "name": "bytes"
+            }
+          },
+          {
+            "id": "lean:Aliases.AChar",
+            "name": "AChar",
+            "rubyType": "single-scalar String",
+            "target": {
+              "kind": "primitive",
+              "name": "char"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF32",
+            "name": "AF32",
+            "rubyType": "Float",
+            "target": {
+              "kind": "primitive",
+              "name": "float32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AF64",
+            "name": "AF64",
+            "rubyType": "Float",
+            "target": {
+              "kind": "primitive",
+              "name": "float64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI16",
+            "name": "AI16",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI32",
+            "name": "AI32",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI64",
+            "name": "AI64",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AI8",
+            "name": "AI8",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AInt",
+            "name": "AInt",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "int"
+            }
+          },
+          {
+            "id": "lean:Aliases.ANat",
+            "name": "ANat",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "id": "lean:Aliases.ASignedWord",
+            "name": "ASignedWord",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "isize"
+            }
+          },
+          {
+            "id": "lean:Aliases.AText",
+            "name": "AText",
+            "rubyType": "UTF-8 String",
+            "target": {
+              "kind": "primitive",
+              "name": "string"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU16",
+            "name": "AU16",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint16"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU32",
+            "name": "AU32",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU64",
+            "name": "AU64",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint64"
+            }
+          },
+          {
+            "id": "lean:Aliases.AU8",
+            "name": "AU8",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint8"
+            }
+          },
+          {
+            "id": "lean:Aliases.AUnit",
+            "name": "AUnit",
+            "rubyType": "LeanBridge::Aliases::UNIT",
+            "target": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          },
+          {
+            "id": "lean:Aliases.AWord",
+            "name": "AWord",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "usize"
+            }
+          },
+          {
+            "id": "lean:Aliases.Count",
+            "name": "Count",
+            "rubyType": "Integer",
+            "target": {
+              "id": "lean:Aliases.AU32",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Maybe",
+            "name": "Maybe",
+            "rubyType": "nil | Some<nil | Some<LeanBridge::Aliases::UNIT>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.AUnit",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.OtherCount",
+            "name": "OtherCount",
+            "rubyType": "Integer",
+            "target": {
+              "kind": "primitive",
+              "name": "uint32"
+            }
+          },
+          {
+            "id": "lean:Aliases.Outcome",
+            "name": "Outcome",
+            "rubyType": "Ok<[Integer, binary String]> | Err<UTF-8 String>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    },
+                    {
+                      "id": "lean:Aliases.ABytes",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "tuple",
+                  "kind": "apply"
+                },
+                {
+                  "id": "lean:Aliases.AText",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "result",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.Packets",
+            "name": "Packets",
+            "rubyType": "Array<LeanBridge::Aliases::Packet>",
+            "target": {
+              "arguments": [
+                {
+                  "id": "lean:Aliases.PacketView",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.PacketView",
+            "name": "PacketView",
+            "rubyType": "LeanBridge::Aliases::Packet",
+            "target": {
+              "id": "lean:Aliases.Packet",
+              "kind": "named"
+            }
+          },
+          {
+            "id": "lean:Aliases.Rows",
+            "name": "Rows",
+            "rubyType": "Array<Array<Integer>>",
+            "target": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.Count",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          },
+          {
+            "id": "lean:Aliases.ScalarsView",
+            "name": "ScalarsView",
+            "rubyType": "LeanBridge::Aliases::Scalars",
+            "target": {
+              "id": "lean:Aliases.Scalars",
+              "kind": "named"
+            }
+          }
+        ],
+        "installedSourceDocumentation": true,
+        "originalAliasChains": true,
+        "transparentTargetValues": true
+      },
+      "checks": 4509,
+      "compilerFreeExecution": true,
+      "consumerSha256": "e24d31035875fabb3fc2e4118353be57718fbc729d8d55d9f72ecf64ad1b3b96",
+      "faults": {
+        "checks": 317,
+        "conversion_probes": 56,
+        "layouts": 22,
+        "partial_inputs": 64
+      },
+      "installedFiles": {
+        "README.md": {
+          "bytes": 5900,
+          "sha256": "b6e0c98550623b5469656c2d2e0363c2ab8869c894209aff00375b76a88ef6eb"
+        },
+        "binding-manifest.json": {
+          "bytes": 7316,
+          "sha256": "89a1799933248282023df5f3f6752ad7f194fc2ff027cfffa9a3b228f7612566"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1395,
+          "sha256": "2895dfe673c3c85da579a6ff3d085a201369c55c84acb4bc322f06bee19f5755"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 72250,
+          "sha256": "69d70a2116aff0696c9a853bff5df5068de877d971248b2d115e3acf1595172f"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5230,
+          "sha256": "f6dbccaaf6a15f7dadfe0ae7b2ed472f2124c0161aa65de2979373a91572d9c2"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 14847,
+          "sha256": "94568bbcf425b75b1fa26571f96343c199f5012bba1a255a9247fc15dbb8bbd0"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 252953,
+          "sha256": "b71fd455d95198d99fab0bc84d06398b2f11acce7a12ba28605bcc6b82e18875"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 267612,
+          "sha256": "3fc779fb20a5ddc0f52037d12ce589e334f119bebf0c35c59c54330b8f41d5d4"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 81489,
+          "sha256": "7fa31179077e02f4bb26cd44a484411ca1fabf7bbdd7741d08ae56566c3842e8"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2273,
+          "sha256": "f7dd75594cdde75410bfac56b5dd69445c4a363bf71b5da13800ec4433742ef8"
+        },
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1345,
+          "sha256": "4ad9f7115e55a0872d529c840c8e70ca07c4e6c601bc7cedec55c694ae75404b"
+        },
+        "lean-bridge/platform.json": {
+          "bytes": 117,
+          "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/lean_bridge/aliases.rb": {
+          "bytes": 6692,
+          "sha256": "659ab847fb4d86f40abcec6c10436f4ff0229673740950f622411ddf588654ff"
+        },
+        "lib/lean_bridge/aliases/native.rb": {
+          "bytes": 39332,
+          "sha256": "fa297c954dda207639c404aaa9aaf3f574fe56ebdcd0772983719b54208dca70"
+        },
+        "lib/lean_bridge/aliases/native/linux-x64/libaliases.so": {
+          "bytes": 78928,
+          "sha256": "92f52ba4ead08655e9e0ebbb21a00a62eafe4d1e2e3372009fbedd4a43ec2a2a"
+        },
+        "lib/lean_bridge/aliases/native/linux-x64/libcomponent_415b536a11d7304fc0bd.so": {
+          "bytes": 91088,
+          "sha256": "60b762416a02ddd5443d7baa0099ef926c3fe977fc1cd7183274f31ea79d2145"
+        },
+        "lib/lean_bridge/aliases/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/lean_bridge/aliases/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 198,
+          "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "47d13bd3722bc05e69b74c7c2ab73055ae7d3c8555fdf0467095007eec7dfd9a",
+      "isolatedInMemoryFaultProbe": true,
+      "modelSha256": "3fc779fb20a5ddc0f52037d12ce589e334f119bebf0c35c59c54330b8f41d5d4",
+      "nativeLibraries": {
+        "lib/lean_bridge/aliases/native/linux-x64/libaliases.so": "92f52ba4ead08655e9e0ebbb21a00a62eafe4d1e2e3372009fbedd4a43ec2a2a",
+        "lib/lean_bridge/aliases/native/linux-x64/libcomponent_415b536a11d7304fc0bd.so": "60b762416a02ddd5443d7baa0099ef926c3fe977fc1cd7183274f31ea79d2145",
+        "lib/lean_bridge/aliases/native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "lib/lean_bridge/aliases/native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50160128,
+              "path": "archives/aliases-api-1.0.0-x86_64-linux.gem",
+              "sha256": "31e3c29d1104512f5abf0b1ef842f7d258d7a45c205a33dbc9311cd8bcd76a09"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "aliases-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "probeSha256": "d976bc5e2728e470b94c19c460c3ac5d96927de6046854e403563b324730ccd4",
+      "producerHandoffRemoved": true,
+      "profile": "ruby",
+      "publicApiOnly": true,
+      "receiptSha256": "2fa320b77301e8d5f5bda53b49b92b00aaee1a263554e8736cef365e7db9fe95",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+      "sourceApiSha256": "0920529b65aebc96e8359fc0f7d834284acab5025e5dda7836ea516ffd2a57c6",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "6fdc59257b2ecf0f27f64c5c4b1092cc2b44e136c60df6f1d08c603ff24fc711",
+      "contractSha256": "b85c98672baa5541794aed0c20fcef62e8173c66a10c661f16893d9797e7fcae"
+    }
+  ]
+}

@@ -40,6 +40,40 @@ Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact 
 
 Calls copy nested values. Invalid types, numeric ranges and encodings raise exceptions. `nil` is valid only at an `Option` position. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
 
+### Named copied aliases
+
+An alias uses its target's Ruby value. Pass an `Integer` to an alias of Nat or
+UInt32, a `String` to an alias of String, and the generated record class to an
+alias of that record. The gem's `binding-manifest.json`, README and public Ruby
+source comments retain alias names, original targets and chains. Aliases do not
+add separate Ruby constants, wrapper classes or RBS declarations.
+
+For the prepared `aliases-api` acceptance gem, save `aliases.rb`:
+
+```ruby
+require "lean_bridge/aliases"
+
+api = LeanBridge::Aliases
+p api.increment(41)                      # 42; Count and OtherCount use Integer
+p api.reverse_rows([[1, 2], [], [3]])     # [[2, 1], [], [3]]
+p api.echo_maybe(api::Some.new(nil))      # Some containing None
+p api.echo_maybe(api::Some.new(api::Some.new(api::UNIT)))
+
+begin
+  api.echo_nat(-1)
+rescue RangeError
+  puts "Nat cannot be negative"
+end
+p api.echo_int(-1)                       # -1
+```
+
+Run `ruby aliases.rb`. Alias parameters, results and record fields keep their
+target checks, including unsigned ranges, exact large integers and one-scalar
+characters. Unit remains `UNIT`, not `nil`. Returned arrays, strings and record
+contents own independent copies. The existing copy budgets and 32-level type
+limit apply. [Installed alias checks](../evidence/ruby-aliases-20260921.md) cover
+both source paths, cleanup failures and relocated gems without producer sources.
+
 ### Lists
 
 Lean `List T` uses a Ruby `Array` in inputs, results and copied record fields. Lists can nest with arrays, records, `Option`, `Except` and binary products. The adapter preserves empty Lists, order, duplicates and every nesting level. List and Array retain distinct Lean and Binding IR identities.
@@ -241,7 +275,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `Ok or Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` becomes Ok.new(value) or Err.new(error), both exposing value. Exact branch classes preserve success/error identity, including same-typed payloads. Frozen Data wrappers support equality and patterns. Domain errors return Err; bridge failures raise. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `Array (exactly two elements, nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two Array elements, preserving binary nesting and per-position validation. Inputs are copied; returned arrays and strings own independent storage. Branch wrapper fields are frozen, but nested mutable payloads are not. Generated record classes retain object-identity equality. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated Ruby record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated keyword-initialized record classes preserve field order through compiler-owned accessors. Nested returned arrays and strings are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `Ruby target value; named Lean contract in gem metadata and API comments` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases retain exact target checks and independent copied storage. Nat rejects negative Integer values; Int accepts them. Char requires a one-scalar string, Unit uses UNIT rather than nil, and fixed-width and machine-word integers retain their ranges. List/Array identities, Option/Result presence, type depth and copy limits remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Proc, method, callable object or block` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

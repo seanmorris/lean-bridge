@@ -184,6 +184,8 @@ test("ordinary gems reproduce and run without Lean or an extension build", { ski
 		assert.deepEqual(await lakeInputState(source), before);
 		assert.deepEqual(builds[0].packages, builds[1].packages);
 		t.diagnostic(canonicalJson({ project: name, archives: builds[0].packages.map(({ archive, sha256 }) => ({ path: archive, sha256 })) }).trim());
+		// Reproducibility is checked. Only the first build supplies later install/tamper checks.
+		await rm(builds[1].output, { recursive: true, force: true });
 		await rename(source, `${source}-hidden`); await rename(relocated, `${relocated}-hidden`);
 		const home = join(working, `gems-${name}`), consumer = join(working, `consumer-${name}`);
 		const clean = { PATH: "/usr/bin:/bin", GEM_HOME: home, GEM_PATH: home, CC: "/missing/cc", LEAN_BRIDGE_LEAN_PREFIX: "/missing/lean", LEAN_BRIDGE_NATIVE_ROOT: "/must/not/use/overrides" };
@@ -202,6 +204,8 @@ test("ordinary gems reproduce and run without Lean or an extension build", { ski
 		const adapter = join(builds[0].output, "native/c-binding/lib", `lib${name.toLowerCase()}.so`);
 		const original = await readFile(adapter); original[original.length - 1] ^= 1; await saveLakeFile(dirname(adapter), `lib${name.toLowerCase()}.so`, original);
 		await assert.rejects(() => packageOrdinaryRuby({ working: join(working, "bad-release"), nativeRoot: join(builds[0].output, "native/component"), runtimeRoot: join(builds[0].output, "native/runtime"), adapterRoot: join(builds[0].output, "native/c-binding"), leanPrefix, glibcMinimumVersion: "2.38", environment }), /drift/);
+		// Keep installed gems for composition, not completed producer builds or poisoned copies.
+		await Promise.all([builds[0].output, bad].map(path => rm(path, { recursive: true, force: true })));
 	}
 	await saveLakeFile(working, "composition.rb", `gem "willow-api"
 gem "aspen-api"

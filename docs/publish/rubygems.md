@@ -1,6 +1,6 @@
 # Build and publish Ruby packages
 
-Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, acyclic copied records, options, results, nested binary products, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, acyclic copied records, options, results, nested binary products, named copied aliases, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -35,6 +35,37 @@ The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `nati
 Copied types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Ruby conversion scratch has a separate 16 MiB budget. Arbitrary variants, resources, compound callbacks and asynchronous effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Callable packages can combine RubyGems, C, CPAN, PyPI and Cargo; adding an unsupported target fails the whole build. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export named copied aliases
+
+Declare concrete aliases in Lean and select the functions that use them. No
+alias-specific configuration is needed:
+
+```lean
+namespace Aliases
+
+abbrev Count := UInt32
+abbrev Rows := Array (List Count)
+
+def increment (value : Count) : Count := value + 1
+def reverse_rows (value : Rows) : Rows := value.map List.reverse
+
+end Aliases
+```
+
+Ruby calls use target values such as `Integer` and nested `Array`. The generated
+gem records alias names, unflattened targets and chains in its binding manifest,
+README and public API comments, including parameter, result and record-field
+types. It does not create alias constants or wrapper classes. Target validation
+and copied ownership still apply.
+
+Ordinary-source and reviewed-IR builds share this behavior. A reviewed contract
+must retain named alias references and their definitions; replacing them with
+flattened primitive or container types fails compiler reconciliation. See the
+[consumer example](../consume/ruby.md#named-copied-aliases) and
+[installed evidence](../evidence/ruby-aliases-20260921.md). Native variants,
+bounded recursion, compound callable payloads and identity-bearing alias targets
+remain separate work.
 
 ## Export Lists
 

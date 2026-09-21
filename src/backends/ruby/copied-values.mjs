@@ -7,18 +7,21 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { compileCopiedRubyModel } from "./copied-model.mjs";
 import { copiedRubyAssets } from "./copied-assets.mjs";
 import { copiedRubyConversions, copiedRubyHelpers, readRubyValue } from "./copied-conversions.mjs";
+import { rubyCopiedAliases, rubyAliasCatalogDocs, rubyAliasSiteDocs, rubyAliasReadme } from "./copied-aliases.mjs";
 import { rubyValue, rubyClosurePublic, rubyNativeCall, rubyCallableTypes, rubyCallableSupport } from "./callables.mjs";
 
 const args = fn => fn.declaration.parameters.map((_, index) => `arg${index}`);
 const publicSource = model => `# frozen_string_literal: true
 module LeanBridge
   module ${model.componentName}
+${rubyAliasCatalogDocs(model)}\
     UNIT = ::Object.new.freeze
     class LeanBridgeError < ::StandardError; end
 ${model.surface.copies.some(copy => copy.compound === "option") ? "    Some = ::Data.define(:value)\n" : ""}\
 ${model.surface.copies.some(copy => copy.compound === "result") ? "    Ok = ::Data.define(:value)\n    Err = ::Data.define(:value)\n" : ""}\
 ${model.surface.callbacks.size ? rubyClosurePublic : ""}\
 ${model.surface.copies.filter(copy => copy.record).map(copy => `    class ${copy.publicName}
+${rubyAliasSiteDocs(model, copy.record.fields, null, "      ")}\
       ${copy.fields.length ? `attr_reader ${copy.fields.map(field => `:${field.name}`).join(", ")}` : ""}
       def initialize(${copy.fields.map(field => `${field.name}:`).join(", ")})
 ${copy.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
@@ -29,7 +32,7 @@ ${copy.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
 ${model.surface.functions.map((fn, index) => {
 	const parameters = args(fn), last = parameters.at(-1);
 	const block = fn.declaration.parameters.length && model.surface.callbacks.has(fn.declaration.parameters.at(-1).type.id);
-	return `    def ${fn.field}(${(block ? [...parameters.slice(0, -1), `${last} = nil`, "&block"] : parameters).join(", ")})
+	return `${rubyAliasSiteDocs(model, fn.declaration.parameters.map((site, n) => ({ name: `arg${n}`, type: site.type })), fn.declaration.result.type)}    def ${fn.field}(${(block ? [...parameters.slice(0, -1), `${last} = nil`, "&block"] : parameters).join(", ")})
       ${block ? `raise ArgumentError, "Pass a callable or a block, not both" if !${last}.nil? && block\n      ${last} = block if ${last}.nil?` : ""}
       Native.call${index}(${parameters.join(", ")})
     end`;
@@ -104,6 +107,9 @@ export const renderCopiedRubyPackage = (model, evidence = null) => {
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "ruby-copied-v1", target: "ruby", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, files: Object.keys(files), publicFiles: [entry], internalFiles: [internal, shared], packageFiles: [], supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "returned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported." }, { feature: "additional-platforms", reason: "The compiled profile is MRI Ruby 3.3 on Linux x86-64." }] }, null, 2)}\n`;
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs, results and record fields use copied Ruby Array values. Exact Array instances are required; no implicit to_ary conversion is used. Empty Lists, order, duplicates and nesting are preserved. Returned arrays and mutable payloads own independent storage. List and Array retain distinct IR/native identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
+	files["README.md"] += rubyAliasReadme(model);
+	if(model.surface.aliases.length)
+		files["binding-manifest.json"] = `${JSON.stringify({ ...JSON.parse(files["binding-manifest.json"]), aliases: rubyCopiedAliases(model) }, null, 2)}\n`;
 	return Object.freeze(files);
 };
 

@@ -136,6 +136,14 @@ The [installed JVM alias checks](../evidence/jvm-aliases-20260921.md) verify bot
 languages on both source paths, exact ranges, conversion failures and relocated
 runtime-only execution.
 
+Ruby callers use ordinary target values. Prepared gems preserve copied alias
+names, original targets and chains in their manifest, README and public API
+comments at parameters, results and record fields. No separate Ruby constants
+or wrapper classes are generated. Target constraints remain enforced when
+calling Lean, including Nat's nonnegative range. The
+[installed Ruby alias checks](../evidence/ruby-aliases-20260921.md) verify both
+source paths, failure cleanup and relocated compiler-free execution.
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:
