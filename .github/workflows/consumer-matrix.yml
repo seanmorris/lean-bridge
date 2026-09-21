@@ -542,6 +542,8 @@ jobs:
           test -s build/lists/native.json
           LEAN_BRIDGE_NATIVE_ALIAS_TEST=1 node --test tests/native-aliases.test.mjs
           test -s build/aliases/native.json
+          LEAN_BRIDGE_CPP_VARIANT_TEST=1 node --test tests/cpp-variants.test.mjs
+          test -s build/variants/cpp.json
           LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs
           test -s build/callables/c.json
           LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs
@@ -563,6 +565,7 @@ jobs:
             build/compounds/native.json
             build/lists/native.json
             build/aliases/native.json
+            build/variants/cpp.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

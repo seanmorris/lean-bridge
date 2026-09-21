@@ -96,6 +96,7 @@ const callbackLeanDefault = type => {
 	if(type.kind === "result") return `(_root_.Except.ok ${callbackLeanDefault(type.arguments[0])})`;
 	if(type.kind === "tuple") return `(_root_.Prod.mk ${type.arguments.map(callbackLeanDefault).join(" ")})`;
 	if(type.kind === "record") return `(_root_.${type.constructor} ${type.fields.map(f => callbackLeanDefault(f.type)).join(" ")})`;
+	if(type.kind === "variant") return `(_root_.${type.cases[0].constructor} ${type.cases[0].fields.map(f => callbackLeanDefault(f.type)).join(" ")})`;
 	if(type.kind !== "primitive") fail("callback results must be copied values");
 	return { unit: "()", bool: "false", char: "(_root_.Char.ofNat 0)", string: '""', bytes: "_root_.ByteArray.empty" }[type.name] ?? "0";
 };
@@ -112,6 +113,7 @@ const nativeRepresentation = type => {
 	if(["array", "list", "option"].includes(type.kind)) return { ...type, element: nativeRepresentation(type.element) };
 	if(["result", "tuple"].includes(type.kind)) return { ...type, arguments: type.arguments.map(nativeRepresentation) };
 	if(type.kind === "record") return { ...type, fields: type.fields.map(field => ({ ...field, type: nativeRepresentation(field.type) })) };
+	if(type.kind === "variant") return { ...type, cases: type.cases.map(branch => ({ ...branch, fields: branch.fields.map(field => ({ ...field, type: nativeRepresentation(field.type) })) })) };
 	if(type.kind === "callback") return { ...type, parameters: type.parameters.map(nativeRepresentation), result: nativeRepresentation(type.result) };
 	return type;
 };
@@ -132,12 +134,12 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 	const allTypes = new Map();
 	const visit = type => {
 		validateNativeType(type);
-		if(type.kind === "variant") fail("copied variants require typed native adapters before compilation");
 		const key = nativeTypeKey(type);
 		if(allTypes.has(key)) return;
 		if(["array", "list", "option"].includes(type.kind)) visit(type.element);
 		if(["result", "tuple"].includes(type.kind)) type.arguments.forEach(visit);
 		if(type.kind === "record") for(const field of type.fields) visit(field.type);
+		if(type.kind === "variant") for(const branch of type.cases) for(const field of branch.fields) visit(field.type);
 		if(type.kind === "callback")
 		{ type.parameters.forEach(visit); visit(type.result); }
 		allTypes.set(key, { ...type, key });
@@ -260,6 +262,17 @@ export const generateNativeLeanAdapters = model => {
 		{
 			emit(`lb_t${type.key}_make`, type.fields.map((f, i) => ({ name: `a${i}`, type: f.type })), type, `_root_.${type.constructor} ${type.fields.map((_, i) => `a${i}`).join(" ")}`);
 			type.fields.forEach((field, i) => emit(`lb_t${type.key}_get${i}`, [{ name: "value", type }], field.type, `_root_.${field.projection} value`));
+		}
+		if(type.kind === "variant")
+		{
+			emit(`lb_t${type.key}_tag`, [{ name: "value", type }], { kind: "primitive", name: "uint32", lean: "UInt32" },
+				`match value with ${type.cases.map((branch, i) => `| .${branch.name} ${branch.fields.map(() => "_").join(" ")} => ${i}`).join(" ")}`);
+			type.cases.forEach((branch, i) => {
+				emit(`lb_t${type.key}_make${i}`, branch.fields.map((f, j) => ({ name: `a${j}`, type: f.type })), type,
+					`_root_.${branch.constructor} ${branch.fields.map((_, j) => `a${j}`).join(" ")}`);
+				branch.fields.forEach((field, j) => emit(`lb_t${type.key}_get${i}_${j}`, [{ name: "value", type }], field.type,
+					`match value with | .${branch.name} ${branch.fields.map((_, k) => k === j ? "item" : "_").join(" ")} => item${type.cases.length > 1 ? ` | _ => ${callbackLeanDefault(field.type)}` : ""}`));
+			});
 		}
 		if(type.kind === "callback")
 		{

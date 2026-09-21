@@ -92,7 +92,7 @@ test("native constructor metadata validates exact identities and copied payloads
 	const ir = lower(input.metadata, input.sourceIdentity.request);
 	assert.deepEqual(constructors(ir.types[0]), [["empty", []], ["some", [["value", "uint32"]]]]);
 	assert.equal(createComponentPrivateAbi(ir).version, 7);
-	assert.throws(() => createNativeModel({ ...input, component }), /variants require typed native adapters/);
+	assert.equal(createNativeModel({ ...input, component }).types.at(-1).kind, "variant");
 	const drift = synthetic();
 	drift.metadata.modules[0].declarations[0].projection.result = structuredClone(drift.type);
 	drift.metadata.modules[0].declarations[0].projection.result.cases[0].name = "different";

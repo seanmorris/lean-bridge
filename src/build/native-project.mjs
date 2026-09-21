@@ -14,6 +14,7 @@ import { CanonicalBuildError } from "./build-error.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { readReviewedSource } from "../analyze/reviewed-source.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
+import { compilePrimitiveCppModel } from "../backends/cpp/primitives.mjs";
 import { validateGmpSurface } from "../backends/c/gmp-projection.mjs";
 import { projectNativeCFamily } from "./native-c-projection.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
@@ -86,8 +87,9 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, validateModel: model => {
 				if(targets.includes("cpan")) validatePerlModel(model);
 				if(!cTargets.length) return;
-				const cSurface = compilePrimitiveCSurface(model.bindingIr, { lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
+				const cSurface = compilePrimitiveCSurface(model.bindingIr, { variants: cTargets.every(target => target === "cpp"), lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 				if(targets.includes("c")) validateGmpSurface(cSurface);
+				if(targets.includes("cpp")) compilePrimitiveCppModel(model.bindingIr);
 				if(targets.includes("nuget")) compileCopiedDotnetModel(model.bindingIr);
 				if(targets.includes("maven")) compileCopiedJvmModel(model.bindingIr);
 				if(targets.includes("rubygems")) compileCopiedRubyModel(model.bindingIr);

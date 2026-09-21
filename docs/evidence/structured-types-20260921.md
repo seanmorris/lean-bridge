@@ -115,9 +115,8 @@ The uninhabited type also rejects. Schemas and semantic validators check the
 reports before lowering them. CI runs this suite with compiler checks enabled.
 
 The initial compiler stage resolved aliases to their targets. The later alias
-stage preserves their identities. The native model still rejects compiled variant
-signatures; npm has the separate installed checks below. The extraction tests
-alone do not promote installed cells.
+stage preserves their identities. npm and C++ have separate installed variant
+checks below. The extraction tests alone do not promote installed cells.
 
 Validation for this compiler stage: three variant-metadata checks pass with
 compiler execution enabled. The existing compiler-analysis and metadata suites
@@ -305,3 +304,21 @@ Alias parameters, results and fields now have installed acceptance in all
 seventeen profiles, covering 102 cells across both source paths. Native
 variants, bounded recursion, compound callables and explicitly owned identity
 aggregates also remain part of VO1219.
+
+## Compiled C++ variants
+
+Prepared C++20 archives expose named constructor structs through `std::variant`.
+Typed Lean helpers construct and inspect values without exposing compiler tags
+or field offsets. Both source paths pass 36,091 assertions in each of two
+relocated executions after producer and handoff removal. The checks cover
+eighteen constructors, all nineteen primitive payloads, nested copied values
+and allocation-failure cleanup.
+
+A separate native probe verifies active-branch validation and cleanup, invalid
+tags and unchanged output slots. Address and undefined-behavior sanitizers pass;
+the leak report matches the startup-only GMP baseline. See the
+[C++ variant evidence](cpp-variants-20260921.md).
+
+C/GMP, the other native hosts, PHP-Wasm and WIT still need their variant
+projections. Bounded recursive values, compound callables and explicitly owned
+identity aggregates remain open.

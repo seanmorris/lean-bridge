@@ -97,6 +97,35 @@ export const generateCopiedNativeCalls = (model, surface) => {
 				, `  if (status != 1) { ${release}${key}_release(owner); return status; }`, "}"
 				, ...(list ? ["lean_dec(items);"] : [])
 				, `*out = (${c.name}){owner->data, length, owner, ${key}_release};`);
+		} else if(type.kind === "variant")
+		{
+			const helper = `lb_t${nativeTypeKey(type)}`;
+			check.push(`if (!lb_charge(budget, 1, sizeof(${c.name}))) return 0;`, "switch (value->kind) {");
+			input.push("switch (value->kind) {");
+			output.push(`if (!lb_charge(budget, 1, sizeof(${c.name}))) return 0;`);
+			if(nativeObjectType(type)) output.push("lean_inc(value);");
+			output.push(`uint32_t kind = ${helper}_tag(value);`, `if (kind >= ${type.cases.length}) return -3;`
+				, `*out = (${c.name}){0};`, "out->kind = kind;", "switch (kind) {");
+			type.cases.forEach((branch, i) => {
+				const member = c.cases[i];
+				check.push(`case ${i}:`); input.push(`case ${i}:`); output.push(`case ${i}: {`);
+				const args = branch.fields.map((field, j) => {
+					const slot = `cases.${member.name}.${member.fields[j].name}`;
+					check.push(`  if (!${id(field.type)}_check(&value->${slot}, budget)) return 0;`);
+					if(nativeObjectType(type)) output.push("  lean_inc(value);");
+					output.push(`  ${nativeCType(field.type)} field${j} = ${helper}_get${i}_${j}(value);`
+						, `  int status${j} = ${id(field.type)}_out(field${j}, &out->${slot}, budget);`);
+					if(nativeObjectType(field.type)) output.push(`  lean_dec(field${j});`);
+					output.push(`  if (status${j} != 1) { ${c.name}_clear(out); return status${j}; }`);
+					return `${id(field.type)}_in(&value->${slot})`;
+				});
+				check.push("  break;");
+				input.push(`  return ${helper}_make${i}(${args.join(", ") || "lean_box(0)"});`);
+				output.push("  break;", "}");
+			});
+			check.push("default: return 0;", "}");
+			input.push("default: abort();", "}");
+			output.push("default: return -3;", "}");
 		} else
 		{
 			const fields = type.kind === "record" ? type.fields : (type.element ? [type.element] : type.arguments).map(type => ({ type }));
@@ -151,6 +180,7 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			if(nativeObjectType(native.result)) lines.push("  lean_dec(value);");
 			lines.push('  if (status == 0) return lb_invalid(error, "16 MiB call limit exceeded");'
 				, '  if (status == -2) return lb_failure(error, "Invalid native Unicode scalar result");'
+				, ...(model.types.some(type => type.kind === "variant") ? ['  if (status == -3) return lb_failure(error, "Invalid native variant result");'] : [])
 				, '  if (status < 0) return lb_failure(error, "Cannot allocate copied result");', "  *out = result;");
 		} else lines.push("  lean_dec(value); (void)budget;");
 		lines.push(`  if (error) *error = (${p}_error){0};`, `  return ${macro}_STATUS_OK;`, "}");

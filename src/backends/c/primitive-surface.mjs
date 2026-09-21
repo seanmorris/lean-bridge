@@ -3,10 +3,9 @@
  *
  * @file
  */
-import { cIdentifier, compileCProjectionModel, describeCFunction, describeCType, describeCopiedCAliases } from "./generate.mjs";
+import { cIdentifier, cKeywords as keywords, cVariantIdentifier, compileCProjectionModel, describeCFunction, describeCType, describeCopiedCAliases } from "./generate.mjs";
 import { componentScalarTypes, fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 
-const keywords = new Set(("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new noexcept not not_eq nullptr operator or or_eq private protected public register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch template this thread_local throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq restrict _Alignas _Alignof _Atomic _Bool _Complex _Generic _Imaginary _Noreturn _Static_assert _Thread_local").split(" "));
 const safe = name => /^[a-z][a-z0-9_]*$/.test(name) && !name.includes("__") && !keywords.has(name);
 const reserved = new Set(["initialize", "runtime", "runtime_v1", "runtime_install_v1", "ready", "fail", "attempted_runtime", "initialization_failure", "error", "error_code", "status", "string", "bytes", "nat", "int", "string_clear", "bytes_clear", "nat_clear", "int_clear", "detail"]);
 const typeKey = ref => ref.kind === "primitive" ? `primitive:${ref.name}` : ref.kind === "named" ? `named:${ref.id}` : `${ref.constructor}(${(ref.arguments ?? []).map(typeKey).join(",")})`;
@@ -34,8 +33,9 @@ export const rejectPrimitiveSurface = (declaration, message) => {
  * @param options.callables - Admit the synchronous primitive callable adapter for implemented host projections.
  * @param options.compounds - Admit options, results and binary products only for implemented host projections.
  * @param options.lists - Admit copied Lists only for implemented host projections.
+ * @param options.variants - Admit acyclic tagged values only for implemented host projections.
  */
-export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false, compounds = false, lists = false } = {}) => {
+export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false, compounds = false, lists = false, variants = false } = {}) => {
 	if(![32, 64].includes(wordBits)) throw new TypeError("Copied platform integers require a 32-bit or 64-bit compiled target");
 	const copies = new Map(), visiting = new Set(), typeNames = new Set(reserved), cTypeNames = new Set();
 	const callbacks = new Map();
@@ -57,13 +57,32 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 		if(depth > 32 || visiting.has(key)) rejectPrimitiveSurface(declaration, "C/C++ copied values must be acyclic and at most 32 types deep");
 		if(copies.has(key)) return copies.get(key);
 		visiting.add(key);
-		let fields = [], element = null, record = null, compound = null;
+		let fields = [], element = null, record = null, compound = null, variant = null, cases = [];
 		if(ref.kind === "primitive" && componentScalarTypes.includes(ref.name)) { /* Closed copied leaf. */ }
 		else if(ref.kind === "apply" && (ref.constructor === "array" || lists && ref.constructor === "list") && ref.arguments.length === 1) element = visit(ref.arguments[0], declaration, depth + 1);
 		else if(compounds && ref.kind === "apply" && ["option", "result", "tuple"].includes(ref.constructor) && ref.arguments.length === (ref.constructor === "option" ? 1 : 2))
 		{
 			compound = ref.constructor;
 			fields = ref.arguments.map((argument, i) => ({ name: { option: ["value"], result: ["ok", "error"], tuple: ["fst", "snd"] }[compound][i], type: visit(argument, declaration, depth + 1) }));
+		}
+		else if(variants && ref.kind === "named" && (variant = ir.types.find(type => type.id === ref.id))?.kind === "variant" && !variant.typeParameters.length)
+		{
+			const name = cIdentifier(variant.name), names = new Set();
+			if(!safe(name) || typeNames.has(name) || !/^[A-Za-z][A-Za-z0-9_]*$/.test(variant.name)) rejectPrimitiveSurface(declaration, "C/C++ variant name collides with a generated or reserved identifier");
+			typeNames.add(name); typeNames.add(`${name}_clear`);
+			cases = variant.cases.map(branch => {
+				const name = cVariantIdentifier(branch.name), members = new Set();
+				if(!safe(name) || names.has(name)) rejectPrimitiveSurface(declaration, `C/C++ variant case is reserved or duplicated: ${branch.name}`);
+				names.add(name);
+				return { name
+					, fields: branch.fields.map(field => {
+					const name = cVariantIdentifier(field.name);
+					if(!safe(name) || members.has(name)) rejectPrimitiveSurface(declaration, `C/C++ variant field is reserved or duplicated: ${field.name}`);
+					members.add(name);
+					return { name, type: visit(field.type, declaration, depth + 1) };
+					})
+				};
+			});
 		}
 		else if(ref.kind === "named" && (record = ir.types.find(type => type.id === ref.id))?.kind === "record" && !record.typeParameters.length)
 		{
@@ -78,7 +97,8 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 			});
 		} else rejectPrimitiveSurface(declaration, `this native projection requires concrete copied primitives, arrays or acyclic records${compounds ? ", options, results and binary products" : "; compound values are not implemented for this target"}`);
 		visiting.delete(key);
-		const copy = { ref, scalarName: fixedPlatformInteger(ref.name, wordBits), ...describeCType(ir, ref), fields, element, record, compound, index: copies.size };
+		if(variant?.kind !== "variant") variant = null;
+		const copy = { ref, scalarName: fixedPlatformInteger(ref.name, wordBits), ...describeCType(ir, ref), fields, element, record, compound, ...(variant ? { variant, cases } : {}), index: copies.size };
 		if(copy.aggregate)
 		{
 			if(cTypeNames.has(copy.name) || cTypeNames.has(`${copy.name}_clear`)) rejectPrimitiveSurface(declaration, "C/C++ copied type name collides with another generated type");

@@ -13,6 +13,7 @@ export const copiedCppType = copy => {
 	if(copy.compound === "option") return `std::optional<${copiedCppType(copy.fields[0].type)}>`;
 	if(copy.compound) return `${copy.compound === "tuple" ? "std::pair" : "Result"}<${copy.fields.map(field => copiedCppType(field.type)).join(", ")}>`;
 	if(copy.element) return `std::vector<${copiedCppType(copy.element)}>`;
+	if(copy.variant) return copy.variant.name;
 	if(copy.record) return copy.record.name;
 	const name = copy.scalarName;
 	return ({ char: "char32_t", unit: "std::monostate", string: "std::string", bytes: "std::vector<uint8_t>", nat: "Nat", int: "Int", bool: "bool", float32: "float", float64: "double" }[name] ?? `${name}_t`);
@@ -25,7 +26,10 @@ export const copiedCppType = copy => {
  */
 export const renderCppCopiedValues = surface => {
 	const p = surface.prefix;
-	const records = surface.copies.filter(copy => copy.record).map(copy => `struct ${copy.record.name} {\n${copy.fields.map(field => `  ${copiedCppType(field.type)} ${field.name}{};`).join("\n")}\n};`).join("\n");
+	const variants = surface.copies.some(copy => copy.variant);
+	const records = surface.copies.filter(copy => copy.record || copy.variant).map(copy => copy.variant
+		? `${copy.cases.map(branch => `struct ${branch.cppName} {\n${branch.fields.map(field => `  ${copiedCppType(field.type)} ${field.name}{};`).join("\n")}\n  friend bool operator==(const ${branch.cppName}&, const ${branch.cppName}&) = default;\n};`).join("\n")}\nusing ${copy.variant.name} = std::variant<${copy.cases.map(branch => branch.cppName).join(", ")}>;`
+		: `struct ${copy.record.name} {\n${copy.fields.map(field => `  ${copiedCppType(field.type)} ${field.name}{};`).join("\n")}${variants ? `\n  friend bool operator==(const ${copy.record.name}&, const ${copy.record.name}&) = default;` : ""}\n};`).join("\n");
 	const conversions = surface.copies.map(copy => {
 		const { index, name, element, fields, record, ref } = copy, host = copiedCppType(copy);
 		const view = [], constructor = [], initializers = [], check = [], output = [];
@@ -40,6 +44,25 @@ export const renderCppCopiedValues = surface => {
 				, `for (const auto& item : source) check${element.index}(item, budget);`);
 			output.push(`${host} result; result.reserve(source.length);`
 				, `for (size_t i = 0; i < source.length; ++i) result.push_back(from${element.index}(source.data[i]));`, "return result;");
+		} else if(copy.variant)
+		{
+			check.push(`charge(budget, 1, sizeof(${name}));`, 'if (source.valueless_by_exception()) invalid("Variant has no active branch");', "switch (source.index()) {");
+			constructor.push("value.kind = static_cast<uint32_t>(source.index());", "switch (source.index()) {");
+			output.push("switch (source.kind) {");
+			copy.cases.forEach((branch, i) => {
+				check.push(`case ${i}:`); constructor.push(`case ${i}:`);
+				branch.fields.forEach((field, j) => {
+					const child = field.type, payload = `std::get<${branch.cppName}>(source).${field.name}`, storage = `field${i}_${j}`;
+					view.push(`std::unique_ptr<View${child.index}> ${storage};`);
+					constructor.push(`  ${storage} = std::make_unique<View${child.index}>(${payload}); value.cases.${branch.name}.${field.name} = ${storage}->value;`);
+					check.push(`  check${child.index}(${payload}, budget);`);
+				});
+				check.push("  break;"); constructor.push("  break;");
+				output.push(`case ${i}: return ${branch.cppName}{${branch.fields.map(field => `from${field.type.index}(source.cases.${branch.name}.${field.name})`).join(", ")}};`);
+			});
+			check.push('default: invalid("Variant has no active branch");', "}");
+			constructor.push('default: invalid("Variant has no active branch");', "}");
+			output.push('default: invalid("Native variant has an invalid tag");', "}");
 		} else if(copy.compound && copy.compound !== "tuple")
 		{
 			const option = copy.compound === "option", flag = option ? "has_value" : "is_ok";

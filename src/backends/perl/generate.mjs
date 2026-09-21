@@ -261,6 +261,7 @@ export const validatePerlModel = model => {
 		|| (type.kind === "record" && type.fields.some(field => containsCompound(field.type)));
 	model.types.forEach(({ key, ...type }) => {
     validateNativeType(type);
+    if(type.kind === "variant") throw Object.assign(new TypeError("Perl copied variants are not implemented"), { code: "unsupported-perl-signature" });
     if(type.kind === "callback" && [...type.parameters, type.result].some(containsCompound))
       throw Object.assign(new TypeError("Perl compound callbacks are not implemented"), { code: "unsupported-perl-signature" });
     if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");

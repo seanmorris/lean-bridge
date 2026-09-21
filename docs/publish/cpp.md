@@ -27,6 +27,29 @@ C++ results own their data. Scoped input views keep nested buffers alive through
 
 Set `targets.cpp.name` and `targets.cpp.version` in `lean-bridge.exports.json` to choose archive coordinates. The package includes the C API, native libraries, matching runtime, CMake and pkg-config metadata. C++ does not require a separately installed C package or Lean runtime.
 
+## Copied tagged variants
+
+Export concrete, non-recursive Lean inductives with copied constructor fields.
+Lean Bridge emits a named struct for each constructor and a `std::variant` for
+the enclosing type. `Signal.data (count : UInt32) (label : String)` becomes
+`SignalData{count, label}`. Empty constructors have different types, even when
+they have no payload. `Unit` fields remain present as `std::monostate`.
+
+Generated Lean functions construct, identify and read each branch. The native
+adapter does not inspect Lean object tags or constructor offsets. Inputs and
+outputs share the 16 MiB copy budget and the 32-level type nesting limit.
+Payloads may nest supported copied records and containers. Case and field name
+collisions fail during generation; C++ keywords in fields gain a trailing
+underscore. Recursive values, callable payloads and retained identities remain
+outside this copied profile.
+
+Select `--target cpp` for these packages. The prepared C/GMP, other native host,
+PHP-Wasm and WIT variant projections are still pending; requesting those targets
+with a variant API rejects before compilation. The C transport included in a
+C++ archive is an implementation layer, not a separately accepted C/GMP package.
+See the [consumer example](../consume/cpp.md#tagged-variants) and
+[installed evidence](../evidence/cpp-variants-20260921.md).
+
 ## Primitive callbacks and returned closures
 
 Ordinary-source and independently reviewed builds support synchronous callbacks and returned Lean closures with all nineteen primitives. Pass a typed lambda or function as a callback; move-only lambdas work too. Arguments are owned C++ values. Return the declared C++ type exactly, including an explicit `cpp_int` result for arithmetic expression templates. A `Unit` callback result is `void`.

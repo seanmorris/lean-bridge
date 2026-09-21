@@ -151,6 +151,42 @@ The [installed checks](../evidence/cpp-callables-20260919.md) cover all nineteen
 
 `std::nullopt`, an engaged Unit value and an engaged empty optional remain distinct. `Ok<T>` and `Err<E>` each have a `value` member, so success and error remain distinct even when `T` and `E` are the same type. A domain error returns `Err<E>`; boundary failures throw the generated `Error`. Nested products remain nested pairs. These values can also appear inside arrays and generated record fields. Returned values own their contents and release them automatically. The [installed compound checks](../evidence/native-compounds-20260920.md) cover both build paths.
 
+### Tagged variants
+
+Each Lean constructor has a named C++ struct. The Lean type becomes a
+`std::variant` of those structs. For the
+[variant example](../../tests/fixtures/onboarding/native-variants/Variants.lean):
+
+```cpp
+#include "variants.hpp"
+#include <cassert>
+
+namespace api = lean_bridge::variants;
+
+int main() {
+    api::Signal input = api::SignalData{41, "ready"};
+    const auto output = api::next(input);
+    const auto& data = std::get<api::SignalData>(output);
+    assert(data.count == 42 && data.label == "ready!");
+
+    const auto stopped = api::next(api::SignalIdle{});
+    assert(std::holds_alternative<api::SignalStopped>(stopped));
+}
+```
+
+Use `std::get`, `std::holds_alternative` or `std::visit` with the named
+alternatives. Empty constructors remain distinct types; a Unit payload uses
+`std::monostate`. You do not supply constructor numbers. Payloads can contain
+supported primitives, records, variants, arrays, Lists, options, results and
+products. Returned strings and containers own their storage, independently of
+the inputs and other returned fields. Constructor fields use snake_case; C++
+keywords gain a trailing underscore, as in `bool_` and `char_`. Naming collisions
+reject during generation.
+
+The [installed variant checks](../evidence/cpp-variants-20260921.md) cover both
+source paths, malformed inputs and allocation-failure cleanup. Recursive types,
+variant callback payloads and identity-bearing fields are not supported yet.
+
 ### Type conversions
 
 Profiles: C++. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.
@@ -181,7 +217,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Prod α β / tuples` | `std::pair<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | std::pair retains binary nesting, per-position types and owned copied contents. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `generated record struct` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated structs with owned fields and deep result cleanup on exceptions. Empty records use empty structs. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Source-named using declaration for the owned C++ target type` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Transparent target values, validation and ownership. Aliases add no wrapper; returned C++ containers and records own their copies. Aliased Nat still rejects negative input. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `std::variant of named constructor structs` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Named alternatives retain constructor identity, including empty cases and Unit payloads. Use std::get, std::holds_alternative or std::visit; no public constructor numbers. Payloads and results own independent storage. C++ keywords in fields gain a trailing underscore; naming collisions reject. Invalid input and budget failures throw Error; C++ allocation failures propagate std::bad_alloc with intermediate native cleanup. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `typed C++ callable` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Call-scoped borrow; typed owned callback arguments; original C++ exceptions rethrow after native cleanup. Same-thread nested calls are supported. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `std::vector<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Owned `std::vector<T>`, including `std::vector<bool>`. Lists preserve order, duplicates and nesting with independent results. List and Array retain distinct IR constructors. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |

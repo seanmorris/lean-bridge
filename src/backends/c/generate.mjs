@@ -44,6 +44,17 @@ const snake = value => value
   .toLowerCase();
 
 const upper = value => snake(value).toUpperCase();
+export const cKeywords = new Set(("alignas alignof and and_eq asm atomic_cancel atomic_commit atomic_noexcept auto bitand bitor bool break case catch char char8_t char16_t char32_t class compl concept const consteval constexpr constinit const_cast continue co_await co_return co_yield decltype default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new noexcept not not_eq nullptr operator or or_eq private protected public register reinterpret_cast requires return short signed sizeof static static_assert static_cast struct switch template this thread_local throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq restrict _Alignas _Alignof _Atomic _Bool _Complex _Generic _Imaginary _Noreturn _Static_assert _Thread_local").split(" "));
+/**
+ * Preserve compiler-disambiguated trailing underscores in constructor fields.
+ *
+ * @param value - Validated source member name.
+ */
+export const cVariantIdentifier = value => {
+	const name = value.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase();
+	return cKeywords.has(name) ? `${name}_` : name;
+};
+const valueFields = type => type.kind === "variant" ? type.cases.flatMap(branch => branch.fields) : type.fields;
 const packageName = ir => ir.component.id.slice(0, ir.component.id.lastIndexOf("@"));
 const packageStem = ir => snake(packageName(ir).split("/").at(-1));
 const prefix = ir => packageStem(ir);
@@ -156,6 +167,7 @@ const collectUsedTypes = ir => {
 	for(const type of ir.types)
 	{
 		if(type.kind === "record") type.fields.forEach(field => walkType(field.type, push));
+		if(type.kind === "variant") valueFields(type).forEach(field => walkType(field.type, push));
 		if(type.kind === "alias") walkType(type.target, push);
 		if(type.kind === "callback")
 		{
@@ -242,8 +254,8 @@ const validateCoverage = ir => {
 				if(value.kind === "primitive") return primitiveCType(value.name) !== null || isDynamicPrimitive(value.name);
 				if(value.kind === "apply") return ["array", "list", "option", "result", "tuple"].includes(value.constructor) && value.arguments.length === (["array", "list", "option"].includes(value.constructor) ? 1 : 2) && value.arguments.every(child => copied(child, seen));
 				const type = value.kind === "named" && namedType(ir, value.id);
-				if(!type || type.kind !== "record" || seen.has(type.id)) return false;
-				return type.fields.every(field => copied(field.type, new Set([...seen, type.id])));
+				if(!type || !["record", "variant"].includes(type.kind) || seen.has(type.id)) return false;
+				return valueFields(type).every(field => copied(field.type, new Set([...seen, type.id])));
 			};
 			if(!resolved.arguments.every(child => copied(child))) fail("unsupported-array-element", "C containers require acyclic copied elements");
 		}
@@ -326,11 +338,11 @@ const validateCoverage = ir => {
 			addName(publicFunctionName(ir, variant), declaration.id);
 		}
 	}
-	const records = ir.types.filter(type => type.kind === "record");
+	const records = ir.types.filter(type => ["record", "variant"].includes(type.kind));
 	const dependencies = new Map(records.map(type => [type.id, new Set()]));
 	for(const type of records)
 	{
-		for(const field of type.fields)
+		for(const field of valueFields(type))
 		{
 			const resolved = resolveAlias(ir, field.type);
 			if(resolved.kind === "named" && dependencies.has(resolved.id))
@@ -362,8 +374,8 @@ const validateCoverage = ir => {
 		for(const alias of aliases)
 		{
 			const ref = resolveAlias(ir, alias.definition.target);
-			if(ref.kind === "named" && namedType(ir, ref.id)?.kind !== "record")
-				fail("unsupported-alias-target", `${alias.definition.id} requires a copied primitive, container or record target`);
+			if(ref.kind === "named" && !["record", "variant"].includes(namedType(ir, ref.id)?.kind))
+				fail("unsupported-alias-target", `${alias.definition.id} requires a copied primitive, container, record or variant target`);
 			for(const name of [alias.name, ...alias.target.aggregate ? [`${alias.name}_init`, `${alias.name}_clear`] : []])
 			{
 				if(occupied.has(name) || names.has(name)) fail("public-name-collision", `C alias name collision: ${name}`, { type: alias.definition.id });
@@ -397,7 +409,7 @@ const isAggregate = (ir, ref) => {
 	const resolved = resolveAlias(ir, ref);
 	if(resolved.kind === "primitive") return isDynamicPrimitive(resolved.name);
 	if(resolved.kind === "apply") return true;
-	if(resolved.kind === "named") return namedType(ir, resolved.id)?.kind === "record";
+	if(resolved.kind === "named") return ["record", "variant"].includes(namedType(ir, resolved.id)?.kind);
 	return false;
 };
 
@@ -592,15 +604,15 @@ const emitPublicHeader = ir => {
 	const visitRecord = type => {
 		if(visited.has(type.id)) return;
 		visited.add(type.id);
-		for(const field of type.fields)
+		for(const field of valueFields(type))
 		{
 			const ref = resolveAlias(ir, field.type);
-			if(ref.kind === "named" && namedType(ir, ref.id)?.kind === "record") visitRecord(namedType(ir, ref.id));
+			if(ref.kind === "named" && ["record", "variant"].includes(namedType(ir, ref.id)?.kind)) visitRecord(namedType(ir, ref.id));
 			if(ref.kind === "apply" && !["array", "list"].includes(ref.constructor)) visitRecord(compound(ref));
 		}
 		records.push(type);
 	};
-	ir.types.filter(type => type.kind === "record").forEach(visitRecord);
+	ir.types.filter(type => ["record", "variant"].includes(type.kind)).forEach(visitRecord);
 	compounds.forEach(ref => visitRecord(compound(ref)));
 	// Array elements may be records or other arrays. Pointers need declarations,
 	// while by-value record fields need definitions in dependency order.
@@ -635,6 +647,19 @@ const emitPublicHeader = ir => {
 	{
 		const name = cType(ir, type.ref ?? { kind: "named", id: type.id });
 		lines.push(`typedef struct ${name} {`);
+		if(type.kind === "variant")
+		{
+			lines.push("  uint32_t kind;", "  union {");
+			for(const branch of type.cases)
+			{
+				lines.push("    struct {");
+				if(!branch.fields.length) lines.push("      uint8_t empty;");
+				for(const field of branch.fields) lines.push(`      ${cType(ir, field.type)} ${cVariantIdentifier(field.name)};`);
+				lines.push(`    } ${cVariantIdentifier(branch.name)};`);
+			}
+			lines.push("  } cases;", `} ${name};`, "", `void ${name}_clear(${name} *value);`, "");
+			continue;
+		}
 		if(compoundFlag(type.ref?.constructor)) lines.push(`  uint8_t ${compoundFlag(type.ref.constructor)};`);
 		if(!type.fields.length) lines.push("  uint8_t empty;");
 		for(const field of type.fields)
@@ -850,13 +875,25 @@ const emitImplementation = ir => {
 		);
 	}
 
-	for(const type of [...ir.types.filter(type => type.kind === "record"), ...compoundTypes(ir).map(ref => ({ ref, fields: compoundFields(ref) }))])
+	for(const type of [...ir.types.filter(type => ["record", "variant"].includes(type.kind)), ...compoundTypes(ir).map(ref => ({ ref, fields: compoundFields(ref) }))])
 	{
 		const name = cType(ir, type.ref ?? { kind: "named", id: type.id });
+		if(type.kind === "variant")
+		{
+			lines.push(`void ${name}_clear(${name} *value) {`, "  if (value == NULL) return;", "  switch (value->kind) {");
+			type.cases.forEach((branch, i) => {
+				lines.push(`    case ${i}:`);
+				for(const field of branch.fields.filter(field => isAggregate(ir, field.type)))
+					lines.push(`      ${cType(ir, field.type)}_clear(&value->cases.${cVariantIdentifier(branch.name)}.${cVariantIdentifier(field.name)});`);
+				lines.push("      break;");
+			});
+			lines.push("    default: break;", "  }", "  memset(value, 0, sizeof(*value));", "}", "");
+			continue;
+		}
 		const clearable = type.fields.filter(field => {
       const resolved = resolveAlias(ir, field.type);
       if((resolved.kind === "primitive" && isDynamicPrimitive(resolved.name)) || resolved.kind === "apply") return true;
-      return resolved.kind === "named" && namedType(ir, resolved.id)?.kind === "record";
+      return resolved.kind === "named" && ["record", "variant"].includes(namedType(ir, resolved.id)?.kind);
 		});
 		lines.push(`void ${name}_clear(${name} *value) {`, "  if (value == NULL) return;");
 		for(const field of clearable)

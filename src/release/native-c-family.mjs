@@ -41,7 +41,7 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity);
-	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: true, compounds: true, lists: true }), p = surface.prefix;
+	const surface = compilePrimitiveCSurface(model.bindingIr, { callables: true, compounds: true, lists: true, variants: target === "cpp" }), p = surface.prefix;
 	const bigint = target === "cpp" && surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName));
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	const gmp = target === "c" && surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName));
@@ -103,6 +103,8 @@ Cflags: -I\${includedir}${bigint ? " -DBOOST_MP_STANDALONE" : ""}
 		: "";
 	const copiedGuide = (surface.copies.some(copy => copy.record || copy.element)
 		? "\n\nArrays and acyclic records can nest up to 32 types deep. C spans own their nested elements through their release callback; record clear functions clear their fields. Do not shallow-copy an owned result and clear both copies. C++ uses owned vectors and structs, with scoped input views. The 16 MiB conversion budget includes input and output payloads, array slots (at least pointer-sized), output ownership headers and record storage; it does not bound the Lean algorithm's working memory."
+		: "") + (surface.copies.some(copy => copy.variant)
+		? "\n\nTagged Lean variants use std::variant with one named struct per constructor. Construct and inspect named alternatives with std::get, std::holds_alternative or std::visit; consumers do not supply constructor numbers. Empty constructors remain distinct and Unit fields use std::monostate. Payloads may nest supported copied values. Field names use snake_case; reserved C++ keywords gain a trailing underscore. Generated Lean helpers keep compiler object tags and field offsets private. Only the active case is read, copied or cleared. Variants share the 32-level type limit and the 16 MiB conversion budget. Recursive, callable and identity-bearing payloads are not supported."
 		: "") + callableGuide;
 	await save(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `get_filename_component(_LB_PREFIX "\${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 if(NOT TARGET ${cmakeTarget})

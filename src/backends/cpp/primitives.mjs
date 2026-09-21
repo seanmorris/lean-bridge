@@ -59,7 +59,7 @@ const wrapper = (surface, fn) => {
  * @param ir - Canonical Binding IR.
  */
 export const compilePrimitiveCppModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true });
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true });
 	if(surface.copies.some(copy => ["LeanClosure", "Ok", "Err", "Result"].includes(copy.record?.name))) throw new TypeError("C++ record name collides with a generated callable or compound type");
 	const occupied = new Set(["LeanClosure", "Ok", "Err", "Result", "Nat", "Int"
 		, "Error", "detail", "std", "boost"
@@ -67,6 +67,18 @@ export const compilePrimitiveCppModel = ir => {
 		, ...surface.functions.map(fn => fn.field)]);
 	if(surface.aliases.some(alias => occupied.has(alias.definition.name)))
 		throw new TypeError("C++ alias name collides with a generated type or namespace");
+	for(const alias of surface.aliases) occupied.add(alias.definition.name);
+	for(const copy of surface.copies.filter(copy => copy.variant))
+	{
+		if(occupied.has(copy.variant.name)) throw new TypeError("C++ variant name collides with a generated type or namespace");
+		occupied.add(copy.variant.name);
+		for(const branch of copy.cases)
+		{
+			branch.cppName = copy.variant.name + branch.name.split("_").map(part => part ? part[0].toUpperCase() + part.slice(1) : "_").join("");
+			if(occupied.has(branch.cppName)) throw new TypeError("C++ variant alternative name collides with a generated type or namespace");
+			occupied.add(branch.cppName);
+		}
+	}
 	for(const [index, callback] of [...surface.callbacks.values()].entries()) callback.cppIndex = index;
 	return { kind: "copied-primitives", surface };
 };
