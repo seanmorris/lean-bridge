@@ -87,6 +87,7 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 				, documentation: doc(callbackName ? "Checked Lean callback." : `Checked Lean ${type.name}.`)
 				, source: source(type.name ?? callbackName), assurance: [] };
 			definitions.set(id, definition);
+			if(type.kind === "alias") definition.target = reference(type.target);
 			if(type.kind === "record") definition.fields = type.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }));
 			if(type.kind === "variant") definition.cases = type.cases.map(item => ({ name: item.name
 				, fields: item.fields.map(field => ({ name: field.name, type: reference(field.type), mutability: "immutable", documentation: doc(field.name) }))

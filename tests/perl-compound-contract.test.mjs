@@ -6,11 +6,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { sha256 } from "../src/capsule/node.mjs";
 import { createNativeModel, nativeTypeKey } from "../src/build/native-model.mjs";
 import { generatePerlBindingPackage, validatePerlModel } from "../src/backends/perl/generate.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { assertCompoundSourceHash } from "./helpers/compound-source-history.mjs";
 
 const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const unit = { kind: "primitive", name: "unit", lean: "Unit", abi: { ...abi, heap: false } };
@@ -79,7 +79,7 @@ test("Perl compound evidence binds eight executions to unchanged relocated insta
 	assert.doesNotMatch(consumer, /LeanBridge::Runtime|Compounds::_|XSLoader|DynaLoader|lean_ctor_/);
 	assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, compoundSignatures);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assertCompoundSourceHash(path, await readFile(path), hash);
 	assert.equal(record.executions.length, 8);
 	const expected = ["ordinary-source", "reviewed-ir"].flatMap(path => record.perlAbis.map(abi => `${path}/${abi}`));
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.perl.slice(1)}-${run.threaded ? "threaded" : "unthreaded"}`), expected);

@@ -90,6 +90,14 @@ const checkReview = document => {
 			continue;
 		}
 		source(definition);
+		if(definition.kind === "alias")
+		{
+			reject(definition.representation !== "copied" || definition.mutability !== "immutable"
+				|| definition.typeParameters.length || definition.target === null || definition.fields.length || definition.cases.length
+				|| definition.resource !== null || definition.callable !== null || definition.host !== null, definition.id);
+			type(definition.target, `${definition.id}.target`);
+			continue;
+		}
 		reject(!["record", "variant"].includes(definition.kind) || definition.representation !== "copied" || definition.mutability !== "immutable"
 			|| definition.typeParameters.length || definition.target !== null || definition.resource !== null
 			|| definition.callable !== null || definition.host !== null

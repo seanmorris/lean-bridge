@@ -198,7 +198,8 @@ end Shop
 	assert.equal(quote.source.startLine, 5);
 	assert.equal(quote.source.startColumn, 0);
 	assert.equal(declarations.find(item => item.identity === "Shop.marker").source.endColumn, "/-- 🙂 -/ def marker (value : Word) : Word := value".length);
-	assert.equal(quote.projection.parameters[0].type.name, "uint32");
+	assert.deepEqual(quote.projection.parameters[0].type, { kind: "alias", name: "Shop.Word", target: { kind: "primitive", name: "uint32" } });
+	assert.deepEqual(quote.projection.result, quote.projection.parameters[0].type);
 	assert.deepEqual(declarations.find(item => item.identity === "Shop.effect").effects, ["IO"]);
 	assert.deepEqual(declarations.find(item => item.identity === "Shop.acceptsEffect").effects, []);
 	assert.deepEqual(declarations.find(item => item.identity === "Shop.returnsActions").effects, []);
@@ -277,14 +278,16 @@ end Shop
 	const definitions = first.bindingIr.document.declarations;
 	assert.deepEqual(definitions.map(item => item.name), ["firstWord", "keepText", "keepWord", "keepWords", "pickWord"]);
 	const words = definitions.find(item => item.name === "keepWords");
-	assert.deepEqual(words.parameters[0].type, { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint32" }] });
+	assert.deepEqual(words.parameters[0].type, { kind: "named", id: "lean:Shop.Words" });
+	assert.deepEqual(first.bindingIr.document.types.find(type => type.id === "lean:Shop.Words").target, { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint32" }] });
 	assert.deepEqual(words.result.type, words.parameters[0].type);
 	assert.deepEqual(definitions.find(item => item.name === "firstWord").parameters.map(item => item.type.name), ["uint32", "string"]);
 	const keep = definitions.find(item => item.name === "keepWord");
 	assert.equal(keep.source.declaration, "Shop.keep");
 	assert.deepEqual(keep.source.extensions["lean-lang.org/theorem-references"], ["Shop.keep_eq"]);
 	assert.deepEqual(keep.assurance, []);
-	assert.equal(keep.parameters[0].type.name, "uint32");
+	assert.deepEqual(keep.parameters[0].type, { kind: "named", id: "lean:Shop.Word" });
+	assert.deepEqual(first.bindingIr.document.types.find(type => type.id === "lean:Shop.Word").target, { kind: "primitive", name: "uint32" });
 	assert.match(definitions.find(item => item.name === "pickWord").source.extensions["lean-lang.org/specialization"].application, /Shop\.instInhabitedUInt32/);
 	const moved = join(context.directory, "moved");
 	await cp(context.workspace, moved, { recursive: true });

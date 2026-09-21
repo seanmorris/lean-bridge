@@ -76,6 +76,19 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
   if depth > 32 then reject e "native copied type nesting exceeds 32"
   if e.hasFVar || e.hasLooseBVars || e.hasMVar then
     reject e "dependent or unresolved native type"
+  if let .const name levels := e then
+    if !(primitives.any (·.1 == name)) && !request.resources.contains name.toString then
+      let info ← getConstInfo name
+      if let .defnInfo definition := info then
+        if (← whnf definition.type).isSort then
+          if let some index := (← getEnv).getModuleIdxFor? name then
+            if request.modules.contains (← getEnv).header.moduleNames[index.toNat]!.toString then
+              if !nativeIdentifier name.toString || !levels.isEmpty || !definition.levelParams.isEmpty ||
+                  info.isUnsafe || info.isPartial then reject e "unsupported copied alias definition"
+              if seen.contains name then reject e "cyclic copied alias"
+              let target ← shape request definition.value (name :: seen) (depth + 1) true
+              return obj [("kind", str "alias"), ("name", str name.toString),
+                ("lean", str name.toString), ("target", target), ("abi", ← abi e)]
   if (← isDefEq e (mkConst ``Unit)) then
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
   if let .const name _ := e then
@@ -190,9 +203,9 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (index : Nat := 0) : MetaM (Array Json × Json) := do
-  let e ← whnf e
+  let reduced ← whnf e
   if index < limit then
-    if let .forallE _ argument result binder := e then
+    if let .forallE _ argument result binder := reduced then
       if binder != .default || result.hasLooseBVars then reject e "dependent or implicit parameter"
       let parameter ← shape request argument
       let (rest, result) ← signature request result limit (index + 1)
@@ -251,6 +264,9 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption == some "primitive" then
     return obj [("kind", str "primitive"), ("name", ← ofExcept <| value.getObjVal? "name")]
   let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  if kind == "alias" then
+    return obj [("kind", str kind), ("name", ← ofExcept <| value.getObjVal? "name"),
+      ("target", ← componentCopiedType (← ofExcept <| value.getObjVal? "target"))]
   if kind == "array" || kind == "list" || kind == "option" then
     return obj [("kind", str kind),
       ("element", ← componentCopiedType (← ofExcept <| value.getObjVal? "element"))]
@@ -272,7 +288,7 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
           ("type", ← componentCopiedType (← ofExcept <| field.getObjVal? "type"))]
       pure <| obj [("name", ← ofExcept <| item.getObjVal? "name"), ("fields", toJson fields)]
     return obj [("kind", str kind), ("name", ← ofExcept <| value.getObjVal? "name"), ("cases", toJson cases)]
-  throwError "component copied values require primitives, arrays, lists, records, variants, Option, Except or Prod"
+  throwError "component copied values require primitives, aliases, arrays, lists, records, variants, Option, Except or Prod"
 
 def componentType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption != some "callback" then
@@ -370,8 +386,6 @@ def describeSignature (request : Request) (name : String) (type : Expr) : MetaM 
   let (parameters, resultText, scalarProjection) ← describeScalarSignature request type
   let native := request.profile.getD "component-scalars-v1" == "native-library-v1"
   let selectedArity := request.arities.find? (·.1 == name) |>.map (·.2)
-  if !native && selectedArity.isNone && (scalarProjection.getObjValAs? String "status").toOption == some "supported" then
-    return (parameters, resultText, scalarProjection)
   if !native && selectedArity.isNone && (scalarProjection.getObjValAs? String "reason").toOption == some "arity-limit" then
     return (parameters, resultText, scalarProjection)
   let arity := selectedArity.getD (if native then 1024 else 32)
@@ -388,7 +402,10 @@ def describeSignature (request : Request) (name : String) (type : Expr) : MetaM 
     return (parameters, resultText, obj [("status", str "supported"),
       ("bindingShape", str (if native then "native-function" else "pure-function")), ("parameters", toJson nativeParameters), ("result", result)])
   catch error =>
-    if !native then return (parameters, resultText, scalarProjection)
+    if !native then
+      if (scalarProjection.getObjValAs? String "status").toOption == some "supported" then
+        return (parameters, resultText, unsupported "unsupported-native-type" (← error.toMessageData.toString))
+      return (parameters, resultText, scalarProjection)
     let reason := (scalarProjection.getObjValAs? String "reason").toOption.getD "unsupported-native-type"
     let reason := if ["implicit-parameter", "instance-parameter", "dependent-type"].contains reason then reason else "unsupported-native-type"
     return (parameters, resultText, unsupported reason (← error.toMessageData.toString))

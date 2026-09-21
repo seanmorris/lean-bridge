@@ -9,6 +9,7 @@ import { basename } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compoundPrimitives, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { assertCompoundSourceHash } from "./helpers/compound-source-history.mjs";
 import { phpWasmCompoundConsumer, phpWasmCompoundRequest } from "./helpers/php-wasm-compound-fixture.mjs";
 import { phpWasmDriverHashes, phpWasmIsolationFlags } from "./helpers/type-corpus-php-wasm-evidence.mjs";
 import { zendCompoundFaultIr, zendCompoundFaultProvider, zendCompoundFaultConsumer } from "./helpers/php-wasm-compound-faults.mjs";
@@ -20,7 +21,7 @@ test("PHP-Wasm compound evidence covers installed public APIs and exact loading 
 	assert.deepEqual(record.profiles, ["php-wasm"]); assert.equal(record.wordBits, 32);
 	assert.deepEqual(record.signatures, compoundSignatures);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assertCompoundSourceHash(path, await readFile(path), hash);
 	const arrangements = new Set(["node/embedded", "node/composer", "chromium/bundled"].flatMap(host =>
 		["startup", "lazy"].flatMap(loading => ["weak", "strict"].map(mode => `${host}/${loading}/${mode}`))));
 	for(const run of record.executions)

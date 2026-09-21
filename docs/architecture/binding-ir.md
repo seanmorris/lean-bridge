@@ -93,9 +93,12 @@ constructor-specific copied fields. Generated Lean helpers construct and match
 values through typed one-element Array carriers. Native C adapters never inspect
 Lean constructor tags or field offsets. The host discriminator is `kind`; its
 value is the source constructor name. Runtime tag 37 carries the authenticated
-constructor ordinal and only that constructor's fields. ABI 7 admits expanded
-alias descriptors too, but source extraction still reduces aliases to targets.
-See [installed variant checks](../evidence/npm-variants-20260921.md).
+constructor ordinal and only that constructor's fields. ABI 7 also preserves
+concrete copied aliases and their named targets. Source extraction retains
+alias chains, including return-only aliases; reviewed contracts must match those
+names and targets. Aliases add no wire tag or ownership wrapper. See
+[installed variants](../evidence/npm-variants-20260921.md) and
+[installed aliases](../evidence/npm-aliases-20260921.md).
 
 ## Language-neutral core and producer metadata
 

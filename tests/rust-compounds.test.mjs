@@ -14,7 +14,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { compileCopiedRustModel } from "../src/backends/rust/copied-model.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-source-fixture.mjs";
 import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 import { checkRustCompoundInstallation } from "./helpers/rust-compound-install.mjs";

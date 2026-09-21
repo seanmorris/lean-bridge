@@ -474,11 +474,13 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /node --test tests\/component-compounds\.test\.mjs/);
   assert.match(workflow, /test -s build\/compounds\/npm\/report\.json/);
   assert.match(workflow, /test -s build\/compounds\/recordless\/report\.json/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*build\/word-npm\/\n\s*build\/callables\/npm\/\n\s*build\/arrays\/npm\/\n\s*build\/records\/npm\/\n\s*build\/compounds\/\n\s*build\/lists\/npm\/\n\s*build\/variants\/npm\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*build\/word-npm\/\n\s*build\/callables\/npm\/\n\s*build\/arrays\/npm\/\n\s*build\/records\/npm\/\n\s*build\/compounds\/\n\s*build\/lists\/npm\/\n\s*build\/variants\/npm\/\n\s*build\/aliases\/npm\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /node --test tests\/component-lists\.test\.mjs/);
   assert.match(workflow, /test -s build\/lists\/npm\/report\.json/);
   assert.match(workflow, /node --test tests\/component-variant-runtime\.test\.mjs tests\/component-variants\.test\.mjs/);
   assert.match(workflow, /test -s build\/variants\/npm\/report\.json/);
+  assert.match(workflow, /node --test tests\/component-aliases\.test\.mjs/);
+  assert.match(workflow, /test -s build\/aliases\/npm\/report\.json/);
   assert.match(workflow, /id: type_corpus_python/);
   assert.match(workflow, /npm run test:type-corpus:python/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);

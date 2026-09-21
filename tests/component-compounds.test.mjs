@@ -8,7 +8,7 @@ import test from "node:test";
 import { resolve, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { compileComponentCopiedCodec } from "../src/release/component-copied-codec.mjs";
-import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-source-fixture.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { checkInstalledScalars } from "./helpers/component-scalar-install.mjs";
 

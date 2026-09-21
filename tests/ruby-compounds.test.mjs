@@ -14,7 +14,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { compileCopiedRubyModel } from "../src/backends/ruby/copied-model.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-source-fixture.mjs";
 import { nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { installRubyCompounds } from "./helpers/ruby-compound-install.mjs";
 

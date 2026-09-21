@@ -79,6 +79,7 @@ const isDynamicPrimitive = name => new Set(["string", "bytes", "nat", "int"]).ha
 const namedType = (ir, id) => ir.types.find(type => type.id === id);
 
 const resolveAlias = (ir, ref, seen = new Set()) => {
+	if(ref.kind === "apply") return { ...ref, arguments: ref.arguments.map(argument => resolveAlias(ir, argument, new Set(seen))) };
 	if(ref.kind !== "named") return ref;
 	const type = namedType(ir, ref.id);
 	if(type?.kind !== "alias") return ref;

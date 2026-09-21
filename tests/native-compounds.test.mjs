@@ -13,7 +13,7 @@ import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-source-fixture.mjs";
 import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { nativeCompoundConsumer } from "./helpers/native-compound-consumers.mjs";
 import { checkGmpCompoundFaults } from "./helpers/c-gmp-faults.mjs";

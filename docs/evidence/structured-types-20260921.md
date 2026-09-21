@@ -63,7 +63,8 @@ Input allocations belong to the caller's arena even after partial failure.
 
 The initial codec tests use synthetic transport in real `WebAssembly.Memory`.
 Compiled npm variants now have separate installed acceptance, described below.
-Named alias preservation, recursive descriptors and identity values remain open.
+Recursive descriptors and identity values remain open. Compiled npm aliases now
+have separate installed acceptance, described below.
 
 ## Reproduce the focused checks
 
@@ -113,8 +114,8 @@ dependent, callback-containing and reserved-field variants have rejection cases.
 The uninhabited type also rejects. Schemas and semantic validators check the
 reports before lowering them. CI runs this suite with compiler checks enabled.
 
-Compiler extraction still resolves aliases to their targets. Named alias
-preservation remains open. The native model still rejects compiled variant
+The initial compiler stage resolved aliases to their targets. The later alias
+stage preserves their identities. The native model still rejects compiled variant
 signatures; npm has the separate installed checks below. The extraction tests
 alone do not promote installed cells.
 
@@ -142,6 +143,25 @@ nested mixtures with the existing copied containers. Raw Wasm tests repeat
 partial nested output cleanup 500 times. See the
 [variant implementation and evidence](npm-variants-20260921.md).
 
-This stage does not complete VO1219. Named alias preservation, native/PHP-Wasm/WIT
-variants, bounded recursion, compound callables and explicitly owned identity
-aggregates remain in scope.
+This stage does not complete VO1219. Native/PHP-Wasm/WIT variants, bounded
+recursion, compound callables and explicitly owned identity aggregates remain
+in scope.
+
+## Compiled npm aliases
+
+Compiler extraction now preserves concrete copied aliases, their chains and
+targets in both metadata profiles. Bare return types retain their names, and
+independently reviewed IR must match alias definitions and references exactly.
+An over-budget alias cannot fall back to a reduced scalar signature.
+
+Both source paths pass installed Node, strict TypeScript and three browser-engine
+page/React/worker checks: 3,613 checks and 44 rejected calls with recovery per
+JavaScript context. Fixtures cover 28 aliases, all nineteen primitives, copied
+records, variants and nested containers. See the
+[alias implementation and evidence](npm-aliases-20260921.md).
+
+Native private conversion helpers use the checked target representation while
+Binding IR retains alias names. Installed alias acceptance and public declarations
+for the other consumer profiles remain open. Generic aliases, bounded recursion,
+compound callables and explicitly owned identity aggregates remain in the full
+structured-types goal.

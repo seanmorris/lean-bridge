@@ -5,6 +5,17 @@
   "oneOf": [
     {
       "type": "object", "additionalProperties": false,
+      "required": ["kind", "name", "lean", "target", "abi"],
+      "properties": {
+        "kind": { "const": "alias" },
+        "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+        "lean": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+        "target": { "$ref": "#" },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
       "required": ["kind", "name", "lean", "cases", "abi"],
       "properties": {
         "kind": { "const": "variant" },

@@ -290,6 +290,13 @@
     "copiedType": {
       "oneOf": [
         {
+          "type": "object", "additionalProperties": false, "required": ["kind", "name", "target"],
+          "properties": {
+            "kind": { "const": "alias" }, "name": { "type": "string", "minLength": 1 },
+            "target": { "$ref": "#/$defs/copiedType" }
+          }
+        },
+        {
           "type": "object", "additionalProperties": false, "required": ["kind", "name", "cases"],
           "properties": {
             "kind": { "const": "variant" }, "name": { "type": "string", "minLength": 1 },

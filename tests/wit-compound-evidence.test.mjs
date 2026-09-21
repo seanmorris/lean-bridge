@@ -11,6 +11,7 @@ import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
 import { renderWitConversions, witConversionPrelude } from "../src/backends/wit/copied-conversions.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { assertCompoundSourceHash } from "./helpers/compound-source-history.mjs";
 import { validateWitEvidence } from "./helpers/type-corpus-wit-evidence.mjs";
 import { validateWitCompoundSignatures, witCompoundConsumer } from "./helpers/wit-compound-fixture.mjs";
 import { witCompoundFaultIr, witCompoundFaultSource } from "./helpers/wit-compound-faults.mjs";
@@ -20,7 +21,7 @@ test("WIT compound evidence binds both source paths to installed packages and pa
 	assert.deepEqual(record.profiles, ["wit-wasi"]); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, compoundSignatures);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assertCompoundSourceHash(path, await readFile(path), hash);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
 	const source = await witCompoundConsumer(), sort = values => [...values].sort((a, b) => a.name.localeCompare(b.name));
 	const fixture = { source

@@ -213,7 +213,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Except ε α` | `{ readonly ok: T } \| { readonly error: E }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly one own data property selects ok or error, including Unit payloads. IR arguments are [success, error]; a domain error returns a value. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `readonly [A, B] (nested binary products)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exact dense ordinary arrays preserve two-element arity and source product nesting. Typed arrays, holes and flattened products reject. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Named readonly interface; copied plain object` (input, result, field); `Generated readonly record (Alpha: Payload)` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Compilation rejected. Reviewed IR: Generator inspected | Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `Named TypeScript alias with the target’s ordinary JavaScript value representation` (input, result, field); `Resolved target type` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Compiler-authenticated names, targets and chains. Runtime validation and copied ownership follow the target; no wrapper, coercion or loss of exact primitive semantics. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Named readonly discriminated union: { kind: "caseName", ...fields }` (input, result, field); `Generated tagged readonly union` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Exact own data fields and a kind discriminator. Empty constructors remain distinct; Unit fields remain present. Return values are independent copies. Getters, inherited/extra/symbol fields, unknown constructors and malformed payloads reject. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Synchronous JavaScript function` (input) | Ordinary source: Installed checks passed (input); Compilation rejected (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Borrowed until the outer call returns. A Promise result is rejected; the first thrown value is preserved. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
@@ -269,7 +269,7 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
 
-The ordinary component build path accepts primitives, nested arrays and Lists, acyclic copied records, concrete non-recursive tagged variants, `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+The ordinary component build path accepts primitives, concrete copied aliases, nested arrays and Lists, acyclic copied records, concrete non-recursive tagged variants, `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
 
 ### Nested arrays
 
@@ -374,6 +374,32 @@ Generic, indexed, recursive, proof-bearing and identity-bearing variants remain
 unsupported by this npm profile. Both source paths have
 [installed variant checks](evidence/npm-variants-20260921.md) across Node,
 TypeScript, browsers, React and workers.
+
+### Named aliases
+
+Concrete Lean aliases become exported TypeScript aliases. Their values use the
+target type's normal JavaScript representation:
+
+```lean
+abbrev Count := UInt32
+abbrev Counts := List Count
+def increment (value : Count) : Count := value + 1
+```
+
+The generated package exports `type Count = number` and
+`type Counts = ReadonlyArray<Count>` when those aliases appear in its public API.
+Call `increment(41)` with no wrapper or conversion function. Runtime validation
+still checks the UInt32 range. Aliases can target copied records, variants,
+arrays, Lists, options, results and products, and can reference other aliases.
+Returned objects and buffers remain independent copies.
+
+Both `abbrev` and concrete type-valued `def` declarations retain their source
+names and targets. Reviewed IR must match them, even when two aliases have the
+same underlying primitive. Alias chains count toward the 32-level descriptor
+bound. Generic aliases, recursive copied values, and aliases containing callbacks
+or resources need further adapter work. The
+[installed alias checks](evidence/npm-aliases-20260921.md) cover both source paths
+in Node, TypeScript and all three browser engines, including React and workers.
 
 ### Options, results and products
 

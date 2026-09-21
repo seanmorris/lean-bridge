@@ -15,7 +15,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-source-fixture.mjs";
 import { jvmCompoundConsumer, jvmCompoundPublicChecks, jvmCompoundRejections } from "./helpers/jvm-compound-fixture.mjs";
 import { nativeFixtureEnvironment, copiedCleanEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { prepareJvmCorpusDependencies } from "./helpers/type-corpus-jvm-tools.mjs";

@@ -105,6 +105,16 @@ const closed = (value, fields, label) => {
 	  || Object.keys(value).sort().join(",") !== [...fields].sort().join(",")) fail(`invalid ${label} fields`);
 };
 
+// Alias names remain in compiler metadata and Binding IR. Native conversion
+// helpers use the compiler-checked target representation without a new wrapper.
+const nativeRepresentation = type => {
+	if(type.kind === "alias") return nativeRepresentation(type.target);
+	if(["array", "list", "option"].includes(type.kind)) return { ...type, element: nativeRepresentation(type.element) };
+	if(["result", "tuple"].includes(type.kind)) return { ...type, arguments: type.arguments.map(nativeRepresentation) };
+	if(type.kind === "record") return { ...type, fields: type.fields.map(field => ({ ...field, type: nativeRepresentation(field.type) })) };
+	if(type.kind === "callback") return { ...type, parameters: type.parameters.map(nativeRepresentation), result: nativeRepresentation(type.result) };
+	return type;
+};
 
 /**
 	Project elaborated native declarations into a checked model and canonical Binding IR.
@@ -132,7 +142,8 @@ const createCompiledModel = ({ metadata, component, moduleName, sourceIdentity }
 		{ type.parameters.forEach(visit); visit(type.result); }
 		allTypes.set(key, { ...type, key });
 	};
-	const checked = elaborated.declarations.map(declaration => {
+	const checked = elaborated.declarations.map(source => {
+		const declaration = { ...source, parameters: source.parameters.map(parameter => ({ ...parameter, type: nativeRepresentation(parameter.type) })), result: nativeRepresentation(source.result) };
 		if(!identifier.test(declaration.name) || !identifier.test(declaration.module)) fail("invalid declaration identity");
 		declaration.parameters.forEach(parameter => { closed(parameter, ["name", "type"], "native parameter"); visit(parameter.type); });
 		visit(declaration.result);

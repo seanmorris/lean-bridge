@@ -13,8 +13,8 @@ import { compileCopiedRubyModel } from "../src/backends/ruby/copied-model.mjs";
 import { generateCopiedRubyPackage } from "../src/backends/ruby/copied-values.mjs";
 import { generateRubyBindingPackage } from "../src/backends/ruby/generate.mjs";
 import { auditManagedBindingPackage } from "../src/backends/managed/package-audit.mjs";
-import { sha256 } from "../src/capsule/node.mjs";
 import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { assertCompoundSourceHash } from "./helpers/compound-source-history.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -62,7 +62,7 @@ test("Ruby compound evidence binds both source paths to unchanged relocated gems
 	assert.equal(record.wordBits, 64); assert.equal(record.ruby, "3.3.12");
 	assert.deepEqual(record.signatures, compoundSignatures);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assertCompoundSourceHash(path, await readFile(path), hash);
 	for(const run of record.executions)
 	{
 		assert.equal(run.profile, "ruby"); assert.equal(run.checks, 38664);

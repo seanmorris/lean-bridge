@@ -68,7 +68,7 @@ export const componentRecordLeanSource = (abi, exports, leanType) => {
 		: type.kind === "apply" ? type.constructor === "array" ? "#[]" : type.constructor === "list" ? "[]" : type.constructor === "option" ? "_root_.Option.none"
 			: type.constructor === "result" ? `(_root_.Except.ok ${defaultValue(type.arguments[0])})`
 				: `(${defaultValue(type.arguments[0])}, ${defaultValue(type.arguments[1])})`
-			: records.get(type.id).kind === "alias" ? defaultValue(records.get(type.id).target)
+			: records.get(type.id).kind === "alias" ? `(${defaultValue(records.get(type.id).target)} : ${sourceType(records.get(type.id).target)})`
 				: records.get(type.id).kind === "variant" ? `(${sourceType(type)}.«${records.get(type.id).cases[0].name}» ${records.get(type.id).cases[0].fields.map(field => defaultValue(field.type)).join(" ")})`
 					: `({ ${records.get(type.id).fields.map(field => `«${field.name}» := ${defaultValue(field.type)}`).join(", ")} } : ${sourceType(type)})`;
 	const lines = [];

@@ -236,7 +236,7 @@ test("type depth and host or wire cycles reject before recursive traversal", () 
 	assert.throws(() => codec.read(f.module, f.slot), /Cyclic copied wire value/);
 });
 
-test("named types select their versioned npm ABI without enabling native adapters", () => {
+test("named npm types select ABI 7 while native surfaces resolve aliases but reject variants", () => {
 	const ir = corpusReviewedIr({ id: "shapes" }, [{ name: "Shapes.echo", parameters: ["uint32"], result: "uint32" }]);
 	const documentation = { summary: "Unimplemented compiled shape.", details: "" };
 	const type = {
@@ -254,6 +254,11 @@ test("named types select their versioned npm ABI without enabling native adapter
 		{ type.kind = kind; type.target = null; type.cases = [{ name: "empty", fields: [], documentation }]; }
 		assert.equal(validateBindingIr(ir), ir);
 		assert.equal(createComponentPrivateAbi(ir).version, 7);
-		assert.throws(() => compilePrimitiveCSurface(ir, { compounds: true, lists: true }), /requires concrete copied/);
+		if(kind === "alias")
+		{
+			const surface = compilePrimitiveCSurface(ir, { compounds: true, lists: true });
+			assert.equal(surface.copy({ kind: "named", id: type.id }), surface.copy(u32));
+			assert.equal(surface.copies.length, 1);
+		} else assert.throws(() => compilePrimitiveCSurface(ir, { compounds: true, lists: true }), /requires concrete copied/);
 	}
 });

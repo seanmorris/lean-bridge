@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compoundPrimitives, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { assertCompoundSourceHash } from "./helpers/compound-source-history.mjs";
 import { phpCompoundConsumer, phpCompoundRequest } from "./helpers/php-compound-fixture.mjs";
 import { phpIsolationFlags } from "./helpers/type-corpus-php.mjs";
 
@@ -16,7 +17,7 @@ test("native PHP compound evidence preserves both paths without promoting PHP-Wa
 	assert.deepEqual(record.profiles, ["php-native"]); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, compoundSignatures);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assertCompoundSourceHash(path, await readFile(path), hash);
 	for(const run of record.executions)
 	{
 		assert.equal(run.profile, "php-native");

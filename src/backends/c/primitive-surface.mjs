@@ -40,7 +40,19 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 	const copies = new Map(), visiting = new Set(), typeNames = new Set(reserved), cTypeNames = new Set();
 	const callbacks = new Map();
 	const callback = ref => ref.kind === "named" && ir.types.find(type => type.id === ref.id && type.kind === "callback");
+	const representation = (ref, declaration, depth = 0) => {
+		if(depth > 32) rejectPrimitiveSurface(declaration, "C/C++ copied values must be acyclic and at most 32 types deep");
+		const definition = ref.kind === "named" && ir.types.find(type => type.id === ref.id);
+		if(definition?.kind === "alias")
+		{
+			if(definition.typeParameters.length || definition.representation !== "copied" || definition.mutability !== "immutable")
+				rejectPrimitiveSurface(declaration, "C/C++ aliases require concrete immutable copied targets");
+			return representation(definition.target, declaration, depth + 1);
+		}
+		return ref.kind === "apply" ? { ...ref, arguments: ref.arguments.map(argument => representation(argument, declaration, depth + 1)) } : ref;
+	};
 	const visit = (ref, declaration, depth = 0) => {
+		ref = representation(ref, declaration, depth);
 		const key = typeKey(ref);
 		if(depth > 32 || visiting.has(key)) rejectPrimitiveSurface(declaration, "C/C++ copied values must be acyclic and at most 32 types deep");
 		if(copies.has(key)) return copies.get(key);
@@ -133,5 +145,5 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 		}
 		return { ...surface, declaration };
 	});
-	return { ...compileCProjectionModel(ir), prefix: functions[0].prefix, functions, callbacks, copies: [...copies.values()], copy: ref => copies.get(typeKey(ref)) };
+	return { ...compileCProjectionModel(ir), prefix: functions[0].prefix, functions, callbacks, copies: [...copies.values()], copy: ref => copies.get(typeKey(representation(ref))) };
 };

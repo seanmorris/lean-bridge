@@ -269,7 +269,10 @@ for(const variant of ["shop", "telemetry"]) test(`real compiler analysis preserv
 	const before = await lakeInputState(context.workspace), runner = transport();
 	const first = await analyzeCompilerProject(context.root, { runner, environment });
 	await assertJsonSchema("project-analysis", first);
-	assert.equal(first.bindingIr.document.declarations[0].parameters[0].type.name, "uint32");
+	const reference = first.bindingIr.document.declarations[0].parameters[0].type;
+	assert.deepEqual(reference, { kind: "named", id: `lean:${context.names.root}.Word` });
+	const alias = first.bindingIr.document.types.find(type => type.id === reference.id);
+	assert.equal(alias.kind, "alias"); assert.deepEqual(alias.target, { kind: "primitive", name: "uint32" });
 	assert.equal(first.exportCandidates[0].path, path);
 	assert.equal(first.elaboration.metadata.modules.length, 3);
 	await cp(context.workspace, join(context.directory, "moved"), { recursive: true });
@@ -361,7 +364,8 @@ test("real generated public entry analysis runs captured recipes without author-
 	const report = await analyzeCompilerProject(context.root, { runner: transport(), environment });
 	await assertJsonSchema("project-analysis", report);
 	assert.equal(report.exportCandidates[0].path, "generated/Shop.lean");
-	assert.equal(report.bindingIr.document.declarations[0].parameters[0].type.name, "uint32");
+	assert.deepEqual(report.bindingIr.document.declarations[0].parameters[0].type, { kind: "named", id: "lean:Extra.Amount" });
+	assert.deepEqual(report.bindingIr.document.types.find(type => type.id === "lean:Extra.Amount").target, { kind: "primitive", name: "uint32" });
 	assert.match(report.elaboration.generatedSourcesSha256, /^[a-f0-9]{64}$/);
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });

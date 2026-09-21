@@ -13,7 +13,7 @@ import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-source-fixture.mjs";
 import { copiedCleanEnvironment, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { installedPhpWasmCorpus } from "./helpers/type-corpus-php-wasm-install.mjs";
 import { phpWasmCompoundSettings, phpWasmCompoundConsumer, phpWasmCompoundRequest } from "./helpers/php-wasm-compound-fixture.mjs";

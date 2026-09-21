@@ -14,7 +14,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
-import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-source-fixture.mjs";
 import { phpCompoundConsumer, phpCompoundRequest } from "./helpers/php-compound-fixture.mjs";
 import { nativeFixtureEnvironment, copiedCleanEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { installedPhpCorpus } from "./helpers/type-corpus-php.mjs";

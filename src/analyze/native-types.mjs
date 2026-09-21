@@ -22,6 +22,7 @@ const closed = (value, fields, label) => {
 export const validateNativeType = (type, depth = 0, copied = false) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
 	const fields = { primitive: ["kind", "name", "lean", "abi"]
+		, alias: ["kind", "name", "lean", "target", "abi"]
 		, array: ["kind", "element", "abi"]
 		, list: ["kind", "element", "abi"]
 		, option: ["kind", "element", "abi"]
@@ -48,6 +49,11 @@ export const validateNativeType = (type, depth = 0, copied = false) => {
 		if(spellings[componentScalarTypes.indexOf(type.name)] !== type.lean) fail("unknown primitive spelling");
 		if(["usize", "isize"].includes(type.name) && (type.abi.cType !== "size_t" || type.abi.heap)) fail("platform integer requires the compiler's size_t representation");
 		if(type.abi.cType === "size_t" && !["usize", "isize"].includes(type.name)) fail("size_t is not a fixed-width primitive representation");
+	} else if(type.kind === "alias")
+	{
+		if(typeof type.name !== "string" || !identifier.test(type.name) || type.name !== type.lean) fail("invalid alias identity");
+		recurse(type.target, true);
+		if(["cType", "box", "unbox", "heap"].some(field => type.abi[field] !== type.target.abi[field])) fail("alias representation differs from its target");
 	} else if(["array", "list", "option"].includes(type.kind)) recurse(type.element, true);
 	else if(["result", "tuple"].includes(type.kind))
 	{

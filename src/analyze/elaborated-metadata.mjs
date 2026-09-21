@@ -145,6 +145,12 @@ export const validateElaboratedMetadata = (report, request) => {
 				const scalar = type => { closed(type, ["kind", "name"]); if(type.kind !== "primitive" || !componentScalarTypes.includes(type.name)) fail("Unsupported runtime projection type"); };
 				const copied = (type, depth = 0) => {
 					if(depth > 32) fail("Component copied type nesting exceeds 32");
+					if(type?.kind === "alias")
+					{
+						closed(type, ["kind", "name", "target"]);
+						if(typeof type.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.name)) fail("Invalid component alias");
+						copied(type.target, depth + 1); return;
+					}
 					if(type?.kind === "variant")
 					{
 						closed(type, ["kind", "name", "cases"]);
@@ -203,6 +209,7 @@ export const validateElaboratedMetadata = (report, request) => {
 				const nativeType = type => {
 					validateNativeType(type);
 					const check = value => {
+						if(value.kind === "alias") check(value.target);
 						if(value.kind === "resource" && (!request.resources.includes(value.name) || !request.modules.includes(value.module))) fail("Native resource lacks its configured source identity");
 						if(["array", "list", "option"].includes(value.kind)) check(value.element);
 						if(["result", "tuple"].includes(value.kind)) value.arguments.forEach(check);

@@ -15,7 +15,7 @@ import { verifyNativeFiles } from "../src/build/native-artifacts.mjs";
 import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
+import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-source-fixture.mjs";
 import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { checkInstalledDotnetCompounds } from "./helpers/dotnet-compound-install.mjs";
 import { checkDotnetCompoundFaults } from "./helpers/dotnet-compound-faults.mjs";

@@ -45,7 +45,7 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 ## Start with the runnable npm shapes
 
-Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, nested arrays and Lists, acyclic copied records, concrete non-recursive tagged variants, `Option`, `Except` and nested binary products. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
+Ordinary npm components support synchronous functions with zero to 32 arguments. Arguments and results can use primitives, concrete copied aliases, nested arrays and Lists, acyclic copied records, concrete non-recursive tagged variants, `Option`, `Except` and nested binary products. A separate callable profile accepts synchronous functions whose one to sixteen arguments and result are primitive; copied containers and callables cannot yet share one component.
 
 | Lean type | JavaScript / TypeScript value |
 | --- | --- |
