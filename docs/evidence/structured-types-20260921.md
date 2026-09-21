@@ -161,8 +161,8 @@ records, variants and nested containers. See the
 [alias implementation and evidence](npm-aliases-20260921.md).
 
 Native private conversion helpers use the checked target representation while
-Binding IR retains alias names. C/C++ now have the installed checks below.
-Installed alias acceptance and public declarations for the other ten consumer
+Binding IR retains alias names. C/C++ and Python now have the installed checks below.
+Installed alias acceptance and public declarations for the other nine consumer
 profiles remain open. Generic aliases, bounded recursion, compound callables and
 explicitly owned identity aggregates remain in the full structured-types goal.
 
@@ -182,3 +182,19 @@ Package file hashes remain unchanged. See
 
 Native variants, the remaining profiles' aliases, bounded recursion, compound
 callables and explicitly owned identity aggregates remain open.
+
+## Compiled Python aliases
+
+Python modules and stubs export 27 source-named `TypeAlias` declarations over
+all nineteen primitives, chains, records and nested containers. Ordinary-source
+and independently reviewed wheels each pass 4,460 checks before and after
+installation relocation. Strict mypy checks accept the installed public API and
+reject eight invalid examples. Producer sources are removed before offline
+installation, consumer execution has no compiler on PATH, and installed files
+retain their receipt hashes. See the
+[Python alias implementation and evidence](python-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in eight of
+seventeen profiles. The other nine profiles, remaining variants, bounded
+recursion, compound callables and explicitly owned identity aggregates remain
+part of VO1219.

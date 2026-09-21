@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.46.0",
+  "contractVersion": "0.47.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,141 @@
   ],
   "evidence": [
     {
+      "id": "python-aliases-installed",
+      "kind": "installed",
+      "revision": "a642bce2a4e98ee94cdd877100fcd70d44b7cf8a",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs; node --test tests/python-alias-contract.test.mjs",
+      "scope": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
+        },
+        {
+          "path": "docs/evidence/python-aliases-20260921.json",
+          "sha256": "0800c115ca41e511428c04fb763206c972992df3b1ef36ee9800d82b47946368"
+        },
+        {
+          "path": "docs/evidence/python-aliases-20260921.md",
+          "sha256": "595d50b0d8f0ea04683114a6cfb14bfc7891dc24bab9aecf8e753cb64f172f08"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "96ad0c1eb9c062bbf0164eb03f3fab7a9029bde75cd006f33be39970a63c0036"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
+        },
+        {
+          "path": "src/backends/python/copied-conversions.mjs",
+          "sha256": "babc887340777d4ad801b7ad05e711e8b4e168851f9b0c795c89fa8c79d76f87"
+        },
+        {
+          "path": "src/backends/python/copied-model.mjs",
+          "sha256": "98386b090474efda2a99d286ca97c399aae51016c0ae0b3824b782b3e91dbbc3"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "4148445a9ae7781cddff4478d3d2cdbe7241e333a1380b6afb0d93ccd56c7abc"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "bab95d12d5c08acf3507ec5dfa36aaf6fabcdf8915436809cff29be0ca4a1b51"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "5c7acb52a06bf9c5dab3fd72b2adc3a45c0d673e8e48e6e8333a4246d464f88d"
+        },
+        {
+          "path": "src/build/native-python-artifacts.mjs",
+          "sha256": "557b14a5fae0d6e45f5f340d07cc1532b501431f5eccf6dc07b4d2ce2a185af4"
+        },
+        {
+          "path": "src/release/native-pypi.mjs",
+          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/python-invalid.py",
+          "sha256": "ac34f4ccefc2ba3089f22d7719b4e2b9960c04b519c94f20b77da034081f2fed"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/python-typed.py",
+          "sha256": "208eb44a6588fee8bbd682ed77a2c6e5c75368b56e8e4db679c6b1e6b955d336"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/python.py",
+          "sha256": "650a382729f253ac5e5b45d071225ab20a2cdc293cfba3b94631512f0c8177c4"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/Aliases.lean",
+          "sha256": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lakefile.toml",
+          "sha256": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/package.json",
+          "sha256": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd"
+        },
+        {
+          "path": "tests/helpers/alias-fixture.mjs",
+          "sha256": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/native-alias-fixture.mjs",
+          "sha256": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6"
+        },
+        {
+          "path": "tests/python-alias-contract.test.mjs",
+          "sha256": "c5650f93b1455a5318f3fcd6f715df4f605043f973211820c1d8dbf85586d20b"
+        },
+        {
+          "path": "tests/python-aliases.test.mjs",
+          "sha256": "ba1a660f545aee805c211187a6892712710b26a13b2c0572e59b9b930f0ebd74"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "python/ordinary-source/archives/aliases_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "80786cdd87016c4a245d421a115ffc2ff04b2b46621fcfa232e09d58be650bfb"
+        },
+        {
+          "path": "python/reviewed-ir/archives/aliases_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "806f82b4ef8d338d1009b5629399e2769b096851dfadce214cff628929267d20"
+        }
+      ]
+    },
+    {
       "id": "native-aliases-installed",
       "kind": "installed",
       "revision": "00e6380a6afdc1b2352d9e4c4092b7d7cd95b359",
@@ -165,7 +300,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -177,7 +312,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -300,7 +435,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -328,7 +463,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -443,7 +578,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -479,7 +614,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -602,7 +737,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -618,7 +753,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -797,7 +932,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -813,7 +948,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1036,7 +1171,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -1052,7 +1187,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1243,7 +1378,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -1259,7 +1394,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1466,7 +1601,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1677,7 +1812,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -1693,7 +1828,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1856,7 +1991,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -1872,7 +2007,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2063,7 +2198,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -2079,7 +2214,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2485,11 +2620,11 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
+          "sha256": "98386b090474efda2a99d286ca97c399aae51016c0ae0b3824b782b3e91dbbc3"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "621edc381a02bb92c480165488608bac2f6558c8e8bd9c2d2253bb51b7f33745"
+          "sha256": "4148445a9ae7781cddff4478d3d2cdbe7241e333a1380b6afb0d93ccd56c7abc"
         },
         {
           "path": "src/backends/python/package-audit.mjs",
@@ -2755,7 +2890,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -2787,7 +2922,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -2894,7 +3029,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -2910,7 +3045,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3113,7 +3248,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -3129,7 +3264,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3328,7 +3463,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3539,7 +3674,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -3555,7 +3690,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3718,7 +3853,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -3734,7 +3869,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3925,7 +4060,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -3941,7 +4076,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4343,11 +4478,11 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
+          "sha256": "98386b090474efda2a99d286ca97c399aae51016c0ae0b3824b782b3e91dbbc3"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "621edc381a02bb92c480165488608bac2f6558c8e8bd9c2d2253bb51b7f33745"
+          "sha256": "4148445a9ae7781cddff4478d3d2cdbe7241e333a1380b6afb0d93ccd56c7abc"
         },
         {
           "path": "src/backends/python/package-audit.mjs",
@@ -4375,7 +4510,7 @@
         },
         {
           "path": "tests/fixtures/compound-consumers/python.py",
-          "sha256": "ee29c436041a087a7420134b02c7a4d747dccfdd867615a66c2571d5a55875c0"
+          "sha256": "ee22f21aff24f6007023b7231a964e083eb4915dbeb14900625830ad632ef44c"
         },
         {
           "path": "tests/fixtures/onboarding/npm-compounds/Compounds.lean",
@@ -4407,7 +4542,7 @@
         },
         {
           "path": "tests/python-compound-contract.test.mjs",
-          "sha256": "4f696824fa12696cd080985b758f69d39ad6214d43d61cd410b4b89e5a20a5f2"
+          "sha256": "e9dd8dd99a1d5b26ebda05997aa429fe0d6b092fab9330ca41961d7a74a75335"
         },
         {
           "path": "tests/python-compounds.test.mjs",
@@ -4609,7 +4744,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -4812,7 +4947,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -4975,7 +5110,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -5023,7 +5158,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5246,11 +5381,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -5385,11 +5520,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -5504,7 +5639,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -5512,7 +5647,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -5540,7 +5675,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -5743,7 +5878,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -5751,7 +5886,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -5779,7 +5914,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -5934,11 +6069,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -5962,7 +6097,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -6157,11 +6292,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -6181,7 +6316,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -6356,15 +6491,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "flake.nix",
@@ -6567,15 +6702,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -6762,15 +6897,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -6893,15 +7028,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -6936,11 +7071,11 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
+          "sha256": "98386b090474efda2a99d286ca97c399aae51016c0ae0b3824b782b3e91dbbc3"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "621edc381a02bb92c480165488608bac2f6558c8e8bd9c2d2253bb51b7f33745"
+          "sha256": "4148445a9ae7781cddff4478d3d2cdbe7241e333a1380b6afb0d93ccd56c7abc"
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
@@ -7024,15 +7159,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -7143,15 +7278,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -7254,15 +7389,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "42f9ccf9adb784f3d9972e48b0ea3977d47a6175b8444d04a509aa954861662b"
+          "sha256": "6d9558d91e45ac6a8a6bc58fc606552b91adfa41f9f01cda7587fdace1dd42c2"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7353,7 +7488,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7401,7 +7536,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -7485,7 +7620,7 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
+          "sha256": "98386b090474efda2a99d286ca97c399aae51016c0ae0b3824b782b3e91dbbc3"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -7553,7 +7688,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "42f9ccf9adb784f3d9972e48b0ea3977d47a6175b8444d04a509aa954861662b"
+          "sha256": "6d9558d91e45ac6a8a6bc58fc606552b91adfa41f9f01cda7587fdace1dd42c2"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -7657,7 +7792,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "44239ffc853558739f24c21b6bf764ea3b89f48324108926f80c49c2f24fd2b3"
+          "sha256": "e4534b53934c645dcf123ddf7504f342a60a46460b88b7c4d6785c3138e1a9a7"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -7732,7 +7867,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -7744,7 +7879,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -7808,7 +7943,7 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
+          "sha256": "98386b090474efda2a99d286ca97c399aae51016c0ae0b3824b782b3e91dbbc3"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -8479,7 +8614,7 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "071add729d8715ae354fba08489a49edddfec0f911550ed9d3df78986752efa2"
+          "sha256": "98386b090474efda2a99d286ca97c399aae51016c0ae0b3824b782b3e91dbbc3"
         },
         {
           "path": "src/backends/python/copied-assets.mjs",
@@ -8491,7 +8626,7 @@
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "621edc381a02bb92c480165488608bac2f6558c8e8bd9c2d2253bb51b7f33745"
+          "sha256": "4148445a9ae7781cddff4478d3d2cdbe7241e333a1380b6afb0d93ccd56c7abc"
         },
         {
           "path": "src/backends/python/generate.mjs",
@@ -8550,7 +8685,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "c0b0aa42f9f8e6e33d1c4665a18f4c5d5e7afcbfeb1eeed1945532b2597841cb"
+          "sha256": "ed0c3a5e6894aaef03ccac1374c64c8630bf52049065149ed38011812d0a4b05"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -8566,7 +8701,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "22f7bb6a8721fd811da8b57f9aeed16317efac6e7f61acb8383125b7c0092805"
+          "sha256": "aa70538384e9e6830686ca1dc9b91a83038a175343b515cc6d034fdaea971410"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9626,7 +9761,7 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "1f2f3018ebef8a88183e91f8bd3091642cffcf5ce273289e086555ad0d6a7141"
+          "sha256": "746e9517a99fb9ba9be4a82995cf47c64bafe83a6e3bb55a25e50735f40a59b4"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
@@ -9987,6 +10122,142 @@
     }
   ],
   "observations": [
+    {
+      "id": "python-aliases-python-ordinary-source",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Source-named TypeAlias of the ordinary Python target value",
+          "result": "Source-named TypeAlias of the ordinary Python target value",
+          "field": "Source-named TypeAlias of the ordinary Python target value"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "No native variant, recursive, callable or identity-bearing alias targets in this installed fixture.",
+        "Compound alias payloads in callbacks and returned closures still require compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Names appear in module exports, stubs, signatures and fields. Target checks and ownership are unchanged: exact integers with range checks, list-or-tuple inputs and independent tuple results, and the same frozen dataclass for record aliases. Unit uses TypeAlias = None. An alias of Nat still rejects negative input."
+      }
+    },
+    {
+      "id": "python-aliases-python-reviewed-ir",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Source-named TypeAlias of the ordinary Python target value",
+          "result": "Source-named TypeAlias of the ordinary Python target value",
+          "field": "Source-named TypeAlias of the ordinary Python target value"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-aliases-installed"
+          ],
+          "note": "Prepared Python wheels preserve 27 named copied aliases over all nineteen primitive parameter/result/field payloads, chains, records and nested containers. Ordinary-source and reviewed-IR builds each pass 4460 runtime checks and strict mypy1.17.1 acceptance plus eight rejection checks, repeated after installation relocation without producer sources or compilers. Installed files retain their receipt hashes."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic copied aliases of supported primitives, containers and records only.",
+        "No native variant, recursive, callable or identity-bearing alias targets in this installed fixture.",
+        "Compound alias payloads in callbacks and returned closures still require compiled and installed acceptance."
+      ],
+      "conversionNotes": {
+        "alias": "Names appear in module exports, stubs, signatures and fields. Target checks and ownership are unchanged: exact integers with range checks, list-or-tuple inputs and independent tuple results, and the same frozen dataclass for record aliases. Unit uses TypeAlias = None. An alias of Nat still rejects negative input."
+      }
+    },
     {
       "id": "native-aliases-c-ordinary-source",
       "profiles": [
@@ -32624,7 +32895,6 @@
       "shapes": [
         "array",
         "record",
-        "alias",
         "variant"
       ],
       "positions": [
@@ -32650,13 +32920,6 @@
           "field": "Generated frozen dataclass (Alpha: Payload)",
           "callback-parameter": "Generated frozen dataclass (Alpha: Payload)",
           "callback-result": "Generated frozen dataclass (Alpha: Payload)"
-        },
-        "alias": {
-          "parameter": "Resolved target type",
-          "result": "Resolved target type",
-          "field": "Resolved target type",
-          "callback-parameter": "Resolved target type",
-          "callback-result": "Resolved target type"
         },
         "variant": {
           "parameter": "Generated case classes",
@@ -32697,10 +32960,60 @@
       },
       "limitations": [
         "Legacy Alpha annotations do not establish installed support for additional copied shapes."
+      ]
+    },
+    {
+      "id": "python-values-python-1-alias-callables",
+      "profiles": [
+        "python"
       ],
-      "conversionNotes": {
-        "alias": "Resolved target annotations alone do not establish compiled alias support."
-      }
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Alias payloads in callbacks and returned closures still require compiled and installed acceptance.",
+      "hostTypes": {
+        "alias": {
+          "callback-parameter": "Resolved target type",
+          "callback-result": "Resolved target type"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "python-mapping-audit"
+          ],
+          "note": "Generated copied-value annotations only."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Legacy Alpha annotations do not establish installed support for additional copied shapes."
+      ]
     },
     {
       "id": "rust-primitives-rust-1",

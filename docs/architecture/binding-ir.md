@@ -107,6 +107,13 @@ and cleanup helpers; C++ exports source-named `using` declarations. Public-name
 collisions fail before packaging. See the
 [installed C/C++ alias checks](../evidence/native-aliases-20260921.md).
 
+Python exposes source-named `TypeAlias` declarations in its module and stubs.
+Aliases retain the target's ordinary values and checks: record aliases use the
+same frozen dataclass, container aliases retain list-or-tuple inputs and tuple
+results, and an alias of Nat still rejects negative input. The
+[installed Python alias checks](../evidence/python-aliases-20260921.md) include
+strict checking and repeated execution after installation relocation.
+
 ## Language-neutral core and producer metadata
 
 The core contains concepts that every backend must understand:

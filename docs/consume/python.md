@@ -29,7 +29,7 @@ print("42; exact integers and copied arrays")
 
 Run `./.venv/bin/python ordinary.py`. The wheel supplies type annotations, type stubs and a `py.typed` marker. Importing it verifies its native libraries and loads a compatible shared runtime automatically. There is no runtime path or `ctypes` setup in application code.
 
-Ordinary packages support pure functions over 19 primitive types, arrays, Lists, acyclic records, options, results and nested binary products. `Unit` is `None`; integers are exact Python `int` values with fixed-width range checks. `Bool` requires `bool`, and floating-point inputs require `float`. `Char` requires a `str` containing exactly one Unicode scalar. `String` is strict Unicode `str`, including embedded NUL; `ByteArray` requires `bytes`. Arrays and Lists accept exact lists or tuples and return owned tuples. Records are generated frozen dataclasses; returned nested values are independent copies.
+Ordinary packages support pure functions over 19 primitive types, concrete copied aliases, arrays, Lists, acyclic records, options, results and nested binary products. `Unit` is `None`; integers are exact Python `int` values with fixed-width range checks. `Bool` requires `bool`, and floating-point inputs require `float`. `Char` requires a `str` containing exactly one Unicode scalar. `String` is strict Unicode `str`, including embedded NUL; `ByteArray` requires `bytes`. Arrays and Lists accept exact lists or tuples and return owned tuples. Records are generated frozen dataclasses; returned nested values are independent copies.
 
 Python conversion and native input/output copying each have a 16 MiB budget. Array and List conversion count at least eight bytes per element, and text counts encoding/decoding storage. These budgets do not bound all Python object overhead or the Lean algorithm's working memory. Inputs raise `TypeError`, `ValueError` or an encoding error when invalid. Native failures raise the package's `LeanBridgeError`. Native results and temporary buffers are released even if Python result conversion fails.
 
@@ -90,6 +90,32 @@ Run `./.venv/bin/python lists.py` after installing its prepared wheel. Native
 output cleanup is automatic, including if a nested Python conversion fails.
 The [installed List checks](../evidence/python-lists-20260920.md) cover both source
 paths. List callback payloads remain unsupported.
+
+### Named aliases
+
+Concrete copied Lean aliases become named `TypeAlias` declarations in the module
+and its type stub. They use the target's ordinary Python values. An alias of
+`Nat` is still an exact `int` and rejects negative input; an alias of a record
+is the same frozen dataclass. Aliased arrays and Lists accept lists or tuples
+and return independent tuples. Aliases introduce no wrapper or disposal step.
+
+For the Aliases acceptance package, save this as `aliases.py`:
+
+```python
+from lean_aliases import Count, Rows, increment, reverse_rows
+
+count: Count = 41
+rows: Rows = ((1, 2), ())
+assert increment(count) == 42
+assert reverse_rows(rows) == ((2, 1), ())
+assert reverse_rows([[1, 2], []]) == ((2, 1), ())
+```
+
+Run `./.venv/bin/python aliases.py` after installing its prepared wheel.
+The [installed alias checks](../evidence/python-aliases-20260921.md) exercise
+all nineteen primitive targets, chains, records and nested containers, including
+strict checking of the installed stubs. Variants, recursive alias targets and
+compound callable payloads remain unsupported.
 
 ### Callbacks and returned Lean closures
 
@@ -216,7 +242,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `Result[T, E] = Ok[T] \| Err[E]` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Generated frozen Ok and Err wrappers each hold value. Branches remain distinct for equal payload types. Domain errors return Err; boundary failures raise exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `tuple[A, B] (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two elements in an ordinary tuple, preserving binary nesting and per-position types. Python lists are accepted for Lean arrays and Lists, not products. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated frozen dataclass` (input, result, field); `Generated frozen dataclass (Alpha: Payload)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected | Generated frozen dataclasses use compiler-owned accessors. Returned nested arrays, records and byte values are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | `Resolved target type` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Resolved target annotations alone do not establish compiled alias support. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `Source-named TypeAlias of the ordinary Python target value` (input, result, field); `Resolved target type` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Names appear in module exports, stubs, signatures and fields. Target checks and ownership are unchanged: exact integers with range checks, list-or-tuple inputs and independent tuple results, and the same frozen dataclass for record aliases. Unit uses TypeAlias = None. An alias of Nat still rejects negative input. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Generated case classes` (input, result, field, callback input, callback result) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box / generated resource class` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Callable[[...], R]` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

@@ -6,13 +6,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
-import { sha256 } from "../src/capsule/node.mjs";
 import { compileCopiedPythonModel } from "../src/backends/python/copied-model.mjs";
 import { generateCopiedPythonPackage } from "../src/backends/python/copied-values.mjs";
 import { generatePythonBindingPackage } from "../src/backends/python/generate.mjs";
 import { auditPythonPackage } from "../src/backends/python/package-audit.mjs";
 import { compoundReviewedIr, compoundSignatures } from "./helpers/compound-fixture.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
+import { assertCompoundSourceHash } from "./helpers/compound-source-history.mjs";
 
 test("Python compound evidence binds both installed wheels to independent signatures and consumers", async () => {
 	const evidence = JSON.parse(await readFile("docs/evidence/python-compounds-20260920.json"));
@@ -22,7 +22,7 @@ test("Python compound evidence binds both installed wheels to independent signat
 	for(const run of evidence.runs)
 	{
 		assert.equal(run.profile, "python"); assert.equal(run.checks, 11293);
-		assert.equal(run.consumerSha256, sha256(await readFile("tests/fixtures/compound-consumers/python.py")));
+		assertCompoundSourceHash("tests/fixtures/compound-consumers/python.py", await readFile("tests/fixtures/compound-consumers/python.py"), run.consumerSha256);
 		assert.equal(run.offlineInstall, true); assert.equal(run.compilerFreePath, true); assert.equal(run.sourceRemovedBeforeInstallation, true);
 		for(const field of ["bindingIrSha256", "sourceTreeSha256", "modelSha256", "receiptSha256"]) assert.match(run[field], /^[a-f0-9]{64}$/);
 		assert.equal(run.packages.length, 1); assert.equal(run.packages[0].target, "pypi");

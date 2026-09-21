@@ -8,7 +8,7 @@ Upload the generated platform wheel with Twine, then download and verify that sa
 
 ## Build an ordinary Lean project
 
-Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, arrays, Lists, acyclic records, `Option`, `Except` and nested binary products, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
+Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, concrete copied aliases, arrays, Lists, acyclic records, `Option`, `Except` and nested binary products, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
 
 ```json
 {
@@ -66,6 +66,24 @@ Their conversion limits match the other copied containers. List and Array keep
 distinct contract types even though both use Python sequences. List callback
 payloads remain unsupported. See the [consumer example](../consume/python.md#lists)
 and [installed checks on both source paths](../evidence/python-lists-20260920.md).
+
+## Export named copied aliases
+
+Concrete `abbrev` and type-valued `def` aliases retain public names as Python
+`TypeAlias` declarations. Both source paths preserve checked alias targets and
+chains in the contract. Functions and record fields use the named annotations;
+the private adapter keeps the target's storage, validation and cleanup rules.
+Aliases can name supported primitives, copied records, arrays, Lists, options,
+results and binary products. Names that collide with Python builtins, functions,
+records or generated helpers fail before packaging.
+
+An alias of `Unit` emits `TypeAlias = None`, which strict type checkers accept.
+An alias of `Nat` still rejects negative values. Python's numeric annotations do
+not encode fixed-width ranges, so runtime validation remains necessary.
+See the [consumer example](../consume/python.md#named-aliases) and
+[installed wheel and stub checks](../evidence/python-aliases-20260921.md).
+Generic and recursive aliases, native variants, and compound callable payloads
+still need adapter support.
 
 ## Export callbacks and closures
 

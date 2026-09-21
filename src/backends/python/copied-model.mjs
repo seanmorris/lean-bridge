@@ -61,5 +61,10 @@ export const compileCopiedPythonModel = ir => {
 		names.add(fn.field);
 		for(const parameter of fn.parameters) if(reserved.has(parameter.name)) fail(fn.declaration, `Python parameter name is reserved: ${parameter.name}`);
 	}
+	for(const alias of surface.aliases)
+	{
+		if(names.has(alias.definition.name)) fail(ir.declarations[0], `Python alias name collides: ${alias.definition.name}`);
+		names.add(alias.definition.name);
+	}
 	return { ir, surface, packageDir };
 };

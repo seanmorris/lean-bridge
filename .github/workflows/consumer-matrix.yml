@@ -581,6 +581,10 @@ jobs:
           test -s build/compounds/python.json
           LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs
           test -s build/lists/python.json
+          python3 -m venv build/python-alias-typecheck
+          build/python-alias-typecheck/bin/python -m pip install --no-cache-dir mypy==1.17.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1
+          LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs
+          test -s build/aliases/python.json
           test -s build/type-corpus/python.json
           test -s build/type-corpus/reviewed-native-python.json
       - name: Upload the real-Lean type corpus report
@@ -596,6 +600,7 @@ jobs:
             build/callables/python.json
             build/compounds/python.json
             build/lists/python.json
+            build/aliases/python.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -669,6 +674,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false

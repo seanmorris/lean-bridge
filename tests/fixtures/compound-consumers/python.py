@@ -126,7 +126,13 @@ check(next(iter(typing.get_type_hints(api.classify).values())) == api.Option[api
 check(typing.get_type_hints(api.flip)["return"] == api.Result[api.Option[str], tuple[int, api.Option[None]]])
 for name in api.__all__:
     value = getattr(api, name)
-    if name not in ("Option", "Result"):
+    if name == "Deep":
+        expected = api.Result[tuple[int, None], str]
+        for _ in range(24):
+            expected = api.Option[expected]
+        check(value == expected)
+        check(typing.get_type_hints(api.deep)["return"] == expected)
+    elif name not in ("Option", "Result"):
         typing.get_type_hints(value)
         check(True)
 match api.result_string(Ok("message")):
