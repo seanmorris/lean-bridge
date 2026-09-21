@@ -46,6 +46,34 @@ Repeat `--target` to add C, C++, CPAN, NuGet, Maven, RubyGems or npm. Native tar
 
 Run `lean-bridge verify --receipt /absolute/path/to/cobalt-release/package-set-receipt.json`, then the [ordinary prepared-package example](../consume/wit-wasi.md#ordinary-project-packages) against the original archive. Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). The receipt checks unsigned local consistency, not publisher identity. The [acceptance evidence](../evidence/native-wit-20260914.md) records relocated builds, installed calls and cleanup checks.
 
+## Export named copied aliases
+
+Select functions using concrete copied aliases in `exports`, then build with
+`--target wit-wasi` as above. No alias-specific configuration is needed:
+
+```lean
+namespace Scores
+abbrev Count := UInt32
+abbrev Counts := List Count
+def increment (value : Count) : Count := value + 1
+def reverse (values : Counts) : Counts := values.reverse
+end Scores
+```
+
+The archive preserves the alias names and chains in its WIT source, compiled
+component, binding manifest and README. API sites and record fields retain
+their original references. Consumers pass
+[ordinary target values](../consume/wit-wasi.md#named-copied-aliases).
+
+A reviewed Binding IR contract must retain the alias definitions and references,
+not flatten them into primitive or container types. The build compares the
+review with fresh Lean metadata. Aliases must remain concrete, immutable copied
+values within the existing depth bound. When an alias's WIT spelling matches
+a function, the alias receives an `alias-` prefix until its name is distinct.
+Other duplicate or reserved type spellings reject at build time.
+Callback alias payloads, native variants, recursive copies and
+identity-bearing alias targets need separate support.
+
 ## Check the build inputs
 
 The separate Alpha example uses a reviewed universal bundle containing its compiled native component and target metadata plus the executable WASI adapter. The following bundle commands retain that example's `read-box` API. Use the ordinary-project workflow above for a new package.

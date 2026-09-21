@@ -75,6 +75,7 @@ test("CLI archives are deterministic, dependency-free, and contain the complete 
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedRubyPackage } from './src/backends/ruby/copied-values.mjs'; if (typeof generateCopiedRubyPackage !== 'function') throw new Error('Missing Ruby generator');"], { cwd: first.directory });
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedPhpPackage } from './src/backends/php/copied-values.mjs'; if (typeof generateCopiedPhpPackage !== 'function') throw new Error('Missing PHP generator');"], { cwd: first.directory });
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generatePerlBindingPackage } from './src/backends/perl/generate.mjs'; if (typeof generatePerlBindingPackage !== 'function') throw new Error('Missing Perl generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { compileCopiedWitModel } from './src/backends/wit/copied-model.mjs'; if (typeof compileCopiedWitModel !== 'function') throw new Error('Missing WIT generator');"], { cwd: first.directory });
 		assert.equal(first.report.productionApproved, false);
 		assert.equal(first.report.externalRegistryWrites, false);
 		const manifest = JSON.parse(await readFile(join(first.directory, "package.json"), "utf8"));

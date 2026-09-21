@@ -6,6 +6,7 @@
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { renderCopiedWitComponent } from "./copied-component.mjs";
+import { compileCopiedWitAliases } from "./copied-aliases.mjs";
 
 const kebab = value => value.replace(/([a-z0-9])([A-Z])/g, "$1-$2").replaceAll("_", "-").toLowerCase();
 const reserved = new Set("as async bool borrow char constructor enum export f32 f64 flags from func future import include interface list option own package record resource result s8 s16 s32 s64 static stream string tuple type u8 u16 u32 u64 use variant with world".split(" "));
@@ -51,16 +52,24 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 		const fields = new Set();
 		for(const field of copy.fields) field.witName = admit(field.name, ir.declarations[0], fields);
 	}
+	const functionNames = new Set(surface.functions.map(fn => kebab(fn.field)));
+	const admitAlias = (name, declaration) => {
+		let label = kebab(name);
+		while(functionNames.has(label)) label = `alias-${label}`;
+		return admit(label, declaration);
+	};
+	const aliasModel = surface.aliases.length ? compileCopiedWitAliases({ ir, surface, admit, admitAlias, fail }) : null;
+	const copied = aliasModel?.copy ?? surface.copy;
 	const resources = [...surface.callbacks.values()].map((callback, index) => {
 		const signature = callback.type.callable;
 		const label = type => kebab(type.name);
 		const witName = admit(`function-${signature.parameters.map(site => label(site.type)).join("-")}-to-${label(signature.result.type)}`, ir.declarations[0]);
-		const resource = { ...callback, index: surface.copies.length + index, witName };
+		const resource = { ...callback, index: (aliasModel?.nextIndex ?? surface.copies.length) + index, witName };
 		resource.borrow = { resource: true, resourceIndex: resource.index, borrowed: true, wit: `borrow<${witName}>`, wat: `$borrow${resource.index}` };
 		resource.own = { resource: true, resourceIndex: resource.index, borrowed: false, wit: `own<${witName}>`, wat: `$own${resource.index}` };
 		return resource;
 	});
-	const value = (ref, returned = false) => resources.find(resource => resource.type.id === ref.id)?.[returned ? "own" : "borrow"] ?? surface.copy(ref);
+	const value = (ref, returned = false) => resources.find(resource => resource.type.id === ref.id)?.[returned ? "own" : "borrow"] ?? copied(ref);
 	for(const fn of surface.functions)
 	{
 		fn.witName = admit(fn.field, fn.declaration);
@@ -76,8 +85,9 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 			, parameters: [{ witName: "self", copy: resource.borrow }, ...resource.type.callable.parameters.map((site, index) => ({ witName: `arg${index}`, copy: surface.copy(site.type) }))]
 			, resultCopy: surface.copy(resource.type.callable.result.type)}))
 	];
-	const types = surface.copies.filter(copy => copy.witName);
+	const types = aliasModel?.types ?? surface.copies.filter(copy => copy.witName);
 	const witType = copy => {
+		if(copy.aliasTarget) return `type ${copy.witName} = ${copy.aliasTarget.wit};`;
 		if(copy.compound === "option") return `type ${copy.witName} = option<${copy.fields[0].type.wit}>;`;
 		if(copy.compound === "result") return `type ${copy.witName} = result<${copy.fields.map(field => field.type.wit).join(", ")}>;`;
 		if(copy.compound === "tuple") return `type ${copy.witName} = tuple<${copy.fields.map(field => field.type.wit).join(", ")}>;`;
@@ -103,9 +113,25 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 	const exportedTypes = [...types, ...resources];
 	const wit = `package ${packageName};\n\ninterface native {\n${types.map(copy => `  ${witType(copy)}`).join("\n")}\n${resourceWit}${signatures}\n}\n\ninterface api {\n${exportedTypes.length ? `  use native.{${exportedTypes.map(copy => copy.witName).join(", ")}};\n` : ""}${signatures}\n}\n\nworld ${name} {\n  import native;\n  export api;\n}\n`;
 	const resourceWat = resources.length ? resources.map(resource => `    (export "${resource.witName}" (type $resource${resource.index} (sub resource)))\n    (type $borrow${resource.index} (borrow $resource${resource.index}))\n    (type $own${resource.index} (own $resource${resource.index}))`).join("\n") + "\n" : "";
-	const typeBody = `    (type $limbs (list u32))\n${types.map(copy => `    (type $base${copy.index} ${watType(copy)})\n    (export "${copy.witName}" (type $t${copy.index} (eq $base${copy.index})))`).join("\n")}\n${resourceWat}${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${parameter.copy.wat})`).join(" ")} (result ${fn.resultCopy.wat})))`).join("\n")}`;
-	const wat = renderCopiedWitComponent({ surface, functions, types, resources, typeBody, importName, exportName });
+	const typeBody = `    (type $limbs (list u32))\n${types.map(copy => {
+		const index = copy.witIndex ?? copy.index;
+		if(copy.aliasTarget?.witName) return `    (export "${copy.witName}" (type $t${index} (eq ${copy.aliasTarget.wat})))`;
+		return `    (type $base${index} ${copy.aliasTarget?.wat ?? watType(copy)})\n    (export "${copy.witName}" (type $t${index} (eq $base${index})))`;
+	}).join("\n")}\n${resourceWat}${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${parameter.copy.wat})`).join(" ")} (result ${fn.resultCopy.wat})))`).join("\n")}`;
+	const wat = renderCopiedWitComponent({ surface, functions, types, resources, typeBody, importName, exportName, preserveTypes: !!aliasModel });
 	const manifest = { schemaVersion: 1, backend: "ordinary-wit-native-v1", component: ir.component, bindingIrSha256: hashBindingIr(ir), wit: { package: packageName, world: name, apiInterface: exportName, nativeImport: importName }, declarations: surface.functions.map(fn => ({ id: fn.declaration.id, witName: fn.witName })), deferred: [], assurance: ir.assurance };
+	if(aliasModel)
+	{
+		manifest.aliases = aliasModel.aliases;
+		manifest.contracts = {
+			declarations: surface.functions.map(fn => ({ id: fn.declaration.id
+				, parameters: fn.declaration.parameters.map((site, index) => ({ name: site.name, type: site.type, witType: fn.parameters[index].copy.wit }))
+				, result: { type: fn.declaration.result.type, witType: fn.resultCopy.wit } }))
+			, records: types.filter(copy => copy.record && !copy.aliasTarget).map(copy => ({ id: copy.record.id
+				, witName: copy.witName
+				, fields: copy.record.fields.map((field, index) => ({ name: field.name, type: field.type, witType: copy.fields[index].type.wit })) }))
+		};
+	}
 	if(resources.length)
 	{
 		manifest.backend = "ordinary-wit-native-callable-v1";

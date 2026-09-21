@@ -162,8 +162,8 @@ records, variants and nested containers. See the
 
 Native private conversion helpers use the checked target representation while
 Binding IR retains alias names. C/C++, Python, Rust, .NET, Java/Kotlin, Ruby,
-Perl, native PHP and PHP-Wasm now have the installed checks below. Installed alias acceptance
-for WIT/WASI remains open. Generic aliases, bounded recursion,
+Perl, native PHP, PHP-Wasm and WIT/WASI now have the installed checks below.
+Generic aliases, bounded recursion,
 compound callables and explicitly owned identity aggregates remain in the full
 structured-types goal.
 
@@ -289,7 +289,19 @@ relocation and producer removal. A separate synthetic Zend provider checks
 alias-wrapped cleanup, malformed outputs and bailout recovery. See the
 [PHP-Wasm alias evidence](php-wasm-aliases-20260921.md).
 
-Alias parameters, results and fields now have installed acceptance in sixteen of
-seventeen profiles. WIT/WASI remains. Native
+## Compiled WIT/WASI aliases
+
+Prepared archives retain 27 source aliases in the text WIT, compiled component,
+binding manifest and README. API sites and record fields keep their original
+named references. An independent decoder rejects flattened chains; the native
+value conversion source remains unchanged.
+
+Both source paths pass 409,138 assertions and 43 rejection/recovery cases in
+each of two relocated, compiler-free executions. A separate sanitizer probe
+checks alias-wrapped conversion failures and cleanup. See the
+[WIT/WASI alias evidence](wit-aliases-20260921.md).
+
+Alias parameters, results and fields now have installed acceptance in all
+seventeen profiles, covering 102 cells across both source paths. Native
 variants, bounded recursion, compound callables and explicitly owned identity
 aggregates also remain part of VO1219.

@@ -157,6 +157,28 @@ The [installed List checks](../evidence/wit-lists-20260921.md) cover both source
 paths, nested values, copy limits and cleanup. List callback payloads remain
 unsupported.
 
+### Named copied aliases
+
+Prepared packages preserve concrete Lean alias names and chains in both the WIT
+source and compiled component. Function signatures and record fields refer to
+the original named types. The installed `binding-manifest.json` records their
+Lean names and targets; the package README lists their WIT names.
+
+For example, `abbrev Count := UInt32` produces a named WIT type backed by `u32`.
+Pass a `WASMTIME_COMPONENT_U32` value to an export accepting `Count`. There is no
+wrapper object or resource to create. An alias of `List Count` uses the same
+Wasmtime list values described above, with `u32` elements.
+
+Aliases preserve target checks and copying rules, including Option presence,
+result branches, arbitrary-precision integers and independently owned outputs.
+Lean `USize` and `ISize` use 64-bit values in this native profile. The existing
+32-level type limit and conversion budgets still apply.
+
+The [installed alias checks](../evidence/wit-aliases-20260921.md) cover ordinary
+source and reviewed IR, including aliases used only as return types. Aliases
+inside callback signatures, native variants, recursive copied values and
+identity-bearing alias targets remain unsupported.
+
 ### Callbacks and returned Lean functions
 
 Callable packages add a checked session API. Each callable signature has a WIT `resource function-*` type and an `invoke-function-*` export. Lean borrows host callbacks for one exporting call. Returned Lean functions remain available until you close their tokens or their session.
@@ -284,7 +306,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Except ε α` | `result<Success, Error>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | WIT result arguments are [success, error], reversing Lean Except error/success parameters. Both branches contain typed payloads, including Unit. Domain errors remain separate from bridge-call failures. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `tuple<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two ordered WIT tuple entries preserve binary nesting and per-position types. All compounds compose with copied arrays and acyclic records. Conversion accounts for slots and payloads with a 16 MiB limit; C callers supply valid borrowed storage. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated WIT record (empty: single-case enum)` (input, result, field); `Generated WIT record` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | Ordinary packages use WIT field order and compiler-owned Lean accessors. Empty records use a single-case enum; returned values remain valid after closing the session. The Alpha executable adapter does not expose this type. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | `Generated WIT type alias` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Type alias` | `Named WIT alias; ordinary target Wasmtime value` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Text WIT and the compiled component preserve original alias names and chains, API references and record fields. The manifest and README document target mappings; callers use ordinary Wasmtime values without wrapper resources. Native target conversions, branch presence, independent result ownership, 64-bit USize/ISize and existing copy budgets remain unchanged. An alias whose WIT name conflicts with a function receives an alias- prefix; other duplicate or reserved type names reject. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `Generated WIT variant` (input, result, field) | Ordinary source: Not audited. Reviewed IR: Generator inspected (input, result, field); Not audited (callback input, callback result) | The Alpha executable adapter does not expose this type. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `borrow<function-*> through a session token` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Generation rejected (result, field, callback input, callback result) | The adapter checks the session, generation and signature before borrowing a callback for one Lean call. Failures return an owned Wasmtime error. The Alpha executable adapter does not expose this type. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |

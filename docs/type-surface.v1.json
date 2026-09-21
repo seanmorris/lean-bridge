@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.54.0",
+  "contractVersion": "0.55.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,177 @@
   ],
   "evidence": [
     {
+      "id": "wit-wasi-aliases-installed",
+      "kind": "installed",
+      "revision": "f63a4408ffdd2ad57482bf1a6dab919438c20c48",
+      "command": "LEAN_BRIDGE_WIT_ALIAS_TEST=1 node --test --test-concurrency=1 tests/wit-aliases.test.mjs tests/wit-alias-contract.test.mjs tests/wit-alias-conversions.test.mjs; node --test tests/wit-alias-evidence.test.mjs",
+      "scope": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
+        },
+        {
+          "path": "docs/evidence/wit-aliases-20260921.json",
+          "sha256": "8b1c64ac11115daa3d21b2e136ecbba2c0d5d0da33c2b18a3cd398873b62cdc6"
+        },
+        {
+          "path": "docs/evidence/wit-aliases-20260921.md",
+          "sha256": "bf39ecfc5c79e45556a8fd932b4721b6d092dcb91562cdc8dda6259d92b3662e"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "8a7f425755179c2112719601cc83f86fdea9cdb5ec29654c2e94933e489c1867"
+        },
+        {
+          "path": "src/backends/wit/copied-aliases.mjs",
+          "sha256": "d418a8dcbbdd36d0c3bc624222ea112fc565a36ac0229d8503ad113a532b6dfe"
+        },
+        {
+          "path": "src/backends/wit/copied-component.mjs",
+          "sha256": "3653a074a948c2921b0b51a4b9488e5b01559b34e206315393e0863d1b7069b0"
+        },
+        {
+          "path": "src/backends/wit/copied-conversions.mjs",
+          "sha256": "6d5cb4c43e4ff7c00c4d608117cace08e22f487f872938a39081a86a4ff5f2c7"
+        },
+        {
+          "path": "src/backends/wit/copied-host.mjs",
+          "sha256": "aac9595356a2ce1c05a3334feb53edcc8d6c412775e2c07069276d5e4d61764e"
+        },
+        {
+          "path": "src/backends/wit/copied-model.mjs",
+          "sha256": "39ddcb4f048440d3d21fc9c0f53a192342e3f8e7e9ec2693f0c7bd1333085eda"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "5c7acb52a06bf9c5dab3fd72b2adc3a45c0d673e8e48e6e8333a4246d464f88d"
+        },
+        {
+          "path": "src/build/native-wit-artifacts.mjs",
+          "sha256": "7d8383552ea01050baf0d8f14843868f0f07a6189f78c9197e0a15523c445700"
+        },
+        {
+          "path": "src/build/native-wit-projection.mjs",
+          "sha256": "613a4d8b322eb00b8e8f7ad016ed2940928f47052159cbf76f58e1bde03678e8"
+        },
+        {
+          "path": "src/release/native-wasi.mjs",
+          "sha256": "3321ce84728a36247073fd03ce5976e2a86cacfff4988cb5e62038ecd01c8d45"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/wit-wasi.c",
+          "sha256": "8bf1441edb4312cfa2bbcc98f597d3df7d03060fbd31776404ab17d602ba422f"
+        },
+        {
+          "path": "tests/fixtures/callable-consumers/wit-component.c",
+          "sha256": "be7510bd447bb28872bc2af3292735fc2637d1570846c78579fed2d970bff3a0"
+        },
+        {
+          "path": "tests/fixtures/list-consumers/wit-wasi.c",
+          "sha256": "e1196270960b61c4c024ba1416bb7830b16cd6ea4e2aa5301508706aa01c7e63"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/Aliases.lean",
+          "sha256": "29856b6d40ab2165b968c4a96d10dabac3b00ab2bdc3253f0f28e3fb68449e9b"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lakefile.toml",
+          "sha256": "78d51dd752c451c83f9cd5501b01f161e7d2e5589290fa10b24f6aea2837258f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/native-aliases/package.json",
+          "sha256": "0e68f94f9314382b7ae9a8bd3fad2baf22d9cc14b438bbc69a8cca1f79df8bbd"
+        },
+        {
+          "path": "tests/helpers/alias-fixture.mjs",
+          "sha256": "1bf32ea0aacbfae72481c5641212389d009206a94c7dee94c3242791138232c8"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/native-alias-fixture.mjs",
+          "sha256": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6"
+        },
+        {
+          "path": "tests/helpers/type-corpus-wit-evidence.mjs",
+          "sha256": "0f936adbb0df8e6e4bb4b3dde96d4987539a069981101de19dac2fc70133a2f0"
+        },
+        {
+          "path": "tests/helpers/type-corpus-wit.mjs",
+          "sha256": "2cf8c27c2401bb5aea78a9a172cdb5044f4f1a1e023d0efc6a02891d84aff378"
+        },
+        {
+          "path": "tests/helpers/wit-alias-faults.mjs",
+          "sha256": "49f647af486f27ebd8156484b5a57cf0db0f4ab13484402ea818ed9361ba9c52"
+        },
+        {
+          "path": "tests/helpers/wit-alias-fixture.mjs",
+          "sha256": "4d48e77cfb6b7adff719e39f419f7cef0c3c962a2a73e9d8dbbc645a0de361ee"
+        },
+        {
+          "path": "tests/helpers/wit-list-faults.mjs",
+          "sha256": "e9113d87b9572344f19238f208f9ffb7ea3550b84b27b6d54bc012328effdfed"
+        },
+        {
+          "path": "tests/helpers/wit-list-fixture.mjs",
+          "sha256": "2994334cf6f6ed73ed8b846708c158215d7203904b1e92a51cbfb5d7036d772b"
+        },
+        {
+          "path": "tests/wit-alias-contract.test.mjs",
+          "sha256": "5ace40fe3eb8214634818fb2a7108f91fdb1cfe50c846dd4fdc18b60d635fd35"
+        },
+        {
+          "path": "tests/wit-alias-conversions.test.mjs",
+          "sha256": "e826211ccc7998f4f65be491ee2902609f8fbc2a05cf10aaf3daf324b1abbd15"
+        },
+        {
+          "path": "tests/wit-alias-evidence.test.mjs",
+          "sha256": "f18613bd3910e98d438997ee6df7514027b92c4419378b18eba8ff2bfcadbffb"
+        },
+        {
+          "path": "tests/wit-aliases.test.mjs",
+          "sha256": "85d744d28d51e8654bcda5084f43d39e414f8b2efdf3ea8efa48a9320f3146f0"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/aliases-1.0.0-wit-wasi.tar.gz",
+          "sha256": "91c9879eb897fdc2ca1feb65f65e7b9575cc40017260ff2a461b09262fd459fa"
+        },
+        {
+          "path": "reviewed-ir/archives/aliases-1.0.0-wit-wasi.tar.gz",
+          "sha256": "cd318b3a71ec3bbf0d1cc0cbce6300257822792872b05669feb4fc838e9eeb87"
+        }
+      ]
+    },
+    {
       "id": "php-wasm-aliases-installed",
       "kind": "installed",
       "revision": "1c9975eef2ec8d021842ee25c8cbd9a8d5485f47",
@@ -165,7 +336,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-wasm-aliases-20260921.json",
@@ -177,7 +348,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -392,7 +563,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-native-aliases-20260921.json",
@@ -404,7 +575,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -555,7 +726,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -690,7 +861,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/ruby-aliases-20260921.json",
@@ -702,7 +873,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -841,7 +1012,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
@@ -853,7 +1024,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1036,15 +1207,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "f15f921c3928625a4eeeeb4b05bcf137cee83e4df640704d7472c813580c8463"
+          "sha256": "51527865f74a2bb628ce20149ffff3e53a175464764a9ad0f52ac9ab5adab0a2"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "4548e81133022578ab84c3574f9f6f0abb9546d675a5b0990d93cbdcb9003740"
+          "sha256": "d6afda30c5b12841393075212d8d9c1d3e3c44fbf91a6dc97f7828db8e4e1ffe"
         },
         {
           "path": "docs/evidence/dotnet-aliases-20260921.json",
@@ -1056,15 +1227,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "981a0d55704a17d72dcfa73ccdc9bfaed0546c57781a6938757ba6324d500c3a"
+          "sha256": "3038873236752bb0117ea30bf2cc3608c5c00f8b9a380d86170dca2bc6b833dd"
         },
         {
           "path": "package.json",
-          "sha256": "df1d4a8443cf369a5a9fa9100d5b85df65787da55035e196804590591a115a73"
+          "sha256": "e158f9d8e20ed949c6621c4863974e071e2061466ea98f1fb0150496c54fbb7e"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1124,7 +1295,7 @@
         },
         {
           "path": "tests/cli-npm-package.test.mjs",
-          "sha256": "32d60d1d1bcaab7c22c55d6a1fd0635fd61164039ac748d0712033bf9822a2bf"
+          "sha256": "dd89028373d075781c8463132c98d4777fe6e894d69284823d9cc91d8a3e1cae"
         },
         {
           "path": "tests/dotnet-alias-contract.test.mjs",
@@ -1211,7 +1382,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -1223,7 +1394,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1354,7 +1525,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -1366,7 +1537,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1489,7 +1660,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -1501,7 +1672,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1624,7 +1795,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -1652,7 +1823,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1767,7 +1938,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -1803,7 +1974,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1926,7 +2097,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -1942,7 +2113,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1986,7 +2157,7 @@
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
-          "sha256": "57017291d3cf734366e88815e1593acece01ca2cab6a5be6e9eb90d17ffbaf3d"
+          "sha256": "3653a074a948c2921b0b51a4b9488e5b01559b34e206315393e0863d1b7069b0"
         },
         {
           "path": "src/backends/wit/copied-conversions.mjs",
@@ -1998,7 +2169,7 @@
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
-          "sha256": "41b3345196faaf118aa8a7e995209e4c1d754c13da3f2bdbdb6623cb2212ff7d"
+          "sha256": "39ddcb4f048440d3d21fc9c0f53a192342e3f8e7e9ec2693f0c7bd1333085eda"
         },
         {
           "path": "src/backends/wit/generate.mjs",
@@ -2026,7 +2197,7 @@
         },
         {
           "path": "src/release/native-wasi.mjs",
-          "sha256": "632993d2822f20f54a1629d680fd8b5d56a78532656ec5f94624aeda16fe0b0b"
+          "sha256": "3321ce84728a36247073fd03ce5976e2a86cacfff4988cb5e62038ecd01c8d45"
         },
         {
           "path": "tests/fixtures/callable-consumers/wit-component.c",
@@ -2121,7 +2292,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -2137,7 +2308,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2360,7 +2531,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -2376,7 +2547,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2567,7 +2738,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -2583,7 +2754,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2790,7 +2961,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3001,7 +3172,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -3017,7 +3188,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3180,7 +3351,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -3196,7 +3367,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3387,7 +3558,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -3403,7 +3574,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4079,7 +4250,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -4111,7 +4282,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -4218,7 +4389,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -4234,7 +4405,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4437,7 +4608,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -4453,7 +4624,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4652,7 +4823,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4863,7 +5034,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -4879,7 +5050,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5042,7 +5213,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -5058,7 +5229,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5249,7 +5420,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -5265,7 +5436,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5933,7 +6104,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -6136,7 +6307,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -6299,7 +6470,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -6347,7 +6518,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6570,11 +6741,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -6665,11 +6836,11 @@
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
-          "sha256": "41b3345196faaf118aa8a7e995209e4c1d754c13da3f2bdbdb6623cb2212ff7d"
+          "sha256": "39ddcb4f048440d3d21fc9c0f53a192342e3f8e7e9ec2693f0c7bd1333085eda"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
-          "sha256": "57017291d3cf734366e88815e1593acece01ca2cab6a5be6e9eb90d17ffbaf3d"
+          "sha256": "3653a074a948c2921b0b51a4b9488e5b01559b34e206315393e0863d1b7069b0"
         },
         {
           "path": "src/backends/wit/copied-conversions.mjs",
@@ -6697,7 +6868,7 @@
         },
         {
           "path": "src/release/native-wasi.mjs",
-          "sha256": "632993d2822f20f54a1629d680fd8b5d56a78532656ec5f94624aeda16fe0b0b"
+          "sha256": "3321ce84728a36247073fd03ce5976e2a86cacfff4988cb5e62038ecd01c8d45"
         },
         {
           "path": "tests/wit-callable-contract.test.mjs",
@@ -6709,11 +6880,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -6828,7 +6999,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -6836,7 +7007,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -6864,7 +7035,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -7067,7 +7238,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -7075,7 +7246,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -7103,7 +7274,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -7258,11 +7429,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -7286,7 +7457,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -7481,11 +7652,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -7505,7 +7676,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -7680,15 +7851,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "flake.nix",
@@ -7891,15 +8062,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -8086,15 +8257,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -8217,15 +8388,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -8348,15 +8519,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -8467,15 +8638,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -8578,15 +8749,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "ad324757fba97d52aa1a0ef2eb4c3b4651edf5697e860f78e3b54d614763037d"
+          "sha256": "028888efd46437fa996af8825b4cfcc273fc456b4ee1a2830bcc65571fd231e7"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -8677,7 +8848,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -8725,7 +8896,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -8829,7 +9000,7 @@
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
-          "sha256": "57017291d3cf734366e88815e1593acece01ca2cab6a5be6e9eb90d17ffbaf3d"
+          "sha256": "3653a074a948c2921b0b51a4b9488e5b01559b34e206315393e0863d1b7069b0"
         },
         {
           "path": "src/backends/wit/copied-conversions.mjs",
@@ -8837,7 +9008,7 @@
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
-          "sha256": "41b3345196faaf118aa8a7e995209e4c1d754c13da3f2bdbdb6623cb2212ff7d"
+          "sha256": "39ddcb4f048440d3d21fc9c0f53a192342e3f8e7e9ec2693f0c7bd1333085eda"
         },
         {
           "path": "src/binding-ir/contract.mjs",
@@ -8877,7 +9048,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "ad324757fba97d52aa1a0ef2eb4c3b4651edf5697e860f78e3b54d614763037d"
+          "sha256": "028888efd46437fa996af8825b4cfcc273fc456b4ee1a2830bcc65571fd231e7"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -8981,7 +9152,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "1ddb8693470f5864d35f6900266deeb4ac29284b93400a273565c98c96cd2365"
+          "sha256": "3031c4152502c1ab157a8f8ca3b4a1d62da5659686aefee49bdb80abfa32dba3"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -9056,7 +9227,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -9068,7 +9239,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -9152,7 +9323,7 @@
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
-          "sha256": "57017291d3cf734366e88815e1593acece01ca2cab6a5be6e9eb90d17ffbaf3d"
+          "sha256": "3653a074a948c2921b0b51a4b9488e5b01559b34e206315393e0863d1b7069b0"
         },
         {
           "path": "src/backends/wit/copied-conversions.mjs",
@@ -9160,7 +9331,7 @@
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
-          "sha256": "41b3345196faaf118aa8a7e995209e4c1d754c13da3f2bdbdb6623cb2212ff7d"
+          "sha256": "39ddcb4f048440d3d21fc9c0f53a192342e3f8e7e9ec2693f0c7bd1333085eda"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -9874,7 +10045,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "34871c3e9eea2fc22c613e678fc673c0ac87f414482145b82ab76ce536427656"
+          "sha256": "dea2683043343c305ff4fd22c7f6cf1f8143106d88c9da820fd4a845fc320fa6"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -9890,7 +10061,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "fc3c4df343947d79b05ec3072d420ab7901530f012cba16cee0591d21baf8d6d"
+          "sha256": "3087b67135a8afa52bb023f420629c947f02b3e313c7a38aa1f5dcd58f5d311a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9934,7 +10105,7 @@
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
-          "sha256": "57017291d3cf734366e88815e1593acece01ca2cab6a5be6e9eb90d17ffbaf3d"
+          "sha256": "3653a074a948c2921b0b51a4b9488e5b01559b34e206315393e0863d1b7069b0"
         },
         {
           "path": "src/backends/wit/copied-conversions.mjs",
@@ -9946,7 +10117,7 @@
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
-          "sha256": "41b3345196faaf118aa8a7e995209e4c1d754c13da3f2bdbdb6623cb2212ff7d"
+          "sha256": "39ddcb4f048440d3d21fc9c0f53a192342e3f8e7e9ec2693f0c7bd1333085eda"
         },
         {
           "path": "src/backends/wit/generate.mjs",
@@ -9974,7 +10145,7 @@
         },
         {
           "path": "src/release/native-wasi.mjs",
-          "sha256": "632993d2822f20f54a1629d680fd8b5d56a78532656ec5f94624aeda16fe0b0b"
+          "sha256": "3321ce84728a36247073fd03ce5976e2a86cacfff4988cb5e62038ecd01c8d45"
         },
         {
           "path": "tests/fixtures/callable-consumers/wit-component.c",
@@ -10069,11 +10240,11 @@
         },
         {
           "path": "src/backends/wit/copied-model.mjs",
-          "sha256": "41b3345196faaf118aa8a7e995209e4c1d754c13da3f2bdbdb6623cb2212ff7d"
+          "sha256": "39ddcb4f048440d3d21fc9c0f53a192342e3f8e7e9ec2693f0c7bd1333085eda"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
-          "sha256": "57017291d3cf734366e88815e1593acece01ca2cab6a5be6e9eb90d17ffbaf3d"
+          "sha256": "3653a074a948c2921b0b51a4b9488e5b01559b34e206315393e0863d1b7069b0"
         },
         {
           "path": "src/backends/wit/copied-conversions.mjs",
@@ -10109,7 +10280,7 @@
         },
         {
           "path": "src/release/native-wasi.mjs",
-          "sha256": "632993d2822f20f54a1629d680fd8b5d56a78532656ec5f94624aeda16fe0b0b"
+          "sha256": "3321ce84728a36247073fd03ce5976e2a86cacfff4988cb5e62038ecd01c8d45"
         },
         {
           "path": "tests/native-wit.test.mjs",
@@ -11311,6 +11482,140 @@
     }
   ],
   "observations": [
+    {
+      "id": "wit-wasi-aliases-ordinary-source",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Named WIT alias; ordinary target Wasmtime value",
+          "result": "Named WIT alias; ordinary target Wasmtime value",
+          "field": "Named WIT alias; ordinary target Wasmtime value"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic immutable copied aliases only; existing 32-level type and conversion bounds remain.",
+        "Native variants, recursion, compound callable payloads and identity-bearing aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "alias": "Text WIT and the compiled component preserve original alias names and chains, API references and record fields. The manifest and README document target mappings; callers use ordinary Wasmtime values without wrapper resources. Native target conversions, branch presence, independent result ownership, 64-bit USize/ISize and existing copy budgets remain unchanged. An alias whose WIT name conflicts with a function receives an alias- prefix; other duplicate or reserved type names reject."
+      }
+    },
+    {
+      "id": "wit-wasi-aliases-reviewed-ir",
+      "profiles": [
+        "wit-wasi"
+      ],
+      "shapes": [
+        "alias"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence.",
+      "hostTypes": {
+        "alias": {
+          "parameter": "Named WIT alias; ordinary target Wasmtime value",
+          "result": "Named WIT alias; ordinary target Wasmtime value",
+          "field": "Named WIT alias; ordinary target Wasmtime value"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "wit-wasi-aliases-installed"
+          ],
+          "note": "Prepared WIT/WASI archives preserve 27 copied alias names, targets and chains in text WIT, the compiled component, binding manifest and README. API sites and fields retain original named references without changing native target conversions. Both source paths pass 409,138 public assertions across 2,653 calls, including 43 rejection/recovery cases, in each of two relocated compiler-free executions after producer removal. Offline installation and unchanged loaded libraries, component and executable are receipt-bound. A separate nine-alias synthetic probe passes ASan/LSan/UBSan across allocation failures, input/output budgets, malformed values and inactive payloads; it is not compiled Lean evidence."
+        }
+      },
+      "limitations": [
+        "Concrete non-generic immutable copied aliases only; existing 32-level type and conversion bounds remain.",
+        "Native variants, recursion, compound callable payloads and identity-bearing aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "alias": "Text WIT and the compiled component preserve original alias names and chains, API references and record fields. The manifest and README document target mappings; callers use ordinary Wasmtime values without wrapper resources. Native target conversions, branch presence, independent result ownership, 64-bit USize/ISize and existing copy budgets remain unchanged. An alias whose WIT name conflicts with a function receives an alias- prefix; other duplicate or reserved type names reject."
+      }
+    },
     {
       "id": "php-wasm-aliases-ordinary-source",
       "profiles": [
@@ -37434,7 +37739,6 @@
       "shapes": [
         "array",
         "record",
-        "alias",
         "variant"
       ],
       "positions": [
@@ -37454,11 +37758,6 @@
           "parameter": "Generated WIT record",
           "result": "Generated WIT record",
           "field": "Generated WIT record"
-        },
-        "alias": {
-          "parameter": "Generated WIT type alias",
-          "result": "Generated WIT type alias",
-          "field": "Generated WIT type alias"
         },
         "variant": {
           "parameter": "Generated WIT variant",
@@ -37499,7 +37798,6 @@
       "conversionNotes": {
         "array": "The Alpha executable adapter does not expose this type.",
         "record": "The Alpha executable adapter does not expose this type.",
-        "alias": "The Alpha executable adapter does not expose this type.",
         "variant": "The Alpha executable adapter does not expose this type."
       }
     },

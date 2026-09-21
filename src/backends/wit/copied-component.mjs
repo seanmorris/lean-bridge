@@ -107,8 +107,9 @@ ${["i32", "i64", "f32", "f64"].map(type => `  (alias core export $allocation "po
  * @param model.typeBody - Component instance type declarations and functions.
  * @param model.importName - Fully qualified native interface.
  * @param model.exportName - Fully qualified public interface.
+ * @param model.preserveTypes - Retain source aliases in the compiled public interface.
  */
-export const renderCopiedWitComponent = ({ surface, functions: exports = surface.functions, types, resources = [], typeBody, importName, exportName }) => {
+export const renderCopiedWitComponent = ({ surface, functions: exports = surface.functions, types, resources = [], typeBody, importName, exportName, preserveTypes = false }) => {
 	const layouts = new Map();
 	const functions = exports.map((fn, index) => {
 		const input = fn.parameters.flatMap(parameter => layout(parameter.copy, layouts).flat), result = layout(fn.resultCopy ?? surface.copy(fn.declaration.result.type), layouts);
@@ -125,11 +126,13 @@ export const renderCopiedWitComponent = ({ surface, functions: exports = surface
 		}).join("\n");
 		return { fn, index, result, parameters, indirect, returned, drop, lowered: [...parameters, ...(indirect ? ["i32"] : [])] };
 	});
-	const publicType = copy => copy.resource ? `$public${copy.borrowed ? "Borrow" : "Own"}${copy.resourceIndex}` : copy.witName ? `$public${copy.index}` : copy.wat;
+	const typeIndex = copy => copy.witIndex ?? copy.index;
+	const explicitTypes = resources.length || preserveTypes;
+	const publicType = copy => copy.resource ? `$public${copy.borrowed ? "Borrow" : "Own"}${copy.resourceIndex}` : copy.witName ? `$public${typeIndex(copy)}` : copy.wat;
 	// Type ascription gives re-exported aliases fresh IDs while preserving the
 	// imported resource identity. Direct duplicate exports confuse WIT decoders.
-	const publicResources = resources.length ? `  (type $public-api (instance
-${types.map(copy => `    (alias outer 1 $public${copy.index} (type $outer${copy.index}))\n    (export "${copy.witName}" (type $public${copy.index} (eq $outer${copy.index})))`).join("\n")}
+	const publicResources = explicitTypes ? `  (type $public-api (instance
+${types.map(copy => `    (alias outer 1 $public${typeIndex(copy)} (type $outer${typeIndex(copy)}))\n    (export "${copy.witName}" (type $public${typeIndex(copy)} (eq $outer${typeIndex(copy)})))`).join("\n")}
 ${resources.map(resource => `    (alias outer 1 $publicResource${resource.index} (type $outer${resource.index}))\n    (export "${resource.witName}" (type $publicResource${resource.index} (eq $outer${resource.index})))\n    (type $publicBorrow${resource.index} (borrow $publicResource${resource.index}))\n    (type $publicOwn${resource.index} (own $publicResource${resource.index}))`).join("\n")}
 ${functions.map(({ fn }) => `    (export "${fn.witName}" (func ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${publicType(parameter.copy)})`).join(" ")} (result ${publicType(fn.resultCopy)})))`).join("\n")}
   ))\n` : "";
@@ -138,7 +141,7 @@ ${functions.map(({ fn }) => `    (export "${fn.witName}" (func ${fn.parameters.m
 ${typeBody}
   ))
   (import "${importName}" (instance $host (type $api)))
-${types.map(copy => `  (alias export $host "${copy.witName}" (type $public${copy.index}))`).join("\n")}
+${types.map(copy => `  (alias export $host "${copy.witName}" (type $public${typeIndex(copy)}))`).join("\n")}
 ${resources.length ? resources.map(resource => `  (alias export $host "${resource.witName}" (type $publicResource${resource.index}))\n  (type $publicBorrow${resource.index} (borrow $publicResource${resource.index}))\n  (type $publicOwn${resource.index} (own $publicResource${resource.index}))`).join("\n") + "\n" : ""}${functions.map(({ fn, index }) => `  (alias export $host "${fn.witName}" (func $host${index}))`).join("\n")}
   ${allocator(resources.length > 0)}
 ${functions.map(({ index }) => `  (core func $lower${index} (canon lower (func $host${index}) (memory $memory) (realloc $realloc)))`).join("\n")}
@@ -157,9 +160,9 @@ ${resources.length ? `  (core instance $resources\n${resources.map(resource => `
 ${functions.map(({ index }) => `  (alias core export $forwarded "f${index}" (core func $forward${index}))`).join("\n")}
 ${functions.map(({ fn, index, returned }) => `  (func $f${index} ${fn.parameters.map(parameter => `(param "${parameter.witName}" ${publicType(parameter.copy)})`).join(" ")} (result ${publicType(fn.resultCopy ?? surface.copy(fn.declaration.result.type))}) (canon lift (core func $forward${index}) (memory $memory) (realloc $realloc) (post-return $post-${returned})))`).join("\n")}
 ${publicResources}  (instance $public
-${resources.length ? [...types.map(copy => `    (export "${copy.witName}" (type $public${copy.index}))`), ...resources.map(resource => `    (export "${resource.witName}" (type $publicResource${resource.index}))`)].join("\n") + "\n" : ""}${functions.map(({ fn, index }) => `    (export "${fn.witName}" (func $f${index}))`).join("\n")}
+${explicitTypes ? [...types.map(copy => `    (export "${copy.witName}" (type $public${typeIndex(copy)}))`), ...resources.map(resource => `    (export "${resource.witName}" (type $publicResource${resource.index}))`)].join("\n") + "\n" : ""}${functions.map(({ fn, index }) => `    (export "${fn.witName}" (func $f${index}))`).join("\n")}
   )
-  (export "${exportName}" (instance $public)${resources.length ? " (instance (type $public-api))" : ""})
+  (export "${exportName}" (instance $public)${explicitTypes ? " (instance (type $public-api))" : ""})
 )
 `;
 };
