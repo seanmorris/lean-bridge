@@ -16,7 +16,7 @@ const scalar = { char: "global::System.Text.Rune", unit: "Unit", bool: "bool", u
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedDotnetModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true }), componentName = pascal(surface.prefix);
+	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true }), componentName = pascal(surface.prefix);
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-dotnet-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -24,10 +24,10 @@ export const compileCopiedDotnetModel = ir => {
 	if(!/^[A-Za-z][A-Za-z0-9]*$/.test(componentName) || reserved.has(componentName)) fail(null, "Component name collides with the generated C# namespace");
 	const names = new Set(reserved);
 	if(surface.copies.some(copy => copy.compound)) for(const name of ["Option", "Result"]) names.add(name);
-	for(const copy of surface.copies.filter(copy => copy.record))
+	for(const copy of surface.copies.filter(copy => copy.record || copy.variant))
 	{
-		copy.publicName = pascal(copy.record.name);
-		if(names.has(copy.publicName) || runtimeNames.has(copy.publicName) || /^(?:N|B|Callback)\d+$/.test(copy.publicName) || ["CallbackFrame", "ClosureLease", "ActiveCall", "ProcessGuard", "Marshal", "Exception", "Math"].includes(copy.publicName)) fail(ir.declarations[0], `C# record name collides with a generated identifier: ${copy.publicName}`);
+		copy.publicName = pascal((copy.record || copy.variant).name);
+		if(names.has(copy.publicName) || runtimeNames.has(copy.publicName) || /^(?:(?:N|B|V|Callback)\d+|C\d+_?\d+)$/.test(copy.publicName) || ["CallbackFrame", "ClosureLease", "ActiveCall", "ProcessGuard", "Marshal", "Exception", "Math"].includes(copy.publicName)) fail(ir.declarations[0], `C# ${copy.variant ? "variant" : "record"} name collides with a generated identifier: ${copy.publicName}`);
 		names.add(copy.publicName);
 		const fields = new Set([...reserved, copy.publicName]);
 		for(const field of copy.fields)
@@ -36,6 +36,21 @@ export const compileCopiedDotnetModel = ir => {
 			if(fields.has(field.publicName)) fail(ir.declarations[0], `C# record field name collides: ${field.publicName}`);
 			fields.add(field.publicName);
 		}
+		if(copy.variant)
+			for(const [index, branch] of copy.cases.entries())
+			{
+				const source = copy.variant.cases[index];
+				branch.publicName = copy.publicName + pascal(source.name) + (source.name.match(/_+$/)?.[0] ?? "");
+				if(names.has(branch.publicName) || runtimeNames.has(branch.publicName)) fail(ir.declarations[0], `C# constructor name collides: ${branch.publicName}`);
+				names.add(branch.publicName);
+				const members = new Set(["Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "MemberwiseClone", "Clone", "EqualityContract", "PrintMembers", "Deconstruct", branch.publicName]);
+				for(const [i, field] of branch.fields.entries())
+				{
+					field.publicName = pascal(source.fields[i].name) + (source.fields[i].name.match(/_+$/)?.[0] ?? "");
+					if(members.has(field.publicName)) fail(ir.declarations[0], `C# variant field name collides: ${field.publicName}`);
+					members.add(field.publicName);
+				}
+			}
 	}
 	const functionNames = new Set(reserved);
 	for(const fn of surface.functions)
@@ -44,7 +59,7 @@ export const compileCopiedDotnetModel = ir => {
 		if(functionNames.has(fn.publicName)) fail(fn.declaration, `C# function name collides: ${fn.publicName}`);
 		functionNames.add(fn.publicName);
 	}
-	const publicType = copy => copy.type?.callable ? copy.delegateType : copy.record ? copy.publicName
+	const publicType = copy => copy.type?.callable ? copy.delegateType : copy.record || copy.variant ? copy.publicName
 		: copy.compound ? copy.compound === "tuple" ? `(${copy.fields.map(field => publicType(field.type)).join(", ")})`
 			: `${copy.compound === "option" ? "Option" : "Result"}<${copy.fields.map(field => publicType(field.type)).join(", ")}>`
 			: copy.element ? `${publicType(copy.element)}[]` : scalar[copy.scalarName];

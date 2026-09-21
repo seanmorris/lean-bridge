@@ -59,7 +59,7 @@ export const dotnetAliasSiteDocs = (model, parameters, result = null, returnsVoi
 export const dotnetAliasReadme = model => !model.surface.aliases.length ? "" : `
 ## Copied Lean aliases
 
-C# using aliases are local to source files; a NuGet assembly cannot export them. Pass and receive the CLR target values below. Aliases add no wrapper or distinct runtime identity. Their names, original targets and chains remain in the installed binding manifest and XML API documentation. Alias parameters, return values and record fields keep their target validation: Nat still rejects negative BigInteger values, while Int accepts them. Unit results return void. Native variants, recursive values, identity-bearing targets and compound callable payloads remain unsupported.
+C# using aliases are local to source files; a NuGet assembly cannot export them. Pass and receive the CLR target values below. Aliases add no wrapper or distinct runtime identity. Their names, original targets and chains remain in the installed binding manifest and XML API documentation. Alias parameters, return values and record fields keep their target validation: Nat still rejects negative BigInteger values, while Int accepts them. Unit results return void. Recursive values, identity-bearing targets and compound callable payloads remain unsupported.
 
 | Lean alias | Contract target | C# value type |
 | --- | --- | --- |

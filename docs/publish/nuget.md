@@ -1,6 +1,6 @@
 # Build and publish C# / .NET packages
 
-Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays and Lists, acyclic copied records, options, results, binary products, and synchronous primitive callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays and Lists, acyclic copied records, tagged variants, options, results, binary products, and synchronous primitive callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/aurora --target nuget \
 
 The result includes `archives/Acme.Aurora.2.0.0-rc.1.nupkg` and `native-release.json`, which records the exact archive digest. The archive contains the compiled .NET 8 assembly, native adapter, Lean component, shared runtime, generated sources, compiler evidence and dependency license notices. Its README identifies the generated namespace and API. A different NuGet package ID does not rename the Lean-derived C# namespace.
 
-The native profile accepts concrete functions with copied values and synchronous primitive callbacks or returned closures. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. Variants, resources, compound callables and asynchronous effects remain outside this ordinary NuGet profile.
+The native profile accepts concrete functions with copied values and synchronous primitive callbacks or returned closures. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. Recursive values, resources, compound callables and asynchronous effects remain outside this ordinary NuGet profile.
 
 Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
 
@@ -65,6 +65,31 @@ and [installed alias evidence](../evidence/dotnet-aliases-20260921.md).
 Both ordinary-source and reviewed-IR builds accept `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested Lists and arrays, copied records, `Option`, `Except` and binary products. Select concrete Lean exports as usual; no List-specific configuration is required.
 
 C# consumers pass and receive typed `T[]` values. Copies preserve empty Lists, order, duplicates and every nesting level. Returned arrays have independent storage. The existing 16 MiB accounting budgets and 32-level type limit apply. List callback payloads remain unsupported. See the [consumer example](../consume/dotnet.md#lists) and [installed NuGet List evidence](../evidence/dotnet-lists-20260920.md).
+
+## Export copied tagged variants
+
+Select functions over concrete, non-recursive Lean inductives in your export
+configuration or independently reviewed contract. The compiler records the
+constructors and payloads. Generated Lean helpers construct and read values
+without exposing runtime object layouts.
+
+The NuGet assembly exports an abstract record and a sealed record per
+constructor, with typed init-only payload properties. Names use PascalCase and
+retain trailing underscores that distinguish source members. Generated type
+names and inherited record members cannot collide. Private unmanaged unions
+carry values to C; consumers use only the named C# records.
+
+Payloads may contain all nineteen primitives, supported copied containers,
+records and other non-recursive variants. Unknown derived records, null cases
+and active null payloads reject. Generic, indexed, recursive, proof-bearing,
+callable and identity-bearing payloads are not admitted. Native multi-target
+variant builds currently accept C, C++, Python, Rust and .NET when every selected
+target accepts the entire API.
+
+No variant-specific author configuration is needed. Run the
+[consumer example](../consume/dotnet.md#tagged-variants) and inspect the
+[installed acceptance record](../evidence/dotnet-variants-20260921.md) before
+publishing.
 
 ## Export callbacks and returned functions
 

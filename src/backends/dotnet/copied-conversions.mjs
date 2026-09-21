@@ -4,16 +4,34 @@
  * @file
  */
 
-const nativeAlignment = copy => copy.record || copy.compound ? Math.max(1, ...copy.fields.map(field => nativeAlignment(field.type)))
-	: copy.aggregate ? 8 : ["unit", "bool", "uint8", "int8"].includes(copy.scalarName) ? 1
-		: ["uint16", "int16"].includes(copy.scalarName) ? 2 : ["char", "uint32", "int32", "float32"].includes(copy.scalarName) ? 4 : 8;
+const nativeAlignment = copy => copy.variant ? Math.max(4, ...copy.cases.flatMap(branch => branch.fields.map(field => nativeAlignment(field.type))))
+	: copy.record || copy.compound ? Math.max(1, ...copy.fields.map(field => nativeAlignment(field.type)))
+		: copy.aggregate ? 8 : ["unit", "bool", "uint8", "int8"].includes(copy.scalarName) ? 1
+			: ["uint16", "int16"].includes(copy.scalarName) ? 2 : ["char", "uint32", "int32", "float32"].includes(copy.scalarName) ? 4 : 8;
 
 /**
  * Render all unmanaged C structs, including nested and empty records.
  *
  * @param model - Closed copied-value C# model.
  */
-export const copiedNativeTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => `
+export const copiedNativeTypes = model => model.surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? `
+${copy.cases.map((branch, index) => `[StructLayout(LayoutKind.Sequential)]
+internal struct C${copy.index}_${index}
+{
+${branch.fields.length ? branch.fields.map((field, i) => `    internal ${model.nativeType(field.type)} F${i};`).join("\n") : "    internal byte Empty;"}
+}`).join("\n")}
+[StructLayout(LayoutKind.Explicit)]
+internal struct V${copy.index}
+{
+${copy.cases.map((_, index) => `    [FieldOffset(0)] internal C${copy.index}_${index} Case${index};`).join("\n")}
+}
+[StructLayout(LayoutKind.Sequential)]
+internal struct N${copy.index}
+{
+    internal uint Kind;
+    internal V${copy.index} Cases;
+}
+` : `
 [StructLayout(LayoutKind.Sequential)]
 internal struct N${copy.index}
 {
@@ -33,7 +51,21 @@ ${copy.compound ? `${copy.compound === "tuple" ? "" : "    internal byte Flag;\n
 export const copiedConversions = model => model.surface.copies.map(copy => {
 	const i = copy.index, type = model.publicType(copy), native = model.nativeType(copy);
 	let input, output;
-	if(copy.compound)
+	if(copy.variant)
+	{
+		input = `ArgumentNullException.ThrowIfNull(value);
+        scope.Charge(1, sizeof(${native}));
+        return value switch
+        {
+${copy.cases.map((branch, index) => `            ${branch.publicName}${branch.fields.length ? " branch" : ""} => new ${native} { Kind = ${index}${branch.fields.length ? `, Cases = new V${i} { Case${index} = new C${i}_${index} { ${branch.fields.map((field, j) => `F${j} = To${field.type.index}(branch.${field.publicName}${field.type.aggregate ? ", scope" : ""})`).join(", ")} } }` : ""} },`).join("\n")}
+            _ => throw new ArgumentException("Expected a named ${copy.publicName} constructor", nameof(value))
+        };`;
+		output = `return value.Kind switch
+        {
+${copy.cases.map((branch, index) => `            ${index} => new ${branch.publicName}(${branch.fields.map((field, j) => `From${field.type.index}(value.Cases.Case${index}.F${j})`).join(", ")}),`).join("\n")}
+            _ => throw new InvalidOperationException("Invalid native ${copy.publicName} constructor")
+        };`;
+	} else if(copy.compound)
 	{
 		const to = (field, value) => `To${field.type.index}(${value}${field.type.aggregate ? ", scope" : ""})`;
 		const from = (field, index) => `From${field.type.index}(value.F${index})`;

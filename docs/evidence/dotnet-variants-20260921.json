@@ -1,0 +1,1688 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "5c0b42399f7ff9c60b48f98a0625501628592489",
+  "profiles": [
+    "dotnet"
+  ],
+  "wordBits": 64,
+  "reportSha256": "6c6fe27ccfcab686746840da667a046cab58a51c287e5de29095563327ced9b5",
+  "sourceHashes": {
+    "tests/dotnet-variants.test.mjs": "ca8df2d4bd6cca085c7b2b89e97421fa28ac22ef91f02864b3ea586e1de96d64",
+    "tests/dotnet-variant-contract.test.mjs": "a219c91fbf9eacf0615ace1a95d7f5f23af12599f3a1742f2fdbbcf411852bd6",
+    "tests/dotnet-variant-evidence.test.mjs": "5b1f472907c330879fd9064cd86709aa3dda56cf5787ce67290965fadb7d6264",
+    "tests/helpers/dotnet-variant-faults.mjs": "a8319d768debdfec4cc9588664a7bcf141bb7a14fcd217898493e4303a3b4fe8",
+    "tests/helpers/dotnet-copied-install.mjs": "ba2081792d64254a49a26bd78958a72df90bdd10eff8e945a2969b5dd285d936",
+    "tests/helpers/c-variant-fixture.mjs": "f6446818fd57352ea8f2b6212c0ce0b8e0e984592bab8da7f9a393ae12b696f9",
+    "tests/helpers/native-variant-fixture.mjs": "e95e4263f216c2ae1e4a6afad017af23fa229358d696a02633ca5e5702167d5e",
+    "tests/helpers/variant-fixture.mjs": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754",
+    "tests/helpers/native-variant-faults.mjs": "2dd45473a8faf5ee566dc6a673176c2ca8080dfe1c015d8fd198028faa81cab6",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/fixtures/variant-consumers/dotnet.cs": "d1c7a54664e8a7bb0f7abb07fe5a76a10f102e13ed31b96e3941655741b42741",
+    "tests/fixtures/variant-consumers/dotnet-invalid.json": "3522e7bba43701283e5799d85f6e6f243ac66d147b310143b6d37d686d556bc4",
+    "tests/fixtures/variant-consumers/dotnet-faults.cs": "141181eede05bb1935236bdcc13dc9bc4b3ffb42e34cf03058c87ce298144c1a",
+    "tests/fixtures/variant-consumers/native-probe.c": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84",
+    "tests/fixtures/variant-consumers/Extra.lean": "e2974d8f0073ea7f7241e3c676824c911714a0cf6d6cc812f4f4c1c97b7e5968",
+    "tests/fixtures/onboarding/native-variants/Variants.lean": "b1ea2c169d60cb150f5f875067f6e872157e58c66a511cef052ba9ddf5630255",
+    "tests/fixtures/onboarding/native-variants/lakefile.toml": "b8f22b2c53854c50e791640dc7353c58c534478e48f0508f9365df5a1f789d31",
+    "tests/fixtures/onboarding/native-variants/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/native-variants/package.json": "592387c172d140512602ddf70a9eb84391334c65f41c2e913f81ce9ff4bb9c85",
+    "tests/fixtures/onboarding/native-variants/LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+  },
+  "signatures": [
+    {
+      "name": "Variants.echo",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.echo_mode",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Mode"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Mode"
+      }
+    },
+    {
+      "name": "Variants.echo_nested",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Nested"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Nested"
+      }
+    },
+    {
+      "name": "Variants.signals",
+      "parameters": [
+        {
+          "kind": "apply",
+          "constructor": "array",
+          "arguments": [
+            {
+              "kind": "apply",
+              "constructor": "list",
+              "arguments": [
+                {
+                  "kind": "named",
+                  "id": "lean:Variants.Signal"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "result": {
+        "kind": "apply",
+        "constructor": "array",
+        "arguments": [
+          {
+            "kind": "apply",
+            "constructor": "list",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Variants.echo_scalars",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Scalars"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Scalars"
+      }
+    },
+    {
+      "name": "Variants.echo_anonymous",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Anonymous"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Anonymous"
+      }
+    },
+    {
+      "name": "Variants.echo_one",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.One"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.One"
+      }
+    },
+    {
+      "name": "Variants.next",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.code",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Signal"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "uint32"
+      }
+    },
+    {
+      "name": "Variants.make",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "uint32"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Signal"
+      }
+    },
+    {
+      "name": "Variants.inspect",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Scalars"
+        }
+      ],
+      "result": {
+        "kind": "primitive",
+        "name": "bool"
+      }
+    },
+    {
+      "name": "Variants.duplicate",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "bytes"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    },
+    {
+      "name": "Variants.produce",
+      "parameters": [
+        {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    },
+    {
+      "name": "Variants.echo_buffers",
+      "parameters": [
+        {
+          "kind": "named",
+          "id": "lean:Variants.Buffers"
+        }
+      ],
+      "result": {
+        "kind": "named",
+        "id": "lean:Variants.Buffers"
+      }
+    }
+  ],
+  "reviewedIrSha256": "21cba6e0f721d83261c4b21eb7cde9f9e476789dd6c3dad4adf7bd29b72c1069",
+  "types": [
+    {
+      "id": "lean:Variants.Anonymous",
+      "name": "Anonymous",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "number",
+          "fields": [
+            {
+              "name": "arg0",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "pair",
+          "fields": [
+            {
+              "name": "arg0",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "arg1",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "collision",
+          "fields": [
+            {
+              "name": "arg1",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "arg1_",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Anonymous",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Buffers",
+      "name": "Buffers",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "empty",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "pair",
+          "fields": [
+            {
+              "name": "first",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "second",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Buffers",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Mode",
+      "name": "Mode",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "first",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "second",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "third",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Mode",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Nested",
+      "name": "Nested",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "empty",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "packet",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "named",
+                "id": "lean:Variants.Packet"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "outcome",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "apply",
+                "constructor": "result",
+                "arguments": [
+                  {
+                    "kind": "apply",
+                    "constructor": "tuple",
+                    "arguments": [
+                      {
+                        "kind": "named",
+                        "id": "lean:Variants.Signal"
+                      },
+                      {
+                        "kind": "named",
+                        "id": "lean:Variants.Mode"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "primitive",
+                    "name": "string"
+                  }
+                ]
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Nested",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.One",
+      "name": "One",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "only",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.One",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Packet",
+      "name": "Packet",
+      "kind": "record",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [
+        {
+          "name": "current",
+          "type": {
+            "kind": "named",
+            "id": "lean:Variants.Signal"
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "events",
+          "type": {
+            "kind": "apply",
+            "constructor": "list",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "fallback",
+          "type": {
+            "kind": "apply",
+            "constructor": "option",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Signal"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "modes",
+          "type": {
+            "kind": "apply",
+            "constructor": "array",
+            "arguments": [
+              {
+                "kind": "named",
+                "id": "lean:Variants.Mode"
+              }
+            ]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "cases": [],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Packet",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Scalars",
+      "name": "Scalars",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "absent",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "all",
+          "fields": [
+            {
+              "name": "unit",
+              "type": {
+                "kind": "primitive",
+                "name": "unit"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "bool",
+              "type": {
+                "kind": "primitive",
+                "name": "bool"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u8",
+              "type": {
+                "kind": "primitive",
+                "name": "uint8"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u16",
+              "type": {
+                "kind": "primitive",
+                "name": "uint16"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u32",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "u64",
+              "type": {
+                "kind": "primitive",
+                "name": "uint64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i8",
+              "type": {
+                "kind": "primitive",
+                "name": "int8"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i16",
+              "type": {
+                "kind": "primitive",
+                "name": "int16"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i32",
+              "type": {
+                "kind": "primitive",
+                "name": "int32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "i64",
+              "type": {
+                "kind": "primitive",
+                "name": "int64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "natural",
+              "type": {
+                "kind": "primitive",
+                "name": "nat"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "integer",
+              "type": {
+                "kind": "primitive",
+                "name": "int"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "f32",
+              "type": {
+                "kind": "primitive",
+                "name": "float32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "f64",
+              "type": {
+                "kind": "primitive",
+                "name": "float64"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "text",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "bytes",
+              "type": {
+                "kind": "primitive",
+                "name": "bytes"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "char",
+              "type": {
+                "kind": "primitive",
+                "name": "char"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "word",
+              "type": {
+                "kind": "primitive",
+                "name": "usize"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "signedWord",
+              "type": {
+                "kind": "primitive",
+                "name": "isize"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Scalars",
+        "extensions": {}
+      },
+      "assurance": []
+    },
+    {
+      "id": "lean:Variants.Signal",
+      "name": "Signal",
+      "kind": "variant",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "cases": [
+        {
+          "name": "idle",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "stopped",
+          "fields": [],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "data",
+          "fields": [
+            {
+              "name": "count",
+              "type": {
+                "kind": "primitive",
+                "name": "uint32"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            },
+            {
+              "name": "label",
+              "type": {
+                "kind": "primitive",
+                "name": "string"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        },
+        {
+          "name": "marker",
+          "fields": [
+            {
+              "name": "value",
+              "type": {
+                "kind": "primitive",
+                "name": "unit"
+              },
+              "mutability": "immutable",
+              "documentation": {
+                "summary": "Independent variant contract.",
+                "details": ""
+              }
+            }
+          ],
+          "documentation": {
+            "summary": "Independent variant contract.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "host": null,
+      "documentation": {
+        "summary": "Independent variant contract.",
+        "details": ""
+      },
+      "source": {
+        "producer": "corpusReview",
+        "declaration": "Variants.Signal",
+        "extensions": {}
+      },
+      "assurance": []
+    }
+  ],
+  "executions": [
+    {
+      "bindingIrSha256": "779041bbdbe89cdd5e51b7b44f157f53716e021b12d9178dfa75bfc1546c16cc",
+      "checks": 209519,
+      "compilerFreePath": true,
+      "consumerSha256": "d1c7a54664e8a7bb0f7abb07fe5a76a10f102e13ed31b96e3941655741b42741",
+      "faults": {
+        "apiSourceSha256": "2d3b628f0883c708fca4e89098817c1724462267055c1bb15a07bdca3be020b8",
+        "checks": 152,
+        "inactiveCases": 6,
+        "instrumentedRuntimeSha256": "db4b15fcf54f0206eaf831c50884d4fb46e7b95c7e60b3b98feaf01af7b04ef2",
+        "isolatedInstrumentedProjection": true,
+        "malformedChecks": 13,
+        "malformedTags": 7,
+        "partialInputChecks": 64,
+        "probeSourceSha256": "141181eede05bb1935236bdcc13dc9bc4b3ffb42e34cf03058c87ce298144c1a",
+        "releaseAssemblyUnchanged": true,
+        "replacements": [
+          66,
+          1,
+          1,
+          1,
+          14,
+          12
+        ],
+        "runtimeSourceSha256": "6883aebf87203ae339dc293844fdfbaec19b16251f5987cba3685cccfb446c47"
+      },
+      "installed": {
+        "assemblySha256": "c162139b31209ae7ed5d457d035c3768782c3dd0934d11da04b753f657702dd8",
+        "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+        "deployment": {
+          "Consumer.deps.json": {
+            "bytes": 1735,
+            "sha256": "17cc639ff8ec8c11eb52493c8312c4202da64a454bcacc99dd4ea407a46dc196"
+          },
+          "Consumer.dll": {
+            "bytes": 21504,
+            "sha256": "8152efd611a3dde168fdd66db447d047115de0c177007bfa92f4418934702fd6"
+          },
+          "Consumer.pdb": {
+            "bytes": 15036,
+            "sha256": "ec3a38d1f8a2a4147306b9052144f3fd5938083901b79d02c03c0f8a1cdaca59"
+          },
+          "Consumer.runtimeconfig.json": {
+            "bytes": 257,
+            "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+          },
+          "LeanBridge.Variants.dll": {
+            "bytes": 60928,
+            "sha256": "c162139b31209ae7ed5d457d035c3768782c3dd0934d11da04b753f657702dd8"
+          },
+          "runtimes/linux-x64/native/libcomponent_ff2699bd8e78670677f5.so": {
+            "bytes": 138584,
+            "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 17016,
+            "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "runtimes/linux-x64/native/libvariants.so": {
+            "bytes": 83416,
+            "sha256": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+          }
+        },
+        "fxrVersion": "8.0.30",
+        "onlyPreparedDependency": true,
+        "packageReceiptSha256": "e8bfd62e8beda050e3725d0a0a58142b131a31db5b283ea4bdb3a98f2f56b77f",
+        "rejected": [
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-variant",
+            "sourceSha256": "400517b7bad4e888d3ee2aacc02f85b92a29d35ceaadf2bb6586a03c47c72eeb"
+          },
+          {
+            "codes": [
+              "CS7036"
+            ],
+            "name": "missing-payload",
+            "sourceSha256": "31612c578109627cf9f230f3c614b665d103be1897f9d85e2e03ea1363a05393"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-payload",
+            "sourceSha256": "8ae40e85d4599f2cc25f355f8bed1c4967057390438b990f1688565f47354656"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "fixed-overflow",
+            "sourceSha256": "d25236c0afdfe402b7fcdf1d863cbf24e6cac27e64d867c6ce620a058e9f6484"
+          },
+          {
+            "codes": [
+              "CS7036"
+            ],
+            "name": "marker-presence",
+            "sourceSha256": "b214edae03e2629a1944fbff49ec79d9facd27c9dc40d3059b6f2741a8a4ba0c"
+          },
+          {
+            "codes": [
+              "CS0144"
+            ],
+            "name": "abstract-base",
+            "sourceSha256": "51f452654b69d68c8d7a734a76365d66456dfe649b1ca82835308ab7cf6e3d42"
+          },
+          {
+            "codes": [
+              "CS8852"
+            ],
+            "name": "init-only-payload",
+            "sourceSha256": "57929bef1c072d843b2ac3efee56ff8e8fbd478f48881bfae72a04801206a532"
+          },
+          {
+            "codes": [
+              "CS0122"
+            ],
+            "name": "private-runtime",
+            "sourceSha256": "4734648d01120d85ae52344743d55b88e3f98d8a71068d63977c3b5e84ff131f"
+          }
+        ],
+        "runtimeVersion": "8.0.30",
+        "sdk": "8.0.424",
+        "sourceFree": true,
+        "sourceFreeChecks": 209519,
+        "sourceFreeExecutions": 2
+      },
+      "installedFiles": {
+        "Lean.Variants.nuspec": {
+          "bytes": 471,
+          "sha256": "99360609927ce612f0d8c975938043a0315de2b762a193a7694a3738c158c8e9"
+        },
+        "README.md": {
+          "bytes": 3279,
+          "sha256": "4a41f88a90ad39cdaf3d5910e4480fd426f439d58b233158a340c2c16d817d66"
+        },
+        "[Content_Types].xml": {
+          "bytes": 939,
+          "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+        },
+        "_rels/.rels": {
+          "bytes": 257,
+          "sha256": "2e9a36187f36836491163fd89a2239cd05a14cc19b0e45df3663ae5d5a8b16f5"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1395,
+          "sha256": "75a150727baefd0971a3632f6b6c25c6e80ec4e82a76a47dc67528e8517b297e"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 42202,
+          "sha256": "565da9a5c6fc7315b09cc9e49606525a3ccea4eea607b866afa4fecc1045669f"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 6292,
+          "sha256": "fa85bc4c0d1c16ad08231e1095b1211b442f1567d8fa9cd9c82738291d23ccc8"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 18954,
+          "sha256": "38fa451ac5dab460124d64f11e407309ad08e5f7c4e6a5158eab8fb4549d462e"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 141285,
+          "sha256": "7356e672a9bcb443f74b059dbcf0c98d4227d5d77889c4dcc52dd4dd4c46438c"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 229602,
+          "sha256": "08c69c91e455ab842a0d374c065f3218f9ac219b84f6839a129beb89defe3d43"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 6042,
+          "sha256": "e26fa551ca5a62756b985f8c6cd85c10d7c814accf8d2c6f61d948e3c20bdd01"
+        },
+        "lean-bridge/dotnet/binding-manifest.json": {
+          "bytes": 1160,
+          "sha256": "f6cf8dbd9b6082bea392ced7caa50282e21526c4378343df2e90fa48cc7fb795"
+        },
+        "lean-bridge/dotnet/global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Variants/Api.cs": {
+          "bytes": 6603,
+          "sha256": "2d3b628f0883c708fca4e89098817c1724462267055c1bb15a07bdca3be020b8"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Variants/LeanBridge.Variants.csproj": {
+          "bytes": 604,
+          "sha256": "7cde3822584b778b752caded476dcd9a93b3c0fba17586fcf93f354929366977"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Variants/Runtime.cs": {
+          "bytes": 41496,
+          "sha256": "6883aebf87203ae339dc293844fdfbaec19b16251f5987cba3685cccfb446c47"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2505,
+          "sha256": "3892c8d29cd35f1c0683ffefc5bd2126954a14bb6275bf7a649b372fdcecd9d5"
+        },
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1349,
+          "sha256": "652a75f9fa6b5f7a1709fa83d8ff4a256f40dd8a9edfa2e121bb8079700ed43e"
+        },
+        "lean-bridge/native-dotnet.json": {
+          "bytes": 2410,
+          "sha256": "1ed3ee55a2f7100bd9ffbfb5800dd909d5181a0641f3c33a60993a1e66537271"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/net8.0/LeanBridge.Variants.dll": {
+          "bytes": 60928,
+          "sha256": "c162139b31209ae7ed5d457d035c3768782c3dd0934d11da04b753f657702dd8"
+        },
+        "lib/net8.0/LeanBridge.Variants.xml": {
+          "bytes": 8015,
+          "sha256": "bd5a70c2a82851887488c32d37d59cf3703a2e67728d369ad9183cdff84090b3"
+        },
+        "runtimes/linux-x64/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "runtimes/linux-x64/native/libvariants.so": {
+          "bytes": 83416,
+          "sha256": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+        }
+      },
+      "modelSha256": "08c69c91e455ab842a0d374c065f3218f9ac219b84f6839a129beb89defe3d43",
+      "nativeFaults": {
+        "adapterSha256": "e8fb3f40f7ad6baae0d4bee02328f6226950ccde117b5b625d7e66f209809079",
+        "allocationFailures": 242,
+        "checks": 1182,
+        "consumerSha256": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84",
+        "executableSha256": "4b40ef0bcbee51932871d45ba1a98a2da5d2e9db20a04d794f5ca7f5a0fcc107",
+        "malformedNativeTags": 1,
+        "probeAdapterSha256": "94ce71e3e8afddf9c540123355aa57154bcfdb23bb891f43adc2b770a93521b7",
+        "realLeanExecution": true,
+        "rejected": 70,
+        "sanitizers": [
+          "address",
+          "leak",
+          "undefined"
+        ],
+        "startupLeakBaseline": {
+          "allocations": 12,
+          "bytes": 128,
+          "report": "\n=================================================================\n==PID==ERROR: LeakSanitizer: detected memory leaks\n\nDirect leak of 128 byte(s) in 12 object(s) allocated from:\n    #0 ADDRESS in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n    #1 ADDRESS in __gmp_default_allocate (/tmp/lean-bridge-dotnet-variant-author-y71OnD/release/native/runtime/lib/libleanshared.so+ADDRESS)\n\nSUMMARY: AddressSanitizer: 128 byte(s) leaked in 12 allocation(s).\n",
+          "unchangedAfterConversions": true
+        },
+        "syntheticTagInjection": true
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51451008,
+              "path": "archives/Lean.Variants.1.0.0.nupkg",
+              "sha256": "e9a336b049084ee9449496f7d82c0edb616d64d5db74d5960c7c126fc97e11ee"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Lean.Variants",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "profile": "dotnet",
+      "receiptSha256": "cdee3dc8ec46067cf6421964e989adf11357c17a49bb1ee02f5345fcd79d5305",
+      "rejectionSourceSha256": "3522e7bba43701283e5799d85f6e6f243ac66d147b310143b6d37d686d556bc4",
+      "sourceApiSha256": "fbb764ec977521cdbe023a14229d53b453dace8157b4b5147a6e5437e242d9e0",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "08a6cc5ff541f54b535965966356aef46b9de51b9205c3e5e93e39101d2621eb"
+    },
+    {
+      "bindingIrSha256": "673928cbd092c416f42eb3572c1c393a40de98c676504469fd5e0cfe128af5a3",
+      "checks": 209519,
+      "compilerFreePath": true,
+      "consumerSha256": "d1c7a54664e8a7bb0f7abb07fe5a76a10f102e13ed31b96e3941655741b42741",
+      "faults": {
+        "apiSourceSha256": "16cf089a410ec994850549cb44da13596045ecb5d37934aa18c5bcf781d9f7af",
+        "checks": 152,
+        "inactiveCases": 6,
+        "instrumentedRuntimeSha256": "63201cd80ccd461b8b21fe4349a704adb53f633b147f714a129b0f6ca34ad831",
+        "isolatedInstrumentedProjection": true,
+        "malformedChecks": 13,
+        "malformedTags": 7,
+        "partialInputChecks": 64,
+        "probeSourceSha256": "141181eede05bb1935236bdcc13dc9bc4b3ffb42e34cf03058c87ce298144c1a",
+        "releaseAssemblyUnchanged": true,
+        "replacements": [
+          66,
+          1,
+          1,
+          1,
+          14,
+          12
+        ],
+        "runtimeSourceSha256": "b57ea025e3a2936f0fb0146b197d5398ab11be5139241c81844fc628c2476d4d"
+      },
+      "installed": {
+        "assemblySha256": "c1afdc50eefa0ec92c9da4749e70eb27337f48d699f6d48dbac95eb5edcb4135",
+        "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+        "deployment": {
+          "Consumer.deps.json": {
+            "bytes": 1735,
+            "sha256": "ac4ad1431a5011f80b261815a77134892b883ac4cf9ff7b96de8827f3eb50564"
+          },
+          "Consumer.dll": {
+            "bytes": 21504,
+            "sha256": "f719e70a4c86c54e153aa2f98aa1fb08f2f4df7596c17c82595b1b6187be6445"
+          },
+          "Consumer.pdb": {
+            "bytes": 15036,
+            "sha256": "89f29a4a847213127506d49f334cb260617afa5e558cecf804e763e12210fbd2"
+          },
+          "Consumer.runtimeconfig.json": {
+            "bytes": 257,
+            "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+          },
+          "LeanBridge.Variants.dll": {
+            "bytes": 60928,
+            "sha256": "c1afdc50eefa0ec92c9da4749e70eb27337f48d699f6d48dbac95eb5edcb4135"
+          },
+          "runtimes/linux-x64/native/libcomponent_ff2699bd8e78670677f5.so": {
+            "bytes": 138584,
+            "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "bytes": 17016,
+            "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "bytes": 158401256,
+            "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+          },
+          "runtimes/linux-x64/native/libvariants.so": {
+            "bytes": 83416,
+            "sha256": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+          }
+        },
+        "fxrVersion": "8.0.30",
+        "onlyPreparedDependency": true,
+        "packageReceiptSha256": "0ff9547c893488ce8a626dc2992da8f45384456de66b3d7606aa45909d2581ca",
+        "rejected": [
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-variant",
+            "sourceSha256": "400517b7bad4e888d3ee2aacc02f85b92a29d35ceaadf2bb6586a03c47c72eeb"
+          },
+          {
+            "codes": [
+              "CS7036"
+            ],
+            "name": "missing-payload",
+            "sourceSha256": "31612c578109627cf9f230f3c614b665d103be1897f9d85e2e03ea1363a05393"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "wrong-payload",
+            "sourceSha256": "8ae40e85d4599f2cc25f355f8bed1c4967057390438b990f1688565f47354656"
+          },
+          {
+            "codes": [
+              "CS1503"
+            ],
+            "name": "fixed-overflow",
+            "sourceSha256": "d25236c0afdfe402b7fcdf1d863cbf24e6cac27e64d867c6ce620a058e9f6484"
+          },
+          {
+            "codes": [
+              "CS7036"
+            ],
+            "name": "marker-presence",
+            "sourceSha256": "b214edae03e2629a1944fbff49ec79d9facd27c9dc40d3059b6f2741a8a4ba0c"
+          },
+          {
+            "codes": [
+              "CS0144"
+            ],
+            "name": "abstract-base",
+            "sourceSha256": "51f452654b69d68c8d7a734a76365d66456dfe649b1ca82835308ab7cf6e3d42"
+          },
+          {
+            "codes": [
+              "CS8852"
+            ],
+            "name": "init-only-payload",
+            "sourceSha256": "57929bef1c072d843b2ac3efee56ff8e8fbd478f48881bfae72a04801206a532"
+          },
+          {
+            "codes": [
+              "CS0122"
+            ],
+            "name": "private-runtime",
+            "sourceSha256": "4734648d01120d85ae52344743d55b88e3f98d8a71068d63977c3b5e84ff131f"
+          }
+        ],
+        "runtimeVersion": "8.0.30",
+        "sdk": "8.0.424",
+        "sourceFree": true,
+        "sourceFreeChecks": 209519,
+        "sourceFreeExecutions": 2
+      },
+      "installedFiles": {
+        "Lean.Variants.nuspec": {
+          "bytes": 471,
+          "sha256": "99360609927ce612f0d8c975938043a0315de2b762a193a7694a3738c158c8e9"
+        },
+        "README.md": {
+          "bytes": 3279,
+          "sha256": "4a41f88a90ad39cdaf3d5910e4480fd426f439d58b233158a340c2c16d817d66"
+        },
+        "[Content_Types].xml": {
+          "bytes": 939,
+          "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+        },
+        "_rels/.rels": {
+          "bytes": 257,
+          "sha256": "2e9a36187f36836491163fd89a2239cd05a14cc19b0e45df3663ae5d5a8b16f5"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1396,
+          "sha256": "9352868f8cda19f38c859931092d1d601b63c87c601062177ba0e212fe8f3d5e"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 42380,
+          "sha256": "fedd4566c8d0401843cd74765c80cf1791d11c8516130354cb97e1256d90f12e"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 6292,
+          "sha256": "fa85bc4c0d1c16ad08231e1095b1211b442f1567d8fa9cd9c82738291d23ccc8"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 18954,
+          "sha256": "38fa451ac5dab460124d64f11e407309ad08e5f7c4e6a5158eab8fb4549d462e"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 141285,
+          "sha256": "bd9fada7104fb7c6754f1740fdac0bc9c3a69a71592f9ab67a9e88ae96198e42"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 274695,
+          "sha256": "28a2b6ae06ac6507e2f4b95047f97cbcce12cec9c24b722edbe624454260067b"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 50957,
+          "sha256": "99fee7c2f24c9c04368bb622f66036227f96ea23c3eaafbee0c96e8e5d578429"
+        },
+        "lean-bridge/dotnet/binding-manifest.json": {
+          "bytes": 1160,
+          "sha256": "2e59171f1f592637b23e3cb024d99575e2a5439fd7bdd8e564adf3aac0eff44c"
+        },
+        "lean-bridge/dotnet/global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Variants/Api.cs": {
+          "bytes": 6659,
+          "sha256": "16cf089a410ec994850549cb44da13596045ecb5d37934aa18c5bcf781d9f7af"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Variants/LeanBridge.Variants.csproj": {
+          "bytes": 604,
+          "sha256": "7cde3822584b778b752caded476dcd9a93b3c0fba17586fcf93f354929366977"
+        },
+        "lean-bridge/dotnet/src/LeanBridge.Variants/Runtime.cs": {
+          "bytes": 41496,
+          "sha256": "b57ea025e3a2936f0fb0146b197d5398ab11be5139241c81844fc628c2476d4d"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2280,
+          "sha256": "1d2ce1756a3931ba5a1ca07c8c7163558df025d950f49fa3985d432836ad9c37"
+        },
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1349,
+          "sha256": "206bf44b77a66b43cdc9c870ce0396ba9e7be2e294c5dd9126a27680ae2b1b9a"
+        },
+        "lean-bridge/native-dotnet.json": {
+          "bytes": 2410,
+          "sha256": "58d1f5acbce52728e9a8b6e9a86a45d9142abe6a74388a7a07b5d49650af98f4"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/net8.0/LeanBridge.Variants.dll": {
+          "bytes": 60928,
+          "sha256": "c1afdc50eefa0ec92c9da4749e70eb27337f48d699f6d48dbac95eb5edcb4135"
+        },
+        "lib/net8.0/LeanBridge.Variants.xml": {
+          "bytes": 8015,
+          "sha256": "bd5a70c2a82851887488c32d37d59cf3703a2e67728d369ad9183cdff84090b3"
+        },
+        "runtimes/linux-x64/native/libcomponent_ff2699bd8e78670677f5.so": {
+          "bytes": 138584,
+          "sha256": "3ce07c077dfba5f4cc3c9933d2b3d768c1cf3a914c5d9d6ed7e09e55c0d282d9"
+        },
+        "runtimes/linux-x64/native/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "runtimes/linux-x64/native/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "runtimes/linux-x64/native/libvariants.so": {
+          "bytes": 83416,
+          "sha256": "876fdcb7546e48c196669ffbd1e747a52827290fc426c33c4b3be0475cae9137"
+        }
+      },
+      "modelSha256": "28a2b6ae06ac6507e2f4b95047f97cbcce12cec9c24b722edbe624454260067b",
+      "nativeFaults": {
+        "adapterSha256": "e104eb5705f5b666907f00acceec8c2518312ac3a95acff73b32cafeb87129aa",
+        "allocationFailures": 242,
+        "checks": 1182,
+        "consumerSha256": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84",
+        "executableSha256": "6c2617da9d780551795a0e9c18c8413c14aff61e0499dfc9560527a6709e4451",
+        "malformedNativeTags": 1,
+        "probeAdapterSha256": "223453a763635381da6cf8f39d6dec46eb1f207903c9dbd20c59d092590621d1",
+        "realLeanExecution": true,
+        "rejected": 70,
+        "sanitizers": [
+          "address",
+          "leak",
+          "undefined"
+        ],
+        "startupLeakBaseline": {
+          "allocations": 12,
+          "bytes": 128,
+          "report": "\n=================================================================\n==PID==ERROR: LeakSanitizer: detected memory leaks\n\nDirect leak of 128 byte(s) in 12 object(s) allocated from:\n    #0 ADDRESS in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n    #1 ADDRESS in __gmp_default_allocate (/tmp/lean-bridge-dotnet-variant-author-SCDSY1/release/native/runtime/lib/libleanshared.so+ADDRESS)\n\nSUMMARY: AddressSanitizer: 128 byte(s) leaked in 12 allocation(s).\n",
+          "unchangedAfterConversions": true
+        },
+        "syntheticTagInjection": true
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51457540,
+              "path": "archives/Lean.Variants.1.0.0.nupkg",
+              "sha256": "45b981703a88eb242c19cfcf1c84631bf9da681e7439cbf5edb86daa1de27e84"
+            }
+          ],
+          "ecosystem": "nuget",
+          "name": "Lean.Variants",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "nuget",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "profile": "dotnet",
+      "receiptSha256": "3cb393c9a9b4bc9fd6662097faa81c8d57502b5d9222d3e868d4ece2850774d8",
+      "rejectionSourceSha256": "3522e7bba43701283e5799d85f6e6f243ac66d147b310143b6d37d686d556bc4",
+      "sourceApiSha256": "e3e4180b471a353cd8b106ee6f80314c52d7baa13e6b54a05ab1ce637d51d9dc",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "56f4c243f53d5338ccfe93586328fbae015df23c08fd832e9a8c35540435a3c1"
+    }
+  ]
+}

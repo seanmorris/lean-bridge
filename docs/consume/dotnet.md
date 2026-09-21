@@ -132,6 +132,46 @@ Lean `Except E T` uses `Result<T, E>.Ok(value)` or `.Err(error)`. Check `IsOk` o
 
 Calls copy array contents even when an option, result or tuple contains them. Returned arrays do not alias the input or each other. The existing 16 MiB conversion budgets and 32-level type limit also apply to compounds. [Compound acceptance](../evidence/dotnet-compounds-20260920.md) covers installed packages, compiler rejections, runtime-only deployment and separately instrumented cleanup checks. Compound callbacks and resource-containing copies remain unsupported.
 
+### Tagged variants
+
+Concrete copied Lean inductives use an abstract record and one sealed record per
+constructor. Construct and pattern-match the named cases; you do not supply a
+numeric tag or a native layout. Constructor and property names use PascalCase.
+Trailing underscores remain when they distinguish source names.
+
+For the `Lean.Variants` acceptance package, install its prepared NuGet archive
+using the local-feed steps above and save this as `Program.cs`:
+
+```csharp
+using System;
+using LeanBridge.Variants;
+
+var value = new SignalData(42, "ready");
+Signal result = Api.Next(value);
+Console.WriteLine(result switch
+{
+    SignalIdle => "Idle",
+    SignalStopped => "Stopped",
+    SignalData(var count, var label) => $"{count}: {label}",
+    SignalMarker => "Marker",
+    _ => throw new InvalidOperationException("Unknown constructor")
+});
+```
+
+Run `dotnet run --no-restore`. Cases can contain all nineteen primitives,
+copied records, arrays, Lists, options, results, products and other admitted
+variants. Only the active case is converted. Empty cases and cases carrying
+`Unit` remain distinct. Null cases, active null fields and unrecognized derived
+records reject before Lean runs.
+
+Returned arrays own independent storage. Record properties are init-only, but
+their array elements remain mutable. C# record equality compares array
+references; compare their elements when checking copied contents. The existing
+32-level type bound and 16 MiB native copy budget apply. Failures release
+scoped scratch buffers and native outputs. See the
+[installed variant checks](../evidence/dotnet-variants-20260921.md).
+Recursive, callable and identity-bearing payloads remain separate work.
+
 ### Callbacks and returned Lean functions
 
 Ordinary-source and compiler-checked reviewed packages accept synchronous callbacks and returned functions across all nineteen primitives. Callbacks use typed `Func<...>` delegates, or `Action<...>` for a Unit result. Parameters and results retain their ordinary C# mappings, including `BigInteger` and `Rune`. No native pointer or marshalling code appears in your application.
@@ -285,7 +325,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Prod α β / tuples` | `(A, B) (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed C# tuple elements, preserving binary nesting. Inputs are copied; returned arrays own independent storage. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
 | `Copied structure` | `Generated sealed record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated sealed C# records preserve declared fields through compiler-owned constructors and accessors. Arrays inside returned records are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `CLR target value; named Lean contract in installed metadata and XML docs` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases add no wrapper identity or consumer configuration. CLR signatures keep exact widths, BigInteger, Rune, typed arrays and copied records. Nat rejects negatives despite sharing BigInteger with Int. Unit results return void; nested Option/Result presence and existing copy budgets remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `abstract C# record with sealed named constructor records` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Construct and pattern-match named case records without numeric tags or unmanaged layouts. Empty cases and Unit payloads stay distinct. Inputs and outputs contain independent copied storage. Only the active payload is converted; invalid native tags reject before union reads. Scoped scratch disposal and native output guards release partial conversions on errors. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Func<...> / Action<...>` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous Func/Action delegates borrow the call. Exceptions preserve their original object and stack after cleanup. Async void delegates reject before execution. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `T[]` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Typed C# arrays preserve empty Lists, order, duplicates and nesting. Returned arrays and mutable payloads own independent storage. Null arrays and invalid payloads reject; native lengths, missing buffers and alignment are checked before output allocation or reads. Scratch and native output cleanup runs on conversion failure. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |

@@ -381,3 +381,24 @@ baseline. See the [Rust variant evidence](rust-variants-20260921.md).
 Nine of seventeen profiles now have installed tagged-variant acceptance. The
 remaining eight profiles, bounded recursive values, compound callable payloads
 and explicitly owned identity aggregates remain assigned work.
+
+## Compiled .NET variants
+
+Prepared NuGet packages now expose an abstract C# record and sealed named cases
+with typed payloads. Both source paths pass 209,519 public assertions per
+execution and eight intended compiler rejections. The author is removed before
+offline installation. Each published consumer runs twice more after its source,
+package cache and handoff are removed, using only the .NET runtime. Independent
+rebuilds reproduce both original archives and every installed package file.
+
+Private probes recover from 152 conversion/allocation failures, reject sixty-four
+partial inputs before entering Lean, reject seven invalid native tags and ignore
+six poisoned inactive cases. The original release assembly remains unchanged.
+Shared native probes retain their startup-only GMP sanitizer baseline. See the
+[.NET variant evidence](dotnet-variants-20260921.md) for copied-array semantics,
+unknown derived-case rejection and exact installed identities.
+
+Ten of seventeen profiles now have installed tagged-variant acceptance. Java,
+Kotlin, Ruby, Perl, native PHP, PHP-Wasm and WIT/WASI remain. Bounded recursive
+values, compound callable payloads and explicitly owned identity aggregates
+remain assigned work.

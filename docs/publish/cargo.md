@@ -88,8 +88,8 @@ Inputs borrow their enum; returned values own independent copies. Use the
 Payloads may contain all nineteen primitives and supported copied containers,
 records and other non-recursive variants. Generic, indexed, recursive,
 proof-bearing, callable and identity-bearing payloads are not admitted by this
-profile. Native multi-target variant builds currently admit C, C++, Python and
-Rust when every selected target accepts the complete API. Other targets retain
+profile. Native multi-target variant builds currently admit C, C++, Python, Rust
+and .NET when every selected target accepts the complete API. Other targets retain
 their own admission checks.
 
 ## Export callbacks and closures

@@ -138,7 +138,12 @@ public sealed class LeanBridgeException : global::System.Exception
     public int Status { get; }
     internal LeanBridgeException(int status, string message) : base(message) => Status = status;
 }
-${model.surface.copies.filter(copy => copy.record).map(copy => `/// <summary>A copied Lean record.</summary>\n${dotnetAliasSiteDocs(model, copy.fields.map((field, index) => ({ name: field.publicName, type: copy.record.fields[index].type })))}public sealed record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")});`).join("\n")}
+${model.surface.copies.filter(copy => copy.record || copy.variant).map(copy => copy.variant ? `/// <summary>A copied Lean variant. Construct a named case.</summary>
+public abstract record ${copy.publicName}
+{
+    private protected ${copy.publicName}() { }
+}
+${copy.cases.map((branch, i) => `/// <summary>A named ${copy.publicName} constructor.</summary>\n${dotnetAliasSiteDocs(model, branch.fields.map((field, j) => ({ name: field.publicName, type: copy.variant.cases[i].fields[j].type })))}public sealed record ${branch.publicName}(${branch.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) : ${copy.publicName};`).join("\n")}` : `/// <summary>A copied Lean record.</summary>\n${dotnetAliasSiteDocs(model, copy.fields.map((field, index) => ({ name: field.publicName, type: copy.record.fields[index].type })))}public sealed record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")});`).join("\n")}
 ${model.surface.callbacks.size ? dotnetClosurePublic : ""}
 /// <summary>The functions selected by the Lean package author.</summary>
 ${dotnetAliasCatalogDocs(model)}public static class Api
@@ -171,6 +176,8 @@ ${model.surface.functions.map((fn, index) => `${dotnetAliasSiteDocs(model, fn.de
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs, results and record fields use typed C# arrays. Returned arrays own independent storage; empty Lists, order, duplicates and nesting are preserved. List and Array retain distinct contract identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
 	files["README.md"] += dotnetAliasReadme(model);
+	if(model.surface.copies.some(copy => copy.variant))
+		files["README.md"] += "\nConcrete copied Lean variants export an abstract record and one sealed record per constructor. Construct and pattern-match named cases without numeric tags or unmanaged layouts. Names use PascalCase and retain trailing underscores that distinguish source members. Only the active payload crosses the boundary. Empty constructors and Unit fields stay distinct. Null cases, active null payloads and unrecognized derived records reject. Results contain independent copied arrays; record properties are init-only, while array elements remain mutable and ordinary C# record equality compares array references. Conversion failures release native outputs and scoped scratch storage. Recursive, callable and identity-bearing payloads remain unsupported.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "dotnet-copied-v1", target: "dotnet", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, assembly: model.assembly, files: Object.keys(files), publicFiles, internalFiles, packageFiles, ...model.surface.aliases.length ? { aliases: dotnetCopiedAliases(model) } : {}, supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "owned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery." }, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] }, null, 2)}\n`;
 	return Object.freeze(files);
 };
