@@ -36,9 +36,31 @@ p api.matrix([1, 2, 3])
 ruby example.rb
 ```
 
-Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact without a fixed bit-width limit; Nat rejects negatives. Floating-point values use `Float`, and Float32 rounds to binary32. Text must be valid UTF-8 or US-ASCII. ByteArray uses binary `String`, arrays use `Array`, and copied structures become keyword-initialized record classes. Unit uses the generated `UNIT` singleton in every position, including results; `nil` is not Unit.
+Fixed-width integers use range-checked Ruby `Integer`. Nat and Int remain exact without a fixed bit-width limit; Nat rejects negatives. Floating-point values use `Float`, and Float32 rounds to binary32. Text must be valid UTF-8 or US-ASCII. ByteArray uses binary `String`, arrays and Lists use `Array`, and copied structures become keyword-initialized record classes. Unit uses the generated `UNIT` singleton in every position, including results; `nil` is not Unit.
 
 Calls copy nested values. Invalid types, numeric ranges and encodings raise exceptions. `nil` is valid only at an `Option` position. Native input/output conversions share a 16 MiB budget; input scratch has its own bound. Generated cleanup releases temporary and owned output buffers even when a conversion raises. Native libraries load from the installed gem, verify their embedded hashes and share a compatible Lean runtime. No runtime-path setting is needed.
+
+### Lists
+
+Lean `List T` uses a Ruby `Array` in inputs, results and copied record fields. Lists can nest with arrays, records, `Option`, `Except` and binary products. The adapter preserves empty Lists, order, duplicates and every nesting level. List and Array retain distinct Lean and Binding IR identities.
+
+For the `lists-api` acceptance gem, install its prepared archive and save `lists.rb`:
+
+```ruby
+require "lean_bridge/lists"
+
+api = LeanBridge::Lists
+input = [1, 2, 2, 3]
+reversed = api.reverse_uint32(input)
+p reversed # [3, 2, 2, 1]
+reversed[0] = 99
+p input # [1, 2, 2, 3]
+p api.reverse_uint32([]) # []
+```
+
+Run `ruby lists.rb`. Pass exact `Array` instances, including frozen arrays. Array subclasses, enumerators, `nil` and objects implementing `to_ary` are not accepted as Lists. Each element must match its declared Lean type. Returned arrays and mutable payloads own independent storage.
+
+The existing copy budgets and 32-level type limit apply. Native sequence lengths, missing buffers and alignment are checked before output allocation or reads. [Installed List checks](../evidence/ruby-lists-20260921.md) cover both source paths, invalid inputs, cleanup failures, GC compaction and relocated gems without producer inputs. List callback payloads remain unsupported.
 
 ### Options, results and products
 
@@ -223,7 +245,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Inductive sum` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Proc, method, callable object or block` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `Array` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Exact Ruby Arrays preserve empty Lists, order, duplicates and nesting; frozen inputs are accepted. Returned arrays and mutable payloads own independent storage. Subclasses, coercion objects, nil containers, invalid payloads and oversized copies reject. Native lengths, missing buffers and alignment are checked before allocation or reads; scratch and native output cleanup runs on conversion failure. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `String` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, 0..0x10FFFF excluding surrogates. NUL, supplementary characters, combining scalars, noncharacters and line endings are preserved without normalization. Multi-scalar grapheme clusters require String. Inputs require valid UTF-8 or US-ASCII encoding. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `Integer` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, 0..18446744073709551615. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `Integer` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 64-bit compiled Lean target, -9223372036854775808..9223372036854775807. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |

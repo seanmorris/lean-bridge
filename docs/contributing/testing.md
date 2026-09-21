@@ -566,6 +566,20 @@ consumer twice without compilers. A separate process injects conversion failures
 and checks cleanup without changing installed files. Ruby source files remain
 part of the installed package. CI retains `build/compounds/ruby.json`.
 
+Run the copied Ruby List checks with the same interpreter:
+
+```sh
+LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs
+node --test tests/ruby-list-contract.test.mjs
+```
+
+The [Ruby List suite](../evidence/ruby-lists-20260921.md) checks all nineteen
+primitive elements, nested copied values, invalid containers and payloads,
+copy budgets, independent results and GC compaction. Both source paths install
+and relocate a prepared gem offline, remove producer inputs and the handoff,
+and repeat the public checks. A separate process injects conversion failures
+and probes malformed native sequence buffers. CI retains `build/lists/ruby.json`.
+
 Run the installed Perl compound checks with a selected supported interpreter:
 
 ```sh

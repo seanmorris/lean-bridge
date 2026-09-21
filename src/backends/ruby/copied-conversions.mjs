@@ -84,6 +84,8 @@ ${copy.fields.map(field => `        ${write(field.type, "result", field.offset, 
         end
         span(scope, data, length, 32)`;
 		output = `data, count = value[0, 16].unpack("Q<Q<")
+        raise RangeError, "Lean Bridge native sequence exceeds the 16 MiB copy limit" if count > (16 * 1024 * 1024) / ${Math.max(e.size, 8)}
+        raise RangeError, "Invalid native sequence buffer" if !count.zero? && (data.zero? || data % ${e.alignment} != 0)
         pointer = ::Fiddle::Pointer.new(data)
         ::Array.new(count) { |index| from${e.index}(${read(e, "pointer", `index * ${e.size}`)}) }`;
 	} else switch(copy.scalarName)

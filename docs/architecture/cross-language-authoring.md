@@ -57,6 +57,7 @@ lists or tuples and return owned tuples on both paths.
 vectors on both paths. [C# packages](../evidence/dotnet-lists-20260920.md) use
 owned typed arrays on both paths. [Java and Kotlin](../evidence/jvm-lists-20260920.md)
 use primitive or reference arrays from the same prepared Maven JAR on both paths.
+[Ruby gems](../evidence/ruby-lists-20260921.md) use copied Arrays on both paths.
 Other native hosts and PHP-Wasm List adapters, aliases,
 arbitrary and recursive variants, and compound callables remain open.
 

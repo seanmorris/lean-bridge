@@ -832,8 +832,10 @@ jobs:
           LEAN_BRIDGE_WORD_PROFILES=ruby node --test tests/native-words.test.mjs
           LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs
           LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs
+          LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs
           test -s build/callables/ruby.json
           test -s build/compounds/ruby.json
+          test -s build/lists/ruby.json
           test -s build/type-corpus/ruby.json
           test -s build/type-corpus/reviewed-native-ruby.json
       - name: Upload the Ruby real-Lean type corpus report
@@ -848,6 +850,7 @@ jobs:
             build/word-native/ruby.json
             build/callables/ruby.json
             build/compounds/ruby.json
+            build/lists/ruby.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -882,6 +885,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RUBY_TEST=1 node --test tests/native-ruby.test.mjs && npm run test:type-corpus:ruby && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=ruby node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs"
               if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
                 test_result=failed
                 executed=false

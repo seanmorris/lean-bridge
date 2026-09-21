@@ -1,0 +1,833 @@
+{
+  "schemaVersion": 1,
+  "baseRevision": "2f7488e295f1f3663207e88bf09765359a1fc3d7",
+  "profiles": [
+    "ruby"
+  ],
+  "wordBits": 64,
+  "ruby": "3.3.12",
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "reportSha256": "8009580a653023eb15a24337266eba6362162b08aed5a84313cf54ff1054a02a",
+  "sourceHashes": {
+    "tests/ruby-lists.test.mjs": "889105c2a9ba12910b885667f2500b40641f3000160cb7b0c3db45e3999bc4ff",
+    "tests/helpers/list-fixture.mjs": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c",
+    "tests/helpers/ruby-list-install.mjs": "89851def0ae62d506f7efc14b39960b467dd0a5e7a562fddd880ae744cad6b66",
+    "tests/fixtures/list-consumers/ruby.rb": "7c2ab68549cbcadf9b5565f079484c3d7f2ca86fd3fbabb0c4250bcbdead12c7",
+    "tests/fixtures/list-consumers/ruby-faults.rb": "4b5d6a713c5bdff9abac117a4d10fe0bff177de47427f751816416227756f9be",
+    "tests/fixtures/onboarding/npm-lists/Lists.lean": "410007916439f78046c9fcb45672ceab64b8020d66e19f940dd58e787888ee38"
+  },
+  "signatures": [
+    {
+      "name": "Lists.reverse_unit",
+      "parameters": [
+        {
+          "list": "unit"
+        }
+      ],
+      "result": {
+        "list": "unit"
+      }
+    },
+    {
+      "name": "Lists.reverse_bool",
+      "parameters": [
+        {
+          "list": "bool"
+        }
+      ],
+      "result": {
+        "list": "bool"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint8",
+      "parameters": [
+        {
+          "list": "uint8"
+        }
+      ],
+      "result": {
+        "list": "uint8"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint16",
+      "parameters": [
+        {
+          "list": "uint16"
+        }
+      ],
+      "result": {
+        "list": "uint16"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint32",
+      "parameters": [
+        {
+          "list": "uint32"
+        }
+      ],
+      "result": {
+        "list": "uint32"
+      }
+    },
+    {
+      "name": "Lists.reverse_uint64",
+      "parameters": [
+        {
+          "list": "uint64"
+        }
+      ],
+      "result": {
+        "list": "uint64"
+      }
+    },
+    {
+      "name": "Lists.reverse_int8",
+      "parameters": [
+        {
+          "list": "int8"
+        }
+      ],
+      "result": {
+        "list": "int8"
+      }
+    },
+    {
+      "name": "Lists.reverse_int16",
+      "parameters": [
+        {
+          "list": "int16"
+        }
+      ],
+      "result": {
+        "list": "int16"
+      }
+    },
+    {
+      "name": "Lists.reverse_int32",
+      "parameters": [
+        {
+          "list": "int32"
+        }
+      ],
+      "result": {
+        "list": "int32"
+      }
+    },
+    {
+      "name": "Lists.reverse_int64",
+      "parameters": [
+        {
+          "list": "int64"
+        }
+      ],
+      "result": {
+        "list": "int64"
+      }
+    },
+    {
+      "name": "Lists.reverse_nat",
+      "parameters": [
+        {
+          "list": "nat"
+        }
+      ],
+      "result": {
+        "list": "nat"
+      }
+    },
+    {
+      "name": "Lists.reverse_int",
+      "parameters": [
+        {
+          "list": "int"
+        }
+      ],
+      "result": {
+        "list": "int"
+      }
+    },
+    {
+      "name": "Lists.reverse_float32",
+      "parameters": [
+        {
+          "list": "float32"
+        }
+      ],
+      "result": {
+        "list": "float32"
+      }
+    },
+    {
+      "name": "Lists.reverse_float64",
+      "parameters": [
+        {
+          "list": "float64"
+        }
+      ],
+      "result": {
+        "list": "float64"
+      }
+    },
+    {
+      "name": "Lists.reverse_string",
+      "parameters": [
+        {
+          "list": "string"
+        }
+      ],
+      "result": {
+        "list": "string"
+      }
+    },
+    {
+      "name": "Lists.reverse_bytes",
+      "parameters": [
+        {
+          "list": "bytes"
+        }
+      ],
+      "result": {
+        "list": "bytes"
+      }
+    },
+    {
+      "name": "Lists.reverse_char",
+      "parameters": [
+        {
+          "list": "char"
+        }
+      ],
+      "result": {
+        "list": "char"
+      }
+    },
+    {
+      "name": "Lists.reverse_usize",
+      "parameters": [
+        {
+          "list": "usize"
+        }
+      ],
+      "result": {
+        "list": "usize"
+      }
+    },
+    {
+      "name": "Lists.reverse_isize",
+      "parameters": [
+        {
+          "list": "isize"
+        }
+      ],
+      "result": {
+        "list": "isize"
+      }
+    },
+    {
+      "name": "Lists.join",
+      "parameters": [
+        {
+          "list": "string"
+        }
+      ],
+      "result": "string"
+    },
+    {
+      "name": "Lists.mix",
+      "parameters": [
+        {
+          "list": {
+            "array": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "list": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Lists.transform",
+      "parameters": [
+        {
+          "record": "Lists.Packet",
+          "fields": {
+            "sequences": {
+              "list": {
+                "list": "uint32"
+              }
+            },
+            "branches": {
+              "list": {
+                "option": {
+                  "result": [
+                    {
+                      "tuple": [
+                        "nat",
+                        "unit"
+                      ]
+                    },
+                    "string"
+                  ]
+                }
+              }
+            },
+            "buffers": {
+              "list": "bytes"
+            },
+            "arrays": {
+              "array": {
+                "list": {
+                  "tuple": [
+                    "bool",
+                    "char"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "record": "Lists.Packet",
+        "fields": {
+          "sequences": {
+            "list": {
+              "list": "uint32"
+            }
+          },
+          "branches": {
+            "list": {
+              "option": {
+                "result": [
+                  {
+                    "tuple": [
+                      "nat",
+                      "unit"
+                    ]
+                  },
+                  "string"
+                ]
+              }
+            }
+          },
+          "buffers": {
+            "list": "bytes"
+          },
+          "arrays": {
+            "array": {
+              "list": {
+                "tuple": [
+                  "bool",
+                  "char"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Lists.duplicate",
+      "parameters": [
+        "bytes"
+      ],
+      "result": {
+        "list": "bytes"
+      }
+    },
+    {
+      "name": "Lists.generate",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "list": "uint32"
+      }
+    },
+    {
+      "name": "Lists.nest",
+      "parameters": [
+        {
+          "option": {
+            "list": {
+              "result": [
+                {
+                  "list": "unit"
+                },
+                "string"
+              ]
+            }
+          }
+        }
+      ],
+      "result": {
+        "option": {
+          "list": {
+            "result": [
+              {
+                "list": "unit"
+              },
+              "string"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Lists.swap",
+      "parameters": [
+        {
+          "result": [
+            {
+              "tuple": [
+                {
+                  "list": "nat"
+                },
+                {
+                  "list": "uint32"
+                }
+              ]
+            },
+            {
+              "list": "string"
+            }
+          ]
+        }
+      ],
+      "result": {
+        "result": [
+          {
+            "list": "string"
+          },
+          {
+            "tuple": [
+              {
+                "list": "nat"
+              },
+              {
+                "list": "uint32"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Lists.deep",
+      "parameters": [
+        {
+          "list": {
+            "list": {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": {
+                                                        "list": "uint32"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "list": {
+          "list": {
+            "list": {
+              "list": {
+                "list": {
+                  "list": {
+                    "list": {
+                      "list": {
+                        "list": {
+                          "list": {
+                            "list": {
+                              "list": {
+                                "list": {
+                                  "list": {
+                                    "list": {
+                                      "list": {
+                                        "list": {
+                                          "list": {
+                                            "list": {
+                                              "list": {
+                                                "list": {
+                                                  "list": {
+                                                    "list": {
+                                                      "list": "uint32"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "executions": [
+    {
+      "bindingIrSha256": "482447fb07116391cd51796726ec8519e3e5b02a9f6cb952a82d67b6da292e13",
+      "checks": 88446,
+      "compilerFreeExecution": true,
+      "consumerSha256": "7c2ab68549cbcadf9b5565f079484c3d7f2ca86fd3fbabb0c4250bcbdead12c7",
+      "faults": {
+        "checks": 384,
+        "conversion_probes": 156,
+        "layouts": 9,
+        "partial_inputs": 16
+      },
+      "installedFiles": {
+        "README.md": {
+          "bytes": 3596,
+          "sha256": "9899250ba446a1bbf741d72a902c5e16804cf106df245c190104c95b856f7ebf"
+        },
+        "binding-manifest.json": {
+          "bytes": 1060,
+          "sha256": "12827e467fc1e1878eeacd32c9775035ef689596d399019c515467d161e1a3ca"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1396,
+          "sha256": "cf598aaff5a7514a39ac6d71a3597482d7ae98c518a3b5876c4033cc36ad1919"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 73467,
+          "sha256": "6f71a473066d4a1323302a9bc78cd6805c14fc32b9ded53bac9938af922698cb"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 11226,
+          "sha256": "2f613efc6b2e62df013e01a450cc5a336da319f404e16244a0b0512abdf6c547"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 71425,
+          "sha256": "423dea846006670922bcf32e737c1cdc8713ba01ff48f980d54b158c29bd6041"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 109727,
+          "sha256": "1c97520e768b1e5d72f8768f1a805cd0bc812fa2a9cb526ef9f84d6032bc12c4"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 309995,
+          "sha256": "0aa006e903b67509b7b31592430c3921fa47d8810c0d4c307160ef181f5c3a41"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 7198,
+          "sha256": "1d8e8f93674083dcc31444e277ad0061d7bbe6d8773e108100b9a52f35987f97"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2646,
+          "sha256": "8928059db2803db0efba4702a4107e0266a68e4dd729d5c9693e6eadcf2ac54f"
+        },
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1337,
+          "sha256": "68f7a23dd59b17bf3c0d3e7819aba9c55e834f28f465251ffb607c16e4305f83"
+        },
+        "lean-bridge/platform.json": {
+          "bytes": 117,
+          "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/lean_bridge/lists.rb": {
+          "bytes": 2422,
+          "sha256": "d012401ec49c268213bdfdd061ed3af3d559426808bf40d52ba7cbef1baf9547"
+        },
+        "lib/lean_bridge/lists/native.rb": {
+          "bytes": 83287,
+          "sha256": "2931c3886677cc3e270e678e69ab0eace802cd11dd6363cf880ea7079b5fa397"
+        },
+        "lib/lean_bridge/lists/native/linux-x64/libcomponent_7545b0c2966a961b6086.so": {
+          "bytes": 105552,
+          "sha256": "3477723a1cf5eff900083e04c7304b5f5976d60b91f8a0ac09fd8bf197a6d0a2"
+        },
+        "lib/lean_bridge/lists/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/lean_bridge/lists/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/lean_bridge/lists/native/linux-x64/liblists.so": {
+          "bytes": 168328,
+          "sha256": "59527be24f76ec00da70c655e636a94de45d86ae84b02cc00087db82a9151127"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 198,
+          "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "621539555fe3d3e3266c5b679f5f523376f5582740f9122a8b63f5486f7674cf",
+      "isolatedInMemoryFaultProbe": true,
+      "modelSha256": "0aa006e903b67509b7b31592430c3921fa47d8810c0d4c307160ef181f5c3a41",
+      "nativeLibraries": {
+        "lib/lean_bridge/lists/native/linux-x64/libcomponent_7545b0c2966a961b6086.so": "3477723a1cf5eff900083e04c7304b5f5976d60b91f8a0ac09fd8bf197a6d0a2",
+        "lib/lean_bridge/lists/native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "lib/lean_bridge/lists/native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "lib/lean_bridge/lists/native/linux-x64/liblists.so": "59527be24f76ec00da70c655e636a94de45d86ae84b02cc00087db82a9151127"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50184192,
+              "path": "archives/lists-api-1.0.0-x86_64-linux.gem",
+              "sha256": "044cb25e1a69c397a6619e03e291977a9605d51fbf9b653eeb767ffe9a3826d8"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "lists-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "probeSha256": "4b5d6a713c5bdff9abac117a4d10fe0bff177de47427f751816416227756f9be",
+      "producerHandoffRemoved": true,
+      "profile": "ruby",
+      "publicApiOnly": true,
+      "receiptSha256": "260460fbbc8cc1c83a9de72011016cd4b0f2e425564dd05a4f092725bdd094a1",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "f7d8d9a1b4fd9fce377e2879a43a5c7e6d067e42eba286f183031e5d53509a33"
+    },
+    {
+      "bindingIrSha256": "f4fc951801a4666fcd1bcba8f458f8e167abde74debb17b312e97d80610f4a4e",
+      "checks": 88446,
+      "compilerFreeExecution": true,
+      "consumerSha256": "7c2ab68549cbcadf9b5565f079484c3d7f2ca86fd3fbabb0c4250bcbdead12c7",
+      "faults": {
+        "checks": 384,
+        "conversion_probes": 156,
+        "layouts": 9,
+        "partial_inputs": 16
+      },
+      "installedFiles": {
+        "README.md": {
+          "bytes": 3596,
+          "sha256": "9899250ba446a1bbf741d72a902c5e16804cf106df245c190104c95b856f7ebf"
+        },
+        "binding-manifest.json": {
+          "bytes": 1060,
+          "sha256": "2ca2a59f2452346b1ed3fe2bb7a34e9536347ccbbb6491272750c39f60bbd048"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1397,
+          "sha256": "5670c58dcaac8954d43d60da3edd6db3d4fc02c45b098e0ceba1e3e569997172"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 73738,
+          "sha256": "37b7c82a9064f2e3e3b69bdcd6a2a9497e722b0d1e15ceb8e481f586e7c7c5df"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 11226,
+          "sha256": "2f613efc6b2e62df013e01a450cc5a336da319f404e16244a0b0512abdf6c547"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 71425,
+          "sha256": "423dea846006670922bcf32e737c1cdc8713ba01ff48f980d54b158c29bd6041"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 109727,
+          "sha256": "84314f1540ba2fadf6128ae8b3a6bc76a07b779163dc4a02554672da61097b9b"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 383399,
+          "sha256": "92caeca7fe4d04958528f8f86cddc186441fd95e0ddfcecb90ee481476548097"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 80331,
+          "sha256": "ed88f29d2925a62f7e5b834292781e42825b7d57fc15fa0c9d9acb305921e953"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2062,
+          "sha256": "b477d26b3a3fb079acbf1b60233c594ff03ac6347ba391e9a9767067694b1eed"
+        },
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1337,
+          "sha256": "47605eee47088a4660560145f5fb017c3b26a9e0b2b08e6a78f19b0346002b94"
+        },
+        "lean-bridge/platform.json": {
+          "bytes": 117,
+          "sha256": "16530dd58887bd79e4993fc88abe2d967ee38bec55efd2c4991c71a995802e72"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "lib/lean_bridge/lists.rb": {
+          "bytes": 2422,
+          "sha256": "d012401ec49c268213bdfdd061ed3af3d559426808bf40d52ba7cbef1baf9547"
+        },
+        "lib/lean_bridge/lists/native.rb": {
+          "bytes": 83287,
+          "sha256": "d30c658e669208b35e18a09304367578630a0899660162906521866a6fe7973a"
+        },
+        "lib/lean_bridge/lists/native/linux-x64/libcomponent_7545b0c2966a961b6086.so": {
+          "bytes": 105552,
+          "sha256": "3477723a1cf5eff900083e04c7304b5f5976d60b91f8a0ac09fd8bf197a6d0a2"
+        },
+        "lib/lean_bridge/lists/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "lib/lean_bridge/lists/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "lib/lean_bridge/lists/native/linux-x64/liblists.so": {
+          "bytes": 168328,
+          "sha256": "59527be24f76ec00da70c655e636a94de45d86ae84b02cc00087db82a9151127"
+        },
+        "lib/lean_bridge/native_copied_runtime_v1.rb": {
+          "bytes": 198,
+          "sha256": "ae8c10a142a3ee1007e21a9a9f73b80de3d111163bd82b22918a7256a8ecbb4e"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "ac31672169a0e7ad02371028753d868645add09212014d245c163dc3b07afb6f",
+      "isolatedInMemoryFaultProbe": true,
+      "modelSha256": "92caeca7fe4d04958528f8f86cddc186441fd95e0ddfcecb90ee481476548097",
+      "nativeLibraries": {
+        "lib/lean_bridge/lists/native/linux-x64/libcomponent_7545b0c2966a961b6086.so": "3477723a1cf5eff900083e04c7304b5f5976d60b91f8a0ac09fd8bf197a6d0a2",
+        "lib/lean_bridge/lists/native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "lib/lean_bridge/lists/native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "lib/lean_bridge/lists/native/linux-x64/liblists.so": "59527be24f76ec00da70c655e636a94de45d86ae84b02cc00087db82a9151127"
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 50192896,
+              "path": "archives/lists-api-1.0.0-x86_64-linux.gem",
+              "sha256": "b4d372207acb27ad53cbd0dabfca8732db1545569365c7c0631a4854b3c32003"
+            }
+          ],
+          "ecosystem": "rubygems",
+          "name": "lists-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "rubygems",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "probeSha256": "4b5d6a713c5bdff9abac117a4d10fe0bff177de47427f751816416227756f9be",
+      "producerHandoffRemoved": true,
+      "profile": "ruby",
+      "publicApiOnly": true,
+      "receiptSha256": "f5861549e421e6d3ac794ca5521c5497f0df132579d9cc31fe492eabf9ce420b",
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "rubySha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "11c9905287ebaa8b70dea5d3726c7384aaeb1df03bb279ea13dd8e9a866e4cee"
+    }
+  ]
+}

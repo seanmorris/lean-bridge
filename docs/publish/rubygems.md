@@ -1,6 +1,6 @@
 # Build and publish Ruby packages
 
-Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays, acyclic copied records, options, results, nested binary products, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, acyclic copied records, options, results, nested binary products, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,9 +32,15 @@ lean-bridge build --project /absolute/path/to/willow --target rubygems \
 
 The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `native-release.json` with its hash. The gem includes Ruby sources, compiled native libraries, compiler evidence and dependency license notices. Its README lists the Lean-derived module and function names. Changing the gem coordinate does not rename that module.
 
-Copied types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Ruby conversion scratch has a separate 16 MiB budget. Lists, arbitrary variants, resources, compound callbacks and asynchronous effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Callable packages can combine RubyGems, C, CPAN, PyPI and Cargo; adding an unsupported target fails the whole build. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
+Copied types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Ruby conversion scratch has a separate 16 MiB budget. Arbitrary variants, resources, compound callbacks and asynchronous effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Callable packages can combine RubyGems, C, CPAN, PyPI and Cargo; adding an unsupported target fails the whole build. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one Wasm compilation. A failed target leaves no partial release.
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
+
+## Export Lists
+
+Ordinary-source and reviewed-IR builds support `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested Lists and arrays, records, `Option`, `Except` and binary products. Select concrete exports as usual; no List-specific configuration is required.
+
+Ruby callers use exact `Array` instances. Conversions preserve empty Lists, order, duplicates, nesting and independent result storage. The existing 16 MiB accounting budgets and 32-level type limit apply. List callback payloads remain unsupported. See the [consumer example](../consume/ruby.md#lists) and [installed gem evidence](../evidence/ruby-lists-20260921.md).
 
 ## Export options, results and products
 
