@@ -47,28 +47,27 @@ test("every consumer table is generated and includes all 48 source forms exactly
 	}
 });
 
-test("the PHP overview records exact UInt32 values in copied and Alpha profiles", async () => {
+test("the PHP overview records exact UInt32 values in native and Wasm profiles", async () => {
 	const source = await readFile("docs/php.md", "utf8");
 	assert.match(row(source, "UInt32"), /Native PHP.*PHP-Wasm|PHP-Wasm.*Native PHP/u);
 	assert.match(row(source, "UInt32"), /0\.\.4294967295/u);
 	assert.match(row(source, "UInt32"), /PHP-Wasm: `Brick\\Math\\BigInteger`/u);
 	assert.match(row(source, "UInt32"), /Ordinary source: Installed checks passed\./u);
 	assert.match(row(source, "UInt32"), /Reviewed IR: Installed checks passed/u);
-	assert.match(row(source, "UInt32"), /Alpha.*full 0\.\.4294967295/u);
-	assert.match(row(source, "Nat"), /BigInteger.*Generator inspected/u);
+	assert.match(source.split("### Alpha example API")[1], /Full `0\.\.4294967295` range in both profiles/u);
+	assert.match(row(source, "Nat"), /BigInteger.*Installed checks passed/u);
 	assert.match(row(source, "Except ε α"), /Installed checks passed \(input, result, field\)/u);
 	const wasm = source;
-	assert.match(row(wasm, "Int64"), /32-bit projection uses Brick\\Math\\BigInteger/u);
+	assert.match(row(wasm, "Int64"), /full -9223372036854775808\.\.9223372036854775807 range on the 32-bit host/u);
 	assert.match(row(wasm, "Int64"), /compiled copied API uses Brick\\Math\\BigInteger for the full/u);
 	assert.match(row(wasm, "Float32"), /subnormals and signed zero/u);
 });
 
-test("PHP distinguishes native collection fields from unverified Wasm fields and async", async () => {
+test("PHP keeps checked collection fields and primitive callables separate from async", async () => {
 	const source = await readFile("docs/php.md", "utf8");
-	assert.match(row(source, "Nat"), /Ordinary source: Installed checks passed\. Reviewed IR: Native PHP: Installed checks passed;/u);
-	assert.match(row(source, "Nat"), /PHP-Wasm: Installed checks passed \(input, result, callback input, callback result\); Generator inspected \(field\)/u);
+	assert.match(row(source, "Nat"), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed \|/u);
 	assert.deepEqual(cells.find(cell => cell.id === "php-native/nat/reviewed-ir/field").stages.installedExecution.evidence, ["php-native-collections-installed"]);
-	assert.notEqual(cells.find(cell => cell.id === "php-wasm/nat/reviewed-ir/field").stages.installedExecution.state, "passed");
+	assert.deepEqual(cells.find(cell => cell.id === "php-wasm/nat/reviewed-ir/field").stages.installedExecution.evidence, ["php-wasm-collections-installed"]);
 	const callback = row(source, "Host function passed to Lean");
 	assert.match(callback, /`callable` \(input\)/u);
 	assert.match(callback, /Ordinary source: Installed checks passed \(input\).*Reviewed IR: Installed checks passed \(input\)/u);

@@ -12,6 +12,7 @@ import { readVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime, v
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
+import { phpValueReadme } from "../backends/php/copied-equality.mjs";
 import { componentNpmIdentity } from "./component-package-receipt.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -112,13 +113,13 @@ ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks ac
 			, "runtime/package/package.json": json(runtimePackage)
 			, "component/package/index.mjs": componentIndex
 			, "component/package/package.json": json(componentPackage)
-			, "component/package/README.md": readme + phpAliasReadme(projection) + phpVariantReadme(projection)
+			, "component/package/README.md": readme + phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme
 			, "component/package/lazy-library.txt": definition.library
 			, ...Object.fromEntries(Object.entries(phpDependencies).map(([path, bytes]) => [`component/package/php/${path}`, bytes]))
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity, ...(aliases.length ? { aliases } : {}) })
 			, ...Object.fromEntries(Object.entries(aliasFiles).map(([path, bytes]) => [`composer/${path}`, bytes]))
-			, ...(aliases.length || projection.surface.copies.some(copy => copy.variant) ? { "composer/README.md": readme + phpAliasReadme(projection) + phpVariantReadme(projection) } : {})
+			, "composer/README.md": readme + phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}

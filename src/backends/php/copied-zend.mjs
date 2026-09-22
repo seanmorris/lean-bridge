@@ -134,9 +134,12 @@ static ZEND_FUNCTION(lb_call${index}) {
   if (status) {
     size_t length = ctx->error.message ? ctx->error.message_length : 0;
     if (length > sizeof(native_message) - 1) length = sizeof(native_message) - 1;
-    if (length) memcpy(native_message, ctx->error.message, length);
-    native_message[length] = 0;
-    message = length ? native_message : "Compiled Lean call failed";
+    if (!lb_readable(&ctx->scope, ctx->error.message, length, 1, 1)) message = ctx->scope.error;
+    else {
+      if (length) memcpy(native_message, ctx->error.message, length);
+      native_message[length] = 0;
+      message = length ? native_message : "Compiled Lean call failed";
+    }
   }
   lb_cleanup${index}(ctx);
   if (message) {
@@ -170,6 +173,7 @@ export const generateCopiedPhpZendAdapter = (ir, { integerBits = 32 } = {}) => {
 #include "${model.surface.prefix}.h"
 
 _Static_assert(sizeof(zend_long) * CHAR_BIT == ${integerBits}, "PHP integer width differs from the generated adapter");
+_Static_assert(sizeof(bool) == sizeof(unsigned char), "Bool wire markers require one byte");
 #if PHP_VERSION_ID < 80200 || PHP_VERSION_ID >= 90000
 #error This adapter requires PHP 8.2 through 8.x
 #endif

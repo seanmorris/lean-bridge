@@ -10,12 +10,13 @@
  * @param value - Original Lean member name.
  * @param scope - Labels already used in this constructor or family.
  * @param fail - Source-located diagnostic callback.
+ * @param kind - Member category used in duplicate-name diagnostics.
  */
-export const witVariantMember = (value, scope, fail) => {
+export const witVariantMember = (value, scope, fail, kind = "variant member") => {
 	const kebab = value.replace(/([a-z0-9])([A-Z])/g, "$1-$2").replaceAll("_", "-").toLowerCase();
 	const label = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(kebab) ? kebab
 		: `lean-field-x${[...value].map(char => char.codePointAt(0).toString(16).padStart(6, "0")).join("")}`;
-	if(scope.has(label)) fail(`WIT variant member is duplicated after projection: ${value}`);
+	if(scope.has(label)) fail(`WIT ${kind} is duplicated after projection: ${value}`);
 	scope.add(label); return label;
 };
 

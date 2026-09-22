@@ -13,9 +13,9 @@ import { zendVariantConversions } from "./copied-zend-variants.mjs";
 export const copiedZendConversions = model => model.surface.copies.map(copy => {
 	const input = [], output = [], name = copy.scalarName;
 	if(name === "unit")
-	{ input.push('if (Z_TYPE_P(value) != IS_NULL) return lb_fail(s, "Unit requires null", 1);', "*out = 0;"); output.push("(void)value; ZVAL_NULL(out);"); }
+	{ input.push('if (Z_TYPE_P(value) != IS_NULL) return lb_fail(s, "Unit requires null", 1);', "*out = 0;"); output.push('if (*value != 0) return lb_fail(s, "Invalid native Unit marker", 0);', "ZVAL_NULL(out);"); }
 	else if(name === "bool")
-	{ input.push('if (Z_TYPE_P(value) != IS_TRUE && Z_TYPE_P(value) != IS_FALSE) return lb_fail(s, "Bool requires bool", 1);', "*out = Z_TYPE_P(value) == IS_TRUE;"); output.push("ZVAL_BOOL(out, *value);"); }
+	{ input.push('if (Z_TYPE_P(value) != IS_TRUE && Z_TYPE_P(value) != IS_FALSE) return lb_fail(s, "Bool requires bool", 1);', "*out = Z_TYPE_P(value) == IS_TRUE;"); output.push("unsigned char raw; memcpy(&raw, value, sizeof(raw));", 'if (raw > 1) return lb_fail(s, "Invalid native Bool marker", 0);', "ZVAL_BOOL(out, raw);"); }
 	else if(name === "char")
 	{
 		input.push('if (Z_TYPE_P(value) != IS_STRING) return lb_fail(s, "Char requires a string", 1);', 'if (!lb_char_in((const unsigned char *)Z_STRVAL_P(value), Z_STRLEN_P(value), out)) return lb_fail(s, "Char requires one Unicode scalar", 0);');
@@ -39,13 +39,15 @@ export const copiedZendConversions = model => model.surface.copies.map(copy => {
 	else if(name === "nat" || name === "int")
 	{
 		input.push(`uint32_t *words; bool negative; if (!lb_big_in(value, s, &words, &out->length, &negative, ${name === "int" ? "true" : "false"})) return 0;`, "out->data = words;", ...(name === "int" ? ["out->negative = negative;"] : []));
-		output.push(`return lb_big_out(value->data, value->length, ${name === "int" ? "value->negative" : "false"}, out, s);`);
+		if(name === "int") output.push("unsigned char negative; memcpy(&negative, &value->negative, sizeof(negative));", 'if (negative > 1) return lb_fail(s, "Invalid native integer sign", 0);');
+		output.push(`return lb_big_out(value->data, value->length, ${name === "int" ? "negative" : "false"}, out, s);`);
 	} else if(name === "string" || name === "bytes")
 	{
 		input.push('if (Z_TYPE_P(value) != IS_STRING) return lb_fail(s, "Expected string bytes", 1);', "if (!lb_charge(s, Z_STRLEN_P(value), 1)) return 0;");
 		if(name === "string") input.push('if (!lb_utf8((const unsigned char *)Z_STRVAL_P(value), Z_STRLEN_P(value))) return lb_fail(s, "String requires valid UTF-8", 0);');
 		input.push(`out->data = (const ${name === "string" ? "char" : "uint8_t"} *)Z_STRVAL_P(value); out->length = Z_STRLEN_P(value);`);
 		output.push('if (!lb_charge(s, value->length, 1) || (value->length && !value->data)) return lb_fail(s, "Invalid string buffer", 0);');
+		output.push("if (!lb_readable(s, value->data, value->length, 1, 1)) return 0;");
 		if(name === "string") output.push('if (!lb_utf8((const unsigned char *)value->data, value->length)) return lb_fail(s, "Native string is not valid UTF-8", 0);');
 		output.push('ZVAL_STRINGL(out, value->length ? (const char *)value->data : "", value->length);');
 	} else if(copy.compound === "option")

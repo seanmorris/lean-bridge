@@ -52,7 +52,10 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 		copy.wit = copy.witName ?? primitive[copy.scalarName];
 		copy.wat = copy.witName ? `$t${copy.index}` : copy.wit;
 		const fields = new Set();
-		for(const field of copy.fields) field.witName = admit(field.name, ir.declarations[0], fields);
+		for(const [index, field] of copy.fields.entries())
+			field.witName = copy.record
+				? witVariantMember(copy.record.fields[index].name, fields, message => fail(ir.declarations[0], message), "record field")
+				: admit(field.name, ir.declarations[0], fields);
 		if(copy.variant)
 		{
 			const cases = new Set(), reject = message => fail(ir.declarations[0], message);
@@ -107,7 +110,7 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 		if(copy.compound === "result") return `type ${copy.witName} = result<${copy.fields.map(field => field.type.wit).join(", ")}>;`;
 		if(copy.compound === "tuple") return `type ${copy.witName} = tuple<${copy.fields.map(field => field.type.wit).join(", ")}>;`;
 		if(copy.element) return `type ${copy.witName} = list<${copy.element.wit}>;`;
-		if(copy.record) return copy.fields.length ? `record ${copy.witName} { ${copy.fields.map(field => `${field.witName}: ${field.type.wit}`).join(", ")} }` : `enum ${copy.witName} { empty }`;
+		if(copy.record) return copy.fields.length ? `record ${copy.witName} { ${copy.fields.map(field => `${identifier(field.witName)}: ${field.type.wit}`).join(", ")} }` : `enum ${copy.witName} { empty }`;
 		if(copy.scalarName === "unit") return `enum ${copy.witName} { unit }`;
 		if(copy.scalarName === "int") return `record ${copy.witName} { negative: bool, limbs: list<u32> }`;
 		return `type ${copy.witName} = list<${copy.scalarName === "nat" ? "u32" : "u8"}>;`;

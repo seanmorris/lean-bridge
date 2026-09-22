@@ -36,6 +36,18 @@ static int lb_charge(lb_scope *s, size_t count, size_t width) {
   s->remaining -= count * width;
   return 1;
 }
+static int lb_readable(lb_scope *s, const void *data, size_t count, size_t width, size_t alignment) {
+  if (!count) return 1;
+  if (!data || !width || !alignment || count > SIZE_MAX / width)
+    return lb_fail(s, "Invalid native output buffer", 0);
+  if ((uintptr_t)data % alignment)
+    return lb_fail(s, "Misaligned native output buffer", 0);
+#ifdef __wasm__
+  if ((uint64_t)(uintptr_t)data + (uint64_t)count * width > (uint64_t)__builtin_wasm_memory_size(0) * 65536)
+    return lb_fail(s, "Native output buffer exceeds Wasm memory", 0);
+#endif
+  return 1;
+}
 static void *lb_allocate(lb_scope *s, size_t count, size_t width) {
   if (!lb_charge(s, count ? count : 1, width) || !lb_charge(s, 1, sizeof(lb_block))) return NULL;
   lb_block *block = LB_ZEND_CALLOC(1, sizeof(*block));
@@ -122,8 +134,10 @@ static int lb_big_in(zval *value, lb_scope *s, uint32_t **out, size_t *length, b
   *out = words; *length = count; *negative = sign; return 1;
 }
 static int lb_big_out(const uint32_t *words, size_t length, bool negative, zval *out, lb_scope *s) {
-  if (length > 1701 || (length && (!words || !words[length - 1])) || (!length && negative))
+  if (length > 1701 || (!length && negative))
     return lb_fail(s, "Invalid or excessive big integer output", 0);
+  if (!lb_readable(s, words, length, sizeof(*words), _Alignof(uint32_t))) return 0;
+  if (length && !words[length - 1]) return lb_fail(s, "Noncanonical big integer output", 0);
   if (!lb_charge(s, length, sizeof(uint32_t))) return 0;
   uint32_t *chunks = lb_allocate(s, length * 2 + 1, sizeof(uint32_t));
   if (!chunks) return 0;

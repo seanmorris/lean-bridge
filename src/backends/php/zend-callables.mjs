@@ -208,8 +208,11 @@ static ZEND_FUNCTION(lb_${entry}) {
   if (status && !message) {
     size_t length = ctx->error.message ? ctx->error.message_length : 0;
     if (length > sizeof(native_message) - 1) length = sizeof(native_message) - 1;
-    if (length) memcpy(native_message, ctx->error.message, length); native_message[length] = 0;
-    message = length ? native_message : "Compiled Lean call failed";
+    if (!lb_readable(&ctx->scope, ctx->error.message, length, 1, 1)) message = ctx->scope.error;
+    else {
+      if (length) memcpy(native_message, ctx->error.message, length); native_message[length] = 0;
+      message = length ? native_message : "Compiled Lean call failed";
+    }
   }
   lb_cleanup_${entry}(ctx);
   if (bailout) zend_bailout();
