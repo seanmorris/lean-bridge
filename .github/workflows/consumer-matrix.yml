@@ -548,6 +548,8 @@ jobs:
           test -s build/compounds/native.json
           LEAN_BRIDGE_NATIVE_LIST_TEST=1 node --test tests/native-lists.test.mjs
           test -s build/lists/native.json
+          LEAN_BRIDGE_NATIVE_COLLECTION_TEST=1 node --test tests/native-collections.test.mjs
+          test -s build/collections/native.json
           LEAN_BRIDGE_NATIVE_ALIAS_TEST=1 node --test tests/native-aliases.test.mjs
           test -s build/aliases/native.json
           LEAN_BRIDGE_CPP_VARIANT_TEST=1 node --test tests/cpp-variants.test.mjs
@@ -574,6 +576,7 @@ jobs:
             build/callables/cpp.json
             build/compounds/native.json
             build/lists/native.json
+            build/collections/native.json
             build/aliases/native.json
             build/variants/cpp.json
             build/variants/c.json

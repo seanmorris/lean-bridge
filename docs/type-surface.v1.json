@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.67.0",
+  "contractVersion": "0.68.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,225 @@
   ],
   "evidence": [
     {
+      "id": "native-collections-installed",
+      "kind": "installed",
+      "revision": "5da8a7b959f0542f95b4c3259d9d768e57c9a30d",
+      "command": "LEAN_BRIDGE_NATIVE_COLLECTION_TEST=1 node --test tests/native-collections.test.mjs; node --test tests/native-collection-contract.test.mjs tests/native-collection-evidence.test.mjs",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+        },
+        {
+          "path": "docs/consume/c.md",
+          "sha256": "18308d2d04a5dcc921b498ae6511ae4e9252fa0ec3ffd42de69ebf57e8b10bec"
+        },
+        {
+          "path": "docs/consume/cpp.md",
+          "sha256": "6168ea85be7f22945a94242a54b1452c9d1f31f1bde3ac19f259820a96ebe4db"
+        },
+        {
+          "path": "docs/evidence/native-collections-20260921.json",
+          "sha256": "e84c008b7563827fa38c58a482090eb06890c7ecb987bef78734c5c0f05b95ae"
+        },
+        {
+          "path": "docs/evidence/native-collections-20260921.md",
+          "sha256": "def3650f5beec843f4bcc610fd571f79c51a4a12b120de607377dd5c9bd45e78"
+        },
+        {
+          "path": "docs/publish/c.md",
+          "sha256": "f54c527496cdadaa2820b49e021868ca51420929059bfeca66445d1a25f24884"
+        },
+        {
+          "path": "docs/publish/cpp.md",
+          "sha256": "a2b3b3a917429387704988ddf52b121959364b4ec313eb87048f57d33916baa6"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/c/generate.mjs",
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
+        },
+        {
+          "path": "src/backends/c/gmp-projection.mjs",
+          "sha256": "1deeff80cd0199c8c6fc07c0393888487430a5084334099b059713a8c2d66559"
+        },
+        {
+          "path": "src/backends/c/gmp-values.mjs",
+          "sha256": "aa7bc5a2819b2eeb37741ae22f3beafb0e3c5404277cdadcb9081441d46830b6"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "6e3923356ad0ffe4fec71b69934d4042ede334c1d28637c9503df7b37d2694c9"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "1ebe8b5edb40ee42f7893c5dc2d500130a91cf360d63bedb90322348c2c11a99"
+        },
+        {
+          "path": "src/backends/c/primitive-surface.mjs",
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
+        },
+        {
+          "path": "src/backends/cpp/copied-values.mjs",
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
+        },
+        {
+          "path": "src/backends/cpp/primitives.mjs",
+          "sha256": "975715895da0d663e71a67a04ceea932f7d987dbd4dfec0c0f0d9331947711e2"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "af18d6c341998d0c788bd764e26622b471b28af1b317e8b208c2860dc77c1789"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/Collections.lean",
+          "sha256": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/c.c",
+          "sha256": "811f128d4b4be029c810d4c604ab7b29f3041f6b9ddbf0d46efff44ccde82401"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/cpp.cpp",
+          "sha256": "e3923754245fb55e22902be353dd5a24e95d72b9ea89336e1327288eef240e41"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/gmp-probe.c",
+          "sha256": "2cfd2ab34c2ea31dacce118722679923fa3f5747c7551fc3d3a29b31bec0aa6c"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/native-probe.c",
+          "sha256": "5c2193ff5133831f35534565bcd0888a1de2f9ab1cd0e344b45254efca9dc5ac"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/Arrays.lean",
+          "sha256": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/LICENSE",
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/Records.lean",
+          "sha256": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540"
+        },
+        {
+          "path": "tests/helpers/array-fixture.mjs",
+          "sha256": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf"
+        },
+        {
+          "path": "tests/helpers/collection-fixture.mjs",
+          "sha256": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/native-collection-consumers.mjs",
+          "sha256": "95ca365d2ab1e86995799abd44971048004ba8e1cfe720cff523eb1bce3e5363"
+        },
+        {
+          "path": "tests/helpers/native-collection-faults.mjs",
+          "sha256": "f86bfbc17cf2ab71fdc369ee50f2cd6c861d83333b7450da2114f5217f9b8c3c"
+        },
+        {
+          "path": "tests/helpers/native-collection-install.mjs",
+          "sha256": "bd6735cb4da3c30d26c4f06a3c2f329e29fcf2c31ad867e16ca76dc81487c69b"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/record-fixture.mjs",
+          "sha256": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        },
+        {
+          "path": "tests/native-collection-contract.test.mjs",
+          "sha256": "6189490db177182f24e505b5108666bc49f714f3239f33e9cb084da33202cd18"
+        },
+        {
+          "path": "tests/native-collection-evidence.test.mjs",
+          "sha256": "751142ecc1b47a941d60a6f5670936b328e6de6e00bbb2840ffa754f4f575ef8"
+        },
+        {
+          "path": "tests/native-collections.test.mjs",
+          "sha256": "9ee9f02940989b9d4965bdd511c06929015c4e9ef6310b56966202f09cd45ffa"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/collections-1.0.0-c.tar.gz",
+          "sha256": "4e2985e58c5f525880c5d145e4fedf4691bf93a6d70a715265eaf662c3354a58"
+        },
+        {
+          "path": "ordinary-source/cFacade-probe",
+          "sha256": "91c017895eee1cd20b630b9904fceaacfa5fca6ef7a2f870867b3494a563b5cb"
+        },
+        {
+          "path": "ordinary-source/native-probe",
+          "sha256": "f4da69ba46883628f6f00b84a5050301c5425f110d6e392d2aa8316df26f68a2"
+        },
+        {
+          "path": "ordinary-source/archives/collections-1.0.0-cpp.tar.gz",
+          "sha256": "61f45e7fbc89ff3b3e37fc39e0eb4d8210b3c93e6f98931665c591c753a62a37"
+        },
+        {
+          "path": "reviewed-ir/archives/collections-1.0.0-c.tar.gz",
+          "sha256": "311e342b49897f78ed17a375526ed031cb107f5801bb67cf4ec084171c617a30"
+        },
+        {
+          "path": "reviewed-ir/cFacade-probe",
+          "sha256": "8a69a39852b75fe58eae79b3d1819dc6ed4e34423576f5363d40cff94f8877e7"
+        },
+        {
+          "path": "reviewed-ir/native-probe",
+          "sha256": "6812ab68e4cf3c894b0d834d4c5dff6972dba37f6d398b8060eb474c4da81d27"
+        },
+        {
+          "path": "reviewed-ir/archives/collections-1.0.0-cpp.tar.gz",
+          "sha256": "fdd9fc3ffafbae10f1688573f906a2d2fe9f423eb362f86174e774c734d93cf4"
+        }
+      ]
+    },
+    {
       "id": "perl-collections-installed",
       "kind": "installed",
       "revision": "37c2aabec7d656987f9be54cf6a729dafe5153eb",
@@ -185,7 +404,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -356,7 +575,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/wit-variants-20260921.json",
@@ -368,7 +587,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -388,7 +607,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/wit/copied-aliases.mjs",
@@ -559,7 +778,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-wasm-variants-20260921.json",
@@ -571,7 +790,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -591,7 +810,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -818,7 +1037,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-native-variants-20260921.json",
@@ -830,7 +1049,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -846,7 +1065,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -858,7 +1077,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -1041,7 +1260,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1204,7 +1423,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/ruby-variants-20260921.json",
@@ -1216,7 +1435,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1232,7 +1451,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1244,7 +1463,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/ruby/callables.mjs",
@@ -1395,7 +1614,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/jvm-variants-20260921.json",
@@ -1407,7 +1626,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1423,7 +1642,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1435,7 +1654,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -1634,7 +1853,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/dotnet-variants-20260921.json",
@@ -1646,7 +1865,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1662,7 +1881,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1674,7 +1893,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/dotnet/callables.mjs",
@@ -1829,7 +2048,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/rust-variants-20260921.json",
@@ -1841,7 +2060,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1857,7 +2076,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -1869,7 +2088,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/rust/callables.mjs",
@@ -2024,7 +2243,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/python-variants-20260921.json",
@@ -2036,7 +2255,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2052,7 +2271,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -2064,7 +2283,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/python/callables.mjs",
@@ -2215,7 +2434,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/c-variants-20260921.json",
@@ -2227,7 +2446,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2243,7 +2462,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/gmp-projection.mjs",
@@ -2267,7 +2486,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2402,7 +2621,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.json",
@@ -2414,7 +2633,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2430,7 +2649,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -2442,11 +2661,11 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
@@ -2553,7 +2772,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/wit-aliases-20260921.json",
@@ -2565,7 +2784,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2581,7 +2800,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/wit/copied-aliases.mjs",
@@ -2724,7 +2943,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-wasm-aliases-20260921.json",
@@ -2736,7 +2955,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2752,7 +2971,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/copied-aliases.mjs",
@@ -2951,7 +3170,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-native-aliases-20260921.json",
@@ -2963,7 +3182,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2979,7 +3198,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -3114,7 +3333,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3249,7 +3468,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/ruby-aliases-20260921.json",
@@ -3261,7 +3480,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3281,7 +3500,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
@@ -3400,7 +3619,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
@@ -3412,7 +3631,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3432,7 +3651,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/jvm/copied-aliases.mjs",
@@ -3595,7 +3814,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "config/checked-javascript.json",
@@ -3623,7 +3842,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3643,7 +3862,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/dotnet/copied-aliases.mjs",
@@ -3770,7 +3989,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -3782,7 +4001,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3802,7 +4021,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/rust/copied-conversions.mjs",
@@ -3913,7 +4132,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -3925,7 +4144,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3945,7 +4164,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
@@ -4048,7 +4267,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -4060,7 +4279,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4076,7 +4295,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/gmp-projection.mjs",
@@ -4088,11 +4307,11 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
@@ -4183,7 +4402,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -4211,7 +4430,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4235,11 +4454,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
@@ -4326,7 +4545,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -4362,7 +4581,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4485,7 +4704,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -4501,7 +4720,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4529,7 +4748,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -4541,7 +4760,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
@@ -4680,7 +4899,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -4696,7 +4915,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4724,7 +4943,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -4736,7 +4955,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -4919,7 +5138,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -4935,7 +5154,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4963,7 +5182,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -4975,7 +5194,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -5126,7 +5345,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -5142,7 +5361,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5170,7 +5389,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -5182,7 +5401,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -5349,7 +5568,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5560,7 +5779,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -5576,7 +5795,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5604,7 +5823,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -5616,7 +5835,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
@@ -5739,7 +5958,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -5755,7 +5974,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5783,7 +6002,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -5795,7 +6014,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -5946,7 +6165,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -5962,7 +6181,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5990,7 +6209,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -6002,7 +6221,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/dotnet/callables.mjs",
@@ -6169,7 +6388,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -6181,7 +6400,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/rust/callables.mjs",
@@ -6336,7 +6555,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -6348,7 +6567,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/python/callables.mjs",
@@ -6499,7 +6718,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/gmp-projection.mjs",
@@ -6519,11 +6738,11 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
@@ -6638,7 +6857,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -6670,7 +6889,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -6777,7 +6996,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -6793,7 +7012,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6821,7 +7040,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -6833,7 +7052,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -6996,7 +7215,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -7012,7 +7231,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7040,7 +7259,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -7052,7 +7271,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/php/callables.mjs",
@@ -7211,7 +7430,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7422,7 +7641,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -7438,7 +7657,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7466,7 +7685,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -7478,7 +7697,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
@@ -7601,7 +7820,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -7617,7 +7836,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7645,7 +7864,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -7657,7 +7876,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -7808,7 +8027,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -7824,7 +8043,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7852,7 +8071,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -7864,7 +8083,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/dotnet/callables.mjs",
@@ -8031,7 +8250,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -8043,7 +8262,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/rust/callables.mjs",
@@ -8194,7 +8413,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -8206,7 +8425,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/python/callables.mjs",
@@ -8353,7 +8572,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/gmp-projection.mjs",
@@ -8373,11 +8592,11 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "src/backends/cpp/primitives.mjs",
@@ -8492,7 +8711,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -8695,7 +8914,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -8858,7 +9077,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -8898,7 +9117,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "9798a64e3aa43ae0b55ca9a5ce15b2b57d25c3beadb2b912f7dd30850ee4e7ab"
+          "sha256": "5721785d6b961ef8fbbf37a47fb81f93b350da3f56b72374cf933c9baaa05d6a"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -8906,7 +9125,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9129,11 +9348,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -9268,11 +9487,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -9395,7 +9614,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -9423,7 +9642,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -9634,7 +9853,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -9662,7 +9881,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -9821,7 +10040,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -9845,7 +10064,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -10044,7 +10263,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -10064,7 +10283,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -10143,7 +10362,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
@@ -10211,7 +10430,7 @@
         },
         {
           "path": "tests/native-c-copied.test.mjs",
-          "sha256": "1f4549b3a68fcc79dfd284d0513c2cba8a9402a818055a70bb418f07814d83d3"
+          "sha256": "6c1652954981afd6e8c078e20a85c6830c8fee5f8afe71bee15b1facb2993487"
         },
         {
           "path": "tests/helpers/type-corpus-c-source.mjs",
@@ -10243,11 +10462,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "flake.nix",
@@ -10354,7 +10573,7 @@
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -10366,7 +10585,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -10430,7 +10649,7 @@
         },
         {
           "path": "tests/native-c-copied.test.mjs",
-          "sha256": "1f4549b3a68fcc79dfd284d0513c2cba8a9402a818055a70bb418f07814d83d3"
+          "sha256": "6c1652954981afd6e8c078e20a85c6830c8fee5f8afe71bee15b1facb2993487"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -10454,11 +10673,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -10565,7 +10784,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -10649,11 +10868,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -10712,7 +10931,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -10780,11 +10999,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -10843,7 +11062,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -10911,11 +11130,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -10946,11 +11165,11 @@
       "files": [
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -11030,11 +11249,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -11141,11 +11360,11 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "7e9c9ff6b269188b7d4de824c7a4e52eceb6e52605b4c8a5ea9ab80996d80190"
+          "sha256": "356e397bac15f29db53a655771e8d17e012f7a73b2be79272bcfc7cf8c2eff41"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -11236,7 +11455,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -11276,7 +11495,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "9798a64e3aa43ae0b55ca9a5ce15b2b57d25c3beadb2b912f7dd30850ee4e7ab"
+          "sha256": "5721785d6b961ef8fbbf37a47fb81f93b350da3f56b72374cf933c9baaa05d6a"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -11284,7 +11503,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -11304,7 +11523,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -11316,11 +11535,11 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
@@ -11436,7 +11655,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "7e9c9ff6b269188b7d4de824c7a4e52eceb6e52605b4c8a5ea9ab80996d80190"
+          "sha256": "356e397bac15f29db53a655771e8d17e012f7a73b2be79272bcfc7cf8c2eff41"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -11615,7 +11834,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -11627,11 +11846,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -11639,11 +11858,11 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
@@ -11973,7 +12192,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -12124,7 +12343,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -12243,7 +12462,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -12350,7 +12569,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -12433,7 +12652,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "33990a398ae3560bb631fb32c97814d940da25205883dd85d78a2c5cbca147df"
+          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -12449,7 +12668,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "34ccc8fc5f569e4984b80beda056d907718ecd17e92aceb7e99bc5ca874e6646"
+          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -12477,7 +12696,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -12489,7 +12708,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/wit/copied-component.mjs",
@@ -12616,7 +12835,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -12707,7 +12926,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -12802,7 +13021,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -12909,7 +13128,7 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -13004,7 +13223,7 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -13016,11 +13235,11 @@
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "src/backends/cpp/generate.mjs",
@@ -13072,7 +13291,7 @@
         },
         {
           "path": "tests/native-c-copied.test.mjs",
-          "sha256": "1f4549b3a68fcc79dfd284d0513c2cba8a9402a818055a70bb418f07814d83d3"
+          "sha256": "6c1652954981afd6e8c078e20a85c6830c8fee5f8afe71bee15b1facb2993487"
         },
         {
           "path": "tests/native-c-family.test.mjs",
@@ -13143,11 +13362,11 @@
         },
         {
           "path": "src/backends/c/generate.mjs",
-          "sha256": "2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"
+          "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
         },
         {
           "path": "src/backends/c/primitive-surface.mjs",
-          "sha256": "02d3737ad06d6cac1c44e5866299bcba9587ae6b82f17cfdcfdbbe6e94e1e664"
+          "sha256": "af33f883e2a4760342e786c44a12b6ee468b6122db5126788f77c7ff78df5f09"
         },
         {
           "path": "src/backends/c/native-primitives.mjs",
@@ -13179,7 +13398,7 @@
         },
         {
           "path": "src/backends/cpp/copied-values.mjs",
-          "sha256": "e2d7d9437978873a17f4c3db8378b452137c81bb00ac2f46e8eda8d85188be18"
+          "sha256": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b"
         },
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
@@ -13789,7 +14008,7 @@
       "command": "Inspect the generator, coverage guards and named acceptance sources.",
       "scope": "C11 scalar and owned-buffer declarations, fixed-width primitive arrays and coverage guards. Unit value positions use uint8_t. Installed ordinary primitive evidence is recorded separately from this reviewed-IR inspection. The Char milestone adds an explicit unsupported-primitive guard for native C. Existing sixteen-scalar branches are unchanged; Char npm evidence does not promote native C support. The native Char follow-up refreshes source hashes for additive converters and admission checks. Its installed evidence is separate in native-installed-char; historical artifact identities and pre-Char type claims in this record are unchanged. The platform-word follow-up refreshes source hashes for additive USize/ISize conversions, compiled-target checks, and shared installed-test harnesses. Its evidence is separate in platform-words-installed; historical artifact identities and type-position claims remain unchanged. C callable follow-up refreshed source hashes; historical artifact identities and coverage are unchanged. New callable execution evidence is separate.",
       "files": [
-        {"path":"src/backends/c/generate.mjs","sha256":"2e9ec42c2e8287e8247e65581daf99ca7904e360770f0b11755c5e8cd001cdd1"}
+        {"path":"src/backends/c/generate.mjs","sha256":"2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"}
       ],
       "artifacts": []
     },
@@ -40247,115 +40466,6 @@
       ]
     },
     {
-      "id": "c-primitives-c-1",
-      "profiles": [
-        "c"
-      ],
-      "shapes": [
-        "unit",
-        "bool",
-        "uint8",
-        "uint16",
-        "uint32",
-        "uint64",
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "float32",
-        "float64",
-        "string",
-        "bytes"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Historical reviewed C copied-field inspection only. Installed primitive input/result and callable coverage is recorded separately.",
-      "hostTypes": {
-        "unit": {
-          "field": "uint8_t (zero)"
-        },
-        "bool": {
-          "field": "bool"
-        },
-        "uint8": {
-          "field": "uint8_t"
-        },
-        "uint16": {
-          "field": "uint16_t"
-        },
-        "uint32": {
-          "field": "uint32_t"
-        },
-        "uint64": {
-          "field": "uint64_t"
-        },
-        "int8": {
-          "field": "int8_t"
-        },
-        "int16": {
-          "field": "int16_t"
-        },
-        "int32": {
-          "field": "int32_t"
-        },
-        "int64": {
-          "field": "int64_t"
-        },
-        "float32": {
-          "field": "float"
-        },
-        "float64": {
-          "field": "double"
-        },
-        "string": {
-          "field": "<prefix>_string buffer struct"
-        },
-        "bytes": {
-          "field": "<prefix>_bytes buffer struct"
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "c-mapping-audit"
-          ],
-          "note": "Generated C11 declarations; outputs use out parameters and a separate status/error result."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": [
-        "Input buffers may borrow for the call; returned buffers use generated clear functions.",
-        "Reviewed-IR buffer declarations alone do not establish arbitrary-integer transport; ordinary primitive execution is recorded separately."
-      ],
-      "conversionNotes": {
-        "unit": "C value positions use uint8_t zero; no-payload results omit the output argument.",
-        "string": "Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free().",
-        "bytes": "Inputs may borrow storage for the call. Clear owned returned buffers with the generated clear function, not free()."
-      }
-    },
-    {
       "id": "c-values-c-1",
       "profiles": [
         "c"
@@ -40365,9 +40475,6 @@
         "record"
       ],
       "positions": [
-        "parameter",
-        "result",
-        "field",
         "callback-parameter",
         "callback-result"
       ],
@@ -40375,16 +40482,10 @@
       "scope": "C copied records and fixed-width primitive spans.",
       "hostTypes": {
         "array": {
-          "parameter": "<prefix>_array_<primitive>_span",
-          "result": "<prefix>_array_<primitive>_span",
-          "field": "<prefix>_array_<primitive>_span",
           "callback-parameter": "<prefix>_array_<primitive>_span",
           "callback-result": "<prefix>_array_<primitive>_span"
         },
         "record": {
-          "parameter": "Generated copied struct (Alpha: lean_alpha_payload)",
-          "result": "Generated copied struct (Alpha: lean_alpha_payload)",
-          "field": "Generated copied struct (Alpha: lean_alpha_payload)",
           "callback-parameter": "Generated copied struct (Alpha: lean_alpha_payload)",
           "callback-result": "Generated copied struct (Alpha: lean_alpha_payload)"
         }
@@ -40871,48 +40972,6 @@
       "limitations": []
     },
     {
-      "id": "alpha-fields-cpp-1",
-      "profiles": ["cpp"],
-      "shapes": ["bool","uint32","string","bytes","array"],
-      "positions": ["field"],
-      "path": "reviewed-ir",
-      "scope": "Only canonical Alpha.Payload fields; Array means Array UInt32 here.",
-      "hostTypes": {
-        "bool": {"field":"bool"},
-        "uint32": {"field":"std::uint32_t"},
-        "string": {"field":"std::string"},
-        "bytes": {"field":"std::vector<std::uint8_t>"},
-        "array": {"field":"std::vector<std::uint32_t>"}
-      },
-      "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["cpp-mapping-audit"],"note":"Only canonical Alpha.Payload fields; Array means Array UInt32 here."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
-      },
-      "limitations": ["This fixed template has no general mapping."]
-    },
-    {
-      "id": "alpha-record-cpp-1",
-      "profiles": ["cpp"],
-      "shapes": ["record"],
-      "positions": ["parameter","result"],
-      "path": "reviewed-ir",
-      "scope": "Only the canonical five-field Alpha.Payload round trip.",
-      "hostTypes": {
-        "record": {"parameter":"Payload","result":"Payload"}
-      },
-      "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["cpp-mapping-audit"],"note":"Only the canonical five-field Alpha.Payload round trip."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
-      },
-      "limitations": []
-    },
-    {
       "id": "alpha-resource-cpp-1",
       "profiles": [
         "cpp"
@@ -40960,93 +41019,6 @@
         }
       },
       "limitations": []
-    },
-    {
-      "id": "alpha-other-scalars-cpp-1",
-      "profiles": [
-        "cpp"
-      ],
-      "shapes": [
-        "unit",
-        "uint8",
-        "uint16",
-        "uint64",
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "float32",
-        "float64"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "The fixed Alpha interface has no general mapping for this type. Exact cpp_int and primitive callable evidence is recorded separately in cpp-callables-installed.",
-      "hostTypes": {
-        "unit": {
-          "field": null
-        },
-        "uint8": {
-          "field": null
-        },
-        "uint16": {
-          "field": null
-        },
-        "uint64": {
-          "field": null
-        },
-        "int8": {
-          "field": null
-        },
-        "int16": {
-          "field": null
-        },
-        "int32": {
-          "field": null
-        },
-        "int64": {
-          "field": null
-        },
-        "float32": {
-          "field": null
-        },
-        "float64": {
-          "field": null
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "cpp-mapping-audit"
-          ],
-          "note": "The fixed Alpha interface has no general mapping for this type."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": [
-        "Keeping Alpha declaration names does not make a changed signature executable."
-      ]
     },
     {
       "id": "alpha-fields-dotnet-1",
@@ -43396,6 +43368,378 @@
             "perl-collections-installed"
           ],
           "note": "Thirty-five compiler-authenticated array and record exports preserve all nineteen primitives, seven named records and 24 fixed levels of nested arrays. Ordinary and independently reviewed source paths install original CPAN archives offline across four Perl ABIs after removing authors, then relocate and execute twice without producer handoffs or compilers. Each of eight combinations passes 239,954 public assertions across 3,008 calls and 132 rejection/recovery cases. Isolated test-only XS probes pass 1,187 checks, including 1,141 injected conversion failures, 32 partial inputs, eight preserved host exceptions and six reentrant record/outer-array mutations. An independent rebuild reproduces archives, loaded libraries and installed payloads; installation path metadata is excluded from the payload comparison."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB conversion budget. These limits do not bound all host allocations or Lean working memory.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ]
+    },
+    {
+      "id": "native-c-collection-reviewed",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations.",
+      "hostTypes": {
+        "array": {
+          "parameter": "<prefix>_array_<type>_span",
+          "result": "<prefix>_array_<type>_span",
+          "field": "<prefix>_array_<type>_span"
+        },
+        "record": {
+          "parameter": "<prefix>_<record>",
+          "result": "<prefix>_<record>",
+          "field": "<prefix>_<record>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB conversion budget. These limits do not bound all host allocations or Lean working memory.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Typed spans preserve all nineteen copied primitive elements, order, duplicates, empty and nested arrays and records. Input storage is borrowed; returned dynamic payloads own independent copies.",
+        "record": "Named structs preserve source field meanings, including empty and single-field records. Keyword fields gain a trailing underscore. Generated init/clear functions manage nested GMP values. Failed conversions preserve the initialized output and release partial owners."
+      }
+    },
+    {
+      "id": "native-c-collection-reviewed-fields",
+      "profiles": [
+        "c"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations.",
+      "hostTypes": {
+        "unit": {
+          "field": "uint8_t (zero)"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "uint8_t"
+        },
+        "uint16": {
+          "field": "uint16_t"
+        },
+        "uint32": {
+          "field": "uint32_t"
+        },
+        "uint64": {
+          "field": "uint64_t"
+        },
+        "int8": {
+          "field": "int8_t"
+        },
+        "int16": {
+          "field": "int16_t"
+        },
+        "int32": {
+          "field": "int32_t"
+        },
+        "int64": {
+          "field": "int64_t"
+        },
+        "float32": {
+          "field": "float"
+        },
+        "float64": {
+          "field": "double"
+        },
+        "string": {
+          "field": "<prefix>_string"
+        },
+        "bytes": {
+          "field": "<prefix>_bytes"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB conversion budget. These limits do not bound all host allocations or Lean working memory.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ]
+    },
+    {
+      "id": "native-cpp-collection-reviewed",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations.",
+      "hostTypes": {
+        "array": {
+          "parameter": "std::vector<T>",
+          "result": "std::vector<T>",
+          "field": "std::vector<T>"
+        },
+        "record": {
+          "parameter": "generated record struct",
+          "result": "generated record struct",
+          "field": "generated record struct"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB conversion budget. These limits do not bound all host allocations or Lean working memory.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Owned `std::vector` values preserve all nineteen primitive elements, order, duplicates, empty and nested arrays and records, including `std::vector<bool>`. Output storage is independent.",
+        "record": "Named structs preserve fields and nested values with defaulted field-by-field equality. Keyword fields gain a trailing underscore. Floating-point equality follows C++ semantics. Returned values release automatically, including partial output copies when allocation throws."
+      }
+    },
+    {
+      "id": "native-cpp-collection-reviewed-fields",
+      "profiles": [
+        "cpp"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations.",
+      "hostTypes": {
+        "unit": {
+          "field": "std::monostate"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "uint8_t"
+        },
+        "uint16": {
+          "field": "uint16_t"
+        },
+        "uint32": {
+          "field": "uint32_t"
+        },
+        "uint64": {
+          "field": "uint64_t"
+        },
+        "int8": {
+          "field": "int8_t"
+        },
+        "int16": {
+          "field": "int16_t"
+        },
+        "int32": {
+          "field": "int32_t"
+        },
+        "int64": {
+          "field": "int64_t"
+        },
+        "float32": {
+          "field": "float"
+        },
+        "float64": {
+          "field": "double"
+        },
+        "string": {
+          "field": "std::string"
+        },
+        "bytes": {
+          "field": "std::vector<uint8_t>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original C/GMP and C++ archives on ordinary-source and independently reviewed paths. The public callers cover all nineteen primitives, seven records and 24 fixed array levels, with independent storage, malformed inputs and budget recovery. Each source path repeats 87,265 C assertions across 2,752 calls and 91 rejections, plus 71,265 C++ assertions across 3,244 calls, twelve rejections and eighty allocation failures. Separate real-Lean sanitizer probes inject 2,720 native and 1,296 C/GMP facade allocation failures, test unchanged output slots and release all tracked allocations. Startup and initialized-fixture leak reports are retained, with no growth after 1,000 repeated initializations or conversions. An independent rebuild reproduces all original archives, installed files and public observations."
         }
       },
       "limitations": [

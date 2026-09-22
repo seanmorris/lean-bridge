@@ -26,10 +26,9 @@ export const copiedCppType = copy => {
  */
 export const renderCppCopiedValues = surface => {
 	const p = surface.prefix;
-	const variants = surface.copies.some(copy => copy.variant);
 	const records = surface.copies.filter(copy => copy.record || copy.variant).map(copy => copy.variant
 		? `${copy.cases.map(branch => `struct ${branch.cppName} {\n${branch.fields.map(field => `  ${copiedCppType(field.type)} ${field.name}{};`).join("\n")}\n  friend bool operator==(const ${branch.cppName}&, const ${branch.cppName}&) = default;\n};`).join("\n")}\nusing ${copy.variant.name} = std::variant<${copy.cases.map(branch => branch.cppName).join(", ")}>;`
-		: `struct ${copy.record.name} {\n${copy.fields.map(field => `  ${copiedCppType(field.type)} ${field.name}{};`).join("\n")}${variants ? `\n  friend bool operator==(const ${copy.record.name}&, const ${copy.record.name}&) = default;` : ""}\n};`).join("\n");
+		: `struct ${copy.record.name} {\n${copy.fields.map(field => `  ${copiedCppType(field.type)} ${field.name}{};`).join("\n")}\n  friend bool operator==(const ${copy.record.name}&, const ${copy.record.name}&) = default;\n};`).join("\n");
 	const conversions = surface.copies.map(copy => {
 		const { index, name, element, fields, record, ref } = copy, host = copiedCppType(copy);
 		const view = [], constructor = [], initializers = [], check = [], output = [];

@@ -55,6 +55,15 @@ export const cVariantIdentifier = value => {
 	return cKeywords.has(name) ? `${name}_` : name;
 };
 /**
+ * Keep record snake-case normalization and escape C/C++ member keywords.
+ *
+ * @param value - Source record field name.
+ */
+export const cRecordIdentifier = value => {
+	const name = snake(value);
+	return cKeywords.has(name) ? `${name}_` : name;
+};
+/**
  * Name a public constructor tag without exposing Lean's runtime representation.
  *
  * @param name - Generated C type name.
@@ -673,7 +682,7 @@ const emitPublicHeader = ir => {
 		if(!type.fields.length) lines.push("  uint8_t empty;");
 		for(const field of type.fields)
 		{
-			lines.push(`  ${cType(ir, field.type)} ${snake(field.name)};`);
+			lines.push(`  ${cType(ir, field.type)} ${cRecordIdentifier(field.name)};`);
 		}
 		lines.push(`} ${name};`, "", `void ${name}_clear(${name} *value);`, "");
 	}
@@ -911,7 +920,7 @@ const emitImplementation = ir => {
 		lines.push(`void ${name}_clear(${name} *value) {`, "  if (value == NULL) return;");
 		for(const field of clearable)
 		{
-			lines.push(`  ${cType(ir, field.type)}_clear(&value->${snake(field.name)});`);
+			lines.push(`  ${cType(ir, field.type)}_clear(&value->${cRecordIdentifier(field.name)});`);
 		}
 		lines.push("  memset(value, 0, sizeof(*value));", "}", "");
 	}

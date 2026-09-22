@@ -252,17 +252,25 @@ int main(void) {
 
 test("copied C admission rejects cycles, ambiguous type names and field spellings at the export", () => {
 	const input = nativeMetadataFixture();
+	const declaration = input.metadata.modules[0].declarations[0], word = declaration.projection.result;
+	declaration.projection.parameters[0].type = {
+		kind: "record", name: "Sample.Item", lean: "Sample.Item"
+		, constructor: "Sample.Item.mk"
+		, fields: [{ name: "value", projection: "Sample.Item.value", type: word }]
+		, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } };
 	const model = createNativeModel({ ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } });
-	const base = { id: "lean:Sample.Item", name: "Item", kind: "record", typeParameters: [], fields: [] };
+	assert.doesNotThrow(() => compilePrimitiveCSurface(model.bindingIr));
+	const keyword = structuredClone(model.bindingIr);
+	keyword.types[0].fields[0].name = "class";
+	assert.equal(compilePrimitiveCSurface(keyword).copy({ kind: "named", id: "lean:Sample.Item" }).fields[0].name, "class_");
 	for(const change of [
-		ir => { ir.types[0].fields = [{ name: "next", type: { kind: "named", id: base.id } }]; }
+		ir => { ir.types[0].fields[0].type = { kind: "named", id: ir.types[0].id }; }
 		, ir => { ir.types[0].name = "Nat"; }
-		, ir => { ir.types[0].fields = [{ name: "class", type: { kind: "primitive", name: "uint32" } }]; }
+		, ir => { ir.types[0].fields = ["class", "class_"].map(name => ({ ...ir.types[0].fields[0], name })); }
 		, ir => { ir.declarations[0].name = "item_clear"; }
-		, ir => { ir.types[0].name = "ArrayUint32Span"; ir.types[0].fields = [{ name: "values", type: { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint32" }] } }]; }
+		, ir => { ir.types[0].name = "ArrayUint32Span"; ir.types[0].fields[0].type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint32" }] }; }
 	]) {
-		const ir = structuredClone(model.bindingIr); ir.types = [structuredClone(base)];
-		ir.declarations[0].parameters[0].type = { kind: "named", id: base.id }; change(ir);
+		const ir = structuredClone(model.bindingIr); change(ir);
 		assert.throws(() => compilePrimitiveCSurface(ir), error => error.code === "unsupported-native-c-signature" && error.details.source.path === "Sample.lean");
 	}
 });

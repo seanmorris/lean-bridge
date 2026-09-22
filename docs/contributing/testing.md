@@ -427,6 +427,22 @@ Native builds discard the duplicate release immediately after comparing archive 
 
 The catalog contains 124 cases across both libraries. Python, Ruby, Perl and native PHP execute all of them: all 16 primitive parameter/result types, nested arrays, copied records, invalid inputs and recovery after rejection. PHP repeats the catalog in weak and strict caller modes. Rust executes 84 positive cases and records 40 invalid inputs as compiler rejections. Each npm corpus package selects scalar exports, executes 112 cases and leaves 12 unselected array/record cases as gaps for that release. Its negative-build copy adds an unsupported `Sum UInt32 UInt32` export; the original oracle modules are unchanged. The separate [npm array](../evidence/npm-arrays-20260920.md), [record](../evidence/npm-records-20260920.md) and [compound suites](../evidence/npm-compounds-20260920.md) exercise nested copied values and all nineteen primitives on both source paths in Node, strict TypeScript and three browser engines, including React and workers. Native and PHP-Wasm corpus negative copies also use `Sum UInt32 UInt32`; their original oracle modules remain unchanged. The [C/C++ compound suite](../evidence/native-compounds-20260920.md) covers options, results and products separately. The [npm List suite](../evidence/npm-lists-20260920.md) covers List parameters, results and fields on both source paths in the same five npm profiles. The [C/C++ List suite](../evidence/native-lists-20260920.md) adds installed native spans and vectors, nested payloads, budget recovery and allocation-failure cleanup. Run it with `LEAN_BRIDGE_NATIVE_LIST_TEST=1 node --test tests/native-lists.test.mjs`; CI retains `build/lists/native.json`.
 
+The [C/C++ collection suite](../evidence/native-collections-20260921.md) checks
+all nineteen primitives, seven records and 24 fixed Array levels on both
+source paths:
+
+```sh
+LEAN_BRIDGE_NATIVE_COLLECTION_TEST=1 node --test tests/native-collections.test.mjs
+node --test tests/native-collection-contract.test.mjs tests/native-collection-evidence.test.mjs
+```
+
+CI requires `build/collections/native.json`. Original archives install offline
+after author removal, relocate and execute twice without compilers. Separate
+native and C/GMP sanitizer probes test allocation failures and partial cleanup;
+the installed C++ caller also fails host allocation checkpoints. Startup and
+initialized-fixture sanitizer reports remain separate, and repeated
+initialization must not grow the report.
+
 Run the npm compound suite against the prepared shared runtime:
 
 ```sh

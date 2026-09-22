@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { cIdentifier, cKeywords as keywords, cVariantIdentifier, cVariantTag, compileCProjectionModel, describeCFunction, describeCType, describeCopiedCAliases } from "./generate.mjs";
+import { cIdentifier, cKeywords as keywords, cRecordIdentifier, cVariantIdentifier, cVariantTag, compileCProjectionModel, describeCFunction, describeCType, describeCopiedCAliases } from "./generate.mjs";
 import { componentScalarTypes, fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 
 const safe = name => /^[a-z][a-z0-9_]*$/.test(name) && !name.includes("__") && !keywords.has(name);
@@ -90,7 +90,7 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 			if(!safe(name) || typeNames.has(name) || !/^[A-Za-z][A-Za-z0-9_]*$/.test(record.name)) rejectPrimitiveSurface(declaration, "C/C++ record name collides with a generated or reserved identifier");
 			typeNames.add(name); typeNames.add(`${name}_clear`);
 			fields = record.fields.map(field => {
-				const name = cIdentifier(field.name);
+				const name = cRecordIdentifier(field.name);
 				if(!safe(name) || names.has(name)) rejectPrimitiveSurface(declaration, `C/C++ record field is reserved or duplicated: ${field.name}`);
 				names.add(name);
 				return { name, type: visit(field.type, declaration, depth + 1) };

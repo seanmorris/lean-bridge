@@ -45,13 +45,36 @@ Add `--target cpan` to produce Perl archives from that same native compilation. 
 
 Arrays become typed spans with `data`, `length`, `owner` and `release` fields. Records become named C structs with their declared fields. Arrays can contain any admitted copied element, including strings, arbitrary integers, other arrays and records. Records can contain those same types. An empty Lean record has a zero-initialized placeholder byte in C.
 
+For example, add `Parcels.lean` to a Lake project named `parcels`:
+
+```lean
+namespace Parcels
+structure Parcel where
+  label : String
+  counts : Array Nat
+def reverse (value : Parcel) : Parcel :=
+  { value with counts := value.counts.reverse }
+end Parcels
+```
+
+Select `Parcels` in `modules` and `Parcels.reverse` in `exports`. Build with
+`--target c --target cpp`. The [C caller](../consume/c.md#arrays-and-records)
+uses a generated struct containing a span of `mpz_t`; the
+[C++ caller](../consume/cpp.md#arrays-and-records) uses a struct containing
+`std::vector<Nat>`.
+
+Record field names become snake_case. C/C++ keywords gain a trailing underscore:
+a Lean field named `char` becomes `char_`. Collisions after normalization reject
+the build. C++ records provide field-by-field value equality; floating-point
+fields retain ordinary C++ equality.
+
 Inputs borrow caller storage for the duration of the call. The adapter validates the complete input before calling Lean and ignores input ownership callbacks. Results own independent copies. In GMP packages, call the generated `<type>_init` for aggregate structs before their first use. This initializes every nested integer. Clear with `<type>_clear`; it releases storage and resets fields to initialized empty values. Successful calls replace initialized copied outputs. Packages without arbitrary integers retain zero-initialized structs and require clearing outputs before reuse. Repeated clear is safe. Never shallow-copy GMP values or owned results.
 
 The 16 MiB per-call budget covers input and output payloads together, array slots and copied record storage. Array slots cost at least one native pointer each; output arrays also account for their ownership header. It is a conversion limit, not a limit on memory used by the Lean algorithm. Type nesting is limited to 32. Invalid input and conversion failures leave the caller's output slot unchanged; partially built outputs are released internally.
 
 Compound structs use `has_value` plus `value` for options, `is_ok` plus `ok` and `error` for results, and `fst`/`snd` for products. Flags must be 0 or 1. Lean's `Except E T` maps to success type `T` and error type `E`. Only the active branch crosses into Lean; both fields must be initialized for cleanup. The conversion budget charges compound struct storage and the active payload. GMP packages also budget the public-to-private conversion. Returned inactive fields remain initialized and empty. `_clear` traverses both fields, including nested GMP integers. C++ maps these types to `std::optional`, tagged `Result` and `std::pair`; see the [consumer guide](../consume/cpp.md#options-results-and-products).
 
-Lean generates the record constructors and field accessors used by the adapter. Consumers do not depend on Lean's object layout. See the [installed array and record acceptance](../evidence/native-c-copied-20260914.md) for nested structures, exact values and allocation-failure checks.
+Lean generates the record constructors and field accessors used by the adapter. Consumers do not depend on Lean's object layout. The [installed collection checks](../evidence/native-collections-20260921.md) cover both source paths, all nineteen primitive elements and fields, seven records, 24 fixed Array levels and failure cleanup.
 
 ## Named copied aliases
 

@@ -14,6 +14,14 @@ Packages using `Nat` or `Int` include pinned Boost.Multiprecision and Boost.Conf
 
 C++ arrays use `std::vector<T>` and records use generated structs with owned fields. Both can nest. `Array Bool` uses `std::vector<bool>`; its packed storage is converted to the C API's individual Boolean values. Empty records use empty C++ structs. The [copied-value rules](c.md#copied-arrays-and-records) define the shared budget and nesting limit.
 
+Records provide defaulted field-by-field `operator==`, including packages with
+no tagged variants. Floating-point fields follow C++ equality: NaN is unequal
+to itself, and positive and negative zero compare equal. Conversion preserves
+their values, including the sign of zero. C/C++ keywords in field names gain a
+trailing underscore. See the [Parcel export](c.md#copied-arrays-and-records),
+[consumer example](../consume/cpp.md#arrays-and-records) and
+[installed collection checks](../evidence/native-collections-20260921.md).
+
 `Option T` uses `std::optional<T>`, including `std::optional<std::monostate>` for `Option Unit` and nested optionals for nested options. `Except E T` uses `Result<T, E>`, an alias for `std::variant<Ok<T>, Err<E>>`. Construct `Ok<T>{value}` or `Err<E>{error}` and read its `value` member with `std::get` or `std::visit`. Products use `std::pair<A, B>` and retain their binary nesting. All three can contain supported primitives, arrays, copied records and each other. These constructors are not admitted in callback signatures. The [installed compound checks](../evidence/native-compounds-20260920.md) cover ordinary-source and reviewed-IR packages.
 
 Concrete copied aliases export source-named `using` declarations for the target's
