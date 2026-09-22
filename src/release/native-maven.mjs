@@ -9,7 +9,8 @@ import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { ordinaryJvmEvidence } from "../build/native-jvm-artifacts.mjs";
-import { generateCopiedJvmPackage } from "../backends/jvm/copied-values.mjs";
+import { validateKotlinCompilation } from "../build/compile-jvm-sources.mjs";
+import { generateCopiedJvmKotlinPackage } from "../backends/jvm/copied-kotlin.mjs";
 import { validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
@@ -33,11 +34,12 @@ export const packageOrdinaryMaven = async ({ working, jvmRoot, nativeRoot, runti
 	const { model, projection, evidence, receipt } = await ordinaryJvmEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const compiled = JSON.parse(await readFile(join(jvmRoot, "native-jvm.json"), "utf8"));
 	await verifyNativeFiles(jvmRoot, compiled.files);
+	validateKotlinCompilation(compiled.kotlin, projection.namespace);
 	if(compiled.schemaVersion !== 1 || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.namespace !== projection.namespace || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| !/^javac 22(?:[.+ -]|$)/.test(compiled.compiler)
 		|| (await nativeArtifactPaths(jvmRoot)).some(path => path !== "native-jvm.json" && !Object.hasOwn(compiled.files, path))) throw new Error("Compiled JVM projection differs from native evidence");
-	for(const [path, contents] of Object.entries(generateCopiedJvmPackage(model.bindingIr, evidence)))
+	for(const [path, contents] of Object.entries(generateCopiedJvmKotlinPackage(model.bindingIr, evidence)))
 		if(await readFile(join(jvmRoot, path), "utf8") !== contents) throw new Error("Generated JVM source differs from the compiled model");
 	const name = settings.name ?? `org.leanbridge:${projection.surface.prefix.replaceAll("_", "-")}`, version = settings.version ?? model.component.version;
 	validateOrdinaryMavenSettings({ name, version });
@@ -47,6 +49,8 @@ export const packageOrdinaryMaven = async ({ working, jvmRoot, nativeRoot, runti
 	const copy = async (source, path) => save(path, await readFile(source));
 	const classes = Object.keys(compiled.files).filter(path => path.startsWith("classes/"));
 	if(!classes.includes(`classes/${projection.namespace.replaceAll(".", "/")}/Api.class`)) throw new Error("Compiled JVM API is missing");
+	if(!classes.includes(`classes/${projection.namespace.replaceAll(".", "/")}/kotlin/Api.class`)
+		|| !classes.includes(`classes/META-INF/${compiled.kotlin.module}.kotlin_module`)) throw new Error("Compiled Kotlin API or metadata is missing");
 	for(const path of classes) await copy(join(jvmRoot, path), path.slice("classes/".length));
 	for(const file of Object.keys(evidence.libraries))
 		await copy(file === evidence.library ? join(adapterRoot, "lib", file) : file === receipt.library ? join(nativeRoot, file) : join(runtimeRoot, "lib", file), `META-INF/lean-bridge/native/linux-x64/${file}`);
@@ -63,13 +67,13 @@ export const packageOrdinaryMaven = async ({ working, jvmRoot, nativeRoot, runti
 	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`META-INF/lean-bridge/licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), "META-INF/lean-bridge/licenses/LeanBridge-LICENSE");
 	await save("README.md", `# ${name}:${version}\n\nRequires glibc ${glibcMinimumVersion} or newer.\n\n${await readFile(join(jvmRoot, "README.md"), "utf8")}`);
-	const pom = `<?xml version="1.0" encoding="UTF-8"?>\n<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>${group}</groupId><artifactId>${artifact}</artifactId><version>${version}</version>${mavenPackageMetadata(compiledPackageMetadata(model.sourceIdentity))}<properties><maven.compiler.release>22</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties></project>\n`;
+	const pom = `<?xml version="1.0" encoding="UTF-8"?>\n<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion><groupId>${group}</groupId><artifactId>${artifact}</artifactId><version>${version}</version>${mavenPackageMetadata(compiledPackageMetadata(model.sourceIdentity))}<properties><maven.compiler.release>22</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding></properties><dependencies><dependency><groupId>org.jetbrains.kotlin</groupId><artifactId>kotlin-stdlib</artifactId><version>2.2.0</version></dependency></dependencies></project>\n`;
 	await save(`META-INF/maven/${group}/${artifact}/pom.xml`, pom);
 	await save("META-INF/MANIFEST.MF", "Manifest-Version: 1.0\n\n");
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("META-INF/lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1, kind: "lean-bridge-ordinary-maven-package", ecosystem: "maven", name, version, component: model.component, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, namespace: projection.namespace, compiledProjectionSha256: sha256(canonicalJson(compiled)), files: inventory }));
+	await save("META-INF/lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1, kind: "lean-bridge-ordinary-maven-package", ecosystem: "maven", name, version, component: model.component, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, namespace: projection.namespace, kotlin: { namespace: compiled.kotlin.namespace, standardLibraryVersion: compiled.kotlin.standardLibraryVersion }, compiledProjectionSha256: sha256(canonicalJson(compiled)), files: inventory }));
 	const jar = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 }), packages = [];
 	await mkdir(coordinateRoot, { recursive: true }); await mkdir(join(working, "archives"), { recursive: true });
 	for(const [extension, bytes] of [["jar", jar], ["pom", Buffer.from(pom)]])

@@ -1,15 +1,34 @@
 // Independently typed Kotlin calls to the original installed Maven JAR.
-import org.leanbridge.collections.*
-import org.leanbridge.collections.Unit
-import org.leanbridge.collections.Pair
+import org.leanbridge.collections.kotlin.*
+import org.leanbridge.collections.kotlin.Unit
+import org.leanbridge.collections.kotlin.Pair
 import java.math.BigInteger
 import java.lang.reflect.Array as JArray
 import java.util.concurrent.atomic.AtomicInteger
 
+/* DOCUMENTATION_DECLARATION */
+
 private val checks = AtomicInteger()
 private val calls = AtomicInteger()
 private var rejected = 0
+private val recordFields = mutableMapOf<Class<*>, List<java.lang.reflect.Field>>()
 private fun verify(value: Boolean) { val n = checks.incrementAndGet(); if (!value) throw AssertionError("collection check $n") }
+private fun kotlinRecord(type: Class<*>, names: Array<String>, types: Array<Class<*>>) {
+    verify(java.lang.reflect.Modifier.isFinal(type.modifiers)); verify(type.getAnnotation(Metadata::class.java) != null)
+    verify(type.constructors.size == 1); verify(type.constructors[0].parameterTypes.contentEquals(types))
+    verify(type.declaredFields.size == names.size)
+    val fields = names.mapIndexed { index, name ->
+        val field = type.getDeclaredField(name)
+        verify(field.type == types[index]); verify(java.lang.reflect.Modifier.isFinal(field.modifiers))
+        verify(java.lang.reflect.Modifier.isPublic(field.modifiers))
+        val accessor = type.getDeclaredMethod(name)
+        verify(accessor.returnType == types[index] && java.lang.reflect.Modifier.isPublic(accessor.modifiers))
+        field
+    }
+    recordFields[type] = fields
+}
+// Only malformed foreign inputs use an erased cast. Every valid call stays typed.
+@Suppress("UNCHECKED_CAST") private fun <T> foreign(value: Any?): T = value as T
 private fun <T> call(action: () -> T): T { calls.incrementAndGet(); return action() }
 private fun equal(actual: Any, expected: Any) {
     verify(actual.javaClass == expected.javaClass)
@@ -20,8 +39,8 @@ private fun equal(actual: Any, expected: Any) {
             verify(JArray.getLength(actual) == JArray.getLength(expected))
             for (i in 0 until JArray.getLength(expected)) equal(JArray.get(actual, i), JArray.get(expected, i))
         }
-        expected.javaClass.isRecord -> {
-            for (field in expected.javaClass.recordComponents) equal(field.accessor.invoke(actual), field.accessor.invoke(expected))
+        recordFields.containsKey(expected.javaClass) -> {
+            for (field in recordFields.getValue(expected.javaClass)) equal(field.get(actual), field.get(expected))
             verify(actual == expected); verify(actual.hashCode() == expected.hashCode())
         }
         else -> verify(actual == expected)
@@ -41,9 +60,10 @@ private fun reject(type: Class<out Throwable>, action: () -> Any?) {
     verify(failed); equal(call { Api.recordMake() }, Pair(42, "\uFEFF🌱\u0000"))
 }
 private fun change(value: Primitives, index: Int, replacement: Any?): Primitives {
-    val fields = Primitives::class.java.recordComponents
-    val values = fields.map { it.accessor.invoke(value) }.toTypedArray(); values[index] = replacement
-    return Primitives::class.java.getConstructor(*fields.map { it.type }.toTypedArray()).newInstance(*values)
+    val fields = recordFields.getValue(Primitives::class.java)
+    val values = fields.map { it.get(value) }.toTypedArray(); values[index] = replacement
+    try { return Primitives::class.java.getConstructor(*fields.map { it.type }.toTypedArray()).newInstance(*values) }
+    catch (error: java.lang.reflect.InvocationTargetException) { throw error.targetException }
 }
 fun main() {
 /* SIGNATURES */
@@ -82,8 +102,8 @@ fun main() {
         equal(call { Api.generate(BigInteger.valueOf(3)) }, arrayOf(Unit.INSTANCE, Unit.INSTANCE, Unit.INSTANCE))
     }
 /* DEEP */
-    for (i in 0 until 19) if (!Primitives::class.java.recordComponents[i].type.isPrimitive) {
-        val invalid = change(scalar, i, null); reject(NullPointerException::class.java) { call { Api.recordReverse(arrayOf(scalar, invalid)) } }
+    for (i in 0 until 19) if (!recordFields.getValue(Primitives::class.java)[i].type.isPrimitive) {
+        reject(NullPointerException::class.java) { call { Api.recordReverse(arrayOf(scalar, change(scalar, i, null))) } }
     }
     for (field in intArrayOf(2, 3, 16)) for (value in when (field) { 2 -> intArrayOf(-1, 256); 3 -> intArrayOf(-1, 65536); else -> intArrayOf(-1, 0xd800, 0xdfff, 0x110000) })
         reject(IllegalArgumentException::class.java) { call { Api.recordReverse(arrayOf(scalar, change(scalar, field, value))) } }
@@ -92,10 +112,10 @@ fun main() {
         reject(IllegalArgumentException::class.java) { call { Api.recordReverse(arrayOf(change(scalar, field, value))) } }
     reject(IllegalArgumentException::class.java) { call { Api.arrayReverseNat(arrayOf(arrayOf(BigInteger.valueOf(-1)))) } }
     reject(IllegalArgumentException::class.java) { call { Api.arrayReverseString(arrayOf(arrayOf("ok", "\ud800"))) } }
-    reject(NullPointerException::class.java) { call { Api.arrayReverseUint32(null) } }
-    reject(NullPointerException::class.java) { call { Api.arrayReverseUint32(arrayOf(longArrayOf(1), null)) } }
-    reject(NullPointerException::class.java) { call { Api.recordDuplicate(null) } }
-    reject(NullPointerException::class.java) { call { Api.recordShuffle(Packet("ok", null, Empty(), Single(max), Count(huge), Pair(0, ""), Reversed("", 0))) } }
+    reject(NullPointerException::class.java) { call { Api.arrayReverseUint32(foreign(null)) } }
+    reject(NullPointerException::class.java) { call { Api.arrayReverseUint32(arrayOf(longArrayOf(1), foreign<LongArray>(null))) } }
+    reject(NullPointerException::class.java) { call { Api.recordDuplicate(foreign(null)) } }
+    reject(NullPointerException::class.java) { call { Api.recordShuffle(Packet("ok", foreign(null), Empty(), Single(max), Count(huge), Pair(0, ""), Reversed("", 0))) } }
     reject(IllegalArgumentException::class.java) { call { Api.arrayReverseString(arrayOf(arrayOf("x".repeat(17 * 1024 * 1024)))) } }
     reject(IllegalArgumentException::class.java) { call { Api.arrayDuplicate(arrayOf(ByteArray(9 * 1024 * 1024))) } }
     reject(IllegalArgumentException::class.java) { call { Api.generate(BigInteger.valueOf(17L * 1024 * 1024)) } }
@@ -103,6 +123,7 @@ fun main() {
         val tasks = (0 until 4).map { workers.submit { repeat(64) { equal(call { Api.arrayReverseInt(arrayOf(arrayOf(huge, huge.negate()))) }, arrayOf(arrayOf(huge.negate(), huge))) } } }
         tasks.forEach { it.get() }
     }
+/* DOCUMENTATION */
     Wire.result("collections/assertions", Wire.integer(checks.get()), true)
     Wire.result("collections/calls", Wire.integer(calls.get()), true)
     Wire.result("collections/rejections", Wire.integer(rejected), true)

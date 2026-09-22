@@ -12,6 +12,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
+import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { jvmAliasCatalogDocs } from "../src/backends/jvm/copied-aliases.mjs";
 import { generateJvmBindingPackage } from "../src/backends/jvm/generate.mjs";
@@ -22,14 +23,15 @@ import { jvmAliasConsumer, jvmAliasPublicChecks, jvmAliasRejections } from "./he
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { javaCompilerOptions, kotlinCompilerOptions } from "./helpers/type-corpus-jvm-tools.mjs";
+import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 
 const prefix = "src/main/java/org/leanbridge/aliases/";
 test("JVM alias evidence binds both installed source paths to named contracts and runtime-only deployments", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/jvm-aliases-20260921.json"));
+	const record = await readJvmHistoricalEvidence("jvm-aliases-20260921");
 	assert.equal(record.wordBits, 64); assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.deepEqual(record.primitives, aliasPrimitives); assert.deepEqual(record.signatures, nativeAliasSignatures);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeAliasReviewedIr())));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertJvmHistoricalSource("jvm-aliases-20260921", path, hash);
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.profile}`), ["ordinary-source/java", "ordinary-source/kotlin", "reviewed-ir/java", "reviewed-ir/kotlin"]);
 	for(const run of record.executions)
 	{
@@ -85,7 +87,7 @@ test("JVM alias installed evidence promotes exactly twelve cells and runs in CI"
 test("JVM aliases retain contract identities, transparent targets and per-site documentation", () => {
 	const ir = nativeAliasReviewedIr(), files = generateCopiedJvmPackage(ir), manifest = JSON.parse(files["binding-manifest.json"]);
 	assert.deepEqual(files, generateCopiedJvmPackage(structuredClone(ir)));
-	assert.deepEqual(files, generateJvmBindingPackage(ir)); auditManagedBindingPackage(ir, files, "jvm");
+	assert.deepEqual(generateCopiedJvmKotlinPackage(ir), generateJvmBindingPackage(ir)); auditManagedBindingPackage(ir, files, "jvm");
 	assert.equal(manifest.aliases.length, 27);
 	assert.deepEqual(manifest.aliases.map(({ id, name, target }) => ({ id, name, target })), ir.types.filter(type => type.kind === "alias").map(({ id, name, target }) => ({ id, name, target })));
 	const aliases = Object.fromEntries(manifest.aliases.map(alias => [alias.name, alias]));

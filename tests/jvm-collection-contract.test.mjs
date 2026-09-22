@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
+import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { generateJvmBindingPackage } from "../src/backends/jvm/generate.mjs";
 import { collectionReviewedIr } from "./helpers/collection-fixture.mjs";
 
@@ -16,7 +17,7 @@ test("JVM collections admit all 35 exports, nineteen primitive arrays and seven 
 	const ir = collectionReviewedIr(), model = compileCopiedJvmModel(ir), files = generateCopiedJvmPackage(ir);
 	assert.equal(model.surface.functions.length, 35);
 	assert.deepEqual(files, generateCopiedJvmPackage(structuredClone(ir)));
-	assert.deepEqual(files, generateJvmBindingPackage(ir));
+	assert.deepEqual(generateCopiedJvmKotlinPackage(ir), generateJvmBindingPackage(ir));
 	assert.deepEqual(model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ["Primitives", "Empty", "Single", "Count", "Pair", "Reversed", "Packet"]);
 	for(const [name, type] of Object.entries({ Unit: "Unit", Bool: "boolean", Uint8: "int", Uint16: "int", Uint32: "long", Uint64: "java.math.BigInteger", Int8: "byte", Int16: "short", Int32: "int", Int64: "long", Nat: "java.math.BigInteger", Int: "java.math.BigInteger", Float32: "float", Float64: "double", String: "String", Bytes: "byte[]", Char: "int", Usize: "java.math.BigInteger", Isize: "long" }))
 		assert.ok(files[`${prefix}Api.java`].includes(`public static ${type}[][] arrayReverse${name}(${type}[][] arg0)`), name);

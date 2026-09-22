@@ -8,9 +8,10 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { jvmCallableConsumer, jvmCallableSignatures, jvmCallableRejections } from "./helpers/jvm-callable-fixture.mjs";
+import { readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 
 test("JVM callable evidence binds both languages and source paths to runtime-only installations", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/jvm-callables-20260919.json"));
+	const record = await readJvmHistoricalEvidence("jvm-callables-20260919");
 	assert.equal(record.wordBits, 64); assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.deepEqual(record.signatures, jvmCallableSignatures);
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.profile}`), ["ordinary-source/java", "ordinary-source/kotlin", "reviewed-ir/java", "reviewed-ir/kotlin"]);

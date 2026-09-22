@@ -53,7 +53,8 @@ test("installed Java and Kotlin variants preserve constructors and runtime-only 
 		const nativeFaults = await checkNativeVariantFaults(outputRoot, join(author, "faults"), environment);
 		const jvm = join(outputRoot, "native/jvm"), metadata = JSON.parse(await readFile(join(jvm, "native-jvm.json")));
 		await verifyNativeFiles(jvm, metadata.files);
-		const sources = Object.fromEntries(await Promise.all(Object.keys(metadata.files).filter(path => path.endsWith(".java")).map(async path => [path, await readFile(join(jvm, path), "utf8")])));
+		const kotlinFiles = JSON.parse(await readFile(join(jvm, "binding-manifest.json"))).kotlin.internalFiles;
+		const sources = Object.fromEntries(await Promise.all(Object.keys(metadata.files).filter(path => path.endsWith(".java") && !kotlinFiles.includes(path)).map(async path => [path, await readFile(join(jvm, path), "utf8")])));
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff), pkg = receipt.packages.find(entry => entry.role === "component");
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
@@ -72,7 +73,8 @@ test("installed Java and Kotlin variants preserve constructors and runtime-only 
 				, pkg, dependencies, environment, clean: copiedCleanEnvironment
 				, fixture: { source: jvmVariantConsumer, signatures: jvmVariantPublicChecks
 					, rejections: jvmVariantRejections
-					, removeHandoffBeforeExecution: true } }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
+					, removeHandoffBeforeExecution: true
+					, kotlinMetadata: true } }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 			const observed = name => Number(installed.observation.results.find(entry => entry.id === `variants/${name}`).observed.integer);
 			const checks = observed("assertions"), calls = observed("calls"), rejected = observed("rejections");
 			assert.ok(checks > 100000); assert.ok(calls > 4000); assert.equal(rejected, 33);

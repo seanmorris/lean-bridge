@@ -41,7 +41,7 @@ export const jvmCallableState = `
         }
     }
     @SuppressWarnings("unchecked")
-    private static <E extends Throwable> RuntimeException rethrow(Throwable error) throws E { throw (E)error; }
+    static <E extends Throwable> RuntimeException rethrow(Throwable error) throws E { throw (E)error; }
     private static final java.lang.ref.Cleaner CLEANER = java.lang.ref.Cleaner.create();
     static final class CallbackFrame {
         Throwable failure;
@@ -129,24 +129,25 @@ public interface ${callback.publicName} {
  */
 export const jvmNativeCall = (model, { name, native, parameters, result, closure = false }) => {
 	const inputs = parameters.map(site => jvmValue(model, site.type)), output = jvmValue(model, result.type);
+	const owner = model.callableRuntime ? `${model.callableRuntime}.` : "";
 	const hasCallbacks = inputs.some(callable), scope = hasCallbacks || inputs.some(value => value.aggregate);
 	const args = [...closure ? ["MemorySegment.ofAddress(token)"] : [], ...inputs.map((_, i) => `input${i}`), ...unit(output) ? [] : ["output"], "error"];
 	return `    static ${jvmResult(model, output)} ${name}(${[...closure ? ["ClosureLease lease"] : [], ...inputs.map((value, i) => `${model.publicType(value)} arg${i}`)].join(", ")}) {
-        ${model.surface.callbacks.size ? `ProcessGuard.${hasCallbacks || closure || callable(output) ? "platformThread" : "ensure"}();` : ""}
+        ${model.surface.callbacks.size ? `${owner}ProcessGuard.${hasCallbacks || closure || callable(output) ? "platformThread" : "ensure"}();` : ""}
         ${closure ? "long token = lease.enter();" : ""}
         try (Arena arena = Arena.ofConfined()) {
             ${scope ? "var scope = new Scope(arena);" : ""}
-            ${hasCallbacks ? "var callbacks = new CallbackFrame();" : ""}
-${inputs.map((value, i) => `            ${value.nativeType} input${i} = ${callable(value) ? `borrow${value.index}(arg${i}, scope, callbacks)` : `to${value.index}(arg${i}${value.aggregate ? ", scope" : ""})`};`).join("\n")}
+            ${hasCallbacks ? `var callbacks = new ${owner}CallbackFrame();` : ""}
+${inputs.map((value, i) => `            ${value.nativeType} input${i} = ${callable(value) ? `${owner}borrow${value.index}(arg${i}, scope, callbacks)` : `to${value.index}(arg${i}${value.aggregate ? ", scope" : ""})`};`).join("\n")}
             ${unit(output) ? "" : `var output = arena.allocate(${output.size}, ${output.alignment});`}
             var error = arena.allocate(24, 8);
             try {
                 int status = (int)${native}.invokeExact(${args.join(", ")});
                 ${hasCallbacks ? "callbacks.check();" : ""}
                 check(status, error);
-                ${unit(output) ? "" : `return ${callable(output) ? `own${output.index}(output)` : `from${output.index}(${output.aggregate ? "output" : readJvmValue(output, "output")})`};`}
-            } finally { ${callable(output) ? `DROP${output.index}.invokeExact(output);` : output.aggregate ? `CLEAR${output.index}.invokeExact(output);` : ""} }
-        } catch (Throwable error) { throw ${model.surface.callbacks.size ? "rethrow" : "propagate"}(error); }
+                ${unit(output) ? "" : `return ${callable(output) ? `${owner}own${output.index}(output)` : `from${output.index}(${output.aggregate ? "output" : readJvmValue(output, "output")})`};`}
+            } finally { ${callable(output) ? `${owner}DROP${output.index}.invokeExact(output);` : output.aggregate ? `CLEAR${output.index}.invokeExact(output);` : ""} }
+        } catch (Throwable error) { throw ${model.surface.callbacks.size ? `${owner}rethrow` : "propagate"}(error); }
         ${closure ? "finally { lease.leave(); }" : ""}
     }`;
 };
@@ -165,7 +166,7 @@ export const jvmCallableRuntime = model => [...model.surface.callbacks.values()]
 	const write = output.aggregate ? `MemorySegment.copy(${conversion}, 0, output.reinterpret(${output.size}), 0, ${output.size});` : `output.reinterpret(${output.size}).set(${output.layout}, 0, ${conversion});`;
 	return `    private static final FunctionDescriptor DESC${i} = FunctionDescriptor.of(JAVA_INT, ${layout});
     private static final MethodHandle OWNED${i} = downcall("${model.surface.prefix}_owned_${callback.field}_call", DESC${i});
-    private static final MethodHandle DROP${i} = downcall("${model.surface.prefix}_owned_${callback.field}_dispose", FunctionDescriptor.ofVoid(ADDRESS));
+    static final MethodHandle DROP${i} = downcall("${model.surface.prefix}_owned_${callback.field}_dispose", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle UPCALL${i} = upcall${i}();
     private static MethodHandle upcall${i}() {
         try { return java.lang.invoke.MethodHandles.lookup().findStatic(Runtime.class, "callback${i}", DESC${i}.toMethodType().insertParameterTypes(0, Host${i}.class)); }
@@ -181,12 +182,12 @@ export const jvmCallableRuntime = model => [...model.surface.callbacks.values()]
             return 0;
         } catch (Throwable failure) { if (state.frame.failure == null) state.frame.failure = failure; return 4; }
     }
-    private static MemorySegment borrow${i}(${callback.publicName} callback, Scope scope, CallbackFrame frame) {
+    static MemorySegment borrow${i}(${callback.publicName} callback, Scope scope, CallbackFrame frame) {
         Objects.requireNonNull(callback);
         var stub = Linker.nativeLinker().upcallStub(UPCALL${i}.bindTo(new Host${i}(callback, scope, frame)), DESC${i}, scope.arena);
         var result = scope.arena.allocate(16, 8); result.set(ADDRESS, 0, stub); return result;
     }
-    private static ${callback.publicName}.LeanClosure own${i}(MemorySegment output) {
+    static ${callback.publicName}.LeanClosure own${i}(MemorySegment output) {
         if (output.get(ADDRESS, 0).equals(MemorySegment.NULL)) throw new IllegalStateException("Missing returned Lean closure");
         var lease = new ClosureLease(DROP${i});
         var result = new ${callback.publicName}.LeanClosure(lease);

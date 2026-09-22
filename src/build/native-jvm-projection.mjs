@@ -6,11 +6,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { generateCopiedJvmPackage } from "../backends/jvm/copied-values.mjs";
+import { generateCopiedJvmKotlinPackage } from "../backends/jvm/copied-kotlin.mjs";
 import { auditManagedBindingPackage } from "../backends/managed/package-audit.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { ordinaryJvmEvidence } from "./native-jvm-artifacts.mjs";
-import { processBuildRunner } from "./process-runner.mjs";
+import { compileJvmSources } from "./compile-jvm-sources.mjs";
 import { packageOrdinaryMaven } from "../release/native-maven.mjs";
 
 /**
@@ -29,20 +29,14 @@ import { packageOrdinaryMaven } from "../release/native-maven.mjs";
  */
 export const projectOrdinaryJvm = async ({ working, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings, glibcMinimumVersion, environment, signal }) => {
 	const { model, projection, evidence } = await ordinaryJvmEvidence({ nativeRoot, runtimeRoot, adapterRoot });
-	const root = join(working, "native/jvm"), files = generateCopiedJvmPackage(model.bindingIr, evidence);
+	const root = join(working, "native/jvm"), files = generateCopiedJvmKotlinPackage(model.bindingIr, evidence);
 	auditManagedBindingPackage(model.bindingIr, files, "jvm");
 	for(const [path, contents] of Object.entries(files))
 	{ await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), contents, { flag: "wx" }); }
-	const env = { ...environment };
-	for(const key of ["CLASSPATH", "JAVA_TOOL_OPTIONS", "JDK_JAVA_OPTIONS", "JDK_JAVAC_OPTIONS", "_JAVA_OPTIONS"]) delete env[key];
-	const run = args => processBuildRunner.capture({ command: environment.LEAN_BRIDGE_JAVAC ?? "javac", args, cwd: root, env, signal });
-	const versionResult = await run(["-version"]), version = (versionResult.stdout || versionResult.stderr).trim();
-	if(!/^javac 22(?:[.+ -]|$)/.test(version)) throw new Error("Ordinary Maven packages require the Java 22 compiler");
-	await mkdir(join(root, "empty-classpath"));
-	await run(["--release", "22", "-g:none", "-proc:none", "-encoding", "UTF-8", "-classpath", "empty-classpath", "-sourcepath", "src/main/java", "-d", "classes", ...Object.keys(files).filter(path => path.endsWith(".java")).sort()]);
+	const compilers = await compileJvmSources({ root, files, environment, signal });
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(root, "native-jvm.json"), canonicalJson({ schemaVersion: 1, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256, evidence, compiler: version, namespace: projection.namespace, files: inventory }), { flag: "wx" });
+	await writeFile(join(root, "native-jvm.json"), canonicalJson({ schemaVersion: 1, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256, evidence, ...compilers, namespace: projection.namespace, files: inventory }), { flag: "wx" });
 	return packageOrdinaryMaven({ working, jvmRoot: root, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings, glibcMinimumVersion });
 };

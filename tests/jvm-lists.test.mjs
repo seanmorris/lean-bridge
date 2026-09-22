@@ -49,7 +49,8 @@ test("installed Java and Kotlin lists preserve copied values on both source path
 		assert.deepEqual(sort(signatures), sort(listSignatures));
 		const jvm = join(outputRoot, "native/jvm"), metadata = JSON.parse(await readFile(join(jvm, "native-jvm.json")));
 		await verifyNativeFiles(jvm, metadata.files);
-		const sources = Object.fromEntries(await Promise.all(Object.keys(metadata.files).filter(path => path.endsWith(".java")).map(async path => [path, await readFile(join(jvm, path), "utf8")])));
+		const kotlinFiles = JSON.parse(await readFile(join(jvm, "binding-manifest.json"))).kotlin.internalFiles;
+		const sources = Object.fromEntries(await Promise.all(Object.keys(metadata.files).filter(path => path.endsWith(".java") && !kotlinFiles.includes(path)).map(async path => [path, await readFile(join(jvm, path), "utf8")])));
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff), pkg = receipt.packages.find(entry => entry.role === "component");
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
@@ -63,7 +64,7 @@ test("installed Java and Kotlin lists preserve copied values on both source path
 			const installed = await installedJvmCorpus({ library: { jvmModule: "org.leanbridge.lists" }
 				, profile, consumer, handoff, pkg, dependencies, environment
 				, clean: copiedCleanEnvironment
-				, fixture: { source: jvmListConsumer, signatures: jvmListPublicChecks, rejections: jvmListRejections } }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
+				, fixture: { source: jvmListConsumer, signatures: jvmListPublicChecks, rejections: jvmListRejections, kotlinMetadata: true } }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 			const checks = Number(installed.observation.results.find(entry => entry.id === "lists/assertions").observed.integer);
 			assert.ok(checks > 20000); assert.equal(installed.observation.results.filter(entry => entry.status === "rejected-at-compile-time").length, 12);
 			t.diagnostic(`${path}/${profile}: ${checks} assertions, compiler rejections and two runtime-only reruns passed`);

@@ -6,9 +6,10 @@
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { compileCopiedJvmModel } from "./copied-model.mjs";
 import { copiedJvmAssets } from "./copied-assets.mjs";
-import { copiedJvmConversions, copiedJvmHelpers, copiedJvmScope } from "./copied-conversions.mjs";
+import { copiedJvmScope } from "./copied-conversions.mjs";
 import { jvmCopiedAliases, jvmAliasCatalogDocs, jvmAliasSiteDocs, jvmAliasReadme } from "./copied-aliases.mjs";
-import { jvmValue, jvmResult, jvmNativeCall, jvmCallableState, jvmCallablePublic, jvmCallableRuntime } from "./callables.mjs";
+import { jvmValue, jvmResult, jvmCallablePublic } from "./callables.mjs";
+import { renderCopiedJvmRuntime } from "./copied-runtime.mjs";
 
 const valueEquality = (name, fields, parameters = "") => `    @Override public boolean equals(Object candidate) {
         if (this == candidate) return true;
@@ -20,30 +21,6 @@ const valueEquality = (name, fields, parameters = "") => `    @Override public b
 
 const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(jvmValue(model, site.type))} arg${index}`).join(", ");
 const resultType = (model, fn) => jvmResult(model, jvmValue(model, fn.declaration.result.type));
-const runtime = model => `package ${model.namespace};
-import static java.lang.foreign.ValueLayout.*;
-import java.lang.foreign.*;
-import java.lang.invoke.MethodHandle;
-import java.math.BigInteger;
-import java.nio.CharBuffer;
-import java.nio.charset.*;
-import java.util.Objects;
-
-final class Runtime {
-    private Runtime() { }
-    private static final SymbolLookup LOOKUP = NativeAssets.lookup();
-    private static MethodHandle downcall(String name, FunctionDescriptor descriptor) {
-        return Linker.nativeLinker().downcallHandle(LOOKUP.find(name).orElseThrow(), descriptor);
-    }
-${model.surface.functions.map((fn, index) => `    private static final MethodHandle CALL${index} = downcall("${fn.name}", FunctionDescriptor.of(JAVA_INT, ${fn.declaration.parameters.map(site => jvmValue(model, site.type).layout).concat(fn.resultType === "void" ? [] : ["ADDRESS"]).concat("ADDRESS").join(", ")}));`).join("\n")}
-${model.surface.copies.filter(copy => copy.aggregate).map(copy => `    private static final MethodHandle CLEAR${copy.index} = downcall("${copy.name}_clear", FunctionDescriptor.ofVoid(ADDRESS));`).join("\n")}
-${copiedJvmHelpers}
-${copiedJvmConversions(model)}
-${model.surface.callbacks.size ? jvmCallableState : ""}
-${jvmCallableRuntime(model)}
-${model.surface.functions.map((fn, index) => jvmNativeCall(model, { name: `call${index}`, native: `CALL${index}`, parameters: fn.declaration.parameters, result: fn.declaration.result })).join("\n")}
-}
-`;
 
 /**
  * Render public Java types, private conversions and binding evidence.
@@ -71,7 +48,7 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
 	if(model.surface.copies.some(copy => copy.compound))
 		for(const [name, source] of Object.entries(compoundTypes)) files[`${prefix}/${name}.java`] = `package ${model.namespace};\n${source}`;
 	const publicFiles = Object.keys(files), internalFiles = [`${prefix}/Runtime.java`, `${prefix}/NativeAssets.java`, `${prefix}/Scope.java`];
-	files[internalFiles[0]] = runtime(model); files[internalFiles[1]] = copiedJvmAssets(model, evidence);
+	files[internalFiles[0]] = renderCopiedJvmRuntime(model); files[internalFiles[1]] = copiedJvmAssets(model, evidence);
 	files[internalFiles[2]] = `package ${model.namespace};\nimport java.lang.foreign.*;\n${copiedJvmScope}\n`;
 	files["README.md"] = `# ${model.namespace}\n\nCall ${model.namespace}.Api from Java or Kotlin. Requires Java 22 or newer with --enable-native-access=ALL-UNNAMED on Linux x86-64. Prepared Maven JARs contain their native adapter, component and shared Lean runtime. No compiler, JNI declarations or runtime-path settings are needed by the consumer.\n\nUInt8/UInt16 use checked int, UInt32 uses checked long, and UInt64/Nat/Int use java.math.BigInteger. Signed values use corresponding JVM primitives. Unit parameters use Unit.INSTANCE; Unit results return void. Arrays, byte arrays and record contents are copied on calls. Null, invalid unsigned ranges and malformed UTF-16 are rejected. Pure acyclic copied values are bounded to 32 type levels and a 16 MiB native input/output conversion budget. Native assets are verified and extracted into private process-lifetime temporary directories, removed at normal JVM shutdown.\n`;
 	files["README.md"] += "\nGenerated records compare nested arrays and records by contents and produce matching hash codes. Nominal record and constructor identities remain distinct. Floating-point equality follows Java: NaNs compare equal and signed zeros differ. Standalone arrays retain JVM reference equality; use Arrays.deepEquals/Arrays.equals in Java or contentDeepEquals/contentEquals in Kotlin. Nested arrays remain mutable. Do not mutate their contents while a containing value is a map key or set member. Record accessors preserve distinguishing trailing underscores and escape Java keywords.\n";

@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
+import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { generateJvmBindingPackage } from "../src/backends/jvm/generate.mjs";
 import { auditManagedBindingPackage } from "../src/backends/managed/package-audit.mjs";
 import { listReviewedIr, listSignatures } from "./helpers/list-fixture.mjs";
@@ -20,13 +21,14 @@ import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { javaCompilerOptions } from "./helpers/type-corpus-jvm-tools.mjs";
+import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 
 test("JVM List evidence binds both languages to prepared archives and runtime-only execution", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/jvm-lists-20260920.json"));
+	const record = await readJvmHistoricalEvidence("jvm-lists-20260920");
 	assert.equal(record.wordBits, 64); assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.deepEqual(record.signatures, listSignatures);
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.profile}`), ["ordinary-source/java", "ordinary-source/kotlin", "reviewed-ir/java", "reviewed-ir/kotlin"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertJvmHistoricalSource("jvm-lists-20260920", path, hash);
 	for(const run of record.executions)
 	{
 		assert.equal(run.checks, run.profile === "java" ? 91674 : 91696);
@@ -66,7 +68,7 @@ test("JVM Lists use primitive and reference arrays while retaining separate List
 	const ir = listReviewedIr(), model = compileCopiedJvmModel(ir), files = generateCopiedJvmPackage(ir);
 	assert.equal(model.surface.functions.length, 27);
 	assert.deepEqual(files, generateCopiedJvmPackage(structuredClone(ir)));
-	assert.deepEqual(files, generateJvmBindingPackage(ir)); auditManagedBindingPackage(ir, files, "jvm");
+	assert.deepEqual(generateCopiedJvmKotlinPackage(ir), generateJvmBindingPackage(ir)); auditManagedBindingPackage(ir, files, "jvm");
 	const prefix = "src/main/java/org/leanbridge/lists/";
 	const source = files[`${prefix}Api.java`], native = files[`${prefix}Runtime.java`];
 	assert.match(source, /long\[\] reverseUint32\(long\[\]/);

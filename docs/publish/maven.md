@@ -8,7 +8,7 @@ Deploy the reviewed JAR and POM to an organization-controlled Maven repository. 
 
 ## Build an ordinary Lean project
 
-Use the [author toolchain](../contributing/author-toolchain.md), a native C compiler and JDK 22. Set `LEAN_BRIDGE_JAVAC` to the compiler executable if it is not on PATH. The current native package profile is Linux x86-64 with glibc 2.38 or newer.
+Use the [author toolchain](../contributing/author-toolchain.md), a native C compiler, JDK 22 and the Kotlin 2.2.0 compiler distribution. Set `LEAN_BRIDGE_JAVAC` and `LEAN_BRIDGE_KOTLINC` to their compiler executables if they are not on PATH. `LEAN_BRIDGE_JAVA`, when set, must select the same JDK as `javac`. If a wrapper puts `kotlinc` outside its distribution, set `LEAN_BRIDGE_KOTLIN_HOME` to the directory containing its `lib/` folder. The current native package profile is Linux x86-64 with glibc 2.38 or newer.
 
 Select modules and functions in `lean-bridge.exports.json`. Choose coordinates your organization owns:
 
@@ -30,7 +30,7 @@ lean-bridge build --project /absolute/path/to/maple --target maven \
   --output /absolute/path/to/maple-release
 ```
 
-The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes compiled Java 22 classes, native libraries, generated sources, compiler evidence and dependency license notices. Its README names the generated Java package and API. Changing the Maven coordinate does not rename the Lean-derived Java package.
+The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes Java 22 classes, the companion `.kotlin` API with Kotlin type metadata, native libraries, generated sources, compiler evidence and dependency license notices. Its POM declares `kotlin-stdlib:2.2.0`; downstream Maven and Gradle projects resolve it automatically. Its README names both generated APIs. Changing the Maven coordinate does not rename their Lean-derived packages.
 
 Calls accept concrete copied values, synchronous primitive callbacks and returned closures. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Recursive values, resources, compound callables and asynchronous effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
@@ -38,7 +38,7 @@ Test the original archives with the [Java](../consume/java.md#call-an-ordinary-l
 
 ## Export options, results and products
 
-Both ordinary-source and independently reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain admitted primitives, arrays and acyclic records. The generated JAR supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches and a binary `Pair<A, B>` record. Generic primitive payloads use boxed JVM types. None, Some Unit and nested options remain distinct; domain errors return `Err` values while bridge failures throw exceptions.
+Both ordinary-source and independently reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain admitted primitives, arrays and acyclic records. The Java API supplies sealed `Option<T>` and `Result<T, E>` interfaces with record branches and a binary `Pair<A, B>` record. The companion Kotlin API supplies sealed interfaces and final classes with non-nullable, covariant type parameters. Both compare nested array contents. Generic primitive payloads use boxed JVM types. None, Some Unit and nested options remain distinct; domain errors return `Err` values while bridge failures throw exceptions.
 
 Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract). Lean checks the source API before adapter generation on either path. Every selected target must admit the full API in a combined build. See the [Java](../consume/java.md#options-results-and-products) and [Kotlin](../consume/kotlin.md#options-results-and-products) examples and the [installed Maven evidence](../evidence/jvm-compounds-20260920.md).
 
@@ -71,13 +71,15 @@ configuration or an independently reviewed contract. Lean checks the source
 constructors and payloads before generation. No variant-specific configuration
 is required.
 
-The JAR exposes a sealed Java interface and one named record per constructor.
-Java switches and Kotlin `when` expressions can match all cases exhaustively.
+The JAR exposes a sealed Java interface with one record per constructor and a
+companion sealed Kotlin interface with named constructor classes. Java switches
+and Kotlin `when` expressions can match all cases exhaustively.
 Constructor names use PascalCase; accessors use camelCase, escape Java keywords
 and preserve distinguishing trailing underscores. Colliding names reject before
 compilation. The private FFM adapter computes aligned C union layouts and reads
 only the active payload. Generated Lean helpers keep runtime object layouts
-private.
+private. The [Kotlin acceptance record](../evidence/kotlin-collections-20260922.md)
+checks the companion APIs alongside the original Java API in installed packages.
 
 Payloads may contain all nineteen primitives and supported copied containers,
 records and other non-recursive variants. Null cases and active null payloads

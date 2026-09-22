@@ -88,7 +88,8 @@ test("Java and Kotlin distinguish callable, collection-field and asynchronous ev
 	assert.match(row(kotlin, "UInt32"), /`Long`/u);
 	assert.match(row(java, "Nat"), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed \|/u);
 	assert.deepEqual(cells.find(cell => cell.id === "java/nat/reviewed-ir/field").stages.installedExecution.evidence, ["java-collections-installed"]);
-	assert.match(row(kotlin, "Nat"), /Reviewed IR: Installed checks passed \(input, result, callback input, callback result\); Inspected: no host mapping \(field\)/u);
+	assert.match(row(kotlin, "Nat"), /`BigInteger` \(input, result, field, callback input, callback result\).*Reviewed IR: Installed checks passed/u);
+	assert.deepEqual(cells.find(cell => cell.id === "kotlin/nat/reviewed-ir/field").stages.installedExecution.evidence, ["kotlin-collections-installed"]);
 	for(const source of [java, kotlin])
 	{
 		assert.match(row(source, "Nat"), /`BigInteger` \(input, result, field, callback input, callback result\).*Ordinary source: Installed checks passed\./u);

@@ -10,13 +10,14 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { cVariantReviewedIr, cVariantSignatures } from "./helpers/c-variant-fixture.mjs";
 import { jvmVariantConsumer, jvmVariantRejections } from "./helpers/jvm-variant-fixture.mjs";
+import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 
 test("Maven variant evidence binds both languages to original archives and independent checks", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/jvm-variants-20260921.json"));
+	const record = await readJvmHistoricalEvidence("jvm-variants-20260921");
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.deepEqual(record.profiles, ["java", "kotlin"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertJvmHistoricalSource("jvm-variants-20260921", path, hash);
 	assert.deepEqual(record.signatures, cVariantSignatures()); assert.deepEqual(record.types, cVariantReviewedIr().types);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(cVariantReviewedIr())));
 	assert.equal(record.types.filter(type => type.kind === "variant").length, 7);

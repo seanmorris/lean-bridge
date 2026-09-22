@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { cp, mkdir, mkdtemp, readFile, rm, statfs } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { sourceApiIdentity } from "../src/analyze/semantic-model.mjs";
@@ -14,6 +14,7 @@ import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { verifyNativeFiles } from "../src/build/native-artifacts.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
+import { compileCopiedKotlinModel } from "../src/backends/jvm/copied-kotlin.mjs";
 import { collectionReviewedIr, collectionSignatures, writeCollectionProject } from "./helpers/collection-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
@@ -53,7 +54,9 @@ test("installed Java and Kotlin collections preserve copied values on both sourc
 		assert.deepEqual(sort(signatures), sort(collectionSignatures));
 		const jvm = join(outputRoot, "native/jvm"), metadata = JSON.parse(await readFile(join(jvm, "native-jvm.json")));
 		await verifyNativeFiles(jvm, metadata.files);
-		const sources = Object.fromEntries(await Promise.all(Object.keys(metadata.files).filter(path => path.endsWith(".java")).map(async path => [path, await readFile(join(jvm, path), "utf8")])));
+		const kotlinFiles = JSON.parse(await readFile(join(jvm, "binding-manifest.json"))).kotlin.internalFiles;
+		const allSources = Object.fromEntries(await Promise.all(Object.keys(metadata.files).filter(path => path.endsWith(".java")).map(async path => [path, await readFile(join(jvm, path), "utf8")])));
+		const sources = Object.fromEntries(Object.entries(allSources).filter(([path]) => !kotlinFiles.includes(path)));
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff), pkg = receipt.packages.find(entry => entry.role === "component");
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
@@ -62,6 +65,7 @@ test("installed Java and Kotlin collections preserve copied values on both sourc
 		const jar = join(handoff, pkg.artifacts.find(artifact => artifact.path.endsWith(".jar")).path);
 		const installedReceipt = JSON.parse((await runCopied("/usr/bin/unzip", ["-p", jar, "META-INF/lean-bridge/package-receipt.json"], consumer)).stdout);
 		const faults = await checkJvmCollectionFaults({ consumer, environment, sources, jar, projection: compileCopiedJvmModel(model.bindingIr) });
+		const kotlinFaults = profiles.includes("kotlin") ? await checkJvmCollectionFaults({ consumer, environment, sources: allSources, jar, projection: compileCopiedKotlinModel(model.bindingIr), profile: "kotlin", dependencies, handoff }) : null;
 		assert.equal(sha256(await readFile(jar)), pkg.artifacts.find(artifact => artifact.path.endsWith(".jar")).sha256);
 		for(const profile of profiles)
 		{
@@ -82,16 +86,12 @@ test("installed Java and Kotlin collections preserve copied values on both sourc
 			const checks = observed("assertions"), calls = observed("calls"), rejected = observed("rejections");
 			assert.ok(checks > 100000); assert.ok(calls > 4000); assert.ok(rejected >= 30);
 			assert.equal(installed.observation.results.filter(entry => entry.status === "rejected-at-compile-time").length, 8);
-			let documentation;
-			if(profile === "java")
-			{
-				const example = jvmCollectionDocumentation();
-				const stdout = installed.observation.results.find(entry => entry.id === "collections/documentation").observed.string;
-				assert.equal(stdout, example.stdout);
-				documentation = { sourceSha256: sha256(example.source), stdout, sourceFreeExecution: true, compilerFreeExecution: true, repeatExecution: true };
-			}
+			const example = jvmCollectionDocumentation(profile);
+			const stdout = installed.observation.results.find(entry => entry.id === "collections/documentation").observed.string;
+			assert.equal(stdout, example.stdout);
+			const documentation = { sourceSha256: sha256(example.source), stdout, sourceFreeExecution: true, compilerFreeExecution: true, repeatExecution: true };
 			reports.push({ profile, path, checks, calls, rejected, signatures
-				, ...installed, faults
+				, ...installed, faults: profile === "kotlin" ? kotlinFaults : faults
 				, ...documentation ? { documentation } : {}
 				, installedFiles: installedReceipt.files
 				, packages: receipt.packages, receiptSha256
@@ -100,12 +100,13 @@ test("installed Java and Kotlin collections preserve copied values on both sourc
 				, sourceApiSha256: sourceApiIdentity(model.bindingIr).sha256
 				, modelSha256: sha256(canonicalJson(model))
 				, sourceRemovedBeforeInstallation: true });
-			t.diagnostic(`${path}/${profile}: ${checks} assertions, ${calls} calls, ${rejected} rejected inputs, ${faults.checkpoints} injected failures`);
+			t.diagnostic(`${path}/${profile}: ${checks} assertions, ${calls} calls, ${rejected} rejected inputs, ${(profile === "kotlin" ? kotlinFaults : faults).checkpoints} injected failures`);
 			await rm(profileConsumer, { recursive: true, force: true });
 		}
 		await rm(consumer, { recursive: true, force: true });
 	}
 	assert.ok(reports.every(report => canonicalJson(report.jvm.nativeLibraries) === canonicalJson(reports[0].jvm.nativeLibraries)));
 	const reportFile = profiles.length === 2 ? "jvm.json" : `jvm-${profiles[0]}.json`;
-	await saveLakeFile("build/collections", reportFile, canonicalJson({ schemaVersion: 1, profiles, reports }));
+	const reportPath = resolve(process.env.LEAN_BRIDGE_JVM_COLLECTION_REPORT ?? join("build/collections", reportFile));
+	await saveLakeFile(dirname(reportPath), reportPath.split("/").at(-1), canonicalJson({ schemaVersion: 1, profiles, reports }));
 });

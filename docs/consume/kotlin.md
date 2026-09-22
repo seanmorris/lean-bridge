@@ -1,12 +1,12 @@
 # Kotlin
 
-Call the generated Java API directly from Kotlin. Java and Kotlin use the same prepared Maven JAR and bundled Lean runtime; no separate Kotlin binding is required.
+Use the generated Kotlin API from the prepared Maven JAR. The JAR also contains the Java API. Both share the bundled Lean runtime.
 
 ## Use a prepared release
 
 ### Prerequisites
 
-Use JDK 22, the Kotlin JVM command-line compiler and runner, and Maven on x86-64 Linux with glibc 2.38 or newer. Check `java -version`, `kotlinc -version`, `kotlin -version`, `mvn -version`, and `ldd --version`. Run all JVM tools with JDK 22. The [support contract](../consumer-support.v1.json) records the shared JVM profile; the pinned consumer environment supplies Kotlin.
+Use JDK 22, the Kotlin 2.2.0 JVM compiler and runner, and Maven on x86-64 Linux with glibc 2.38 or newer. Check `java -version`, `kotlinc -version`, `kotlin -version`, `mvn -version`, and `ldd --version`. Run all JVM tools with JDK 22. The [support contract](../consumer-support.v1.json) records the shared JVM profile.
 
 Follow [Use a prepared release](receive-package.md) to authenticate the JAR and POM.
 
@@ -16,7 +16,7 @@ Use the [Java installation commands](java.md#call-an-ordinary-lean-package) to i
 
 ```kotlin
 import java.math.BigInteger
-import org.leanbridge.maple.Api
+import org.leanbridge.maple.kotlin.Api
 
 fun main() {
     println(Api.echoNat(BigInteger.ONE.shiftLeft(200)))
@@ -33,9 +33,50 @@ kotlin -J--enable-native-access=ALL-UNNAMED \
 
 UInt8 and UInt16 use `Int`, UInt32 uses `Long`, and UInt64/Nat/Int use `java.math.BigInteger`, with runtime range checks. Signed integers use `Byte`, `Short`, `Int` and `Long`; floats use `Float` and `Double`. Primitive arrays use their Kotlin array types, such as `LongArray`; records and nested arrays use `Array<T>`. ByteArray maps to Kotlin `ByteArray`.
 
-Unit arguments use the generated Java enum. Import it with an alias, such as `import org.leanbridge.maple.Unit as LeanUnit`, then pass `LeanUnit.INSTANCE`. A Lean Unit result returns Kotlin `Unit`. Java platform types do not make null a valid Lean value; generated calls reject null. Native loading, copying, limits and cleanup follow the [Java rules](java.md#call-an-ordinary-lean-package).
+Unit arguments use the generated Java enum. Import it with an alias, such as `import org.leanbridge.maple.Unit as LeanUnit`, then pass `LeanUnit.INSTANCE`. A Lean Unit result returns Kotlin `Unit`. The Kotlin API has non-nullable signatures; foreign JVM calls also encounter runtime null checks. Native loading, copying, limits and cleanup follow the [Java rules](java.md#call-an-ordinary-lean-package).
 
-Deeply nested Java array signatures currently expose a Kotlin compiler performance problem. The 24-level collection caller stalls with Kotlin 2.2.0 and 2.4.20; its installed acceptance remains open. See the [Kotlin deep-array status](../evidence/java-collections-20260922.md#kotlin-status).
+### Arrays and records
+
+New ordinary Maven packages include a Kotlin API in a `.kotlin` subpackage.
+It carries Kotlin type metadata, including deeply nested arrays, alongside the
+original Java API. These signatures avoid the Kotlin compiler's expansion of
+deeply nested Java platform types. Maven and
+Gradle resolve the declared Kotlin standard library dependency automatically.
+
+For the `org.leanbridge:collections:1.0.0` acceptance archive, save `Example.kt`:
+
+```kotlin
+import org.leanbridge.collections.kotlin.Api
+import org.leanbridge.collections.kotlin.Single
+import java.math.BigInteger
+
+fun main() {
+    val rows: Array<LongArray> = arrayOf(longArrayOf(1, 2, 3), longArrayOf())
+    val reversed: Array<LongArray> = Api.arrayReverseUint32(rows)
+    println(reversed.contentDeepToString())
+    reversed[1][0] = 99
+    println(rows[0][2])
+    println(Api.recordSingle(Single(BigInteger.valueOf(41))).value)
+}
+```
+
+The output is `[[], [3, 2, 1]]`, `3`, then `42`. Use the
+[prepared JAR compilation commands](#call-an-ordinary-lean-package).
+Generated final Kotlin classes expose typed `val` properties and named
+accessors. They compare nested array contents and preserve nominal record
+identity. Returned arrays and record contents have independent storage.
+Use `contentEquals` or `contentDeepEquals` for standalone arrays.
+
+Generated fields and parameters are non-nullable. Foreign JVM calls that bypass
+Kotlin's type checks still encounter runtime validation. Primitive ranges,
+Unicode validation, the 32-level type limit and the 16 MiB conversion budget
+follow the [Java array and record rules](java.md#arrays-and-records).
+
+The [Kotlin acceptance record](../evidence/kotlin-collections-20260922.md)
+covers all nineteen primitive types, seven record shapes, 24 nested array
+levels, compiler rejections and conversion-failure cleanup. It also records
+installed checks of the companion Kotlin APIs for Lists, aliases, options,
+results, products, variants and primitive callables.
 
 ### Lists
 
@@ -44,7 +85,7 @@ Lean Lists use the same array types as Lean arrays. `List UInt32` uses `LongArra
 For the `org.leanbridge:lists:1.0.0` acceptance archive, save `Example.kt`:
 
 ```kotlin
-import org.leanbridge.lists.Api
+import org.leanbridge.lists.kotlin.Api
 
 fun main() {
     val input = longArrayOf(1, 2, 2, 3)
@@ -55,21 +96,21 @@ fun main() {
 }
 ```
 
-Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package). Kotlin `List<T>` and boxed `Array<Long>` do not replace a required `LongArray`. Calls preserve empty Lists, order, duplicates and nesting, and return independent copies. Java platform types do not authorize null elements or containers. The [Java List conversion rules](java.md#lists) cover validation, budgets and cleanup. [Installed checks](../evidence/jvm-lists-20260920.md) compile Kotlin independently against the same prepared JAR as Java. List callback payloads remain unsupported.
+Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package). Kotlin `List<T>` and boxed `Array<Long>` do not replace a required `LongArray`. Calls preserve empty Lists, order, duplicates and nesting, and return independent copies. Elements and containers are non-nullable. The [Java List conversion rules](java.md#lists) cover validation, budgets and cleanup. [Installed checks](../evidence/kotlin-collections-20260922.md) compile the Kotlin API consumer independently against the same prepared JAR as Java. List callback payloads remain unsupported.
 
 ### Named copied aliases
 
 Use Kotlin target types when calling an aliased Lean API: UInt32 uses checked
 `Long`, Nat uses `BigInteger`, and `Array (List UInt32)` uses `Array<LongArray>`.
 The shared Maven JAR preserves alias names, targets and chains in its manifest,
-README and generated Java source documentation. This Java API does not export
-separate Kotlin `typealias` declarations or wrapper classes.
+README and generated Java source documentation. Lean aliases use their target
+Kotlin types without extra wrapper classes or alias declarations.
 
 For the `org.leanbridge:aliases:1.0.0` acceptance archive, save `Example.kt`:
 
 ```kotlin
 import java.math.BigInteger
-import org.leanbridge.aliases.Api
+import org.leanbridge.aliases.kotlin.Api
 
 fun main() {
     val count: Long = Api.make()
@@ -83,8 +124,8 @@ fun main() {
 Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package).
 Aliasing preserves target constraints, including nonnegative Nat and UInt32's
 `0..4294967295` range. Returned arrays and mutable record contents own independent
-copies. Java platform types do not make null a valid alias value. See the
-[installed alias checks](../evidence/jvm-aliases-20260921.md).
+copies. Alias values are non-nullable. See the
+[installed Kotlin checks](../evidence/kotlin-collections-20260922.md).
 
 ### Options, results and products
 
@@ -93,9 +134,9 @@ Java and Kotlin use the same prepared JAR on either source path. Its generated `
 For the `org.leanbridge:compounds:1.0.0` acceptance archive, save `Example.kt`:
 
 ```kotlin
-import org.leanbridge.compounds.Api
-import org.leanbridge.compounds.Option
-import org.leanbridge.compounds.Pair
+import org.leanbridge.compounds.kotlin.Api
+import org.leanbridge.compounds.kotlin.Option
+import org.leanbridge.compounds.kotlin.Pair
 import org.leanbridge.compounds.Unit as LeanUnit
 
 fun main() {
@@ -112,22 +153,22 @@ fun main() {
 }
 ```
 
-Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package). The sealed Java branches support exhaustive Kotlin `when` expressions. `Option.none<LeanUnit>()`, `Option.some(LeanUnit.INSTANCE)` and an outer `Some` containing `None` stay distinct. Lean `Except E T` maps to the generated `Result<T, E>`, not `kotlin.Result`; factories are `Result.ok` and `Result.err`. Domain errors are values, while bridge failures throw exceptions.
+Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package). The sealed Kotlin branches support exhaustive `when` expressions. `Option.none<LeanUnit>()`, `Option.some(LeanUnit.INSTANCE)` and an outer `Some` containing `None` stay distinct. Lean `Except E T` maps to the generated `Result<T, E>`, not `kotlin.Result`; factories are `Result.ok` and `Result.err`. Domain errors are values, while bridge failures throw exceptions.
 
-Primitive generic payloads use their Kotlin names, such as `Option<Long>`, with JVM boxing. Lean Unit payloads always use `LeanUnit.INSTANCE`. Java platform types do not authorize null: compound factories and constructors reject null payloads, and calls reject null containers. Inactive payload access throws `IllegalStateException`. Generated records and compound wrappers compare nested array contents with `==` and produce matching hash codes. Copy limits and ownership follow the [Java compound rules](java.md#options-results-and-products). The [installed checks](../evidence/jvm-compounds-20260920.md) independently compile Java and Kotlin consumers.
+Primitive generic payloads use their Kotlin names, such as `Option<Long>`, with JVM boxing. Lean Unit payloads always use `LeanUnit.INSTANCE`. The immutable compound wrappers use covariant type parameters. Payloads and containers are non-nullable, with runtime checks for foreign JVM callers. Inactive payload access throws `IllegalStateException`. Generated records and compound wrappers compare nested array contents with `==` and produce matching hash codes. Copy limits and ownership follow the [Java compound rules](java.md#options-results-and-products). The [installed checks](../evidence/kotlin-collections-20260922.md) include a fully typed 24-level `Option` caller.
 
 Standalone arrays retain JVM reference equality. Use `contentEquals` for primitive arrays and `contentDeepEquals` for nested arrays. Generated value equality follows Java floating-point rules: NaNs compare equal and positive and negative zero differ. Do not mutate nested arrays while a containing value is a map key or set member.
 
 ### Tagged variants
 
-Kotlin uses the same sealed interfaces and named constructor records as Java.
+Kotlin uses sealed interfaces and named constructor classes with typed `val` fields.
 `when` expressions can match every permitted constructor without an `else`.
 You do not supply numeric tags or write FFM code.
 
 For the `org.leanbridge:variants:1.0.0` acceptance archive, save `Example.kt`:
 
 ```kotlin
-import org.leanbridge.variants.*
+import org.leanbridge.variants.kotlin.*
 
 fun main() {
     val result: Signal = Api.next(SignalData(42, "ready"))
@@ -142,16 +183,16 @@ fun main() {
 ```
 
 Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package).
-Java record accessors retain their generated names. Import the generated
+Named accessors retain their generated names. Import the generated
 `Unit` and `Pair` explicitly, or alias them, when constructor payloads use those
 types. A Unit payload needs the generated enum's `INSTANCE`, not `kotlin.Unit`.
 
 Payloads support the same primitives, copied containers, records and nested
-variants as Java. Platform types do not make null valid: calls reject null cases
+variants as Java. Signatures are non-nullable; foreign JVM calls reject null cases
 and active null fields. Results copy array contents. Generated records compare
 nested contents and keep each constructor's identity distinct.
 The [Java conversion and ownership rules](java.md#tagged-variants) apply to both
-languages. [Installed checks](../evidence/jvm-variants-20260921.md) compile each
+languages. [Installed checks](../evidence/kotlin-collections-20260922.md) compile each
 consumer independently and run it without an installed compiler.
 
 ### Callbacks and returned Lean functions
@@ -278,29 +319,29 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | `Generated Java Unit enum` (input, field, callback input); `Unit` (result, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Alias the generated Java Unit enum and pass its INSTANCE. Lean Unit results return Kotlin Unit. Pass the generated Java Unit.INSTANCE enum (alias it as LeanUnit); Unit callback results return Kotlin Unit. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `Boolean` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | `Int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Checked nonnegative integer, at most 255. Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | `Int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Checked nonnegative integer, at most 65535. Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `Long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Checked nonnegative long, at most 4294967295. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | BigInteger in 0..18446744073709551615. Invalid sign or width throws before narrowing. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | `Byte` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | `Short` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | `Int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | `Long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Exact BigInteger magnitude; negative input throws. Exact java.math.BigInteger. Negative Nat values and callback results reject; captured values retain every bit. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Exact signed BigInteger with no narrowing. Signed exact java.math.BigInteger without fixed-width or floating-point narrowing. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | `Float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | `Double` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `String` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Strict Unicode conversion preserves embedded NUL. Null and malformed UTF-16 throw. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `ByteArray` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Copied mutable byte array with independent returned storage. Null throws. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `Primitive array or Array<T>` (input, result, field); `LongArray` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Primitive arrays retain their scalar mappings; nested/reference arrays preserve their types. Calls deep-copy values and reject nested nulls. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | `Option<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Generated sealed interface with None/Some record branches, none()/some(value) factories, isSome() and guarded value(). Boxed primitive payloads preserve JVM generic types. Some(None) and Some(Some(Unit)) remain distinct. Null containers and payloads reject. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | `Result<T, E>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` uses success-first `Result<T, E>.ok(value)` or `.err(error)`. Generated sealed Ok/Err records support exhaustive matching. isOk() selects guarded value()/error(). Domain errors return Err; bridge failures throw exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | `Pair<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed generated Pair elements, preserving binary nesting. Kotlin uses this generated record, not kotlin.Pair. Inputs are copied; returned arrays own independent storage. Generated records compare and hash nested array contents. Arrays remain mutable; do not mutate them while a containing record is a map key or set member. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Generated Java record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated Java records preserve field order through compiler-owned accessors. Nested arrays in results are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Unit` | `Generated Java Unit enum` (input, field, callback input); `Unit` (result, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Alias the generated Java Unit enum and pass its INSTANCE. Lean Unit results return Kotlin Unit. Pass the generated Java Unit.INSTANCE enum (alias it as LeanUnit); Unit callback results return Kotlin Unit. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `Boolean` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `Int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Checked nonnegative integer, at most 255. Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `Int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Checked nonnegative integer, at most 65535. Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `Long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Checked nonnegative long, at most 4294967295. Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | BigInteger in 0..18446744073709551615. Invalid sign or width throws before narrowing. Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `Byte` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `Short` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `Int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `Long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact BigInteger magnitude; negative input throws. Exact java.math.BigInteger. Negative Nat values and callback results reject; captured values retain every bit. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact signed BigInteger with no narrowing. Signed exact java.math.BigInteger without fixed-width or floating-point narrowing. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `Float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `Double` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `String` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Strict Unicode conversion preserves embedded NUL. Null and malformed UTF-16 throw. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `ByteArray` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Copied mutable byte array with independent returned storage. Null throws. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `Primitive array or Array<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Primitive arrays retain their scalar mappings; nested/reference arrays preserve their types. Calls deep-copy values and reject nested nulls. Primitive arrays and `Array<T>` retain exact non-nullable Kotlin types through 24 tested levels. Element order, empty rows, duplicates and records are preserved. Invalid element types and depths fail compilation. Returned arrays have independent storage. Foreign nulls, invalid native buffers and over-budget copies reject. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Option α` | `Option<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Generated sealed interface with None/Some branches (Java records or final Kotlin classes), none()/some(value) factories, isSome() and guarded value(). Boxed primitive payloads preserve JVM generic types. Some(None) and Some(Some(Unit)) remain distinct. Null containers and payloads reject. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `Result<T, E>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` uses success-first `Result<T, E>.ok(value)` or `.err(error)`. Generated sealed Ok/Err branches support exhaustive matching. isOk() selects guarded value()/error(). Domain errors return Err; bridge failures throw exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `Pair<A, B> (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed generated Pair elements, preserving binary nesting. Kotlin uses the generated covariant class, not kotlin.Pair. Inputs are copied; returned arrays own independent storage. Generated records compare and hash nested array contents. Arrays remain mutable; do not mutate them while a containing record is a map key or set member. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Copied structure` | `Generated Kotlin class or Java record` (input, result, field); `Generated Kotlin class with typed val properties` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | The companion Kotlin API exposes final classes with typed val properties and deep array equality. The original Java records and accessors remain available in the same JAR. Results own independent copied storage. Generated final Kotlin classes expose typed val properties and named accessors, preserve record identity and compare nested array contents. The companion Java API remains available. Fields preserve declared order and types. Returned buffers have independent storage. Invalid foreign values reject; partial conversions close their arenas and clear native outputs once. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `Kotlin target value; named Lean contract in Maven metadata and Java source docs` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases retain exact target ranges and copied storage. Nat rejects negative BigInteger while Int accepts it; UInt32 uses range-checked long/Long. Generic compound payloads box primitives; arrays retain primitive storage. Generated Unit inputs and void outputs stay distinct. The original List/Array identities, nested Option/Result presence and copy limits remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | `sealed Java interface with named constructor records` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Construct named records and match exhaustively with Java switch or Kotlin when. Empty constructors and Unit payloads stay distinct. Numeric tags and native union layouts remain private. Only the active payload is converted; invalid native tags reject before union reads. Scoped arenas and native output guards release partial conversions on errors. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Inductive sum` | `sealed Kotlin interface with named constructor classes (Java API also available)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Construct named Kotlin classes or Java records and match exhaustively with Java switch or Kotlin when. Empty constructors and Unit payloads stay distinct. Numeric tags and native union layouts remain private. Only the active payload is converted; invalid native tags reject before union reads. Scoped arenas and native output guards release partial conversions on errors. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Typed Fn...To... functional interface` (input) | Ordinary source: Installed checks passed (input); Not audited (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Typed synchronous functional interfaces accept Java and Kotlin lambdas. Call-scoped native stubs retain their targets. Callback failures preserve the same Throwable, stack and suppressed exceptions after cleanup. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
 | `List α` | `primitive arrays or Array<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Typed JVM arrays preserve empty Lists, order, duplicates and nesting. Primitive elements retain primitive array storage; Kotlin uses LongArray for List UInt32, for example. Returned arrays and mutable payloads own independent storage. Nulls, invalid payloads and oversized copies reject. Native lengths, missing buffers and alignment are checked before allocation or reads; scoped arenas and native output clears run on conversion failure. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |

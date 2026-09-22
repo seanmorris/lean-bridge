@@ -56,7 +56,7 @@ test("installed Java and Kotlin callables preserve nineteen primitives on both s
 			const installed = await installedJvmCorpus({ library: { jvmModule: "org.leanbridge.callables" }
 				, profile, consumer, handoff, pkg, dependencies, environment
 				, clean: copiedCleanEnvironment
-				, fixture: { source: jvmCallableConsumer, signatures: jvmCallablePublicChecks, rejections: jvmCallableRejections } }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
+				, fixture: { source: jvmCallableConsumer, signatures: jvmCallablePublicChecks, rejections: jvmCallableRejections, kotlinMetadata: true } }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 			const checks = Number(installed.observation.results.find(entry => entry.id === "callables/assertions").observed.integer);
 			assert.ok(checks > 60000); assert.equal(installed.observation.results.filter(entry => entry.status === "rejected-at-compile-time").length, 6);
 			t.diagnostic(`${path}/${profile}: ${checks} assertions and six compile rejections passed twice with a runtime-only installation`);

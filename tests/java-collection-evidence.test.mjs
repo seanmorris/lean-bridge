@@ -15,8 +15,9 @@ import { compoundReviewedIr } from "./helpers/compound-fixture.mjs";
 import { listReviewedIr } from "./helpers/list-fixture.mjs";
 import { nativeAliasReviewedIr } from "./helpers/native-alias-fixture.mjs";
 import { nativeVariantReviewedIr } from "./helpers/native-variant-fixture.mjs";
+import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 
-const receipt = async () => JSON.parse(await readFile("docs/evidence/java-collections-20260922.json"));
+const receipt = () => readJvmHistoricalEvidence("java-collections-20260922");
 const observations = run => ({ checks: run.checks
 	, calls: run.calls
 	, rejected: run.rejected
@@ -29,7 +30,7 @@ test("Java collections retain original archives, typed callers and source-free d
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.profiles, ["java"]);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.hostGlibc, "2.36"); assert.equal(record.packageGlibcFloor, "2.36");
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertJvmHistoricalSource("java-collections-20260922", path, hash);
 	const sort = values => [...values].sort((a, b) => a.name.localeCompare(b.name));
 	assert.deepEqual(sort(record.signatures), sort(collectionSignatures));
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(collectionReviewedIr())));
@@ -132,7 +133,7 @@ test("JVM conversion and equality evidence distinguishes host checks from instal
 	assert.deepEqual(regressions.map(run => run.name), ["compounds", "lists", "aliases", "variants", "callables", "native"]);
 	for(const run of regressions)
 	{
-		assert.equal(run.sourceSha256, sha256(await readFile(run.test)));
+		await assertJvmHistoricalSource("java-collections-20260922", run.test, run.sourceSha256);
 		assert.equal(run.log.sha256, sha256(run.log.text));
 		assert.equal(run.tests, run.name === "native" ? 4 : 1);
 		assert.ok(run.log.text.includes(`# tests ${run.tests}\n# suites 0\n# pass ${run.tests}\n# fail 0`));
@@ -157,7 +158,7 @@ test("Java collections promote only reviewed copied positions and require origin
 	assert.ok(!observed.some(cell => cell.profile === "kotlin"));
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	for(const [command, report] of [
-		["LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java node --test tests/jvm-collections.test.mjs", "collections/jvm-java"]
+		["LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs", "collections/jvm"]
 		, ["LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs", "collections/jvm-conversions"]
 		, ["LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs", "equality/jvm"]
 	]) {

@@ -7,7 +7,7 @@
 import { compileManagedAlphaModel, managedBindingManifest } from "../managed/alpha-model.mjs";
 import { auditManagedBindingPackage } from "../managed/package-audit.mjs";
 import { compileCopiedJvmModel } from "./copied-model.mjs";
-import { renderCopiedJvmPackage } from "./copied-values.mjs";
+import { generateCopiedJvmKotlinPackage } from "./copied-kotlin.mjs";
 
 const publicSources = model => ({
 	"src/main/java/org/leanbridge/alpha/Payload.java": `package org.leanbridge.alpha;
@@ -435,7 +435,7 @@ export const compileJvmPackageModel = ir => ir.declarations.every(declaration =>
  * @param root0.copied - Ordinary copied-value projection, when selected.
  */
 export const renderJvmPackageLayout = ({ model, copied }) => {
-	if(copied) return renderCopiedJvmPackage(copied);
+	if(copied) return generateCopiedJvmKotlinPackage(copied.ir);
 	const publicEntries = publicSources(model);
 	const publicFiles = Object.keys(publicEntries).sort();
 	const internalFiles = ["src/main/java/org/leanbridge/alpha/Runtime.java"];

@@ -5,12 +5,13 @@
  */
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
+import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { generateJvmBindingPackage } from "../src/backends/jvm/generate.mjs";
 import { auditManagedBindingPackage } from "../src/backends/managed/package-audit.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
@@ -20,12 +21,13 @@ import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { javaCompilerOptions } from "./helpers/type-corpus-jvm-tools.mjs";
+import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 
 test("JVM compounds preserve typed branches, boxed payloads and binary products", () => {
 	const ir = compoundReviewedIr(), model = compileCopiedJvmModel(ir), files = generateCopiedJvmPackage(ir);
 	assert.equal(model.surface.functions.length, 64);
 	assert.deepEqual(files, generateCopiedJvmPackage(structuredClone(ir)));
-	assert.deepEqual(files, generateJvmBindingPackage(ir));
+	assert.deepEqual(generateCopiedJvmKotlinPackage(ir), generateJvmBindingPackage(ir));
 	auditManagedBindingPackage(ir, files, "jvm");
 	const root = "src/main/java/org/leanbridge/compounds/", api = files[`${root}Api.java`];
 	assert.match(api, /long classify\(Option<Option<Unit>>/);
@@ -58,11 +60,11 @@ test("JVM compounds do not admit compound callables or borrowed copied identity"
 });
 
 test("JVM compound evidence binds both languages to prepared packages and runtime-only execution", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/jvm-compounds-20260920.json"));
+	const record = await readJvmHistoricalEvidence("jvm-compounds-20260920");
 	assert.equal(record.wordBits, 64); assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.deepEqual(record.signatures, compoundSignatures);
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.profile}`), ["ordinary-source/java", "ordinary-source/kotlin", "reviewed-ir/java", "reviewed-ir/kotlin"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertJvmHistoricalSource("jvm-compounds-20260920", path, hash);
 	for(const run of record.executions)
 	{
 		assert.equal(run.checks, 36872);

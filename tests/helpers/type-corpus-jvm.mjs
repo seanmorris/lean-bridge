@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { cp, mkdir, readFile, readdir, realpath, rename, rm } from "node:fs/promises";
-import { basename, dirname, join, resolve } from "node:path";
+import { basename, delimiter, dirname, join, relative, resolve } from "node:path";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { corpusCases, corpusHostCase } from "../fixtures/type-corpus/cases.mjs";
@@ -13,6 +13,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 import { captureCorpusCompiler } from "./type-corpus-compiler.mjs";
 import { corpusJvmSource, corpusJvmSignatures, corpusJvmRejection } from "./type-corpus-jvm-source.mjs";
 import { jvmRun, jvmDigest, jvmTools, jvmMaven, mavenGoals, mavenSettings, jvmConsumerPom, javaCompilerOptions, kotlinCompilerOptions, jvmDiagnostics } from "./type-corpus-jvm-tools.mjs";
+import { jvmKotlinMetadataConsumer } from "./jvm-kotlin-metadata-fixture.mjs";
 
 const repository = resolve(import.meta.dirname, "../..");
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -59,7 +60,18 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	await jvmMaven(tools, project, [mavenGoals.resolve, "-Dmdep.outputFile=classpath.txt"], clean);
 	const [group, name] = pkg.name.split(":"), installed = join(project, "repository", ...group.split("."), name, pkg.version);
 	const installedJar = join(installed, basename(jar.path)), installedPom = join(installed, basename(pom.path));
-	assert.equal((await readFile(join(project, "classpath.txt"), "utf8")).trim(), installedJar);
+	const resolvedClasspath = (await readFile(join(project, "classpath.txt"), "utf8")).trim();
+	const classpath = resolvedClasspath.split(delimiter), resolvedDependencies = [];
+	assert.equal(classpath[0], installedJar); assert.equal(new Set(classpath).size, classpath.length);
+	for(const path of classpath.slice(1))
+	{
+		const entry = relative(join(project, "repository"), path);
+		assert.ok(!entry.startsWith("../") && dependencies.files[entry]);
+		assert.equal(await jvmDigest(path), dependencies.files[entry].sha256);
+		resolvedDependencies.push({ path, mavenPath: entry, sha256: dependencies.files[entry].sha256 });
+	}
+	const standardLibrary = resolvedDependencies.find(entry => entry.mavenPath === "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar");
+	assert.ok(standardLibrary, "Maven must resolve the package's Kotlin runtime dependency");
 	assert.equal(await jvmDigest(installedJar), jar.sha256); assert.equal(await jvmDigest(installedPom), pom.sha256);
 	const extracted = join(project, "extracted");
 	await mkdir(extracted);
@@ -67,6 +79,7 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	const receiptPath = "META-INF/lean-bridge/package-receipt.json", receipt = await json(join(extracted, receiptPath));
 	assert.equal(receipt.kind, "lean-bridge-ordinary-maven-package");
 	assert.equal(receipt.namespace, library.jvmModule);
+	assert.deepEqual(receipt.kotlin, { namespace: `${library.jvmModule}.kotlin`, standardLibraryVersion: "2.2.0" });
 	assert.equal(receipt.name, pkg.name); assert.equal(receipt.version, pkg.version);
 	assert.equal(receipt.runtimeIdentity, pkg.runtimeIdentity);
 	const payload = await inventory(extracted); delete payload[receiptPath];
@@ -76,10 +89,18 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	assert.match(javacVersion, /^javac 22(?:\.|$)/);
 	const javaVersion = (await jvmRun(tools.java, ["-version"], project, clean)).stderr.trim();
 	assert.match(javaVersion, /version "22[."]/);
-	const source = fixture ? fixture.source(profile) : corpusJvmSource(library, profile), file = `src/Consumer.${javaProfile ? "java" : "kt"}`;
+	let source = fixture ? fixture.source(profile) : corpusJvmSource(library, profile);
+	const file = `src/Consumer.${javaProfile ? "java" : "kt"}`;
+	const metadataSource = !javaProfile && fixture?.kotlinMetadata ? jvmKotlinMetadataConsumer(library.jvmModule.split(".").at(-1)) : null;
+	if(metadataSource)
+	{
+		assert.equal(source.split("fun main() {").length, 2);
+		source = source.replace("fun main() {", "fun main() {\n    checkKotlinMetadata()");
+		await saveLakeFile(project, "src/Metadata.kt", metadataSource);
+	}
 	await saveLakeFile(project, file, source);
 	await saveLakeFile(project, "src/Wire.java", await readFile(join(repository, "tests/fixtures/type-corpus/consumers/Wire.java")));
-	const javacArgs = [...javaCompilerOptions, "-sourcepath", "empty-source", "-classpath", installedJar, "-d", "classes"];
+	const javacArgs = [...javaCompilerOptions, "-sourcepath", "empty-source", "-classpath", resolvedClasspath, "-d", "classes"];
 	await jvmRun(tools.javac, [...javacArgs, "src/Wire.java", ...javaProfile ? [file] : []], project, clean);
 	let kotlin, kotlinArgs;
 	if(!javaProfile)
@@ -89,9 +110,9 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 		const launch = ["-classpath", join(lib, "*"), "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-kotlin-home", kotlinRoot];
 		const version = (await jvmRun(tools.java, [...launch, "-version"], project, clean)).stderr.trim();
 		assert.match(version, /kotlinc-jvm 2\.2\.0 /);
-		kotlinArgs = [...launch, ...kotlinCompilerOptions, "-jdk-home", tools.jdk, "-classpath", `${installedJar}:${join(project, "classes")}:${join(lib, "kotlin-stdlib.jar")}:${join(lib, "annotations-13.0.jar")}`, "-d", "classes"];
-		await jvmRun(tools.java, [...kotlinArgs, file], project, clean);
-		kotlin = { version, compilerFiles, stdlib: join(lib, "kotlin-stdlib.jar") };
+		kotlinArgs = [...launch, ...kotlinCompilerOptions, "-jdk-home", tools.jdk, "-classpath", `${resolvedClasspath}${delimiter}${join(project, "classes")}`, "-d", "classes"];
+		await jvmRun(tools.java, [...kotlinArgs, file, ...metadataSource ? ["src/Metadata.kt"] : []], project, clean);
+		kotlin = { version, compilerFiles, stdlib: standardLibrary.path };
 	}
 	const rejected = [];
 	for(const entry of fixture ? fixture.rejections(profile) : corpusCases(library).map(entry => corpusHostCase(entry, profile)).filter(entry => entry.expectation.kind === "compile-rejection"))
@@ -128,14 +149,23 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 		, classpathSha256: await jvmDigest(join(project, "classpath.txt"))
 		, compilerOptions: [...javaProfile ? javaCompilerOptions : kotlinCompilerOptions]
 		, dependencies, exactPublicSignatures: true, emptyRepository: true
+		, resolvedDependencies: resolvedDependencies.map(({ mavenPath, sha256 }) => ({ mavenPath, sha256 }))
 		, emptyUserHome: true, offline: true, resolvedClasspathOnly: true
 		, publicApiOnly: true, runtimeOverridesDisabled: true };
+	if(metadataSource) jvm.kotlinMetadataSourceSha256 = sha256(metadataSource);
 	const deployment = join(root, "relocated");
 	await mkdir(deployment); await rename(join(project, "classes"), join(deployment, "classes"));
 	await cp(installedJar, join(deployment, "package.jar"));
+	await mkdir(join(deployment, "dependencies"));
+	const runtimeClasspath = ["classes", "package.jar"];
+	for(const dependency of resolvedDependencies)
+	{
+		const target = `dependencies/${basename(dependency.path)}`;
+		assert.ok(!runtimeClasspath.includes(target));
+		await cp(dependency.path, join(deployment, target)); runtimeClasspath.push(target);
+	}
 	if(kotlin)
 	{
-		await cp(kotlin.stdlib, join(deployment, "kotlin-stdlib.jar"));
 		jvm.kotlin = { version: kotlin.version, compilerFiles: kotlin.compilerFiles, stdlibSha256: await jvmDigest(kotlin.stdlib) };
 	}
 	const runtime = join(root, "runtime-only");
@@ -158,10 +188,16 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	for(let i = 0; i < 2; ++i)
 	{
 		assert.deepEqual(await readdir(temp), []);
-		observations.push(JSON.parse((await jvmRun(runtimeJava, ["--enable-native-access=ALL-UNNAMED", `-Djava.io.tmpdir=${temp}`, "-classpath", `classes:package.jar${javaProfile ? "" : ":kotlin-stdlib.jar"}`, javaProfile ? "Consumer" : "ConsumerKt"], deployment, runtimeEnv)).stdout));
+		observations.push(JSON.parse((await jvmRun(runtimeJava, ["--enable-native-access=ALL-UNNAMED", `-Djava.io.tmpdir=${temp}`, "-classpath", runtimeClasspath.join(delimiter), javaProfile ? "Consumer" : "ConsumerKt"], deployment, runtimeEnv)).stdout));
 		assert.deepEqual(await readdir(temp), [], "Normal exit must remove extracted native assets");
 	}
 	assert.deepEqual(observations[0], observations[1]);
+	if(metadataSource)
+	{
+		const result = observations[0].results.find(result => result.id === "kotlin-metadata/assertions");
+		assert.ok(Number(result?.observed.integer) > 10, "The installed Kotlin metadata API must execute its independent checks");
+		jvm.kotlinMetadataChecks = Number(result.observed.integer);
+	}
 	assert.equal(observations[0].apiLocation, join(deployment, "package.jar"));
 	const native = Object.fromEntries(Object.entries(receipt.files).filter(([path]) => path.startsWith("META-INF/lean-bridge/native/linux-x64/")).map(([path, value]) => [basename(path), value.sha256]));
 	assert.deepEqual(observations[0].nativeLibraries, native);

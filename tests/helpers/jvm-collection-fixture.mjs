@@ -5,12 +5,16 @@
  */
 import { readFileSync } from "node:fs";
 
-/** Read the exact Java collection example that installed consumers execute. */
-export const jvmCollectionDocumentation = () => {
-	const document = readFileSync(new URL("../../docs/consume/java.md", import.meta.url), "utf8");
+/**
+ * Read the exact collection example that installed consumers execute.
+ *
+ * @param profile - Java or Kotlin documentation.
+ */
+export const jvmCollectionDocumentation = (profile = "java") => {
+	const document = readFileSync(new URL(`../../docs/consume/${profile}.md`, import.meta.url), "utf8");
 	const section = document.split("### Arrays and records\n")[1]?.split("\n### ")[0];
-	const source = section?.match(/```java\n([^]*?)\n```/)?.[1];
-	if(!source) throw new Error("Java arrays and records documentation example is missing");
+	const source = section?.match(new RegExp("```" + profile + "\\n([^]*?)\\n```"))?.[1];
+	if(!source) throw new Error(`${profile} arrays and records documentation example is missing`);
 	return { source: `${source}\n`, stdout: "[[], [3, 2, 1]]\n3\n42\n" };
 };
 
@@ -84,7 +88,7 @@ export const jvmCollectionPublicChecks = profile => {
 	{
 		const names = fields.map(field => JSON.stringify(field.split(":")[0])).join(", ");
 		const types = fields.map(field => cls(field.split(":")[1], java)).join(", ");
-		lines.push(java ? `    Wire.record(${name}.class, new String[] {${names}}, new Class<?>[] {${types}});` : `    Wire.record(${name}::class.java, arrayOf<String>(${names}), arrayOf<Class<*>>(${types}))`);
+		lines.push(java ? `    Wire.record(${name}.class, new String[] {${names}}, new Class<?>[] {${types}});` : `    kotlinRecord(${name}::class.java, arrayOf<String>(${names}), arrayOf<Class<*>>(${types}))`);
 	}
 	return lines.join("\n");
 };
@@ -124,6 +128,23 @@ export const jvmCollectionConsumer = profile => {
         calls.addAndGet(2);
         Wire.result("collections/documentation", Wire.text(documentationOutput), true);`);
 	}
+	else
+	{
+		const documentation = jvmCollectionDocumentation(profile), imports = documentation.source.match(/^import .+$/gm) ?? [];
+		const body = documentation.source.replace(/^import .+\n/gm, "").replace("fun main()", "fun documentationExample()");
+		for(const line of imports) if(!source.includes(`${line}\n`)) source = `${line}\n${source}`;
+		source = source.replace("/* DOCUMENTATION_DECLARATION */", body)
+			.replace("/* DOCUMENTATION */", `    val documentationBytes = java.io.ByteArrayOutputStream()
+    val originalOutput = System.out
+    java.io.PrintStream(documentationBytes, true, java.nio.charset.StandardCharsets.UTF_8).use { output ->
+        System.setOut(output)
+        try { documentationExample() } finally { System.setOut(originalOutput) }
+    }
+    val documentationOutput = documentationBytes.toString(java.nio.charset.StandardCharsets.UTF_8)
+    verify(documentationOutput == ${JSON.stringify(documentation.stdout)})
+    calls.addAndGet(2)
+    Wire.result("collections/documentation", Wire.text(documentationOutput), true)`);
+	}
 	return source;
 };
 
@@ -141,12 +162,12 @@ export const jvmCollectionRejections = profile => {
 		, ["bytes-text", 'Api.arrayDuplicate(new String[] {"x"});', 'Api.arrayDuplicate(arrayOf("x"))']
 		, ["uint64-narrowing", "Api.recordSingle(new Single(1L));", "Api.recordSingle(Single(1L))"]
 		, ["record-fields", 'Api.recordMake().first().length();', 'Api.recordMake().first().length']
-		, ["product-order", 'new Pair("x", 1L);', 'Pair("x", 1L)']
+		, ["product-order", 'new Pair("x", 1L);', 'org.leanbridge.collections.kotlin.Pair("x", 1L)']
 		, ["deep-leaf", "Api.deep(new long[][] {{1}});", "Api.deep(arrayOf(longArrayOf(1)))"]
 	];
 	return cases.map(([name, j, k]) => ({ id: `collections/${name}`
 		, expectation: { kind: "compile-rejection"
 			, diagnostic: java ? name === "record-fields" ? "compiler.err.cant.deref" : "compiler.err.cant.apply.symbol"
 				: name === "record-fields" ? "UNRESOLVED_REFERENCE" : name === "product-order" ? ["ARGUMENT_TYPE_MISMATCH", "ARGUMENT_TYPE_MISMATCH"] : "ARGUMENT_TYPE_MISMATCH" }
-		, source: `import org.leanbridge.collections.*;\nimport java.math.BigInteger;\n${java ? "class Invalid { static void rejected() {" : "fun rejected() {"}\n${java ? j : k}\n}${java ? " }" : ""}\n` }));
+		, source: `import org.leanbridge.collections${java ? "" : ".kotlin"}.*;\n${java ? "" : "import org.leanbridge.collections.kotlin.Pair;\n"}import java.math.BigInteger;\n${java ? "class Invalid { static void rejected() {" : "fun rejected() {"}\n${java ? j : k}\n}${java ? " }" : ""}\n` }));
 };

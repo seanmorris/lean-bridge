@@ -7,6 +7,7 @@
 	],
 	"deferred": [
 		{ "path": "src/build/component-copied-adapters.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/compile-jvm-sources.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/component-record-adapters.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/abi/component-records.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/component-copied-runtime.mjs", "classification": "strict-migration-backlog" },
@@ -86,7 +87,9 @@
 		{ "path": "src/backends/jvm/copied-aliases.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/jvm/copied-assets.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/jvm/copied-conversions.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/jvm/copied-kotlin.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/jvm/copied-model.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/jvm/copied-runtime.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/jvm/copied-values.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/native-jvm-artifacts.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/native-jvm-projection.mjs", "classification": "strict-migration-backlog" },

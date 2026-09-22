@@ -131,6 +131,21 @@ test("List evidence covers all seventeen copied profiles on both paths without p
 	}
 });
 
+test("collection evidence covers all seventeen profiles, both source paths and nineteen primitive fields", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell =>
+		["array", "record"].includes(cell.shape) && ["parameter", "result", "field"].includes(cell.position)
+		|| document.irFacets.primitive.includes(cell.shape) && cell.position === "field");
+	assert.equal(document.profiles.length, 17); assert.equal(document.irFacets.primitive.length, 19);
+	assert.equal(cells.length, 850);
+	for(const profile of document.profiles) assert.equal(cells.filter(cell => cell.profile === profile.id).length, 50);
+	for(const cell of cells)
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed", cell.id);
+		assert.ok(cell.stages.installedExecution.evidence.length > 0, cell.id);
+		assert.ok(cell.hostType, cell.id);
+	}
+});
+
 test("npm record evidence covers only copied positions and all nineteen primitive fields", () => {
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("npm-records-installed"));

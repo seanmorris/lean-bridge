@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { generateCopiedJvmPackage } from "../src/backends/jvm/copied-values.mjs";
+import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { generateJvmBindingPackage } from "../src/backends/jvm/generate.mjs";
 import { nativeVariantReviewedIr } from "./helpers/native-variant-fixture.mjs";
 import { aliasReviewedIr } from "./helpers/alias-fixture.mjs";
@@ -16,7 +17,7 @@ const prefix = "src/main/java/org/leanbridge/variants/";
 
 test("JVM variants expose sealed interfaces and named constructor records", () => {
 	const ir = nativeVariantReviewedIr(), files = generateCopiedJvmPackage(ir);
-	assert.deepEqual(files, generateJvmBindingPackage(ir));
+	assert.deepEqual(generateCopiedJvmKotlinPackage(ir), generateJvmBindingPackage(ir));
 	assert.deepEqual(files, generateCopiedJvmPackage(structuredClone(ir)));
 	assert.match(files[`${prefix}Signal.java`], /public sealed interface Signal permits SignalIdle, SignalStopped, SignalData, SignalMarker/);
 	assert.match(files[`${prefix}SignalIdle.java`], /public record SignalIdle\(\) implements Signal/);

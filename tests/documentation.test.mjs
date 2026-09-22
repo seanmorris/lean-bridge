@@ -373,12 +373,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/variants\/jvm\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs"));
-  assert.ok(workflow.includes("LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java node --test tests/jvm-collection-callers.test.mjs"));
-  assert.ok(workflow.includes("LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java node --test tests/jvm-collections.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs"));
   assert.match(workflow, /test -s build\/equality\/jvm\.json/);
   assert.match(workflow, /test -s build\/collections\/jvm-conversions\.json/);
-  assert.match(workflow, /test -s build\/collections\/jvm-java\.json/);
-  assert.match(workflow, /build\/callables\/jvm\.json\n\s*build\/compounds\/jvm\.json\n\s*build\/lists\/jvm\.json\n\s*build\/aliases\/jvm\.json\n\s*build\/variants\/jvm\.json\n\s*build\/equality\/jvm\.json\n\s*build\/collections\/jvm-conversions\.json\n\s*build\/collections\/jvm-java\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /test -s build\/collections\/jvm\.json/);
+  assert.match(workflow, /build\/callables\/jvm\.json\n\s*build\/compounds\/jvm\.json\n\s*build\/lists\/jvm\.json\n\s*build\/aliases\/jvm\.json\n\s*build\/variants\/jvm\.json\n\s*build\/equality\/jvm\.json\n\s*build\/collections\/jvm-conversions\.json\n\s*build\/collections\/jvm\.json\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs"));
   assert.match(workflow, /test -s build\/compounds\/python\.json/);
@@ -493,7 +493,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_jvm\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_jvm\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-jvm-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/java-kotlin\.json\n\s*build\/type-corpus\/reviewed-native-java-kotlin\.json\n\s*build\/char-native\/java-kotlin\.json\n\s*build\/word-native\/java-kotlin\.json\n\s*build\/callables\/jvm\.json\n\s*build\/compounds\/jvm\.json\n\s*build\/lists\/jvm\.json\n\s*build\/aliases\/jvm\.json\n\s*build\/variants\/jvm\.json\n\s*build\/equality\/jvm\.json\n\s*build\/collections\/jvm-conversions\.json\n\s*build\/collections\/jvm-java\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/java-kotlin\.json\n\s*build\/type-corpus\/reviewed-native-java-kotlin\.json\n\s*build\/char-native\/java-kotlin\.json\n\s*build\/word-native\/java-kotlin\.json\n\s*build\/callables\/jvm\.json\n\s*build\/compounds\/jvm\.json\n\s*build\/lists\/jvm\.json\n\s*build\/aliases\/jvm\.json\n\s*build\/variants\/jvm\.json\n\s*build\/equality\/jvm\.json\n\s*build\/collections\/jvm-conversions\.json\n\s*build\/collections\/jvm\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:dotnet"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=dotnet node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: ordinary_dotnet\n\s*continue-on-error: true/);
   assert.match(workflow, /id: type_corpus_dotnet/);

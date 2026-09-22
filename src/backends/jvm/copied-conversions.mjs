@@ -47,21 +47,22 @@ ${copy.cases.map((branch, index) => `            case ${index} -> new ${branch.p
         };`;
 	} else if(copy.compound)
 	{
+		const wrapper = model.compoundNames?.[copy.compound] ?? ({ option: "Option", result: "Result", tuple: "Pair" })[copy.compound];
 		const to = (field, expression) => writeValue(field.type, "result", field.offset, `to${field.type.index}(${expression}${field.type.aggregate ? ", scope" : ""})`);
 		const from = field => `from${field.type.index}(${readJvmValue(field.type, "value", field.offset)})`;
 		input = `Objects.requireNonNull(value);\n        var result = scope.allocate(${copy.size}, ${copy.alignment});\n        `;
 		if(copy.compound === "option")
 		{
 			input += `if (value.isSome()) { result.set(JAVA_BYTE, 0, (byte)1); ${to(copy.fields[0], "value.value()")} }\n        return result;`;
-			output = `return switch (value.get(JAVA_BYTE, 0)) { case 0 -> Option.none(); case 1 -> Option.some(${from(copy.fields[0])}); default -> throw new IllegalStateException("Invalid native Option flag"); };`;
+			output = `return switch (value.get(JAVA_BYTE, 0)) { case 0 -> ${wrapper}.none(); case 1 -> ${wrapper}.some(${from(copy.fields[0])}); default -> throw new IllegalStateException("Invalid native Option flag"); };`;
 		} else if(copy.compound === "result")
 		{
 			input += `if (value.isOk()) { result.set(JAVA_BYTE, 0, (byte)1); ${to(copy.fields[0], "value.value()")} }\n        else { ${to(copy.fields[1], "value.error()")} }\n        return result;`;
-			output = `return switch (value.get(JAVA_BYTE, 0)) { case 1 -> Result.ok(${from(copy.fields[0])}); case 0 -> Result.err(${from(copy.fields[1])}); default -> throw new IllegalStateException("Invalid native Except flag"); };`;
+			output = `return switch (value.get(JAVA_BYTE, 0)) { case 1 -> ${wrapper}.ok(${from(copy.fields[0])}); case 0 -> ${wrapper}.err(${from(copy.fields[1])}); default -> throw new IllegalStateException("Invalid native Except flag"); };`;
 		} else
 		{
 			input += `${to(copy.fields[0], "value.first()")}\n        ${to(copy.fields[1], "value.second()")}\n        return result;`;
-			output = `return new Pair<>(${copy.fields.map(from).join(", ")});`;
+			output = `return new ${wrapper}<>(${copy.fields.map(from).join(", ")});`;
 		}
 	} else if(copy.record)
 	{
