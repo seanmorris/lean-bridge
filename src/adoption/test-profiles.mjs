@@ -182,6 +182,7 @@ const profileManifest = Object.freeze({
 		, "native-c-family"
 		, "native-c-copied"
 		, "native-copied-graph-layout"
+		, "cpp-copied-graph-values"
 		, "native-recursive-transport"
 		, "native-allocation-guard"
 		, "native-graph-model"
