@@ -213,6 +213,10 @@ const dotnetValidationFixture = library => ({
 });
 
 const jvmNativeLibraries = library => Object.fromEntries([`lib${library.cModule}.so`, "libleanshared.so", "liblean_bridge_native.so"].map(name => [name, "f".repeat(64)]));
+const jvmRuntimeDependencies = [
+	"org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar"
+	, "org/jetbrains/annotations/13.0/annotations-13.0.jar"
+];
 const jvmValidationFixture = (library, profile) => {
 	const files = paths => Object.fromEntries(paths.map(path => [path, { sha256: "e".repeat(64), bytes: 100 }]));
 	return {
@@ -227,10 +231,11 @@ const jvmValidationFixture = (library, profile) => {
 		, mavenFiles: files(["maven-core-3.9.11.jar"])
 		, dependencies: { archive: "maven-plugin-closure.tar.gz"
 			, sha256: "f".repeat(64)
-			, files: files(["org/apache/maven/plugins/maven-install-plugin/3.1.4/maven-install-plugin-3.1.4.jar", "org/apache/maven/plugins/maven-dependency-plugin/3.8.1/maven-dependency-plugin-3.8.1.jar"]) }
+			, files: files(["org/apache/maven/plugins/maven-install-plugin/3.1.4/maven-install-plugin-3.1.4.jar", "org/apache/maven/plugins/maven-dependency-plugin/3.8.1/maven-dependency-plugin-3.8.1.jar", ...jvmRuntimeDependencies]) }
+		, resolvedDependencies: jvmRuntimeDependencies.map(mavenPath => ({ mavenPath, sha256: "e".repeat(64) }))
 		, compilerOptions: [...profile === "java" ? javaCompilerOptions : kotlinCompilerOptions]
 		, ...Object.fromEntries(["exactPublicSignatures", "emptyRepository", "emptyUserHome", "offline", "resolvedClasspathOnly", "publicApiOnly", "runtimeOverridesDisabled", "installedSourcesRemoved", "compilerFreeExecution", "runtimeOnlyExecution", "normalExitCleanup", "repeatExecution", "localLibraries"].map(key => [key, true]))
-		, deployment: { ...files(["classes/Wire.class", `classes/Consumer${profile === "java" ? "" : "Kt"}.class`, ...profile === "kotlin" ? ["kotlin-stdlib.jar"] : []]), "package.jar": { sha256: "a".repeat(64), bytes: 100 } }
+		, deployment: { ...files(["classes/Wire.class", `classes/Consumer${profile === "java" ? "" : "Kt"}.class`, ...jvmRuntimeDependencies.map(path => `dependencies/${path.split("/").at(-1)}`)]), "package.jar": { sha256: "a".repeat(64), bytes: 100 } }
 		, runtimeFiles: files(["bin/java", "lib/modules", "release"])
 		, runtimeModules: ["java.base@22.0.2"]
 		, nativeLibraries: jvmNativeLibraries(library)
@@ -817,6 +822,18 @@ for(const profile of ["java", "kotlin"])
 		, ["ambient home", run => { run.jvm.emptyUserHome = false; }]
 		, ["online resolution", run => { run.jvm.offline = false; }]
 		, ["extra classpath", run => { run.jvm.resolvedClasspathOnly = false; }]
+		, ["missing resolved dependencies", run => { delete run.jvm.resolvedDependencies; }]
+		, ["missing runtime dependency", run => { run.jvm.resolvedDependencies.pop(); }]
+		, ["duplicate runtime dependency", run => { run.jvm.resolvedDependencies.push(run.jvm.resolvedDependencies[0]); }]
+		, ["unlocked runtime dependency", run => { delete run.jvm.dependencies.files[jvmRuntimeDependencies[0]]; }]
+		, ["changed resolved dependency", run => { run.jvm.resolvedDependencies[0].sha256 = "0".repeat(64); }]
+		, ["changed deployed dependency", run => { run.jvm.deployment["dependencies/kotlin-stdlib-2.2.0.jar"].sha256 = "0".repeat(64); }]
+		, ["wrong dependency size", run => { run.jvm.deployment["dependencies/annotations-13.0.jar"].bytes++; }]
+		, ["missing annotations dependency", run => { delete run.jvm.deployment["dependencies/annotations-13.0.jar"]; }]
+		, ["undeclared deployed dependency", run => { run.jvm.deployment["dependencies/kotlin-reflect-2.2.0.jar"] = { sha256: "e".repeat(64), bytes: 100 }; }]
+		, ["old standard library location", run => { run.jvm.deployment["kotlin-stdlib.jar"] = run.jvm.deployment["dependencies/kotlin-stdlib-2.2.0.jar"]; delete run.jvm.deployment["dependencies/kotlin-stdlib-2.2.0.jar"]; }]
+		, ["compiler as runtime dependency", run => { run.jvm.resolvedDependencies[0].mavenPath = "org/jetbrains/kotlin/kotlin-compiler/2.2.0/kotlin-compiler-2.2.0.jar"; }]
+		, ["unsafe runtime dependency path", run => { run.jvm.resolvedDependencies[0].mavenPath = "../kotlin-stdlib-2.2.0.jar"; }]
 		, ["runtime override", run => { run.jvm.runtimeOverridesDisabled = false; }]
 		, ["source tree present", run => { run.jvm.installedSourcesRemoved = false; }]
 		, ["compiler during execution", run => { run.jvm.compilerFreeExecution = false; }]
@@ -850,7 +867,7 @@ for(const profile of ["java", "kotlin"])
 for(const [label, change] of [
 	["wrong Kotlin compiler", run => { run.jvm.kotlin.version = "kotlinc-jvm 1.9.0"; }]
 	, ["missing Kotlin compiler", run => { delete run.jvm.kotlin.compilerFiles["kotlin-compiler.jar"]; }]
-	, ["changed standard library", run => { run.jvm.deployment["kotlin-stdlib.jar"].sha256 = "0".repeat(64); }]
+	, ["changed standard library", run => { run.jvm.deployment["dependencies/kotlin-stdlib-2.2.0.jar"].sha256 = "0".repeat(64); }]
 	, ["wrong Kotlin version", run => { run.observation.hostVersion = "1.9.0"; }]
 ]) test(`Kotlin corpus rejects ${label}`, () => {
 	const run = validationFixture("kotlin"); change(run);

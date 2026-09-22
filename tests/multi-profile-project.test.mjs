@@ -200,6 +200,9 @@ for(const variant of ["shop", "telemetry"]) test(`combined ${variant} packages a
 	assert.deepEqual(await json(join(builds[0].output, "package-set-receipt.json")), await json(join(builds[1].output, "package-set-receipt.json")));
 	for(const pkg of builds[0].packages) for(const archive of pkg.archives)
 		assert.equal(sha256(await readFile(join(builds[1].output, archive.path))), archive.sha256);
+	// Both builds have been compared byte-for-byte. Install from the first one;
+	// retaining the duplicate release adds gigabytes without another assertion.
+	await rm(builds[1].output, { recursive: true, force: true });
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 	assert.deepEqual(await lakeInputState(moved), movedBefore);
 	await rename(context.workspace, join(context.directory, "source-hidden"));

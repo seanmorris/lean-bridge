@@ -411,7 +411,27 @@ const validateJvmEvidence = (run, library) => {
 	files(evidence.deployment); files(evidence.runtimeFiles);
 	assert.equal(evidence.deployment["package.jar"].sha256, run.archiveSha256);
 	for(const path of ["classes/Wire.class", `classes/Consumer${java ? "" : "Kt"}.class`]) assert.ok(evidence.deployment[path]);
-	assert.ok(Object.keys(evidence.deployment).every(path => /^classes\/[A-Za-z0-9_.$/-]+\.(?:class|kotlin_module)$/.test(path) || path === "package.jar" || !java && path === "kotlin-stdlib.jar"));
+	// Both language projections use the package's Maven-resolved runtime closure.
+	// Bind each deployed JAR to its locked coordinate, hash and byte count. Do not
+	// admit arbitrary files under dependencies/ or compiler/plugin JARs at runtime.
+	const expectedDependencies = [
+		"org/jetbrains/annotations/13.0/annotations-13.0.jar"
+		, "org/jetbrains/kotlin/kotlin-stdlib/2.2.0/kotlin-stdlib-2.2.0.jar"
+	];
+	assert.ok(Array.isArray(evidence.resolvedDependencies));
+	assert.deepEqual(evidence.resolvedDependencies.map(entry => entry.mavenPath).sort(), expectedDependencies);
+	const deployedDependencies = new Set();
+	for(const dependency of evidence.resolvedDependencies)
+	{
+		assert.deepEqual(Object.keys(dependency).sort(), ["mavenPath", "sha256"]);
+		const path = `dependencies/${dependency.mavenPath.split("/").at(-1)}`;
+		const locked = evidence.dependencies.files[dependency.mavenPath];
+		assert.ok(locked);
+		assert.equal(dependency.sha256, locked.sha256);
+		assert.deepEqual(evidence.deployment[path], locked);
+		deployedDependencies.add(path);
+	}
+	assert.ok(Object.keys(evidence.deployment).every(path => /^classes\/[A-Za-z0-9_.$/-]+\.(?:class|kotlin_module)$/.test(path) || path === "package.jar" || deployedDependencies.has(path)));
 	for(const path of ["bin/java", "lib/modules", "release"]) assert.ok(evidence.runtimeFiles[path]);
 	assert.ok(Object.keys(evidence.runtimeFiles).every(path => !/^(?:jmods|include|src)\//.test(path) && (!path.startsWith("bin/") || path === "bin/java" || path === "bin/keytool")));
 	assert.deepEqual(evidence.runtimeModules, [`java.base@${run.observation.jvmVersion}`]);
@@ -430,7 +450,7 @@ const validateJvmEvidence = (run, library) => {
 		for(const [path, hash] of Object.entries(evidence.kotlin.compilerFiles))
 		{ assert.match(path, /^[A-Za-z0-9_.-]+\.jar$/); assert.match(hash, /^[a-f0-9]{64}$/); }
 		assert.equal(evidence.kotlin.stdlibSha256, evidence.kotlin.compilerFiles["kotlin-stdlib.jar"]);
-		assert.equal(evidence.kotlin.stdlibSha256, evidence.deployment["kotlin-stdlib.jar"].sha256);
+		assert.equal(evidence.kotlin.stdlibSha256, evidence.deployment["dependencies/kotlin-stdlib-2.2.0.jar"].sha256);
 	}
 };
 
