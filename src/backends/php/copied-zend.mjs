@@ -9,6 +9,7 @@ import { generateCBindingPackage } from "../c/generate.mjs";
 import { compileCopiedPhpModel } from "./copied-model.mjs";
 import { phpCopiedAliases } from "./copied-aliases.mjs";
 import { copiedPhpPublicSource } from "./copied-values.mjs";
+import { phpValueSemantics } from "./copied-equality.mjs";
 import { copiedPhpChecks } from "./copied-conversions.mjs";
 import { copiedZendSupport } from "./copied-zend-support.mjs";
 import { copiedZendConversions } from "./copied-zend-conversions.mjs";
@@ -39,7 +40,7 @@ const phpWire = model => model.surface.copies.map(copy => {
 	}
 	else if(copy.record)
 	{
-		input = `[${copy.fields.map(field => `self::to${field.type.index}($value->${field.name})`).join(", ")}]`;
+		input = `[${copy.fields.map(field => `self::to${field.type.index}($value->${field.publicName})`).join(", ")}]`;
 		output = `new ${ns}${copy.publicName}(${copy.fields.map((field, i) => `self::from${field.type.index}($value[${i}])`).join(", ")})`;
 	} else if(copy.element)
 	{
@@ -69,6 +70,7 @@ final class Checks
 {
 ${copiedPhpChecks(model)}
 }
+${phpValueSemantics(model)}
 ${model.surface.callbacks.size ? phpZendLease : ""}
 final class Native
 {

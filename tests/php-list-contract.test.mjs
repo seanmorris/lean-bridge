@@ -44,7 +44,9 @@ test("PHP List output validates length and pointer alignment before element read
 		assert.ok(body.indexOf("missing buffer") < body.indexOf("$memory ="));
 		assert.ok(body.indexOf("misaligned buffer") < body.indexOf("$memory ="));
 		assert.match(body, /\$scope->ffi->cast\('uintptr_t \*', \\FFI::addr\(\$value->data\)\)\[0\]/);
-		assert.ok(body.includes(`FFI::alignof($scope->ffi->type('${copy.element.ctype}'))`));
+		// Read raw Bool bytes so FFI cannot coerce invalid native markers first.
+		const ffiType = copy.element.ctype === "bool" ? "uint8_t" : copy.element.ctype;
+		assert.ok(body.includes(`FFI::alignof($scope->ffi->type('${ffiType}'))`));
 	}
 });
 

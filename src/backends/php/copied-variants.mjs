@@ -3,13 +3,16 @@
  *
  * @file
  */
+import { phpClassName, phpFieldName } from "./copied-names.mjs";
+import { phpFfiType } from "./callables.mjs";
+import { phpValueMethods } from "./copied-equality.mjs";
+
 /**
  * Capitalize constructor segments without discarding trailing underscores.
  *
  * @param value - Original Lean constructor name.
  */
 const caseName = value => value.split("_").filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("") + (value.match(/_+$/)?.[0] ?? "");
-const forbiddenFields = new Set(["this", "GLOBALS", "_SERVER", "_GET", "_POST", "_FILES", "_COOKIE", "_SESSION", "_REQUEST", "_ENV", "__lbBudget"]);
 
 /**
  * Bind original PHP payload names separately from escaped private C members.
@@ -23,15 +26,14 @@ export const configurePhpVariant = (copy, names, fail) => {
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(name) || names.has(name.toLowerCase())) fail(`PHP variant class is reserved or duplicated: ${name}`);
 		names.add(name.toLowerCase()); return name;
 	};
-	copy.publicName = register(copy.variant.name);
+	copy.publicName = register(phpClassName(copy.variant.name));
 	for(const [index, branch] of copy.cases.entries())
 	{
 		const original = copy.variant.cases[index];
 		branch.publicName = register(copy.publicName + caseName(original.name));
 		for(const [fieldIndex, field] of branch.fields.entries())
 		{
-			field.publicName = original.fields[fieldIndex].name;
-			if(!/^[A-Za-z_][A-Za-z0-9_]*$/.test(field.publicName) || forbiddenFields.has(field.publicName)) fail(`PHP variant field is reserved or invalid: ${field.publicName}`);
+			field.publicName = phpFieldName(original.fields[fieldIndex].name, fail);
 		}
 	}
 };
@@ -50,6 +52,7 @@ ${branch.fields.map(field => `    /** @var ${field.type.docType} */\n    public 
         $__lbBudget = new Internal\\Budget();
 ${branch.fields.map(field => `        $this->${field.publicName} = Internal\\Checks::check${field.type.index}($${field.publicName}, $__lbBudget);`).join("\n")}
     }
+${phpValueMethods}
 }`).join("\n\n")}`).join("\n\n");
 
 /**
@@ -57,7 +60,7 @@ ${branch.fields.map(field => `        $this->${field.publicName} = Internal\\Che
  *
  * @param copy - Checked variant with C-safe member names.
  */
-export const phpVariantDefinition = copy => `typedef struct { uint32_t kind; union { ${copy.cases.map(branch => `struct { ${branch.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") || "uint8_t empty;"} } ${branch.name};`).join(" ")} } cases; } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`;
+export const phpVariantDefinition = copy => `typedef struct { uint32_t kind; union { ${copy.cases.map(branch => `struct { ${branch.fields.map(field => `${phpFfiType(field.type)} ${field.name};`).join(" ") || "uint8_t empty;"} } ${branch.name};`).join(" ")} } cases; } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`;
 
 /**
  * Validate exact generated constructors, initialized fields and typed payloads.

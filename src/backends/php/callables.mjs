@@ -11,6 +11,13 @@
  * @param ref - Canonical type reference.
  */
 export const phpValue = (model, ref) => model.surface.copy(ref) ?? model.surface.callbacks.get(ref.id);
+
+/**
+ * Keep Boolean bytes visible until validation instead of FFI truth-value coercion.
+ *
+ * @param value - Private copied C value descriptor.
+ */
+export const phpFfiType = value => value.scalarName === "bool" ? "uint8_t" : value.ctype;
 const callable = value => Boolean(value.type?.callable);
 
 /** Public lifetime API. All arguments stay mixed to prevent weak-call coercion. */
@@ -75,8 +82,8 @@ final class Lease
  */
 export const phpCallableDefinitions = model => [...model.surface.callbacks.values()].map(value => {
 	const { parameters, result } = value.type.callable, output = phpValue(model, result.type);
-	const args = parameters.map(site => { const input = phpValue(model, site.type); return input.ctype + (input.aggregate ? " *" : ""); });
-	const tail = [...args, ...output.scalarName === "unit" ? [] : [`${output.ctype} *`], "BridgeError *"].join(", ");
+	const args = parameters.map(site => { const input = phpValue(model, site.type); return phpFfiType(input) + (input.aggregate ? " *" : ""); });
+	const tail = [...args, ...output.scalarName === "unit" ? [] : [`${phpFfiType(output)} *`], "BridgeError *"].join(", ");
 	return `typedef struct { int (*call)(void *, ${tail}); void *context; } ${value.ctype};
 typedef struct ${value.ownedType} ${value.ownedType};
 int ${value.ownedType}_call(${value.ownedType} *, ${tail});
@@ -104,7 +111,7 @@ export const phpNativeCall = (model, { name, symbol, parameters, result, closure
         $scope = new Scope($ffi);
         $validation = new Budget();
         ${callbacks ? "$frame = new CallFrame();" : ""}
-        ${unit ? "" : `$out = $ffi->new('${owned ? output.ownedType + " *" : output.ctype}');`}
+        ${unit ? "" : `$out = $ffi->new('${owned ? output.ownedType + " *" : phpFfiType(output)}');`}
         $error = $ffi->new('BridgeError');
         try {
 ${inputs.map((value, i) => `            $input${i} = ${callable(value) ? `self::borrow${value.index}($arg${i}, $scope, $validation, $frame)` : `self::to${value.index}(Checks::check${value.index}($arg${i}, $validation), $scope)`};`).join("\n")}

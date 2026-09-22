@@ -63,9 +63,12 @@ test("the PHP overview records exact UInt32 values in copied and Alpha profiles"
 	assert.match(row(wasm, "Float32"), /subnormals and signed zero/u);
 });
 
-test("PHP documents both primitive callable transports without promoting reviewed fields or async", async () => {
+test("PHP distinguishes native collection fields from unverified Wasm fields and async", async () => {
 	const source = await readFile("docs/php.md", "utf8");
-	assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed \(input, result, callback input, callback result\); Generator inspected \(field\)/u);
+	assert.match(row(source, "Nat"), /Ordinary source: Installed checks passed\. Reviewed IR: Native PHP: Installed checks passed;/u);
+	assert.match(row(source, "Nat"), /PHP-Wasm: Installed checks passed \(input, result, callback input, callback result\); Generator inspected \(field\)/u);
+	assert.deepEqual(cells.find(cell => cell.id === "php-native/nat/reviewed-ir/field").stages.installedExecution.evidence, ["php-native-collections-installed"]);
+	assert.notEqual(cells.find(cell => cell.id === "php-wasm/nat/reviewed-ir/field").stages.installedExecution.state, "passed");
 	const callback = row(source, "Host function passed to Lean");
 	assert.match(callback, /`callable` \(input\)/u);
 	assert.match(callback, /Ordinary source: Installed checks passed \(input\).*Reviewed IR: Installed checks passed \(input\)/u);

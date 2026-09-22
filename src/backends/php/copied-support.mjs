@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { phpValueMethods } from "./copied-equality.mjs";
 
 /** Exact value wrappers shared by each generated package's namespace. */
 export const copiedPhpValues = String.raw`
@@ -18,6 +19,7 @@ final readonly class Bytes implements \Stringable, \Countable
     public function toString(): string { return $this->value; }
     public function __toString(): string { return $this->value; }
     public function count(): int { return strlen($this->value); }
+${phpValueMethods}
 }
 
 `;
@@ -52,10 +54,11 @@ final class Scope
         \FFI::memcpy($memory, $bytes, strlen($bytes));
         return \FFI::addr($memory[0]);
     }
-    public function read(?\FFI\CData $data, int $length, int $width = 1): string {
+    public function read(?\FFI\CData $data, int $length, int $width = 1, int $alignment = 1): string {
         $this->budget->charge($length, $width);
         if (!$length) return '';
         if ($data === null || \FFI::isNull($data)) throw new \RuntimeException('Native result has a missing buffer');
+        if ($alignment < 1 || $this->ffi->cast('uintptr_t *', \FFI::addr($data))[0] % $alignment !== 0) throw new \RuntimeException('Native result has a misaligned buffer');
         return \FFI::string($data, $length);
     }
     public function close(): void { $this->owners = []; }

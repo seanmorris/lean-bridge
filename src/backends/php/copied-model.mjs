@@ -5,8 +5,8 @@
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 import { configurePhpVariant } from "./copied-variants.mjs";
+import { reservedPhpNames as reserved, phpClassName, phpFieldName } from "./copied-names.mjs";
 
-const reserved = new Set("abstract and array as bool break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile enum eval exit extends false final finally float fn for foreach from function global goto if implements include include_once instanceof insteadof int interface isset iterable list match mixed namespace never new null object or parent print private protected public readonly require require_once resource return self static string switch throw trait true try unset use var void while xor yield bigint biginteger bytes leanbridgeerror leanclosure internal this globals dispatch invoke".split(" "));
 const bigInteger = "\\Brick\\Math\\BigInteger";
 const primitives = { char: "string", unit: "null", bool: "bool", uint8: "int", uint16: "int", uint32: "int", uint64: bigInteger, int8: "int", int16: "int", int32: "int", int64: "int", nat: bigInteger, int: bigInteger, float32: "float", float64: "float", string: "string", bytes: "Bytes" };
 
@@ -49,10 +49,11 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integer
 		if(copy.variant) configurePhpVariant(copy, names, message => fail(ir.declarations[0], message));
 		if(copy.record)
 		{
-			copy.publicName = copy.record.name;
+			copy.publicName = phpClassName(copy.record.name);
 			if(names.has(copy.publicName.toLowerCase())) fail(ir.declarations[0], `PHP class name is reserved or duplicated: ${copy.publicName}`);
 			names.add(copy.publicName.toLowerCase());
-			for(const field of copy.fields) if(reserved.has(field.name.toLowerCase())) fail(ir.declarations[0], `PHP field name is reserved: ${field.name}`);
+			for(const [index, field] of copy.fields.entries())
+				field.publicName = phpFieldName(copy.record.fields[index].name, message => fail(ir.declarations[0], message));
 		}
 		copy.publicType = copy.record || copy.variant ? copy.publicName : copy.compound
 			? { option: "Some|null", result: "Ok|Err", tuple: "array" }[copy.compound]

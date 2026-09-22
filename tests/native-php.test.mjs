@@ -104,12 +104,19 @@ test("ordinary PHP admission rejects reserved names and noncanonical coordinates
 		const ir = synthetic(); ir.declarations[0].name = name;
 		assert.throws(() => compileCopiedPhpModel(ir), error => error.code === "unsupported-php-signature" && error.details.source.path === "Sample.lean");
 	}
-	for(const name of ["BigInteger", "Null", "Bytes", "Internal"])
+	for(const name of ["BigInteger", "Bytes", "Internal"])
 	{
 		const ir = synthetic();
 		ir.types.push({ ...structuredClone(alpha.bindingIr.types.find(type => type.kind === "record")), id: "example:reserved", name, fields: [], assurance: [] });
 		ir.declarations[0].parameters[0].type = { kind: "named", id: "example:reserved" };
 		assert.throws(() => compileCopiedPhpModel(ir), /reserved|collid/);
+	}
+	for(const name of ["Null", "Empty", "Match"])
+	{
+		const ir = synthetic();
+		ir.types.push({ ...structuredClone(alpha.bindingIr.types.find(type => type.kind === "record")), id: "example:keyword", name, fields: [], assurance: [] });
+		ir.declarations[0].parameters[0].type = { kind: "named", id: "example:keyword" };
+		assert.match(generatePhpBindingPackage(ir)["src/Api.php"], new RegExp(`final readonly class ${name}_\\b`));
 	}
 	for(const settings of [{ name: "../escape" }, { name: "Vendor/pkg" }, { name: "pkg" }, { version: "1.0" }, { version: "1.0.0-rc.1" }, { version: "1.0.0-RC.01" }, { version: ">=1.0.0" }]) assert.throws(() => validateOrdinaryPhpSettings(settings));
 	validateOrdinaryPhpSettings({ name: "example/api", version: "2.0.0-RC.1" });

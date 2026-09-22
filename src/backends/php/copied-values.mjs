@@ -9,6 +9,7 @@ import { compileCopiedPhpModel } from "./copied-model.mjs";
 import { phpCopiedAliases, phpAliasCatalogDocs, phpAliasContract, phpAliasReadme } from "./copied-aliases.mjs";
 import { copiedPhpAssets, copiedPhpLoader } from "./copied-assets.mjs";
 import { copiedPhpValues, copiedPhpHelpers } from "./copied-support.mjs";
+import { phpValueMethods, phpValueSemantics, phpValueReadme } from "./copied-equality.mjs";
 import { copiedPhpChecks, copiedPhpConversions, copiedPhpDefinitions } from "./copied-conversions.mjs";
 import { phpVariantClasses, phpVariantReadme } from "./copied-variants.mjs";
 import { phpValue, phpClosurePublic, phpCallableState, phpCallableRuntime, phpNativeCall } from "./callables.mjs";
@@ -33,15 +34,18 @@ final readonly class ${name}
         if (func_num_args() !== 1) throw new \\ArgumentCountError('${name} requires one payload');
         $this->value = $value;
     }
+${phpValueMethods}
 }`).join("\n\n")}
 ${model.surface.callbacks.size ? phpClosurePublic : ""}
 ${model.surface.copies.some(copy => copy.variant) ? phpVariantClasses(model) + "\n" : ""}${model.surface.copies.filter(copy => copy.record).map(copy => `final readonly class ${copy.publicName}
 {
-${copy.fields.map((field, index) => `    /** @var ${field.type.docType}${model.surface.aliases.length ? `\n     * @lean-bridge-contract ${phpAliasContract(model, copy.record.fields[index].type)}\n    ` : " "}*/\n    public ${field.type.publicType} $${field.name};`).join("\n")}
-    public function __construct(${copy.fields.map(field => `mixed $${field.name}`).join(", ")}) {
+${copy.fields.map((field, index) => `    /** @var ${field.type.docType}${model.surface.aliases.length ? `\n     * @lean-bridge-contract ${phpAliasContract(model, copy.record.fields[index].type)}\n    ` : " "}*/\n    public ${field.type.publicType} $${field.publicName};`).join("\n")}
+    public function __construct(${copy.fields.map(field => `mixed $${field.publicName}`).join(", ")}) {
+        if (func_num_args() !== ${copy.fields.length}) throw new \\ArgumentCountError('${copy.publicName} requires exactly ${copy.fields.length} fields');
         $__lbBudget = new Internal\\Budget();
-${copy.fields.map(field => `        $this->${field.name} = Internal\\Checks::check${field.type.index}($${field.name}, $__lbBudget);`).join("\n")}
+${copy.fields.map(field => `        $this->${field.publicName} = Internal\\Checks::check${field.type.index}($${field.publicName}, $__lbBudget);`).join("\n")}
     }
+${phpValueMethods}
 }`).join("\n\n")}
 
 require_once __DIR__ . '/Internal/Native.php';
@@ -62,6 +66,7 @@ namespace ${model.namespace}\\Internal;
 require_once __DIR__ . '/Runtime.php';
 
 ${copiedPhpHelpers}
+${phpValueSemantics(model)}
 ${model.surface.callbacks.size ? phpCallableState : ""}
 final class Checks
 {
@@ -105,7 +110,7 @@ export const renderCopiedPhpPackage = (model, evidence = null) => {
 	}
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\n## Lean Lists\n\nList inputs, results and record fields use consecutive-key PHP arrays with precise list<T> PHPDoc. Empty Lists, order, duplicates and nesting are preserved. Mutable array values and Bytes results are independently copied. List and Array keep distinct IR/native identities. Weak and strict callers get the same element and copy-budget checks. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
-	files["README.md"] += phpAliasReadme(model) + phpVariantReadme(model);
+	files["README.md"] += phpAliasReadme(model) + phpVariantReadme(model) + phpValueReadme;
 	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1, generator: { id: "lean-wasm/php-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, publicFiles: ["src/Api.php"], ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: ["Bytes", "LeanBridgeError", ...model.branches, ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.copies.filter(copy => copy.variant).flatMap(copy => [copy.publicName, ...copy.cases.map(branch => branch.publicName)]), ...model.surface.functions.map(fn => fn.field)].map(name => `${model.namespace}\\${name}`), files: [...Object.keys(files), "binding-manifest.json"], filesSha256: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) });
 	return Object.freeze(files);
 };

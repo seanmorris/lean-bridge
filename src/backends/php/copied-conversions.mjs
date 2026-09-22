@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { phpValue, phpCallableDefinitions } from "./callables.mjs";
+import { phpValue, phpFfiType, phpCallableDefinitions } from "./callables.mjs";
 import { phpVariantDefinition, phpVariantChecks, phpVariantConversions } from "./copied-variants.mjs";
 
 /**
@@ -14,9 +14,9 @@ import { phpVariantDefinition, phpVariantChecks, phpVariantConversions } from ".
 export const copiedPhpDefinitions = model => {
 	const { surface } = model;
 	return ["typedef struct { int code; void *message; size_t message_length; } BridgeError;"
-		, ...surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? phpVariantDefinition(copy) : `typedef struct { ${copy.compound === "option" ? "uint8_t has_value; " : copy.compound === "result" ? "uint8_t is_ok; " : ""}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${field.type.ctype} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " bool negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
+		, ...surface.copies.filter(copy => copy.aggregate).map(copy => copy.variant ? phpVariantDefinition(copy) : `typedef struct { ${copy.compound === "option" ? "uint8_t has_value; " : copy.compound === "result" ? "uint8_t is_ok; " : ""}${copy.record || copy.compound ? copy.fields.length ? copy.fields.map(field => `${phpFfiType(field.type)} ${field.name};`).join(" ") : "uint8_t empty;" : `void *data; size_t length; void *owner; void (*release)(void *);${copy.scalarName === "int" ? " uint8_t negative;" : ""}`} } ${copy.ctype};\nvoid ${copy.name}_clear(${copy.ctype} *);`)
 		, ...surface.callbacks.size ? [phpCallableDefinitions(model)] : []
-		, ...surface.functions.map(fn => { const result = phpValue(model, fn.declaration.result.type); return `int ${fn.name}(${fn.declaration.parameters.map(site => { const copy = phpValue(model, site.type); return copy.ctype + (copy.aggregate || copy.type?.callable ? " *" : ""); }).concat(fn.resultType === "void" ? [] : [result.type?.callable ? `${result.ownedType} **` : `${result.ctype} *`]).concat("BridgeError *").join(", ")});`; })
+		, ...surface.functions.map(fn => { const result = phpValue(model, fn.declaration.result.type); return `int ${fn.name}(${fn.declaration.parameters.map(site => { const copy = phpValue(model, site.type); return phpFfiType(copy) + (copy.aggregate || copy.type?.callable ? " *" : ""); }).concat(fn.resultType === "void" ? [] : [result.type?.callable ? `${result.ownedType} **` : `${phpFfiType(result)} *`]).concat("BridgeError *").join(", ")});`; })
 	].join("\n");
 };
 
@@ -60,7 +60,9 @@ export const copiedPhpChecks = model => model.surface.copies.map(copy => {
 			, `return [${copy.fields.map((field, i) => `self::check${field.type.index}($value[${i}], $budget)`).join(", ")}];`);
 	}
 	else if(copy.variant) lines.push(...phpVariantChecks(model, copy));
-	else if(copy.record) lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected ${copy.publicType}');`, ...copy.fields.map(field => `self::check${field.type.index}($value->${field.name}, $budget);`));
+	else if(copy.record) lines.push(`if (!$value instanceof ${publicType}) throw new \\TypeError('Expected ${copy.publicType}');`
+		, `if (array_keys(get_object_vars($value)) !== [${copy.fields.map(field => `'${field.publicName}'`).join(", ")}]) throw new \\TypeError('${copy.publicName} requires exactly its initialized fields');`
+		, ...copy.fields.map(field => `self::check${field.type.index}($value->${field.publicName}, $budget);`));
 	else lines.push("if (!is_array($value) || !array_is_list($value)) throw new \\TypeError('Expected a list with consecutive integer keys');", "$budget->charge(count($value), 32);", "$result = [];", `foreach ($value as $item) $result[] = self::check${copy.element.index}($item, $budget);`, "return $result;");
 	if(!copy.element && !copy.compound && !copy.variant) lines.push("return $value;");
 	return `    public static function check${copy.index}(mixed $value, Budget $budget): mixed {\n        $budget->charge(1, 16);\n${lines.map(line => `        ${line}`).join("\n")}\n    }`;
@@ -73,9 +75,11 @@ export const copiedPhpChecks = model => model.surface.copies.map(copy => {
  */
 export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 	const input = [], output = [], name = copy.scalarName, ns = `\\${model.namespace}\\`;
-	input.push(`$out = $scope->allocate('${copy.ctype}');`);
+	input.push(`$out = $scope->allocate('${phpFfiType(copy)}');`);
 	if(name === "unit")
-	{ input.push("$out->cdata = 0;"); output.push("return null;"); }
+	{ input.push("$out->cdata = 0;"); output.push("if ($value !== 0) throw new \\RuntimeException('Invalid native Unit marker');", "return null;"); }
+	else if(name === "bool")
+	{ input.push("$out->cdata = $value ? 1 : 0;"); output.push("if ($value !== 0 && $value !== 1) throw new \\RuntimeException('Invalid native Bool marker');", "return $value === 1;"); }
 	else if(name === "char")
 	{ input.push("$out->cdata = ScalarCodec::point($value);"); output.push("return ScalarCodec::text($value);"); }
 	else if(name === "uint64")
@@ -88,7 +92,11 @@ export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 		{
 			input.push("$decimal = (string) $value;", "$words = IntegerCodec::limbs($decimal);", "$scope->budget->charge(count($words), 32);", "$bytes = $words ? pack('V*', ...$words) : '';", "$out->length = count($words);");
 			if(name === "int") input.push("$out->negative = $decimal[0] === '-';");
-			output.push("if ($value->length > 1701) throw new \\ValueError('BigInteger decimal conversion limit exceeded');", "$bytes = $scope->read($value->data, $value->length * 4, 8);", `return \\Brick\\Math\\BigInteger::of(IntegerCodec::decimal($bytes === '' ? [] : array_values(unpack('V*', $bytes)), ${name === "int" ? "$value->negative" : "false"}));`);
+			output.push("if ($value->length < 0 || $value->length > 1701) throw new \\ValueError('BigInteger decimal conversion limit exceeded');");
+			if(name === "int") output.push("if (($value->negative !== 0 && $value->negative !== 1) || ($value->negative === 1 && $value->length === 0)) throw new \\RuntimeException('Invalid native integer sign');");
+			output.push("$bytes = $scope->read($value->data, $value->length * 4, 8, 4);", "$words = $bytes === '' ? [] : array_values(unpack('V*', $bytes));"
+				, "if ($words && $words[count($words) - 1] === 0) throw new \\RuntimeException('Invalid native integer magnitude');"
+				, `return \\Brick\\Math\\BigInteger::of(IntegerCodec::decimal($words, ${name === "int" ? "$value->negative === 1" : "false"}));`);
 		} else
 		{
 			input.push(`$bytes = ${name === "bytes" ? "$value->toString()" : "$value"};`, "$out->length = strlen($bytes);");
@@ -123,14 +131,14 @@ export const copiedPhpConversions = model => model.surface.copies.map(copy => {
 		input.push(...variant.input); output.push(...variant.output);
 	} else if(copy.record)
 	{
-		for(const field of copy.fields) input.push(`$field${field.type.index}_${field.name} = self::to${field.type.index}($value->${field.name}, $scope);`, `$out->${field.name} = $field${field.type.index}_${field.name}${field.type.aggregate ? "" : "->cdata"};`);
+		for(const field of copy.fields) input.push(`$field${field.type.index}_${field.name} = self::to${field.type.index}($value->${field.publicName}, $scope);`, `$out->${field.name} = $field${field.type.index}_${field.name}${field.type.aggregate ? "" : "->cdata"};`);
 		output.push(`return new ${ns}${copy.publicName}(${copy.fields.map(field => `self::from${field.type.index}($value->${field.name}, $scope)`).join(", ")});`);
 	} else if(copy.element)
 	{
-		input.push("$scope->budget->charge(count($value), 32);", `$memory = $scope->allocate('${copy.element.ctype}', count($value), true);`, `foreach ($value as $i => $item) { $entry = self::to${copy.element.index}($item, $scope); $memory[$i] = $entry${copy.element.aggregate ? "" : "->cdata"}; }`, "$out->data = count($value) ? \\FFI::addr($memory[0]) : null;", "$out->length = count($value);");
-		output.push(`$scope->budget->charge($value->length, max(32, \\FFI::sizeof($scope->ffi->type('${copy.element.ctype}'))));`, "if (!$value->length) return [];", "if ($value->data === null || \\FFI::isNull($value->data)) throw new \\RuntimeException('Native array has a missing buffer');"
-			, `if ($scope->ffi->cast('uintptr_t *', \\FFI::addr($value->data))[0] % \\FFI::alignof($scope->ffi->type('${copy.element.ctype}')) !== 0) throw new \\RuntimeException('Native array has a misaligned buffer');`
-			, `$memory = $scope->ffi->cast('${copy.element.ctype} *', $value->data);`, "$items = [];", `for ($i = 0; $i < $value->length; $i++) $items[] = self::from${copy.element.index}($memory[$i], $scope);`, "return $items;");
+		input.push("$scope->budget->charge(count($value), 32);", `$memory = $scope->allocate('${phpFfiType(copy.element)}', count($value), true);`, `foreach ($value as $i => $item) { $entry = self::to${copy.element.index}($item, $scope); $memory[$i] = $entry${copy.element.aggregate ? "" : "->cdata"}; }`, "$out->data = count($value) ? \\FFI::addr($memory[0]) : null;", "$out->length = count($value);");
+		output.push(`$scope->budget->charge($value->length, max(32, \\FFI::sizeof($scope->ffi->type('${phpFfiType(copy.element)}'))));`, "if (!$value->length) return [];", "if ($value->data === null || \\FFI::isNull($value->data)) throw new \\RuntimeException('Native array has a missing buffer');"
+			, `if ($scope->ffi->cast('uintptr_t *', \\FFI::addr($value->data))[0] % \\FFI::alignof($scope->ffi->type('${phpFfiType(copy.element)}')) !== 0) throw new \\RuntimeException('Native array has a misaligned buffer');`
+			, `$memory = $scope->ffi->cast('${phpFfiType(copy.element)} *', $value->data);`, "$items = [];", `for ($i = 0; $i < $value->length; $i++) $items[] = self::from${copy.element.index}($memory[$i], $scope);`, "return $items;");
 	} else
 	{ input.push("$out->cdata = $value;"); output.push("return $value;"); }
 	input.push("return $out;");

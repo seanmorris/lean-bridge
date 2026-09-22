@@ -450,7 +450,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-php-native-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*build\/compounds\/php-native\.json\n\s*build\/lists\/php-native\.json\n\s*build\/aliases\/php-native\.json\n\s*build\/variants\/php-native\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*build\/compounds\/php-native\.json\n\s*build\/lists\/php-native\.json\n\s*build\/aliases\/php-native\.json\n\s*build\/variants\/php-native\.json\n\s*build\/collections\/php-native-conversions\.json\n\s*build\/equality\/php\.json\n\s*build\/collections\/php-native\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests\/php-callables\.test\.mjs tests\/php-callable-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests\/php-compounds\.test\.mjs tests\/php-compound-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests\/php-lists\.test\.mjs tests\/php-list-contract\.test\.mjs/);
@@ -459,6 +459,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.ok(workflow.includes("test -s build/aliases/php-native.json"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PHP_VARIANT_TEST=1 node --test tests/php-variants.test.mjs tests/php-variant-contract.test.mjs"));
   assert.ok(workflow.includes("test -s build/variants/php-native.json"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_PHP_CONVERSIONS_TEST=1 node --test tests/php-collection-conversions.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_PHP_EQUALITY_TEST=1 node --test tests/php-value-equality.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs"));
+  assert.ok(workflow.includes("test -s build/collections/php-native-conversions.json"));
+  assert.ok(workflow.includes("test -s build/equality/php.json"));
+  assert.ok(workflow.includes("test -s build/collections/php-native.json"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PHP_WASM_LIST_TEST=1 node --test tests/php-wasm-lists.test.mjs tests/php-wasm-list-contract.test.mjs tests/php-wasm-list-zend.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PHP_WASM_VARIANT_TEST=1 node --test --test-concurrency=1 tests/php-wasm-variants.test.mjs tests/php-wasm-variant-contract.test.mjs tests/php-wasm-variant-zend.test.mjs"));
   assert.ok(workflow.includes("test -s build/lists/php-wasm.json"));

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.73.0",
+  "contractVersion": "0.74.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,277 @@
   ],
   "evidence": [
     {
+      "id": "php-native-collections-installed",
+      "kind": "installed",
+      "revision": "5f7e67a03b560e27ef1af19849a125821c9b6fa2",
+      "command": "LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs; node --test tests/php-collection-contract.test.mjs tests/php-collection-evidence.test.mjs",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
+        },
+        {
+          "path": "docs/evidence/php-native-collections-20260922.json",
+          "sha256": "34bea08b87601b39889f89c5ec2fafdf95e75115611620dd280e8f5879527edf"
+        },
+        {
+          "path": "docs/evidence/php-native-collections-20260922.md",
+          "sha256": "8145341224a0cafcdd0eb7aa080f64cabc2f6e7b9506fc9b95bae695260768a9"
+        },
+        {
+          "path": "docs/php.md",
+          "sha256": "dc86fa4cd63f7708c8dbc17b2f6a25588be349f18028c70fc8bcec57413a6faa"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "6e3923356ad0ffe4fec71b69934d4042ede334c1d28637c9503df7b37d2694c9"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "1ebe8b5edb40ee42f7893c5dc2d500130a91cf360d63bedb90322348c2c11a99"
+        },
+        {
+          "path": "src/backends/php/callables.mjs",
+          "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
+        },
+        {
+          "path": "src/backends/php/copied-aliases.mjs",
+          "sha256": "129d0fbf719149849ff70970934207cc0c639bb9ced1ffc18e65e83b2b7587e0"
+        },
+        {
+          "path": "src/backends/php/copied-conversions.mjs",
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
+        },
+        {
+          "path": "src/backends/php/copied-equality.mjs",
+          "sha256": "9eec1bcc845f5494897b631f5d8829bf7cf52c3ef4dd440eb970a1ff07f078a7"
+        },
+        {
+          "path": "src/backends/php/copied-model.mjs",
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
+        },
+        {
+          "path": "src/backends/php/copied-names.mjs",
+          "sha256": "8c0a0bd0cbbb8d785daa12986f345141ee763769f0a70cd6b812e4e1542a5f16"
+        },
+        {
+          "path": "src/backends/php/copied-support.mjs",
+          "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
+        },
+        {
+          "path": "src/backends/php/copied-values.mjs",
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
+        },
+        {
+          "path": "src/backends/php/copied-variants.mjs",
+          "sha256": "e02c4841e6780a17a37c2c32520243ef56e6535daf3ac6ddda6b7f3b36923e27"
+        },
+        {
+          "path": "src/backends/php/copied-zend.mjs",
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd"
+        },
+        {
+          "path": "src/build/native-php-artifacts.mjs",
+          "sha256": "b3ca638d2d0997a6dbec55bc1b6741aa806515c0dc87bc261b1a8248cc80b523"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "d653bfd9ab3078316ebb3b152840a62485c77f0d41cd873612ccad405af60a14"
+        },
+        {
+          "path": "src/release/native-composer.mjs",
+          "sha256": "4c57149cd083a8484fcefaadb5bea3e3f84826044e2316a562658454bf3473ec"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/Collections.lean",
+          "sha256": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/php-conversions.php",
+          "sha256": "8d690187542d214f9ffd4c513125f078481fd890b0ba1cecd6d46ac6a2432f27"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/php-equality.php",
+          "sha256": "2368cdeb86a4c271822cb04fa6ec5d2732bd15578add9556340df2cefee85009"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/php-faults.php",
+          "sha256": "c0de2ebe5c6c430af1fc113923b8ae4ce9e540522daa256fbdd6f2aa7fba7774"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/php.php",
+          "sha256": "fe830b57a05c2ed99d8d629abb0a2841949dc220032944d073d65cb2839b6b48"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/Arrays.lean",
+          "sha256": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/LICENSE",
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/Records.lean",
+          "sha256": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540"
+        },
+        {
+          "path": "tests/helpers/array-fixture.mjs",
+          "sha256": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf"
+        },
+        {
+          "path": "tests/helpers/brick-math.mjs",
+          "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+        },
+        {
+          "path": "tests/helpers/collection-fixture.mjs",
+          "sha256": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330"
+        },
+        {
+          "path": "tests/helpers/compound-fixture.mjs",
+          "sha256": "77f1071e6268beac5b5d197a5fac934be342a405c3cb46c48bcbc9070b50e488"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/list-fixture.mjs",
+          "sha256": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c"
+        },
+        {
+          "path": "tests/helpers/native-alias-fixture.mjs",
+          "sha256": "6ee21a22fb537712cf4be3b21ae5c674fab5064b23c748667d835e87e83ecca6"
+        },
+        {
+          "path": "tests/helpers/native-variant-fixture.mjs",
+          "sha256": "e95e4263f216c2ae1e4a6afad017af23fa229358d696a02633ca5e5702167d5e"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/php-collection-faults.mjs",
+          "sha256": "70dd127581409f9842fd9ee5e0995276c2910f86171ac283c8a08bf3d3b6bafd"
+        },
+        {
+          "path": "tests/helpers/php-collection-fixture.mjs",
+          "sha256": "e9b1b94d7e7230f25fcfe047dd97c1c4fd7ad1b8f6b94027ee8a0fbd248d18c4"
+        },
+        {
+          "path": "tests/helpers/php-variant-fixture.mjs",
+          "sha256": "1d98357cdd7b7c5077eed5f6b9cb13938f4a75e889eec75be58f0c57c01eea91"
+        },
+        {
+          "path": "tests/helpers/record-fixture.mjs",
+          "sha256": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f"
+        },
+        {
+          "path": "tests/helpers/type-corpus-compiler.mjs",
+          "sha256": "020290f8ed04a935b51fb1a2b53e3b213884d36d891c5eacba8850194f181fa0"
+        },
+        {
+          "path": "tests/helpers/type-corpus-php.mjs",
+          "sha256": "46f9428900f9a81c536f3d46accb633838d2778e43e62b5f78f84dafeeecc502"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        },
+        {
+          "path": "tests/native-php.test.mjs",
+          "sha256": "bcedaccafb6fd72701933d251a529dcbf96c2b3d67aa1dd1aa20a3ffa92eed36"
+        },
+        {
+          "path": "tests/php-aliases.test.mjs",
+          "sha256": "981013a87656192c479c18e16c9001608c27f67c061fbf2ac978f22255bcb7d4"
+        },
+        {
+          "path": "tests/php-callables.test.mjs",
+          "sha256": "824a8fb875ac3e878e55d41d958e14c301b77f3307fc5e01ee1dc097766bc613"
+        },
+        {
+          "path": "tests/php-collection-contract.test.mjs",
+          "sha256": "57f0d4b3c0b80d4c0001af06e3310f8c2f6700e8750b5fbb76fb3a817b553e62"
+        },
+        {
+          "path": "tests/php-collection-conversions.test.mjs",
+          "sha256": "23e3af1b8dbffafb5c2841d0f8cbfaae693fd63a96e0a7bbb83a10c9b2c2cc46"
+        },
+        {
+          "path": "tests/php-collection-evidence.test.mjs",
+          "sha256": "bf4ef3357a17eff5085b9a8f6728d5664c9ddd9b0539deaf85c2fd087b809574"
+        },
+        {
+          "path": "tests/php-collections.test.mjs",
+          "sha256": "a8fe84c51b1a31221ddf83ea21d99bf0f5c6754aa6221264305e91125d03bb44"
+        },
+        {
+          "path": "tests/php-compounds.test.mjs",
+          "sha256": "ac05b91728838114119374b6b328978c34dcd7aac345154907afc51446f82c11"
+        },
+        {
+          "path": "tests/php-list-contract.test.mjs",
+          "sha256": "9901b2a829baab7774e03c819072724684f91e151bd3df2c52df8d100ef56500"
+        },
+        {
+          "path": "tests/php-lists.test.mjs",
+          "sha256": "d9b13ace79dafb5c44f77290768b6e703c9188667bb529bf5ec05d4a96668248"
+        },
+        {
+          "path": "tests/php-value-equality.test.mjs",
+          "sha256": "9cd5fef0718243323c4b3b664c60a536ae78768b51836fa0b232fcfc2d3ae510"
+        },
+        {
+          "path": "tests/php-variants.test.mjs",
+          "sha256": "fe3d2db381d39e51be49badad6c5b25769638913027335180f18f29ae03f548e"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/lean-bridge-collections-api-1.0.0-linux-x86_64.zip",
+          "sha256": "75849c0a231258b281efd37fd1007fd7c28a63a32549dd8f25b74d63607a63b8"
+        },
+        {
+          "path": "reviewed-ir/archives/lean-bridge-collections-api-1.0.0-linux-x86_64.zip",
+          "sha256": "27a0126875ebdc6c4f514de7e558ed2f70193b965ca2a3215d0cdc5ab8eb7256"
+        }
+      ]
+    },
+    {
       "id": "java-collections-installed",
       "kind": "installed",
       "revision": "71554e9782584f495ddd8539951390343ec7f417",
@@ -165,7 +436,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/consume/java.md",
@@ -185,7 +456,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -416,7 +687,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/consume/rust.md",
@@ -436,7 +707,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -599,7 +870,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/consume/python.md",
@@ -619,7 +890,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -778,7 +1049,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/consume/dotnet.md",
@@ -798,7 +1069,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -973,7 +1244,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/consume/ruby.md",
@@ -993,7 +1264,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1152,7 +1423,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/consume/c.md",
@@ -1180,7 +1451,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1391,7 +1662,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1562,7 +1833,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/wit-variants-20260921.json",
@@ -1574,7 +1845,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1765,7 +2036,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-wasm-variants-20260921.json",
@@ -1777,7 +2048,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1801,19 +2072,19 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-variants.mjs",
-          "sha256": "b24a903ae6c62b203b61eb42c603204511a2b054311d2313771080e5c86dbc6e"
+          "sha256": "e02c4841e6780a17a37c2c32520243ef56e6535daf3ac6ddda6b7f3b36923e27"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
@@ -1829,7 +2100,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/php/php-wasm-copied-host.mjs",
@@ -2024,7 +2295,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-native-variants-20260921.json",
@@ -2036,7 +2307,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2068,7 +2339,7 @@
         },
         {
           "path": "src/backends/php/callables.mjs",
-          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+          "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
         },
         {
           "path": "src/backends/php/copied-aliases.mjs",
@@ -2076,19 +2347,19 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-variants.mjs",
-          "sha256": "b24a903ae6c62b203b61eb42c603204511a2b054311d2313771080e5c86dbc6e"
+          "sha256": "e02c4841e6780a17a37c2c32520243ef56e6535daf3ac6ddda6b7f3b36923e27"
         },
         {
           "path": "src/backends/php/generate.mjs",
@@ -2243,11 +2514,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "638cc52f96ab4a53fda42b6afd731ecbf1de2ec2e61b26f466169e91f2005d88"
+          "sha256": "ca1c9086c0a5f477ead0e66eac3f7b5419740fc2e27c9240434d26e37d5b2db8"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2410,7 +2681,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/ruby-variants-20260921.json",
@@ -2422,7 +2693,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2601,7 +2872,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/jvm-variants-20260921.json",
@@ -2613,7 +2884,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2840,7 +3111,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/dotnet-variants-20260921.json",
@@ -2852,7 +3123,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3035,7 +3306,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/rust-variants-20260921.json",
@@ -3047,7 +3318,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3230,7 +3501,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/python-variants-20260921.json",
@@ -3242,7 +3513,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3421,7 +3692,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/c-variants-20260921.json",
@@ -3433,7 +3704,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3608,7 +3879,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.json",
@@ -3620,7 +3891,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3759,7 +4030,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/wit-aliases-20260921.json",
@@ -3771,7 +4042,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3930,7 +4201,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-wasm-aliases-20260921.json",
@@ -3942,7 +4213,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3966,15 +4237,15 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
@@ -3986,7 +4257,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/php/php-wasm-copied-host.mjs",
@@ -4157,7 +4428,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-native-aliases-20260921.json",
@@ -4169,7 +4440,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4189,7 +4460,7 @@
         },
         {
           "path": "src/backends/php/callables.mjs",
-          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+          "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
         },
         {
           "path": "src/backends/php/copied-aliases.mjs",
@@ -4197,15 +4468,15 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/generate.mjs",
@@ -4320,7 +4591,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4455,7 +4726,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/ruby-aliases-20260921.json",
@@ -4467,7 +4738,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4606,7 +4877,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
@@ -4618,7 +4889,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4801,15 +5072,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "85353c2b4880f0603409c88f2a9dfa2e6eb1a764d5e7eb74e264ca10d83b1e5d"
+          "sha256": "8009d47f17b2bee36ef1e6fddb5797210d3d9a5aa1a346b2a76bd3b56d0f89ab"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "8d2a556a6bcc076aab1e6b2e9cc218dd07a8ef1927a634aa968fa1e23434f91d"
+          "sha256": "f14fb063ffe8b403501f4f6814aae624629c4bcf4106b3fbea004eec80200fa0"
         },
         {
           "path": "docs/evidence/dotnet-aliases-20260921.json",
@@ -4821,15 +5092,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "638cc52f96ab4a53fda42b6afd731ecbf1de2ec2e61b26f466169e91f2005d88"
+          "sha256": "ca1c9086c0a5f477ead0e66eac3f7b5419740fc2e27c9240434d26e37d5b2db8"
         },
         {
           "path": "package.json",
-          "sha256": "6605e68a5264f763d74fdb56ef53260ababa4f3ebc8792d95cdf869a16e6f1a6"
+          "sha256": "393d5ff7ca64f54873d9ee631f0ebdb3caeab3473350c54b444c40a9ceb42be6"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4976,7 +5247,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -4988,7 +5259,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5119,7 +5390,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -5131,7 +5402,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5254,7 +5525,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -5266,7 +5537,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5389,7 +5660,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -5417,7 +5688,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5532,7 +5803,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -5568,7 +5839,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5691,7 +5962,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -5707,7 +5978,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5886,7 +6157,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -5902,7 +6173,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5946,15 +6217,15 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
@@ -5966,7 +6237,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/php/php-wasm-copied-host.mjs",
@@ -6125,7 +6396,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -6141,7 +6412,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6185,7 +6456,7 @@
         },
         {
           "path": "src/backends/php/callables.mjs",
-          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+          "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
         },
         {
           "path": "src/backends/php/copied-assets.mjs",
@@ -6193,23 +6464,23 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+          "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/php/generate.mjs",
@@ -6301,7 +6572,7 @@
         },
         {
           "path": "tests/php-list-contract.test.mjs",
-          "sha256": "cab39002dc18c8ee1d14759e1476581540397628af4f7329952931fcf3bc320e"
+          "sha256": "9901b2a829baab7774e03c819072724684f91e151bd3df2c52df8d100ef56500"
         },
         {
           "path": "tests/php-list-evidence.test.mjs",
@@ -6332,7 +6603,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -6348,7 +6619,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6392,7 +6663,7 @@
         },
         {
           "path": "src/backends/php/callables.mjs",
-          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+          "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
         },
         {
           "path": "src/backends/php/copied-assets.mjs",
@@ -6400,23 +6671,23 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+          "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/php/generate.mjs",
@@ -6508,7 +6779,7 @@
         },
         {
           "path": "tests/php-list-contract.test.mjs",
-          "sha256": "cab39002dc18c8ee1d14759e1476581540397628af4f7329952931fcf3bc320e"
+          "sha256": "9901b2a829baab7774e03c819072724684f91e151bd3df2c52df8d100ef56500"
         },
         {
           "path": "tests/php-list-evidence.test.mjs",
@@ -6555,7 +6826,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6766,7 +7037,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -6782,7 +7053,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6945,7 +7216,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -6961,7 +7232,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7152,7 +7423,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -7168,7 +7439,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7844,7 +8115,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -7876,7 +8147,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -7983,7 +8254,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -7999,7 +8270,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8043,15 +8314,15 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
@@ -8063,7 +8334,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/php/php-wasm-copied-host.mjs",
@@ -8202,7 +8473,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -8218,7 +8489,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8262,7 +8533,7 @@
         },
         {
           "path": "src/backends/php/callables.mjs",
-          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+          "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
         },
         {
           "path": "src/backends/php/copied-assets.mjs",
@@ -8270,23 +8541,23 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+          "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -8417,7 +8688,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8628,7 +8899,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -8644,7 +8915,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8807,7 +9078,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -8823,7 +9094,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9014,7 +9285,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -9030,7 +9301,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9698,7 +9969,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -9710,7 +9981,7 @@
         },
         {
           "path": "nix/component-engine-source-boundary.json",
-          "sha256": "6d7e07f0ea87b3d4b2325de1f861cbf461015af31362decce24c02c84640797c"
+          "sha256": "56281a45dc6cab7c24186e28bb7ec4791e3eb960934ae52d2f038cdee78d0926"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
@@ -9901,7 +10172,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -9913,7 +10184,7 @@
         },
         {
           "path": "nix/component-engine-source-boundary.json",
-          "sha256": "6d7e07f0ea87b3d4b2325de1f861cbf461015af31362decce24c02c84640797c"
+          "sha256": "56281a45dc6cab7c24186e28bb7ec4791e3eb960934ae52d2f038cdee78d0926"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
@@ -10064,7 +10335,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -10076,7 +10347,7 @@
         },
         {
           "path": "nix/component-engine-source-boundary.json",
-          "sha256": "6d7e07f0ea87b3d4b2325de1f861cbf461015af31362decce24c02c84640797c"
+          "sha256": "56281a45dc6cab7c24186e28bb7ec4791e3eb960934ae52d2f038cdee78d0926"
         },
         {
           "path": "poc/lean-link-spike/bindings/generated-package-gate.json",
@@ -10112,7 +10383,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10335,11 +10606,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -10474,11 +10745,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -10513,23 +10784,23 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/callables.mjs",
-          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+          "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
@@ -10597,11 +10868,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "c469b039c00b88f1aff8429bc1ed22a999409441a2456e48e6714177e2f1360d"
+          "sha256": "242cd853683316e84a12748e86cf0fbf3cf46bb2b8d0048fd015f685a593b246"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -10629,7 +10900,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -10748,23 +11019,23 @@
       "files": [
         {
           "path": "src/backends/php/callables.mjs",
-          "sha256": "a2292a943435d04c4353c0dcac50f6595f35536f6b159e75bac871e3ee02492a"
+          "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+          "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
         },
         {
           "path": "src/backends/php/copied-assets.mjs",
@@ -10776,7 +11047,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
@@ -10828,7 +11099,7 @@
         },
         {
           "path": "tests/native-php.test.mjs",
-          "sha256": "d5f01de92a58df6dc3a2751ec167fa63bea3ec2de2366ba01d5d6d0f9faeb17b"
+          "sha256": "bcedaccafb6fd72701933d251a529dcbf96c2b3d67aa1dd1aa20a3ffa92eed36"
         },
         {
           "path": "tests/type-surface.test.mjs",
@@ -10836,11 +11107,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "c469b039c00b88f1aff8429bc1ed22a999409441a2456e48e6714177e2f1360d"
+          "sha256": "242cd853683316e84a12748e86cf0fbf3cf46bb2b8d0048fd015f685a593b246"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -10868,7 +11139,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -11027,7 +11298,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -11051,7 +11322,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -11250,7 +11521,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -11270,7 +11541,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -11449,11 +11720,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "flake.nix",
@@ -11660,11 +11931,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -11855,11 +12126,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -11986,11 +12257,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -12117,11 +12388,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -12236,11 +12507,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -12347,11 +12618,11 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "c5867566e27cff918f29651b811a9fa7ebf70412c9ae7952fc606780663924ab"
+          "sha256": "bc438d8a70891aef1609ad002f30650a84cf0a9322c8bac415a2a0aa7999760c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -12442,7 +12713,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -12490,7 +12761,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -12554,11 +12825,11 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
@@ -12566,7 +12837,7 @@
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
@@ -12642,7 +12913,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "c5867566e27cff918f29651b811a9fa7ebf70412c9ae7952fc606780663924ab"
+          "sha256": "bc438d8a70891aef1609ad002f30650a84cf0a9322c8bac415a2a0aa7999760c"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -12821,7 +13092,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -12833,7 +13104,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -12873,15 +13144,15 @@
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+          "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
@@ -13223,23 +13494,23 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+          "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-zend.mjs",
-          "sha256": "81f4b171103a47c9f05e287e3d863f05c42391a70964ff8c7dc1d08922992bb2"
+          "sha256": "d426b6f057c3b9b37683356dcc08698b54a33be6d79c2d460bc75822d2625ab5"
         },
         {
           "path": "src/backends/php/copied-zend-support.mjs",
@@ -13370,7 +13641,7 @@
         },
         {
           "path": "src/backends/php/copied-model.mjs",
-          "sha256": "ed48abe67aa60f71ab269c7db99d6c06ac1c63d67b6acee500c83513b596508b"
+          "sha256": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628"
         },
         {
           "path": "src/backends/php/copied-assets.mjs",
@@ -13378,19 +13649,19 @@
         },
         {
           "path": "src/backends/php/copied-support.mjs",
-          "sha256": "3eba41ae2fcad1015a640c6dcd395cb767b3489872ad14e9d50306c36ef83670"
+          "sha256": "11e71b391dd00a4e4acdd85239eed44bf46870973bcbb295573ab3bac193fc74"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
-          "sha256": "7c1bef89b65f7af10a3818f188378e719b404154d9806ef443af173ccb2ca04c"
+          "sha256": "025ecb45d698eb18520392a304d5771792c2df2c616e45dc591ee3a0938637c1"
         },
         {
           "path": "src/backends/php/copied-values.mjs",
-          "sha256": "f77f589a72d133d7ff9836d6728c37ee5726b0ebc56faf3f14225abc88bf0ec2"
+          "sha256": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
         },
         {
           "path": "tests/native-php.test.mjs",
-          "sha256": "d5f01de92a58df6dc3a2751ec167fa63bea3ec2de2366ba01d5d6d0f9faeb17b"
+          "sha256": "bcedaccafb6fd72701933d251a529dcbf96c2b3d67aa1dd1aa20a3ffa92eed36"
         },
         {
           "path": "tests/fixtures/documentation/consumers/php-native/ordinary/composer.json",
@@ -13639,7 +13910,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "3b92686ba7edf737ad2ebb3839d0539671e3f642210b6ba38bcdf8794f355b4f"
+          "sha256": "29d239ea6a26857c6a7a9a28aa28a2b58f9aaf6fca3bb8ab3cf2ec038a805fda"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -13655,7 +13926,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "876f63edafaffd7cc3635fd83cc68de61f407f69801c214958d7c29238ca7469"
+          "sha256": "894cd0c09f6bf9a41c9b29f5ac43b6c35c58ceecc2e60f01f2f1f6df20272768"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -24587,73 +24858,6 @@
         "unit": "Unit is null for arguments and results, including callbacks; a PHP void callback returns null.",
         "nat": "Exact Brick\\Math\\BigInteger; negative Nat inputs and callback results reject. No native integer narrowing.",
         "int": "Exact signed Brick\\Math\\BigInteger including multi-thousand-bit captured values."
-      }
-    },
-    {
-      "id": "php-native-legacy-primitive-fields",
-      "profiles": [
-        "php-native"
-      ],
-      "shapes": [
-        "nat",
-        "int",
-        "float32",
-        "float64"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range.",
-      "hostTypes": {
-        "nat": {
-          "field": "Brick\\Math\\BigInteger"
-        },
-        "int": {
-          "field": "Brick\\Math\\BigInteger"
-        },
-        "float32": {
-          "field": "float"
-        },
-        "float64": {
-          "field": "float"
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "php-mapping-audit"
-          ],
-          "note": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": [
-        "Unit has a void result spelling, not a usable PHP argument or property type."
-      ],
-      "conversionNotes": {
-        "nat": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence.",
-        "int": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence."
       }
     },
     {
@@ -38956,68 +39160,6 @@
       }
     },
     {
-      "id": "php-alpha-uint32-php-native",
-      "profiles": [
-        "php-native"
-      ],
-      "shapes": [
-        "uint32"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Installed Alpha UInt32 inputs, outputs, payload elements, callback arguments/results and returned functions at all four signed/unsigned boundaries.",
-      "hostTypes": {
-        "uint32": {
-          "field": "int"
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "passed",
-          "evidence": [
-            "php-alpha-uint32-installed"
-          ],
-          "note": "Reviewed Alpha Binding IR validation and concrete UInt32 projection passed. This is not ordinary-source callback analysis."
-        },
-        "generation": {
-          "state": "passed",
-          "evidence": [
-            "php-alpha-uint32-installed"
-          ],
-          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
-        },
-        "compilation": {
-          "state": "passed",
-          "evidence": [
-            "php-alpha-uint32-installed"
-          ],
-          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
-        },
-        "packaging": {
-          "state": "passed",
-          "evidence": [
-            "php-alpha-uint32-installed"
-          ],
-          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
-        },
-        "installedExecution": {
-          "state": "passed",
-          "evidence": [
-            "php-alpha-uint32-installed"
-          ],
-          "note": "Compiled real Lean, installed the generated consumer package and checked exact UInt32 types/values with strict and weak PHP callers."
-        }
-      },
-      "limitations": [
-        "Alpha UInt32 only. No claim for arbitrary callback signatures, other primitive exports or browser-hosted Alpha execution."
-      ],
-      "conversionNotes": {
-        "uint32": "Alpha preserves the full 0..4294967295 range as int, including payload elements, callback arguments/results and returned closures. Requires native 64-bit PHP."
-      }
-    },
-    {
       "id": "js-values-node-javascript-1",
       "profiles": [
         "node-javascript",
@@ -39348,102 +39490,6 @@
       ]
     },
     {
-      "id": "php-primitives-php-native-1",
-      "profiles": [
-        "php-native"
-      ],
-      "shapes": [
-        "unit",
-        "bool",
-        "uint8",
-        "uint16",
-        "uint64",
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "string",
-        "bytes"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range.",
-      "hostTypes": {
-        "unit": {
-          "field": null
-        },
-        "bool": {
-          "field": "bool"
-        },
-        "uint8": {
-          "field": "int"
-        },
-        "uint16": {
-          "field": "int"
-        },
-        "uint64": {
-          "field": "Brick\\Math\\BigInteger"
-        },
-        "int8": {
-          "field": "int"
-        },
-        "int16": {
-          "field": "int"
-        },
-        "int32": {
-          "field": "int"
-        },
-        "int64": {
-          "field": "int"
-        },
-        "string": {
-          "field": "string"
-        },
-        "bytes": {
-          "field": "LeanAlpha\\Bytes"
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "php-mapping-audit"
-          ],
-          "note": "Shared PHP generator syntax only; these projections do not establish either transport's compiled range."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": [
-        "Unit has a void result spelling, not a usable PHP argument or property type."
-      ],
-      "conversionNotes": {
-        "unit": "PHP void is return-only; there is no valid void parameter or property representation.",
-        "uint64": "The reviewed-IR Brick\\Math\\BigInteger projection has no installed full-range Alpha transport evidence.",
-        "int64": "Native 64-bit PHP represents the full -9223372036854775808..9223372036854775807 range as int."
-      }
-    },
-    {
       "id": "php-primitives-php-native-2",
       "profiles": [
         "php-wasm"
@@ -39609,7 +39655,6 @@
     {
       "id": "php-values-php-native-1",
       "profiles": [
-        "php-native",
         "php-wasm"
       ],
       "shapes": [
@@ -45200,6 +45245,262 @@
         "Acyclic copied shapes with a 32-level schema limit and separate 16 MiB managed/native conversion budgets. These budgets do not bound all JVM allocations or Lean working memory.",
         "Generated records compare and hash nested arrays by contents. Java floating equality treats NaNs as equal and signed zeros as distinct. Arrays remain mutable; do not mutate contained arrays while a record is a map key or set member.",
         "This original-package receipt covers Java 22 on Linux x86-64 with glibc. Kotlin deep-array compiler acceptance, recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
+      ]
+    },
+    {
+      "id": "php-native-values-callbacks-reviewed",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "PHP copied-value projection and guards, independent of compiled adapter coverage.",
+      "hostTypes": {
+        "array": {
+          "callback-parameter": "array; list<T>",
+          "callback-result": "array; list<T>"
+        },
+        "record": {
+          "callback-parameter": "Generated value class (Alpha: LeanAlpha\\Payload)",
+          "callback-result": "Generated value class (Alpha: LeanAlpha\\Payload)"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "php-mapping-audit"
+          ],
+          "note": "PHP copied-value projection and guards, independent of compiled adapter coverage."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
+      },
+      "limitations": [
+        "Every field and element must satisfy validation and ownership rules."
+      ]
+    },
+    {
+      "id": "php-native-collections-reviewed",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only.",
+      "hostTypes": {
+        "array": {
+          "parameter": "list<T>",
+          "result": "list<T>",
+          "field": "list<T>"
+        },
+        "record": {
+          "parameter": "Generated readonly class",
+          "result": "Generated readonly class",
+          "field": "Generated readonly class"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        }
+      },
+      "limitations": [
+        "PHP 8.2+ NTS CLI on Linux x86-64 with FFI. This installed receipt uses PHP 8.2.33 and glibc 2.36; release packages retain their declared platform floor. PHP-Wasm, FPM, Apache, cli-server and ZTS are not promoted.",
+        "Acyclic copied schemas have a 32-level nesting limit and separate 16 MiB PHP/native conversion budgets. These budgets do not bound every host allocation or Lean working memory.",
+        "Generated equals and hashCode use bounded nested contents, preserve constructor identity, equate NaNs and distinguish signed zeros. PHP == and === retain their built-in meanings. Do not mutate referenced payloads while their hash is a lookup key.",
+        "Recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Consecutive-key PHP arrays preserve all nineteen primitives, order, empty rows, duplicates and nested arrays or records. Every call validates element types and nesting, including weak-mode callers, and returns independent copies. Native lengths, missing buffers, alignment, canonical scalar markers and copy budgets are checked before reads or allocation.",
+        "record": "Final readonly classes preserve original Lean field names, order and declared types, including empty and single-field records. Keyword class names gain a trailing underscore, with collision checks. Constructors require exactly their declared fields. Wrong classes, invalid payloads and uninitialized fields reject. equals and hashCode compare nested contents; private FFI layouts are not part of the public API."
+      }
+    },
+    {
+      "id": "php-native-collection-reviewed-fields",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only.",
+      "hostTypes": {
+        "unit": {
+          "field": "null"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "int"
+        },
+        "uint16": {
+          "field": "int"
+        },
+        "uint32": {
+          "field": "int"
+        },
+        "uint64": {
+          "field": "Brick\\Math\\BigInteger"
+        },
+        "int8": {
+          "field": "int"
+        },
+        "int16": {
+          "field": "int"
+        },
+        "int32": {
+          "field": "int"
+        },
+        "int64": {
+          "field": "int"
+        },
+        "nat": {
+          "field": "Brick\\Math\\BigInteger"
+        },
+        "int": {
+          "field": "Brick\\Math\\BigInteger"
+        },
+        "float32": {
+          "field": "float"
+        },
+        "float64": {
+          "field": "float"
+        },
+        "string": {
+          "field": "string"
+        },
+        "bytes": {
+          "field": "Bytes"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "php-native-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original native Composer packages on ordinary-source and independently reviewed paths. Each weak/strict PHP execution checks nineteen primitives, seven records and 24 Array levels with 191,516 assertions, 4,317 calls and 67 rejected inputs. Separate installed probes recover from 1,354 conversion/allocation failures and 64 partial inputs, releasing tracked owners and clearing native output exactly once. Isolated FFI conversions reject 803 malformed values; host-only equality checks cover FFI and both Zend integer mappings without claiming native execution for Zend. Original packages remain unchanged. Offline consumers use empty Composer homes and caches and repeat after sources, handoffs and install staging are removed, including the exact documentation example. Independent rebuilds reproduce archives, package-owned files, native libraries and public observations; four Composer-generated deployment files contain installation-specific identities. This receipt promotes native PHP only."
+        }
+      },
+      "limitations": [
+        "PHP 8.2+ NTS CLI on Linux x86-64 with FFI. This installed receipt uses PHP 8.2.33 and glibc 2.36; release packages retain their declared platform floor. PHP-Wasm, FPM, Apache, cli-server and ZTS are not promoted.",
+        "Acyclic copied schemas have a 32-level nesting limit and separate 16 MiB PHP/native conversion budgets. These budgets do not bound every host allocation or Lean working memory.",
+        "Generated equals and hashCode use bounded nested contents, preserve constructor identity, equate NaNs and distinguish signed zeros. PHP == and === retain their built-in meanings. Do not mutate referenced payloads while their hash is a lookup key.",
+        "Recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
       ]
     }
   ]
