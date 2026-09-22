@@ -6,6 +6,9 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/abi/component-recursive.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/component-recursive-types.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/component-recursive-codec.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/component-copied-adapters.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/compile-jvm-sources.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/component-record-adapters.mjs", "classification": "strict-migration-backlog" },

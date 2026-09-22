@@ -88,6 +88,12 @@ valid IR. Valid IR does not establish compiled support: the
 [structured-type implementation record](../evidence/structured-types-20260921.md)
 tracks adapters and installed acceptance separately.
 
+The [recursive copied transport implementation](../evidence/recursive-copied-transport-20260922.md)
+uses finite nominal references and iterative value traversal with separate schema,
+value-depth, node and byte limits. Its graph comparison preserves the public IR's
+identities and field order. Compiler/native integration and installed recursive
+package acceptance remain open.
+
 Compiled npm variants use private ABI 7, with a closed named-type table and
 constructor-specific copied fields. Generated Lean helpers construct and match
 values through typed one-element Array carriers. Native C adapters never inspect
@@ -128,13 +134,15 @@ source-file aliases cannot be exported from a NuGet assembly. The
 both source paths, static rejection, conversion cleanup, and relocated execution
 with a runtime but no SDK. Nat aliases still reject negative `BigInteger` values.
 
-Java and Kotlin consume the same prepared Java API with transparent alias target
-values. The Maven manifest, README and Java source documentation preserve alias
+Java and Kotlin consume the same prepared Maven JAR. It contains the Java API and
+a non-nullable Kotlin companion API, both using transparent alias target values.
+The Maven manifest, README and Java source documentation preserve alias
 names, targets and chains at parameters, results and record components. This
 profile adds neither wrapper classes nor separate Kotlin typealias declarations.
 The [installed JVM alias checks](../evidence/jvm-aliases-20260921.md) verify both
 languages on both source paths, exact ranges, conversion failures and relocated
-runtime-only execution.
+runtime-only execution. The [Kotlin companion checks](../evidence/kotlin-collections-20260922.md)
+also exercise the Kotlin API's alias signatures and shared runtime ownership.
 
 Ruby callers use ordinary target values. Prepared gems preserve copied alias
 names, original targets and chains in their manifest, README and public API
