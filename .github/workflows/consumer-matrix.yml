@@ -900,6 +900,13 @@ jobs:
           test -s build/aliases/jvm.json
           LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs
           test -s build/variants/jvm.json
+          LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs
+          test -s build/equality/jvm.json
+          LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs
+          test -s build/collections/jvm-conversions.json
+          LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java node --test tests/jvm-collection-callers.test.mjs
+          LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java node --test tests/jvm-collections.test.mjs
+          test -s build/collections/jvm-java.json
           test -s build/type-corpus/java-kotlin.json
           test -s build/type-corpus/reviewed-native-java-kotlin.json
       - name: Upload installed Java and Kotlin corpus observations
@@ -917,6 +924,9 @@ jobs:
             build/lists/jvm.json
             build/aliases/jvm.json
             build/variants/jvm.json
+            build/equality/jvm.json
+            build/collections/jvm-conversions.json
+            build/collections/jvm-java.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -1005,6 +1015,10 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java node --test tests/jvm-collection-callers.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java node --test tests/jvm-collections.test.mjs"
               if [ "${{ steps.ordinary_jvm.outcome }}" != success ] || [ "${{ steps.type_corpus_jvm.outcome }}" != success ]; then
                 test_result=failed
                 executed=false

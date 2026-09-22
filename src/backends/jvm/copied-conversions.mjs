@@ -92,8 +92,8 @@ ${copy.fields.map(field => `        ${writeValue(field.type, "result", field.off
         return result;`;
 	} else switch(copy.scalarName)
 	{
-		case "unit": input = "Objects.requireNonNull(value); return (byte)0;"; output = "return Unit.INSTANCE;"; break;
-		case "bool": input = "return value ? (byte)1 : (byte)0;"; output = "return value != 0;"; break;
+		case "unit": input = "Objects.requireNonNull(value); return (byte)0;"; output = 'if (value != 0) throw new IllegalStateException("Invalid native Unit"); return Unit.INSTANCE;'; break;
+		case "bool": input = "return value ? (byte)1 : (byte)0;"; output = 'if (value != 0 && value != 1) throw new IllegalStateException("Invalid native Bool"); return value == 1;'; break;
 		case "char":
 			input = 'if (value < 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) throw new IllegalArgumentException("Char requires a Unicode scalar code point"); return value;';
 			output = 'if (value < 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) throw new IllegalArgumentException("Invalid native Unicode scalar"); return value;'; break;
@@ -130,11 +130,17 @@ ${copy.fields.map(field => `        ${writeValue(field.type, "result", field.off
         var result = slice(scope, data, limbs, ${copy.size});
         ${copy.scalarName === "int" ? "result.set(JAVA_BYTE, 32, (byte)(value.signum() < 0 ? 1 : 0));" : ""}
         return result;`;
-			output = `int length = Math.toIntExact(value.get(JAVA_LONG, 8) * 4);
-        byte[] bytes = value.get(ADDRESS, 0).reinterpret(length).toArray(JAVA_BYTE);
+			output = `var buffer = checkedData(value, 4, 4);
+        long limbs = value.get(JAVA_LONG, 8);
+        if (limbs != 0 && buffer.get(JAVA_INT, (limbs - 1) * 4) == 0)
+            throw new IllegalStateException("Invalid native integer magnitude");
+        ${copy.scalarName === "int" ? `byte sign = value.get(JAVA_BYTE, 32);
+        if ((sign != 0 && sign != 1) || (sign != 0 && limbs == 0))
+            throw new IllegalStateException("Invalid native integer sign");` : ""}
+        byte[] bytes = buffer.toArray(JAVA_BYTE);
         for (int left = 0, right = bytes.length - 1; left < right; left++, right--) { byte saved = bytes[left]; bytes[left] = bytes[right]; bytes[right] = saved; }
         var result = new BigInteger(1, bytes);
-        return ${copy.scalarName === "int" ? "value.get(JAVA_BYTE, 32) != 0 ? result.negate() : result" : "result"};`; break;
+        return ${copy.scalarName === "int" ? "sign == 1 ? result.negate() : result" : "result"};`; break;
 		default: input = "return value;"; output = "return value;";
 	}
 	return `    private static ${copy.nativeType} to${i}(${type} value${copy.aggregate ? ", Scope scope" : ""}) {
@@ -163,7 +169,17 @@ export const copiedJvmHelpers = `    private static MemorySegment slice(Scope sc
         result.set(ADDRESS, 0, data); result.set(JAVA_LONG, 8, length);
         return result;
     }
-    private static MemorySegment data(MemorySegment value) { return value.get(ADDRESS, 0).reinterpret(value.get(JAVA_LONG, 8)); }
+    private static MemorySegment checkedData(MemorySegment value, long width, long alignment) {
+        long length = value.get(JAVA_LONG, 8);
+        if (length < 0 || length > (16 * 1024 * 1024) / width)
+            throw new IllegalArgumentException("Lean Bridge native buffer exceeds the 16 MiB copy limit");
+        if (length == 0) return MemorySegment.NULL;
+        var pointer = value.get(ADDRESS, 0);
+        if (pointer.address() == 0 || pointer.address() % alignment != 0)
+            throw new IllegalStateException("Invalid native buffer");
+        return pointer.reinterpret(length * width);
+    }
+    private static MemorySegment data(MemorySegment value) { return checkedData(value, 1, 1); }
     private static int utf8Length(String value) {
         long length = 0;
         for (int index = 0; index < value.length(); index++) {

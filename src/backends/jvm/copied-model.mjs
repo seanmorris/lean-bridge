@@ -9,6 +9,10 @@ const pascal = name => name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => p
 const camel = name => { const value = pascal(name); return value[0].toLowerCase() + value.slice(1); };
 const reserved = new Set(("Api Unit Runtime NativeAssets Scope LeanBridgeException Object String System Class Record Throwable Error Exception RuntimeException IllegalArgumentException IllegalStateException ExceptionInInitializerError UnsupportedOperationException NullPointerException AssertionError BigInteger Objects Arrays Math Byte Short Integer Long Float Double Character Boolean MemorySegment Arena Linker FunctionDescriptor SymbolLookup MethodHandle ByteBuffer CharBuffer StandardCharsets CodingErrorAction CharacterCodingException IOException InputStream OutputStream Files Path MessageDigest HexFormat PosixFilePermissions Properties equals hashCode toString getClass clone finalize notify notifyAll wait").split(" "));
 const keywords = new Set(("abstract assert boolean break byte case catch char class const continue default do double else enum extends final finally float for goto if implements import instanceof int interface long native new package private protected public return short static strictfp super switch synchronized this throw throws transient try void volatile while true false null record sealed permits var yield").split(" "));
+const fieldName = name => {
+	const result = camel(name) + (name.match(/_+$/)?.[0] ?? "");
+	return keywords.has(result) ? `${result}_` : result;
+};
 const publicTypes = { char: "int", unit: "Unit", bool: "boolean", uint8: "int", uint16: "int", uint32: "long", uint64: "java.math.BigInteger", int8: "byte", int16: "short", int32: "int", int64: "long", nat: "java.math.BigInteger", int: "java.math.BigInteger", float32: "float", float64: "double", string: "String", bytes: "byte[]" };
 const nativeTypes = { char: "int", unit: "byte", bool: "byte", uint8: "byte", uint16: "short", uint32: "int", uint64: "long", int8: "byte", int16: "short", int32: "int", int64: "long", float32: "float", float64: "double" };
 const widths = { byte: 1, short: 2, int: 4, long: 8, float: 4, double: 8 };
@@ -48,8 +52,7 @@ export const compileCopiedJvmModel = ir => {
 				for(const [i, field] of branch.fields.entries())
 				{
 					const name = source.fields[i].name;
-					field.publicName = camel(name) + (name.match(/_+$/)?.[0] ?? "");
-					if(keywords.has(field.publicName)) field.publicName += "_";
+					field.publicName = fieldName(name);
 					if(fields.has(field.publicName) || reserved.has(field.publicName)) fail(ir.declarations[0], `Java variant field name collides: ${field.publicName}`);
 					fields.add(field.publicName);
 					field.offset = align(size, field.type.alignment);
@@ -71,10 +74,10 @@ export const compileCopiedJvmModel = ir => {
 			}
 			const fields = new Set();
 			let size = copy.compound && copy.compound !== "tuple" ? 1 : 0, alignment = 1;
-			for(const field of copy.fields)
+			for(const [index, field] of copy.fields.entries())
 			{
-				field.publicName = camel(field.name);
-				if(fields.has(field.publicName) || reserved.has(field.publicName) || keywords.has(field.publicName)) fail(ir.declarations[0], `Java field name collides: ${field.publicName}`);
+				field.publicName = fieldName(copy.record ? copy.record.fields[index].name : field.name);
+				if(fields.has(field.publicName) || reserved.has(field.publicName)) fail(ir.declarations[0], `Java field name collides: ${field.publicName}`);
 				fields.add(field.publicName);
 				field.offset = align(size, field.type.alignment);
 				size = field.offset + field.type.size; alignment = Math.max(alignment, field.type.alignment);

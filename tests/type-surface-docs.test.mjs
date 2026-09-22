@@ -79,15 +79,17 @@ test("PHP documents both primitive callable transports without promoting reviewe
 	assert.doesNotMatch(row(source, "Task α / asynchronous result"), /Installed checks passed/u);
 });
 
-test("Java and Kotlin document installed primitive callables without promoting fields or async", async () => {
+test("Java and Kotlin distinguish callable, collection-field and asynchronous evidence", async () => {
 	const java = await readFile("docs/consume/java.md", "utf8");
 	const kotlin = await readFile("docs/consume/kotlin.md", "utf8");
 	assert.match(row(java, "UInt32"), /`long`/u);
 	assert.match(row(kotlin, "UInt32"), /`Long`/u);
+	assert.match(row(java, "Nat"), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed \|/u);
+	assert.deepEqual(cells.find(cell => cell.id === "java/nat/reviewed-ir/field").stages.installedExecution.evidence, ["java-collections-installed"]);
+	assert.match(row(kotlin, "Nat"), /Reviewed IR: Installed checks passed \(input, result, callback input, callback result\); Inspected: no host mapping \(field\)/u);
 	for(const source of [java, kotlin])
 	{
 		assert.match(row(source, "Nat"), /`BigInteger` \(input, result, field, callback input, callback result\).*Ordinary source: Installed checks passed\./u);
-		assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed \(input, result, callback input, callback result\); Inspected: no host mapping \(field\)/u);
 		assert.match(row(source, "Host function passed to Lean"), /Typed Fn\.\.\.To\.\.\. functional interface/u);
 		assert.match(row(source, "Lean function returned to the host"), /Signature-specific LeanClosure \(AutoCloseable\)/u);
 		assert.match(row(source, "Identity-bearing value"), /Ordinary source: Not audited\./u);
