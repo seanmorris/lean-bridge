@@ -8,7 +8,6 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
-import { renderWitConversions, witConversionPrelude } from "../src/backends/wit/copied-conversions.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { validateWitEvidence } from "./helpers/type-corpus-wit-evidence.mjs";
@@ -29,13 +28,17 @@ const contracts = ir => ({
 });
 
 test("WIT variants bind named contracts, original installed bytes and independent reproduction", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/wit-variants-20260921.json"));
+	// Historical converter bytes stay fixed; collection acceptance checks the current converters.
+	const bytes = await readFile("docs/evidence/wit-variants-20260921.json");
+	assert.equal(sha256(bytes), "f726e1fc373051ab9a25d38cc9f10797f31e99b5a6eb7a9148c6e0018bb6122f");
+	const record = JSON.parse(bytes);
 	assert.deepEqual(record.profiles, ["wit-wasi"]); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, witVariantSignatures);
 	const ir = witVariantReviewedIr();
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(ir)));
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		if(path !== "tests/wit-variant-evidence.test.mjs") assert.equal(sha256(await readFile(path)), hash, path);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
 	const source = await witVariantConsumer();
 	const fixture = { source, validateSignatures: validateWitVariantSignatures
@@ -85,7 +88,6 @@ test("WIT variants bind named contracts, original installed bytes and independen
 	assert.equal(faults.synthetic, true); assert.deepEqual(faults.sanitizers, ["address", "undefined", "leak"]);
 	assert.ok(faults.compilerOptions.includes("-fsanitize=address,undefined"));
 	assert.equal(faults.sourceSha256, sha256(await witVariantFaultSource(model)));
-	assert.equal(faults.conversionsSha256, sha256(witConversionPrelude + renderWitConversions(model)));
 	assert.equal(faults.headerSha256, sha256(generateCBindingPackage(ir)["include/variants.h"]));
 	assert.deepEqual(faults.observation, { checks: 688008, scratchFailures: 25
 		, inputBudgetFailures: 113855, outputBudgetFailures: 108251

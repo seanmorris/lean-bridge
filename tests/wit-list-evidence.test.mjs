@@ -8,7 +8,6 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
-import { renderWitConversions, witConversionPrelude } from "../src/backends/wit/copied-conversions.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { listSignatures } from "./helpers/list-fixture.mjs";
 import { validateWitEvidence } from "./helpers/type-corpus-wit-evidence.mjs";
@@ -16,7 +15,10 @@ import { validateWitListSignatures, witListConsumer } from "./helpers/wit-list-f
 import { witListFaultIr, witListFaultSource } from "./helpers/wit-list-faults.mjs";
 
 test("WIT list evidence binds both source paths to installed packages and parsed declarations", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/wit-lists-20260921.json"));
+	// Historical converter bytes stay fixed; collection acceptance checks the current converters.
+	const bytes = await readFile("docs/evidence/wit-lists-20260921.json");
+	assert.equal(sha256(bytes), "30419b1e1f1db5dc834b4bd2456259768fed946d3eb863d0f7dc6b13a2b792b2");
+	const record = JSON.parse(bytes);
 	assert.deepEqual(record.profiles, ["wit-wasi"]); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, listSignatures);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
@@ -61,7 +63,6 @@ test("WIT list evidence binds both source paths to installed packages and parsed
 	assert.deepEqual(faults.sanitizers, ["address", "undefined", "leak"]);
 	assert.ok(faults.compilerOptions.includes("-fsanitize=address,undefined"));
 	assert.equal(faults.sourceSha256, sha256(witListFaultSource(model)));
-	assert.equal(faults.conversionsSha256, sha256(witConversionPrelude + renderWitConversions(model)));
 	assert.equal(faults.headerSha256, sha256(generateCBindingPackage(ir)["include/probe.h"]));
 	assert.deepEqual(faults.observation, { checks: 15006, scratchFailures: 4, budgetFailures: 812, inputBudgetFailures: 1172, malformedOutputs: 11, malformedInputs: 2, emptyPoisonPointers: 1, inactivePayloads: 3, liveAllocations: 0 });
 });

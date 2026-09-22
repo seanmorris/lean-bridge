@@ -55,7 +55,7 @@ export const witVariantConversions = copy => ({
 			`${index ? "else " : ""}if (lb_name(&value->of.variant.discriminant, "${branch.witName}")) {`
 			, ...(branch.fields.length ? [
 				'  const wasmtime_component_val_t *payload = value->of.variant.val;'
-				, `  if (!payload || payload->kind != WASMTIME_COMPONENT_RECORD || payload->of.record.size != ${branch.fields.length} || !payload->of.record.data) return false;`
+				, `  if (!lb_buffer(payload, 1, sizeof(*payload), _Alignof(wasmtime_component_val_t)) || payload->kind != WASMTIME_COMPONENT_RECORD || payload->of.record.size != ${branch.fields.length} || !lb_buffer(payload->of.record.data, ${branch.fields.length}, sizeof(wasmtime_component_valrecord_entry_t), _Alignof(wasmtime_component_valrecord_entry_t))) return false;`
 				, `  if (!lb_charge(scope, ${branch.fields.length}, sizeof(wasmtime_component_valrecord_entry_t))) return false;`
 			] : ['  if (value->of.variant.val) return false;'])
 			, `  if (out) out->kind = ${index};`

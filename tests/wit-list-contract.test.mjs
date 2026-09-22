@@ -29,7 +29,8 @@ test("WIT Lists use canonical lists with distinct source and native identities",
 	assert.ok(list && array); assert.notEqual(list.name, array.name); assert.notEqual(list.index, array.index);
 	for(const copy of [list, array]) assert.ok(model.wit.includes(`type ${copy.witName} = list<u32>;`));
 	const host = renderWitHostSource(model, new Uint8Array());
-	for(const pattern of [/WASMTIME_COMPONENT_LIST/, /lb_charge\(scope, value->length/, /value->length && !value->data/, /wasmtime_component_val_delete\(&converted\)/, /lb_scope_close\(&scope\)/]) assert.match(host, pattern);
+	for(const pattern of [/WASMTIME_COMPONENT_LIST/, /lb_charge\(scope, value->length/, /if \(!count\) return true/, /!data \|\| !width/, /wasmtime_component_val_delete\(&converted\)/, /lb_scope_close\(&scope\)/]) assert.match(host, pattern);
+	for(const copy of [list, array]) assert.ok(host.includes(`lb_buffer(value->data, value->length, sizeof(${copy.element.name}), _Alignof(${copy.element.name}))`));
 	assert.doesNotMatch(host, /lean_ctor_|lean_obj_tag/);
 });
 
