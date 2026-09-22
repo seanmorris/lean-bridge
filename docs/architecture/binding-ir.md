@@ -104,6 +104,11 @@ now execute typed layouts, bounded conversions and private allocation cleanup
 against freshly compiled Lean. Native package admission and the remaining
 consumer targets still need integration and installed acceptance.
 
+Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
+against the verified runtime's allocator limits. Oversized allocations fail
+before linking. Component receipts bind that check and native packages retain
+its header alongside their compilation evidence.
+
 Compiled npm variants use private ABI 7, with a closed named-type table and
 constructor-specific copied fields. Generated Lean helpers construct and match
 values through typed one-element Array carriers. Native C adapters never inspect

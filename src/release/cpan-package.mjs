@@ -11,6 +11,7 @@ import { generatePerlBindingPackage } from "../backends/perl/generate.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
 import { readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { createNativeModel } from "../build/native-model.mjs";
+import { nativeAllocationGuardHeader } from "../build/native-allocation-guard.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { cpanPackageMetadata, verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 
@@ -166,7 +167,10 @@ export const stageCpanPackage = async ({ outputRoot
 		const model = JSON.parse(await readFile(join(componentRoot, "model.json"), "utf8"));
 		const receipt = JSON.parse(await readFile(join(componentRoot, "native-component.json"), "utf8"));
 		await verifyNativeFiles(componentRoot, JSON.parse(await readFile(join(componentRoot, "artifacts.json"), "utf8")).files);
-		if(sha256(canonicalJson(model)) !== receipt.modelSha256
+		if(receipt.schemaVersion !== 2
+      || receipt.allocationGuardSha256 !== sha256(nativeAllocationGuardHeader)
+      || await readFile(join(componentRoot, "allocation-guard.h"), "utf8") !== nativeAllocationGuardHeader
+      || sha256(canonicalJson(model)) !== receipt.modelSha256
       || sha256(await readFile(join(componentRoot, "metadata.json"))) !== receipt.metadataSha256
       || canonicalJson(model.sourceIdentity) !== canonicalJson(receipt.sourceIdentity)
       || sha256(await readFile(join(componentRoot, "component.h"))) !== receipt.headerSha256)
@@ -192,7 +196,7 @@ export const stageCpanPackage = async ({ outputRoot
 		for(const [path, bytes] of Object.entries(files)) await save(join(directory, path), path.endsWith(".pm") ? bytes.replace("our $VERSION = '0.001';", `our $VERSION = '${version}';`)
 			.replace("use LeanBridge::Runtime;", `use LeanBridge::Runtime;\ndie "Incompatible shared Lean runtime package version\\n" unless $LeanBridge::Runtime::VERSION eq '${runtimeVersion}';`) : bytes);
 		await copy(join(componentRoot, receipt.library), join(directory, `lib/${relative}/native/${receipt.library}`));
-		for(const path of ["component.h", "model.json", "binding-ir.json", "native-component.json", "metadata.json", "generated.lean", "artifacts.json"])
+		for(const path of ["component.h", "model.json", "binding-ir.json", "native-component.json", "metadata.json", "generated.lean", "allocation-guard.h", "artifacts.json"])
       await copy(join(componentRoot, path), join(directory, path));
 		const generatedDigest = receipt.sourceIdentity?.lakeDependencies?.generatedSourcesSha256;
 		if(generatedDigest !== undefined)

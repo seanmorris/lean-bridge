@@ -68,7 +68,7 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	await copy(join(nativeRoot, receipt.library), `lib/${receipt.library}`);
 	for(const path of Object.keys(runtime.files).filter(path => path.startsWith("lib/"))) await copy(join(runtimeRoot, path), path);
 	const evidence = "share/lean-bridge";
-	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "artifacts.json"])
+	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json"])
 		await copy(join(nativeRoot, path), `${evidence}/component/${path}`);
 	const generatedDigest = receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256;
 	if(generatedDigest !== undefined)

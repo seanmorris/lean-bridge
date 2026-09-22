@@ -57,7 +57,7 @@ export const packageOrdinaryMaven = async ({ working, jvmRoot, nativeRoot, runti
 	for(const path of Object.keys(compiled.files).filter(path => path.startsWith("src/") || path === "binding-manifest.json"))
 		await copy(join(jvmRoot, path), `META-INF/lean-bridge/jvm/${path}`);
 	await copy(join(jvmRoot, "native-jvm.json"), "META-INF/lean-bridge/native-jvm.json");
-	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "artifacts.json"])
+	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json"])
 		await copy(join(nativeRoot, path), `META-INF/lean-bridge/component/${path}`);
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined) await copy(join(nativeRoot, "lake-generated-sources.json"), "META-INF/lean-bridge/component/lake-generated-sources.json");
 	await copy(join(adapterRoot, "native-c-adapter.json"), "META-INF/lean-bridge/native-c-adapter.json");

@@ -13,6 +13,7 @@ import { createElaboratedSemanticModel } from "../../src/analyze/semantic-model.
 import { componentRecursiveLeanSource } from "../../src/build/component-recursive-lean.mjs";
 import { generateNativeCopiedGraphAdapters } from "../../src/backends/c/native-graph-adapters.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
+import { nativeAllocationGuardHeader } from "../../src/build/native-allocation-guard.mjs";
 import { recursiveCarrierAbi } from "./recursive-carriers.mjs";
 import { recursiveSignatures } from "./recursive-fixture.mjs";
 
@@ -128,7 +129,8 @@ def main : IO Unit := do
 `;
 	await writeFile(join(directory, "NativeCheck.lean"), main);
 	await run(lean, ["-c", "NativeCheck.c", "NativeCheck.lean"]);
-	await run(join(prefix, "bin/leanc"), ["-O1", "Recursive.c", "NativeCarriers.c", "NativeCheck.c", "native-check.o", "-o", "native-check"]);
+	await writeFile(join(directory, "allocation-guard.h"), nativeAllocationGuardHeader);
+	await run(join(prefix, "bin/leanc"), ["-O1", "-include", "allocation-guard.h", "Recursive.c", "NativeCarriers.c", "NativeCheck.c", "native-check.o", "-o", "native-check"]);
 	const observed = await run(join(directory, "native-check"), []);
 	assert.match(observed.stdout, /^native-graphs-ok \d+\n$/u); assert.equal(observed.stderr, "");
 	assert.equal(await readFile(join(directory, "Recursive.lean"), "utf8"), original);

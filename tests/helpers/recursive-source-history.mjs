@@ -1,5 +1,5 @@
 /**
- * Preserve installed historical receipts across test-registration changes.
+ * Preserve installed receipts across explicit test and provenance-file changes.
  *
  * @file
  */
@@ -22,6 +22,9 @@ export const assertRecursiveSourceHistory = async (name, path, previousSha256) =
 	assert.ok(record, `Missing historical receipt lineage: ${name}`);
 	const bytes = await readFile(`docs/evidence/${name}.json`);
 	assert.equal(sha256(bytes), record.receiptSha256, `Historical receipt changed: ${name}`);
-	assert.equal(JSON.parse(bytes).sourceHashes[path], previousSha256);
+	const original = JSON.parse(bytes);
+	assert.equal(original.sourceHashes[path] ?? original.generatorSourceHashes?.[path], previousSha256);
 	assert.deepEqual(record.sources[path], { previousSha256, currentSha256 }, path);
+	if(["src/release/native-maven.mjs", "src/release/native-wasi.mjs"].includes(path))
+		assert.equal(sha256((await readFile(path, "utf8")).replace('"allocation-guard.h", ', "")), previousSha256, "Only the extra provenance header may differ from this historical packager");
 };

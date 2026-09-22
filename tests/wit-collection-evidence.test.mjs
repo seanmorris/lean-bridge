@@ -19,6 +19,7 @@ import { witListFaultIr } from "./helpers/wit-list-faults.mjs";
 import { witCompoundFaultIr } from "./helpers/wit-compound-faults.mjs";
 import { witAliasFaultIr } from "./helpers/wit-alias-faults.mjs";
 import { witVariantReviewedIr } from "./helpers/wit-variant-fixture.mjs";
+import { assertRecursiveSourceHistory } from "./helpers/recursive-source-history.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/wit-collections-20260922.json"));
 const withoutPaths = value => { const copy = { ...value }; delete copy.loadedLibraries; return copy; };
@@ -31,8 +32,8 @@ test("WIT collections bind all original signatures and both reproducible install
 	assert.equal(record.schemaVersion, 1); assert.deepEqual(record.profiles, ["wit-wasi"]); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, collectionSignatures);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(collectionReviewedIr())));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
-	for(const [path, hash] of Object.entries(record.generatorSourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertRecursiveSourceHistory("wit-collections-20260922", path, hash);
+	for(const [path, hash] of Object.entries(record.generatorSourceHashes)) await assertRecursiveSourceHistory("wit-collections-20260922", path, hash);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	assert.equal(record.reproduction.runs.length, 2);

@@ -86,9 +86,10 @@ limit. Reducing it to 255 exposed a second limit: its 1,040-byte constructor
 allocation reached `mi_malloc_small`, whose pinned 64-bit implementation supports
 at most 1,024 bytes. GDB located the fault in that allocation, not recursive
 decoder stack growth. The UInt16 fixture keeps 256 carrier arguments while its
-source object fits the allocator. Native admission must diagnose oversized
-source constructors or use a corrected, authenticated runtime before enabling
-those layouts. This test does not claim arbitrary-width Lean constructors work.
+source object fits the allocator. Native builds now reject oversized constructor
+allocations with an [authenticated build-time check](native-allocation-guard-20260922.md).
+The compiled transport test also enables that check. This test does not claim
+arbitrary-width Lean constructors work.
 
 Final repository gates pass: 1,841 contract tests with 69 explicit toolchain
 skips, 78 documentation tests, 111 site tests, lint, repository/site typechecks

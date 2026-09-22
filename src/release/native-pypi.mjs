@@ -38,7 +38,7 @@ export const packageOrdinaryPython = async options => {
 	for(const [path, text] of Object.entries(files)) await save(path.startsWith(`${moduleName}/`) ? path : `${metadataRoot}/${path}`, text);
 	for(const file of Object.keys(evidence.libraries))
 		await copy(file === evidence.library ? join(adapterRoot, "lib", file) : file === receipt.library ? join(nativeRoot, file) : join(runtimeRoot, "lib", file), `${moduleName}/native/linux-x64/${file}`);
-	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "artifacts.json"])
+	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json"])
 		await copy(join(nativeRoot, path), `${metadataRoot}/component/${path}`);
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined) await copy(join(nativeRoot, "lake-generated-sources.json"), `${metadataRoot}/component/lake-generated-sources.json`);
 	await copy(join(adapterRoot, "native-c-adapter.json"), `${metadataRoot}/native-c-adapter.json`);

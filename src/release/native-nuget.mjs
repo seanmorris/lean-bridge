@@ -54,7 +54,7 @@ export const packageOrdinaryNuget = async ({ working, dotnetRoot, nativeRoot, ru
 	for(const path of Object.keys(compiled.files).filter(path => path.startsWith("src/") || path === "binding-manifest.json")) await copy(join(dotnetRoot, path), `lean-bridge/dotnet/${path}`);
 	await copy(join(dotnetRoot, "native-dotnet.json"), "lean-bridge/native-dotnet.json");
 	await copy(join(dotnetRoot, "global.json"), "lean-bridge/dotnet/global.json");
-	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "artifacts.json"])
+	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json"])
 		await copy(join(nativeRoot, path), `lean-bridge/component/${path}`);
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined) await copy(join(nativeRoot, "lake-generated-sources.json"), "lean-bridge/component/lake-generated-sources.json");
 	await copy(join(adapterRoot, "native-c-adapter.json"), "lean-bridge/native-c-adapter.json");

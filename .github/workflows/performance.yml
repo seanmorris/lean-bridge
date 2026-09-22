@@ -114,7 +114,7 @@ jobs:
           LEAN_BRIDGE_NATIVE_RECURSIVE_TEST: "1"
         run: |
           source scripts/env.sh
-          node --test tests/native-recursive-transport.test.mjs
+          node --test --test-concurrency=1 tests/native-recursive-transport.test.mjs tests/native-allocation-guard.test.mjs
 
   spatial:
     name: Startup and composition profiles

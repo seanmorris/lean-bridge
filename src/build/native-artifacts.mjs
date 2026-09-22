@@ -10,6 +10,7 @@ import { createNativeModel, generateNativeLeanAdapters } from "./native-model.mj
 import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
 import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 import { verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
+import { nativeAllocationGuardHeader } from "./native-allocation-guard.mjs";
 
 /**
  * List regular payload files and reject symlinks and special filesystem entries.
@@ -97,7 +98,7 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity)
 	const metadata = await read("metadata.json");
 	const reconstructed = createNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity });
 	const adapters = generateNativeLeanAdapters(reconstructed);
-	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== 1
+	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== 2
 		|| receipt.runtimeIdentity !== runtimeIdentity
 		|| canonicalJson(model) !== canonicalJson(reconstructed)
 		|| receipt.modelSha256 !== sha256(canonicalJson(model))
@@ -108,6 +109,8 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity)
 		|| adapters.header !== await readFile(join(root, "component.h"), "utf8")
 		|| receipt.adaptersSha256 !== sha256(adapters.leanSource)
 		|| adapters.leanSource !== await readFile(join(root, "generated.lean"), "utf8")
+		|| receipt.allocationGuardSha256 !== sha256(nativeAllocationGuardHeader)
+		|| nativeAllocationGuardHeader !== await readFile(join(root, "allocation-guard.h"), "utf8")
 		|| receipt.initializer !== `initialize_${adapters.module}`
 		|| !/^libcomponent_[0-9a-f]{20}\.so$/.test(receipt.library)) throw new Error("native component differs from compiler metadata or runtime");
 	const bytes = await readFile(join(root, receipt.library));

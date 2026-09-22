@@ -12,6 +12,7 @@ import { createNativeModel, nativeCType, nativeCallbackDefault } from "./native-
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
+import { nativeAllocationGuardHeader } from "./native-allocation-guard.mjs";
 
 import { buildElaboratedComponent, pinnedCompiledLean as pinnedNativeLean } from "./elaborated-component.mjs";
 
@@ -167,6 +168,8 @@ export const buildNativeComponent = async options => {
 		, receiptName: "native-component.json", createModel: createNativeModel
 		, compileComponent: async ({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace, lakeSnapshot, run, verifyElaborationInputs }) => {
 			await save(join(staging, "c/callbacks.c"), generateCompiledCallbacks(model));
+			const allocationGuard = join(staging, "allocation-guard.h");
+			await save(allocationGuard, nativeAllocationGuardHeader);
 			const objects = [];
 			const nativeInputs = lakeWorkspace ? lakeNativeInputs(lakeWorkspace.resolution) : [];
 			const nativeCompilation = nativeInputs.length ? await compileLakeNativeInputs({ snapshot: lakeSnapshot
@@ -180,7 +183,15 @@ export const buildNativeComponent = async options => {
 			for(const [index, path] of [...compileOrder.map(item => item.c), generatedC, join(staging, "c/callbacks.c")].entries())
 			{
 				const object = join(staging, `c/${index}.o`); objects.push(object);
-				await run(cc, ["-O2", "-g0", "-fPIC", `-ffile-prefix-map=${staging}=/build/native-component`, "-I", join(leanPrefix, "include"), "-I", join(runtime, "include"), "-I", staging, "-c", path, "-o", object], { signal });
+				try
+				{
+					await run(cc, ["-O2", "-g0", "-fPIC", `-ffile-prefix-map=${staging}=/build/native-component`, `-ffile-prefix-map=${runtime}=/build/native-runtime`, "-I", join(runtime, "include"), "-I", staging, "-include", allocationGuard, "-c", path, "-o", object], { signal });
+				} catch(error)
+				{
+					if(error.details?.stderr?.includes("Lean Bridge: native constructor"))
+						throw Object.assign(new Error("Cannot establish a safe constructor allocation for the pinned Lean runtime. Reduce the constructor's stored fields, for example by using an Array.", { cause: error }), { code: "native-constructor-allocation-unsupported", details: error.details });
+					throw error;
+				}
 			}
 			const library = `libcomponent_${sha256(model.component.id).slice(0, 20)}.so`;
 			await verifyElaborationInputs();
@@ -197,7 +208,7 @@ export const buildNativeComponent = async options => {
 				, `-Wl,-soname,${library}`
 				, "-o"
 				, join(staging, library)], { signal });
-			const receipt = { schemaVersion: 1
+			const receipt = { schemaVersion: 2
 				, profile: "native-library-v1"
 				, runtimeIdentity: sha256(canonicalJson(runtimeManifest))
 				, bindingIrSha256: model.bindingIrSha256
@@ -206,6 +217,7 @@ export const buildNativeComponent = async options => {
 				, modelSha256: sha256(canonicalJson(model))
 				, headerSha256: sha256(adapters.header)
 				, adaptersSha256: sha256(adapters.leanSource)
+				, allocationGuardSha256: sha256(nativeAllocationGuardHeader)
 				, initializer: `initialize_${adapters.module}`
 				, library
 				, nativeLibrary: await fileIdentity(join(staging, library))
