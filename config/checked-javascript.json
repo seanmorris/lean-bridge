@@ -6,6 +6,7 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/build/native-graph-model.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/component-recursive-ownership.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/component-recursive-adapters.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/abi/component-recursive-abi.mjs", "classification": "strict-migration-backlog" },

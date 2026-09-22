@@ -46,7 +46,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "89785ee6fef474a15f4c2b35ee4d6f69abf79297d3f1244cb948b9f94bf81e20"
+          "currentSha256": "3942e34621d85a2e048eb06f2835c7a33df98b1a20a46d5e933929f6adb8b4e1"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -73,6 +73,12 @@
       "previousSha256": "94bf425467d51dbe8401580c48445cb70780a879f7e3100dcabd3a53560c71c9",
       "currentSha256": "89785ee6fef474a15f4c2b35ee4d6f69abf79297d3f1244cb948b9f94bf81e20",
       "change": "Add native allocator boundary and guarded-component acceptance tests. Historical installed receipts are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "89785ee6fef474a15f4c2b35ee4d6f69abf79297d3f1244cb948b9f94bf81e20",
+      "currentSha256": "3942e34621d85a2e048eb06f2835c7a33df98b1a20a46d5e933929f6adb8b4e1",
+      "change": "Add authenticated native graph component models and opt-in ordinary/reviewed compiled component checks. Historical installed receipts are unchanged."
     }
   ]
 }

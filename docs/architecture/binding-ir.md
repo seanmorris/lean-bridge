@@ -101,7 +101,10 @@ for recursive graphs. A native allocation ledger owns the result; the loader
 checks each returned buffer against that ledger before copying it. Cleanup does
 not follow result pointers. [Native C transport checks](../evidence/native-recursive-transport-20260922.md)
 now execute typed layouts, bounded conversions and private allocation cleanup
-against freshly compiled Lean. Native package admission and the remaining
+against freshly compiled Lean. [Native graph components](../evidence/native-graph-components-20260922.md)
+compile and verify ordinary and independently reviewed exports through the
+shared runtime. Host adapters must explicitly support their finite graph model.
+Native package admission and the remaining
 consumer targets still need integration and installed acceptance.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)

@@ -8,7 +8,8 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
-import { createNativeModel, nativeCType, nativeCallbackDefault } from "./native-model.mjs";
+import { nativeCType, nativeCallbackDefault } from "./native-model.mjs";
+import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "./native-graph-model.mjs";
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
@@ -160,12 +161,18 @@ export const generateCompiledCallbacks = model => {
  * @param options - Source selection, pinned compiler and native runtime paths.
  */
 export const buildNativeComponent = async options => {
-	const { runtimeRoot, leanPrefix, cc = "cc", signal } = options;
+	const { runtimeRoot, leanPrefix, cc = "cc", signal, copiedGraphs = false } = options;
 	const runtime = resolve(runtimeRoot);
 	const { manifest: runtimeManifest } = await readVerifiedNativeRuntime(runtime);
 	if(runtimeManifest.leanCommit !== pinnedNativeLean) throw new Error("incompatible native runtime");
+	const createModel = input => {
+		const model = createCompiledNativeModel(input);
+		if(model.copiedGraph && !copiedGraphs) throw Object.assign(new TypeError("Native graph components require a graph-capable host adapter"), { code: "native-graph-projection-unavailable" });
+		return model;
+	};
 	return buildElaboratedComponent({ ...options, profile: "native-library-v1"
-		, receiptName: "native-component.json", createModel: createNativeModel
+		, receiptName: "native-component.json", createModel
+		, createAdapters: generateCompiledNativeLeanAdapters
 		, compileComponent: async ({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace, lakeSnapshot, run, verifyElaborationInputs }) => {
 			await save(join(staging, "c/callbacks.c"), generateCompiledCallbacks(model));
 			const allocationGuard = join(staging, "allocation-guard.h");

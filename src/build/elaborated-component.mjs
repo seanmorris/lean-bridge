@@ -54,6 +54,7 @@ const fileIdentity = async path => { const bytes = await readFile(path); return 
  * @param options.profile - Fixed compiled target profile.
  * @param options.receiptName - Target-specific receipt filename.
  * @param options.createModel - Fixed target model factory.
+ * @param options.createAdapters - Typed Lean adapter generator for that model.
  * @param options.compileComponent - Compile the checked C and return a receipt.
  * @param options.signal - Child-process cancellation signal.
  * @param options.runner - Process runner for fresh compiler and drift checks.
@@ -73,6 +74,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 	, profile
 	, receiptName
 	, createModel
+	, createAdapters = generateNativeLeanAdapters
 	, compileComponent
 	, signal
 	, runner = processBuildRunner }) => {
@@ -253,7 +255,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 		if(model.profile !== profile || model.pointerBits !== (profile === "native-library-v1" ? 64 : 32)) throw new TypeError("Compiled model differs from its target profile");
 		validateModel?.(model);
 		await verifyElaborationInputs();
-		const adapters = generateNativeLeanAdapters(model), generated = join(sourceRoot, `${adapters.module}.lean`), generatedC = join(staging, "c/adapter.c");
+		const adapters = createAdapters(model), generated = join(sourceRoot, `${adapters.module}.lean`), generatedC = join(staging, "c/adapter.c");
 		await save(generated, adapters.leanSource);
 		await run(lean, ["-R", sourceRoot, "-c", generatedC, generated], { env, signal });
 		await verifyElaborationInputs();

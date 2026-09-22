@@ -18,8 +18,10 @@ const containsGraph = value => value !== null && typeof value === "object"
  *
  * @param metadata - Shared report emitted by the pinned Lean extractor.
  * @param sourceIdentity - Native build's compiler, selection and interface evidence.
+ * @param options - Internal compiled-transport admission.
+ * @param options.copiedGraphs - Allow finite graphs only for the typed carrier compiler.
  */
-export const projectNativeMetadata = (metadata, sourceIdentity) => {
+export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs = false } = {}) => {
 	if(!sourceIdentity || !digest(sourceIdentity.leanCompilerSha256) || !digest(sourceIdentity.extractorSha256)
 		|| !digest(sourceIdentity.sourceTreeSha256) || !/^[a-f0-9]{40}$/.test(sourceIdentity.leanCommit)
 		|| !Array.isArray(sourceIdentity.modules) || !sourceIdentity.modules.length) fail("Native metadata requires measured compiler and source identities");
@@ -49,7 +51,7 @@ export const projectNativeMetadata = (metadata, sourceIdentity) => {
 			, projections: metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "unsupported").map(item => ({ declaration: item.identity, ...item.projection })) }
 	});
 	const graph = metadata.modules.flatMap(module => module.declarations).find(item => item.selected && containsGraph(item.projection));
-	if(graph) throw Object.assign(new Error(`${graph.identity}: copied graph exports require the bounded graph transport`), {
+	if(graph && !copiedGraphs) throw Object.assign(new Error(`${graph.identity}: copied graph exports require the bounded graph transport`), {
 		code: "native-elaboration-unsupported"
 		, details: { declaration: graph.identity }
 	});

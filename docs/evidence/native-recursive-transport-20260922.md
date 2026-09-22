@@ -98,7 +98,9 @@ The [callable-alias repair](callable-alias-ci-repair-20260922.md) also includes
 rebuilt installed npm recursive, alias and variant packages on both source paths
 in all three browsers. Native installed coverage remains unchanged.
 
-Next are the native build model, wrapper status/runtime policy, typed C/C++
+The [native component integration](native-graph-components-20260922.md) now
+executes both ordinary and independently reviewed builds through the shared
+library and runtime broker. Next are wrapper status/runtime policy, typed C/C++
 packages, and ordinary/reviewed installed consumers. The remaining host
 projections, compound callable payloads and explicitly owned identity aggregates
 remain part of the structured-types goal.
