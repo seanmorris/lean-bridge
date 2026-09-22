@@ -22,6 +22,7 @@ import { assertComponentSignature, componentScalarAbi } from "../abi/component-s
 import { assertComponentCallableBindings, componentCallableSignatureText } from "../abi/component-callables.mjs";
 import { assertComponentCopiedBindings } from "../abi/component-copied.mjs";
 import { assertComponentRecordBindings } from "../abi/component-records.mjs";
+import { assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { componentNpmIdentity, validateComponentPackageReceipt } from "./component-package-receipt.mjs";
 import { writeNpmPackageSet } from "./package-set-assembly.mjs";
@@ -133,13 +134,14 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	}
 	else if(abi.version === 4) assertComponentCopiedBindings(abi, ir);
 	else if([5, 6, 7].includes(abi.version)) assertComponentRecordBindings(abi, ir);
+	else if(abi.version === 8) assertComponentRecursiveBindings(abi, ir);
 	else
 	{
 		if(abi.version !== componentScalarAbi || abi.dispatch !== "scalar-frame-v2") throw new Error("Rebuild this component for scalar ABI 2");
 		for(const declaration of ir.declarations) assertComponentSignature(declaration);
 		for(const declaration of abi.exports) assertComponentSignature(declaration);
 	}
-	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs");
+	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs").replaceAll("../abi/component-recursive.mjs", "./component-recursive.mjs").replaceAll("../abi/component-recursive-abi.mjs", "./component-recursive-abi.mjs");
 	const runtimeSource = relocate(await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8"));
 	const scalarSource = await readFile(new URL("../abi/component-scalars.mjs", import.meta.url), "utf8");
 	const codecSource = (await readFile(new URL("./component-scalar-codec.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
@@ -151,6 +153,7 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 	const side = new WebAssembly.Module(await readFile(join(bundle.root, artifact.path)));
 	if([6, 7].includes(abi.version) && ["bridge_compound_abi", "bridge_compound_frame_validate", "bridge_compound_children_validate", "bridge_compound_children_allocate"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component compound ABI; rebuild the shared runtime");
 	if(abi.version === 7 && ["bridge_nominal_abi", "bridge_nominal_frame_validate", "bridge_nominal_children_validate", "bridge_nominal_children_allocate"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component nominal ABI; rebuild the shared runtime");
+	if(abi.version === 8 && ["abi", "frame_validate", "arena_open", "children_allocate", "encode_leaf", "receipt_count", "receipt_data", "frame_clear"].some(name => !runtimeExports.has(`function:bridge_recursive_${name}`) || !mainModule.includes(Buffer.from(`bridge_recursive_${name}`)))) throw new Error("Prepared runtime lacks the component recursive ABI; rebuild the shared runtime");
 	const sideExports = new Set(WebAssembly.Module.exports(side).map(item => `${item.kind}:${item.name}`));
 	for(const item of WebAssembly.Module.imports(side))
 	{
@@ -175,6 +178,10 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, ["internal/component-records.mjs", await readFile(new URL("../abi/component-records.mjs", import.meta.url))]
 		, ["internal/component-copied-codec.mjs", relocate(await readFile(new URL("./component-copied-codec.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-copied-runtime.mjs", relocate(await readFile(new URL("./component-copied-runtime.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-recursive.mjs", await readFile(new URL("../abi/component-recursive.mjs", import.meta.url))]
+		, ["internal/component-recursive-abi.mjs", await readFile(new URL("../abi/component-recursive-abi.mjs", import.meta.url))]
+		, ["internal/component-recursive-codec.mjs", relocate(await readFile(new URL("./component-recursive-codec.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-recursive-ownership.mjs", relocate(await readFile(new URL("./component-recursive-ownership.mjs", import.meta.url), "utf8"))]
 		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
 	]);
 	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);

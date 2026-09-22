@@ -112,7 +112,7 @@ const recursiveReview = () => {
 	return { schemaVersion: 1, path: "recursive.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(ir) };
 };
 
-test("recursive compiler tables lower to nominal IR while unimplemented compiled paths stay closed", async () => {
+test("recursive compiler tables lower to npm graph ABI while native graph paths stay closed", async () => {
 	const identities = [];
 	for(const native of [true, false])
 	{
@@ -127,7 +127,7 @@ test("recursive compiler tables lower to nominal IR while unimplemented compiled
 		identities.push(sourceApiIdentity(ir).sha256);
 		const abi = recursiveCarrierAbi(ir);
 		assertComponentRecursiveBindings(abi, ir);
-		assert.throws(() => createComponentPrivateAbi(ir), /recursive|cyclic/iu);
+		assert.equal(createComponentPrivateAbi(ir).version, 8);
 		if(native) assert.throws(() => createNativeModel({ ...input, component }), /bounded graph transport/u);
 	}
 	assert.equal(identities[0], identities[1]);

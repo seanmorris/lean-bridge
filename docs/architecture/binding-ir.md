@@ -95,8 +95,12 @@ identities and field order. [Fresh Lean extraction](../evidence/recursive-copied
 retains recursive definitions in closed nominal tables, checks their compiler
 representations, and reconciles independently reviewed recursive contracts.
 [Typed carriers and bounded C/Wasm walkers](../evidence/recursive-copied-adapters-20260922.md)
-execute with input validation and partial-output cleanup. Public runtime
-integration and installed recursive package acceptance remain open.
+execute with input validation and partial-output cleanup.
+[Compiled npm packages](../evidence/npm-recursive-20260922.md) use private ABI 8
+for recursive graphs. A native allocation ledger owns the result; the loader
+checks each returned buffer against that ledger before copying it. Cleanup does
+not follow result pointers. Other consumer targets still need recursive adapters
+and installed acceptance.
 
 Compiled npm variants use private ABI 7, with a closed named-type table and
 constructor-specific copied fields. Generated Lean helpers construct and match

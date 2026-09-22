@@ -149,6 +149,7 @@ jobs:
           node --test tests/component-lists.test.mjs
           node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs
           node --test tests/component-aliases.test.mjs
+          node --test tests/component-recursive.test.mjs
           test -s build/callables/npm/report.json
           test -s build/arrays/npm/report.json
           test -s build/records/npm/report.json
@@ -157,6 +158,7 @@ jobs:
           test -s build/lists/npm/report.json
           test -s build/variants/npm/report.json
           test -s build/aliases/npm/report.json
+          test -s build/recursive/npm/report.json
           test -s build/word-npm/report.json
           test -s build/char-npm/report.json
           test -s build/type-corpus/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript.json
@@ -178,6 +180,7 @@ jobs:
             build/lists/npm/
             build/variants/npm/
             build/aliases/npm/
+            build/recursive/npm/
           if-no-files-found: error
           retention-days: 30
       - name: Install C# for the combined native projection
@@ -199,7 +202,7 @@ jobs:
           LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
           LEAN_BRIDGE_LAKE_RUNTIME_ROOT: build/consumer-ci-runtime/lazy
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv php-cli php-common composer zstd m4
+          sudo apt-get update && sudo apt-get install -y build-essential libperl-dev pkg-config python3-venv php-cli php-common composer zstd m4 unzip
           bash scripts/bootstrap-toolchains.sh --lean-only
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only
           bash scripts/bootstrap-rust-ci.sh
@@ -207,6 +210,12 @@ jobs:
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
           export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+          curl -fL --retry 3 --output build/combined-kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/combined-kotlin-compiler.zip' | sha256sum --check
+          unzip -q build/combined-kotlin-compiler.zip -d build/combined-kotlin-tools
+          export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+          export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+          export LEAN_BRIDGE_KOTLINC="$PWD/build/combined-kotlin-tools/kotlinc/bin/kotlinc"
           source scripts/env.sh
           node --test tests/multi-profile-project.test.mjs
       - name: Check documentation API captures through compiler-backed public analysis
@@ -239,8 +248,8 @@ jobs:
         run: |
           test_result="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && 'passed' || 'failed' }}"
           executed="${{ steps.consumer.outcome == 'success' && steps.type_corpus_npm.outcome == 'success' && 'true' || 'false' }}"
-          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs"
-          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs"
+          node scripts/consumer-ci.mjs record --consumer node-javascript --output build/consumer-ci/results/node-javascript.json --performance build/consumer-ci/performance/node-javascript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs"
+          node scripts/consumer-ci.mjs record --consumer node-typescript --output build/consumer-ci/results/node-typescript.json --performance build/consumer-ci/performance/node-typescript.json --test-result "$test_result" --package-installation "$executed" --real-lean-execution "$executed" --command "npm run test:consumer:node && npm run test:type-corpus:npm && npm run test:type-corpus:reviewed-npm && node --test tests/component-char.test.mjs && node --test tests/component-words.test.mjs && node --test tests/component-callables.test.mjs && node --test tests/component-arrays.test.mjs && node --test tests/component-records.test.mjs && node --test tests/component-compounds.test.mjs && node --test tests/component-lists.test.mjs && node --test tests/component-variant-runtime.test.mjs tests/component-variants.test.mjs && node --test tests/component-aliases.test.mjs && node --test tests/component-recursive.test.mjs"
       - name: Upload Node observations
         if: always()
         uses: actions/upload-artifact@v7

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.77.0",
+  "contractVersion": "0.78.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,201 @@
   ],
   "evidence": [
     {
+      "id": "npm-recursive-installed",
+      "kind": "installed",
+      "revision": "73e30223156a38bd0d9cb609edca6a2e80a8a47a",
+      "command": "CHROMIUM_PATH=/usr/bin/chromium LEAN_BRIDGE_TYPE_CORPUS_BROWSERS=chromium,firefox,webkit node --test tests/component-recursive.test.mjs; node --test tests/component-structured-codec.test.mjs",
+      "scope": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
+        },
+        {
+          "path": "config/cli-package.v1.json",
+          "sha256": "3f41fbb81a02d8f6054b5cf391ae5ab85c1e1263f4d3dcf0a19b57c9a5c6cc78"
+        },
+        {
+          "path": "docs/evidence/npm-recursive-20260922.json",
+          "sha256": "edbf2bcd8e330cf42cbbf1d9e9a1c9eb9ad0ab7c89fe5afa2329bffdde397212"
+        },
+        {
+          "path": "docs/evidence/npm-recursive-20260922.md",
+          "sha256": "71275d1af1c27fd3e5c3befd1cfa92e7d935e2b9659311b62c3802da11fbd95d"
+        },
+        {
+          "path": "docs/evidence/recursive-npm-source-lineage-20260922.json",
+          "sha256": "7a615dd82c8a89666da6fe76ca9e1442228cfb596ff9267aedf12a4ab4e02ee4"
+        },
+        {
+          "path": "nix/component-engine-source-boundary.json",
+          "sha256": "27299acfd26c6dc9eb1815393de76d49c89b9021d25f3c515869e989164c1385"
+        },
+        {
+          "path": "nix/core-source-boundary.json",
+          "sha256": "c8bd590a7a6c94f9f0f6c78bd066c1d22e1b500c809f46a17d57538b6433de01"
+        },
+        {
+          "path": "poc/lean-link-spike/component_scalar.cpp",
+          "sha256": "6a5317ef24233b25014c577b2fa72ef531cc536cd3db23bfe8866f93595b5824"
+        },
+        {
+          "path": "poc/lean-link-spike/component_scalar.h",
+          "sha256": "f298ba8da0fe232a8470961f4f18e0d9a3fdcfc98135ce72a0fc75e2a3622d01"
+        },
+        {
+          "path": "schema/compiler-adapter-plan.schema.json",
+          "sha256": "4eef5156a1f98dcf1630a22b7fdae33ddfd6c43818cdc0556695204f9ac7fe80"
+        },
+        {
+          "path": "src/abi/component-recursive-abi.mjs",
+          "sha256": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4"
+        },
+        {
+          "path": "src/abi/component-recursive.mjs",
+          "sha256": "684f81daabbb20b8e61ce22a56fb26c5e565213dde1d08942f46afa3640bdba9"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "6e2ab9f7c16a94051b787b483896af63a54fbf94c929a85a765c9d4bc559ca8d"
+        },
+        {
+          "path": "src/analyze/copied-metadata-graph.mjs",
+          "sha256": "7ad41f21d0cfd4933c73e7293131499219b72309d172f2e8201580885f1abc58"
+        },
+        {
+          "path": "src/backends/javascript/copied-validators.mjs",
+          "sha256": "12cc0b98a3b62e50a200081d29a1fb3c7014a43048753af8360c251f066fa869"
+        },
+        {
+          "path": "src/backends/javascript/generate.mjs",
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
+        },
+        {
+          "path": "src/build/compiler-adapters.mjs",
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
+        },
+        {
+          "path": "src/build/component-callable-adapters.mjs",
+          "sha256": "ede28855d38959501fcd32d325996cd68604c2af3f3ec24de1eab91c769541f7"
+        },
+        {
+          "path": "src/build/component-recursive-adapters.mjs",
+          "sha256": "b6dd63869083f1a16cf109b573b251f37e78ff96bafc16522e83c3ab8eeea1f0"
+        },
+        {
+          "path": "src/build/component-recursive-lean.mjs",
+          "sha256": "7bcff37a068738a5fc029621f411ae422ae6e286b5f31b13dfb5360fb0e74c28"
+        },
+        {
+          "path": "src/build/lean-component-compiler.mjs",
+          "sha256": "acf5b28adb6cb976dde9ab75141b3bf0eddbe655b6a4851b30b74775702c542e"
+        },
+        {
+          "path": "src/build/side-module-audit.mjs",
+          "sha256": "1e6ac8cef8f355ad4ff93d4def5756e604fd4eb05a07870e377ecdf57f0e062b"
+        },
+        {
+          "path": "src/release/component-copied-runtime.mjs",
+          "sha256": "fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97"
+        },
+        {
+          "path": "src/release/component-npm-package.mjs",
+          "sha256": "45cba2b8be0c97e17ef28dfa53779d105eb0ca7a5aab4d4f55ea1ccc9c6c2372"
+        },
+        {
+          "path": "src/release/component-recursive-codec.mjs",
+          "sha256": "ff525d5e995a4e7fea6f3fe1cb12543238cb746928b15153600145881d0be976"
+        },
+        {
+          "path": "src/release/component-recursive-ownership.mjs",
+          "sha256": "99caed95532e307a04b88505a2aebb8182fe61944a406919e5c6b8a2948d78c5"
+        },
+        {
+          "path": "src/release/component-runtime.mjs",
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
+        },
+        {
+          "path": "tests/component-recursive.test.mjs",
+          "sha256": "21718408a92360534d461658a9961a58502326ca83ac498cedd13165ec927dd0"
+        },
+        {
+          "path": "tests/component-structured-codec.test.mjs",
+          "sha256": "24025ab571cc4a1da732f4693c3515176dd78b82524f253f0365f34036eb0b56"
+        },
+        {
+          "path": "tests/fixtures/alias-consumers/npm.mjs",
+          "sha256": "83436d22a7dca3adc31da806476f20d39c44203a09ee4fbb8a6d76424626f0ad"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-recursive/LICENSE",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-recursive/Recursive.lean",
+          "sha256": "e63ad95cf9c5cea264803a470498b0e2c6a1b419382d671894785e3b998009f3"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-recursive/lakefile.toml",
+          "sha256": "b239924759d92c81602411eff6fed58516504a385e430b0d766d87c5f4f63fc7"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-recursive/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-recursive/package.json",
+          "sha256": "752f29330253422e346ec5a556a032cb9a4236044d41db56a50e4f9b2ecd9fd7"
+        },
+        {
+          "path": "tests/fixtures/recursive-consumers/npm.mjs",
+          "sha256": "9a6b9e471d7346a6d29846ff32b17d84db64d15365b5677e6711ad7c6b366221"
+        },
+        {
+          "path": "tests/fixtures/structured-types/recursive-ownership.c",
+          "sha256": "85e9913c3bde7b6b21685081c1187492f58bf7188aefc94c4711414982bf0a42"
+        },
+        {
+          "path": "tests/fixtures/variant-consumers/npm.mjs",
+          "sha256": "f50b8009f1b9db916c8551a1b87334c6035a198a834737848179e09f739c1a3c"
+        },
+        {
+          "path": "tests/helpers/component-scalar-install.mjs",
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
+        },
+        {
+          "path": "tests/helpers/recursive-carriers.mjs",
+          "sha256": "ab60b62a8ce5a47350946ff12d6a4de4bab1d682f8b79473c2b45dd0dbc899cd"
+        },
+        {
+          "path": "tests/helpers/recursive-fixture.mjs",
+          "sha256": "18973bd78828c2bf98b3cf26191f2ff1b5d8fa32ab1d16dad31374b59a928dbb"
+        },
+        {
+          "path": "tests/helpers/recursive-wasm.mjs",
+          "sha256": "0f6971616c466ae7c68569d1c15b4a183f58035e37d883eec9cc8bce9f5a8436"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "npm/ordinary-source/recursive-1.0.0.tgz",
+          "sha256": "96addb85fde690ee70ea964efadb47c38c0ea89185e2290c90a3173231405ce7"
+        },
+        {
+          "path": "npm/ordinary-source/lean-bridge-runtime-0.0.0-abi2.9cc347ec9e621fde067e1e4ff40943ad5b35c2519c36adf9e23a52aba21d979a.tgz",
+          "sha256": "79a7826279f07679b05738aa80f22bde250172d7026349b5a3ba99aa55b5fc2c"
+        },
+        {
+          "path": "npm/reviewed-ir/recursive-1.0.0.tgz",
+          "sha256": "8bd9796c6a1141e466f8f74d8a501304bdf33d6ffcc32a2c6637d119e15254d1"
+        },
+        {
+          "path": "npm/reviewed-ir/lean-bridge-runtime-0.0.0-abi2.9cc347ec9e621fde067e1e4ff40943ad5b35c2519c36adf9e23a52aba21d979a.tgz",
+          "sha256": "79a7826279f07679b05738aa80f22bde250172d7026349b5a3ba99aa55b5fc2c"
+        }
+      ]
+    },
+    {
       "id": "kotlin-collections-installed",
       "kind": "installed",
       "revision": "fe67147986aff51c5d16c1279b51f5d60403b9a7",
@@ -165,7 +360,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/consume/kotlin.md",
@@ -185,7 +380,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -625,7 +820,7 @@
         },
         {
           "path": "tests/kotlin-collection-evidence.test.mjs",
-          "sha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc"
+          "sha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
         },
         {
           "path": "tests/native-jvm.test.mjs",
@@ -660,7 +855,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/consume/wit-wasi.md",
@@ -676,7 +871,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -943,7 +1138,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-wasm-collections-20260922.json",
@@ -959,7 +1154,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1262,7 +1457,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-native-collections-20260922.json",
@@ -1278,7 +1473,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1533,7 +1728,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/consume/java.md",
@@ -1553,7 +1748,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1765,7 +1960,7 @@
         },
         {
           "path": "tests/kotlin-collection-evidence.test.mjs",
-          "sha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc"
+          "sha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
         },
         {
           "path": "tests/jvm-kotlin-contract.test.mjs",
@@ -1820,7 +2015,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/consume/rust.md",
@@ -1840,7 +2035,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2003,7 +2198,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/consume/python.md",
@@ -2023,7 +2218,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2182,7 +2377,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/consume/dotnet.md",
@@ -2202,7 +2397,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2377,7 +2572,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/consume/ruby.md",
@@ -2397,7 +2592,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2556,7 +2751,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/consume/c.md",
@@ -2584,7 +2779,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2795,7 +2990,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2966,7 +3161,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/wit-variants-20260921.json",
@@ -2978,7 +3173,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3169,7 +3364,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-wasm-variants-20260921.json",
@@ -3181,7 +3376,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3428,7 +3623,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-native-variants-20260921.json",
@@ -3440,7 +3635,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3651,7 +3846,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3814,7 +4009,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/ruby-variants-20260921.json",
@@ -3826,7 +4021,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4005,7 +4200,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/jvm-variants-20260921.json",
@@ -4017,7 +4212,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4209,7 +4404,7 @@
         },
         {
           "path": "tests/kotlin-collection-evidence.test.mjs",
-          "sha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc"
+          "sha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
         },
         {
           "path": "tests/jvm-kotlin-contract.test.mjs",
@@ -4280,7 +4475,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/dotnet-variants-20260921.json",
@@ -4292,7 +4487,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4475,7 +4670,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/rust-variants-20260921.json",
@@ -4487,7 +4682,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4670,7 +4865,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/python-variants-20260921.json",
@@ -4682,7 +4877,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4861,7 +5056,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/c-variants-20260921.json",
@@ -4873,7 +5068,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5048,7 +5243,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.json",
@@ -5060,7 +5255,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5199,7 +5394,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/wit-aliases-20260921.json",
@@ -5211,7 +5406,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5370,7 +5565,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-wasm-aliases-20260921.json",
@@ -5382,7 +5577,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5597,7 +5792,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-native-aliases-20260921.json",
@@ -5609,7 +5804,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5760,7 +5955,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5895,7 +6090,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/ruby-aliases-20260921.json",
@@ -5907,7 +6102,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6046,7 +6241,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
@@ -6058,7 +6253,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6206,7 +6401,7 @@
         },
         {
           "path": "tests/kotlin-collection-evidence.test.mjs",
-          "sha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc"
+          "sha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
         },
         {
           "path": "tests/jvm-kotlin-contract.test.mjs",
@@ -6277,15 +6472,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "2a32787b192195c5c183b125631358f124253f9da2b8ae1f274db4a1f82c1705"
+          "sha256": "44f422e295caa5ea1325398256f828c8fc6139b9c12d5da30ba7310c928454aa"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "91193565c3b20ee8d864556b757829d7e747819936df9cbe7bdf188ae860641f"
+          "sha256": "3f41fbb81a02d8f6054b5cf391ae5ab85c1e1263f4d3dcf0a19b57c9a5c6cc78"
         },
         {
           "path": "docs/evidence/dotnet-aliases-20260921.json",
@@ -6301,11 +6496,11 @@
         },
         {
           "path": "package.json",
-          "sha256": "7e18c4a39619bb9767f6ef4644c730c40c8c3f1da62f817464f71f38a38f56a3"
+          "sha256": "9108dde6160aabd1ad5442de2b3e23f9a4f9edb72367d486f7f7ff346ffbf66a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6452,7 +6647,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -6464,7 +6659,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6595,7 +6790,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -6607,7 +6802,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6730,7 +6925,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -6742,7 +6937,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6865,7 +7060,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -6893,7 +7088,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6937,7 +7132,7 @@
         },
         {
           "path": "tests/compiler-alias-metadata.test.mjs",
-          "sha256": "826bd41df9fdc442f1440f0d8d90af180b1a45a51b5d723334f0cfa4a193337c"
+          "sha256": "b04c61d4070b9c44047bedd645925b3dea81901635fcc368cbdfab077eb1333f"
         },
         {
           "path": "tests/component-aliases.test.mjs",
@@ -6973,7 +7168,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
         },
         {
           "path": "tests/helpers/compound-source-fixture.mjs",
@@ -7008,7 +7203,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -7020,15 +7215,15 @@
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "00b54df94080679e2ca88cd8c8eb00da75877e82854af58b0eb96c6f7a421fdb"
+          "sha256": "6a5317ef24233b25014c577b2fa72ef531cc536cd3db23bfe8866f93595b5824"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "e693b9ae345346f071720c7ef6f73fc36bb57850e72bcb33eb4ae48ca73858fe"
+          "sha256": "f298ba8da0fe232a8470961f4f18e0d9a3fdcfc98135ce72a0fc75e2a3622d01"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
+          "sha256": "4eef5156a1f98dcf1630a22b7fdae33ddfd6c43818cdc0556695204f9ac7fe80"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
@@ -7044,7 +7239,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7056,15 +7251,15 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
+          "sha256": "ede28855d38959501fcd32d325996cd68604c2af3f3ec24de1eab91c769541f7"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
@@ -7080,23 +7275,23 @@
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
+          "sha256": "acf5b28adb6cb976dde9ab75141b3bf0eddbe655b6a4851b30b74775702c542e"
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
-          "sha256": "8261ab45cfb85ad73ed794b4acdf5868a53723df76f3f0dd7656213f9e8a7534"
+          "sha256": "fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97"
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
+          "sha256": "45cba2b8be0c97e17ef28dfa53779d105eb0ca7a5aab4d4f55ea1ccc9c6c2372"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
         },
         {
           "path": "tests/component-variant-contract.test.mjs",
-          "sha256": "d67656f36d1eb6b935e3f1a81a6a65ab92a4bb7cc15d090b41ef2f1c3136387f"
+          "sha256": "e88517997190f59e9323d114f4f27f74446004704baa5061cf9bdbbad4ba75f0"
         },
         {
           "path": "tests/component-variant-runtime.test.mjs",
@@ -7132,7 +7327,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
         },
         {
           "path": "tests/helpers/variant-fixture.mjs",
@@ -7167,7 +7362,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -7183,7 +7378,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7362,7 +7557,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -7378,7 +7573,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7601,7 +7796,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -7617,7 +7812,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7808,7 +8003,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -7824,7 +8019,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8031,7 +8226,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8242,7 +8437,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -8258,7 +8453,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8421,7 +8616,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -8437,7 +8632,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8609,7 +8804,7 @@
         },
         {
           "path": "tests/kotlin-collection-evidence.test.mjs",
-          "sha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc"
+          "sha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
         },
         {
           "path": "tests/jvm-kotlin-contract.test.mjs",
@@ -8664,7 +8859,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -8680,7 +8875,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9356,7 +9551,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -9388,7 +9583,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -9416,7 +9611,7 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "src/binding-ir/contract.mjs",
@@ -9424,7 +9619,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
@@ -9456,7 +9651,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
         },
         {
           "path": "tests/helpers/list-fixture.mjs",
@@ -9495,7 +9690,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -9511,7 +9706,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9714,7 +9909,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -9730,7 +9925,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9929,7 +10124,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10140,7 +10335,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -10156,7 +10351,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10319,7 +10514,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -10335,7 +10530,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10507,7 +10702,7 @@
         },
         {
           "path": "tests/kotlin-collection-evidence.test.mjs",
-          "sha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc"
+          "sha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
         },
         {
           "path": "tests/jvm-kotlin-contract.test.mjs",
@@ -10562,7 +10757,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -10578,7 +10773,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11246,7 +11441,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -11258,19 +11453,19 @@
         },
         {
           "path": "nix/component-engine-source-boundary.json",
-          "sha256": "3c75b21c43e4706471af796a49806f7fbd2648be71d703692b2d67d4165d876f"
+          "sha256": "27299acfd26c6dc9eb1815393de76d49c89b9021d25f3c515869e989164c1385"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "00b54df94080679e2ca88cd8c8eb00da75877e82854af58b0eb96c6f7a421fdb"
+          "sha256": "6a5317ef24233b25014c577b2fa72ef531cc536cd3db23bfe8866f93595b5824"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "e693b9ae345346f071720c7ef6f73fc36bb57850e72bcb33eb4ae48ca73858fe"
+          "sha256": "f298ba8da0fe232a8470961f4f18e0d9a3fdcfc98135ce72a0fc75e2a3622d01"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
+          "sha256": "4eef5156a1f98dcf1630a22b7fdae33ddfd6c43818cdc0556695204f9ac7fe80"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
@@ -11314,15 +11509,15 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
+          "sha256": "ede28855d38959501fcd32d325996cd68604c2af3f3ec24de1eab91c769541f7"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
@@ -11338,11 +11533,11 @@
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
+          "sha256": "acf5b28adb6cb976dde9ab75141b3bf0eddbe655b6a4851b30b74775702c542e"
         },
         {
           "path": "src/build/side-module-audit.mjs",
-          "sha256": "0448107966944580a043fd8d5224bd3145bf16345b4eff00c65045658bbbc31b"
+          "sha256": "1e6ac8cef8f355ad4ff93d4def5756e604fd4eb05a07870e377ecdf57f0e062b"
         },
         {
           "path": "src/release/component-copied-codec.mjs",
@@ -11350,15 +11545,15 @@
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
-          "sha256": "8261ab45cfb85ad73ed794b4acdf5868a53723df76f3f0dd7656213f9e8a7534"
+          "sha256": "fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97"
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
+          "sha256": "45cba2b8be0c97e17ef28dfa53779d105eb0ca7a5aab4d4f55ea1ccc9c6c2372"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
         },
         {
           "path": "tests/component-compound-contract.test.mjs",
@@ -11394,7 +11589,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
         },
         {
           "path": "tests/helpers/compound-fixture.mjs",
@@ -11449,7 +11644,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -11461,19 +11656,19 @@
         },
         {
           "path": "nix/component-engine-source-boundary.json",
-          "sha256": "3c75b21c43e4706471af796a49806f7fbd2648be71d703692b2d67d4165d876f"
+          "sha256": "27299acfd26c6dc9eb1815393de76d49c89b9021d25f3c515869e989164c1385"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "00b54df94080679e2ca88cd8c8eb00da75877e82854af58b0eb96c6f7a421fdb"
+          "sha256": "6a5317ef24233b25014c577b2fa72ef531cc536cd3db23bfe8866f93595b5824"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "e693b9ae345346f071720c7ef6f73fc36bb57850e72bcb33eb4ae48ca73858fe"
+          "sha256": "f298ba8da0fe232a8470961f4f18e0d9a3fdcfc98135ce72a0fc75e2a3622d01"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
+          "sha256": "4eef5156a1f98dcf1630a22b7fdae33ddfd6c43818cdc0556695204f9ac7fe80"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
@@ -11501,15 +11696,15 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
+          "sha256": "ede28855d38959501fcd32d325996cd68604c2af3f3ec24de1eab91c769541f7"
         },
         {
           "path": "src/build/component-record-adapters.mjs",
@@ -11517,11 +11712,11 @@
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
+          "sha256": "acf5b28adb6cb976dde9ab75141b3bf0eddbe655b6a4851b30b74775702c542e"
         },
         {
           "path": "src/build/side-module-audit.mjs",
-          "sha256": "0448107966944580a043fd8d5224bd3145bf16345b4eff00c65045658bbbc31b"
+          "sha256": "1e6ac8cef8f355ad4ff93d4def5756e604fd4eb05a07870e377ecdf57f0e062b"
         },
         {
           "path": "src/release/component-copied-codec.mjs",
@@ -11529,15 +11724,15 @@
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
-          "sha256": "8261ab45cfb85ad73ed794b4acdf5868a53723df76f3f0dd7656213f9e8a7534"
+          "sha256": "fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97"
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
+          "sha256": "45cba2b8be0c97e17ef28dfa53779d105eb0ca7a5aab4d4f55ea1ccc9c6c2372"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
         },
         {
           "path": "tests/component-record-contract.test.mjs",
@@ -11573,7 +11768,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
         },
         {
           "path": "tests/helpers/record-fixture.mjs",
@@ -11612,7 +11807,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -11624,23 +11819,23 @@
         },
         {
           "path": "nix/component-engine-source-boundary.json",
-          "sha256": "3c75b21c43e4706471af796a49806f7fbd2648be71d703692b2d67d4165d876f"
+          "sha256": "27299acfd26c6dc9eb1815393de76d49c89b9021d25f3c515869e989164c1385"
         },
         {
           "path": "poc/lean-link-spike/bindings/generated-package-gate.json",
-          "sha256": "c6443d040ce0cc90ff66415206a4edb48137efa2f3fc84558897b13674d9a2b7"
+          "sha256": "40ba88481b21616328b15649791ff01a708235d862684204496780fc049fbc7d"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "00b54df94080679e2ca88cd8c8eb00da75877e82854af58b0eb96c6f7a421fdb"
+          "sha256": "6a5317ef24233b25014c577b2fa72ef531cc536cd3db23bfe8866f93595b5824"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "e693b9ae345346f071720c7ef6f73fc36bb57850e72bcb33eb4ae48ca73858fe"
+          "sha256": "f298ba8da0fe232a8470961f4f18e0d9a3fdcfc98135ce72a0fc75e2a3622d01"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
+          "sha256": "4eef5156a1f98dcf1630a22b7fdae33ddfd6c43818cdc0556695204f9ac7fe80"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
@@ -11652,7 +11847,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "fca6a75ad284d543e363468521065e69eff5eac3246df5e33829e8befc281183"
+          "sha256": "cd7cde6c4f20fe5b2fae7166c70572161e3f0c6267787238fc614c19daf539e0"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -11660,7 +11855,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11672,15 +11867,15 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
+          "sha256": "ede28855d38959501fcd32d325996cd68604c2af3f3ec24de1eab91c769541f7"
         },
         {
           "path": "src/build/component-copied-adapters.mjs",
@@ -11688,11 +11883,11 @@
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
+          "sha256": "acf5b28adb6cb976dde9ab75141b3bf0eddbe655b6a4851b30b74775702c542e"
         },
         {
           "path": "src/build/side-module-audit.mjs",
-          "sha256": "0448107966944580a043fd8d5224bd3145bf16345b4eff00c65045658bbbc31b"
+          "sha256": "1e6ac8cef8f355ad4ff93d4def5756e604fd4eb05a07870e377ecdf57f0e062b"
         },
         {
           "path": "src/release/component-copied-codec.mjs",
@@ -11700,15 +11895,15 @@
         },
         {
           "path": "src/release/component-copied-runtime.mjs",
-          "sha256": "8261ab45cfb85ad73ed794b4acdf5868a53723df76f3f0dd7656213f9e8a7534"
+          "sha256": "fd2900bab92704b9d877efbc66567fc71037a3c183cd9dfe4a08678e5c3d8e97"
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
+          "sha256": "45cba2b8be0c97e17ef28dfa53779d105eb0ca7a5aab4d4f55ea1ccc9c6c2372"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
         },
         {
           "path": "tests/component-array-contract.test.mjs",
@@ -11736,7 +11931,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
         },
         {
           "path": "tests/helpers/type-corpus-node.mjs",
@@ -11799,7 +11994,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
         },
         {
           "path": "tests/component-callables.test.mjs",
@@ -11823,15 +12018,15 @@
         },
         {
           "path": "src/build/component-callable-adapters.mjs",
-          "sha256": "c1c7b91e92cfe0971f5e81dc8d63c63beb324bd0215ba707ce17732ac4118073"
+          "sha256": "ede28855d38959501fcd32d325996cd68604c2af3f3ec24de1eab91c769541f7"
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
         },
         {
           "path": "src/build/lean-component-compiler.mjs",
-          "sha256": "dd973572cb99131f268df2eb4607cc6da3c011c2701bfd59a36ed245165d9a2e"
+          "sha256": "acf5b28adb6cb976dde9ab75141b3bf0eddbe655b6a4851b30b74775702c542e"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11851,7 +12046,7 @@
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
         },
         {
           "path": "src/release/component-callable-runtime.mjs",
@@ -11859,15 +12054,15 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
+          "sha256": "45cba2b8be0c97e17ef28dfa53779d105eb0ca7a5aab4d4f55ea1ccc9c6c2372"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "00b54df94080679e2ca88cd8c8eb00da75877e82854af58b0eb96c6f7a421fdb"
+          "sha256": "6a5317ef24233b25014c577b2fa72ef531cc536cd3db23bfe8866f93595b5824"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "e693b9ae345346f071720c7ef6f73fc36bb57850e72bcb33eb4ae48ca73858fe"
+          "sha256": "f298ba8da0fe232a8470961f4f18e0d9a3fdcfc98135ce72a0fc75e2a3622d01"
         },
         {
           "path": "scripts/build-lean-link-spike.sh",
@@ -11875,7 +12070,7 @@
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
-          "sha256": "6c29ac7d79cc4e2d6908e98d1d69f306088bfacea474c3c87049d6f4721587b9"
+          "sha256": "4eef5156a1f98dcf1630a22b7fdae33ddfd6c43818cdc0556695204f9ac7fe80"
         },
         {
           "path": "schema/elaborated-export-metadata.schema.json",
@@ -11883,11 +12078,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -12022,11 +12217,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -12149,7 +12344,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -12177,7 +12372,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -12388,7 +12583,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -12416,7 +12611,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -12575,7 +12770,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -12599,7 +12794,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -12619,7 +12814,7 @@
         },
         {
           "path": "tests/kotlin-collection-evidence.test.mjs",
-          "sha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc"
+          "sha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
         },
         {
           "path": "tests/jvm-kotlin-contract.test.mjs",
@@ -12834,7 +13029,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -12854,7 +13049,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -13033,11 +13228,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "flake.nix",
@@ -13244,11 +13439,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -13439,11 +13634,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -13570,11 +13765,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -13701,11 +13896,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -13820,11 +14015,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -13931,11 +14126,11 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "4eff18fbb6872ae0ce78ff55b214403238d3b47f8802128609474a789c607eee"
+          "sha256": "b5478bbd807b3f6c121abdec5024b8f697433cc2ce9e73bf090e5cdecf1383e1"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -14026,7 +14221,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -14050,15 +14245,15 @@
         },
         {
           "path": "poc/lean-link-spike/bindings/generated-package-gate.json",
-          "sha256": "c6443d040ce0cc90ff66415206a4edb48137efa2f3fc84558897b13674d9a2b7"
+          "sha256": "40ba88481b21616328b15649791ff01a708235d862684204496780fc049fbc7d"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "00b54df94080679e2ca88cd8c8eb00da75877e82854af58b0eb96c6f7a421fdb"
+          "sha256": "6a5317ef24233b25014c577b2fa72ef531cc536cd3db23bfe8866f93595b5824"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.h",
-          "sha256": "e693b9ae345346f071720c7ef6f73fc36bb57850e72bcb33eb4ae48ca73858fe"
+          "sha256": "f298ba8da0fe232a8470961f4f18e0d9a3fdcfc98135ce72a0fc75e2a3622d01"
         },
         {
           "path": "schema/binding-ir.schema.json",
@@ -14074,7 +14269,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "fca6a75ad284d543e363468521065e69eff5eac3246df5e33829e8befc281183"
+          "sha256": "cd7cde6c4f20fe5b2fae7166c70572161e3f0c6267787238fc614c19daf539e0"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -14082,7 +14277,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -14130,7 +14325,7 @@
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
@@ -14202,7 +14397,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
         },
         {
           "path": "src/build/component-scalar-adapters.mjs",
@@ -14214,11 +14409,11 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
+          "sha256": "45cba2b8be0c97e17ef28dfa53779d105eb0ca7a5aab4d4f55ea1ccc9c6c2372"
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
         },
         {
           "path": "tests/component-scalars.test.mjs",
@@ -14234,7 +14429,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "4eff18fbb6872ae0ce78ff55b214403238d3b47f8802128609474a789c607eee"
+          "sha256": "b5478bbd807b3f6c121abdec5024b8f697433cc2ce9e73bf090e5cdecf1383e1"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -14310,7 +14505,7 @@
         },
         {
           "path": "tests/helpers/component-scalar-install.mjs",
-          "sha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779"
+          "sha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
         },
         {
           "path": "tests/helpers/copied-fixture-install.mjs",
@@ -14413,7 +14608,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -14425,7 +14620,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -14668,7 +14863,7 @@
         },
         {
           "path": "src/build/compiler-adapters.mjs",
-          "sha256": "081b8d2dc80e8fef17093f3281c6fedd5c2206d2dd5d7a8a40b4f69b18595062"
+          "sha256": "3d74642fff79cf1a3d43efc2f328c745e2ad90d9ef44ed1319871d49e5f1d703"
         },
         {
           "path": "src/build/component-scalar-adapters.mjs",
@@ -14676,15 +14871,15 @@
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "poc/lean-link-spike/component_scalar.cpp",
-          "sha256": "00b54df94080679e2ca88cd8c8eb00da75877e82854af58b0eb96c6f7a421fdb"
+          "sha256": "6a5317ef24233b25014c577b2fa72ef531cc536cd3db23bfe8866f93595b5824"
         },
         {
           "path": "tests/component-char.test.mjs",
@@ -15231,7 +15426,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "8d6a6784836008bff71e7bb18d8e978f1f34218a27d45c874bad9039dd8b4a02"
+          "sha256": "29db321ebc02e1eb3c433ac45beb1ceeb54ea34acf1fd80b0d3e4fb0c8f2d4b5"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -15247,7 +15442,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68"
+          "sha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -15569,7 +15764,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "31039696547a992d1e6a9a08cb65b8b2b4a6fadcaab9ba312b42de69643a995f"
+          "sha256": "fe9ca868f618f8d31de199c277c294c1d22e2fa113c98fc6341fe7d77e9bb0de"
         }
       ],
       "artifacts": [
@@ -15668,7 +15863,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "31039696547a992d1e6a9a08cb65b8b2b4a6fadcaab9ba312b42de69643a995f"
+          "sha256": "fe9ca868f618f8d31de199c277c294c1d22e2fa113c98fc6341fe7d77e9bb0de"
         },
         {
           "path": "docs/evidence/kotlin-collections-20260922.json",
@@ -15680,7 +15875,7 @@
         },
         {
           "path": "tests/kotlin-collection-evidence.test.mjs",
-          "sha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc"
+          "sha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
         },
         {
           "path": "tests/jvm-kotlin-contract.test.mjs",
@@ -15807,7 +16002,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "31039696547a992d1e6a9a08cb65b8b2b4a6fadcaab9ba312b42de69643a995f"
+          "sha256": "fe9ca868f618f8d31de199c277c294c1d22e2fa113c98fc6341fe7d77e9bb0de"
         }
       ],
       "artifacts": [
@@ -15902,7 +16097,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "31039696547a992d1e6a9a08cb65b8b2b4a6fadcaab9ba312b42de69643a995f"
+          "sha256": "fe9ca868f618f8d31de199c277c294c1d22e2fa113c98fc6341fe7d77e9bb0de"
         },
         {
           "path": "tests/native-c-copied.test.mjs",
@@ -16005,7 +16200,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "31039696547a992d1e6a9a08cb65b8b2b4a6fadcaab9ba312b42de69643a995f"
+          "sha256": "fe9ca868f618f8d31de199c277c294c1d22e2fa113c98fc6341fe7d77e9bb0de"
         },
         {
           "path": "src/backends/c/native-copied-values.mjs",
@@ -16064,7 +16259,7 @@
         },
         {
           "path": "tests/multi-profile-project.test.mjs",
-          "sha256": "31039696547a992d1e6a9a08cb65b8b2b4a6fadcaab9ba312b42de69643a995f"
+          "sha256": "fe9ca868f618f8d31de199c277c294c1d22e2fa113c98fc6341fe7d77e9bb0de"
         },
         {
           "path": "docs/evidence/shared-authoring-configuration-20260911.md",
@@ -16343,11 +16538,11 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "113e0c02b01e303c8b9a13f193c350ce19f8c12d1a0341cd4e4b00499b6854ac"
+          "sha256": "b06722dfc8dc90deccd975c86888304fccf43f7ff359402d519f357147b1f8a5"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -16359,7 +16554,7 @@
         },
         {
           "path": "src/release/component-runtime.mjs",
-          "sha256": "4aee3c8d6cbf233c45fc49514549dfb52a2adbc58aa6c4393176253d51b257b5"
+          "sha256": "4925a36cffdc81ef1048630777b927b415f499492c30dfbb11a3db0e869fb252"
         },
         {
           "path": "src/release/component-scalar-codec.mjs",
@@ -16367,7 +16562,7 @@
         },
         {
           "path": "src/release/component-npm-package.mjs",
-          "sha256": "adbd2fc0bb6d7fe8052d3e0cbe2c186ccb144bcd13b281aeadfb9c273bd4f3d0"
+          "sha256": "45cba2b8be0c97e17ef28dfa53779d105eb0ca7a5aab4d4f55ea1ccc9c6c2372"
         }
       ],
       "artifacts": []
@@ -16567,7 +16762,7 @@
       "files": [
         {
           "path": "src/backends/javascript/generate.mjs",
-          "sha256": "618c083d47cde3ec2bc2681930b02d1c5fe54a70ccda72f6b5e7a92bbf146c06"
+          "sha256": "885a28238b7b30b1c696aeb9c1e48c593bda1e699eb059518ab2d599de19b839"
         },
         {
           "path": "src/backends/javascript/coverage.mjs",
@@ -16704,6 +16899,150 @@
     }
   ],
   "observations": [
+    {
+      "id": "npm-recursive-ordinary-source",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named recursive readonly types; ordinary objects and arrays",
+          "result": "Named recursive readonly types; ordinary objects and arrays",
+          "field": "Named recursive readonly types; ordinary objects and arrays"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        }
+      },
+      "limitations": [
+        "Concrete copied graphs only; no generic, indexed, dependent, proof-bearing or identity-bearing payloads.",
+        "128 value edges, 262144 shared input/result slots and 16 MiB copied bytes. Lean working memory is outside that budget.",
+        "Recursive acceptance for the other twelve profiles, compound callables and explicitly owned identity aggregates remain open."
+      ],
+      "conversionNotes": {
+        "recursive": "Preserves constructor/field order, aliases and all copied containers. Shared subtrees copy independently; ancestor cycles reject. Output receipts require exact, disjoint, owned buffers. Invalid results or traps retire the shared runtime; bounded conversion failures recover."
+      }
+    },
+    {
+      "id": "npm-recursive-reviewed-ir",
+      "profiles": [
+        "node-javascript",
+        "node-typescript",
+        "browser-javascript",
+        "browser-react",
+        "browser-worker"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named recursive readonly types; ordinary objects and arrays",
+          "result": "Named recursive readonly types; ordinary objects and arrays",
+          "field": "Named recursive readonly types; ordinary objects and arrays"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "npm-recursive-installed"
+          ],
+          "note": "Installed ordinary-source and independently reviewed npm packages preserve finite recursive and mutually recursive copied values, all nineteen primitives and direct copied record fields. Node, executed strict TypeScript, Chromium, Firefox and WebKit pages, React and workers run both paths. Each JavaScript context passes 199,675 assertions and 46 rejection cases with recovery. Native allocation receipts authenticate output ownership and cleanup."
+        }
+      },
+      "limitations": [
+        "Concrete copied graphs only; no generic, indexed, dependent, proof-bearing or identity-bearing payloads.",
+        "128 value edges, 262144 shared input/result slots and 16 MiB copied bytes. Lean working memory is outside that budget.",
+        "Recursive acceptance for the other twelve profiles, compound callables and explicitly owned identity aggregates remain open."
+      ],
+      "conversionNotes": {
+        "recursive": "Preserves constructor/field order, aliases and all copied containers. Shared subtrees copy independently; ancestor cycles reject. Output receipts require exact, disjoint, owned buffers. Invalid results or traps retire the shared runtime; bounded conversion failures recover."
+      }
+    },
     {
       "id": "php-wasm-variants-ordinary-source",
       "profiles": [

@@ -2,9 +2,9 @@
 
 VO 1219, 2026-09-22. This is transport implementation evidence, not installed
 Lean-package acceptance. [Fresh Lean extraction now retains recursive type
-graphs](recursive-copied-metadata-20260922.md); compiled recursive adapters and
-installed-package acceptance remain open. The consumer coverage inventory is
-unchanged.
+graphs](recursive-copied-metadata-20260922.md). Subsequent
+[compiled adapters](recursive-copied-adapters-20260922.md) and
+[installed npm acceptance](npm-recursive-20260922.md) build on this foundation.
 
 ## Implemented
 
@@ -81,10 +81,7 @@ node --test tests/component-structured-codec.test.mjs \
 [Typed carriers and bounded C/Wasm walkers now execute](recursive-copied-adapters-20260922.md),
 including malformed-input rejection and injected partial-output failures.
 
-1. Connect runtime ownership handling and poison behavior. Malformed native
-   output must retire the shared runtime without traversing untrusted pointers.
-2. Connect the npm compiler, package and runtime paths. Run ordinary-source and
-   reviewed installed archives in Node, TypeScript and every browser profile.
-3. Extend installed acceptance to the remaining consumer targets. Compound
-   callable payloads and explicitly owned resource aggregates remain separate
-   required work under VO 1219 and VO 1221.
+The npm loader now authenticates allocation receipts, retires malformed heaps,
+and executes ordinary-source and reviewed installed packages. Remaining work:
+recursive adapters for the other consumer targets, compound callable payloads,
+and explicitly owned resource aggregates under VO 1219 and VO 1221.

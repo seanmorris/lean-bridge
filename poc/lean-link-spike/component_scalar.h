@@ -42,6 +42,13 @@ uint32_t bridge_compound_children_allocate(bridge_scalar_slot *, uint32_t, uint3
 uint32_t bridge_nominal_abi(void);
 uint32_t bridge_recursive_abi(void);
 uint32_t bridge_recursive_frame_validate(bridge_scalar_frame *, uint32_t);
+typedef struct bridge_recursive_arena bridge_recursive_arena;
+uint32_t bridge_recursive_arena_open(bridge_scalar_frame *, bridge_recursive_arena **);
+uint32_t bridge_recursive_children_allocate(bridge_recursive_arena *, bridge_scalar_slot *, uint32_t, uint32_t, uint32_t, uint32_t *);
+uint32_t bridge_recursive_encode_leaf(bridge_recursive_arena *, bridge_scalar_slot *, uint32_t, lean_object *, uint32_t *);
+uint32_t bridge_recursive_receipt_count(bridge_scalar_frame *);
+uint32_t bridge_recursive_receipt_data(bridge_scalar_frame *);
+void bridge_recursive_frame_clear(bridge_scalar_frame *);
 uint32_t bridge_nominal_frame_validate(bridge_scalar_frame *, uint32_t);
 uint32_t bridge_nominal_children_validate(bridge_scalar_slot const *, uint32_t, uint32_t, uint32_t *);
 uint32_t bridge_nominal_children_allocate(bridge_scalar_slot *, uint32_t, uint32_t, uint32_t, uint32_t *);

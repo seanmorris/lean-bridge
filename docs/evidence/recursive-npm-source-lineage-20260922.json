@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "description": "Historical installed archives are unchanged. Source lineage records the new recursive test registration, receipt-aware compatibility assertion, and the evidence tests that check those changes.",
+  "historicalReceipts": {
+    "npm-aliases-20260921": {
+      "receiptSha256": "b169dc438ff64f0f823db733aa7d9f0beaa8ef97f502b5ff700a5f986b46c9d0",
+      "sources": {
+        "tests/helpers/component-scalar-install.mjs": {
+          "previousSha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779",
+          "currentSha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
+        }
+      }
+    },
+    "npm-variants-20260921": {
+      "receiptSha256": "d0c3bf39f03aecec94a8077e0134cd875331a38864901ea604d1dbebb9299087",
+      "sources": {
+        "tests/component-variant-contract.test.mjs": {
+          "previousSha256": "d67656f36d1eb6b935e3f1a81a6a65ab92a4bb7cc15d090b41ef2f1c3136387f",
+          "currentSha256": "e88517997190f59e9323d114f4f27f74446004704baa5061cf9bdbbad4ba75f0"
+        },
+        "tests/helpers/component-scalar-install.mjs": {
+          "previousSha256": "ffa5613a50a854e9b16e3354c8e4d80ecf8cf0c59552524e1291740adb66c779",
+          "currentSha256": "1575d4d3ac5a9c39c7de57ee71966291db84bad1717fedad7512ad65043c745e"
+        }
+      }
+    },
+    "kotlin-collections-20260922": {
+      "receiptSha256": "c7a1b371b89de0099fd1d2af45cb557071ae15cb7701abce4fd1eba5e83013b2",
+      "sources": {
+        "src/adoption/test-profiles.mjs": {
+          "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
+          "currentSha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2"
+        },
+        "tests/kotlin-collection-evidence.test.mjs": {
+          "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
+          "currentSha256": "116f50cb9e7489ca0f0340807ad16da755cee89bd46bd71473c9f5dcfc850a72"
+        }
+      }
+    }
+  }
+}

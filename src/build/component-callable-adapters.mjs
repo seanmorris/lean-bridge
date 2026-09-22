@@ -9,6 +9,7 @@ import { generateComponentScalarAdapters } from "./component-scalar-adapters.mjs
 import { assertComponentCopiedBindings, componentCopiedAbi, componentCopiedDispatch } from "../abi/component-copied.mjs";
 import { sha256 } from "../capsule/node.mjs";
 import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, componentCompoundDispatch, componentNominalAbi, componentNominalDispatch, componentRecordDefinitions, assertComponentRecordBindings } from "../abi/component-records.mjs";
+import { componentRecursiveAbi, componentRecursiveDispatch, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 
 /**
  * Admit scalar or primitive callable declarations and derive their private ABI.
@@ -39,7 +40,24 @@ export const createComponentPrivateAbi = document => {
 			, resultMode: declaration.resultMode }))
 	};
 	if(callbacks.length) assertComponentCallableBindings(abi, document);
-	else if(nominal || records || compounds) assertComponentRecordBindings(abi, document);
+	else if(nominal || records || compounds)
+	{
+		try
+		{ assertComponentRecordBindings(abi, document); }
+		catch(error)
+		{
+			// Finite graph validation independently checks all copied semantics.
+			// Existing small acyclic components keep their established wire ABI.
+			const graph = {
+				version: componentRecursiveAbi, dispatch: componentRecursiveDispatch
+				, types: componentRecordDefinitions(document, true), exports: abi.exports };
+			try
+			{ assertComponentRecursiveBindings(graph, document); }
+			catch
+			{ throw error; }
+			return graph;
+		}
+	}
 	else if(copied) assertComponentCopiedBindings(abi, document);
 	else for(const declaration of document.declarations) assertComponentSignature(declaration);
 	return abi;

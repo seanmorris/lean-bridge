@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertRecursiveSourceHistory } from "./helpers/recursive-source-history.mjs";
 import test from "node:test";
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -71,7 +72,7 @@ test("recorded aliases cover installed source paths and all npm execution contex
 		const currentSha256 = sha256(await readFile(path));
 		if(path === "tests/compiler-alias-metadata.test.mjs")
 			assert.deepEqual(lineage.sources[path], { previousSha256, currentSha256 });
-		else assert.equal(currentSha256, previousSha256, path);
+		else await assertRecursiveSourceHistory("npm-aliases-20260921", path, previousSha256);
 	}
 	assert.deepEqual(record.runs.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.runs)

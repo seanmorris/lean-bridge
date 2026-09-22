@@ -134,7 +134,7 @@ export const compileComponentRecursiveCodec = descriptor => {
 				, depth: frame.depth + 1 });
 		}
 	};
-	const read = (module, slot, budget = createComponentRecursiveBudget()) => {
+	const read = (module, slot, budget = createComponentRecursiveBudget(), claim = null) => {
 		assertComponentRecursiveBudget(budget);
 		budget.reserve(1); budget.charge(scalarSlotBytes);
 		const result = {}, active = new Set(), stack = [{ type: graph.root, slot, depth: 0, owner: result, key: "value" }];
@@ -148,6 +148,12 @@ export const compileComponentRecursiveCodec = descriptor => {
 				const type = resolve(frame.type);
 				if(type.kind === "primitive")
 				{
+					if(claim && ["nat", "int", "string", "bytes"].includes(type.name))
+					{
+						const data = view(module), count = data.getUint32(frame.slot + 12, true);
+						if(!(data.getUint32(frame.slot + 4, true) & 2)) throw new TypeError("Recursive output payload lacks ownership");
+						claim(data.getUint32(frame.slot + 8, true), count * (["nat", "int"].includes(type.name) ? 4 : 1));
+					}
 					frame.owner[frame.key] = readComponentScalarSlot(module, frame.slot, type.name, budget.charge);
 					stack.pop(); continue;
 				}
@@ -158,6 +164,11 @@ export const compileComponentRecursiveCodec = descriptor => {
 				const pointer = data.getUint32(frame.slot + 8, true), count = data.getUint32(frame.slot + 12, true), children = layout(type, kind, branch);
 				if(children.count !== null && count !== children.count || !count && (pointer || flags & 2)) throw new TypeError("Invalid component copied shape");
 				span(module, pointer, count * scalarSlotBytes);
+				if(claim && count)
+				{
+					if(!(flags & 2)) throw new TypeError("Recursive output children lack ownership");
+					claim(pointer, count * scalarSlotBytes);
+				}
 				budget.reserve(count); budget.charge(count * scalarSlotBytes);
 				// Reserve all immediate children before allocating their host container.
 				const value = sequence(kind) ? new Array(count) : kind === "option" ? { tag: branch ? "some" : "none" }
@@ -177,5 +188,11 @@ export const compileComponentRecursiveCodec = descriptor => {
 		}
 		return result.value;
 	};
-	return Object.freeze({ graph, write, read });
+	return Object.freeze({
+		graph, write, read: (module, slot, budget) => read(module, slot, budget)
+		, readOwned: (module, slot, budget, claim) => {
+			if(typeof claim !== "function") throw new TypeError("Recursive output needs its native allocation receipt");
+			return read(module, slot, budget, claim);
+		}
+	});
 };

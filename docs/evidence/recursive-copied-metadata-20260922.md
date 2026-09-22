@@ -1,8 +1,8 @@
 # Compiler-authenticated recursive type graphs
 
 VO 1219, 2026-09-22. Lean extraction and semantic lowering now support finite
-nominal graphs. This does not establish installed recursive package support.
-Package admission remains gated. [Typed carriers and C/Wasm walkers](recursive-copied-adapters-20260922.md)
+nominal graphs. Subsequent [npm acceptance](npm-recursive-20260922.md) covers
+installed recursive packages. [Typed carriers and C/Wasm walkers](recursive-copied-adapters-20260922.md)
 now execute bounded conversions and partial-output cleanup; public runtime and
 installed-package integration remain open.
 
@@ -86,5 +86,5 @@ pass 1,781 tests with 68 explicit opt-in skips; docs pass 78 and site tests pass
 111. Lint, root/site typechecks and the production site build pass.
 
 [Typed carriers and bounded C/Wasm conversion](recursive-copied-adapters-20260922.md)
-now have separate execution checks. Next are runtime/package integration and
-installed-package acceptance across all consumer targets.
+now have separate execution checks. npm runtime and package integration is
+complete; installed recursive acceptance for the other consumer targets remains.

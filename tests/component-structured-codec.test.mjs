@@ -10,11 +10,17 @@ import { snapshotComponentCopiedType, createComponentCopyBudget } from "../src/a
 import { snapshotComponentCopiedGraph, compileComponentCopiedGraph, componentRecursiveLimits, createComponentRecursiveBudget } from "../src/abi/component-recursive.mjs";
 import { compileComponentCopiedCodec } from "../src/release/component-copied-codec.mjs";
 import { compileComponentRecursiveCodec } from "../src/release/component-recursive-codec.mjs";
+import { compileComponentCopiedCall } from "../src/release/component-copied-runtime.mjs";
+import { createComponentRuntime } from "../src/release/component-runtime.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { componentRecursiveTypeGraph, assertComponentRecursiveTypeGraph } from "../src/build/component-recursive-types.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
+import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
+import { sha256 } from "../src/capsule/node.mjs";
+import { readFile } from "node:fs/promises";
+import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 
 const primitive = name => ({ kind: "primitive", name });
 const apply = (constructor, ...args) => ({ kind: "apply", constructor, arguments: args });
@@ -663,9 +669,262 @@ test("recursive graphs authenticate exact public nominal definitions and roots w
 	}
 });
 
-test("finite graph codecs do not silently enable recursive compiled npm or native exports", () => {
+test("finite graph npm admission retains the separate native transport gate", () => {
 	const ir = recursiveIr();
 	assert.equal(validateBindingIr(ir), ir);
-	assert.throws(() => createComponentPrivateAbi(ir), /recursive/);
+	assert.equal(createComponentPrivateAbi(ir).version, 8);
 	assert.throws(() => compilePrimitiveCSurface(ir, { compounds: true, lists: true, variants: true }), /acyclic/);
+});
+
+test("generated recursive host validators bound traversal and reject cycles without reading accessors", async () => {
+	const files = generateJavaScriptPackage(recursiveIr());
+	const validators = await import(`data:text/javascript,${encodeURIComponent(files["internal/validators.mjs"])}`);
+	const shared = { kind: "leaf", value: 42 }, fork = { kind: "fork", left: shared, right: shared };
+	assert.equal(validators.assertTree(fork, "tree"), fork);
+	const cycle = { kind: "fork", left: shared }; cycle.right = cycle;
+	assert.throws(() => validators.assertTree(cycle, "tree"), /Cyclic copied value/);
+	let deep = shared;
+	for(let index = 0; index < 20000; index++) deep = { kind: "fork", left: shared, right: deep };
+	assert.throws(() => validators.assertTree(deep, "tree"), /Component recursive value depth exceeded/);
+	const huge = Array(componentRecursiveLimits.valueNodes).fill({ kind: "empty" });
+	assert.throws(() => validators.assertForest(huge, "forest"), /node budget/);
+	let reads = 0;
+	const getter = Object.defineProperty({ kind: "leaf" }, "value", { get: () => { reads++; return 42; } });
+	assert.throws(() => validators.assertTree(getter, "tree"), /own data fields/);
+	assert.equal(reads, 0);
+	assert.equal(validators.assertTree(shared, "tree"), shared);
+});
+
+// Independent native output construction. No graph writer supplies result slots
+// or receipts, and the allocator grows memory to invalidate cached views.
+const arenaFixture = (failAt = Infinity) => {
+	const f = fixture({ grow: true }), arenas = new Map();
+	let attempts = 0, clears = 0, frees = 0, poisoned = false;
+	f.module._malloc = bytes => ++attempts === failAt ? 0 : f.allocate(bytes);
+	f.module._free = pointer => { assert.ok(f.live.delete(pointer)); frees++; };
+	f.module._bridge_recursive_receipt_count = frame => arenas.get(frame)?.entries.length ?? 0xffffffff;
+	f.module._bridge_recursive_receipt_data = frame => arenas.get(frame)?.table ?? 0;
+	f.module._bridge_recursive_frame_clear = frame => {
+		clears++;
+		const arena = arenas.get(frame);
+		if(arena)
+		{
+			for(const entry of arena.entries) f.module._free(entry.pointer);
+			if(arena.table) f.module._free(arena.table);
+			arenas.delete(frame);
+		}
+		f.module.HEAP8.fill(0, frame + 16, frame + 32);
+	};
+	const output = frame => {
+		const children = f.allocate(32), first = f.allocate(1), second = f.allocate(1), table = f.allocate(24);
+		const entries = [{ pointer: children, bytes: 32 }, { pointer: first, bytes: 1 }, { pointer: second, bytes: 1 }];
+		arenas.set(frame, { entries, table });
+		const slot = (offset, kind, pointer, count, flags = 2) => {
+			const data = f.view();
+			data.setUint32(offset, kind, true); data.setUint32(offset + 4, flags, true);
+			data.setUint32(offset + 8, pointer, true); data.setUint32(offset + 12, count, true);
+		};
+		slot(frame + 16, 33, children, 2);
+		slot(children, 14, first, 1); slot(children + 16, 14, second, 0);
+		f.module.HEAP8[first] = 65;
+		entries.forEach(({ pointer, bytes }, index) => {
+			f.view().setUint32(table + index * 8, pointer, true);
+			f.view().setUint32(table + index * 8 + 4, bytes, true);
+		});
+		return { children, first, second, table, slot, entries };
+	};
+	return { ...f, output, arenas, poison: () => { poisoned = true; }
+		, state: () => ({ clears, frees, poisoned }) };
+};
+const strings = apply("tuple", primitive("string"), primitive("string"));
+const arenaCall = (f, action, parameters = []) => compileComponentCopiedCall(f.module, action
+	, { parameters, result: strings }, f.poison, 8, []);
+
+test("recursive call receipts own every result allocation, including empty scalar buffers", () => {
+	const f = arenaFixture();
+	const call = arenaCall(f, frame => { f.output(frame); return 0; });
+	for(let index = 0; index < 5; index++)
+	{
+		assert.deepEqual(call([]), ["A", ""]);
+		assert.equal(f.live.size, 0); assert.equal(f.arenas.size, 0);
+	}
+	assert.deepEqual(f.state(), { clears: 5, frees: 25, poisoned: false });
+});
+
+test("recursive receipts reject borrowed, overlapping, duplicate and unclaimed buffers without cleanup", () => {
+	const corruptions = [
+		(f, frame) => f.view().setUint32(frame + 20, 0, true)
+		, (f, frame, r) => f.view().setUint32(r.children + 4, 0, true)
+		, (f, frame) => f.view().setUint32(frame + 24, frame + 32, true)
+		, (f, frame, r) => f.view().setUint32(r.children + 8, r.first + 1, true)
+		, (f, frame, r) => f.view().setUint32(r.children + 24, r.first, true)
+		, (f, frame, r) => f.view().setUint32(r.table + 8, frame, true)
+		, (f, frame, r) => f.view().setUint32(r.table + 8, r.children + 8, true)
+		, (f, frame, r) => f.view().setUint32(r.table + 8, r.table, true)
+		, (f, frame, r) => f.view().setUint32(r.table + 16, r.first, true)
+		, (f, frame, r) => f.view().setUint32(r.table + 12, 0, true)
+		, (f, frame, r) => f.view().setUint32(r.table + 12, 2, true)
+		, (f, frame, r) => f.view().setUint32(r.table + 12, 0xffffffff, true)
+		, (f, frame, r) => { r.slot(r.children, 14, r.first, 0); r.slot(r.children + 16, 14, r.first, 0); }
+		, f => { f.module._bridge_recursive_receipt_count = () => 0xffffffff; }
+		, f => { f.module._bridge_recursive_receipt_count = () => 0; }
+		, f => { f.module._bridge_recursive_receipt_count = () => 2; }
+		, f => { f.module._bridge_recursive_receipt_data = () => 1; }
+		, f => { f.module._bridge_recursive_receipt_data = () => 0; }
+	];
+	for(const corrupt of corruptions)
+	{
+		const f = arenaFixture();
+		const call = arenaCall(f, frame => { const receipt = f.output(frame); corrupt(f, frame, receipt); return 0; }, [strings]);
+		assert.throws(() => call([["input", ""]]), /ownership|receipt|shape|buffer/);
+		assert.deepEqual(f.state(), { clears: 0, frees: 0, poisoned: true });
+	}
+});
+
+test("recursive input allocation failures and reported conversion failures recover", () => {
+	for(const failAt of [1, 2, 3, 4])
+	{
+		const f = arenaFixture(failAt);
+		const call = arenaCall(f, frame => { f.output(frame); return 0; }, [strings]);
+		assert.throws(() => call([["input", ""]]), /allocation/);
+		assert.equal(f.live.size, 0); assert.equal(f.state().poisoned, false);
+		assert.deepEqual(call([["input", ""]]), ["A", ""]);
+		assert.equal(f.live.size, 0);
+	}
+	for(const status of [4, 5])
+	{
+		const f = arenaFixture();
+		const call = arenaCall(f, frame => { f.view().setUint32(frame + 8, status, true); return status; });
+		assert.throws(() => call([]), /budget|failed/);
+		assert.equal(f.live.size, 0); assert.equal(f.state().poisoned, false);
+		assert.deepEqual(arenaCall(f, frame => { f.output(frame); return 0; })([]), ["A", ""]);
+	}
+});
+
+test("recursive traps, invalid status and frame corruption retire the heap without freeing it", () => {
+	for(const action of [
+		() => { throw new WebAssembly.RuntimeError("injected trap"); }
+		, (f, frame) => { f.view().setUint32(frame, 7, true); return 0; }
+		, (f, frame) => { f.view().setUint32(frame + 4, 1024, true); return 0; }
+		, (f, frame) => { f.view().setUint32(frame + 12, 1, true); return 0; }
+		, () => 5
+		, (f, frame) => { f.view().setUint32(frame + 8, 6, true); return 6; }
+		, (f, frame) => { f.output(frame); f.view().setUint32(frame + 8, 5, true); return 5; }
+	]) {
+		const f = arenaFixture();
+		assert.throws(() => arenaCall(f, frame => action(f, frame))([]));
+		assert.deepEqual(f.state(), { clears: 0, frees: 0, poisoned: true });
+	}
+});
+
+test("recursive loader rejects obsolete runtimes and changed graphs before fetching code", async t => {
+	let fetched = 0;
+	t.mock.method(globalThis, "fetch", () => { fetched++; assert.fail("invalid descriptor fetched code"); });
+	for(const missing of ["abi", "frame_clear", "receipt_count", "receipt_data", null])
+	{
+		const module = {
+			FS: {}, _bridge_lean_runtime_init: () => 1
+			, _bridge_scalar_frame_clear: () => {}, _bridge_copied_frame_clear: () => {}
+			, _bridge_copied_abi: () => 1, _bridge_recursive_abi: () => 1
+			, _bridge_recursive_frame_clear: () => {}
+			, _bridge_recursive_receipt_count: () => 0
+			, _bridge_recursive_receipt_data: () => 0 };
+		if(missing) delete module[`_bridge_recursive_${missing}`];
+		const bindingIr = recursiveIr(), privateAbi = createComponentPrivateAbi(bindingIr);
+		if(!missing) privateAbi.types.find(type => type.kind === "variant").cases.reverse();
+		const runtime = await createComponentRuntime(async () => module, new URL("file:///main.wasm"));
+		await assert.rejects(runtime.loadComponent({ id: "recursive", sideModule: new URL("https://example.invalid/recursive.wasm"), bindingIr, privateAbi }), /recursive ABI/);
+	}
+	assert.equal(fetched, 0);
+});
+
+test("public recursive loader shares heap retirement and recovers from symbol allocation failure", async () => {
+	for(const failure of ["trap", "malformed"])
+	{
+		const f = arenaFixture(), bindingIr = recursiveIr(), privateAbi = createComponentPrivateAbi(bindingIr);
+		let corrupt = false;
+		Object.assign(f.module, {
+			FS: { writeFile: () => {}, unlink: () => {} }
+			, loadDynamicLibrary: async () => {}
+			, _bridge_lean_runtime_init: () => 1
+			, _bridge_lean_component_initialize: () => 1
+			, _bridge_lean_component_last_error: () => 0
+			, _bridge_scalar_frame_clear: () => {}
+			, _bridge_copied_frame_clear: () => {}
+			, _bridge_copied_abi: () => 1, _bridge_recursive_abi: () => 1
+			, _bridge_scalar_call: (name, frame) => {
+				if(corrupt && failure === "trap") throw new WebAssembly.RuntimeError("injected trap");
+				f.arenas.set(frame, { entries: [], table: 0 });
+				f.view().setUint32(frame + 16, corrupt ? 99 : 37, true);
+				f.view().setUint32(frame + 20, 4 << 2, true);
+				return 0;
+			}
+		});
+		const runtime = await createComponentRuntime(async () => f.module, new URL("file:///main.wasm"));
+		const bytes = Uint8Array.of(0, 97, 115, 109, 1, 0, 0, 0);
+		const descriptor = { id: "one"
+			, sideModule: new URL("data:application/wasm;base64,AGFzbQEAAAA=")
+			, integrity: sha256(bytes), buildHash: "test"
+			, initializer: "initialize_Test", bindingIr, privateAbi };
+		const first = await runtime.loadComponent(descriptor);
+		const second = await runtime.loadComponent({ ...descriptor, id: "two" });
+		const call = target => target.call(bindingIr.declarations[0].id, [{ kind: "empty" }]);
+		assert.deepEqual(call(first), { kind: "empty" }); assert.equal(f.live.size, 0);
+		const malloc = f.module._malloc;
+		let allocations = 0;
+		f.module._malloc = bytes => ++allocations === 2 ? 0 : malloc(bytes);
+		assert.throws(() => call(first), /failed \(5\)/);
+		assert.equal(f.live.size, 0);
+		f.module._malloc = malloc;
+		assert.deepEqual(call(second), { kind: "empty" });
+		const before = f.state(); corrupt = true;
+		assert.throws(() => call(first), /trap|type mismatch/);
+		assert.equal(f.state().clears, before.clears);
+		assert.equal(f.state().frees, before.frees + (failure === "trap" ? 0 : 1));
+		assert.throws(() => call(first), /poisoned/);
+		assert.throws(() => call(second), /poisoned/);
+		assert.throws(() => runtime.loadComponent({ ...descriptor, id: "three" }), /poisoned/);
+	}
+});
+
+test("recursive npm evidence binds installed archives to both source paths and every browser context", async () => {
+	const record = JSON.parse(await readFile("docs/evidence/npm-recursive-20260922.json"));
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	assert.deepEqual(record.runs.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
+	for(const run of record.runs)
+	{
+		assert.equal(run.sourceSha256, record.sourceHashes["tests/fixtures/onboarding/npm-recursive/Recursive.lean"]);
+		assert.equal(run.consumerSha256, record.sourceHashes["tests/fixtures/recursive-consumers/npm.mjs"]);
+		assert.equal(run.offlineInstall, true); assert.equal(run.compilerFreePath, true);
+		assert.equal(run.sourceRelocatedBeforeInstallation, true);
+		assert.deepEqual(run.typescript, { strict: true, executed: true });
+		assert.deepEqual(run.result, { checks: 199675, primitives: 19, rejections: 46 });
+		assert.deepEqual(run.browsers.map(browser => browser.engine), ["chromium", "firefox", "webkit"]);
+		for(const browser of run.browsers)
+			for(const profile of ["page", "react", "worker"]) assert.deepEqual(browser.result[profile], run.result);
+		for(const artifact of [run.receipt.package, run.receipt.runtime]) assert.match(artifact.sha256, /^[a-f0-9]{64}$/);
+	}
+	assert.equal(record.runs[0].receipt.runtime.sha256, record.runs[1].receipt.runtime.sha256);
+	assert.equal(record.runs[0].receipt.componentArtifactSha256, record.runs[1].receipt.componentArtifactSha256);
+	for(const item of record.regressions)
+	{
+		assert.deepEqual(item.runs.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
+		for(const run of item.runs)
+		{
+			assert.equal(run.consumerSha256, record.sourceHashes[`tests/fixtures/${item.name === "aliases" ? "alias" : "variant"}-consumers/npm.mjs`]);
+			assert.deepEqual(run.browsers.map(browser => browser.engine), ["chromium", "firefox", "webkit"]);
+			assert.equal(run.offlineInstall, true); assert.equal(run.compilerFreePath, true);
+			assert.equal(run.typescript.executed, true);
+		}
+	}
+	const { document, ...contracts } = await readTypeSurface();
+	const cells = typeSurfaceCells(document, contracts);
+	const recursive = cells.filter(cell => cell.shape === "recursive" && cell.stages.installedExecution.state === "passed");
+	assert.equal(recursive.length, 30);
+	assert.deepEqual([...new Set(recursive.map(cell => cell.profile))].sort(), ["browser-javascript", "browser-react", "browser-worker", "node-javascript", "node-typescript"]);
+	assert.deepEqual([...new Set(recursive.map(cell => cell.position))].sort(), ["field", "parameter", "result"]);
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	assert.match(workflow, /node --test tests\/component-recursive\.test\.mjs/);
+	assert.match(workflow, /test -s build\/recursive\/npm\/report\.json/);
+	assert.match(workflow, /build\/recursive\/npm\//);
 });

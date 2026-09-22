@@ -319,6 +319,7 @@ const profileManifest = Object.freeze({
 		, "component-lists"
 		, "component-variants"
 		, "component-aliases"
+		, "component-recursive"
 		, "component-variant-runtime"
 		, "component-char"
 		, "native-char"

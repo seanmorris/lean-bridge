@@ -7,7 +7,7 @@
   "sources": {
     "tests/compiler-alias-metadata.test.mjs": {
       "previousSha256": "70f894a70a30b7bb5cae798ebcd485f60acb3067d245eeefd222d3a297b18be0",
-      "currentSha256": "826bd41df9fdc442f1440f0d8d90af180b1a45a51b5d723334f0cfa4a193337c"
+      "currentSha256": "b04c61d4070b9c44047bedd645925b3dea81901635fcc368cbdfab077eb1333f"
     }
   },
   "change": "The fresh compiler regression now requires all 34 aliases to survive in a finite nominal graph instead of expecting inline-depth rejection. Historical installed callers, package archives and receipt bytes are unchanged."

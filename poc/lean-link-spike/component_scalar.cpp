@@ -372,6 +372,83 @@ extern "C" EMSCRIPTEN_KEEPALIVE void bridge_record_slot_clear(bridge_scalar_slot
   copied_clear(slot);
 }
 
+/* Recursive results own a separate allocation ledger. Cleanup never follows
+   returned slot pointers. Entries describe the actual allocations, including
+   the one-byte allocation used by an empty copied primitive payload. */
+struct recursive_allocation { uint32_t pointer, bytes; };
+static_assert(sizeof(recursive_allocation) == 8, "recursive receipt layout drift");
+struct bridge_recursive_arena {
+  bridge_scalar_frame *frame;
+  std::vector<recursive_allocation> allocations;
+  bridge_recursive_arena *next;
+};
+static bridge_recursive_arena *recursive_arenas = nullptr;
+static uint32_t recursive_arena_count = 0;
+
+static bridge_recursive_arena *recursive_find(bridge_scalar_frame *frame) {
+  for (auto *arena = recursive_arenas; arena; arena = arena->next) if (arena->frame == frame) return arena;
+  return nullptr;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_recursive_arena_open(bridge_scalar_frame *frame, bridge_recursive_arena **output) {
+  *output = nullptr;
+  if (!frame || !in_heap((uintptr_t)frame, 32)) return 1;
+  uint32_t status = bridge_recursive_frame_validate(frame, frame->argc);
+  if (status) return status;
+  if (recursive_find(frame)) return 6;
+  if (recursive_arena_count >= 1024) return 4;
+  try {
+    auto *arena = new bridge_recursive_arena{frame, {}, recursive_arenas};
+    recursive_arenas = arena; ++recursive_arena_count; *output = arena;
+    return 0;
+  } catch (...) { return 5; }
+}
+
+static uint32_t recursive_record(bridge_recursive_arena *arena, bridge_scalar_slot *slot) {
+  if (!(slot->flags & 2u)) return 0;
+  uint32_t pointer = (uint32_t)slot->bits, count = slot->bits >> 32;
+  uint64_t bytes = (uint64_t)count * (slot->kind >= 32 ? 16 : slot->kind == 10 || slot->kind == 11 ? 4 : 1);
+  uint32_t status = 0;
+  if (!arena || bytes > copy_limit || arena->allocations.size() >= 262144) status = 4;
+  else try { arena->allocations.push_back({pointer, bytes ? (uint32_t)bytes : 1u}); }
+  catch (...) { status = 5; }
+  if (status) { free((void *)(uintptr_t)pointer); *slot = {}; }
+  return status;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_recursive_children_allocate(bridge_recursive_arena *arena, bridge_scalar_slot *slot, uint32_t kind, uint32_t count, uint32_t branch, uint32_t *budget) {
+  uint32_t status = bridge_nominal_children_allocate(slot, kind, count, branch, budget);
+  uint32_t ownership = recursive_record(arena, slot);
+  return status ? status : ownership;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_recursive_encode_leaf(bridge_recursive_arena *arena, bridge_scalar_slot *slot, uint32_t kind, lean_object *value, uint32_t *budget) {
+  uint32_t status = bridge_record_encode_leaf(slot, kind, value, budget);
+  uint32_t ownership = recursive_record(arena, slot);
+  return status ? status : ownership;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_recursive_receipt_count(bridge_scalar_frame *frame) {
+  auto *arena = recursive_find(frame);
+  return arena ? (uint32_t)arena->allocations.size() : UINT32_MAX;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_recursive_receipt_data(bridge_scalar_frame *frame) {
+  auto *arena = recursive_find(frame);
+  return arena && !arena->allocations.empty() ? (uint32_t)(uintptr_t)arena->allocations.data() : 0;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE void bridge_recursive_frame_clear(bridge_scalar_frame *frame) {
+  auto **link = &recursive_arenas;
+  while (*link && (*link)->frame != frame) link = &(*link)->next;
+  if (*link) {
+    auto *arena = *link; *link = arena->next; --recursive_arena_count;
+    for (auto item = arena->allocations.rbegin(); item != arena->allocations.rend(); ++item) free((void *)(uintptr_t)item->pointer);
+    delete arena;
+  }
+  if (frame && !((uintptr_t)frame % 8) && in_heap((uintptr_t)frame, 32)) frame->result = {};
+}
+
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_call(char const *symbol, bridge_scalar_frame *frame) {
   if (!in_heap((uintptr_t)frame, 32)) return 1;
   auto operation = (uint32_t (*)(bridge_scalar_frame *))dlsym(RTLD_DEFAULT, symbol);

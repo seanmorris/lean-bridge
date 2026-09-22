@@ -4,9 +4,10 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertRecursiveSourceHistory } from "./helpers/recursive-source-history.mjs";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
-import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { canonicalJson } from "../src/capsule/node.mjs";
 import { parseBindingIr } from "../src/binding-ir/canonical.mjs";
 import { assertComponentRecordAbi, assertComponentRecordBindings, resolveComponentRecordType } from "../src/abi/component-records.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
@@ -192,7 +193,7 @@ test("nominal call arenas clean failed inputs, recover budget errors and poison 
 
 test("variant evidence binds both source paths and every npm context to exact archives", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/npm-variants-20260921.json", "utf8"));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertRecursiveSourceHistory("npm-variants-20260921", path, hash);
 	assert.deepEqual(record.runs.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.runs)
 	{

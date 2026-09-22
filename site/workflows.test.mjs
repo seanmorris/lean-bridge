@@ -40,7 +40,8 @@ test("source intake describes new and existing libraries without widening target
 	assert.match(exports, /produce unsupported diagnostics in this profile/);
 	assert.match(exports, /## Native Perl exports/);
 	assert.match(exports, /\[locked Lake dependencies\]\(\.\.\/publish\/cpan\.md#build-with-locked-lake-dependencies\)/);
-	assert.match(exports, /Open generics, dependent signatures, recursive copied structures, asynchronous operations, and retained host callbacks require further work/);
+	assert.match(exports, /Open generics, dependent signatures, native recursive copied structures, asynchronous operations, and retained host callbacks require further work/);
+	assert.match(exports, /npm-recursive-20260922\.md/);
 	const existing = await readFile("docs/lean/existing-package.md", "utf8");
 	assert.match(existing, /### Generate the public entry module/);
 	assert.match(existing, /engine runs declared generators against captured inputs/);

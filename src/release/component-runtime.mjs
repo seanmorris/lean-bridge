@@ -13,6 +13,7 @@ import { createComponentCallableRuntime } from "./component-callable-runtime.mjs
 import { assertComponentCopiedBindings, componentCopiedAbi } from "../abi/component-copied.mjs";
 import { compileComponentCopiedCall } from "./component-copied-runtime.mjs";
 import { componentRecordAbi, componentCompoundAbi, componentNominalAbi, assertComponentRecordBindings } from "../abi/component-records.mjs";
+import { componentRecursiveAbi, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 
 const encoder = new TextEncoder();
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
@@ -98,7 +99,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 		const record = { fingerprint, promise: null, linking: false };
 		loaded.set(descriptor.id, record);
 		record.promise = (async () => {
-			const callable = descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi].includes(descriptor.privateAbi.version);
+			const callable = descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(descriptor.privateAbi.version);
 			if(callable)
 			{
 				if(!callables) throw new Error("Shared runtime lacks the component callable ABI; rebuild it");
@@ -109,7 +110,13 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			else if(copied)
 			{
 				if(!module._bridge_copied_frame_clear || !module._bridge_copied_abi || module._bridge_copied_abi() !== 1) throw new Error("Shared runtime lacks the component copied ABI; rebuild it");
-				if([componentRecordAbi, componentCompoundAbi, componentNominalAbi].includes(descriptor.privateAbi.version))
+				if(descriptor.privateAbi.version === componentRecursiveAbi)
+				{
+					if(!module._bridge_recursive_abi || module._bridge_recursive_abi() !== 1
+						|| ["frame_clear", "receipt_count", "receipt_data"].some(name => typeof module[`_bridge_recursive_${name}`] !== "function")) throw new Error("Shared runtime lacks the component recursive ABI; rebuild it");
+					assertComponentRecursiveBindings(descriptor.privateAbi, descriptor.bindingIr);
+				}
+				else if([componentRecordAbi, componentCompoundAbi, componentNominalAbi].includes(descriptor.privateAbi.version))
 				{
 					if(!module._bridge_record_abi || module._bridge_record_abi() !== 1) throw new Error("Shared runtime lacks the component record ABI; rebuild it");
 					if([componentCompoundAbi, componentNominalAbi].includes(descriptor.privateAbi.version) && (!module._bridge_compound_abi || module._bridge_compound_abi() !== 1)) throw new Error("Shared runtime lacks the component compound ABI; rebuild it");
@@ -162,13 +169,19 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 					return [abi.bindingId, frame => {
 						assertOpen();
 						const name = module._malloc(symbol.length);
-						if(!name) throw new Error("Component call allocation failed");
+						if(!name)
+						{
+							if(copied)
+							{ new DataView(module.HEAP8.buffer).setUint32(frame + 8, 5, true); return 5; }
+							throw new Error("Component call allocation failed");
+						}
+						let trapped = false;
 						try
 { module.HEAP8.set(symbol, name); return module._bridge_scalar_call(name, frame); }
 						catch(error)
-{ poisoned = true; callables?.poison(); throw error; }
+{ trapped = true; poisoned = true; callables?.poison(); throw error; }
 						finally
-{ module._free(name); }
+{ if(!trapped) module._free(name); }
 					}];
 				}));
 				if(callable) return callables.bind(descriptor.privateAbi, operations);

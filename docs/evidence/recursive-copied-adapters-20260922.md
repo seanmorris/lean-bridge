@@ -1,9 +1,9 @@
 # Compiled recursive copied-value adapters
 
 VO 1219, 2026-09-22. Fresh Lean types now compile through typed carrier helpers
-and bounded C walkers into an executable WebAssembly side module. Compiler
-package admission, runtime-loader integration and installed recursive packages
-remain open. The consumer coverage inventory does not claim recursive support.
+and bounded C walkers into an executable WebAssembly side module. The subsequent
+[npm integration](npm-recursive-20260922.md) connects compiler admission, runtime
+ownership and installed packages. Other consumer targets remain open.
 
 ## Typed construction and projection
 
@@ -42,11 +42,11 @@ ancestor wire cycles, malformed tags, child counts and pointers. Bounds match
 the JavaScript graph codec: 128 value edges, 262,144 value slots, and 16 MiB of
 copied slots and payloads shared across arguments and the result.
 
-Result encoding consumes its owned Lean carriers. Each parent owns its
-initialized child table and clears partial output on failure. A failed call
-leaves a zeroed result slot. The runtime loader still needs to connect this ABI
-and retire the shared heap on a trap or malformed output before packages can
-use these walkers.
+Result encoding consumes its owned Lean carriers. A per-frame native allocation
+ledger owns child tables and primitive buffers, including partial output.
+Cleanup frees recorded allocations without following result pointers. A failed
+call leaves a zeroed result slot. The loader authenticates output spans against
+the native receipt and retires the shared heap on a trap or malformed output.
 
 ## Executed checks
 
@@ -96,8 +96,7 @@ Node, strict TypeScript and Chromium page, React and worker consumers against
 the rebuilt shared runtime. Installed C/C++ alias checks also passed after the
 preceding metadata changes, including offline installation and relocation.
 
-Next: connect compiler, package and runtime admission, test traps and malformed
-outputs through the public loader, and verify ordinary-source and reviewed
-installed archives in Node, TypeScript and browsers. Then extend installed
-recursive coverage to the other consumer targets. Compound callable payloads
+[npm integration and installed acceptance](npm-recursive-20260922.md) now cover
+ordinary-source and reviewed archives. Next: extend installed recursive coverage
+to the other consumer targets. Compound callable payloads
 and explicitly owned resource aggregates remain required work.

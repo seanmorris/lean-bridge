@@ -31,6 +31,7 @@ export const generateComponentRecursiveAdapters = abi => {
 		, '_Static_assert(sizeof(size_t) == 4, "recursive frames require wasm32 Lean");'
 		, "typedef struct {"
 		, "  uint32_t bytes, nodes;"
+		, "  bridge_recursive_arena *owner;"
 		, `  bridge_scalar_slot const *path[${componentRecursiveLimits.valueDepth + 1}];`
 		, "} recursive_budget;"
 		, "static uint32_t recursive_enter(bridge_scalar_slot const *slot, uint32_t depth, recursive_budget *budget) {"
@@ -92,7 +93,7 @@ export const generateComponentRecursiveAdapters = abi => {
 				, "  --budget->nodes;"
 				, "  if (!lean_is_array(value) || lean_array_size(value) != 1) { lean_dec(value); return 6; }"
 				, "  lean_object *child = lean_array_get_core(value, 0); lean_inc(child); lean_dec(value);"
-				, `  return bridge_record_encode_leaf(slot, ${tag}, child, &budget->bytes);`, "}");
+				, `  return bridge_recursive_encode_leaf(budget->owner, slot, ${tag}, child, &budget->bytes);`, "}");
 			continue;
 		}
 		const definition = resolve(type), symbol = componentRecursiveHelper(abi, type);
@@ -153,7 +154,7 @@ export const generateComponentRecursiveAdapters = abi => {
 			lines.push("  uint32_t status = 0;", "  switch (branch) {");
 			definition.cases.forEach((item, branch) => {
 				lines.push(`  case ${branch}: {`, `    if (budget->nodes < ${item.fields.length}) { lean_dec(value); return 4; }`
-					, `    status = bridge_nominal_children_allocate(slot, 37, ${item.fields.length}, branch, &budget->bytes);`
+					, `    status = bridge_recursive_children_allocate(budget->owner, slot, 37, ${item.fields.length}, branch, &budget->bytes);`
 					, "    if (status) { lean_dec(value); return status; }"
 					, "    bridge_scalar_slot *children = (bridge_scalar_slot *)(uintptr_t)(uint32_t)slot->bits;");
 				item.fields.forEach((field, index) => lines.push(...encodeField(field.type, `${symbol}_case${branch}_field${index}`, `children + ${index}`)));
@@ -166,14 +167,14 @@ export const generateComponentRecursiveAdapters = abi => {
 			if(array) lines.push(`  value = ${symbol}_items(value);`);
 			lines.push(`  size_t count = ${array ? "lean_array_size(value)" : option ? "branch" : sum ? "1" : children.length};`
 				, "  if (count > budget->nodes) { lean_dec(value); return 4; }"
-				, `  uint32_t status = bridge_nominal_children_allocate(slot, ${tag}, (uint32_t)count, ${sum ? "branch" : "0"}, &budget->bytes);`
+				, `  uint32_t status = bridge_recursive_children_allocate(budget->owner, slot, ${tag}, (uint32_t)count, ${sum ? "branch" : "0"}, &budget->bytes);`
 				, "  if (status) { lean_dec(value); return status; }", "  bridge_scalar_slot *children = (bridge_scalar_slot *)(uintptr_t)(uint32_t)slot->bits;");
 			if(array) lines.push("  for (uint32_t i = 0; i < count; ++i) {", "    lean_object *child = lean_array_get_core(value, i); lean_inc(child);"
 				, `    status = ${walker(children[0])}_encode(children + i, child, depth + 1, budget);`, "    if (status) break;", "  }");
 			else if(sum) children.forEach((child, index) => lines.push(`  if (branch == ${option ? 1 : index}) {`, ...encodeField(child, `${symbol}_field${index}`, "children"), "  }"));
 			else children.forEach((child, index) => lines.push(...encodeField(child, `${symbol}_field${index}`, `children + ${index}`)));
 		}
-		lines.push("  lean_dec(value);", "  if (status) bridge_record_slot_clear(slot);", "  return status;", "}");
+		lines.push("  lean_dec(value);", "  return status;", "}");
 	}
 	for(const item of abi.exports)
 	{
@@ -181,13 +182,14 @@ export const generateComponentRecursiveAdapters = abi => {
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`
 			, `  uint32_t status = bridge_recursive_frame_validate(frame, ${item.parameters.length});`
 			, "  if (status) return status;", "  if (bridge_recursive_abi() != 1) return 6;"
-			, `  recursive_budget budget = { .bytes = 16u * 1024u * 1024u, .nodes = ${componentRecursiveLimits.valueNodes}, .path = {0} };`);
+			, `  recursive_budget budget = { .bytes = 16u * 1024u * 1024u, .nodes = ${componentRecursiveLimits.valueNodes}, .owner = NULL, .path = {0} };`);
 		item.parameters.forEach((type, index) => lines.push(`  if ((status = ${walker(type)}_validate(&frame->args[${index}], 0, &budget))) return status;`));
 		lines.push("  if (budget.bytes < 16 || !budget.nodes) return 4;", "  budget.bytes -= 16;");
+		lines.push("  if ((status = bridge_recursive_arena_open(frame, &budget.owner))) return status;");
 		item.parameters.forEach((type, index) => lines.push(`  lean_object *a${index} = ${walker(type)}_decode(&frame->args[${index}]);`));
 		lines.push(`  lean_object *result = ${item.symbol}_lean(${item.parameters.length ? item.parameters.map((_, index) => `a${index}`).join(", ") : "lean_box(0)"});`
 			, `  status = ${walker(item.result)}_encode(&frame->result, result, 0, &budget);`
-			, "  if (status) bridge_record_slot_clear(&frame->result);", "  return status;", "}", "");
+			, "  if (status) bridge_recursive_frame_clear(frame);", "  return status;", "}", "");
 	}
 	return lines.join("\n");
 };

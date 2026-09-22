@@ -64,8 +64,8 @@
       "additionalProperties": false,
       "required": ["version", "dispatch", "exports"],
       "properties": {
-        "version": { "enum": [2, 3, 4, 5, 6, 7] },
-        "dispatch": { "enum": ["scalar-frame-v2", "scalar-callable-frame-v1", "copied-array-frame-v1", "copied-record-frame-v1", "copied-compound-frame-v1", "copied-nominal-frame-v1"] },
+        "version": { "enum": [2, 3, 4, 5, 6, 7, 8] },
+        "dispatch": { "enum": ["scalar-frame-v2", "scalar-callable-frame-v1", "copied-array-frame-v1", "copied-record-frame-v1", "copied-compound-frame-v1", "copied-nominal-frame-v1", "copied-graph-frame-v1"] },
         "types": { "type": "array", "minItems": 1, "maxItems": 1024, "items": { "$ref": "#/$defs/nominal" } },
         "records": { "type": "array", "maxItems": 1024, "items": { "$ref": "#/$defs/record" } },
         "callbacks": { "type": "array", "minItems": 1, "maxItems": 1024, "items": { "$ref": "#/$defs/callback" } },
@@ -78,7 +78,8 @@
         { "properties": { "version": { "const": 4 }, "dispatch": { "const": "copied-array-frame-v1" } }, "not": { "anyOf": [{ "required": ["callbacks"] }, { "required": ["records"] }] } },
         { "properties": { "version": { "const": 5 }, "dispatch": { "const": "copied-record-frame-v1" }, "records": { "minItems": 1 } }, "required": ["records"], "not": { "required": ["callbacks"] } },
         { "properties": { "version": { "const": 6 }, "dispatch": { "const": "copied-compound-frame-v1" } }, "required": ["records"], "not": { "required": ["callbacks"] } },
-        { "properties": { "version": { "const": 7 }, "dispatch": { "const": "copied-nominal-frame-v1" } }, "required": ["types"], "not": { "anyOf": [{ "required": ["callbacks"] }, { "required": ["records"] }] } }
+        { "properties": { "version": { "const": 7 }, "dispatch": { "const": "copied-nominal-frame-v1" } }, "required": ["types"], "not": { "anyOf": [{ "required": ["callbacks"] }, { "required": ["records"] }] } },
+        { "properties": { "version": { "const": 8 }, "dispatch": { "const": "copied-graph-frame-v1" } }, "required": ["types"], "not": { "anyOf": [{ "required": ["callbacks"] }, { "required": ["records"] }] } }
       ]
     },
     "record": {

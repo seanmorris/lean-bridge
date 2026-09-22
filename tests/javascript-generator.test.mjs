@@ -296,7 +296,7 @@ test("Promise declarations generate an ordinary async function", async () => {
   );
 });
 
-test("variants and static methods project as native TypeScript surfaces", () => {
+test("variants and static methods project as native TypeScript surfaces", async () => {
   const ir = clone(alpha.bindingIr);
   ir.types.push({
     id: "bridge:Alpha.Lookup"
@@ -348,8 +348,14 @@ test("variants and static methods project as native TypeScript surfaces", () => 
   );
   assert.match(files["index.d.ts"], /static lookup\(payload: Payload\): Lookup/);
   assert.match(files["index.mjs"], /static lookup\(payload\)/);
-  assert.match(files["internal/validators.mjs"], /Object\.getOwnPropertyDescriptor\(value, "kind"\)/);
-  assert.match(files["internal/validators.mjs"], /switch \(kind\.value\)/);
+  const validators = await import(`data:text/javascript,${encodeURIComponent(files["internal/validators.mjs"])}`);
+  assert.deepEqual(validators.assertLookup({ kind: "Found", value: 42 }, "lookup"), { kind: "Found", value: 42 });
+  assert.deepEqual(validators.assertLookup({ kind: "Missing" }, "lookup"), { kind: "Missing" });
+  assert.throws(() => validators.assertLookup({ kind: "Other" }, "lookup"), /variant constructor/);
+  let reads = 0;
+  const getter = Object.defineProperty({}, "kind", { get: () => { reads++; return "Missing"; } });
+  assert.throws(() => validators.assertLookup(getter, "lookup"), /own data fields/);
+  assert.equal(reads, 0);
   assert.doesNotMatch(files["index.d.ts"], /tag: number|handle|pointer/i);
 });
 

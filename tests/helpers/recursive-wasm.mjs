@@ -11,6 +11,7 @@ import { pathToFileURL } from "node:url";
 import { generateComponentRecursiveAdapters } from "../../src/build/component-recursive-adapters.mjs";
 import { compileComponentRecursiveCodec } from "../../src/release/component-recursive-codec.mjs";
 import { createComponentRecursiveBudget } from "../../src/abi/component-recursive.mjs";
+import { recursiveOutputReceipt } from "../../src/release/component-recursive-ownership.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 
 /**
@@ -70,8 +71,9 @@ export const checkRecursiveWasm = async ({ abi, directory }) => {
 	};
 	const invoke = (name, args, options = {}) => {
 		const item = abi.exports.find(item => item.bindingId === `lean:Recursive.${name}`);
-		const owners = [], allocate = bytes => {
-			const pointer = module._malloc(Math.max(1, bytes)); assert.ok(pointer); owners.push(pointer); return pointer;
+		const owners = [], spans = [], allocate = bytes => {
+			const pointer = module._malloc(Math.max(1, bytes)); assert.ok(pointer); owners.push(pointer);
+			spans.push({ pointer, bytes: Math.max(1, bytes) }); return pointer;
 		};
 		const budget = createComponentRecursiveBudget();
 		const frame = allocate(32 + args.length * 16);
@@ -85,12 +87,21 @@ export const checkRecursiveWasm = async ({ abi, directory }) => {
 			const status = text(item.symbol, name => module._bridge_scalar_call(name, frame));
 			assert.equal(status, options.status ?? 0, name); assert.equal(view().getUint32(frame + 8, true), status);
 			if(status) assert.deepEqual([...module.HEAP8.slice(frame + 16, frame + 32)], Array(16).fill(0));
-			else return codec(item.result).read(module, frame + 16, budget);
+			else
+			{
+				const receipt = recursiveOutputReceipt(module, frame, spans);
+				const result = codec(item.result).readOwned(module, frame + 16, budget, receipt.claim);
+				receipt.finish();
+				// Cleanup must use the native receipt even if the returned slots have
+				// been replaced with arbitrary pointers after their successful copy.
+				if(options.corruptAfterRead) module.HEAP8.fill(255, frame + 16, frame + 32);
+				return result;
+			}
 		} finally
 		{
 			assert.equal(text("recursive_test_release", name => module._bridge_scalar_call(name, frame)), 0);
 			assert.deepEqual([...module.HEAP8.slice(frame + 16, frame + 32)], Array(16).fill(0));
-			module._bridge_copied_frame_clear(frame);
+			module._bridge_recursive_frame_clear(frame);
 			for(const pointer of owners.reverse()) module._free(pointer);
 			assert.equal(command("live"), 0);
 		}
@@ -132,6 +143,7 @@ export const checkRecursiveWasm = async ({ abi, directory }) => {
 		command("configure", 0, 0);
 	};
 	faultCheck("tree", tree);
+	assert.deepEqual(invoke("tree", [tree], { corruptAfterRead: true }), tree);
 	faultCheck("envelope", {
 		tree: leaf, alternatives: [[tree], []]
 		, fallback: { tag: "some", value: empty }

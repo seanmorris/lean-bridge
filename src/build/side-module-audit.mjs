@@ -104,6 +104,7 @@ const allowedFunctionImport = name => name === "initialize_Init"
   || ["bridge_record_abi", "bridge_record_frame_validate", "bridge_record_children_validate", "bridge_record_children_allocate", "bridge_record_encode_leaf", "bridge_record_slot_clear"].includes(name)
   || ["bridge_compound_abi", "bridge_compound_frame_validate", "bridge_compound_children_validate", "bridge_compound_children_allocate"].includes(name)
   || ["bridge_nominal_abi", "bridge_nominal_frame_validate", "bridge_nominal_children_validate", "bridge_nominal_children_allocate"].includes(name)
+  || ["bridge_recursive_abi", "bridge_recursive_frame_validate", "bridge_recursive_arena_open", "bridge_recursive_children_allocate", "bridge_recursive_encode_leaf", "bridge_recursive_frame_clear"].includes(name)
   || ["bridge_callable_abi", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].includes(name)
   || name.startsWith("l_")
   || name.startsWith("emscripten_")

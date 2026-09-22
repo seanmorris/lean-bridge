@@ -2,9 +2,12 @@
 
 VO1219 remains open. Copied Lists have [installed acceptance across all seventeen
 consumer profiles](lists-acceptance-20260921.md). The remaining structured-type
-work covers named aliases, user-defined tagged variants, bounded recursive copied
-data, compound callback/closure payloads, and aggregates with explicit identity
-ownership. The identity work also belongs to VO1221.
+work covers recursive copied data in the remaining twelve consumer profiles,
+compound callback/closure payloads, and aggregates with explicit identity
+ownership. Copied aliases and tagged variants have installed acceptance across
+all seventeen profiles. [Recursive npm values](npm-recursive-20260922.md) have
+installed acceptance across the five npm profiles. The identity work also
+belongs to VO1221.
 
 ## Delivery stages
 
@@ -109,9 +112,10 @@ LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 \
 These checks compile fresh Lean interfaces and run the production extractor in
 both profiles. Fixtures include all nineteen primitive payloads, empty cases,
 Unit fields, unnamed fields, enums, records, nested variants, arrays, Lists,
-options, results and products. Recursive, generic/indexed, proof-bearing,
-dependent, callback-containing and reserved-field variants have rejection cases.
-The uninhabited type also rejects. Schemas and semantic validators check the
+options, results and products. Generic/indexed, proof-bearing, dependent,
+callback-containing and reserved-field variants have rejection cases. Recursive
+and uninhabited types now lower through finite graphs and total carriers.
+Schemas and semantic validators check the
 reports before lowering them. CI runs this suite with compiler checks enabled.
 
 The initial compiler stage resolved aliases to their targets. The later alias

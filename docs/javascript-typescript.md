@@ -224,7 +224,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named recursive readonly types; ordinary objects and arrays` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Preserves constructor/field order, aliases and all copied containers. Shared subtrees copy independently; ancestor cycles reject. Output receipts require exact, disjoint, owned buffers. Invalid results or traps retire the shared runtime; bounded conversion failures recover. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |
@@ -269,7 +269,7 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
 
-The ordinary component build path accepts primitives, concrete copied aliases, nested arrays and Lists, acyclic copied records, concrete non-recursive tagged variants, `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+The ordinary component build path accepts primitives, concrete copied aliases, nested arrays and Lists, copied records, concrete tagged variants (including bounded recursive values), `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
 
 ### Nested arrays
 
@@ -344,13 +344,14 @@ constructors and field accessors handle the compiler's record representation.
 
 Both source paths have [installed record checks](evidence/npm-records-20260920.md)
 in Node, strict TypeScript and three browser engines, including React and workers.
-Generic, inherited, dependent and recursive records are not supported by this
-profile. Records cannot contain callbacks or resources, or share a component
+Generic, inherited and dependent records are not supported by this
+profile. Recursive copies use the graph transport described below.
+Records cannot contain callbacks or resources, or share a component
 with callable exports yet.
 
 ### Tagged variants
 
-Lean's concrete non-recursive inductive sums become plain objects with a `kind`
+Lean's concrete inductive sums become plain objects with a `kind`
 discriminator and the selected constructor's fields:
 
 ```ts
@@ -370,7 +371,7 @@ copies and need no disposal.
 
 Variants compose with records, arrays, Lists, options, results and products.
 The same copied-value budgets apply. `kind` is reserved for the discriminator.
-Generic, indexed, recursive, proof-bearing and identity-bearing variants remain
+Generic, indexed, proof-bearing and identity-bearing variants remain
 unsupported by this npm profile. Both source paths have
 [installed variant checks](evidence/npm-variants-20260921.md) across Node,
 TypeScript, browsers, React and workers.
@@ -395,11 +396,51 @@ Returned objects and buffers remain independent copies.
 
 Both `abbrev` and concrete type-valued `def` declarations retain their source
 names and targets. Reviewed IR must match them, even when two aliases have the
-same underlying primitive. Alias chains count toward the 32-level descriptor
-bound. Generic aliases, recursive copied values, and aliases containing callbacks
+same underlying primitive. Long alias chains use a finite type graph and add no
+value depth. Generic aliases and aliases containing callbacks
 or resources need further adapter work. The
 [installed alias checks](evidence/npm-aliases-20260921.md) cover both source paths
 in Node, TypeScript and all three browser engines, including React and workers.
+
+### Recursive values
+
+Recursive Lean types produce named recursive TypeScript types. Use ordinary
+objects and arrays, with the same constructor names and fields as Lean:
+
+```lean
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : List Tree)
+
+def echo (value : Tree) : Tree := value
+```
+
+```ts
+type Tree =
+  | { readonly kind: "leaf"; readonly value: bigint }
+  | { readonly kind: "branch"; readonly children: ReadonlyArray<Tree> };
+
+const tree: Tree = {
+  kind: "branch",
+  children: [{ kind: "leaf", value: 42n }],
+};
+```
+
+The generated package supplies `Tree`; callers do not recreate it. Mutually
+recursive types, copied record wrappers, aliases, arrays, Lists, options,
+results and products compose. Shared subtrees return as independent copies.
+Host cycles reject, including cycles across two different nominal types.
+
+Graph-backed calls allow 128 value edges and 262,144 value slots. They share a
+16 MiB copied-slot and payload budget across all arguments and the result.
+These limits exclude Lean's working memory. Oversized results fail without
+returning a prefix, and the runtime remains usable. Malformed native results
+or traps retire the shared runtime. Native allocation receipts provide cleanup
+without following returned pointers.
+
+Both author paths have [installed recursive checks](evidence/npm-recursive-20260922.md)
+in Node, strict TypeScript, Chromium, Firefox and WebKit, including React and
+workers. Recursive support in the other consumer targets remains in progress.
 
 ### Options, results and products
 

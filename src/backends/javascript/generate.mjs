@@ -15,6 +15,7 @@ import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 import { sha256 } from "../../capsule/node.mjs";
+import { emitCopiedValidators } from "./copied-validators.mjs";
 
 const fail = (code, message, details = {}) => {
 	throw new JavaScriptProjectionError(code, message, details);
@@ -605,146 +606,7 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertBytes = (value, path) => { if (!(value instanceof Uint8Array)) invalid(path, \"Uint8Array\"); return value; };"
 		, ""
 	];
-	const emittedArrays = new Set();
-	const emitArray = typeRef => {
-		if(typeRef.kind !== "apply") return;
-		typeRef.arguments.forEach(emitArray);
-		const name = validatorName(typeRef, typeMap);
-		if(emittedArrays.has(name)) return;
-		emittedArrays.add(name);
-		if(!["array", "list"].includes(typeRef.constructor))
-		{
-			lines.push(`export const ${name} = (value, path) => {`);
-			if(typeRef.constructor === "tuple")
-			{
-				lines.push(`  if (!Array.isArray(value) || value.length !== ${typeRef.arguments.length} || Reflect.ownKeys(value).length !== ${typeRef.arguments.length + 1}) invalid(path, "exact data tuple");`);
-				typeRef.arguments.forEach((argument, index) => lines.push(
-					`  const field${index} = Object.getOwnPropertyDescriptor(value, ${index});`,
-					`  if (!field${index} || !Object.hasOwn(field${index}, "value")) invalid(path, "own data fields");`,
-					`  ${validatorName(argument, typeMap)}(field${index}.value, path + "[${index}]");`,
-				));
-			}
-			else
-			{
-				lines.push('  if (!value || typeof value !== "object" || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) invalid(path, "plain tagged object");');
-				if(typeRef.constructor === "option") lines.push(
-					'  const tag = Object.getOwnPropertyDescriptor(value, "tag");',
-					'  if (!tag || !Object.hasOwn(tag, "value") || !["none", "some"].includes(tag.value)) invalid(path, "Option tag");',
-					'  const key = "value", expected = tag.value === "none" ? ["tag"] : ["tag", "value"];',
-				);
-				else lines.push('  const key = Object.hasOwn(value, "error") ? "error" : "ok", expected = [key];');
-				lines.push('  const own = Reflect.ownKeys(value);', '  if (own.length !== expected.length || own.some(key => !expected.includes(key))) invalid(path, "exact tagged fields");');
-				if(typeRef.constructor === "option") lines.push('  if (tag.value === "none") return value;');
-				lines.push('  const field = Object.getOwnPropertyDescriptor(value, key);', '  if (!field || !Object.hasOwn(field, "value")) invalid(path, "own data payload");');
-				if(typeRef.constructor === "option") lines.push(`  ${validatorName(typeRef.arguments[0], typeMap)}(field.value, path + ".value");`);
-				else lines.push(`  (key === "ok" ? ${validatorName(typeRef.arguments[0], typeMap)} : ${validatorName(typeRef.arguments[1], typeMap)})(field.value, path + "." + key);`);
-			}
-			lines.push("  return value;", "};", "");
-			return;
-		}
-		const itemValidator = validatorName(typeRef.arguments[0], typeMap);
-		lines.push(
-			`export const ${name} = (value, path) => {`,
-			typeRef.constructor === "list" ? "  if (!Array.isArray(value)) invalid(path, \"list array\");"
-				: "  if (!Array.isArray(value) && !(value instanceof Uint32Array)) invalid(path, \"array\");",
-			"  if (value.length > 4194304) invalid(path, \"bounded array\");",
-			"  if (Array.isArray(value) && Reflect.ownKeys(value).length !== value.length + 1) invalid(path, \"dense data array\");",
-			"  for (let index = 0; index < value.length; index += 1) {",
-			"    const field = Object.getOwnPropertyDescriptor(value, index);",
-			"    if (!field || !Object.hasOwn(field, \"value\")) invalid(path, \"dense data array\");",
-			`    ${itemValidator}(field.value, \`\${path}[\${index}]\`);`,
-			"  }",
-			"  return value;",
-			"};",
-			"",
-		);
-	};
-	for(const type of ir.types)
-	{
-		if(type.kind === "record") type.fields.forEach(field => emitArray(field.type));
-		if(type.kind === "variant")
-		{
-			type.cases.forEach(variantCase => variantCase.fields.forEach(field => emitArray(field.type)));
-		}
-		if(type.kind === "alias") emitArray(type.target);
-	}
-	for(const declaration of ir.declarations)
-	{
-		declaration.parameters.forEach(parameter => emitArray(parameter.type));
-		emitArray(declaration.result.type);
-	}
-	for(const type of ir.types.filter(item => item.kind === "record"))
-	{
-		lines.push(`export const assert${type.name} = (value, path) => {`);
-		lines.push(
-			"  if (value === null || typeof value !== \"object\" || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) invalid(path, \"plain record\");",
-			`  const expected = new Set(${JSON.stringify(type.fields.map(field => field.name))});`,
-			"  const unknown = Reflect.ownKeys(value).filter(key => !expected.has(key)).map(String);",
-			"  const missing = [...expected].filter(key => !Object.hasOwn(value, key));",
-			`  if (unknown.length || missing.length) throw new TypeError(\`\${path} does not match ${type.name}: missing=\${missing.join(\",\")} unknown=\${unknown.join(\",\")}\`);`,
-		);
-		for(const field of type.fields)
-		{
-			lines.push(
-				`  if (!Object.hasOwn(Object.getOwnPropertyDescriptor(value, ${quote(field.name)}), "value")) invalid(path, "own data fields");`,
-				`  ${validatorName(field.type, typeMap)}(Object.getOwnPropertyDescriptor(value, ${quote(field.name)}).value, \`\${path}.${field.name}\`);`,
-			);
-		}
-		lines.push("  return value;", "};", "");
-	}
-	for(const type of ir.types.filter(item => item.kind === "variant"))
-	{
-		lines.push(`export const assert${type.name} = (value, path) => {`);
-		lines.push(
-			"  if (value === null || typeof value !== \"object\" || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) invalid(path, \"plain variant\");",
-			"  const kind = Object.getOwnPropertyDescriptor(value, \"kind\");",
-			"  if (!kind || !Object.hasOwn(kind, \"value\")) invalid(path, \"own data discriminator\");",
-			"  switch (kind.value) {",
-		);
-		for(const variantCase of type.cases)
-		{
-			const names = ["kind", ...variantCase.fields.map(field => field.name)];
-			lines.push(
-				`    case ${quote(variantCase.name)}: {`,
-				`      const expected = new Set(${JSON.stringify(names)});`,
-				"      const unknown = Reflect.ownKeys(value).filter(key => !expected.has(key)).map(String);",
-				"      const missing = [...expected].filter(key => !Object.hasOwn(value, key));",
-				`      if (unknown.length || missing.length) throw new TypeError(\`\${path} does not match ${type.name}.${variantCase.name}: missing=\${missing.join(\",\")} unknown=\${unknown.join(\",\")}\`);`,
-			);
-			for(const field of variantCase.fields)
-			{
-				lines.push(
-					`      if (!Object.hasOwn(Object.getOwnPropertyDescriptor(value, ${quote(field.name)}), "value")) invalid(path, "own data fields");`,
-					`      ${validatorName(field.type, typeMap)}(Object.getOwnPropertyDescriptor(value, ${quote(field.name)}).value, \`\${path}.${field.name}\`);`,
-				);
-			}
-			lines.push("      return value;", "    }");
-		}
-		lines.push(
-			`    default: invalid(\`\${path}.kind\`, ${quote(type.cases.map(item => item.name).join(" or "))});`,
-			"  }",
-			"};",
-			"",
-		);
-	}
-	for(const type of ir.types.filter(item => item.kind === "alias"))
-	{
-		lines.push(
-			`export const assert${type.name} = (value, path) => ${validatorName(type.target, typeMap)}(value, path);`,
-			"",
-		);
-	}
-	for(const type of ir.types.filter(item => item.kind === "callback"))
-	{
-		lines.push(
-			`export const assert${type.name} = (value, path) => {`,
-			'  if (typeof value !== "function") invalid(path, "function");',
-			"  return value;",
-			"};",
-			"",
-		);
-	}
-	return lines.join("\n");
+	return `${lines.join("\n")}\n${emitCopiedValidators(ir, typeMap, validatorName)}`;
 };
 
 const emitTypeScript = (ir, typeMap) => {
