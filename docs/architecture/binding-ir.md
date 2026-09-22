@@ -91,8 +91,10 @@ tracks adapters and installed acceptance separately.
 The [recursive copied transport implementation](../evidence/recursive-copied-transport-20260922.md)
 uses finite nominal references and iterative value traversal with separate schema,
 value-depth, node and byte limits. Its graph comparison preserves the public IR's
-identities and field order. Compiler/native integration and installed recursive
-package acceptance remain open.
+identities and field order. [Fresh Lean extraction](../evidence/recursive-copied-metadata-20260922.md)
+retains recursive definitions in closed nominal tables, checks their compiler
+representations, and reconciles independently reviewed recursive contracts.
+Native runtime integration and installed recursive package acceptance remain open.
 
 Compiled npm variants use private ABI 7, with a closed named-type table and
 constructor-specific copied fields. Generated Lean helpers construct and match

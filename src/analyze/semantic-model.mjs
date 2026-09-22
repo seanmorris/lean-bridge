@@ -59,11 +59,48 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 	const selected = metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "supported");
 	if(include && (new Set(include).size !== include.length || include.some(name => !selected.some(item => item.identity === name))))
 		throw new TypeError("Semantic lowering can select only admitted compiler declarations");
-	const definitions = new Map(), namedFacts = new Map();
+	const definitions = new Map(), namedFacts = new Map(), namedTypes = new Map();
+	const included = selected.filter(item => !include || include.includes(item.identity));
+	// Compare a nominal definition by its immediate edges, regardless of whether
+	// another export spells its dependencies inline or in a finite graph table.
+	// Visit every inline definition, including duplicates, so conflicting nested
+	// facts cannot hide behind a previously encountered parent type.
+	const remember = type => {
+		if(type.kind === "graph")
+		{
+			type.types.forEach(remember);
+			return remember(type.root);
+		}
+		const value = { ...type };
+		if(type.kind === "alias") value.target = remember(type.target);
+		if(["array", "list", "option"].includes(type.kind)) value.element = remember(type.element);
+		if(["result", "tuple"].includes(type.kind)) value.arguments = type.arguments.map(remember);
+		if(type.kind === "record") value.fields = type.fields.map(field => ({ ...field, type: remember(field.type) }));
+		if(type.kind === "variant") value.cases = type.cases.map(branch => ({ ...branch, fields: branch.fields.map(field => ({ ...field, type: remember(field.type) })) }));
+		if(type.kind === "callback")
+		{ value.parameters = type.parameters.map(remember); value.result = remember(type.result); }
+		if(!["alias", "record", "variant", "resource"].includes(type.kind)) return value;
+		const facts = canonicalJson(value);
+		if(namedFacts.has(type.name) && namedFacts.get(type.name) !== facts) throw new TypeError(`Conflicting compiler type definitions: lean:${type.name}`);
+		namedFacts.set(type.name, facts); namedTypes.set(type.name, type);
+		return { kind: "reference", name: type.name, ...(type.abi ? { lean: type.lean, abi: type.abi } : {}) };
+	};
+	for(const { projection } of included)
+	{
+		projection.parameters.forEach(parameter => remember(parameter.type));
+		remember(projection.result);
+	}
 	const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
 	const site = (type, result = false) => ({ type: reference(type), ...exportContractOwnership(type, result) });
 	const parameter = (type, index) => ({ name: `arg${index}`, ...site(type), mutability: "immutable", optional: false, default: null });
 	const reference = type => {
+		if(type.kind === "graph") return reference(type.root);
+		if(type.kind === "reference")
+		{
+			const target = namedTypes.get(type.name);
+			if(!target) throw new TypeError(`Missing compiler type definition: ${type.name}`);
+			return reference(target);
+		}
 		if(type.kind === "primitive") return { kind: "primitive", name: type.name };
 		if(["array", "list", "option"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: [reference(type.element)] };
 		if(["result", "tuple"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: type.arguments.map(reference) };
@@ -71,12 +108,6 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 		const signature = type.kind === "callback" ? { parameters: type.parameters.map(reference), result: reference(type.result) } : null;
 		const callbackName = signature && `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
 		const id = callbackName ? `bridge:${callbackName}` : `lean:${type.name}`;
-		if(!callbackName)
-		{
-			const facts = canonicalJson(type);
-			if(namedFacts.has(id) && namedFacts.get(id) !== facts) throw new TypeError(`Conflicting compiler type definitions: ${id}`);
-			namedFacts.set(id, facts);
-		}
 		if(!definitions.has(id))
 		{
 			const definition = { id, name: callbackName || type.name.split(".").at(-1)
@@ -101,7 +132,7 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 		}
 		return { kind: "named", id };
 	};
-	const declarations = selected.filter(item => !include || include.includes(item.identity)).map(item => {
+	const declarations = included.map(item => {
 		const { projection } = item;
 		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
 		return { id: `lean:${item.identity}`, name: item.identity.split(".").at(-1)

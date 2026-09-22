@@ -10,6 +10,8 @@ const fail = message => { throw Object.assign(new Error(message), { code: "inval
 const digest = value => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 const name = value => typeof value === "string" && /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value);
 const names = value => Array.isArray(value) && value.every(name) && new Set(value).size === value.length;
+const containsGraph = value => value !== null && typeof value === "object"
+	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
 
 /**
  * Reconstruct invocation context from separately retained compiler/source evidence.
@@ -45,6 +47,11 @@ export const projectNativeMetadata = (metadata, sourceIdentity) => {
 		code: "native-elaboration-unsupported"
 		, details: { diagnostics
 			, projections: metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "unsupported").map(item => ({ declaration: item.identity, ...item.projection })) }
+	});
+	const graph = metadata.modules.flatMap(module => module.declarations).find(item => item.selected && containsGraph(item.projection));
+	if(graph) throw Object.assign(new Error(`${graph.identity}: copied graph exports require the bounded graph transport`), {
+		code: "native-elaboration-unsupported"
+		, details: { declaration: graph.identity }
 	});
 	return { sha256: sha256(canonicalJson({ metadata, sourceIdentity }))
 		, declarations: metadata.modules.flatMap(module => module.declarations.filter(item => item.selected).map(item => ({

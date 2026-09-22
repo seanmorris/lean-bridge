@@ -4,6 +4,7 @@
  * @file
  */
 import { componentScalarTypes } from "../abi/component-scalars.mjs";
+import { validateCopiedMetadataGraph } from "./copied-metadata-graph.mjs";
 
 const identifier = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
 const fail = message => { throw new TypeError(`native-library-v1: ${message}`); };
@@ -19,9 +20,13 @@ const closed = (value, fields, label) => {
  * @param depth - Current recursive type-validation depth.
  * @param copied - Whether this position forbids retained identity.
  */
-export const validateNativeType = (type, depth = 0, copied = false) => {
+export const validateNativeType = (type, depth = 0, copied = false) => validate(type, depth, copied);
+
+const validate = (type, depth, copied, references) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
 	const fields = { primitive: ["kind", "name", "lean", "abi"]
+		, graph: ["kind", "root", "types", "abi"]
+		, reference: ["kind", "name", "lean", "abi"]
 		, alias: ["kind", "name", "lean", "target", "abi"]
 		, array: ["kind", "element", "abi"]
 		, list: ["kind", "element", "abi"]
@@ -42,8 +47,17 @@ export const validateNativeType = (type, depth = 0, copied = false) => {
 	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", size_t: "_usize", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
 	if(type.abi.box !== `lean_box${suffix}` || type.abi.unbox !== `lean_unbox${suffix}`
 	  || (type.abi.heap && type.abi.cType !== "lean_object*")) fail("inconsistent native representation");
-	const recurse = (child, copy = copied) => validateNativeType(child, depth + 1, copy);
-	if(type.kind === "primitive")
+	const recurse = (child, copy = copied) => validate(child, depth + 1, copy, references);
+	if(type.kind === "graph")
+	{
+		if(references) fail("nested copied graph");
+		validateCopiedMetadataGraph(type, (value, table) => validate(value, 0, true, table), true);
+	} else if(type.kind === "reference")
+	{
+		if(typeof type.name !== "string" || !identifier.test(type.name) || type.name !== type.lean || !references?.has(type.name)) fail("reference requires a matching nominal definition in its graph");
+		const target = references.get(type.name);
+		if(["cType", "box", "unbox", "heap"].some(field => type.abi[field] !== target.abi[field])) fail("reference representation differs from its definition");
+	} else if(type.kind === "primitive")
 	{
 		const spellings = ["Unit", "Bool", "UInt8", "UInt16", "UInt32", "UInt64", "Int8", "Int16", "Int32", "Int64", "Nat", "Int", "Float32", "Float", "String", "ByteArray", "Char", "USize", "ISize"];
 		if(spellings[componentScalarTypes.indexOf(type.name)] !== type.lean) fail("unknown primitive spelling");

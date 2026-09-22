@@ -17,6 +17,8 @@ import { validateNativeType } from "../src/analyze/native-types.mjs";
 import { createNativeModel } from "../src/build/native-model.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { componentScalarTypes } from "../src/abi/component-scalars.mjs";
+import { validateCopiedMetadataGraph } from "../src/analyze/copied-metadata-graph.mjs";
+import { componentRecursiveTypeGraph } from "../src/build/component-recursive-types.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
@@ -24,9 +26,10 @@ import { assertJsonSchema } from "./helpers/json-schema.mjs";
 
 const component = { id: "shapes@1.0.0", name: "shapes", version: "1.0.0" };
 const enabled = process.env.LEAN_BRIDGE_ELABORATED_METADATA_TEST === "1";
-const lower = (metadata, request) => createElaboratedSemanticModel({
+const lower = (metadata, request, include) => createElaboratedSemanticModel({
 	metadata, request
-	, component, elaborationSha256: sha256(canonicalJson(metadata)) }).document;
+	, component, include
+	, elaborationSha256: sha256(canonicalJson(metadata)) }).document;
 const expected = [
 	["idle", []], ["stopped", []]
 	, ["data", [["count", "uint32"], ["label", "string"]]]
@@ -63,6 +66,179 @@ const synthetic = () => {
 	projection.parameters[0].type = type; projection.result = type;
 	return { ...input, type };
 };
+
+const syntheticGraph = (native = true) => {
+	const input = synthetic(), type = input.type;
+	const ref = { kind: "reference", name: type.name, lean: type.lean, abi: type.abi };
+	type.cases[1].fields.push({ name: "children", type: { kind: "list", element: ref, abi: type.abi } });
+	const graph = { kind: "graph", root: ref, types: [type], abi: type.abi };
+	const projection = input.metadata.modules[0].declarations[0].projection;
+	projection.parameters[0].type = graph; projection.result = graph;
+	if(!native)
+	{
+		const strip = value => Array.isArray(value) ? value.map(strip) : value && typeof value === "object"
+			? Object.fromEntries(Object.entries(value).filter(([key]) => !["abi", "lean", "constructor", "projection"].includes(key)).map(([key, child]) => [key, strip(child)])) : value;
+		const { metadata, ...request } = input.sourceIdentity.request;
+		input.sourceIdentity.request = createMetadataRequest({ ...request, profile: "component-scalars-v1" }, metadata);
+		input.metadata.profile = "component-scalars-v1";
+		input.metadata.producer.invocationIdentitySha256 = input.sourceIdentity.request.metadata.invocationIdentitySha256;
+		projection.bindingShape = "pure-function";
+		projection.parameters[0].type = strip(graph); projection.result = strip(graph);
+	}
+	return { ...input, graph: projection.result };
+};
+
+const recursiveReview = () => {
+	const ir = corpusReviewedIr({ id: "shapes" }, [{ name: "Recursive.left", parameters: ["unit"], result: "unit" }]);
+	const base = review(), template = JSON.parse(base.source).types[0];
+	const ref = name => ({ kind: "named", id: `lean:Recursive.${name}` });
+	const declarations = [
+		["LeftTree", [["next", [["right", ref("RightTree")]]], ["leaf", [["value", { kind: "primitive", name: "uint32" }]]]]]
+		, ["RightTree", [["many", [["lefts", { kind: "apply", constructor: "array", arguments: [ref("LeftTree")] }]]]]]
+	];
+	ir.types = declarations.map(([name, cases]) => ({
+		...template, id: `lean:Recursive.${name}`, name
+		, source: { producer: "corpusReview", declaration: `Recursive.${name}`, extensions: {} }
+		, cases: cases.map(([name, fields]) => ({
+			name, documentation: template.documentation
+			, fields: fields.map(([name, type]) => ({ name, type, mutability: "immutable", documentation: template.documentation })) }))
+	}));
+	ir.declarations[0].parameters[0].type = ref("LeftTree"); ir.declarations[0].result.type = ref("LeftTree");
+	const source = canonicalJson(ir);
+	return { schemaVersion: 1, path: "recursive.binding-ir.json", source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(ir) };
+};
+
+test("recursive compiler tables lower to nominal IR while unimplemented compiled paths stay closed", async () => {
+	const identities = [];
+	for(const native of [true, false])
+	{
+		const input = syntheticGraph(native), request = input.sourceIdentity.request;
+		validateElaboratedMetadata(input.metadata, request);
+		await assertJsonSchema("elaborated-export-metadata", input.metadata);
+		const ir = lower(input.metadata, request), type = ir.types[0];
+		assert.equal(type.id, "lean:Sample.Choice");
+		assert.deepEqual(type.cases[1].fields[1].type, { kind: "apply", constructor: "list", arguments: [{ kind: "named", id: type.id }] });
+		const graph = validateCopiedMetadataGraph(input.graph, () => {}, native);
+		assert.deepEqual(graph, componentRecursiveTypeGraph(ir, ir.declarations[0].result.type));
+		identities.push(sourceApiIdentity(ir).sha256);
+		assert.throws(() => createComponentPrivateAbi(ir), /recursive|cyclic/iu);
+		if(native) assert.throws(() => createNativeModel({ ...input, component }), /bounded graph transport/u);
+	}
+	assert.equal(identities[0], identities[1]);
+});
+
+test("copied compiler graphs reject unbound references, identities, alias cycles and malformed tables", () => {
+	for(const native of [true, false]) for(const change of [
+		value => { value.root.name = "Unknown.Type"; }
+		, value => { value.types.push(structuredClone(value.types[0])); }
+		, value => { value.types = []; }
+		, value => { value.types = new Array(1); }
+		, value => { value.root = value.types[0]; }
+		, value => { value.types[0].cases[1].fields[1].type.element = value; }
+		, value => { value.types[0].cases[1].fields[0].type = { kind: "resource", name: "Secret" }; }
+		, value => { value.types[0].cases[1].fields[1].type = { kind: "callback", parameters: [], result: value.root }; }
+		, value => { value.types[0].cases[1].fields[1].type.extra = true; }
+		, value => { value.types[0].cases[1].fields[1].name = "kind"; }
+		, value => { value.types[0].cases[1].fields[0].name = "__proto__"; }
+		, value => {
+			const { name, lean, abi } = value.types[0];
+			value.types[0] = {
+				kind: "alias", name
+				, ...(native ? { lean, abi } : {})
+				, target: { kind: "list", element: value.root, ...(native ? { abi } : {}) } };
+		}
+	]) {
+		const input = syntheticGraph(native); change(input.graph);
+		assert.throws(() => validateElaboratedMetadata(input.metadata, input.sourceIdentity.request));
+	}
+	for(const change of [
+		value => { value.root.lean = "Other.Type"; }
+		, value => { value.root.abi = { ...value.root.abi, heap: false }; }
+		, value => { value.abi = { ...value.abi, heap: false }; }
+		, value => { value.types[0].cases[1].constructor = "Other.some"; }
+	]) {
+		const input = syntheticGraph(); change(input.graph);
+		assert.throws(() => validateNativeType(input.graph));
+	}
+	const input = syntheticGraph();
+	assert.throws(() => validateNativeType(input.graph.root), /requires a matching nominal/u);
+	const componentInput = syntheticGraph(false);
+	componentInput.metadata.modules[0].declarations[0].projection.result = componentInput.graph.root;
+	assert.throws(() => validateElaboratedMetadata(componentInput.metadata, componentInput.sourceIdentity.request), /requires a matching nominal/u);
+});
+
+test("compiler graphs enforce finite schema limits without unfolding recursive edges", () => {
+	const input = syntheticGraph();
+	const { abi } = input.graph;
+	const ref = name => ({ kind: "reference", name, lean: name, abi });
+	const aliases = Array.from({ length: 1000 }, (_, index) => ({
+		kind: "alias", name: `Sample.A${index}`, lean: `Sample.A${index}`, abi
+		, target: ref(index === 999 ? "Sample.Choice" : `Sample.A${index + 1}`) }));
+	input.graph.types.push(...aliases); input.graph.root = ref("Sample.A0");
+	validateNativeType(input.graph);
+	const ir = lower(input.metadata, input.sourceIdentity.request);
+	assert.equal(ir.types.length, 1001);
+	const oversized = structuredClone(input.graph); oversized.types.push(...aliases.slice(0, 24));
+	assert.throws(() => validateNativeType(oversized), /bounded dense table/u);
+	const deep = syntheticGraph().graph;
+	for(let index = 0; index < 32; index++) deep.root = { kind: "array", element: deep.root, abi };
+	validateNativeType(deep);
+	deep.root = { kind: "array", element: deep.root, abi };
+	assert.throws(() => validateNativeType(deep), /nesting/u);
+	const cyclic = syntheticGraph().graph;
+	cyclic.root = { kind: "array", abi }; cyclic.root.element = cyclic.root;
+	assert.throws(() => validateNativeType(cyclic), /nesting/u);
+});
+
+test("inline and graph definitions share identity without hiding nested compiler conflicts", () => {
+	const input = syntheticGraph(), projection = input.metadata.modules[0].declarations[0].projection;
+	const scalar = projection.result.types[0].cases[1].fields[0].type;
+	const record = {
+		kind: "record", name: "Sample.Payload", lean: "Sample.Payload"
+		, constructor: "Sample.Payload.mk"
+		, fields: [{ name: "value", projection: "Sample.Payload.value", type: scalar }]
+		, abi: input.graph.abi };
+	const ref = { kind: "reference", name: record.name, lean: record.lean, abi: record.abi };
+	input.graph.types[0].cases[1].fields[0].type = ref;
+	input.graph.types.push(record);
+	projection.parameters[0].type = record;
+	const ir = lower(input.metadata, input.sourceIdentity.request);
+	assert.equal(ir.types.length, 2);
+	assert.deepEqual(ir.declarations[0].parameters[0].type, { kind: "named", id: "lean:Sample.Payload" });
+	const conflicting = structuredClone(record);
+	conflicting.fields[0].name = "renamed";
+	projection.parameters[0].type = conflicting;
+	assert.throws(() => lower(input.metadata, input.sourceIdentity.request), /Conflicting compiler type definitions/u);
+	const wrap = type => ({
+		kind: "record", name: "Sample.Wrapper", lean: "Sample.Wrapper"
+		, constructor: "Sample.Wrapper.mk"
+		, fields: [{ name: "payload", projection: "Sample.Wrapper.payload", type }]
+		, abi: record.abi });
+	projection.parameters[0].type = wrap(record); projection.result = wrap(conflicting);
+	assert.throws(() => lower(input.metadata, input.sourceIdentity.request), /Conflicting compiler type definitions: lean:Sample.Payload/u);
+});
+
+test("compiler graph limits count fields and cases and do not execute descriptor accessors", () => {
+	const input = syntheticGraph(), graph = input.graph;
+	const scalar = graph.types[0].cases[1].fields[0].type;
+	graph.types[0].cases = Array.from({ length: 1023 }, (_, index) => ({
+		name: `case${index}`, constructor: `Sample.Choice.case${index}`
+		, fields: ["a", "b", "c"].map(name => ({ name, type: scalar })) }));
+	graph.types[0].cases[0].fields.push({ name: "d", type: scalar }, { name: "e", type: scalar });
+	validateNativeType(graph); // 4,096 nominal, constructor and reference nodes.
+	graph.types[0].cases[0].fields.push({ name: "f", type: scalar });
+	assert.throws(() => validateNativeType(graph), /node limit/u);
+	for(const install of [
+		(value, get) => Object.defineProperty(value, "root", { get })
+		, (value, get) => Object.defineProperty(value.types[0], "name", { get })
+		, (value, get) => Object.defineProperty(value.types, 0, { get })
+	]) {
+		const type = syntheticGraph().graph; let calls = 0;
+		install(type, () => { calls++; throw new Error("accessor executed"); });
+		assert.throws(() => validateCopiedMetadataGraph(type, () => {}, true), /accessors/u);
+		assert.equal(calls, 0);
+	}
+});
 
 test("variant interfaces retain stable source references across relocated C and metadata builds", { skip: !enabled, timeout: 120000 }, async t => {
 	const root = process.cwd(), directory = await mkdtemp(join(tmpdir(), "lean-bridge-variant-relocation-"));
@@ -162,8 +338,8 @@ test("fresh Lean constructor facts agree across profiles and with independent re
 		, extractorSha256: sha256(await readFile(extractor))
 		, leanCompilerSha256: sha256(await readFile(lean)) };
 	const config = canonicalJson({ schemaVersion: 1, modules: ["Shapes"] });
-	const admitted = ["echo", "mode", "nested", "signals", "scalars", "anonymous"];
-	const all = [...admitted, "tree", "generic", "indexed", "proof", "callback", "reserved", "dependent", "empty"];
+	const admitted = ["echo", "mode", "nested", "signals", "scalars", "anonymous", "tree"];
+	const all = [...admitted, "generic", "indexed", "proof", "callback", "reserved", "dependent", "empty"];
 	const results = [];
 	for(const profile of ["native-library-v1", "component-scalars-v1"])
 	{
@@ -214,4 +390,88 @@ test("fresh Lean constructor facts agree across profiles and with independent re
 	}
 	assert.equal(results[0], results[1]);
 	assert.deepEqual(await readFile(join(directory, "Shapes.lean")), source);
+});
+
+test("fresh Lean recursive graphs preserve mutual recursion, aliases and reviewed contracts", { skip: !enabled, timeout: 600000 }, async t => {
+	const root = process.cwd(), directory = await mkdtemp(join(tmpdir(), "lean-bridge-recursive-metadata-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const prefix = (await processBuildRunner.capture({ command: join(root, ".toolchains/elan/bin/lean"), args: ["--print-prefix"], cwd: root })).stdout.trim();
+	const lean = join(prefix, "bin/lean"), extractor = join(root, "src/analyze/NativeExports.lean");
+	const capture = args => processBuildRunner.capture({
+		command: lean, args, cwd: directory
+		, env: { ...process.env, LEAN_PATH: directory, PATH: `${join(prefix, "bin")}:${process.env.PATH}` }
+		, timeoutMs: 120000
+	}).catch(error => { throw new Error(JSON.stringify(error.details ?? error.message), { cause: error }); });
+	const fixture = await readFile(join(root, "tests/fixtures/structured-types/Recursive.lean"), "utf8");
+	const stress = "\nnamespace Recursive\n"
+		+ Array.from({ length: 48 }, (_, index) => `abbrev Alias${index} := ${index ? `Alias${index - 1}` : "Tree"}\n`).join("")
+		+ "def deepAliases (value : Alias47) : Alias47 := value\n"
+		+ "structure Shared0 where\n  value : UInt32\n"
+		+ Array.from({ length: 16 }, (_, index) => `structure Shared${index + 1} where\n  left : Shared${index}\n  right : Shared${index}\n`).join("")
+		+ "def shared (value : Shared16) : Shared16 := value\nend Recursive\n";
+	await writeFile(join(directory, "Recursive.lean"), fixture + stress);
+	await capture(["-o", "Recursive.olean", "Recursive.lean"]);
+	const source = await readFile(join(directory, "Recursive.lean"));
+	const context = { toolchain: "leanprover/lean4:v4.32.2"
+		, modules: [{ name: "Recursive", sourcePath: "Recursive.lean"
+			, sourceSha256: sha256(source)
+			, interfaceSha256: (await identifyLeanInterface(join(directory, "Recursive.olean"))).interfaceSha256 }]
+		, extractorSha256: sha256(await readFile(extractor))
+		, leanCompilerSha256: sha256(await readFile(lean)) };
+	const names = ["tree", "forest", "envelope", "scalars", "left", "right", "never", "deepAliases", "shared"];
+	const identities = [];
+	for(const profile of ["native-library-v1", "component-scalars-v1"])
+	{
+		const run = async selected => {
+			const request = createMetadataRequest({
+				profile, modules: ["Recursive"], exportModules: ["Recursive"]
+				, exports: selected.map(name => `Recursive.${name}`)
+				, resources: [], arities: [] }, context);
+			await writeFile(join(directory, "request.json"), canonicalJson(request));
+			const metadata = JSON.parse((await capture(["--run", extractor, "--metadata", "request.json"])).stdout);
+			validateElaboratedMetadata(metadata, request); await assertJsonSchema("elaborated-export-metadata", metadata);
+			return { metadata, request };
+		};
+		const { metadata, request } = await run(names);
+		assert.deepEqual(metadata.diagnostics, []);
+		const declarations = new Map(metadata.modules[0].declarations.map(item => [item.identity, item]));
+		for(const name of names) assert.equal(declarations.get(`Recursive.${name}`).projection.status, "supported", `${profile}/${name}`);
+		const ir = lower(metadata, request);
+		identities.push(sourceApiIdentity(ir).sha256);
+		const scalar = declarations.get("Recursive.scalars").projection.result;
+		assert.equal(scalar.kind, "record"); assert.deepEqual(scalar.fields.map(field => field.type.name), componentScalarTypes);
+		assert.equal(declarations.get("Recursive.deepAliases").projection.result.types.length, 50);
+		assert.equal(declarations.get("Recursive.shared").projection.result.types.length, 17);
+		for(const name of names.filter(name => name !== "scalars"))
+		{
+			const graph = declarations.get(`Recursive.${name}`).projection.result;
+			assert.equal(graph.kind, "graph");
+			assert.deepEqual(graph.types.map(type => type.name), graph.types.map(type => type.name).sort());
+			const one = lower(metadata, request, [`Recursive.${name}`]);
+			assert.deepEqual(validateCopiedMetadataGraph(graph, () => {}, profile === "native-library-v1")
+				, componentRecursiveTypeGraph(one, one.declarations[0].result.type));
+		}
+		const tree = ir.types.find(type => type.id === "lean:Recursive.Tree");
+		assert.deepEqual(tree.cases.map(branch => branch.name), ["branch", "leaf"]);
+		assert.deepEqual(tree.cases[0].fields[0].type, { kind: "apply", constructor: "list", arguments: [{ kind: "named", id: tree.id }] });
+		assert.deepEqual(ir.types.find(type => type.id === "lean:Recursive.Forest").target, { kind: "apply", constructor: "list", arguments: [{ kind: "named", id: tree.id }] });
+		assert.equal(ir.types.find(type => type.id === "lean:Recursive.Never").cases[0].fields[0].type.id, "lean:Recursive.Never");
+		const selected = await run(["left"]), checked = lower(selected.metadata, selected.request);
+		const config = canonicalJson({ schemaVersion: 1, modules: ["Recursive"] });
+		const sourceIdentity = { request: selected.request, exportConfigurationSource: config, exportConfigurationSha256: sha256(config) };
+		assert.equal(reconcileReviewedSource(recursiveReview(), checked, sourceIdentity).types.length, 2);
+		for(const change of [
+			document => { document.types[0].cases.reverse(); }
+			, document => { document.types[0].cases[0].fields[0].name = "different"; }
+			, document => { document.types[0].cases[0].fields[0].type.id = "lean:Recursive.LeftTree"; }
+			, document => { document.types[1].cases[0].fields[0].type.constructor = "list"; }
+		]) {
+			const original = recursiveReview(), document = JSON.parse(original.source); change(document);
+			const source = canonicalJson(document);
+			const changed = { ...original, source, sourceSha256: sha256(source), semanticSha256: hashBindingIr(document) };
+			assert.throws(() => reconcileReviewedSource(changed, checked, sourceIdentity), { code: "reviewed-ir-source-mismatch" });
+		}
+	}
+	assert.equal(identities[0], identities[1]);
+	assert.deepEqual(await readFile(join(directory, "Recursive.lean")), source);
 });

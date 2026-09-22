@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "historicalReceipt": {
+    "path": "docs/evidence/npm-aliases-20260921.json",
+    "sha256": "b169dc438ff64f0f823db733aa7d9f0beaa8ef97f502b5ff700a5f986b46c9d0"
+  },
+  "sources": {
+    "tests/compiler-alias-metadata.test.mjs": {
+      "previousSha256": "70f894a70a30b7bb5cae798ebcd485f60acb3067d245eeefd222d3a297b18be0",
+      "currentSha256": "826bd41df9fdc442f1440f0d8d90af180b1a45a51b5d723334f0cfa4a193337c"
+    }
+  },
+  "change": "The fresh compiler regression now requires all 34 aliases to survive in a finite nominal graph instead of expecting inline-depth rejection. Historical installed callers, package archives and receipt bytes are unchanged."
+}

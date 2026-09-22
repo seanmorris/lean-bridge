@@ -5,6 +5,28 @@
   "oneOf": [
     {
       "type": "object", "additionalProperties": false,
+      "required": ["kind", "root", "types", "abi"],
+      "properties": {
+        "kind": { "const": "graph" },
+        "root": { "$ref": "#" },
+        "types": { "type": "array", "minItems": 1, "maxItems": 1024, "items": {
+          "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "enum": ["alias", "record", "variant"] } } }]
+        } },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "name", "lean", "abi"],
+      "properties": {
+        "kind": { "const": "reference" },
+        "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+        "lean": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$" },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
       "required": ["kind", "name", "lean", "target", "abi"],
       "properties": {
         "kind": { "const": "alias" },

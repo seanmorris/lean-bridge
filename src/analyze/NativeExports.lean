@@ -72,20 +72,40 @@ def nativeIdentifier (name : String) : Bool :=
       part.toList.all (fun c => c.toNat < 128 && (c.isAlphanum || c == '_'))
 
 -- Callable signatures use the checked value representation. Traverse aliases
--- only after shape has enforced their definition, cycle and nesting checks.
+-- only after the finite table has been checked and acyclic types expanded.
 def callableTarget (value : Json) : MetaM Json := do
   let mut value := value
   while (value.getObjValAs? String "kind").toOption == some "alias" do
     value ← ofExcept <| value.getObjVal? "target"
   return value
 
-partial def shape (request : Request) (e : Expr) (seen : List Name := [])
-    (depth : Nat := 0) (copied : Bool := false) : MetaM Json := do
-  if depth > 32 then reject e "native copied type nesting exceeds 32"
+def nominalReference (e : Expr) (name : Name) : MetaM Json := do
+  return obj [("kind", str "reference"), ("name", str name.toString),
+    ("lean", str name.toString), ("abi", ← abi e)]
+
+structure ShapeState where
+  types : Array Json := #[]
+  nodes : Nat := 0
+
+abbrev ShapeM := StateT ShapeState MetaM
+
+def rememberShape (e : Expr) (name : Name) (value : Json) : ShapeM Json := do
+  if (← get).types.size >= 1024 then reject e "copied graph exceeds 1024 nominal definitions"
+  if (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
+  modify fun state => { state with types := state.types.push value, nodes := state.nodes + 1 }
+  return ← nominalReference e name
+
+partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
+    (depth : Nat := 0) (copied : Bool := false) : ShapeM Json := do
+  if depth > 32 then reject e "native copied type nesting exceeds 32 inline edges"
+  if seen.length > 1024 || (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
+  modify fun state => { state with nodes := state.nodes + 1 }
   if e.hasFVar || e.hasLooseBVars || e.hasMVar then
     reject e "dependent or unresolved native type"
   if let .const name levels := e then
     if !(primitives.any (·.1 == name)) && !request.resources.contains name.toString then
+      if (← get).types.any (fun type => (type.getObjValAs? String "name").toOption == some name.toString) then
+        return ← nominalReference e name
       let info ← getConstInfo name
       if let .defnInfo definition := info then
         if (← whnf definition.type).isSort then
@@ -93,11 +113,15 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
             if request.modules.contains (← getEnv).header.moduleNames[index.toNat]!.toString then
               if !nativeIdentifier name.toString || !levels.isEmpty || !definition.levelParams.isEmpty ||
                   info.isUnsafe || info.isPartial then reject e "unsupported copied alias definition"
-              if seen.contains name then reject e "cyclic copied alias"
-              let target ← shape request definition.value (name :: seen) (depth + 1) copied
+              if seen.contains name then
+                let guarded ← (seen.takeWhile (· != name)).anyM fun other => do
+                  return (← getConstInfo other) matches .inductInfo _
+                unless guarded do reject e "cyclic copied alias"
+                return ← nominalReference e name
+              let target ← shapeTree request definition.value (name :: seen) 0 copied
               if ["resource", "callback"].contains ((target.getObjValAs? String "kind").toOption.getD "") then
                 return target
-              return obj [("kind", str "alias"), ("name", str name.toString),
+              return ← rememberShape e name <| obj [("kind", str "alias"), ("name", str name.toString),
                 ("lean", str name.toString), ("target", target), ("abi", ← abi e)]
   if (← isDefEq e (mkConst ``Unit)) then
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
@@ -117,7 +141,7 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
       return obj [("kind", str "resource"), ("name", str name.toString), ("lean", str name.toString),
         ("module", str (← getEnv).header.moduleNames[index.toNat]!.toString), ("abi", lowered)]
     if let some info := getStructureInfo? (← getEnv) name then
-      if seen.contains name then reject e "recursive copied records require a reviewed representation"
+      if seen.contains name then return ← nominalReference e name
       let .inductInfo induct ← getConstInfo name | reject e "invalid record"
       if !nativeIdentifier name.toString || !nativeIdentifier induct.ctors.head!.toString then
         reject e "unsupported native record identifier"
@@ -133,17 +157,19 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
         let .forallE _ _ fieldType _ := projectionInfo.type | reject e "invalid record projection"
         fields := fields.push (obj [("name", str field.toString),
           ("projection", str projection.toString),
-          ("type", ← shape request fieldType (name :: seen) (depth + 1) true)])
-      return obj [("kind", str "record"), ("name", str name.toString),
+          ("type", ← shapeTree request fieldType (name :: seen) 0 true)])
+      return ← rememberShape e name <| obj [("kind", str "record"), ("name", str name.toString),
         ("lean", str name.toString), ("constructor", str induct.ctors.head!.toString), ("fields", toJson fields), ("abi", ← abi e)]
     if let .inductInfo induct ← getConstInfo name then
-      if seen.contains name then reject e "recursive copied variants require a bounded graph representation"
+      if seen.contains name then return ← nominalReference e name
       if !nativeIdentifier name.toString || induct.numParams != 0 || induct.numIndices != 0 then
         reject e "generic or indexed variants require a checked specialization"
       if induct.ctors.isEmpty || induct.ctors.length > 1024 || (← isProp e) then
         reject e "copied variants require between 1 and 1024 value constructors"
       let mut cases := #[]
       for constructor in induct.ctors do
+        if (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
+        modify fun state => { state with nodes := state.nodes + 1 }
         if !nativeIdentifier constructor.toString then reject e "unsupported variant constructor identifier"
         let .str owner caseName := constructor | reject e "unnamed variant constructor"
         if owner != name then reject e "variant constructor belongs to a different type"
@@ -171,23 +197,23 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
               ["kind", "new", "DESTROY", "CLONE", "CLONE_SKIP"].contains fieldName || names.contains fieldName then
             reject e s!"invalid, reserved or duplicate variant field name {fieldName}"
           fields := fields.push (obj [("name", str fieldName),
-            ("type", ← shape request fieldType (name :: seen) (depth + 1) true)])
+            ("type", ← shapeTree request fieldType (name :: seen) 0 true)])
           names := fieldName :: names
           rest := body
         unless ← isDefEq rest e do reject e "variant constructor has a dependent result"
         cases := cases.push (obj [("name", str caseName), ("constructor", str constructor.toString), ("fields", toJson fields)])
-      return obj [("kind", str "variant"), ("name", str name.toString),
+      return ← rememberShape e name <| obj [("kind", str "variant"), ("name", str name.toString),
         ("lean", str name.toString), ("cases", toJson cases), ("abi", ← abi e)]
   if e.isAppOfArity ``Array 1 then
-    return obj [("kind", str "array"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
   if e.isAppOfArity ``List 1 then
-    return obj [("kind", str "list"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
   if e.isAppOfArity ``Option 1 then
-    return obj [("kind", str "option"), ("element", ← shape request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
+    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true), ("abi", ← abi e)]
   if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
     let args := e.getAppArgs
-    let first ← shape request args[0]! seen (depth + 1) true
-    let second ← shape request args[1]! seen (depth + 1) true
+    let first ← shapeTree request args[0]! seen (depth + 1) true
+    let second ← shapeTree request args[1]! seen (depth + 1) true
     -- IR result arguments are [success, error]; Lean's Except is [error, success].
     let result := e.isAppOfArity ``Except 2
     return obj [("kind", str (if result then "result" else "tuple")),
@@ -202,14 +228,84 @@ partial def shape (request : Request) (e : Expr) (seen : List Name := [])
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
         if parameters.size >= 16 then reject e "native callbacks support at most 16 arguments"
-        parameters := parameters.push (← callableTarget (← shape request argument seen (depth + 1)))
+        parameters := parameters.push (← shapeTree request argument seen (depth + 1))
         result := rest
       | _ => break
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
-      ("result", ← callableTarget (← shape request result seen (depth + 1))), ("abi", ← abi e)]
+      ("result", ← shapeTree request result seen (depth + 1)), ("abi", ← abi e)]
   let reduced ← whnf e
-  if reduced != e then return ← shape request reduced seen (depth + 1) copied
+  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied
   reject e "unsupported native export type"
+
+/- Preserve the existing inline report for small acyclic types. Expansion has
+   its own budget: sharing and nominal depth must not grow an exponential tree. -/
+partial def inlineCopiedType (types : Array Json) (value : Json)
+    (seen : List String := []) (depth : Nat := 0) : OptionT (StateT Nat MetaM) Json := do
+  if depth > 32 || (← get) >= 4096 then return ← OptionT.fail
+  modify (· + 1)
+  let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  if kind == "reference" then
+    let name ← ofExcept <| value.getObjValAs? String "name"
+    if seen.contains name then return ← OptionT.fail
+    let some type := types.find? (fun item => (item.getObjValAs? String "name").toOption == some name)
+      | throwError "missing copied type definition: {name}"
+    return ← inlineCopiedType types type (name :: seen) depth
+  if kind == "alias" || kind == "array" || kind == "list" || kind == "option" then
+    let key := if kind == "alias" then "target" else "element"
+    return value.setObjVal! key (← inlineCopiedType types (← ofExcept <| value.getObjVal? key) seen (depth + 1))
+  if kind == "result" || kind == "tuple" then
+    let args ← ofExcept <| value.getObjValAs? (Array Json) "arguments"
+    return value.setObjVal! "arguments" (toJson (← args.mapM fun child => inlineCopiedType types child seen (depth + 1)))
+  let expandFields := fun (owner : Json) => do
+    let fields ← ofExcept <| owner.getObjValAs? (Array Json) "fields"
+    let fields ← fields.mapM fun (field : Json) => do
+      pure (field.setObjVal! "type" (← inlineCopiedType types (← ofExcept <| field.getObjVal? "type") seen (depth + 1)))
+    pure (owner.setObjVal! "fields" (toJson fields))
+  if kind == "record" then return ← expandFields value
+  if kind == "variant" then
+    let cases ← ofExcept <| value.getObjValAs? (Array Json) "cases"
+    return value.setObjVal! "cases" (toJson (← cases.mapM expandFields))
+  return value
+
+partial def copiedReferenceNames (value : Json) : List String :=
+  match value with
+  | .obj fields =>
+    if (value.getObjValAs? String "kind").toOption == some "reference" then
+      (value.getObjValAs? String "name").toOption.toList
+    else fields.toArray.toList.flatMap (fun (_, child) => copiedReferenceNames child)
+  | .arr values => values.toList.flatMap copiedReferenceNames
+  | _ => []
+
+partial def finiteCopiedGraph (types : Array Json) (value : Json) : MetaM Json := do
+  if (value.getObjValAs? String "kind").toOption == some "callback" then
+    let parameters ← ofExcept <| value.getObjValAs? (Array Json) "parameters"
+    let result ← ofExcept <| value.getObjVal? "result"
+    let parameters ← parameters.mapM fun parameter => do
+      callableTarget (← finiteCopiedGraph types parameter)
+    return value.setObjVal! "parameters" (toJson parameters)
+      |>.setObjVal! "result" (← callableTarget (← finiteCopiedGraph types result))
+  let (expanded, _) ← (inlineCopiedType types value).run.run 0
+  if let some inline := expanded then return inline
+  let mut pending := copiedReferenceNames value
+  let mut names : List String := []
+  let mut selected := #[]
+  while !pending.isEmpty do
+    let name := pending.head!
+    pending := pending.tail!
+    unless names.contains name do
+      names := name :: names
+      let some type := types.find? (fun item => (item.getObjValAs? String "name").toOption == some name)
+        | throwError "missing copied type definition: {name}"
+      selected := selected.push type
+      pending := copiedReferenceNames type ++ pending
+  return obj [("kind", str "graph"), ("root", value),
+    ("types", toJson (selected.qsort fun a b =>
+      (a.getObjValAs? String "name").toOption.getD "" < (b.getObjValAs? String "name").toOption.getD "")),
+    ("abi", ← ofExcept <| value.getObjVal? "abi")]
+
+def shape (request : Request) (e : Expr) : MetaM Json := do
+  let (value, state) ← (shapeTree request e).run {}
+  finiteCopiedGraph state.types value
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (index : Nat := 0) : MetaM (Array Json × Json) := do
@@ -271,6 +367,14 @@ def scalarType (request : Request) (e : Expr) : MetaM Json := do
   return obj [("kind", str "primitive"), ("name", str name)]
 
 partial def componentCopiedType (value : Json) : MetaM Json := do
+  let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  if kind == "reference" then
+    return obj [("kind", str kind), ("name", ← ofExcept <| value.getObjVal? "name")]
+  if kind == "graph" then
+    let types ← ofExcept <| value.getObjValAs? (Array Json) "types"
+    return obj [("kind", str kind),
+      ("root", ← componentCopiedType (← ofExcept <| value.getObjVal? "root")),
+      ("types", toJson (← types.mapM componentCopiedType))]
   if (value.getObjValAs? String "kind").toOption == some "primitive" then
     return obj [("kind", str "primitive"), ("name", ← ofExcept <| value.getObjVal? "name")]
   let kind := (value.getObjValAs? String "kind").toOption.getD ""

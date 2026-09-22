@@ -59,8 +59,20 @@ test("native aliases authenticate their target representation and retain the pub
 });
 
 test("recorded aliases cover installed source paths and all npm execution contexts", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/npm-aliases-20260921.json", "utf8"));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	const bytes = await readFile("docs/evidence/npm-aliases-20260921.json");
+	assert.equal(sha256(bytes), "b169dc438ff64f0f823db733aa7d9f0beaa8ef97f502b5ff700a5f986b46c9d0");
+	const record = JSON.parse(bytes);
+	const lineage = JSON.parse(await readFile("docs/evidence/recursive-copied-metadata-20260922.json"));
+	assert.equal(lineage.schemaVersion, 1);
+	assert.deepEqual(lineage.historicalReceipt, { path: "docs/evidence/npm-aliases-20260921.json", sha256: sha256(bytes) });
+	assert.deepEqual(Object.keys(lineage.sources), ["tests/compiler-alias-metadata.test.mjs"]);
+	for(const [path, previousSha256] of Object.entries(record.sourceHashes))
+	{
+		const currentSha256 = sha256(await readFile(path));
+		if(path === "tests/compiler-alias-metadata.test.mjs")
+			assert.deepEqual(lineage.sources[path], { previousSha256, currentSha256 });
+		else assert.equal(currentSha256, previousSha256, path);
+	}
 	assert.deepEqual(record.runs.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.runs)
 	{
@@ -171,7 +183,19 @@ test("fresh alias metadata agrees across profiles and rejects changed reviewed i
 		await writeFile(join(directory, "request.json"), canonicalJson(request));
 		const metadata = JSON.parse((await capture(["--run", extractor, "--metadata", "request.json"])).stdout);
 		validateElaboratedMetadata(metadata, request);
+		await assertJsonSchema("elaborated-export-metadata", metadata);
 		for(const declaration of metadata.modules[0].declarations.filter(item => item.selected))
-			assert.equal(declaration.projection.status, "unsupported", `${profile}/${declaration.identity}: over-budget aliases must not reduce to a scalar fallback`);
+		{
+			assert.equal(declaration.projection.status, "supported", `${profile}/${declaration.identity}`);
+			const type = declaration.identity === "Depth.bare" ? declaration.projection.result : declaration.projection.parameters[0].type;
+			assert.equal(type.kind, "graph", "long aliases must retain a nominal graph, never a scalar fallback");
+			assert.equal(type.root.kind, "reference"); assert.equal(type.root.name, "Depth.A33");
+			assert.equal(type.types.length, 34);
+			assert.equal(type.types.find(item => item.name === "Depth.A0").target.name, "uint32");
+		}
+		const ir = lower(metadata, request);
+		assert.equal(ir.types.length, 34); assert.ok(ir.types.every(type => type.kind === "alias"));
+		assert.equal(ir.declarations.find(item => item.name === "bare").result.type.id, "lean:Depth.A33");
+		assert.equal(ir.declarations.find(item => item.name === "parameter").parameters[0].type.id, "lean:Depth.A33");
 	}
 });

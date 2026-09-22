@@ -1,8 +1,10 @@
 # Finite graphs for recursive copied values
 
 VO 1219, 2026-09-22. This is transport implementation evidence, not installed
-Lean-package acceptance. Recursive exports remain rejected by the existing
-compiler and native adapters. The consumer coverage inventory is unchanged.
+Lean-package acceptance. [Fresh Lean extraction now retains recursive type
+graphs](recursive-copied-metadata-20260922.md); compiled recursive adapters and
+installed-package acceptance remain open. The consumer coverage inventory is
+unchanged.
 
 ## Implemented
 
@@ -76,15 +78,13 @@ node --test tests/component-structured-codec.test.mjs \
 
 ## Remaining integration
 
-1. Extract finite nominal references and definitions from fresh Lean compilation,
-   and authenticate reviewed contracts against the same compiler facts.
-2. Generate typed Lean constructors and projections without requiring the first
+1. Generate typed Lean constructors and projections without requiring the first
    constructor of a recursive variant to have a finite default value.
-3. Add versioned native validation, conversion and partial-output cleanup with
+2. Add versioned native validation, conversion and partial-output cleanup with
    matching depth, node and allocation limits. Validate ownership before cleanup;
    malformed native output must retire the shared runtime.
-4. Connect the npm compiler, package and runtime paths. Run ordinary-source and
+3. Connect the npm compiler, package and runtime paths. Run ordinary-source and
    reviewed installed archives in Node, TypeScript and every browser profile.
-5. Extend installed acceptance to the remaining consumer targets. Compound
+4. Extend installed acceptance to the remaining consumer targets. Compound
    callable payloads and explicitly owned resource aggregates remain separate
    required work under VO 1219 and VO 1221.
