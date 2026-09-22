@@ -14,12 +14,19 @@ const scalar = {
 	, nat: "Nat", int: "Int", char: "char32_t", usize: "uint64_t", isize: "int64_t"
 	, float32: "float", float64: "double"
 };
-const box = `template<class T> class Box {
+const box = `namespace detail {
+template<class T, class U> struct BoxInput : std::is_same<T, U> {};
+template<class... T, class U> struct BoxInput<std::variant<T...>, U>
+  : std::bool_constant<std::is_same_v<std::variant<T...>, U> || (std::is_same_v<T, U> || ...)> {};
+template<class T, class U> struct BoxInput<std::optional<T>, U>
+  : std::bool_constant<std::is_same_v<std::optional<T>, U> || std::is_same_v<T, U> || std::is_same_v<std::nullopt_t, U>> {};
+}
+template<class T> class Box {
   std::unique_ptr<T> value_;
 public:
   Box() noexcept = default;
   template<class U>
-  requires (!std::is_same_v<std::remove_cvref_t<U>, Box> && std::is_constructible_v<T, U&&>)
+  requires detail::BoxInput<T, std::remove_cvref_t<U>>::value
   Box(U&& value) : value_(std::make_unique<T>(std::forward<U>(value))) {}
   Box(const Box& other) : value_(other ? std::make_unique<T>(*other) : nullptr) {}
   Box(Box&&) noexcept = default;
@@ -29,7 +36,7 @@ public:
   }
   Box& operator=(Box&&) noexcept = default;
   template<class U>
-  requires (!std::is_same_v<std::remove_cvref_t<U>, Box> && std::is_constructible_v<T, U&&>)
+  requires detail::BoxInput<T, std::remove_cvref_t<U>>::value
   Box& operator=(U&& value) {
     Box copy(std::forward<U>(value)); value_.swap(copy.value_); return *this;
   }
@@ -94,6 +101,14 @@ export const generateCopiedCppGraphValues = ir => {
 		, "template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;"
 		, ...bigint ? ["using Nat = boost::multiprecision::cpp_int;", "using Int = boost::multiprecision::cpp_int;"] : []];
 	for(const node of layout.nodes) if(node.ref.kind === "named") lines.push(`struct ${names.get(node.ref.id)};`);
+	// Structural is_constructible checks recurse through optional/result fields
+	// in recursive records. Admit only the target value or its named alternatives.
+	for(const [id, branches] of alternatives)
+	{
+		const name = names.get(nodes.get(id).ref.id);
+		lines.push(...branches.map(branch => `struct ${branch};`), "namespace detail {"
+			, `template<class U> struct BoxInput<${name}, U> : std::bool_constant<${[name, ...branches].map(branch => `std::is_same_v<${branch}, U>`).join(" || ")}> {};`, "}");
+	}
 	const equalities = [];
 	const record = (name, fields, tail = []) => {
 		lines.push(`struct ${name} {`, ...fields, ...tail, `  friend bool operator==(const ${name}&, const ${name}&);`, "};");

@@ -38,7 +38,8 @@ embedded NUL text, Unicode scalars, machine-word endpoints, empty records,
 distinct nullary and Unit-bearing constructors, a 255-field recursive variant,
 empty and moved-from boxes, and cleanup after a throwing copy constructor.
 
-The remaining C++ integration needs bounded input views, output conversion,
-status/runtime failure handling, prepared archives and ordinary/reviewed
-installed consumers. The [compiled native graph components](native-graph-components-20260922.md)
+[Bounded input views and output conversion](cpp-recursive-conversions-20260922.md)
+now connect these values to the staged native graph calls. Status/runtime
+failure handling, prepared archives and ordinary/reviewed installed consumers
+remain. The [compiled native graph components](native-graph-components-20260922.md)
 supply the checked Lean implementation and C conversion underneath those APIs.

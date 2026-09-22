@@ -21,6 +21,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 import { nativeRecursiveReviewedIr } from "./native-recursive-reviewed.mjs";
 import { recursiveCarrierAbi } from "./recursive-carriers.mjs";
 import { recursiveSignatures } from "./recursive-fixture.mjs";
+import { checkNativeRecursiveCpp } from "./native-recursive-cpp.mjs";
 
 const spellings = {
 	unit: "Unit", bool: "Bool", uint8: "UInt8", uint16: "UInt16"
@@ -45,8 +46,10 @@ const render = type => {
  * @param options - Exercise the component build instead of standalone carriers.
  * @param options.component - Build a verified native shared component and runtime.
  * @param options.reviewed - Check an independently authored contract against Lean.
+ * @param options.cpp - Also execute owned C++ conversion and cleanup checks.
  */
-export const checkNativeRecursiveTransport = async (directory, { component = false, reviewed = false } = {}) => {
+export const checkNativeRecursiveTransport = async (directory, { component = false, reviewed = false, cpp = false } = {}) => {
+	if(cpp && !component) throw new TypeError("C++ graph checks require a verified native component");
 	const root = process.cwd();
 	const prefix = (await processBuildRunner.capture({ command: join(root, ".toolchains/elan/bin/lean"), args: ["--print-prefix"], cwd: root })).stdout.trim();
 	const lean = join(prefix, "bin/lean"), extractor = join(root, "src/analyze/NativeExports.lean");
@@ -190,7 +193,9 @@ def main : IO Unit := do
 	const observed = await run(join(directory, "native-check"), []);
 	assert.match(observed.stdout, /^native-graphs-ok \d+\n$/u); assert.equal(observed.stderr, "");
 	assert.equal(await readFile(join(directory, "Recursive.lean"), "utf8"), original);
+	const cppChecks = cpp ? await checkNativeRecursiveCpp({ directory, ir, compiled, runtime, output, run }) : null;
 	return { checks: Number(observed.stdout.trim().split(" ").at(-1))
 		, exports: abi.exports.length, width, stack
+		, ...cpp ? { cppChecks } : {}
 		, ...compiled ? { modelSha256: compiled.receipt.modelSha256, binarySha256: compiled.receipt.nativeLibrary.sha256, reviewed } : {} };
 };

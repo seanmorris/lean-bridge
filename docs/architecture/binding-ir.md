@@ -107,9 +107,11 @@ shared runtime. Host adapters must explicitly support their finite graph model.
 Native package admission and the remaining
 consumer targets still need integration and installed acceptance.
 [C++ recursive value declarations](../evidence/cpp-recursive-values-20260922.md)
-use named constructors, standard containers and deep-copy boxes. Their C++
-execution checks cover ownership; compiled call and package admission remain
-separate.
+use named constructors, standard containers and deep-copy boxes.
+[Bounded C++ conversions](../evidence/cpp-recursive-conversions-20260922.md)
+check all arguments before creating views and release native results after
+copying, including on allocation failure. Runtime failure policy and installed
+C/C++ package admission remain separate.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail
