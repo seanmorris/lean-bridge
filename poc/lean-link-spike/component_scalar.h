@@ -40,6 +40,8 @@ uint32_t bridge_compound_frame_validate(bridge_scalar_frame *, uint32_t);
 uint32_t bridge_compound_children_validate(bridge_scalar_slot const *, uint32_t, uint32_t, uint32_t *);
 uint32_t bridge_compound_children_allocate(bridge_scalar_slot *, uint32_t, uint32_t, uint32_t, uint32_t *);
 uint32_t bridge_nominal_abi(void);
+uint32_t bridge_recursive_abi(void);
+uint32_t bridge_recursive_frame_validate(bridge_scalar_frame *, uint32_t);
 uint32_t bridge_nominal_frame_validate(bridge_scalar_frame *, uint32_t);
 uint32_t bridge_nominal_children_validate(bridge_scalar_slot const *, uint32_t, uint32_t, uint32_t *);
 uint32_t bridge_nominal_children_allocate(bridge_scalar_slot *, uint32_t, uint32_t, uint32_t, uint32_t *);

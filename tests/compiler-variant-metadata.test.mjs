@@ -23,6 +23,10 @@ import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { checkRecursiveCarriers, recursiveCarrierAbi } from "./helpers/recursive-carriers.mjs";
+import { assertComponentRecursiveAbi, assertComponentRecursiveBindings } from "../src/abi/component-recursive-abi.mjs";
+import { componentRecursiveTypes } from "../src/build/component-recursive-lean.mjs";
+import { generateComponentRecursiveAdapters } from "../src/build/component-recursive-adapters.mjs";
 
 const component = { id: "shapes@1.0.0", name: "shapes", version: "1.0.0" };
 const enabled = process.env.LEAN_BRIDGE_ELABORATED_METADATA_TEST === "1";
@@ -121,10 +125,77 @@ test("recursive compiler tables lower to nominal IR while unimplemented compiled
 		const graph = validateCopiedMetadataGraph(input.graph, () => {}, native);
 		assert.deepEqual(graph, componentRecursiveTypeGraph(ir, ir.declarations[0].result.type));
 		identities.push(sourceApiIdentity(ir).sha256);
+		const abi = recursiveCarrierAbi(ir);
+		assertComponentRecursiveBindings(abi, ir);
 		assert.throws(() => createComponentPrivateAbi(ir), /recursive|cyclic/iu);
 		if(native) assert.throws(() => createNativeModel({ ...input, component }), /bounded graph transport/u);
 	}
 	assert.equal(identities[0], identities[1]);
+});
+
+test("recursive private ABI binds finite graphs and rejects changed call or copy semantics", () => {
+	const input = syntheticGraph(), ir = lower(input.metadata, input.sourceIdentity.request);
+	const abi = recursiveCarrierAbi(ir);
+	assertComponentRecursiveBindings(abi, ir);
+	for(const change of [
+		value => { value.version = 7; }
+		, value => { value.dispatch = "copied-nominal-frame-v1"; }
+		, value => { value.exports = []; }
+		, value => { value.exports.push(value.exports[0]); }
+		, value => { value.exports[0].extra = true; }
+		, value => { value.exports[0].parameters = new Array(1); }
+		, value => { value.exports[0].resultMode = "promise"; }
+		, value => { value.exports[0].symbol = "unchecked"; }
+		, value => { value.exports[0].parameters.push({ kind: "named", id: "lean:Unknown" }); }
+		, value => { value.types[0].cases[1].fields[1].type.arguments[0].id = "lean:Unknown"; }
+	]) {
+		const value = structuredClone(abi); change(value);
+		assert.throws(() => assertComponentRecursiveAbi(value));
+	}
+	for(const change of [
+		value => { value.types[0].cases.reverse(); }
+		, value => { value.types[0].cases[1].fields.reverse(); }
+		, value => { value.types[0].cases[1].fields[1].type.constructor = "array"; }
+		, value => { value.exports[0].result = { kind: "primitive", name: "unit" }; }
+	]) {
+		const value = structuredClone(abi); change(value);
+		assertComponentRecursiveAbi(value);
+		assert.throws(() => assertComponentRecursiveBindings(value, ir));
+	}
+	for(const change of [
+		value => { value.declarations[0].parameters[0].ownership = "borrow"; }
+		, value => { value.declarations[0].effects = ["io"]; }
+		, value => { value.types[0].representation = "identity"; }
+	]) {
+		const value = structuredClone(ir); change(value);
+		assert.throws(() => assertComponentRecursiveBindings(abi, value));
+	}
+	let reads = 0;
+	for(const target of ["root", "export", "array"])
+	{
+		const value = structuredClone(abi);
+		const [object, name] = target === "root" ? [value, "types"] : target === "export" ? [value.exports[0], "parameters"] : [value.exports, 0];
+		Object.defineProperty(object, name, { get: () => { reads++; return []; } });
+		assert.throws(() => assertComponentRecursiveAbi(value));
+	}
+	assert.equal(reads, 0);
+});
+
+test("recursive C walkers erase alias traversal without erasing descriptor identities", () => {
+	const input = syntheticGraph(), ir = lower(input.metadata, input.sourceIdentity.request);
+	const abi = recursiveCarrierAbi(ir), root = abi.exports[0].result;
+	for(let index = 0; index < 1000; index++) abi.types.push({
+		kind: "alias", id: `lean:A${index}`
+		, target: index ? { kind: "named", id: `lean:A${index - 1}` } : root });
+	abi.exports[0].parameters[0] = { kind: "named", id: "lean:A999" };
+	assert.equal(componentRecursiveTypes(abi).length, 1003);
+	const c = generateComponentRecursiveAdapters(abi);
+	assert.equal([...c.matchAll(/static uint32_t recursive_[a-f0-9]+_validate\(bridge_scalar_slot const \*slot/g)].length, 3);
+	assert.ok(c.length < 14000, "aliases must not add recursive C call frames");
+	assert.match(c, /depth > 128/u); assert.match(c, /nodes = 262144/u);
+	assert.match(c, /path\[129\]/u); assert.match(c, /lean_array_size\(value\) != 1/u);
+	assert.doesNotMatch(c, /lean_ctor_get|lean_ctor_set|lean_alloc_ctor/u);
+	assert.ok(c.lastIndexOf("_validate(&frame->args") < c.lastIndexOf("_decode(&frame->args"));
 });
 
 test("copied compiler graphs reject unbound references, identities, alias cycles and malformed tables", () => {
@@ -418,7 +489,7 @@ test("fresh Lean recursive graphs preserve mutual recursion, aliases and reviewe
 			, interfaceSha256: (await identifyLeanInterface(join(directory, "Recursive.olean"))).interfaceSha256 }]
 		, extractorSha256: sha256(await readFile(extractor))
 		, leanCompilerSha256: sha256(await readFile(lean)) };
-	const names = ["tree", "forest", "envelope", "scalars", "left", "right", "never", "deepAliases", "shared"];
+	const names = ["tree", "forest", "envelope", "scalars", "left", "right", "never", "spine", "grow", "empty", "joinTrees", "deepAliases", "shared"];
 	const identities = [];
 	for(const profile of ["native-library-v1", "component-scalars-v1"])
 	{
@@ -437,6 +508,7 @@ test("fresh Lean recursive graphs preserve mutual recursion, aliases and reviewe
 		const declarations = new Map(metadata.modules[0].declarations.map(item => [item.identity, item]));
 		for(const name of names) assert.equal(declarations.get(`Recursive.${name}`).projection.status, "supported", `${profile}/${name}`);
 		const ir = lower(metadata, request);
+		if(profile === "native-library-v1") await checkRecursiveCarriers({ ir, directory, prefix, capture });
 		identities.push(sourceApiIdentity(ir).sha256);
 		const scalar = declarations.get("Recursive.scalars").projection.result;
 		assert.equal(scalar.kind, "record"); assert.deepEqual(scalar.fields.map(field => field.type.name), componentScalarTypes);

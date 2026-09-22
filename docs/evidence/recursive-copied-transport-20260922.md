@@ -78,13 +78,13 @@ node --test tests/component-structured-codec.test.mjs \
 
 ## Remaining integration
 
-1. Generate typed Lean constructors and projections without requiring the first
-   constructor of a recursive variant to have a finite default value.
-2. Add versioned native validation, conversion and partial-output cleanup with
-   matching depth, node and allocation limits. Validate ownership before cleanup;
-   malformed native output must retire the shared runtime.
-3. Connect the npm compiler, package and runtime paths. Run ordinary-source and
+[Typed carriers and bounded C/Wasm walkers now execute](recursive-copied-adapters-20260922.md),
+including malformed-input rejection and injected partial-output failures.
+
+1. Connect runtime ownership handling and poison behavior. Malformed native
+   output must retire the shared runtime without traversing untrusted pointers.
+2. Connect the npm compiler, package and runtime paths. Run ordinary-source and
    reviewed installed archives in Node, TypeScript and every browser profile.
-4. Extend installed acceptance to the remaining consumer targets. Compound
+3. Extend installed acceptance to the remaining consumer targets. Compound
    callable payloads and explicitly owned resource aggregates remain separate
    required work under VO 1219 and VO 1221.

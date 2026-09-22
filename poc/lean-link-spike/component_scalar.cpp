@@ -142,6 +142,11 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_copied_frame_validate(bridge_sca
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_record_abi(void) { return 1; }
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_compound_abi(void) { return 1; }
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_nominal_abi(void) { return 1; }
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_recursive_abi(void) { return 1; }
+
+extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_recursive_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
+  return copied_frame_validate(frame, argc, 8);
+}
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_nominal_frame_validate(bridge_scalar_frame *frame, uint32_t argc) {
   return copied_frame_validate(frame, argc, 7);

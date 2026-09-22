@@ -42,10 +42,15 @@ structure Envelope where
   alternatives : Array Forest
   fallback : Option Tree
   outcome : Except String (Tree × Tree)
+  marker : Option (Option Unit)
 
 -- There need not be an inhabitant available for adapter fallback generation.
 inductive Never where
   | again (value : Never)
+
+inductive Spine where
+  | next (value : Spine)
+  | leaf (value : UInt32)
 
 def tree (value : Tree) : Tree := value
 def forest (value : Forest) : Forest := value
@@ -54,5 +59,9 @@ def scalars (value : Scalars) : Scalars := value
 def left (value : LeftTree) : LeftTree := value
 def right (value : RightTree) : RightTree := value
 def never (value : Never) : Never := value
+def spine (value : Spine) : Spine := value
+def grow (value : Spine) : Spine := .next value
+def empty : Tree := .branch []
+def joinTrees (left right : Tree) : Tree := .branch [left, right]
 
 end Recursive

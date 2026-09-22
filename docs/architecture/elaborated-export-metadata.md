@@ -42,8 +42,9 @@ uses a finite `graph` wrapper with a root and nominal definition table. A
 the same compiler ABI as the named definition. Small acyclic types keep their
 inline representation; long chains and shared graphs have bounded expansion.
 Semantic lowering authenticates every definition, including types used both
-inline and in graphs. Native graph transport and installed recursive packages
-remain separate implementation work.
+inline and in graphs. [Typed recursive transport](../evidence/recursive-copied-adapters-20260922.md)
+executes in native helper and Wasm walker checks. Compiler package admission,
+public runtime integration and installed recursive packages remain open.
 
 The historically named `component-scalars-v1` profile supports zero to 32 explicit arguments. Compiled npm parameters and results can contain primitives, nested Array and List values, acyclic copied records and variants, aliases, Option, Except and nested binary products. A separate callable ABI accepts synchronous functions with one to sixteen primitive arguments and a primitive result. `arities` identifies the outer argument count for an export returning a function. Scalar-only packages retain private ABI 2; callable packages use ABI 3, array-only packages ABI 4 and record packages ABI 5. Packages with Option, Except or products use ABI 6, with a nominal record table that may be empty; aliases and variants use ABI 7. Lean constructs and inspects every branch and field through typed helpers; C never guesses constructor layouts. Result arguments use canonical [success, error] order. Copied containers and callables cannot share one component yet. Unresolved implicit, instance, dependent, generic, asynchronous and other unimplemented signatures receive unsupported reasons. Explicit selections of proof-only or type-valued declarations fail; automatic discovery omits them. Selected implementations also pass the existing unsafe, foreign-call and admitted-proof checks. Duplicate unqualified host names require an export-selection or wrapper decision.
 

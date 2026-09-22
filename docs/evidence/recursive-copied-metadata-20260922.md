@@ -2,8 +2,9 @@
 
 VO 1219, 2026-09-22. Lean extraction and semantic lowering now support finite
 nominal graphs. This does not establish installed recursive package support.
-Native graph adapters and npm recursive adapters remain gated until their
-bounded conversions and cleanup are implemented.
+Package admission remains gated. [Typed carriers and C/Wasm walkers](recursive-copied-adapters-20260922.md)
+now execute bounded conversions and partial-output cleanup; public runtime and
+installed-package integration remain open.
 
 ## Extraction and validation
 
@@ -84,5 +85,6 @@ strict TypeScript, and Chromium page, React and worker consumers. Full contracts
 pass 1,781 tests with 68 explicit opt-in skips; docs pass 78 and site tests pass
 111. Lint, root/site typechecks and the production site build pass.
 
-Next are typed Lean carriers, bounded native conversion and ownership-aware
-cleanup, then installed-package acceptance across all consumer targets.
+[Typed carriers and bounded C/Wasm conversion](recursive-copied-adapters-20260922.md)
+now have separate execution checks. Next are runtime/package integration and
+installed-package acceptance across all consumer targets.

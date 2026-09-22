@@ -102,6 +102,13 @@ jobs:
       - name: Enforce build acceptance
         if: always()
         run: test "${{ steps.benchmark-build.outputs.exit-code }}" = "0"
+      - name: Check compiled recursive carriers and bounded Wasm transport
+        env:
+          LEAN_BRIDGE_ELABORATED_METADATA_TEST: "1"
+          LEAN_BRIDGE_RECURSIVE_WASM_TEST: "1"
+        run: |
+          source scripts/env.sh
+          node --test --test-name-pattern='fresh Lean recursive graphs' tests/compiler-variant-metadata.test.mjs
 
   spatial:
     name: Startup and composition profiles
