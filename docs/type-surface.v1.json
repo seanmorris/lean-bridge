@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.68.0",
+  "contractVersion": "0.69.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,185 @@
   ],
   "evidence": [
     {
+      "id": "ruby-collections-installed",
+      "kind": "installed",
+      "revision": "4a83322cfc92383634f243f546537002120f0bfb",
+      "command": "LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs; node --test tests/ruby-collection-contract.test.mjs tests/ruby-collection-evidence.test.mjs",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+        },
+        {
+          "path": "docs/consume/ruby.md",
+          "sha256": "b0e2cbbf76186e2209e642a72122bac9a5696d4337db3d527e7669bb17b675c5"
+        },
+        {
+          "path": "docs/evidence/ruby-collections-20260922.json",
+          "sha256": "42750c8ad86ceb76146bef45b117e19666bd88adfc695b45803a06f5684eccce"
+        },
+        {
+          "path": "docs/evidence/ruby-collections-20260922.md",
+          "sha256": "bef0adea7b9d8dc745d7e1b2c48bd2dd6b42c52e7528b98f4620f91c78248596"
+        },
+        {
+          "path": "docs/publish/rubygems.md",
+          "sha256": "c6d9a8d3b0892a1dea3da357e69b1719da18199b65326227cff29fe7da7805fe"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/ruby/copied-assets.mjs",
+          "sha256": "631f2e2f7c40c3648bbcc874312f4320f34c566756be896586d928acdd7bd345"
+        },
+        {
+          "path": "src/backends/ruby/copied-conversions.mjs",
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
+        },
+        {
+          "path": "src/backends/ruby/copied-model.mjs",
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
+        },
+        {
+          "path": "src/backends/ruby/copied-values.mjs",
+          "sha256": "ab91c1889fc7dfbdddab3e4f631eed33e1c18e70ac3739c252cc4505671db65d"
+        },
+        {
+          "path": "src/backends/ruby/generate.mjs",
+          "sha256": "c67121dcf205fcf78b1482c96945e82b431a83d6524127ac42eeaff6eb829500"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd"
+        },
+        {
+          "path": "src/release/native-rubygems.mjs",
+          "sha256": "96bd8d7d0780ab2b831529bf8ba67a465d056738b032b27395430f377a3111ab"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/Collections.lean",
+          "sha256": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/ruby-faults.rb",
+          "sha256": "1d8c2427c0f123cdd50fc58d41aa1014e899fed49f6f2403942cc6e33083477b"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/ruby-snapshots.rb",
+          "sha256": "084f6234e2b3899946f2dff64dff1dd1a1c59b29a524ce706d0e49c49b88cb6b"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/ruby.rb",
+          "sha256": "c3bbe1c53bbaf9d9b9998d350ff65c34ee389a577062ad28c99e20e9ac89cf81"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/Arrays.lean",
+          "sha256": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/LICENSE",
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/Records.lean",
+          "sha256": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540"
+        },
+        {
+          "path": "tests/helpers/array-fixture.mjs",
+          "sha256": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf"
+        },
+        {
+          "path": "tests/helpers/collection-fixture.mjs",
+          "sha256": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/record-fixture.mjs",
+          "sha256": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f"
+        },
+        {
+          "path": "tests/helpers/ruby-collection-install.mjs",
+          "sha256": "7d789c345da9840cabf4e20f78e3646f9b51d502c22d623b571945b3edc167f6"
+        },
+        {
+          "path": "tests/helpers/ruby-source-history.mjs",
+          "sha256": "0cd1e4c8ffcd01d2ba4fb5938e333023b085e5b42cfc64e2498c560f09ee677a"
+        },
+        {
+          "path": "tests/helpers/ruby-variant-fixture.mjs",
+          "sha256": "b46da73b0a3acd1ec24d64e582c8534491b1851348a1f66ef48c3b5124f01f75"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        },
+        {
+          "path": "tests/ruby-collection-contract.test.mjs",
+          "sha256": "610483c3a8522a7b6b923443f068bfb082b23ae549a0695909a7331b3751b771"
+        },
+        {
+          "path": "tests/ruby-collection-evidence.test.mjs",
+          "sha256": "e52f05e994abb4d8693fe4cd028f859e3d2deaf64b56c56c064199843eb68ef5"
+        },
+        {
+          "path": "tests/ruby-collections.test.mjs",
+          "sha256": "4666200f37092ababf868c6cbb278070734b1146da9aa02339b2f0becea11d5c"
+        },
+        {
+          "path": "tests/ruby-variant-contract.test.mjs",
+          "sha256": "ea9055431519a54b5864235859a6c486c83a7701a70485ad4a51debb9f52f238"
+        },
+        {
+          "path": "tests/ruby-variant-evidence.test.mjs",
+          "sha256": "1c94ab709b7d0e6a9ee6d50fe523d88b5075ffacc3456c236c2042a4a437bf40"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/collections-api-1.0.0-x86_64-linux.gem",
+          "sha256": "b681ecc5447a2ad25adee343b55efd4331325fbb593804cd5dda58ed19223a8b"
+        },
+        {
+          "path": "reviewed-ir/archives/collections-api-1.0.0-x86_64-linux.gem",
+          "sha256": "e4babe266a5e0be77b7f99c122d26b2c49e6d2a429309ed0032921f56df9f85c"
+        }
+      ]
+    },
+    {
       "id": "native-collections-installed",
       "kind": "installed",
       "revision": "5da8a7b959f0542f95b4c3259d9d768e57c9a30d",
@@ -165,7 +344,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/consume/c.md",
@@ -193,7 +372,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -404,7 +583,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -575,7 +754,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/wit-variants-20260921.json",
@@ -587,7 +766,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -778,7 +957,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-wasm-variants-20260921.json",
@@ -790,7 +969,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1037,7 +1216,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-native-variants-20260921.json",
@@ -1049,7 +1228,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1260,7 +1439,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1423,7 +1602,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/ruby-variants-20260921.json",
@@ -1435,7 +1614,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1475,15 +1654,15 @@
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "b71c6503e5e9d04de86fa9b9ff53b2eb4f59a32871e70d151b3f74f4d35e1bc9"
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "4c4ffd7044842feec1869cff5769b65acf1e4cf0c6e2597534a50af644198569"
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "ceec697d9dd257271e8103e271d05cefcbd3254aef960fb5f1a59f33c70dc400"
+          "sha256": "ab91c1889fc7dfbdddab3e4f631eed33e1c18e70ac3739c252cc4505671db65d"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -1583,11 +1762,11 @@
         },
         {
           "path": "tests/ruby-variant-contract.test.mjs",
-          "sha256": "e68f901ade17c89df837c62d05e0b71140dbcb989814e5b6e9249fe26c384531"
+          "sha256": "ea9055431519a54b5864235859a6c486c83a7701a70485ad4a51debb9f52f238"
         },
         {
           "path": "tests/ruby-variant-evidence.test.mjs",
-          "sha256": "e1ed5cb2984966cf7060b5fa7921ae4ca24387fd0dac056e394491e57c53db15"
+          "sha256": "1c94ab709b7d0e6a9ee6d50fe523d88b5075ffacc3456c236c2042a4a437bf40"
         },
         {
           "path": "tests/ruby-variants.test.mjs",
@@ -1614,7 +1793,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/jvm-variants-20260921.json",
@@ -1626,7 +1805,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1853,7 +2032,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/dotnet-variants-20260921.json",
@@ -1865,7 +2044,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2048,7 +2227,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/rust-variants-20260921.json",
@@ -2060,7 +2239,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2243,7 +2422,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/python-variants-20260921.json",
@@ -2255,7 +2434,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2434,7 +2613,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/c-variants-20260921.json",
@@ -2446,7 +2625,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2621,7 +2800,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.json",
@@ -2633,7 +2812,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2772,7 +2951,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/wit-aliases-20260921.json",
@@ -2784,7 +2963,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2943,7 +3122,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-wasm-aliases-20260921.json",
@@ -2955,7 +3134,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3170,7 +3349,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-native-aliases-20260921.json",
@@ -3182,7 +3361,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3333,7 +3512,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3468,7 +3647,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/ruby-aliases-20260921.json",
@@ -3480,7 +3659,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3512,15 +3691,15 @@
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "b71c6503e5e9d04de86fa9b9ff53b2eb4f59a32871e70d151b3f74f4d35e1bc9"
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "4c4ffd7044842feec1869cff5769b65acf1e4cf0c6e2597534a50af644198569"
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "ceec697d9dd257271e8103e271d05cefcbd3254aef960fb5f1a59f33c70dc400"
+          "sha256": "ab91c1889fc7dfbdddab3e4f631eed33e1c18e70ac3739c252cc4505671db65d"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -3619,7 +3798,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
@@ -3631,7 +3810,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3814,7 +3993,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "config/checked-javascript.json",
@@ -3842,7 +4021,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3989,7 +4168,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -4001,7 +4180,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4132,7 +4311,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -4144,7 +4323,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4267,7 +4446,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -4279,7 +4458,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4402,7 +4581,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -4430,7 +4609,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4545,7 +4724,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -4581,7 +4760,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4704,7 +4883,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -4720,7 +4899,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4899,7 +5078,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -4915,7 +5094,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5138,7 +5317,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -5154,7 +5333,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5345,7 +5524,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -5361,7 +5540,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5568,7 +5747,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5779,7 +5958,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -5795,7 +5974,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5851,15 +6030,15 @@
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "b71c6503e5e9d04de86fa9b9ff53b2eb4f59a32871e70d151b3f74f4d35e1bc9"
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "4c4ffd7044842feec1869cff5769b65acf1e4cf0c6e2597534a50af644198569"
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "ceec697d9dd257271e8103e271d05cefcbd3254aef960fb5f1a59f33c70dc400"
+          "sha256": "ab91c1889fc7dfbdddab3e4f631eed33e1c18e70ac3739c252cc4505671db65d"
         },
         {
           "path": "src/backends/ruby/generate.mjs",
@@ -5931,7 +6110,7 @@
         },
         {
           "path": "tests/ruby-list-contract.test.mjs",
-          "sha256": "0243d2cbf8eef15f5bd0209b701a0a2f90c0c5e4993827925399204bf617ed27"
+          "sha256": "5a758e5473218832c4de851251537e0bec2667076fec94ac7c8c45c943e3a088"
         },
         {
           "path": "tests/ruby-lists.test.mjs",
@@ -5958,7 +6137,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -5974,7 +6153,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6165,7 +6344,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -6181,7 +6360,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6857,7 +7036,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -6889,7 +7068,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -6996,7 +7175,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -7012,7 +7191,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7215,7 +7394,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -7231,7 +7410,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7430,7 +7609,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7641,7 +7820,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -7657,7 +7836,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7713,15 +7892,15 @@
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "b71c6503e5e9d04de86fa9b9ff53b2eb4f59a32871e70d151b3f74f4d35e1bc9"
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "4c4ffd7044842feec1869cff5769b65acf1e4cf0c6e2597534a50af644198569"
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "ceec697d9dd257271e8103e271d05cefcbd3254aef960fb5f1a59f33c70dc400"
+          "sha256": "ab91c1889fc7dfbdddab3e4f631eed33e1c18e70ac3739c252cc4505671db65d"
         },
         {
           "path": "src/backends/ruby/generate.mjs",
@@ -7793,7 +7972,7 @@
         },
         {
           "path": "tests/ruby-compound-contract.test.mjs",
-          "sha256": "278d40200aa9ceab9f6dffc5cb2d9fbcb9cddb7d3ed2a66d5c8a2b91320020e0"
+          "sha256": "0917a86fddc22a0debbb6120fc1cbbdf1056bf1fe0727e373fb98c576a03ff30"
         },
         {
           "path": "tests/ruby-compounds.test.mjs",
@@ -7820,7 +7999,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -7836,7 +8015,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8027,7 +8206,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -8043,7 +8222,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8711,7 +8890,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -8914,7 +9093,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -9077,7 +9256,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -9117,7 +9296,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "5721785d6b961ef8fbbf37a47fb81f93b350da3f56b72374cf933c9baaa05d6a"
+          "sha256": "e23d11e1ef2a7253147dafdad98e2f029878f2027253209059b7d09ba88fd899"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -9125,7 +9304,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9348,11 +9527,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -9487,11 +9666,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -9610,11 +9789,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "451875f2c6e87060ad7c6d3f61110fa760a57e0a462602027b57f8fc1ff3abb8"
+          "sha256": "fe7b224e018bd60a5e796e9dbae7b4a509357683d56933d9a70427b5be5c437f"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -9642,7 +9821,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -9849,11 +10028,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "451875f2c6e87060ad7c6d3f61110fa760a57e0a462602027b57f8fc1ff3abb8"
+          "sha256": "fe7b224e018bd60a5e796e9dbae7b4a509357683d56933d9a70427b5be5c437f"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -9881,7 +10060,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -10040,7 +10219,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -10064,7 +10243,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -10263,7 +10442,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -10283,7 +10462,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -10462,11 +10641,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "flake.nix",
@@ -10673,11 +10852,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -10868,11 +11047,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -10907,15 +11086,15 @@
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "4c4ffd7044842feec1869cff5769b65acf1e4cf0c6e2597534a50af644198569"
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "ceec697d9dd257271e8103e271d05cefcbd3254aef960fb5f1a59f33c70dc400"
+          "sha256": "ab91c1889fc7dfbdddab3e4f631eed33e1c18e70ac3739c252cc4505671db65d"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "b71c6503e5e9d04de86fa9b9ff53b2eb4f59a32871e70d151b3f74f4d35e1bc9"
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
         },
         {
           "path": "src/backends/ruby/copied-assets.mjs",
@@ -10999,11 +11178,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -11130,11 +11309,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -11249,11 +11428,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -11360,11 +11539,11 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "356e397bac15f29db53a655771e8d17e012f7a73b2be79272bcfc7cf8c2eff41"
+          "sha256": "859338b10bb1b88e408d4d275f21b72cee677b0a4a4b8e2b9e4c70a7dbfb7400"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -11455,7 +11634,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -11495,7 +11674,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "5721785d6b961ef8fbbf37a47fb81f93b350da3f56b72374cf933c9baaa05d6a"
+          "sha256": "e23d11e1ef2a7253147dafdad98e2f029878f2027253209059b7d09ba88fd899"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -11503,7 +11682,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -11591,11 +11770,11 @@
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "b71c6503e5e9d04de86fa9b9ff53b2eb4f59a32871e70d151b3f74f4d35e1bc9"
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "4c4ffd7044842feec1869cff5769b65acf1e4cf0c6e2597534a50af644198569"
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
         },
         {
           "path": "src/backends/rust/copied-conversions.mjs",
@@ -11655,7 +11834,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "356e397bac15f29db53a655771e8d17e012f7a73b2be79272bcfc7cf8c2eff41"
+          "sha256": "859338b10bb1b88e408d4d275f21b72cee677b0a4a4b8e2b9e4c70a7dbfb7400"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -11834,7 +12013,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -11846,7 +12025,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -11914,11 +12093,11 @@
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "b71c6503e5e9d04de86fa9b9ff53b2eb4f59a32871e70d151b3f74f4d35e1bc9"
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "4c4ffd7044842feec1869cff5769b65acf1e4cf0c6e2597534a50af644198569"
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
         },
         {
           "path": "src/backends/rust/copied-conversions.mjs",
@@ -12652,7 +12831,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "ae7277e03617ba941ce897a299c8e1642aed699abe4073362c735e96c36db073"
+          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -12668,7 +12847,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "677c53f963a032f3057dc03237b7a591ab99fe6d9661165b98eb185804b3ea4e"
+          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -12938,11 +13117,11 @@
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
-          "sha256": "4c4ffd7044842feec1869cff5769b65acf1e4cf0c6e2597534a50af644198569"
+          "sha256": "0b0b7f1b1815c740cd68af732a27c5adeecf9d258b615c4d00de21ff760367e3"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
-          "sha256": "b71c6503e5e9d04de86fa9b9ff53b2eb4f59a32871e70d151b3f74f4d35e1bc9"
+          "sha256": "ce15adec396be01282ccb353fc486359693d032ccc46442dbe897d80e45fb52a"
         },
         {
           "path": "src/backends/ruby/copied-assets.mjs",
@@ -12950,7 +13129,7 @@
         },
         {
           "path": "src/backends/ruby/copied-values.mjs",
-          "sha256": "ceec697d9dd257271e8103e271d05cefcbd3254aef960fb5f1a59f33c70dc400"
+          "sha256": "ab91c1889fc7dfbdddab3e4f631eed33e1c18e70ac3739c252cc4505671db65d"
         },
         {
           "path": "src/backends/ruby/generate.mjs",
@@ -29424,101 +29603,6 @@
       }
     },
     {
-      "id": "alpha-other-scalars-ruby-1",
-      "profiles": [
-        "ruby"
-      ],
-      "shapes": [
-        "unit",
-        "uint8",
-        "uint16",
-        "uint64",
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "nat",
-        "int",
-        "float32",
-        "float64"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "The fixed Alpha interface has no general mapping for this type.",
-      "hostTypes": {
-        "unit": {
-          "field": null
-        },
-        "uint8": {
-          "field": null
-        },
-        "uint16": {
-          "field": null
-        },
-        "uint64": {
-          "field": null
-        },
-        "int8": {
-          "field": null
-        },
-        "int16": {
-          "field": null
-        },
-        "int32": {
-          "field": null
-        },
-        "int64": {
-          "field": null
-        },
-        "nat": {
-          "field": null
-        },
-        "int": {
-          "field": null
-        },
-        "float32": {
-          "field": null
-        },
-        "float64": {
-          "field": null
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "managed-mapping-audit"
-          ],
-          "note": "The fixed Alpha interface has no general mapping for this type."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": [
-        "Keeping Alpha declaration names does not make a changed signature executable."
-      ]
-    },
-    {
       "id": "alpha-resource-ruby-1",
       "profiles": [
         "ruby"
@@ -41045,20 +41129,54 @@
     },
     {
       "id": "alpha-record-dotnet-1",
-      "profiles": ["dotnet","java","kotlin","ruby"],
-      "shapes": ["record"],
-      "positions": ["parameter","result"],
+      "profiles": [
+        "dotnet",
+        "java",
+        "kotlin"
+      ],
+      "shapes": [
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result"
+      ],
       "path": "reviewed-ir",
       "scope": "Only the canonical five-field Alpha.Payload round trip.",
       "hostTypes": {
-        "record": {"parameter":"Payload","result":"Payload"}
+        "record": {
+          "parameter": "Payload",
+          "result": "Payload"
+        }
       },
       "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["managed-mapping-audit"],"note":"Only the canonical five-field Alpha.Payload round trip."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
+        "analysis": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "generation": {
+          "state": "inspected",
+          "evidence": [
+            "managed-mapping-audit"
+          ],
+          "note": "Only the canonical five-field Alpha.Payload round trip."
+        },
+        "compilation": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "packaging": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        },
+        "installedExecution": {
+          "state": "unreviewed",
+          "evidence": [],
+          "note": "No type-specific execution evidence is recorded for this stage and position."
+        }
       },
       "limitations": []
     },
@@ -41244,29 +41362,6 @@
         "string": {"field":"String"},
         "bytes": {"field":"ByteArray"},
         "array": {"field":"LongArray"}
-      },
-      "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["managed-mapping-audit"],"note":"Only canonical Alpha.Payload fields; Array means Array UInt32 here."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
-      },
-      "limitations": ["This fixed template has no general mapping."]
-    },
-    {
-      "id": "alpha-fields-ruby-1",
-      "profiles": ["ruby"],
-      "shapes": ["bool","uint32","string","bytes","array"],
-      "positions": ["field"],
-      "path": "reviewed-ir",
-      "scope": "Only canonical Alpha.Payload fields; Array means Array UInt32 here.",
-      "hostTypes": {
-        "bool": {"field":"true or false"},
-        "uint32": {"field":"Integer"},
-        "string": {"field":"String (UTF-8)"},
-        "bytes": {"field":"String (ASCII-8BIT)"},
-        "array": {"field":"Array of Integer"}
       },
       "stages": {
         "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
@@ -43744,6 +43839,202 @@
       },
       "limitations": [
         "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB conversion budget. These limits do not bound all host allocations or Lean working memory.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ]
+    },
+    {
+      "id": "ruby-collections-reviewed",
+      "profiles": [
+        "ruby"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler.",
+      "hostTypes": {
+        "array": {
+          "parameter": "Array",
+          "result": "Array",
+          "field": "Array"
+        },
+        "record": {
+          "parameter": "Generated Ruby record",
+          "result": "Generated Ruby record",
+          "field": "Generated Ruby record"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB native conversion budget. Ruby scratch has a separate 16 MiB budget; these limits do not bound all host allocations or Lean working memory.",
+        "Snapshots preserve bounded local values, not an atomic view of concurrently mutated nested inputs. Frozen wrappers can contain mutable payloads; do not mutate payloads while their containing values are Hash keys.",
+        "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Exact Array instances preserve every primitive, order, empty and nested arrays and records. Builtin-bound slot snapshots ignore overridden length/index methods. Returned mutable values own independent storage.",
+        "record": "Generated keyword-initialized record classes preserve stored field values and nested copies. Records support nominal field-by-field ==, eql?, hash and deconstruct_keys. Objects are frozen; contained arrays and strings remain mutable. C/C++ keyword fields gain a trailing underscore, such as char_."
+      }
+    },
+    {
+      "id": "ruby-collection-reviewed-fields",
+      "profiles": [
+        "ruby"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler.",
+      "hostTypes": {
+        "unit": {
+          "field": "UNIT singleton"
+        },
+        "bool": {
+          "field": "true or false"
+        },
+        "uint8": {
+          "field": "Integer"
+        },
+        "uint16": {
+          "field": "Integer"
+        },
+        "uint32": {
+          "field": "Integer"
+        },
+        "uint64": {
+          "field": "Integer"
+        },
+        "int8": {
+          "field": "Integer"
+        },
+        "int16": {
+          "field": "Integer"
+        },
+        "int32": {
+          "field": "Integer"
+        },
+        "int64": {
+          "field": "Integer"
+        },
+        "nat": {
+          "field": "Integer"
+        },
+        "int": {
+          "field": "Integer"
+        },
+        "float32": {
+          "field": "Float"
+        },
+        "float64": {
+          "field": "Float"
+        },
+        "string": {
+          "field": "String"
+        },
+        "bytes": {
+          "field": "Binary String"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "ruby-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Ruby gems on ordinary-source and independently reviewed paths. The public caller covers all nineteen primitives, seven records and 24 fixed Array levels, with independent mutable storage, exact primitive values, malformed inputs, budget recovery and builtin-bound snapshots. Each execution passes 167,545 assertions across 3,225 calls and 118 rejections. A separate in-memory probe checks 842 failure checkpoints, 64 partial invalid inputs and eight malformed output values without changing installed files. An independent rebuild reproduces both original gems, all 24 installed files and every public observation. The publisher and consumer Parcels examples execute from a relocated original gem without Lean or a compiler."
+        }
+      },
+      "limitations": [
+        "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB native conversion budget. Ruby scratch has a separate 16 MiB budget; these limits do not bound all host allocations or Lean working memory.",
+        "Snapshots preserve bounded local values, not an atomic view of concurrently mutated nested inputs. Frozen wrappers can contain mutable payloads; do not mutate payloads while their containing values are Hash keys.",
         "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
       ]
     }

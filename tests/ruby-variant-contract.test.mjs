@@ -25,7 +25,8 @@ test("Ruby variants expose named frozen constructors with keyword payloads", () 
 	assert.match(publicSource, /def initialize\(arg1:, arg1_:\)/);
 	assert.doesNotMatch(publicSource, /Fiddle::|constructor_tag|\.pack\(|\.unpack/);
 	const native = files["lib/lean_bridge/variants/native.rb"];
-	assert.match(native, /value\.instance_of\?\(Signal::Data\)/);
+	assert.match(native, /exact\?\(value, Signal::Data\)/);
+	assert.match(native, /STORED_FIELD\.bind_call\(value, :@count\)/);
 	assert.match(native, /case value\[0, 4\]\.unpack1\("L<"\)/);
 	assert.match(native, /Invalid native Signal constructor/);
 	assert.match(files["README.md"], /subclass/);

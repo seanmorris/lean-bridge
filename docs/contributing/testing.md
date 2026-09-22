@@ -144,6 +144,29 @@ LEAN_BRIDGE_NATIVE_RUBY_TEST=1 \
 
 Willow and Aspen each build from two relocated source trees. Their gems must match byte-for-byte. The suite hides both source locations, installs with RubyGems offline, and calls generated APIs without Lean or a C compiler. It covers all primitive values, arrays and record fields, nested values, strict rejection, allocation-failure cleanup, concurrent calls, GC compaction, tampering and two installed gems sharing one runtime. See the [Ruby acceptance record](../evidence/native-ruby-20260914.md).
 
+Run the independent copied-array and record acceptance on both source paths:
+
+```sh
+LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 \
+  node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs
+```
+
+The 35-export contract covers all nineteen primitive elements and fields, seven
+records and 24 fixed Array nesting levels. Consumers install original gems
+offline, remove producer sources and handoffs, relocate the installation and
+execute without compilers. They check independent copies, field meanings,
+nominal value equality, exact integers, float bit cases, Unicode, malformed
+inputs, budgets, GC compaction and threads. Overridden String and Array methods
+must not change copy lengths or element selection.
+
+A separate process injects conversion, allocation, buffer-retention and record
+construction failures in memory. It checks native output cleanup, every retained
+scratch pointer, partial invalid inputs and malformed sequence/Char outputs.
+Public consumers execute before and after the probe, and all installed files
+must retain their original identities. Managed CI requires
+`build/collections/ruby.json`. The [collection record](../evidence/ruby-collections-20260922.md)
+retains the independent rebuild and executed documentation example.
+
 ## Native PHP package
 
 For ordinary Composer packages, install the C author tools, PHP 8.2+ CLI with FFI, and Composer 2 with ZIP support:

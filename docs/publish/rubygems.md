@@ -36,6 +36,38 @@ Copied types can nest up to 32 levels, and native input/output conversion shares
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
+## Export arrays and records
+
+Add these definitions to `Parcels.lean`:
+
+```lean
+namespace Parcels
+
+structure Parcel where
+  label : String
+  counts : Array Nat
+
+def reverse (value : Parcel) : Parcel :=
+  { value with counts := value.counts.reverse }
+
+end Parcels
+```
+
+Select `Parcels` in `modules` and `Parcels.reverse` in `exports`, then set
+`targets.rubygems` to a gem name and version your organization owns. Build with
+`--target rubygems` as above. The generated module is `LeanBridge::Parcels`;
+its `Parcel` class takes the required keywords `label:` and `counts:`.
+
+Arrays and acyclic copied records can nest with supported copied types.
+Ruby callers use `Array`, exact integers and named record classes. Generated
+records and variant constructors provide value equality, hashing and key
+pattern matching. Frozen records can contain mutable arrays and strings;
+conversions copy those payloads. See the [consumer example](../consume/ruby.md#arrays-and-records).
+
+The [installed collection record](../evidence/ruby-collections-20260922.md)
+includes this Lean example and its Ruby caller, original archive identities
+and both compiler-checked source paths.
+
 ## Export named copied aliases
 
 Declare concrete aliases in Lean and select the functions that use them. No

@@ -48,7 +48,9 @@ test("Ruby Lists use checked owned arrays with distinct List/Array native identi
 	const source = files["lib/lean_bridge/lists.rb"], native = files["lib/lean_bridge/lists/native.rb"];
 	assert.match(source, /def reverse_uint32\(arg0\)/); assert.match(source, /def mix\(arg0\)/);
 	assert.doesNotMatch(source, /Fiddle|Pointer|dispatch/);
-	assert.match(native, /value\.instance_of\?\(::Array\)/);
+	assert.match(native, /exact\?\(value, ::Array\)/);
+	assert.match(native, /ARRAY_LENGTH\.bind_call\(value\)/);
+	assert.match(native, /FREEZE\.bind_call\(ARRAY_GET\.bind_call\(value, 0, length\)\)/);
 	assert.match(native, /count > \(16 \* 1024 \* 1024\) \/ 8/);
 	assert.match(native, /data.zero\? \|\| data % 4 != 0/);
 	assert.match(native, /CLEAR\d+\.call\(output\)/);

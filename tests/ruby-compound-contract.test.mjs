@@ -34,7 +34,8 @@ test("Ruby compounds preserve presence, distinct branches and binary products", 
 		assert.equal(copy(field).size, size, field); assert.deepEqual(copy(field).fields.map(field => field.offset), offsets);
 	}
 	assert.match(native, /Invalid native Option flag/); assert.match(native, /Invalid native Except flag/);
-	assert.match(native, /value\.instance_of\?\(::Array\)/); assert.match(native, /unless value\.length == 2/);
+	assert.match(native, /exact\?\(value, ::Array\)/); assert.match(native, /unless ARRAY_LENGTH\.bind_call\(value\) == 2/);
+	assert.match(native, /payload = data_payload\(value\)/);
 	const simple = generateCopiedRubyPackage(callableReviewedIr());
 	assert.doesNotMatch(simple["lib/lean_bridge/callables.rb"], /::Data\.define/);
 });

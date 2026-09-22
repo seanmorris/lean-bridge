@@ -9,12 +9,13 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { rubyVariantReviewedIr, rubyVariantSignatures } from "./helpers/ruby-variant-fixture.mjs";
+import { assertRubyVariantSourceHash } from "./helpers/ruby-source-history.mjs";
 
 test("Ruby variant evidence binds original gems to both source paths and independent probes", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/ruby-variants-20260921.json"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64); assert.deepEqual(record.profiles, ["ruby"]);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assertRubyVariantSourceHash(path, await readFile(path), hash);
 	assert.deepEqual(record.signatures, rubyVariantSignatures); assert.deepEqual(record.types, rubyVariantReviewedIr().types);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(rubyVariantReviewedIr())));
 	assert.equal(record.types.filter(type => type.kind === "variant").length, 7);

@@ -907,11 +907,13 @@ jobs:
           LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs
           LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs
           LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs
+          LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs
           test -s build/callables/ruby.json
           test -s build/compounds/ruby.json
           test -s build/lists/ruby.json
           test -s build/aliases/ruby.json
           test -s build/variants/ruby.json
+          test -s build/collections/ruby.json
           test -s build/type-corpus/ruby.json
           test -s build/type-corpus/reviewed-native-ruby.json
       - name: Upload the Ruby real-Lean type corpus report
@@ -929,6 +931,7 @@ jobs:
             build/lists/ruby.json
             build/aliases/ruby.json
             build/variants/ruby.json
+            build/collections/ruby.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -970,6 +973,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs"
               if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
                 test_result=failed
                 executed=false

@@ -245,7 +245,9 @@ test("Ruby compound docs distinguish absent options, Unit and result branches", 
 	assert.match(source, /Some\.new\(nil\)/u);
 	assert.match(source, /Some\.new\(Some\.new\(API::UNIT\)\)/u);
 	assert.match(source, /in Err\(value\)/u);
-	assert.match(source, /Ruby object-identity equality/u);
+	assert.match(source, /Generated records and variant constructors implement field-by-field/u);
+	assert.match(source, /`eql\?`, `hash` and `deconstruct_keys`/u);
+	assert.match(source, /Do not mutate a nested payload while using its containing record as a Hash key/u);
 });
 
 test("Python compound docs retain presence and branch identity in installed mappings", async () => {

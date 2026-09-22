@@ -67,7 +67,7 @@ export const compileCopiedRubyModel = ir => {
 			let size = copy.compound && copy.compound !== "tuple" ? 1 : 0, alignment = 1;
 			for(const field of copy.fields)
 			{
-				if(reserved.has(field.name)) fail(ir.declarations[0], `Ruby record field name collides: ${field.name}`);
+				if(reserved.has(field.name) || ["deconstruct", "deconstruct_keys"].includes(field.name)) fail(ir.declarations[0], `Ruby record field name collides: ${field.name}`);
 				field.offset = align(size, field.type.alignment);
 				size = field.offset + field.type.size; alignment = Math.max(alignment, field.type.alignment);
 			}

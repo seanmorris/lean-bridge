@@ -11,6 +11,18 @@ import { rubyCopiedAliases, rubyAliasCatalogDocs, rubyAliasSiteDocs, rubyAliasRe
 import { rubyValue, rubyClosurePublic, rubyNativeCall, rubyCallableTypes, rubyCallableSupport } from "./callables.mjs";
 
 const args = fn => fn.declaration.parameters.map((_, index) => `arg${index}`);
+const valueMethods = fields => `      def ==(other)
+        Native.exact?(other, self.class)${fields.map(field => ` && @${field.name} == Native::STORED_FIELD.bind_call(other, :@${field.name})`).join("")}
+      end
+      def eql?(other)
+        Native.exact?(other, self.class)${fields.map(field => ` && @${field.name}.eql?(Native::STORED_FIELD.bind_call(other, :@${field.name}))`).join("")}
+      end
+      def hash
+        [self.class${fields.map(field => `, @${field.name}`).join("")}].hash
+      end
+      def deconstruct_keys(_keys)
+        { ${fields.map(field => `${field.name}: @${field.name}`).join(", ")} }
+      end`;
 const variants = model => model.surface.copies.filter(copy => copy.variant).map(copy => `
     class ${copy.publicName}
       private_class_method :new
@@ -23,9 +35,7 @@ ${rubyAliasSiteDocs(model, copy.variant.cases[index].fields.map((field, i) => ({
 ${branch.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
         freeze
       end
-      def deconstruct_keys(_keys)
-        { ${branch.fields.map(field => `${field.name}: @${field.name}`).join(", ")} }
-      end
+${valueMethods(branch.fields)}
     end`).join("\n")}`).join("");
 const publicSource = model => `# frozen_string_literal: true
 module LeanBridge
@@ -43,6 +53,7 @@ ${rubyAliasSiteDocs(model, copy.record.fields, null, "      ")}\
 ${copy.fields.map(field => `        @${field.name} = ${field.name}`).join("\n")}
         freeze
       end
+${valueMethods(copy.fields)}
     end`).join("\n")}${variants(model)}
     module_function
 ${model.surface.functions.map((fn, index) => {
@@ -120,12 +131,15 @@ export const renderCopiedRubyPackage = (model, evidence = null) => {
 	if(model.surface.copies.some(copy => ["option", "result"].includes(copy.compound))) files["README.md"] += "\nBranch wrappers are frozen Data classes with value equality and pattern matching. Wrapper fields are frozen, but nested strings and arrays remain mutable.\n";
 	if(model.surface.copies.some(copy => copy.compound === "tuple")) files["README.md"] += "\nProducts use exactly two Array elements and preserve nesting.\n";
 	if(model.surface.copies.some(copy => copy.compound)) files["README.md"] += "\nPayloads are checked against the concrete Lean type when called; no implicit coercion is used. Returned values own independent storage.\n";
+	files["README.md"] += "\nConversions use builtin exact-type checks and bounded snapshots of String bytes and Array slots. Overridden instance methods cannot change the native allocation size, copy length or element selection. Generated record and constructor fields are read from stored values, not overridden accessors. Inputs must not be mutated concurrently if a consistent snapshot of the entire nested value is required.\n";
+	if(model.surface.copies.some(copy => copy.record || copy.variant))
+		files["README.md"] += "\nGenerated records and variant constructors support field-by-field ==, eql?, hash and deconstruct_keys. Equality requires the same Ruby class and follows the contained values' Ruby semantics, including floating-point behavior. Objects are frozen; nested arrays and strings remain mutable. Do not mutate a nested payload while using its containing value as a Hash key.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: "ruby-copied-v1", target: "ruby", component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, files: Object.keys(files), publicFiles: [entry], internalFiles: [internal, shared], packageFiles: [], supportedFeatures: ["direct-functions", "copied-values", "deterministic-close", ...model.surface.callbacks.size ? ["primitive-callbacks", "returned-closures"] : []], capabilityGaps: [{ feature: "identity-and-effects", reason: "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported." }, { feature: "additional-platforms", reason: "The compiled profile is MRI Ruby 3.3 on Linux x86-64." }] }, null, 2)}\n`;
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List inputs, results and record fields use copied Ruby Array values. Exact Array instances are required; no implicit to_ary conversion is used. Empty Lists, order, duplicates and nesting are preserved. Returned arrays and mutable payloads own independent storage. List and Array retain distinct IR/native identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
 	files["README.md"] += rubyAliasReadme(model);
 	if(model.surface.copies.some(copy => copy.variant))
-		files["README.md"] += "\nConcrete copied Lean variants use named constructor classes such as Signal::Data.new(count: 42, label: \"ready\"). Constructor payloads use required keyword arguments and read-only accessors; deconstruct_keys supports Ruby pattern matching. Constructor objects are frozen, but contained strings and arrays remain mutable and are copied at the boundary. The abstract family cannot be constructed with new. Unknown subclasses, nil cases, wrong field values and invalid native tags reject. Only the active payload is converted. Empty constructors and UNIT payloads remain distinct. Ruby does not check match exhaustiveness, and ordinary generated object equality is identity-based; compare payload contents for copied-value equality. Generic, indexed, recursive, proof-bearing, callable and identity-bearing payloads remain unsupported.\n";
+		files["README.md"] += "\nConcrete copied Lean variants use named constructor classes such as Signal::Data.new(count: 42, label: \"ready\"). Constructor payloads use required keyword arguments and read-only accessors; deconstruct_keys supports Ruby pattern matching. Constructor objects are frozen, but contained strings and arrays remain mutable and are copied at the boundary. The abstract family cannot be constructed with new. Unknown subclasses, nil cases, wrong field values and invalid native tags reject. Only the active payload is converted. Empty constructors and UNIT payloads remain distinct. Ruby does not check match exhaustiveness. Generic, indexed, recursive, proof-bearing, callable and identity-bearing payloads remain unsupported.\n";
 	if(model.surface.aliases.length)
 		files["binding-manifest.json"] = `${JSON.stringify({ ...JSON.parse(files["binding-manifest.json"]), aliases: rubyCopiedAliases(model) }, null, 2)}\n`;
 	return Object.freeze(files);
