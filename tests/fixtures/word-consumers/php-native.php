@@ -29,8 +29,8 @@ foreach ($us as $i => $u) {
 foreach ([BigInteger::of(-1), $modulus, 1, '1', 1.0, true, null, []] as $bad) {
     foreach ([fn() => keep_unsigned($bad), fn() => keep_unsigned_values([$us[0], $bad]),
               fn() => keep_unsigned_rows([[$us[0]], [$bad]]),
-              fn() => keep_sample(new Sample(natural: $bad, integer: -1, unsigned_values: $us, signed_values: $ss)),
-              fn() => keep_sample(new Sample(natural: $us[0], integer: -1, unsigned_values: [$bad], signed_values: $ss))] as $call) {
+              fn() => keep_sample(new Sample(natural: $bad, integer: -1, unsignedValues: $us, signedValues: $ss)),
+              fn() => keep_sample(new Sample(natural: $us[0], integer: -1, unsignedValues: [$bad], signedValues: $ss))] as $call) {
         $rejected = false;
         try { $call(); } catch (TypeError|ValueError $error) { $rejected = true; }
         check($rejected); check(keep_signed(-1) === -1);
@@ -39,17 +39,17 @@ foreach ([BigInteger::of(-1), $modulus, 1, '1', 1.0, true, null, []] as $bad) {
 foreach ([BigInteger::of($minimumSigned)->minus(1), BigInteger::of($maximumSigned)->plus(1), '1', 1.0, true, null, []] as $bad) {
     foreach ([fn() => keep_signed($bad), fn() => keep_signed_values([0, $bad]),
               fn() => keep_signed_rows([[0], [$bad]]),
-              fn() => keep_sample(new Sample(natural: $us[0], integer: $bad, unsigned_values: $us, signed_values: $ss)),
-              fn() => keep_sample(new Sample(natural: $us[0], integer: -1, unsigned_values: $us, signed_values: [$bad]))] as $call) {
+              fn() => keep_sample(new Sample(natural: $us[0], integer: $bad, unsignedValues: $us, signedValues: $ss)),
+              fn() => keep_sample(new Sample(natural: $us[0], integer: -1, unsignedValues: $us, signedValues: [$bad]))] as $call) {
         $rejected = false;
         try { $call(); } catch (TypeError|ValueError $error) { $rejected = true; }
         check($rejected); check(keep_unsigned($maximum)->isEqualTo($maximum));
     }
 }
 for ($i = 0; $i < 1000; ++$i) {
-    $sample = keep_sample(new Sample(natural: $maximum, integer: $minimumSigned, unsigned_values: $us, signed_values: $ss));
+    $sample = keep_sample(new Sample(natural: $maximum, integer: $minimumSigned, unsignedValues: $us, signedValues: $ss));
     check($sample->natural->isEqualTo($maximum) && $sample->integer === $minimumSigned);
-    check(texts($sample->unsigned_values) === texts($us) && $sample->signed_values === $ss);
+    check(texts($sample->unsignedValues) === texts($us) && $sample->signedValues === $ss);
     check(texts(keep_unsigned_values($us)) === texts($us));
     check(keep_signed_values($ss) === $ss);
     $ur = keep_unsigned_rows([$us, []]); $sr = keep_signed_rows([$ss, []]);

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { componentScalarTypes, fixedPlatformInteger, validateComponentScalar } from "../src/abi/component-scalars.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
@@ -16,6 +17,7 @@ import { generateJavaScriptPackage } from "../src/backends/javascript/generate.m
 import { generateComponentScalarAdapters } from "../src/build/component-scalar-adapters.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
+import { copiedPhpPublicSource } from "../src/backends/php/copied-values.mjs";
 import { compileCopiedRustModel } from "../src/backends/rust/copied-model.mjs";
 import { compileCopiedJvmModel } from "../src/backends/jvm/copied-model.mjs";
 import { compileCopiedDotnetModel } from "../src/backends/dotnet/copied-model.mjs";
@@ -87,6 +89,29 @@ test("copied transports use stable carriers and explicit compiled-target ranges"
 	const wit = compileCopiedWitModel(compiled);
 	assert.match(wit.wit, /keep-unsigned: func\([^)]*: u64\) -> u64/);
 	assert.match(wit.wit, /keep-signed: func\([^)]*: s64\) -> s64/);
+});
+
+test("installed PHP Word callers use source record fields and projected function names", async () => {
+	const source = await readFile("tests/fixtures/word-consumers/php-native.php", "utf8");
+	const fields = ["natural", "integer", "unsignedValues", "signedValues"];
+	const constructors = [...source.matchAll(/new Sample\(([^)]*)\)/gu)];
+	assert.equal(constructors.length, 5);
+	for(const [, args] of constructors)
+		assert.deepEqual([...args.matchAll(/\b([A-Za-z]\w*):/gu)].map(match => match[1]), fields);
+	assert.deepEqual([...source.matchAll(/\$sample->([A-Za-z]\w*)/gu)].map(match => match[1]), fields);
+	for(const wordBits of [32, 64])
+	{
+		const model = compileCopiedPhpModel(compiled, { integerBits: wordBits, wordBits });
+		const record = model.surface.copies.find(copy => copy.record?.name === "Sample");
+		assert.deepEqual(record.fields.map(field => field.publicName), fields);
+		const generated = copiedPhpPublicSource(model);
+		assert.match(generated, /function __construct\(mixed \$natural, mixed \$integer, mixed \$unsignedValues, mixed \$signedValues\)/u);
+		for(const name of ["keep_unsigned_values", "keep_signed_values"])
+		{
+			assert.ok(generated.includes(`function ${name}(`));
+			assert.ok(source.includes(`${name}(`));
+		}
+	}
 });
 
 test("npm word validation uses exact wasm32 number ranges without coercion", async () => {
