@@ -52,6 +52,36 @@ Nat and Int use `BigInteger`. Fixed-width numbers use their corresponding C# num
 
 Null strings, arrays and records, negative Nat inputs, and oversized input copies throw before invoking the Lean function. Managed input copying has a 16 MiB accounting budget. Native copying shares a separate 16 MiB budget across inputs and outputs, including array slots and record storage. These budgets do not bound every managed allocation or Lean working memory. An oversized result throws after Lean returns. Generated code releases temporary input buffers and native results on failure. Native library hashes and runtime compatibility are checked automatically when loading. See the [author guide](../publish/nuget.md#build-an-ordinary-lean-project) for admitted signatures.
 
+### Arrays and records
+
+Lean `Array T` uses a typed C# `T[]`, including nested arrays and arrays of
+records. Each copied Lean record becomes a named sealed C# record with typed,
+init-only properties. Empty and single-field records retain their own types.
+
+For the `Lean.Collections` acceptance package, reference its prepared NuGet
+archive using the local-feed steps above and save this as `Program.cs`:
+
+```csharp
+using System;
+using LeanBridge.Collections;
+
+uint[][] input = { new uint[] { 1, 2, 3 }, Array.Empty<uint>() };
+uint[][] reversed = Api.ArrayReverseUint32(input);
+Console.WriteLine(string.Join(", ", reversed[1])); // 3, 2, 1
+reversed[1][0] = 99;
+Console.WriteLine(string.Join(", ", input[0])); // 1, 2, 3
+
+Pair pair = Api.RecordMake();
+Console.WriteLine(pair.First); // 42
+Console.WriteLine(pair == new Pair(42, "\ufeff🌱\0")); // True
+```
+
+Returned arrays own independent storage. Records compare nested contents by
+value, including arrays; different record types remain distinct. C# arrays
+themselves retain their language equality behavior. See
+[comparing copied values](#comparing-copied-values) and the
+[installed collection checks](../evidence/dotnet-collections-20260922.md).
+
 ### Named aliases
 
 Copied Lean aliases use their target's C# values. A `Count` alias of `UInt32`
@@ -128,7 +158,7 @@ if (result.IsError)
 
 `Option<T>.None` and `default(Option<T>)` mean absence. `Some(default(Unit))` means a present Unit; `Some(Option<U>.None)` preserves the inner absence. Read `Value` only when `IsSome` is true. A null reference payload inside `Some` still fails the payload's conversion rules.
 
-Lean `Except E T` uses `Result<T, E>.Ok(value)` or `.Err(error)`. Check `IsOk` or `IsError`, then read `Value` or `Error`. Domain errors return `Err`; load and conversion failures throw exceptions. An inactive payload property throws `InvalidOperationException`. `default(Result<T, E>)` has no branch and is rejected at the boundary. The wrappers support value equality and safe `ToString()` calls in every state; contained arrays retain C# reference equality.
+Lean `Except E T` uses `Result<T, E>.Ok(value)` or `.Err(error)`. Check `IsOk` or `IsError`, then read `Value` or `Error`. Domain errors return `Err`; load and conversion failures throw exceptions. An inactive payload property throws `InvalidOperationException`. `default(Result<T, E>)` has no branch and is rejected at the boundary. The wrappers compare active payloads by value, including nested arrays, and support safe `ToString()` calls in every state.
 
 Calls copy array contents even when an option, result or tuple contains them. Returned arrays do not alias the input or each other. The existing 16 MiB conversion budgets and 32-level type limit also apply to compounds. [Compound acceptance](../evidence/dotnet-compounds-20260920.md) covers installed packages, compiler rejections, runtime-only deployment and separately instrumented cleanup checks. Compound callbacks and resource-containing copies remain unsupported.
 
@@ -165,12 +195,43 @@ variants. Only the active case is converted. Empty cases and cases carrying
 records reject before Lean runs.
 
 Returned arrays own independent storage. Record properties are init-only, but
-their array elements remain mutable. C# record equality compares array
-references; compare their elements when checking copied contents. The existing
+their array elements remain mutable. Generated records compare nested contents
+by value and retain constructor identity. The existing
 32-level type bound and 16 MiB native copy budget apply. Failures release
 scoped scratch buffers and native outputs. See the
 [installed variant checks](../evidence/dotnet-variants-20260921.md).
 Recursive, callable and identity-bearing payloads remain separate work.
+
+### Comparing copied values
+
+Generated records, named variant cases, `Option` and `Result` compare payloads
+structurally, including nested arrays and tuples. Equal values have equal hash
+codes, so independently copied values work in dictionaries and hash sets.
+Different record types and variant constructors stay distinct. `None`,
+`Some(None)`, `Ok` and `Err` also stay distinct. Floating-point comparisons follow
+.NET equality: NaNs compare equal, as do positive and negative zero.
+
+Direct C# arrays and tuples keep their language equality behavior. Use
+`StructuralComparisons.StructuralEqualityComparer` to compare their nested
+contents. For the `Lean.Compounds` package, save this as `Program.cs`:
+
+```csharp
+using System;
+using System.Collections;
+using LeanBridge.Compounds;
+
+var first = Option<byte[]>.Some(new byte[] { 0, 255 });
+var second = Option<byte[]>.Some(new byte[] { 0, 255 });
+Console.WriteLine(first == second); // True
+
+var left = (new uint[] { 1, 2 }, new byte[] { 0, 255 });
+var right = (new uint[] { 1, 2 }, new byte[] { 0, 255 });
+Console.WriteLine(StructuralComparisons.StructuralEqualityComparer.Equals(left, right)); // True
+```
+
+Arrays remain mutable. Do not change a value's contents while it is a dictionary
+key or hash-set member. Comparison does not relax conversion rules: an active
+null payload still fails when passed to Lean.
 
 ### Callbacks and returned Lean functions
 
@@ -303,27 +364,27 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 
 | Lean type or source form | Host representation | Current evidence | Conversion rules |
 | --- | --- | --- | --- |
-| `Unit` | `Unit` (input, field, callback input); `void` (result, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Pass default(Unit); Unit results return void. Unit fields and array elements use the generated Unit value type. Pass default(Unit); Unit callback results use Action and return void. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
-| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Required: Exactly two Boolean values; do not coerce numbers or strings. |
-| `UInt8` | `byte` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: 0..255; reject overflow before narrowing. |
-| `UInt16` | `ushort` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: 0..65535; reject overflow before narrowing. |
-| `UInt32` | `uint` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
-| `UInt64` | `ulong` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
-| `Int8` | `sbyte` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: -128..127; reject overflow before narrowing. |
-| `Int16` | `short` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: -32768..32767; reject overflow before narrowing. |
-| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: -2147483648..2147483647; reject overflow before narrowing. |
-| `Int64` | `long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
-| `Nat` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Arbitrary-precision BigInteger. Negative input throws; zero and multi-limb magnitudes copy without floating-point conversion. Exact System.Numerics.BigInteger; negative Nat inputs and callback results throw. Copied arguments and captured values remain independent. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
-| `Int` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Signed arbitrary-precision BigInteger with exact sign and magnitude. Signed exact System.Numerics.BigInteger; no fixed-width or floating-point narrowing. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
-| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
-| `Float` | `double` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Inspected: no host mapping (field) | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
-| `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Strict Unicode conversion preserves embedded NUL. Invalid UTF-16 input throws; null is not an empty string. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
-| `ByteArray` | `byte[]` (input, result, field, callback input, callback result); `ReadOnlyMemory<byte>` (field) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed (input, result, callback input, callback result); Generator inspected (field) | Copied byte arrays with independent returned storage. Null is rejected. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `T[]` (input, result, field); `ReadOnlyMemory<uint>` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Not audited (input, result, callback input, callback result); Generator inspected (field) | Recursive copied T[] values, including jagged arrays and arrays of records. Input scratch and deep native outputs are released on failure. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Unit` | `Unit` (input, field, callback input); `void` (result, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass default(Unit); Unit results return void. Unit fields and array elements use the generated Unit value type. Pass default(Unit); Unit callback results use Action and return void. Required: One inhabitant. A result with no host return value still requires an explicit argument and field mapping. |
+| `Bool` | `bool` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Exactly two Boolean values; do not coerce numbers or strings. |
+| `UInt8` | `byte` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: 0..255; reject overflow before narrowing. |
+| `UInt16` | `ushort` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: 0..65535; reject overflow before narrowing. |
+| `UInt32` | `uint` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: 0..4294967295, including on hosts with 32-bit signed integers. |
+| `UInt64` | `ulong` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: 0..18446744073709551615; no conversion through a floating-point host number. |
+| `Int8` | `sbyte` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -128..127; reject overflow before narrowing. |
+| `Int16` | `short` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -32768..32767; reject overflow before narrowing. |
+| `Int32` | `int` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -2147483648..2147483647; reject overflow before narrowing. |
+| `Int64` | `long` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: -9223372036854775808..9223372036854775807; preserve exact values. |
+| `Nat` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Arbitrary-precision BigInteger. Negative input throws; zero and multi-limb magnitudes copy without floating-point conversion. Exact System.Numerics.BigInteger; negative Nat inputs and callback results throw. Copied arguments and captured values remain independent. Required: No fixed bit-width limit. Reject negative inputs and enforce documented allocation limits. |
+| `Int` | `BigInteger` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Signed arbitrary-precision BigInteger with exact sign and magnitude. Signed exact System.Numerics.BigInteger; no fixed-width or floating-point narrowing. Required: Preserve sign and magnitude without narrowing; enforce documented allocation limits. |
+| `Float32` | `float` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Round to binary32. Specify NaN, infinities and signed zero; do not claim NaN payload preservation without a bit-level test. |
+| `Float` | `double` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
+| `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Strict Unicode conversion preserves embedded NUL. Invalid UTF-16 input throws; null is not an empty string. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
+| `ByteArray` | `byte[]` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Copied byte arrays with independent returned storage. Null is rejected. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
+| `Array α` | `T[]` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Recursive copied T[] values, including jagged arrays and arrays of records. Input scratch and deep native outputs are released on failure. Typed T[] preserves every primitive, element order, empty and nested arrays and records. Returned mutable storage is independent. Null arrays, invalid nested values and oversized copies reject without retaining scratch. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
 | `Option α` | `Option<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Generated readonly record struct with None and Some factories, IsSome/IsNone and guarded Value. `default(Option<T>)` is None; Some(None) and Some(Some(Unit)) remain distinct. Active null reference payloads reject. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
 | `Except ε α` | `Result<T, E>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Lean `Except E T` uses `Result<T, E>.Ok(value)` or `.Err(error)`. IsOk/IsError select guarded Value/Error. `default(Result<T, E>)` has no branch and rejects at the boundary. Domain errors return Err; bridge failures throw exceptions. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
 | `Prod α β / tuples` | `(A, B) (nested binary products)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly two statically typed C# tuple elements, preserving binary nesting. Inputs are copied; returned arrays own independent storage. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Generated sealed record` (input, result, field); `Payload` (input, result) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Generator inspected (input, result); Not audited (field, callback input, callback result) | Generated sealed C# records preserve declared fields through compiler-owned constructors and accessors. Arrays inside returned records are independent copies. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Copied structure` | `Generated sealed record` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Generated sealed C# records preserve declared fields through compiler-owned constructors and accessors. Arrays inside returned records are independent copies. Named sealed C# records preserve declared typed fields through init-only properties, constructors, deconstruction and with expressions. Empty and one-field records remain distinct. Records compare nested payloads structurally and hash consistently; floating equality follows .NET NaN and signed-zero semantics. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
 | `Type alias` | `CLR target value; named Lean contract in installed metadata and XML docs` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Aliases add no wrapper identity or consumer configuration. CLR signatures keep exact widths, BigInteger, Rune, typed arrays and copied records. Nat rejects negatives despite sharing BigInteger with Int. Unit results return void; nested Option/Result presence and existing copy budgets remain unchanged. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
 | `Inductive sum` | `abstract C# record with sealed named constructor records` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Construct and pattern-match named case records without numeric tags or unmanaged layouts. Empty cases and Unit payloads stay distinct. Inputs and outputs contain independent copied storage. Only the active payload is converted; invalid native tags reject before union reads. Scoped scratch disposal and native output guards release partial conversions on errors. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | `Box` (result) | Ordinary source: Not audited. Reviewed IR: Not audited (input, field, callback input, callback result); Generator inspected (result) | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |

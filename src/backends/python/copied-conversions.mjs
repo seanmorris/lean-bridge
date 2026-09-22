@@ -77,7 +77,7 @@ class ${copy.ctype}(_c.Structure):
     _fields_ = [("kind", _c.c_uint32), ("cases", _V${copy.index})]
 `;
 	const fields = copy.compound ? [...copy.compound === "tuple" ? [] : [[copy.compound === "option" ? "has_value" : "is_ok", "_c.c_uint8"]], ...copy.fields.map(field => [field.name, field.type.ctype])]
-		: copy.record ? copy.fields.length ? copy.fields.map(field => [field.name, field.type.ctype]) : [["empty", "_c.c_uint8"]]
+		: copy.record ? copy.fields.length ? copy.fields.map(field => [field.publicName, field.type.ctype]) : [["empty", "_c.c_uint8"]]
 		: [["data", "_c.c_void_p"], ["length", "_c.c_size_t"], ["owner", "_c.c_void_p"], ["release", "_c.c_void_p"], ...(copy.scalarName === "int" ? [["negative", "_c.c_bool"]] : [])];
 	return `class ${copy.ctype}(_c.Structure):\n    _fields_ = [${fields.map(([name, type]) => `(${JSON.stringify(name)}, ${type})`).join(", ")}]\n`;
 }).join("\n");
@@ -146,12 +146,12 @@ export const copiedPythonConversions = model => model.surface.copies.map(copy =>
 		output.push(`raise LeanBridgeError(5, "Invalid native ${copy.publicName} constructor")`);
 	} else if(copy.record)
 	{
-		input.push(`if type(value) is not ${copy.publicName}: raise TypeError("Expected ${copy.publicName}")`, `return ${copy.ctype}(${copy.fields.map(field => `_to${field.type.index}(value.${field.name}, scope)`).join(", ")})`);
-		output.push(`return ${copy.publicName}(${copy.fields.map(field => `${field.name}=_from${field.type.index}(value.${field.name}, scope)`).join(", ")})`);
+		input.push(`if type(value) is not ${copy.publicName}: raise TypeError("Expected ${copy.publicName}")`, `return ${copy.ctype}(${copy.fields.map(field => `_to${field.type.index}(value.${field.publicName}, scope)`).join(", ")})`);
+		output.push(`return ${copy.publicName}(${copy.fields.map(field => `${field.publicName}=_from${field.type.index}(value.${field.publicName}, scope)`).join(", ")})`);
 	} else
 	{
 		input.push('if type(value) not in (tuple, list): raise TypeError("Expected a tuple or list")', "scope.charge(len(value), 8)", "value = tuple(value)", `memory = scope.allocate(${copy.element.ctype}, len(value))`, "for index, item in enumerate(value):", `    memory[index] = _to${copy.element.index}(item, scope)`, `return ${copy.ctype}(_c.addressof(memory) if len(value) else None, len(value), None, None)`);
-		output.push(`scope.charge(value.length, max(8, _c.sizeof(${copy.element.ctype})))`, 'if value.length and not value.data: raise LeanBridgeError(5, "Native array has a missing buffer")', `memory = (${copy.element.ctype} * value.length).from_address(value.data) if value.length else ()`, `return tuple(_from${copy.element.index}(item, scope) for item in memory)`);
+		output.push(`scope.charge(value.length, max(8, _c.sizeof(${copy.element.ctype})))`, 'if value.length and not value.data: raise LeanBridgeError(5, "Native array has a missing buffer")', `if value.length and value.data % _c.alignment(${copy.element.ctype}): raise LeanBridgeError(5, "Native array has a misaligned buffer")`, `memory = (${copy.element.ctype} * value.length).from_address(value.data) if value.length else ()`, `return tuple(_from${copy.element.index}(item, scope) for item in memory)`);
 	}
 	return `def _to${copy.index}(value, scope):
     scope.charge(1, _c.sizeof(${copy.ctype}))

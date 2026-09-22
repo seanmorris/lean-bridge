@@ -248,6 +248,19 @@ test("Ruby compound docs distinguish absent options, Unit and result branches", 
 	assert.match(source, /Generated records and variant constructors implement field-by-field/u);
 	assert.match(source, /`eql\?`, `hash` and `deconstruct_keys`/u);
 	assert.match(source, /Do not mutate a nested payload while using its containing record as a Hash key/u);
+	assert.match(row(source, "Prod α β / tuples"), /compare fields by value within the same record class/u);
+	assert.doesNotMatch(source, /record classes retain object-identity equality/u);
+});
+
+test("Python collection docs show named records and independently copied arrays", async () => {
+	const consumer = await readFile("docs/consume/python.md", "utf8"), publisher = await readFile("docs/publish/pypi.md", "utf8");
+	assert.match(consumer, /from lean_parcels import Parcel, reverse/u);
+	assert.match(consumer, /assert result == Parcel\(label="Seeds", counts=\(7, 2\)\)/u);
+	assert.match(consumer, /assert parcel\.counts == \[2, 7\]/u);
+	assert.match(publisher, /structure Parcel where\n {2}label : String\n {2}counts : Array Nat/u);
+	assert.match(publisher, /counts := value\.counts\.reverse/u);
+	assert.match(consumer, /\.\.\/publish\/pypi\.md#export-arrays-and-records/u);
+	assert.match(publisher, /\.\.\/consume\/python\.md#arrays-and-records/u);
 });
 
 test("Python compound docs retain presence and branch identity in installed mappings", async () => {
@@ -257,6 +270,19 @@ test("Python compound docs retain presence and branch identity in installed mapp
 	assert.match(row(source, "Option α"), /Some\[T\]/u);
 	assert.doesNotMatch(row(source, "Option α"), /collapses nested Option/u);
 	assert.match(source, /Some\(Some\(None\)\)/u);
+});
+
+test("Rust collection docs retain typed Markdown and position-specific installed evidence", async () => {
+	const source = await readFile("docs/consume/rust.md", "utf8");
+	for(const lean of ["Array α", "Copied structure"])
+	{
+		assert.match(row(source, lean), /Reviewed IR: Installed checks passed \(input, result, field\)/u);
+		assert.match(row(source, lean), /Generator inspected \(callback input, callback result\)/u);
+	}
+	assert.match(row(source, "Array α"), /Borrowed `&\[T\]` inputs and owned `Vec<T>` outputs/u);
+	assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed \|/u);
+	assert.match(source, /assert_eq!\(input\[0\], vec!\[1, 2, 3\]\)/u);
+	assert.match(source, /rust-collections-20260922\.md/u);
 });
 
 test("Rust compound docs distinguish domain results from bridge errors", async () => {

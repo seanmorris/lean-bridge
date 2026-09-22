@@ -507,7 +507,7 @@ jobs:
   native-consumers:
     name: Python, Rust, C, and C++
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 240
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -583,6 +583,16 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Select Python 3.11 for backported type aliases
+        id: collection_python311
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Select Python 3.12 for standard-library type aliases
+        id: collection_python312
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
       - name: Build ordinary Lean APIs and install relocated Python wheels
         id: ordinary_python
         continue-on-error: true
@@ -595,8 +605,16 @@ jobs:
       - name: Compare installed Python corpus packages with fresh Lean results
         id: type_corpus_python
         continue-on-error: true
+        env:
+          LEAN_BRIDGE_PYTHON: ${{ steps.collection_python311.outputs.python-path }}
+          LEAN_BRIDGE_COLLECTION_PYTHONS: '["${{ steps.collection_python311.outputs.python-path }}", "${{ steps.collection_python312.outputs.python-path }}"]'
         run: |
           source scripts/env.sh
+          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.6.0 typing_extensions==4.6.0
+          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
+          python3 -m venv build/python-collection-typecheck
+          build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
+          LEAN_BRIDGE_PYTHON_WHEEL_INSTALL_TEST=1 node --test tests/python-wheel-install.test.mjs
           npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs
           LEAN_BRIDGE_CHAR_PROFILES=python node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=python node --test tests/native-words.test.mjs
@@ -612,6 +630,9 @@ jobs:
           test -s build/aliases/python.json
           LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs
           test -s build/variants/python.json
+          LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs
+          test -s build/collections/python.json
+          test -s build/collections/python-docs.json
           test -s build/type-corpus/python.json
           test -s build/type-corpus/reviewed-native-python.json
       - name: Upload the real-Lean type corpus report
@@ -629,6 +650,8 @@ jobs:
             build/lists/python.json
             build/aliases/python.json
             build/variants/python.json
+            build/collections/python.json
+            build/collections/python-docs.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -663,6 +686,10 @@ jobs:
           test -s build/aliases/rust.json
           LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs
           test -s build/variants/rust.json
+          LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs
+          test -s build/collections/rust-conversions.json
+          LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs
+          test -s build/collections/rust.json
           test -s build/type-corpus/rust.json
           test -s build/type-corpus/reviewed-native-rust.json
       - name: Upload installed Rust corpus observations
@@ -680,6 +707,8 @@ jobs:
             build/lists/rust.json
             build/aliases/rust.json
             build/variants/rust.json
+            build/collections/rust-conversions.json
+            build/collections/rust.json
           if-no-files-found: error
           retention-days: 30
       - name: Record native consumer observations
@@ -710,6 +739,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false
@@ -722,6 +752,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs"
               if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ]; then
                 result=failed
                 installed=false
@@ -797,6 +829,12 @@ jobs:
           test -s build/aliases/dotnet.json
           LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs
           test -s build/variants/dotnet.json
+          LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs
+          test -s build/collections/dotnet-conversions.json
+          LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs
+          test -s build/collections/dotnet.json
+          LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs
+          test -s build/equality/dotnet.json
           test -s build/type-corpus/dotnet.json
           test -s build/type-corpus/reviewed-native-dotnet.json
       - name: Upload the .NET real-Lean type corpus report
@@ -814,6 +852,9 @@ jobs:
             build/lists/dotnet.json
             build/aliases/dotnet.json
             build/variants/dotnet.json
+            build/collections/dotnet-conversions.json
+            build/collections/dotnet.json
+            build/equality/dotnet.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -949,6 +990,9 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs"
               if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ]; then
                 test_result=failed
                 executed=false

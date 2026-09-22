@@ -38,6 +38,20 @@ Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation.
 
 NuGet archive assembly consumes verified compiled artifacts and does not invoke a compiler. Registry upload uses the native NuGet commands below. Verify the release with `lean-bridge verify --receipt /absolute/path/to/aurora-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
+## Export arrays and records
+
+Select concrete exports using `Array T` and acyclic Lean structures in the same
+export configuration. Both source paths support all nineteen primitives, nested
+arrays and records, including empty and single-field structures. The compiler
+checks the source constructors and accessors before generating the adapter.
+
+NuGet consumers use typed `T[]` arrays and named sealed C# records. Copies own
+independent nested storage. Record properties are init-only; records compare
+nested payloads by value and provide matching hash codes. Their contained arrays
+remain mutable. The existing 32-level type bound and 16 MiB accounting budgets
+apply. See the [consumer example](../consume/dotnet.md#arrays-and-records) and
+[installed NuGet collection checks](../evidence/dotnet-collections-20260922.md).
+
 ## Export options, results and products
 
 Both ordinary-source and reviewed-IR builds compile `Option T`, `Except E T` and nested `A × B` values. They can contain the admitted copied primitives, arrays and acyclic records. Consumers use generated readonly `Option<T>` and `Result<T, E>` value types and native C# `(A, B)` tuples. Default options mean None; default results have no branch and reject. Lean domain errors return `Err` values, while bridge failures throw exceptions.

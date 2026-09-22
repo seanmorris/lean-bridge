@@ -19,8 +19,17 @@ const publicType = (model, ref, input = false) => {
 const publicAliases = model => !model.surface.aliases.length ? "" : `\nfrom typing import TypeAlias as _TypeAlias
 
 ${model.surface.aliases.map(alias => `${alias.definition.name}: _TypeAlias = ${alias.copy.publicType}`).join("\n")}`;
+const copiedTypeAliases = (copy, stub) => [
+	...copy.publicExpression ? [[copy.publicType, copy.publicExpression, true]] : []
+	, ...copy.inputExpression ? [[copy.inputType, copy.inputExpression, copy.inputTypeAlias]] : []
+].map(([name, expression, lazy]) => `${name} = ${lazy && !stub ? `_TypeAliasType(${JSON.stringify(name)}, ${expression})` : expression}\n`).join("");
 const publicSource = (model, stub = false) => `from __future__ import annotations
 from dataclasses import dataclass as _dataclass
+${model.requiresTypeAliases && !stub ? `\ntry:
+    from typing import TypeAliasType as _TypeAliasType
+except ImportError:
+    from typing_extensions import TypeAliasType as _TypeAliasType
+` : ""}\
 
 __all__ = (${names(model).map(name => JSON.stringify(name)).join(", ")},)
 
@@ -31,16 +40,16 @@ class LeanBridgeError(RuntimeError):
 
 ${pythonClosurePublic(model, stub)}
 ${pythonCompoundPublic(model)}
-${model.surface.copies.some(copy => copy.variant) ? "from typing import ClassVar as _ClassVar, Literal as _Literal, TypeAlias as _TypeAlias\n\n" : ""}${model.surface.copies.filter(copy => copy.record || copy.element || copy.variant).map(copy => copy.element ? `${copy.inputType} = ${copy.inputExpression}\n` : copy.variant ? `${copy.cases.map((branch, i) => `@_dataclass(frozen=True, slots=True)
+${model.surface.copies.some(copy => copy.variant) ? "from typing import ClassVar as _ClassVar, Literal as _Literal, TypeAlias as _TypeAlias\n\n" : ""}${model.surface.copies.filter(copy => copy.record || copy.inputExpression || copy.publicExpression || copy.variant).map(copy => `${copiedTypeAliases(copy, stub)}${copy.variant ? `${copy.cases.map((branch, i) => `@_dataclass(frozen=True, slots=True)
 class ${branch.publicName}:
     kind: _ClassVar[_Literal[${JSON.stringify(copy.variant.cases[i].name)}]] = ${JSON.stringify(copy.variant.cases[i].name)}
 ${branch.fields.map((field, j) => `    ${field.publicName}: ${publicType(model, copy.variant.cases[i].fields[j].type, true)}`).join("\n")}
 `).join("\n")}
 ${copy.publicName}: _TypeAlias = ${copy.cases.map(branch => branch.publicName).join(" | ")}
-` : `@_dataclass(frozen=True, slots=True)
+` : copy.record ? `@_dataclass(frozen=True, slots=True)
 class ${copy.publicName}:
-${copy.fields.length ? copy.fields.map((field, index) => `    ${field.name}: ${publicType(model, copy.record.fields[index].type, true)}`).join("\n") : "    pass"}
-`).join("\n")}${publicAliases(model)}
+${copy.fields.length ? copy.fields.map((field, index) => `    ${field.publicName}: ${publicType(model, copy.record.fields[index].type, true)}`).join("\n") : "    pass"}
+` : ""}`).join("\n")}${publicAliases(model)}
 ${model.surface.functions.map((fn, index) => `def ${fn.field}(${fn.parameters.map((parameter, i) => `${parameter.name}: ${publicType(model, fn.declaration.parameters[i].type, true)}`).join(", ")}) -> ${publicType(model, fn.declaration.result.type)}:
     ${stub ? "..." : `return _native._call${index}(${fn.parameters.map(parameter => parameter.name).join(", ")})`}
 `).join("\n")}
@@ -77,6 +86,7 @@ export const renderCopiedPythonPackage = (model, evidence = null) => {
 		, [`${packageDir}/_native.py`]: nativeSource(model, evidence)
 		, [`${packageDir}/py.typed`]: ""
 		, "README.md": `# ${packageDir}\n\nInstall the prepared platform wheel and import ${packageDir}. Native Lean libraries and runtime loading are included. No Lean compiler or extension build is needed by consumers. Python 3.11+, Linux x86-64 with glibc matching the wheel tag.\n\nUnit is None in every position. Fixed-width integers are range checked; Nat and Int use exact Python integers. Boolean and numeric coercions are rejected. Float32 rounds a Python float to binary32, preserving NaN classification, infinities and signed zero. String is strict Unicode str, including NUL; ByteArray is bytes. Arrays accept tuples or lists and return tuples. Records are frozen dataclasses; nested copied values remain independent.\n\nTypes must be pure, acyclic and at most 32 levels deep. Python conversions and native input/output copies each have a 16 MiB budget. Python array conversions count at least eight bytes per element, and strings account for encoding/decoding. These limits do not bound the Lean algorithm's working memory. Native outputs are cleared in finally even if conversion raises. Calls can run on separate threads with independent scratch; do not mutate an input during its conversion. Compatible packages share a synchronized loader and native runtime. Free-threading and post-fork calls are rejected; subinterpreters and other Python implementations have not been accepted.\n\n${model.surface.functions.map(fn => `- ${packageDir}.${fn.field}: ${fn.declaration.id}`).join("\n")}\n` };
+	if(model.requiresTypeAliases) files["README.md"] += "\nDeep runtime annotations use standard TypeAliasType boundaries to bound repeated expansion. Each alias exposes its precise target through __value__; shallow hints retain their existing forms. Stubs retain exact tuple-or-list input types and tuple results. On Python 3.11, pip installs typing_extensions (>=4.6,<5) automatically; Python 3.12+ uses typing from the standard library.\n";
 	files["README.md"] += "\nOption[T] is None or Some(value). Some(None) preserves a present Unit or absent inner Option; nested options retain every layer. Result[T, E] is Ok(value) or Err(value), including when both payload types match. These generated wrappers are frozen dataclasses with a value field. Domain errors return Err, not exceptions. Binary products use exact two-element tuples and retain their nesting. Copies can contain these types, arrays and records; resources and callbacks cannot be hidden in them.\n\nSynchronous primitive host callbacks accept typed Python callables. Returned Lean closures are callable LeanClosure values: use a with block or close(), and invoke them on their creating thread. close() is idempotent and defers disposal during active reentry. Garbage collection is a fallback. Callback exceptions return as the original Python exception after native cleanup; later invocations in that call are suppressed. Callback values use the same checked primitive conversions and share the call's copy budgets. Host callbacks are borrowed only for the exporting call. Async or retained host callbacks, callable containers, resources and other effects are not enabled by this adapter.\n";
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\nLean List values accept exact Python lists or tuples and return independent tuples, including nested copied values. Order, duplicates and empty Lists are preserved. List and Array retain distinct contract identities. List callback payloads remain unsupported.\n";

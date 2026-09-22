@@ -9,12 +9,13 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { cVariantReviewedIr, cVariantSignatures } from "./helpers/c-variant-fixture.mjs";
+import { assertDotnetVariantSourceHash } from "./helpers/dotnet-source-history.mjs";
 
 test("NuGet variant evidence binds original assemblies to independent contracts and probes", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/dotnet-variants-20260921.json"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64); assert.deepEqual(record.profiles, ["dotnet"]);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assertDotnetVariantSourceHash(path, await readFile(path), hash);
 	assert.deepEqual(record.signatures, cVariantSignatures()); assert.deepEqual(record.types, cVariantReviewedIr().types);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(cVariantReviewedIr())));
 	assert.equal(record.types.filter(type => type.kind === "variant").length, 7);

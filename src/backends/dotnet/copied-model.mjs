@@ -7,6 +7,7 @@ import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
 
 const pascal = name => name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
 const reserved = new Set(["Api", "Unit", "LeanBridgeException", "LeanClosure", "Interop", "Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "Clone", "EqualityContract", "PrintMembers", "Deconstruct"]);
+const recordMembers = ["Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "MemberwiseClone", "Clone", "EqualityContract", "PrintMembers", "Deconstruct"];
 const runtimeNames = new Set(("Scope Native Runtime NativeError ArgumentException ArgumentNullException ArgumentOutOfRangeException InvalidOperationException OutOfMemoryException PlatformNotSupportedException DllNotFoundException IDisposable StructLayout LayoutKind DllImport CallingConvention UTF8Encoding Span ReadOnlySpan IntPtr NativeMemory NativeLibrary RuntimeInformation Architecture OperatingSystem BitConverter AppDomain Tuple File Path Convert StringComparison").split(" "));
 const scalar = { char: "global::System.Text.Rune", unit: "Unit", bool: "bool", uint8: "byte", uint16: "ushort", uint32: "uint", uint64: "ulong", int8: "sbyte", int16: "short", int32: "int", int64: "long", float32: "float", float64: "double", string: "string", bytes: "byte[]", nat: "global::System.Numerics.BigInteger", int: "global::System.Numerics.BigInteger" };
 
@@ -29,7 +30,7 @@ export const compileCopiedDotnetModel = ir => {
 		copy.publicName = pascal((copy.record || copy.variant).name);
 		if(names.has(copy.publicName) || runtimeNames.has(copy.publicName) || /^(?:(?:N|B|V|Callback)\d+|C\d+_?\d+)$/.test(copy.publicName) || ["CallbackFrame", "ClosureLease", "ActiveCall", "ProcessGuard", "Marshal", "Exception", "Math"].includes(copy.publicName)) fail(ir.declarations[0], `C# ${copy.variant ? "variant" : "record"} name collides with a generated identifier: ${copy.publicName}`);
 		names.add(copy.publicName);
-		const fields = new Set([...reserved, copy.publicName]);
+		const fields = new Set([...recordMembers, copy.publicName]);
 		for(const field of copy.fields)
 		{
 			field.publicName = pascal(field.name);
@@ -43,7 +44,7 @@ export const compileCopiedDotnetModel = ir => {
 				branch.publicName = copy.publicName + pascal(source.name) + (source.name.match(/_+$/)?.[0] ?? "");
 				if(names.has(branch.publicName) || runtimeNames.has(branch.publicName)) fail(ir.declarations[0], `C# constructor name collides: ${branch.publicName}`);
 				names.add(branch.publicName);
-				const members = new Set(["Equals", "GetHashCode", "GetType", "ToString", "ReferenceEquals", "MemberwiseClone", "Clone", "EqualityContract", "PrintMembers", "Deconstruct", branch.publicName]);
+				const members = new Set([...recordMembers, branch.publicName]);
 				for(const [i, field] of branch.fields.entries())
 				{
 					field.publicName = pascal(source.fields[i].name) + (source.fields[i].name.match(/_+$/)?.[0] ?? "");

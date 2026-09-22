@@ -293,6 +293,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /^\s*pull_request:\s*$/m);
   assert.match(workflow, /^\s*workflow_dispatch:\s*$/m);
   assert.match(workflow, /NODE_VERSION: "22"/);
+  const nativeJob = workflow.split("  native-consumers:\n")[1].split("\n  managed-consumers:\n")[0];
+  assert.match(nativeJob, /^ {4}timeout-minutes: 240$/m);
   assert.match(workflow, /LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build\/consumer-ci\/performance/);
   assert.match(workflow, /npm run build:builder-image/);
   assert.match(workflow, /npm run test:builder-ownership/);
@@ -351,9 +353,15 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/lists\/dotnet\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_DOTNET_VARIANT_TEST=1 node --test tests/dotnet-variants.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs"));
+  assert.match(workflow, /test -s build\/collections\/dotnet-conversions\.json/);
+  assert.match(workflow, /test -s build\/collections\/dotnet\.json/);
+  assert.match(workflow, /test -s build\/equality\/dotnet\.json/);
   assert.match(workflow, /test -s build\/variants\/dotnet\.json/);
   assert.match(workflow, /test -s build\/aliases\/dotnet\.json/);
-  assert.match(workflow, /build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*build\/collections\/dotnet-conversions\.json\n\s*build\/collections\/dotnet\.json\n\s*build\/equality\/dotnet\.json\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"));
   assert.match(workflow, /test -s build\/compounds\/jvm\.json/);
@@ -371,7 +379,15 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/lists\/python\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs"));
   assert.match(workflow, /test -s build\/aliases\/python\.json/);
-  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*if-no-files-found: error/);
+  assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_WHEEL_INSTALL_TEST=1 node --test tests/python-wheel-install.test.mjs"));
+  assert.match(workflow, /test -s build\/collections\/python\.json/);
+  assert.match(workflow, /test -s build\/collections\/python-docs\.json/);
+  for(const version of ["4.6.0", "4.16.0"]) assert.ok(workflow.includes(`--dest build/python-typing-wheels/${version} typing_extensions==${version}`));
+  for(const version of ["3.11", "3.12"]) assert.ok(workflow.includes(`python-version: "${version}"`));
+  assert.match(workflow, /LEAN_BRIDGE_COLLECTION_PYTHONS:.*steps\.collection_python311\.outputs\.python-path.*steps\.collection_python312\.outputs\.python-path/);
+  assert.match(workflow, /python-collection-typecheck\/bin\/python -m pip install --no-cache-dir mypy==2\.3\.1/);
+  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs"));
@@ -391,9 +407,13 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/lists\/rust\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs"));
+  assert.match(workflow, /test -s build\/collections\/rust-conversions\.json/);
+  assert.match(workflow, /test -s build\/collections\/rust\.json/);
   assert.match(workflow, /test -s build\/variants\/rust\.json/);
   assert.match(workflow, /test -s build\/aliases\/rust\.json/);
-  assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /build\/word-native\/ruby\.json\n\s*build\/callables\/ruby\.json\n\s*build\/compounds\/ruby\.json\n\s*build\/lists\/ruby\.json\n\s*build\/aliases\/ruby\.json\n\s*build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   for(const target of ["npm", "php-wasm"])
@@ -466,7 +486,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_dotnet\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_dotnet\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-dotnet-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/dotnet\.json\n\s*build\/type-corpus\/reviewed-native-dotnet\.json\n\s*build\/char-native\/dotnet\.json\n\s*build\/word-native\/dotnet\.json\n\s*build\/callables\/dotnet\.json\n\s*build\/compounds\/dotnet\.json\n\s*build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/dotnet\.json\n\s*build\/type-corpus\/reviewed-native-dotnet\.json\n\s*build\/char-native\/dotnet\.json\n\s*build\/word-native\/dotnet\.json\n\s*build\/callables\/dotnet\.json\n\s*build\/compounds\/dotnet\.json\n\s*build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*build\/collections\/dotnet-conversions\.json\n\s*build\/collections\/dotnet\.json\n\s*build\/equality\/dotnet\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:c"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:cpp"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=cpp node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:c-family"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp node --test tests/type-corpus.test.mjs");
@@ -494,7 +514,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_rust\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_rust\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-rust-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:node"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:browser"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:npm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript,browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");
@@ -527,7 +547,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-python-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests\/python-variants\.test\.mjs/);
   assert.match(workflow, /test -s build\/variants\/python\.json/);
   assert.match(workflow, /id: type_corpus_ruby/);

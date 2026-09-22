@@ -52,7 +52,8 @@ export const packageOrdinaryPython = async options => {
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), `${distInfo}/licenses/LeanBridge-LICENSE`);
 	const metadata = { description: "Compiled Lean API with generated Python copied-value conversions", ...compiledPackageMetadata(model.sourceIdentity) };
 	const licenseFiles = (await nativeArtifactPaths(root)).filter(path => path.startsWith(`${distInfo}/licenses/`)).map(path => path.slice(`${distInfo}/licenses/`.length)).sort();
-	await save(`${distInfo}/METADATA`, `Metadata-Version: 2.4\nName: ${name}\nVersion: ${version}\n${pythonPackageMetadata(metadata)}\n${licenseFiles.map(path => `License-File: ${path}\n`).join("")}Requires-Python: >=3.11\nDescription-Content-Type: text/markdown\n\n${files["README.md"]}`);
+	const typingRequirement = projection.requiresTypeAliases ? 'Requires-Dist: typing_extensions (<5,>=4.6); python_version < "3.12"\n' : "";
+	await save(`${distInfo}/METADATA`, `Metadata-Version: 2.4\nName: ${name}\nVersion: ${version}\n${pythonPackageMetadata(metadata)}\n${licenseFiles.map(path => `License-File: ${path}\n`).join("")}Requires-Python: >=3.11\n${typingRequirement}Description-Content-Type: text/markdown\n\n${files["README.md"]}`);
 	await save(`${distInfo}/WHEEL`, `Wheel-Version: 1.0\nGenerator: lean-bridge-python-copied/1\nRoot-Is-Purelib: false\nTag: ${tag}\n`);
 	await save(`${distInfo}/top_level.txt`, `${moduleName}\n`);
 	const pythonFiles = (await nativeArtifactPaths(root)).filter(path => /\.pyi?$/.test(path));

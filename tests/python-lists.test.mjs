@@ -14,7 +14,8 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { listReviewedIr, listSignatures } from "./helpers/list-fixture.mjs";
-import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { installCopiedPythonConsumer as installCopiedConsumer } from "./helpers/python-wheel-install.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PYTHON_LIST_TEST === "1";
 const type = value => value.kind === "primitive" ? value.name : ["array", "list", "option"].includes(value.kind)

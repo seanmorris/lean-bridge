@@ -31,11 +31,50 @@ lean-bridge build --project ./iris --target pypi --output ./release-iris
 
 Set `LEAN_BRIDGE_PYTHON` to an absolute interpreter path if Python is not available as `python3`. The build checks generated Python syntax without loading ambient Python modules. It creates `release-iris/archives/iris_api-2.0.0rc1-py3-none-manylinux_2_38_x86_64.whl`. The wheel contains generated functions, frozen record classes, stubs, verified native libraries, compiler receipts and license notices. It needs no extension build or setuptools at installation. This path emits a wheel, not an sdist.
 
+Deep type annotations use standard `TypeAliasType` boundaries while keeping
+precise list-or-tuple inputs and tuple results. For these packages, wheel metadata
+declares `typing_extensions>=4.6,<5` on Python 3.11 only. pip handles that dependency;
+Python 3.12 and newer use the standard library. Do not tell consumers to disable
+dependency resolution. For disconnected deployments, prepare a wheelhouse using
+the [offline installation recipe](../consume/python.md#ordinary-project-packages).
+The package-set receipt covers your original wheel, not third-party dependencies.
+
 Repeat `--target` to combine PyPI with npm, CPAN, C, C++, Cargo, NuGet, Maven, RubyGems or WIT/WASI when their type profiles all accept the exports. Lean compiles once per required native/Wasm profile. A failed projection leaves no partial release directory.
 
 Before upload, run `lean-bridge verify --receipt ./release-iris/package-set-receipt.json` and the [installed Python example](../consume/python.md#ordinary-project-packages). Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths with the wheel for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). These unsigned checks detect byte and metadata drift; they do not authenticate the publisher. The [acceptance record](../evidence/native-python-20260915.md) covers relocated builds, offline pip installation, cleanup and shared-runtime composition.
 
 Use the Twine upload and download checks below for an ordinary wheel too. The Alpha-specific source projection and preflight are separate.
+
+## Export arrays and records
+
+Add these definitions to `Parcels.lean`:
+
+```lean
+namespace Parcels
+
+structure Parcel where
+  label : String
+  counts : Array Nat
+
+def reverse (value : Parcel) : Parcel :=
+  { value with counts := value.counts.reverse }
+
+end Parcels
+```
+
+Select `Parcels` in `modules` and `Parcels.reverse` in `exports`, then set
+`targets.pypi` to a distribution name and version you own. Build with
+`--target pypi` as above. The generated module is `lean_parcels`, and its
+`Parcel` class takes `label` and `counts` fields.
+
+Arrays and acyclic records can nest with the other supported copied types.
+Python callers use the generated dataclasses, ordinary integers and lists or
+tuples. Returned arrays are independent tuples. Required fields retain their
+order and meaning; reserved Python names gain a trailing underscore, with
+collisions rejected before packaging. Run the
+[consumer example](../consume/python.md#arrays-and-records) against the original
+wheel before publishing. The [installed collection record](../evidence/python-collections-20260922.md)
+covers both source paths, Python 3.11/3.12, exact typing and conversion-failure cleanup.
 
 ## Export options, results and products
 
@@ -230,7 +269,7 @@ sha256sum "$LEAN_BRIDGE_PYPI_WHEEL" "$LEAN_BRIDGE_PYPI_DOWNLOADED"
 
 The download must have the expected filename and identical bytes. `--only-binary=:all:` prevents an sdist rebuild from silently replacing the reviewed wheel. `--no-deps` prevents this fixture check from fetching unrelated packages. Do not add another package index to compensate for a missing release. [pip download](https://pip.pypa.io/en/stable/cli/pip_download/).
 
-Create a fresh consumer venv, install the downloaded wheel using `--no-index --no-deps`, and execute the matching [Python example](../consume/python.md). Alpha consumers can run the optional packaged preflight first. Record the program's visible output and cleanup result. Retain the downloaded hash, filename, version, TestPyPI project URL, and any upload response alongside the approved candidate. PyPI's [release JSON API](https://docs.pypi.org/api/json/#get-a-release) also exposes per-file URLs and SHA-256 digests for comparison.
+Create a fresh consumer venv, install the downloaded wheel with dependency resolution enabled, and execute the matching [Python example](../consume/python.md). For an offline check, use `--no-index --find-links ./wheelhouse` with the prepared dependency wheels. Alpha consumers can run the optional packaged preflight first. Record the program's visible output and cleanup result. Retain the downloaded hash, filename, version, TestPyPI project URL, and any upload response alongside the approved candidate. PyPI's [release JSON API](https://docs.pypi.org/api/json/#get-a-release) also exposes per-file URLs and SHA-256 digests for comparison.
 
 If a reviewed integration produced a signed Lean Bridge receipt, give consumers that receipt, its verifier, and the independently trusted signer-policy hash. A successful Twine upload alone does not produce those records.
 

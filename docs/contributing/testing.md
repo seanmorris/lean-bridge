@@ -497,6 +497,8 @@ CI retains `build/compounds/python.json`.
 Run the installed Python List checks on both source paths:
 
 ```sh
+python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps \
+  --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
 LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs
 node --test tests/python-list-contract.test.mjs
 ```
@@ -506,6 +508,51 @@ wheels after removing producer files. It checks all nineteen primitive elements,
 nested arrays/Lists/options/results/products, copied record fields, exact public
 annotations, conversion failures, allocation limits and concurrent calls.
 CI retains `build/lists/python.json`.
+
+Run the Python array/record collection suite with CPython 3.11 and 3.12 installed.
+Set `LEAN_BRIDGE_COLLECTION_PYTHONS` to a JSON array containing their absolute
+executable paths, in that order. Without the override, the suite uses
+`.toolchains/python311/bin/python3.11` and `.toolchains/python312/bin/python3.12`.
+Prepare the isolated checker and both offline dependency versions:
+
+```sh
+python3 -m venv build/python-collection-typecheck
+build/python-collection-typecheck/bin/python -m pip install --no-cache-dir \
+  mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 \
+  pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
+python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps \
+  --dest build/python-typing-wheels/4.6.0 typing_extensions==4.6.0
+python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps \
+  --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
+LEAN_BRIDGE_PYTHON_WHEEL_INSTALL_TEST=1 node --test tests/python-wheel-install.test.mjs
+LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test \
+  tests/python-collections.test.mjs tests/python-collection-contract.test.mjs
+node --test tests/python-collection-evidence.test.mjs
+```
+
+The installer checks each dependency wheel's pinned SHA-256, then lets pip resolve
+the original component wheel with `--no-index --find-links`. Python 3.11 runs with
+both the minimum and current backport; Python 3.12 runs without that dependency.
+The separate wheel-install test uses a metadata-only fixture to check dependency
+resolution, runtime annotations and strict positive/negative typing of installed
+stubs. It does not count as compiled Lean evidence.
+Both source paths exercise all 19 primitive elements, seven record types and 24
+fixed array levels. The suite removes producer files, relocates installations,
+checks public calls and precise runtime annotations, and runs strict positive
+and negative typing fixtures. Separate in-memory probes inject failures without
+editing installed files. Each mypy process has a 30-second deadline and 1 GiB
+address-space limit. The suite also builds the publisher's Parcels example and
+executes the consumer's arrays-and-records example from its relocated original
+wheel. CI retains `build/collections/python.json` and
+`build/collections/python-docs.json`.
+
+The [installed collection record](../evidence/python-collections-20260922.md)
+binds both source paths, all three runtime/dependency configurations, unchanged
+installed files and an independent rebuild to their public callers.
+
+Mypy 1.17.1 remains pinned for the earlier alias and variant regressions. Its deep
+union expansion is unsuitable for this collection fixture; keep the new checker
+in its separate environment.
 
 Run the installed Rust compound checks on both source paths:
 
@@ -533,6 +580,35 @@ It compiles invalid consumers, injects conversion errors and panics, and checks
 malformed private output layouts. The public consumer reruns after removal of
 crate and dependency sources. CI retains `build/lists/rust.json`.
 
+Run the Rust array/record checks with the pinned Rust toolchain:
+
+```sh
+LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs
+LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs
+node --test tests/rust-collection-contract.test.mjs tests/rust-collection-evidence.test.mjs
+```
+
+The conversion preflight needs a populated Cargo cache and runs offline. It
+compiles the independent public caller, rejects fifteen invalid programs and
+executes generated host conversions for nineteen primitive array shapes, seven
+records and 24 fixed array levels. It also tests allocation failures, unwinding,
+malformed buffers and copy limits. It compiles the native fault probe but does
+not execute it or load Lean. Its report, `build/collections/rust-conversions.json`,
+does not count as installed-package evidence.
+
+The installed suite builds original crates on both source paths. Consumers
+install the archives and checksummed dependency closure offline with an empty
+Cargo home. They compile Rust without Lean or C compilation, execute the public
+caller, then repeat from a relocated executable after all sources are removed.
+Private fault tests run in a separate instrumented copy; the original installed
+files and dependencies must remain unchanged. CI retains the preflight report
+and `build/collections/rust.json` separately.
+
+The [installed collection record](../evidence/rust-collections-20260922.md)
+binds public callers, unchanged original crates, dependencies, failure probes
+and an independent rebuild. The suite also compiles the actual consumer
+documentation example and runs it after source removal, with compiler access disabled.
+
 Run the installed .NET compound checks on both source paths:
 
 ```sh
@@ -546,6 +622,52 @@ relocated application with only the .NET runtime. A separate instrumented copy
 of the compiler-produced C# projection tests conversion failures and malformed
 native flags without changing the installed assembly. CI retains
 `build/compounds/dotnet.json`.
+
+Run the .NET array/record checks:
+
+```sh
+LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs
+LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs
+node --test tests/dotnet-collection-contract.test.mjs
+```
+
+The conversion preflight uses the .NET 8 SDK and an empty NuGet source list. It
+compiles the independent public caller, rejects sixteen invalid programs and
+executes unchanged generated converters for nineteen primitive array shapes,
+seven records and 24 fixed array levels. It checks independent copies, partial
+invalid inputs, copy limits, null and misaligned result buffers, Unicode,
+canonical integer magnitudes, boolean bytes and unit markers. Valid empty
+buffers do not read their data pointer. A separate instrumented copy checks
+cleanup at every conversion and allocation checkpoint. The preflight compiles
+the native-result failure probe but does not execute it or load Lean. Its report,
+`build/collections/dotnet-conversions.json`, does not count as installed-package
+coverage.
+
+The installed suite builds original NuGet archives on both source paths.
+Consumers install from a local-only feed with an empty package cache, compile
+the public caller and reject the invalid programs against the installed
+assembly. They execute all 35 exports, copied-value checks and threaded calls.
+Failure probes run in a separate source copy; the installed package must remain
+unchanged. The suite then removes package and consumer sources and feeds. It
+reruns the relocated application twice with a runtime-only deployment that
+contains no SDK. It also compiles the consumer guide's Array/record example
+against the original installed assembly and runs it after source removal. The
+[installed collection record](../evidence/dotnet-collections-20260922.md) binds
+the repeated build, consumer and failure checks. CI retains
+`build/collections/dotnet.json` separately from the preflight report.
+
+Run generated .NET value equality checks without a native library:
+
+```sh
+LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs
+```
+
+This compiles unchanged generated C# sources for collections, compounds, Lists,
+aliases and variants. The independent caller checks nested equality and hashes,
+dictionary/set lookup, constructor identity, absent and active branches, empty
+arrays and mutation. It also checks structural comparison of native C# arrays
+and tuples. CI retains `build/equality/dotnet.json` as host-only evidence, not
+installed-package or Lean-execution coverage.
 
 Run the copied .NET List checks on both source paths:
 

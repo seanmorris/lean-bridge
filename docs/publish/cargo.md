@@ -35,6 +35,21 @@ This path supports pure copied primitives, nested arrays and Lists, acyclic reco
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
+## Export arrays and records
+
+Select concrete exports using `Array T` and acyclic Lean structures in the shared
+configuration. Both source paths support all nineteen primitives, nested arrays
+and records, including empty and single-field structures. The compiler checks
+the source constructors and accessors before generating the Rust adapter.
+
+Inputs borrow slices and structs; results own vectors and named structs.
+Generated structs derive `Clone`, `Debug` and `PartialEq`, preserving nested
+value equality with Rust's floating-point semantics. Invalid fields and missing
+borrows fail compilation. The existing 32-level schema bound and 16 MiB
+accounting budgets apply. See the [consumer example](../consume/rust.md#arrays-and-records).
+The [installed collection record](../evidence/rust-collections-20260922.md) covers
+original crates, offline dependency resolution, source-free execution and failure cleanup.
+
 ## Export options, results and products
 
 Ordinary-source and reviewed-IR builds compile `Option`, `Except` and nested binary `Prod` values, including mixtures with all nineteen primitives, arrays, Lists and acyclic record fields. Consumers use Rust `Option<T>`, `Result<T, E>` and `(A, B)` without native declarations. Inputs borrow the container; results own their copied data. The function's outer `Result<_, Error>` reports bridge failures separately from a Lean `Except` value.

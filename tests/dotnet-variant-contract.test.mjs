@@ -16,10 +16,10 @@ test("C# variants expose named constructor records and private explicit-layout u
 	assert.deepEqual(files, generateCopiedDotnetPackage(structuredClone(ir)));
 	const source = files["src/LeanBridge.Variants/Api.cs"], runtime = files["src/LeanBridge.Variants/Runtime.cs"];
 	assert.match(source, /public abstract record Signal/);
-	assert.match(source, /public sealed record SignalIdle\(\) : Signal;/);
-	assert.match(source, /public sealed record SignalData\(uint Count, string Label\) : Signal;/);
-	assert.match(source, /public sealed record SignalMarker\(Unit Value\) : Signal;/);
-	assert.match(source, /public sealed record OneOnly\(uint Value\) : One;/);
+	assert.match(source, /public sealed record SignalIdle\(\) : Signal\n\{/);
+	assert.match(source, /public sealed record SignalData\(uint Count, string Label\) : Signal\n\{/);
+	assert.match(source, /public sealed record SignalMarker\(Unit Value\) : Signal\n\{/);
+	assert.match(source, /public sealed record OneOnly\(uint Value\) : One\n\{/);
 	assert.match(source, /public sealed record AnonymousCollision\(uint Arg1, string Arg1_\)/);
 	assert.match(source, /public static Signal Echo\(Signal @value0\)/);
 	assert.doesNotMatch(source, /unsafe|DllImport|FieldOffset|\b(?:nint|nuint)\b/);

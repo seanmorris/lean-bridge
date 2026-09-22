@@ -39,7 +39,13 @@ export const compileCopiedPythonModel = ir => {
 			copy.publicName = (copy.record || copy.variant).name;
 			if(names.has(copy.publicName)) fail(ir.declarations[0], `Python ${copy.variant ? "variant" : "record"} name collides: ${copy.publicName}`);
 			names.add(copy.publicName);
-			for(const field of copy.fields) if(reserved.has(field.name)) fail(ir.declarations[0], `Python field name is reserved: ${field.name}`);
+			const members = new Set();
+			for(const field of copy.fields)
+			{
+				field.publicName = reserved.has(field.name) ? `${field.name}_` : field.name;
+				if(members.has(field.publicName)) fail(ir.declarations[0], `Python record field name collides: ${field.publicName}`);
+				members.add(field.publicName);
+			}
 		}
 		if(copy.variant)
 		{
@@ -60,8 +66,33 @@ export const compileCopiedPythonModel = ir => {
 		const compoundType = field => copy.compound === "option" ? `Option[${copy.fields[0].type[field]}]`
 			: `${copy.compound === "result" ? "Result" : "tuple"}[${copy.fields.map(child => child.type[field]).join(", ")}]`;
 		copy.publicType = copy.record || copy.variant ? copy.publicName : copy.compound ? compoundType("publicType") : copy.element ? `tuple[${copy.element.publicType}, ...]` : primitive[copy.scalarName][0];
-		copy.inputType = copy.element ? `_Array${copy.index}` : copy.compound ? compoundType("inputType") : copy.publicType;
-		copy.inputExpression = copy.element ? `tuple[${copy.element.inputType}, ...] | list[${copy.element.inputType}]` : null;
+		copy.publicTypeCost = copy.record ? 1 : copy.variant ? copy.cases.length + 1
+			: copy.compound ? 4 + copy.fields.reduce((sum, field) => sum + field.type.publicTypeCost, 0)
+				: copy.element ? 2 + copy.element.publicTypeCost : 1;
+		const publicExpression = copy.publicType;
+		if(copy.publicTypeCost > 128 && !copy.record && !copy.variant)
+		{
+			copy.publicExpression = publicExpression;
+			copy.publicType = `_Value${copy.index}`;
+			copy.publicTypeCost = 1;
+		}
+		const inputExpression = copy.compound ? compoundType("inputType") : copy.element
+			? `tuple[${copy.element.inputType}, ...] | list[${copy.element.inputType}]` : copy.publicType;
+		copy.inputTypeCost = copy.compound ? 4 + copy.fields.reduce((sum, field) => sum + field.type.inputTypeCost, 0)
+			: copy.element ? 4 + 2 * copy.element.inputTypeCost : copy.publicTypeCost;
+		copy.inputExpression = copy.element ? inputExpression : null;
+		copy.inputType = copy.element ? `_Array${copy.index}` : inputExpression;
+		if(copy.publicExpression && inputExpression === publicExpression)
+		{
+			copy.inputType = copy.publicType;
+			copy.inputTypeCost = 1;
+		} else if(copy.inputTypeCost > 128 && !copy.record && !copy.variant)
+		{
+			copy.inputExpression = inputExpression;
+			copy.inputType = copy.element ? `_Array${copy.index}` : `_Input${copy.index}`;
+			copy.inputTypeCost = 1;
+			copy.inputTypeAlias = true;
+		}
 	}
 	for(const [index, callback] of [...surface.callbacks.values()].entries())
 	{
@@ -82,5 +113,5 @@ export const compileCopiedPythonModel = ir => {
 		if(names.has(alias.definition.name)) fail(ir.declarations[0], `Python alias name collides: ${alias.definition.name}`);
 		names.add(alias.definition.name);
 	}
-	return { ir, surface, packageDir };
+	return { ir, surface, packageDir, requiresTypeAliases: surface.copies.some(copy => copy.publicExpression || copy.inputTypeAlias) };
 };

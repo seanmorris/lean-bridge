@@ -1,0 +1,1950 @@
+{
+  "baseRevision": "afc50732a7e9205eaefb9917e5d835fc62e43876",
+  "conversion": {
+    "allocationErrorCheckpoints": 112,
+    "compiledLean": false,
+    "fixedArrayDepth": 24,
+    "fixtureSha256": "f58dc7b1d09e782a9656196e26309bb52ee152e993eea87c6e60e2766974635c",
+    "generatedSourceHashes": {
+      "Cargo.toml": "4446143b6cfcff1663ee93c0662b13eaac3e18a8f9a5c485704fa7f6b0c98e20",
+      "README.md": "3e3f123f9f00658d508ac59bcea3e9b0f8f12688631846630c332e7bd0c3af4b",
+      "binding-manifest.json": "3a17915dc9245dd25c3b41e177da1a1f65e2460131fcb674b721e7428d97046a",
+      "src/__runtime.rs": "4095a8e69d6bc2f75a92d943da4a3a066a47da50847307ce2be5c6b47673c633",
+      "src/assets.rs": "a91d8c05b832e9b705bc1c82b28fd1166a71ff3de4b7b7042589f39b1a8bf17d",
+      "src/lib.rs": "7ff32680754ac3db3904a56ed73fc428e5890cdfd286781292fbe235d18ff571"
+    },
+    "installedPackage": false,
+    "kind": "rust-collection-conversion-preflight",
+    "nativeFaultsCompiled": true,
+    "nativeFaultsExecuted": false,
+    "nativeFaultsSha256": "9f6cfb329125b1258fba59abaef962797d9fd40bb2b68d522d102c46073fbf23",
+    "primitiveShapes": 19,
+    "probeSha256": "35d16a45d73fd967ba4c4de47e909f03ca508e150b3410b1bf86009166143b40",
+    "publicTypes": {
+      "checked": true,
+      "consumerSha256": "7b7469b40b5fdfde9b32d1abbaa71f37fa051de01b2fbfa2c396f7edfb68f763",
+      "executed": false,
+      "rejected": [
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-scalar",
+          "sourceSha256": "7fb156e4dddc7555dd7867604d7f19a6946b936c5a437fcb832871936b9c3865"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "mixed-elements",
+          "sourceSha256": "e1726736e97dc8de1e5070c29b172f0b3881b5706964106ec23c42b44e8ac353"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "signed-natural",
+          "sourceSha256": "b2be5aef68963f68ae6387164c961645723a2da388273af6113d6c24084d5d6d"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "machine-natural",
+          "sourceSha256": "38c411ad829ef26cb1e3f85f2d6eb76e2f481af3a8bd72751e14ba462f255cf0"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "bytes-as-text",
+          "sourceSha256": "a4f2beb68ee62fd79428017e589fa8d2ed9ecf417f43e7a2ac11b9525e3b3057"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "text-as-char",
+          "sourceSha256": "d53c7a7ef1de98bc05668435785a283677c425ae1a8c4f2ff71aa96ac214537c"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-depth",
+          "sourceSha256": "4005c569155ffb5a6f04260d134bd4e68274b269a2e46dfa1e065e08b7319a4f"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "nominal-record",
+          "sourceSha256": "bad2d48fb6db1c3f0ecac3ed154a9042fd4e7802226b4ee470e57ea63d352c5e"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "unit-as-record",
+          "sourceSha256": "f0e287bc116ba2c30f7af8fcdb753726b4a2e1d94b649896a53223d3e244aaa6"
+        },
+        {
+          "code": "E0063",
+          "diagnostics": 1,
+          "name": "missing-field",
+          "sourceSha256": "a2da8b4ec6917ff7504d59345cfe21bcf53188b8b890fb427138b1c2680471f8"
+        },
+        {
+          "code": "E0560",
+          "diagnostics": 1,
+          "name": "unknown-field",
+          "sourceSha256": "879df1e5a94e56b6a307389992e1ce9abc544315017dfaf044365e16001663ad"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "wrong-field",
+          "sourceSha256": "dd2ad48a6d16736fefead0d73d0fbd1ebe14935b3ca81bdbd6b3832269fa1cc7"
+        },
+        {
+          "code": "E0308",
+          "diagnostics": 1,
+          "name": "borrowed-result",
+          "sourceSha256": "91574b88ca6153066d348b862c22c0591c0068172c835881e16d4ac05e5853b4"
+        },
+        {
+          "code": "overflowing_literals",
+          "diagnostics": 1,
+          "name": "unsigned-overflow",
+          "sourceSha256": "c0a0815901ce8002928828261f992b97b9cfa42323189e19851da86289584452"
+        },
+        {
+          "code": "overflowing_literals",
+          "diagnostics": 1,
+          "name": "signed-overflow",
+          "sourceSha256": "0199467d9d7c307f8e2b6f1a4899243f42ed75c6e3396ba34bff877c0cf67f1b"
+        }
+      ],
+      "rejectionSourceSha256": "c202f4192fcc7666c99406d0515ec574fa65271eef6b6e52e0bd8ebdd747792d"
+    },
+    "records": 7,
+    "schemaVersion": 1,
+    "tests": 4,
+    "unwindCheckpoints": 112
+  },
+  "executions": [
+    {
+      "bindingIrSha256": "baf67fe271db951ce34067934926503904f1aafddbabaf2f1ba6519fb8a3e813",
+      "calls": 3274,
+      "cargoSha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561",
+      "cargoVersion": "cargo 1.90.0 (840b83a10 2025-07-30)",
+      "checks": 321191,
+      "compilerFreeExecution": true,
+      "compilerSha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa",
+      "conversionCheckpoints": 112,
+      "conversionProbeSha256": "c42babcd32abb733eb8b13455ab3c07fcc891ad566ca5c56d25325c379d78935",
+      "dependencies": {
+        "archive": "rust-dependencies.tar.gz",
+        "lockSha256": "9699816a5bbe66d30f54dd7f401edeb14a3e23cd759c210d4776ae134415d51f",
+        "packages": [
+          {
+            "checksum": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+            "directory": "autocfg-1.5.1",
+            "files": 22,
+            "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+          },
+          {
+            "checksum": "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71",
+            "directory": "block-buffer-0.10.4",
+            "files": 10,
+            "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+          },
+          {
+            "checksum": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+            "directory": "cfg-if-1.0.4",
+            "files": 13,
+            "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+          },
+          {
+            "checksum": "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280",
+            "directory": "cpufeatures-0.2.17",
+            "files": 16,
+            "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+          },
+          {
+            "checksum": "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a",
+            "directory": "crypto-common-0.1.7",
+            "files": 9,
+            "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+          },
+          {
+            "checksum": "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292",
+            "directory": "digest-0.10.7",
+            "files": 21,
+            "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+          },
+          {
+            "checksum": "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a",
+            "directory": "generic-array-0.14.7",
+            "files": 16,
+            "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+          },
+          {
+            "checksum": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+            "directory": "libc-0.2.189",
+            "files": 403,
+            "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+          },
+          {
+            "checksum": "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9",
+            "directory": "num-bigint-0.4.6",
+            "files": 50,
+            "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+          },
+          {
+            "checksum": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+            "directory": "num-integer-0.1.47",
+            "files": 16,
+            "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+          },
+          {
+            "checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+            "directory": "num-traits-0.2.19",
+            "files": 28,
+            "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+          },
+          {
+            "checksum": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+            "directory": "sha2-0.10.9",
+            "files": 31,
+            "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+          },
+          {
+            "checksum": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+            "directory": "typenum-1.20.1",
+            "files": 24,
+            "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+          },
+          {
+            "checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+            "directory": "version_check-0.9.5",
+            "files": 12,
+            "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+          }
+        ],
+        "sha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd"
+      },
+      "dependencyFilesSha256": "3483b77afd0ee3082223896aa8b42316f52b5e93fac48f0ad779325616a0b917",
+      "documentation": {
+        "compilerFreeExecution": true,
+        "executableSha256": "b4d62932ace3abba0f822226d7a80f8f970395fdc7dd10a6767112ed2041f4a7",
+        "normalExitCleanup": true,
+        "sourceFreeExecution": true,
+        "sourceSha256": "6905c493d1805d0730e410fe7732ed4c0584e2c07b628d6a0f7ae251ffce3ebc",
+        "stdout": "[1, 2, 3]\n42\n"
+      },
+      "emptyCargoHome": true,
+      "executableSha256": "35f1062df711cfe0c247968e4831a046cbe98a911f4f78c41dc87ed8b311721d",
+      "faultSourceSha256": "9f6cfb329125b1258fba59abaef962797d9fd40bb2b68d522d102c46073fbf23",
+      "faultTests": 5,
+      "fixedArrayDepth": 24,
+      "handoffRemovedBeforeExecution": true,
+      "installedFiles": {
+        "Cargo.lock": {
+          "bytes": 3304,
+          "sha256": "9699816a5bbe66d30f54dd7f401edeb14a3e23cd759c210d4776ae134415d51f"
+        },
+        "Cargo.toml": {
+          "bytes": 336,
+          "sha256": "4446143b6cfcff1663ee93c0662b13eaac3e18a8f9a5c485704fa7f6b0c98e20"
+        },
+        "README.md": {
+          "bytes": 4133,
+          "sha256": "9ab3e00ae7351e0230a1b474b3cbcd4350211f94abde4f9fcc53cf491747cf90"
+        },
+        "binding-manifest.json": {
+          "bytes": 1826,
+          "sha256": "42329cbf1a9ae8903dc6abd85db5c268562855c49bdea5d9f0f22aa1456ce790"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1397,
+          "sha256": "46d133c8012a191c6634d7dbf994e76c480e223cacc80773dbb72780ee5b28da"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 107696,
+          "sha256": "0a5317f3406917d2339f897a063d3548972c9549a920c61635d7eb8ddecbd4ed"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5537,
+          "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 15932,
+          "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 259208,
+          "sha256": "545921f0fa2de9a1ad9f6a319eebe78acd41c53e522802721d83bbf955ebf635"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 522301,
+          "sha256": "194930f209909f714e4290d83bbae2916bd058707fc950baf3cc5691c6a1dd2e"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 11053,
+          "sha256": "b92689425b92be62462ce34f0bf37c2ee43738285af3e4c9b49c678835bdeee6"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 3579,
+          "sha256": "43c851d636a07828e7aeec6e50c7f5bd9fad0d36acd6e1de2a7f55f585420ccf"
+        },
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+          "bytes": 1081,
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1367,
+          "sha256": "44bc8f32e15c32099d8447b95aa6363378999a3cc9fd8c650f763a54f0cfbf8f"
+        },
+        "lean-bridge/native-rust.json": {
+          "bytes": 2733,
+          "sha256": "7df502c76ead3c632b56b5ebf43267aa3cfe40116d368332862c88c4c6fbc494"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "native/linux-x64/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "src/__runtime.rs": {
+          "bytes": 119062,
+          "sha256": "8a1827f32bc34f357021c18b11a86d221b97d6e5dbd4e75dad12f12e95f81324"
+        },
+        "src/assets.rs": {
+          "bytes": 8085,
+          "sha256": "71dc692d73c43e9bbb0e05b087581f5c4e176984def23cec5b711262fbd4e7bf"
+        },
+        "src/lib.rs": {
+          "bytes": 8198,
+          "sha256": "eea2c085c4d281fced3e3034e3adaa2370bd6e643da42cf0b69da2078e7126dd"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "c6f57e3ea292b02126a4f025793f9111449c27809a7cb0ba2c8a7556ab2d74ca",
+      "installedSnapshot": {
+        "Cargo.lock": "9699816a5bbe66d30f54dd7f401edeb14a3e23cd759c210d4776ae134415d51f",
+        "Cargo.toml": "4446143b6cfcff1663ee93c0662b13eaac3e18a8f9a5c485704fa7f6b0c98e20",
+        "README.md": "9ab3e00ae7351e0230a1b474b3cbcd4350211f94abde4f9fcc53cf491747cf90",
+        "binding-manifest.json": "42329cbf1a9ae8903dc6abd85db5c268562855c49bdea5d9f0f22aa1456ce790",
+        "lean-bridge/component/artifacts.json": "46d133c8012a191c6634d7dbf994e76c480e223cacc80773dbb72780ee5b28da",
+        "lean-bridge/component/binding-ir.json": "0a5317f3406917d2339f897a063d3548972c9549a920c61635d7eb8ddecbd4ed",
+        "lean-bridge/component/component.h": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28",
+        "lean-bridge/component/generated.lean": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647",
+        "lean-bridge/component/metadata.json": "545921f0fa2de9a1ad9f6a319eebe78acd41c53e522802721d83bbf955ebf635",
+        "lean-bridge/component/model.json": "194930f209909f714e4290d83bbae2916bd058707fc950baf3cc5691c6a1dd2e",
+        "lean-bridge/component/native-component.json": "b92689425b92be62462ce34f0bf37c2ee43738285af3e4c9b49c678835bdeee6",
+        "lean-bridge/licenses/Lean-LICENSE": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e",
+        "lean-bridge/licenses/Lean-LICENSES": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+        "lean-bridge/licenses/LeanBridge-LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+        "lean-bridge/licenses/source-notices.json": "43c851d636a07828e7aeec6e50c7f5bd9fad0d36acd6e1de2a7f55f585420ccf",
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca",
+        "lean-bridge/native-c-adapter.json": "44bc8f32e15c32099d8447b95aa6363378999a3cc9fd8c650f763a54f0cfbf8f",
+        "lean-bridge/native-rust.json": "7df502c76ead3c632b56b5ebf43267aa3cfe40116d368332862c88c4c6fbc494",
+        "lean-bridge/package-receipt.json": "c6f57e3ea292b02126a4f025793f9111449c27809a7cb0ba2c8a7556ab2d74ca",
+        "lean-bridge/runtime.json": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+        "native/linux-x64/libcollections.so": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a",
+        "native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "src/__runtime.rs": "8a1827f32bc34f357021c18b11a86d221b97d6e5dbd4e75dad12f12e95f81324",
+        "src/assets.rs": "71dc692d73c43e9bbb0e05b087581f5c4e176984def23cec5b711262fbd4e7bf",
+        "src/lib.rs": "eea2c085c4d281fced3e3034e3adaa2370bd6e643da42cf0b69da2078e7126dd"
+      },
+      "installedSourcesRemoved": true,
+      "isolatedFaultCopy": true,
+      "linkOnly": true,
+      "linkerSha256": "efc815dfc425e8ae1d86c67648082d3356bfe9a3817274b017b2f9175c1d4d0a",
+      "lockSha256": "3d847c39ee96e845f9ea6396dedfaeb69bbf974464a5d4904207f0888c5288c6",
+      "modelSha256": "194930f209909f714e4290d83bbae2916bd058707fc950baf3cc5691c6a1dd2e",
+      "nativeFaultChecks": 1546,
+      "nativeLibraries": {
+        "native/linux-x64/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "normalExitCleanup": true,
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51470513,
+              "path": "archives/collections-api-1.0.0.crate",
+              "sha256": "86049dabc087f936963c444eb52e45f75285aa3dea9f4187b4f69b25e4e14df9"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "collections-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "ordinary-source",
+      "primitiveShapes": 19,
+      "profile": "rust",
+      "publicTypes": {
+        "checked": true,
+        "consumerSha256": "7b7469b40b5fdfde9b32d1abbaa71f37fa051de01b2fbfa2c396f7edfb68f763",
+        "executed": true,
+        "rejected": [
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-scalar",
+            "sourceSha256": "7fb156e4dddc7555dd7867604d7f19a6946b936c5a437fcb832871936b9c3865"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "mixed-elements",
+            "sourceSha256": "e1726736e97dc8de1e5070c29b172f0b3881b5706964106ec23c42b44e8ac353"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "signed-natural",
+            "sourceSha256": "b2be5aef68963f68ae6387164c961645723a2da388273af6113d6c24084d5d6d"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "machine-natural",
+            "sourceSha256": "38c411ad829ef26cb1e3f85f2d6eb76e2f481af3a8bd72751e14ba462f255cf0"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "bytes-as-text",
+            "sourceSha256": "a4f2beb68ee62fd79428017e589fa8d2ed9ecf417f43e7a2ac11b9525e3b3057"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "text-as-char",
+            "sourceSha256": "d53c7a7ef1de98bc05668435785a283677c425ae1a8c4f2ff71aa96ac214537c"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-depth",
+            "sourceSha256": "4005c569155ffb5a6f04260d134bd4e68274b269a2e46dfa1e065e08b7319a4f"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "nominal-record",
+            "sourceSha256": "bad2d48fb6db1c3f0ecac3ed154a9042fd4e7802226b4ee470e57ea63d352c5e"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "unit-as-record",
+            "sourceSha256": "f0e287bc116ba2c30f7af8fcdb753726b4a2e1d94b649896a53223d3e244aaa6"
+          },
+          {
+            "code": "E0063",
+            "diagnostics": 1,
+            "name": "missing-field",
+            "sourceSha256": "a2da8b4ec6917ff7504d59345cfe21bcf53188b8b890fb427138b1c2680471f8"
+          },
+          {
+            "code": "E0560",
+            "diagnostics": 1,
+            "name": "unknown-field",
+            "sourceSha256": "879df1e5a94e56b6a307389992e1ce9abc544315017dfaf044365e16001663ad"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-field",
+            "sourceSha256": "dd2ad48a6d16736fefead0d73d0fbd1ebe14935b3ca81bdbd6b3832269fa1cc7"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "borrowed-result",
+            "sourceSha256": "91574b88ca6153066d348b862c22c0591c0068172c835881e16d4ac05e5853b4"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "unsigned-overflow",
+            "sourceSha256": "c0a0815901ce8002928828261f992b97b9cfa42323189e19851da86289584452"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "signed-overflow",
+            "sourceSha256": "0199467d9d7c307f8e2b6f1a4899243f42ed75c6e3396ba34bff877c0cf67f1b"
+          }
+        ],
+        "rejectionSourceSha256": "c202f4192fcc7666c99406d0515ec574fa65271eef6b6e52e0bd8ebdd747792d"
+      },
+      "receiptSha256": "5caaee34078a16506ba82346a8e3094c2c78f926d677e47b74ae088dfb40680e",
+      "recordTypes": 7,
+      "rejected": 12,
+      "relocatedExecutable": true,
+      "repeatExecution": true,
+      "rustcVersion": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceApiSha256": "0a5fc140236189555ec6a0af93bcdc51370715789853673ea936a0f28c392e54",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "e6b6eb60dedf3b4de0fa80e90c66bd17303e3b89f5f33a2d733f872b14f41b87",
+      "threadedCalls": 512
+    },
+    {
+      "bindingIrSha256": "8c6838bdea254b2b7fe23e4947c0dc2480b4fd4a4a86d906163040a2973a26cd",
+      "calls": 3274,
+      "cargoSha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561",
+      "cargoVersion": "cargo 1.90.0 (840b83a10 2025-07-30)",
+      "checks": 321191,
+      "compilerFreeExecution": true,
+      "compilerSha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa",
+      "conversionCheckpoints": 112,
+      "conversionProbeSha256": "c42babcd32abb733eb8b13455ab3c07fcc891ad566ca5c56d25325c379d78935",
+      "dependencies": {
+        "archive": "rust-dependencies.tar.gz",
+        "lockSha256": "9699816a5bbe66d30f54dd7f401edeb14a3e23cd759c210d4776ae134415d51f",
+        "packages": [
+          {
+            "checksum": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+            "directory": "autocfg-1.5.1",
+            "files": 22,
+            "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+          },
+          {
+            "checksum": "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71",
+            "directory": "block-buffer-0.10.4",
+            "files": 10,
+            "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+          },
+          {
+            "checksum": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+            "directory": "cfg-if-1.0.4",
+            "files": 13,
+            "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+          },
+          {
+            "checksum": "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280",
+            "directory": "cpufeatures-0.2.17",
+            "files": 16,
+            "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+          },
+          {
+            "checksum": "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a",
+            "directory": "crypto-common-0.1.7",
+            "files": 9,
+            "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+          },
+          {
+            "checksum": "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292",
+            "directory": "digest-0.10.7",
+            "files": 21,
+            "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+          },
+          {
+            "checksum": "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a",
+            "directory": "generic-array-0.14.7",
+            "files": 16,
+            "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+          },
+          {
+            "checksum": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+            "directory": "libc-0.2.189",
+            "files": 403,
+            "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+          },
+          {
+            "checksum": "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9",
+            "directory": "num-bigint-0.4.6",
+            "files": 50,
+            "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+          },
+          {
+            "checksum": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+            "directory": "num-integer-0.1.47",
+            "files": 16,
+            "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+          },
+          {
+            "checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+            "directory": "num-traits-0.2.19",
+            "files": 28,
+            "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+          },
+          {
+            "checksum": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+            "directory": "sha2-0.10.9",
+            "files": 31,
+            "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+          },
+          {
+            "checksum": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+            "directory": "typenum-1.20.1",
+            "files": 24,
+            "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+          },
+          {
+            "checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+            "directory": "version_check-0.9.5",
+            "files": 12,
+            "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+          }
+        ],
+        "sha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd"
+      },
+      "dependencyFilesSha256": "3483b77afd0ee3082223896aa8b42316f52b5e93fac48f0ad779325616a0b917",
+      "documentation": {
+        "compilerFreeExecution": true,
+        "executableSha256": "489b437874124031e2e2d6da994632af9dff113a04fe15bc7255d29ee8784e3b",
+        "normalExitCleanup": true,
+        "sourceFreeExecution": true,
+        "sourceSha256": "6905c493d1805d0730e410fe7732ed4c0584e2c07b628d6a0f7ae251ffce3ebc",
+        "stdout": "[1, 2, 3]\n42\n"
+      },
+      "emptyCargoHome": true,
+      "executableSha256": "dfd3efa0b421e601562039e168435a67f3fe72ce170b373f7a2e62c93e744aa3",
+      "faultSourceSha256": "9f6cfb329125b1258fba59abaef962797d9fd40bb2b68d522d102c46073fbf23",
+      "faultTests": 5,
+      "fixedArrayDepth": 24,
+      "handoffRemovedBeforeExecution": true,
+      "installedFiles": {
+        "Cargo.lock": {
+          "bytes": 3304,
+          "sha256": "9699816a5bbe66d30f54dd7f401edeb14a3e23cd759c210d4776ae134415d51f"
+        },
+        "Cargo.toml": {
+          "bytes": 336,
+          "sha256": "4446143b6cfcff1663ee93c0662b13eaac3e18a8f9a5c485704fa7f6b0c98e20"
+        },
+        "README.md": {
+          "bytes": 4133,
+          "sha256": "9ab3e00ae7351e0230a1b474b3cbcd4350211f94abde4f9fcc53cf491747cf90"
+        },
+        "binding-manifest.json": {
+          "bytes": 1826,
+          "sha256": "d13b4e1074e6eab3f3c82735db1bcc4077b25021cb0e5ec719e2577ad2f13205"
+        },
+        "lean-bridge/component/artifacts.json": {
+          "bytes": 1398,
+          "sha256": "5717688ec53bc5c1f063d02425daa03767f4aa96866f88d875582a052126dc11"
+        },
+        "lean-bridge/component/binding-ir.json": {
+          "bytes": 108385,
+          "sha256": "9a7b84d506f9c977178f2d19f16cf106af496117166d9962c71d6b08549b3c06"
+        },
+        "lean-bridge/component/component.h": {
+          "bytes": 5537,
+          "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+        },
+        "lean-bridge/component/generated.lean": {
+          "bytes": 15932,
+          "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+        },
+        "lean-bridge/component/metadata.json": {
+          "bytes": 259208,
+          "sha256": "6da6761ba5f0366d5c98c993f33bfb10cccb09d4c58baff0ec91ea2d59a16695"
+        },
+        "lean-bridge/component/model.json": {
+          "bytes": 632152,
+          "sha256": "688e6f57d06886129aa54ccb16c6942d2875efe71ff6ae90d1e2cd2017f12e0c"
+        },
+        "lean-bridge/component/native-component.json": {
+          "bytes": 120215,
+          "sha256": "ccf4f18015abd076cf69bc630278b4727d2dc2ba67261d25e3c20384fdddb6d0"
+        },
+        "lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "lean-bridge/licenses/source-notices.json": {
+          "bytes": 2438,
+          "sha256": "c9acdebac8fd1cc49ac370997de8ffecc9b5c7ac672d2fc550d4ba90595e6f66"
+        },
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+          "bytes": 1081,
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        "lean-bridge/native-c-adapter.json": {
+          "bytes": 1367,
+          "sha256": "9863abbb6dd0a22853ea622583bd8c4eb00ba10641c6a8e603fc2d2e209f716f"
+        },
+        "lean-bridge/native-rust.json": {
+          "bytes": 2733,
+          "sha256": "306143de2e8dcb3f6b226bb5cc98e5c829888ac4a7d3c5dac46211ee73c74dde"
+        },
+        "lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f"
+        },
+        "native/linux-x64/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "src/__runtime.rs": {
+          "bytes": 119062,
+          "sha256": "8a1827f32bc34f357021c18b11a86d221b97d6e5dbd4e75dad12f12e95f81324"
+        },
+        "src/assets.rs": {
+          "bytes": 8085,
+          "sha256": "71dc692d73c43e9bbb0e05b087581f5c4e176984def23cec5b711262fbd4e7bf"
+        },
+        "src/lib.rs": {
+          "bytes": 8406,
+          "sha256": "7df3c84e1c6f1e1bb7cb00dd73dfd5de03b92e762316e5ef685b76bc6612b033"
+        }
+      },
+      "installedFilesUnchanged": true,
+      "installedReceiptSha256": "fd6464f34fbe75718e0e75a2f342fb8d414e767c40550464cf9bdc718328675c",
+      "installedSnapshot": {
+        "Cargo.lock": "9699816a5bbe66d30f54dd7f401edeb14a3e23cd759c210d4776ae134415d51f",
+        "Cargo.toml": "4446143b6cfcff1663ee93c0662b13eaac3e18a8f9a5c485704fa7f6b0c98e20",
+        "README.md": "9ab3e00ae7351e0230a1b474b3cbcd4350211f94abde4f9fcc53cf491747cf90",
+        "binding-manifest.json": "d13b4e1074e6eab3f3c82735db1bcc4077b25021cb0e5ec719e2577ad2f13205",
+        "lean-bridge/component/artifacts.json": "5717688ec53bc5c1f063d02425daa03767f4aa96866f88d875582a052126dc11",
+        "lean-bridge/component/binding-ir.json": "9a7b84d506f9c977178f2d19f16cf106af496117166d9962c71d6b08549b3c06",
+        "lean-bridge/component/component.h": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28",
+        "lean-bridge/component/generated.lean": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647",
+        "lean-bridge/component/metadata.json": "6da6761ba5f0366d5c98c993f33bfb10cccb09d4c58baff0ec91ea2d59a16695",
+        "lean-bridge/component/model.json": "688e6f57d06886129aa54ccb16c6942d2875efe71ff6ae90d1e2cd2017f12e0c",
+        "lean-bridge/component/native-component.json": "ccf4f18015abd076cf69bc630278b4727d2dc2ba67261d25e3c20384fdddb6d0",
+        "lean-bridge/licenses/Lean-LICENSE": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e",
+        "lean-bridge/licenses/Lean-LICENSES": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+        "lean-bridge/licenses/LeanBridge-LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+        "lean-bridge/licenses/source-notices.json": "c9acdebac8fd1cc49ac370997de8ffecc9b5c7ac672d2fc550d4ba90595e6f66",
+        "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca",
+        "lean-bridge/native-c-adapter.json": "9863abbb6dd0a22853ea622583bd8c4eb00ba10641c6a8e603fc2d2e209f716f",
+        "lean-bridge/native-rust.json": "306143de2e8dcb3f6b226bb5cc98e5c829888ac4a7d3c5dac46211ee73c74dde",
+        "lean-bridge/package-receipt.json": "fd6464f34fbe75718e0e75a2f342fb8d414e767c40550464cf9bdc718328675c",
+        "lean-bridge/runtime.json": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+        "native/linux-x64/libcollections.so": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a",
+        "native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1",
+        "native/linux-x64/liblean_bridge_native.so": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31",
+        "native/linux-x64/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "src/__runtime.rs": "8a1827f32bc34f357021c18b11a86d221b97d6e5dbd4e75dad12f12e95f81324",
+        "src/assets.rs": "71dc692d73c43e9bbb0e05b087581f5c4e176984def23cec5b711262fbd4e7bf",
+        "src/lib.rs": "7df3c84e1c6f1e1bb7cb00dd73dfd5de03b92e762316e5ef685b76bc6612b033"
+      },
+      "installedSourcesRemoved": true,
+      "isolatedFaultCopy": true,
+      "linkOnly": true,
+      "linkerSha256": "efc815dfc425e8ae1d86c67648082d3356bfe9a3817274b017b2f9175c1d4d0a",
+      "lockSha256": "3d847c39ee96e845f9ea6396dedfaeb69bbf974464a5d4904207f0888c5288c6",
+      "modelSha256": "688e6f57d06886129aa54ccb16c6942d2875efe71ff6ae90d1e2cd2017f12e0c",
+      "nativeFaultChecks": 1546,
+      "nativeLibraries": {
+        "native/linux-x64/libcollections.so": {
+          "bytes": 162472,
+          "sha256": "a09d40759bc84b2421961368e794fec856455764ea56cbe384a7c4c2217d4d6a"
+        },
+        "native/linux-x64/libcomponent_4b14a94f6762b3de9a61.so": {
+          "bytes": 143216,
+          "sha256": "bfe8c57b9e4991b9a8f6f7037be4378eadece97a7ef72eb36776f1c99dd87bb1"
+        },
+        "native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 17016,
+          "sha256": "571b16c1ff1b4d05a1d9f8f45065cc505cee62c36337186eeb15f4099b3e9e31"
+        },
+        "native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        }
+      },
+      "normalExitCleanup": true,
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51480873,
+              "path": "archives/collections-api-1.0.0.crate",
+              "sha256": "8d691cc9131bfd18c0c8e16cf0eb34e2d1ddeb71580e6cf307915714e9ebdf6c"
+            }
+          ],
+          "ecosystem": "cargo",
+          "name": "collections-api",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "e7d08d91baf7f70d791a79bd611779d311201ce6b6530f478be4f8ff1113be1f",
+          "target": "cargo",
+          "version": "1.0.0"
+        }
+      ],
+      "path": "reviewed-ir",
+      "primitiveShapes": 19,
+      "profile": "rust",
+      "publicTypes": {
+        "checked": true,
+        "consumerSha256": "7b7469b40b5fdfde9b32d1abbaa71f37fa051de01b2fbfa2c396f7edfb68f763",
+        "executed": true,
+        "rejected": [
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-scalar",
+            "sourceSha256": "7fb156e4dddc7555dd7867604d7f19a6946b936c5a437fcb832871936b9c3865"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "mixed-elements",
+            "sourceSha256": "e1726736e97dc8de1e5070c29b172f0b3881b5706964106ec23c42b44e8ac353"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "signed-natural",
+            "sourceSha256": "b2be5aef68963f68ae6387164c961645723a2da388273af6113d6c24084d5d6d"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "machine-natural",
+            "sourceSha256": "38c411ad829ef26cb1e3f85f2d6eb76e2f481af3a8bd72751e14ba462f255cf0"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "bytes-as-text",
+            "sourceSha256": "a4f2beb68ee62fd79428017e589fa8d2ed9ecf417f43e7a2ac11b9525e3b3057"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "text-as-char",
+            "sourceSha256": "d53c7a7ef1de98bc05668435785a283677c425ae1a8c4f2ff71aa96ac214537c"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-depth",
+            "sourceSha256": "4005c569155ffb5a6f04260d134bd4e68274b269a2e46dfa1e065e08b7319a4f"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "nominal-record",
+            "sourceSha256": "bad2d48fb6db1c3f0ecac3ed154a9042fd4e7802226b4ee470e57ea63d352c5e"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "unit-as-record",
+            "sourceSha256": "f0e287bc116ba2c30f7af8fcdb753726b4a2e1d94b649896a53223d3e244aaa6"
+          },
+          {
+            "code": "E0063",
+            "diagnostics": 1,
+            "name": "missing-field",
+            "sourceSha256": "a2da8b4ec6917ff7504d59345cfe21bcf53188b8b890fb427138b1c2680471f8"
+          },
+          {
+            "code": "E0560",
+            "diagnostics": 1,
+            "name": "unknown-field",
+            "sourceSha256": "879df1e5a94e56b6a307389992e1ce9abc544315017dfaf044365e16001663ad"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "wrong-field",
+            "sourceSha256": "dd2ad48a6d16736fefead0d73d0fbd1ebe14935b3ca81bdbd6b3832269fa1cc7"
+          },
+          {
+            "code": "E0308",
+            "diagnostics": 1,
+            "name": "borrowed-result",
+            "sourceSha256": "91574b88ca6153066d348b862c22c0591c0068172c835881e16d4ac05e5853b4"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "unsigned-overflow",
+            "sourceSha256": "c0a0815901ce8002928828261f992b97b9cfa42323189e19851da86289584452"
+          },
+          {
+            "code": "overflowing_literals",
+            "diagnostics": 1,
+            "name": "signed-overflow",
+            "sourceSha256": "0199467d9d7c307f8e2b6f1a4899243f42ed75c6e3396ba34bff877c0cf67f1b"
+          }
+        ],
+        "rejectionSourceSha256": "c202f4192fcc7666c99406d0515ec574fa65271eef6b6e52e0bd8ebdd747792d"
+      },
+      "receiptSha256": "9430be122aac29a0fa32ea27617ee3aa370d10c91c143928568c13d971ffabfb",
+      "recordTypes": 7,
+      "rejected": 12,
+      "relocatedExecutable": true,
+      "repeatExecution": true,
+      "rustcVersion": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+      "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43",
+      "sourceApiSha256": "1c7f49e4367c95f4b558f8c6a8725bef2661f1be16211a2a0e2ac691e5a040c6",
+      "sourceRemovedBeforeInstallation": true,
+      "sourceTreeSha256": "53ea6235d3e6aeb85ab9d5e9ac504142e53469f9bb64972d342364eb055b3e8d",
+      "threadedCalls": 512
+    }
+  ],
+  "hostGlibc": "2.36",
+  "packageGlibcFloor": "2.36",
+  "profiles": [
+    "rust"
+  ],
+  "reportSha256": "ed49bc29d5c32f29b980ca4e4ab1164c9407e43a75c0c607cd3569b0aefd9dba",
+  "reproduction": {
+    "archivesIdentical": true,
+    "firstLog": {
+      "sha256": "bc57955275efa55ed0697118c70aee6af4b89ea5eb7e399ca5a9c03272ae5777",
+      "text": "TAP version 13\n# Subtest: installed Rust arrays and records preserve values on both source paths\nok 1 - installed Rust arrays and records preserve values on both source paths\n  ---\n  duration_ms: 179382.728436\n  type: 'test'\n  ...\n# ordinary-source: compiling Rust collections\n# ordinary-source: original offline crate, typed callers, isolated failure probes and relocation\n# ordinary-source: 321191 public assertions, 3274 calls, 1546 allocation/panic checks\n# reviewed-ir: compiling Rust collections\n# reviewed-ir: original offline crate, typed callers, isolated failure probes and relocation\n# reviewed-ir: 321191 public assertions, 3274 calls, 1546 allocation/panic checks\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 179568.595823\n"
+    },
+    "firstReportSha256": "42ce0ef3aa3cdcd4062e35baff861bca7706b4bcec4ad6eb49d391650acdc197",
+    "installedFilesIdentical": true,
+    "nativeLibrariesIdentical": true,
+    "publicObservationsIdentical": true,
+    "runs": [
+      {
+        "installedFilesSha256": "bca23108584216ed348e45fe5f54b20409434a5c62d97a1c2472bb778eeea97f",
+        "observationsSha256": "a0297c4e78e490be45a7ddaf0026d8da4d70035f2f84c430911f709b84b2f4b5",
+        "packagesSha256": "f280003e2f2a8a77ee3ccb4b701be3d82a455183958021c3b09fb057f223e691",
+        "path": "ordinary-source"
+      },
+      {
+        "installedFilesSha256": "06949be3262e1445318c7a0602fb873b96594b0fc1b98556a553b4fb08e5fd88",
+        "observationsSha256": "a0297c4e78e490be45a7ddaf0026d8da4d70035f2f84c430911f709b84b2f4b5",
+        "packagesSha256": "db5c942fc499ef3e091646e2828a34209d4b8329c70de500c38e7da6e6ab1c4d",
+        "path": "reviewed-ir"
+      }
+    ],
+    "secondLog": {
+      "sha256": "dbfd3289c62cf2888e20cacc58852813bb5d2b00d1701eef5b62684e314df775",
+      "text": "TAP version 13\n# Subtest: installed Rust arrays and records preserve values on both source paths\nok 1 - installed Rust arrays and records preserve values on both source paths\n  ---\n  duration_ms: 176217.980313\n  type: 'test'\n  ...\n# ordinary-source: compiling Rust collections\n# ordinary-source: original offline crate, typed callers, isolated failure probes and relocation\n# ordinary-source: 321191 public assertions, 3274 calls, 1546 allocation/panic checks\n# reviewed-ir: compiling Rust collections\n# reviewed-ir: original offline crate, typed callers, isolated failure probes and relocation\n# reviewed-ir: 321191 public assertions, 3274 calls, 1546 allocation/panic checks\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 176410.819523\n"
+    }
+  },
+  "reviewedIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+  "schemaVersion": 1,
+  "signatures": [
+    {
+      "name": "Collections.arrayAdd",
+      "parameters": [
+        "int",
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayCheckElements",
+      "parameters": [
+        {
+          "array": "unit"
+        },
+        {
+          "array": "bool"
+        },
+        {
+          "array": "uint8"
+        },
+        {
+          "array": "uint16"
+        },
+        {
+          "array": "uint32"
+        },
+        {
+          "array": "uint64"
+        },
+        {
+          "array": "int8"
+        },
+        {
+          "array": "int16"
+        },
+        {
+          "array": "int32"
+        },
+        {
+          "array": "int64"
+        },
+        {
+          "array": "nat"
+        },
+        {
+          "array": "int"
+        },
+        {
+          "array": "float32"
+        },
+        {
+          "array": "float64"
+        },
+        {
+          "array": "string"
+        },
+        {
+          "array": "bytes"
+        },
+        {
+          "array": "char"
+        },
+        {
+          "array": "usize"
+        },
+        {
+          "array": "isize"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.arrayDuplicate",
+      "parameters": [
+        {
+          "array": "bytes"
+        }
+      ],
+      "result": {
+        "array": "bytes"
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBool",
+      "parameters": [
+        {
+          "array": {
+            "array": "bool"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bool"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseBytes",
+      "parameters": [
+        {
+          "array": {
+            "array": "bytes"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "bytes"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseChar",
+      "parameters": [
+        {
+          "array": {
+            "array": "char"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "char"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat32",
+      "parameters": [
+        {
+          "array": {
+            "array": "float32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseFloat64",
+      "parameters": [
+        {
+          "array": {
+            "array": "float64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "float64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt",
+      "parameters": [
+        {
+          "array": {
+            "array": "int"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "int16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "int32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "int64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "int8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "int8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseISize",
+      "parameters": [
+        {
+          "array": {
+            "array": "isize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "isize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseNat",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "nat"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseString",
+      "parameters": [
+        {
+          "array": {
+            "array": "string"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt16",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint16"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint16"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt32",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint32"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint32"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt64",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint64"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint64"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUInt8",
+      "parameters": [
+        {
+          "array": {
+            "array": "uint8"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "uint8"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUnit",
+      "parameters": [
+        {
+          "array": {
+            "array": "unit"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "unit"
+        }
+      }
+    },
+    {
+      "name": "Collections.arrayReverseUSize",
+      "parameters": [
+        {
+          "array": {
+            "array": "usize"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": "usize"
+        }
+      }
+    },
+    {
+      "name": "Collections.arraySize",
+      "parameters": [
+        {
+          "array": "unit"
+        }
+      ],
+      "result": "usize"
+    },
+    {
+      "name": "Collections.arrayTotal",
+      "parameters": [
+        {
+          "array": {
+            "array": "nat"
+          }
+        }
+      ],
+      "result": "nat"
+    },
+    {
+      "name": "Collections.arrayWords",
+      "parameters": [],
+      "result": {
+        "array": {
+          "array": "string"
+        }
+      }
+    },
+    {
+      "name": "Collections.deep",
+      "parameters": [
+        {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": {
+                                                        "array": "uint32"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "array": {
+            "array": {
+              "array": {
+                "array": {
+                  "array": {
+                    "array": {
+                      "array": {
+                        "array": {
+                          "array": {
+                            "array": {
+                              "array": {
+                                "array": {
+                                  "array": {
+                                    "array": {
+                                      "array": {
+                                        "array": {
+                                          "array": {
+                                            "array": {
+                                              "array": {
+                                                "array": {
+                                                  "array": {
+                                                    "array": {
+                                                      "array": "uint32"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Collections.generate",
+      "parameters": [
+        "nat"
+      ],
+      "result": {
+        "array": "unit"
+      }
+    },
+    {
+      "name": "Collections.recordCount",
+      "parameters": [
+        {
+          "fields": {
+            "value": "nat"
+          },
+          "record": "Records.Count"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "nat"
+        },
+        "record": "Records.Count"
+      }
+    },
+    {
+      "name": "Collections.recordDuplicate",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordEmpty",
+      "parameters": [
+        {
+          "fields": {},
+          "record": "Records.Empty"
+        }
+      ],
+      "result": {
+        "fields": {},
+        "record": "Records.Empty"
+      }
+    },
+    {
+      "name": "Collections.recordInspect",
+      "parameters": [
+        {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      ],
+      "result": "bool"
+    },
+    {
+      "name": "Collections.recordMake",
+      "parameters": [],
+      "result": {
+        "fields": {
+          "first": "uint32",
+          "second": "string"
+        },
+        "record": "Records.Pair"
+      }
+    },
+    {
+      "name": "Collections.recordReverse",
+      "parameters": [
+        {
+          "array": {
+            "fields": {
+              "bytes": "bytes",
+              "char": "char",
+              "f32": "float32",
+              "f64": "float64",
+              "flag": "bool",
+              "i16": "int16",
+              "i32": "int32",
+              "i64": "int64",
+              "i8": "int8",
+              "integer": "int",
+              "isize": "isize",
+              "natural": "nat",
+              "text": "string",
+              "u16": "uint16",
+              "u32": "uint32",
+              "u64": "uint64",
+              "u8": "uint8",
+              "unit": "unit",
+              "usize": "usize"
+            },
+            "record": "Records.Primitives"
+          }
+        }
+      ],
+      "result": {
+        "array": {
+          "fields": {
+            "bytes": "bytes",
+            "char": "char",
+            "f32": "float32",
+            "f64": "float64",
+            "flag": "bool",
+            "i16": "int16",
+            "i32": "int32",
+            "i64": "int64",
+            "i8": "int8",
+            "integer": "int",
+            "isize": "isize",
+            "natural": "nat",
+            "text": "string",
+            "u16": "uint16",
+            "u32": "uint32",
+            "u64": "uint64",
+            "u8": "uint8",
+            "unit": "unit",
+            "usize": "usize"
+          },
+          "record": "Records.Primitives"
+        }
+      }
+    },
+    {
+      "name": "Collections.recordShuffle",
+      "parameters": [
+        {
+          "fields": {
+            "count": {
+              "fields": {
+                "value": "nat"
+              },
+              "record": "Records.Count"
+            },
+            "empty": {
+              "fields": {},
+              "record": "Records.Empty"
+            },
+            "label": "string",
+            "pair": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Pair"
+            },
+            "reversed": {
+              "fields": {
+                "first": "uint32",
+                "second": "string"
+              },
+              "record": "Records.Reversed"
+            },
+            "single": {
+              "fields": {
+                "value": "uint64"
+              },
+              "record": "Records.Single"
+            },
+            "values": {
+              "array": {
+                "array": {
+                  "fields": {
+                    "bytes": "bytes",
+                    "char": "char",
+                    "f32": "float32",
+                    "f64": "float64",
+                    "flag": "bool",
+                    "i16": "int16",
+                    "i32": "int32",
+                    "i64": "int64",
+                    "i8": "int8",
+                    "integer": "int",
+                    "isize": "isize",
+                    "natural": "nat",
+                    "text": "string",
+                    "u16": "uint16",
+                    "u32": "uint32",
+                    "u64": "uint64",
+                    "u8": "uint8",
+                    "unit": "unit",
+                    "usize": "usize"
+                  },
+                  "record": "Records.Primitives"
+                }
+              }
+            }
+          },
+          "record": "Records.Packet"
+        }
+      ],
+      "result": {
+        "fields": {
+          "count": {
+            "fields": {
+              "value": "nat"
+            },
+            "record": "Records.Count"
+          },
+          "empty": {
+            "fields": {},
+            "record": "Records.Empty"
+          },
+          "label": "string",
+          "pair": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Pair"
+          },
+          "reversed": {
+            "fields": {
+              "first": "uint32",
+              "second": "string"
+            },
+            "record": "Records.Reversed"
+          },
+          "single": {
+            "fields": {
+              "value": "uint64"
+            },
+            "record": "Records.Single"
+          },
+          "values": {
+            "array": {
+              "array": {
+                "fields": {
+                  "bytes": "bytes",
+                  "char": "char",
+                  "f32": "float32",
+                  "f64": "float64",
+                  "flag": "bool",
+                  "i16": "int16",
+                  "i32": "int32",
+                  "i64": "int64",
+                  "i8": "int8",
+                  "integer": "int",
+                  "isize": "isize",
+                  "natural": "nat",
+                  "text": "string",
+                  "u16": "uint16",
+                  "u32": "uint32",
+                  "u64": "uint64",
+                  "u8": "uint8",
+                  "unit": "unit",
+                  "usize": "usize"
+                },
+                "record": "Records.Primitives"
+              }
+            }
+          }
+        },
+        "record": "Records.Packet"
+      }
+    },
+    {
+      "name": "Collections.recordSingle",
+      "parameters": [
+        {
+          "fields": {
+            "value": "uint64"
+          },
+          "record": "Records.Single"
+        }
+      ],
+      "result": {
+        "fields": {
+          "value": "uint64"
+        },
+        "record": "Records.Single"
+      }
+    }
+  ],
+  "sourceHashes": {
+    "tests/fixtures/collection-consumers/Collections.lean": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524",
+    "tests/fixtures/collection-consumers/rust-conversions.rs": "f58dc7b1d09e782a9656196e26309bb52ee152e993eea87c6e60e2766974635c",
+    "tests/fixtures/collection-consumers/rust-faults.rs": "9f6cfb329125b1258fba59abaef962797d9fd40bb2b68d522d102c46073fbf23",
+    "tests/fixtures/collection-consumers/rust-invalid.json": "c202f4192fcc7666c99406d0515ec574fa65271eef6b6e52e0bd8ebdd747792d",
+    "tests/fixtures/collection-consumers/rust.rs": "7b7469b40b5fdfde9b32d1abbaa71f37fa051de01b2fbfa2c396f7edfb68f763",
+    "tests/fixtures/onboarding/npm-arrays/Arrays.lean": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668",
+    "tests/fixtures/onboarding/npm-arrays/LICENSE": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca",
+    "tests/fixtures/onboarding/npm-arrays/lean-toolchain": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+    "tests/fixtures/onboarding/npm-records/Records.lean": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540",
+    "tests/helpers/array-fixture.mjs": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf",
+    "tests/helpers/collection-fixture.mjs": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/lake-workspace.mjs": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082",
+    "tests/helpers/package-set.mjs": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c",
+    "tests/helpers/record-fixture.mjs": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f",
+    "tests/helpers/rust-collection-install.mjs": "5a751e1a1a7a4def2e03a635e00d28c1315486aedcfd4203e46b690c88ca02eb",
+    "tests/helpers/rust-collection-probes.mjs": "9ade5f434fb1d36ee6641558fa6a9ce1ef74d9b122d0e4b8259028421b4f8516",
+    "tests/helpers/rust-collection-types.mjs": "7a7ddf5f167ba64ee174f76129ebcae0be4b6d45c8c1d4050c4095d37f65ecd2",
+    "tests/helpers/type-corpus-compiler.mjs": "020290f8ed04a935b51fb1a2b53e3b213884d36d891c5eacba8850194f181fa0",
+    "tests/helpers/type-corpus-reviewed-ir.mjs": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7",
+    "tests/helpers/type-corpus-rust.mjs": "7203661ed2553808eba8d3b36af92c1cd3b881f0ec5158cb37ea34b247b8ea53",
+    "tests/rust-collection-contract.test.mjs": "e17e1f7a0cbebdee04ade2b757d048e4a2c4dc319ad7593886035d41752d8069",
+    "tests/rust-collection-conversions.test.mjs": "633e907d36cf1838271bd7df0548d47c83ac932403ac55bc514984220b678dda",
+    "tests/rust-collection-evidence.test.mjs": "b8a381fb51d4e4de9c7cfd5937e9184ae6affecd31ae43af86aae455496914a8",
+    "tests/rust-collections.test.mjs": "63e9da6b047d87e2bf2e592c64a0dc6ced71bf0e9ca360a0bec13c4e8861bef7"
+  },
+  "wordBits": 64
+}

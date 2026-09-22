@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.69.0",
+  "contractVersion": "0.72.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,563 @@
   ],
   "evidence": [
     {
+      "id": "rust-collections-installed",
+      "kind": "installed",
+      "revision": "afc50732a7e9205eaefb9917e5d835fc62e43876",
+      "command": "LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs; node --test tests/rust-collection-contract.test.mjs tests/rust-collection-evidence.test.mjs",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
+        },
+        {
+          "path": "docs/consume/rust.md",
+          "sha256": "e7c5a2642c29e2e6b085f1a28a230629edd5a15fc56368d1b71b9f2b7ed0a96f"
+        },
+        {
+          "path": "docs/evidence/rust-collections-20260922.json",
+          "sha256": "efb7028f721d78ae3cd8dabe20c347be985ebc0c40819cd1319b1903192bdb14"
+        },
+        {
+          "path": "docs/evidence/rust-collections-20260922.md",
+          "sha256": "6fe8fec4d9de339270902651735958e6e9ead4310899c3f78a2f2fe746672a9d"
+        },
+        {
+          "path": "docs/publish/cargo.md",
+          "sha256": "57462b525d13719ac77de6cf821f3b7045524ff90496f83d1cdcd9142bd20889"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/rust/copied-conversions.mjs",
+          "sha256": "e57c24479cdda0a53486494d54498d6aa4a75ba73605113be67e082df6413d0f"
+        },
+        {
+          "path": "src/backends/rust/copied-model.mjs",
+          "sha256": "30c05760fed097b5e380d2dfe8be71a227d7971e31504b8de861ce19ec9ab611"
+        },
+        {
+          "path": "src/backends/rust/copied-values.mjs",
+          "sha256": "254acb7d95a4e478504d8b9376e189b921a22d80312561661a6116f8e99bb960"
+        },
+        {
+          "path": "src/backends/rust/generate.mjs",
+          "sha256": "e7e64e60c47a4dfe46a85de0df11880078edbd85153a083e2d58af46d8310af4"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd"
+        },
+        {
+          "path": "src/release/native-cargo.mjs",
+          "sha256": "451a93d27536c64951394821540ac2a737448f74b0403c6a499804ca5b91a56c"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/Collections.lean",
+          "sha256": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/rust-conversions.rs",
+          "sha256": "f58dc7b1d09e782a9656196e26309bb52ee152e993eea87c6e60e2766974635c"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/rust-faults.rs",
+          "sha256": "9f6cfb329125b1258fba59abaef962797d9fd40bb2b68d522d102c46073fbf23"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/rust-invalid.json",
+          "sha256": "c202f4192fcc7666c99406d0515ec574fa65271eef6b6e52e0bd8ebdd747792d"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/rust.rs",
+          "sha256": "7b7469b40b5fdfde9b32d1abbaa71f37fa051de01b2fbfa2c396f7edfb68f763"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/Arrays.lean",
+          "sha256": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/LICENSE",
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/Records.lean",
+          "sha256": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540"
+        },
+        {
+          "path": "tests/helpers/array-fixture.mjs",
+          "sha256": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf"
+        },
+        {
+          "path": "tests/helpers/collection-fixture.mjs",
+          "sha256": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/record-fixture.mjs",
+          "sha256": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f"
+        },
+        {
+          "path": "tests/helpers/rust-collection-install.mjs",
+          "sha256": "5a751e1a1a7a4def2e03a635e00d28c1315486aedcfd4203e46b690c88ca02eb"
+        },
+        {
+          "path": "tests/helpers/rust-collection-probes.mjs",
+          "sha256": "9ade5f434fb1d36ee6641558fa6a9ce1ef74d9b122d0e4b8259028421b4f8516"
+        },
+        {
+          "path": "tests/helpers/rust-collection-types.mjs",
+          "sha256": "7a7ddf5f167ba64ee174f76129ebcae0be4b6d45c8c1d4050c4095d37f65ecd2"
+        },
+        {
+          "path": "tests/helpers/type-corpus-compiler.mjs",
+          "sha256": "020290f8ed04a935b51fb1a2b53e3b213884d36d891c5eacba8850194f181fa0"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        },
+        {
+          "path": "tests/helpers/type-corpus-rust.mjs",
+          "sha256": "7203661ed2553808eba8d3b36af92c1cd3b881f0ec5158cb37ea34b247b8ea53"
+        },
+        {
+          "path": "tests/rust-collection-contract.test.mjs",
+          "sha256": "e17e1f7a0cbebdee04ade2b757d048e4a2c4dc319ad7593886035d41752d8069"
+        },
+        {
+          "path": "tests/rust-collection-conversions.test.mjs",
+          "sha256": "633e907d36cf1838271bd7df0548d47c83ac932403ac55bc514984220b678dda"
+        },
+        {
+          "path": "tests/rust-collection-evidence.test.mjs",
+          "sha256": "b8a381fb51d4e4de9c7cfd5937e9184ae6affecd31ae43af86aae455496914a8"
+        },
+        {
+          "path": "tests/rust-collections.test.mjs",
+          "sha256": "63e9da6b047d87e2bf2e592c64a0dc6ced71bf0e9ca360a0bec13c4e8861bef7"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/collections-api-1.0.0.crate",
+          "sha256": "86049dabc087f936963c444eb52e45f75285aa3dea9f4187b4f69b25e4e14df9"
+        },
+        {
+          "path": "reviewed-ir/archives/collections-api-1.0.0.crate",
+          "sha256": "8d691cc9131bfd18c0c8e16cf0eb34e2d1ddeb71580e6cf307915714e9ebdf6c"
+        }
+      ]
+    },
+    {
+      "id": "python-collections-installed",
+      "kind": "installed",
+      "revision": "afc50732a7e9205eaefb9917e5d835fc62e43876",
+      "command": "LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs; node --test tests/python-collection-contract.test.mjs tests/python-collection-evidence.test.mjs",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
+        },
+        {
+          "path": "docs/consume/python.md",
+          "sha256": "e9d475bb930d0a86c1610e8c8a45f15af3152c93f6b46c5cf36a837c5adf6d3e"
+        },
+        {
+          "path": "docs/evidence/python-collections-20260922.json",
+          "sha256": "7d6384c1d636637487ec24e718a175ce13d5aaee24aaeab0340fbca596b3b6c1"
+        },
+        {
+          "path": "docs/evidence/python-collections-20260922.md",
+          "sha256": "5bd276bcfc8717b33c14f04f0cfce49928e91ea158827d1476a16a68b197a47a"
+        },
+        {
+          "path": "docs/publish/pypi.md",
+          "sha256": "06f366e3fc4f49e26109c25c12994c958fef4140b96f8ae0d33a1170e5c1432f"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/python/copied-conversions.mjs",
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
+        },
+        {
+          "path": "src/backends/python/copied-model.mjs",
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
+        },
+        {
+          "path": "src/backends/python/copied-values.mjs",
+          "sha256": "acb9f56c4596ef83085cdd685cb9eeaf0620b75f9f32568e56aa574a90d2f74f"
+        },
+        {
+          "path": "src/backends/python/generate.mjs",
+          "sha256": "68b032ac2da7c45b55de1d5f68ff0d310c475ef6998503be8e761eea73eae39c"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd"
+        },
+        {
+          "path": "src/release/native-pypi.mjs",
+          "sha256": "dfade7eebe7f4e0dd2a36e6810680353df9c3d81d8ffdd751d28e221746525e5"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/Collections.lean",
+          "sha256": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/python-hints.py",
+          "sha256": "222891330173755754284d66926008489c27847ca1f496b1c8c63d0e069e497c"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/python-invalid.py",
+          "sha256": "19ba824ce77fc45845d9f4cab6725ba5d1d65284f8e6b5851b33d3a0f3962b52"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/python-probe.py",
+          "sha256": "71b48a95e2315ef95dbfaa06fd58472fdd106ab031f76cfee143e975e505faba"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/python-typed.py",
+          "sha256": "c5a94dd07d03c350cf3b4bebe8c4f5725a25b72757169a684fcc0534a9c4ff37"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/python.py",
+          "sha256": "febdb93c4353fe94a8b049f7a56ed2f2f438058b681871456eb020ef4705ba0f"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/Arrays.lean",
+          "sha256": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/LICENSE",
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/Records.lean",
+          "sha256": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540"
+        },
+        {
+          "path": "tests/helpers/array-fixture.mjs",
+          "sha256": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf"
+        },
+        {
+          "path": "tests/helpers/collection-fixture.mjs",
+          "sha256": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/python-collection-install.mjs",
+          "sha256": "73817c10670888f4b925025671ca7ac6cad1db9287bce683d40784aec357b7f5"
+        },
+        {
+          "path": "tests/helpers/python-wheel-install.mjs",
+          "sha256": "f075880a23027dd52c73e8d73a08244e5b8339d3c9d1f2fa1b698afda4edc189"
+        },
+        {
+          "path": "tests/helpers/record-fixture.mjs",
+          "sha256": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        },
+        {
+          "path": "tests/python-collection-contract.test.mjs",
+          "sha256": "71fc55ae8f795ff8958e8590c1483c0cc5055602eb57a80babb85e9302adc8aa"
+        },
+        {
+          "path": "tests/python-collection-evidence.test.mjs",
+          "sha256": "e6211ced15e5de581bc75a7e8ff2a3bf8443f40833083e411bb5b531dbd814c0"
+        },
+        {
+          "path": "tests/python-collections.test.mjs",
+          "sha256": "633c40af72834da8072f6dc41770f63dfc53f305ffcfbe0940a76f5dafe9a4b0"
+        },
+        {
+          "path": "tests/python-wheel-install.test.mjs",
+          "sha256": "b9924f45dc33e8d2fdbdf77d0c55a61abdbaeae4a100024ed248e5605be0169d"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/collections_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "7f0a02384d439c5e21dd2d6f9b47a67bc45d0963fd623bb0a9bea044186fefdf"
+        },
+        {
+          "path": "reviewed-ir/archives/collections_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "4d3a6582db32a920fc12d662d48e027cb0df5f52dac05bb287bc64f77f826293"
+        },
+        {
+          "path": "documentation/archives/parcels_api-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+          "sha256": "6f0dabe0ca7d8a0fe611fbd57f2bd2bfde9586c19d051006fed929d81910978f"
+        }
+      ]
+    },
+    {
+      "id": "dotnet-collections-installed",
+      "kind": "installed",
+      "revision": "afc50732a7e9205eaefb9917e5d835fc62e43876",
+      "command": "LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs; node --test tests/dotnet-collection-contract.test.mjs tests/dotnet-collection-evidence.test.mjs",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
+        },
+        {
+          "path": "docs/consume/dotnet.md",
+          "sha256": "f81f2de427ef578b9db89b5d2c3f618527bd345625a23566ff411763c337bfec"
+        },
+        {
+          "path": "docs/evidence/dotnet-collections-20260922.json",
+          "sha256": "a956e23e613efe404937693cb1e6fcac569b9206c8e800de714cf50eecf0e440"
+        },
+        {
+          "path": "docs/evidence/dotnet-collections-20260922.md",
+          "sha256": "3fa115e31a2cecf06ea2e94e5c034e7e97cf5129384a659b5f536d83369fcb2f"
+        },
+        {
+          "path": "docs/publish/nuget.md",
+          "sha256": "c04e9d1f812527324bddf22e958522d21d31098be3759c0a88fc7eed924a82c8"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "383ed6889cc834b1c30c7305b685bfd85361053ce204c9b29e55c26b7026353e"
+        },
+        {
+          "path": "src/analyze/native-types.mjs",
+          "sha256": "6ae30062aad226ae82718d8a55fbebee562000722b638c938357bc43b0cf55ca"
+        },
+        {
+          "path": "src/analyze/reviewed-source.mjs",
+          "sha256": "597e82a6457ad5cd0d70bf529b55de460eed8588d686a74fd7d285e10eb40790"
+        },
+        {
+          "path": "src/backends/dotnet/copied-conversions.mjs",
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
+        },
+        {
+          "path": "src/backends/dotnet/copied-model.mjs",
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
+        },
+        {
+          "path": "src/backends/dotnet/copied-values.mjs",
+          "sha256": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd"
+        },
+        {
+          "path": "src/backends/dotnet/generate.mjs",
+          "sha256": "4a270f1cee05936996eed48b57faa57405efaae103348c5e4f6ba9604ebbb73b"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd"
+        },
+        {
+          "path": "src/release/native-nuget.mjs",
+          "sha256": "855e9b30a71d53716000e15c297b589294ee9ec9c7b421c325db883c9c565702"
+        },
+        {
+          "path": "tests/dotnet-collection-contract.test.mjs",
+          "sha256": "38f6272bfaad0a8bf8887de2a1c5833122daa1c6acad75bd0462470beabe8b95"
+        },
+        {
+          "path": "tests/dotnet-collection-conversions.test.mjs",
+          "sha256": "f860e28a9379cbe41e8c4bfe1647aadfdbfe2fa9e21e66803014580617409dc5"
+        },
+        {
+          "path": "tests/dotnet-collection-evidence.test.mjs",
+          "sha256": "2a9e94d9f8fb26418d679a82b3e911a684a23ae8720843fdd6f075bd1dec18cc"
+        },
+        {
+          "path": "tests/dotnet-collections.test.mjs",
+          "sha256": "f711c7e930148059b5f36a263b5edf65a0e7137c80b4cb489b4965df265c9f58"
+        },
+        {
+          "path": "tests/dotnet-value-equality.test.mjs",
+          "sha256": "de10a35d9099f865381b671d8458228ed5dbe6b2b434ef6f15d4f0aa2f4efcba"
+        },
+        {
+          "path": "tests/dotnet-variant-contract.test.mjs",
+          "sha256": "c397bc9e74290fb99fc443084e0130b1f5ec7edf3d03519f704368414ded34a2"
+        },
+        {
+          "path": "tests/dotnet-variant-evidence.test.mjs",
+          "sha256": "6270bf6355f2f991580b7090675a96f3a7f283cd7ffafa3cc11b74a2e44fbc27"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/Collections.lean",
+          "sha256": "daeef36c57ebb75f67537c26d9b9c2cfaa41d6e19333f919e39a0eca2653f524"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/dotnet-conversions.cs",
+          "sha256": "ba29970a8bac0fde9e9445a08c51dae1a40482852e4257771c39c9dd0c990b92"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/dotnet-equality.cs",
+          "sha256": "4d435533cdfe8f91032df16fbc6045b3f78f63ade4a651ff324dcb699c805de7"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/dotnet-faults.cs",
+          "sha256": "d9e612963c1c08900676df7eb1eaae7782f9540ea24964ee61f916e8fbf68c84"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/dotnet-invalid.json",
+          "sha256": "a83a104fcf3f95c26e2cd1989d4890190c5d5fe6fa44bfbffe4bd154b0a5f13f"
+        },
+        {
+          "path": "tests/fixtures/collection-consumers/dotnet.cs",
+          "sha256": "eff9e13ec16524c0b265cf405850876d00124aa1f68ee898a81d02411b462250"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/Arrays.lean",
+          "sha256": "02ff5d1ed8d4e1c59ed93fba835099c5dadf62fd0366a1e37e0be716cd06d668"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/LICENSE",
+          "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-arrays/lean-toolchain",
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-records/Records.lean",
+          "sha256": "18f30510a58c2ff9cf030cbf0c976816390ba9845826316f99e0a86e72fa0540"
+        },
+        {
+          "path": "tests/helpers/array-fixture.mjs",
+          "sha256": "fe5d6ad3a3a6300d2528dfdd8b14f4d95b8a07ede055f85403f142cebe572bcf"
+        },
+        {
+          "path": "tests/helpers/collection-fixture.mjs",
+          "sha256": "17f7f5f6e24a7588d1af59c29bb747c1712930c2721b62eabf5bbb14c606c330"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/dotnet-collection-install.mjs",
+          "sha256": "579d879ec0f11a765a848e34c39e4450cd1038e0c2da1e3568857571801e993b"
+        },
+        {
+          "path": "tests/helpers/dotnet-collection-probes.mjs",
+          "sha256": "42679c290a35d21d76906b1f54e5696d744d5bc195c9fd431bc4f6067c8c7838"
+        },
+        {
+          "path": "tests/helpers/dotnet-collection-types.mjs",
+          "sha256": "18cf0ec3b971a0d1fb6e088f4d064b2b1bdb77c9623670bd1583914363269e27"
+        },
+        {
+          "path": "tests/helpers/dotnet-source-history.mjs",
+          "sha256": "6152032344fecd017ab8e42a90eb0481d81a4ab0dd1ec116d1562c60208b69e9"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/record-fixture.mjs",
+          "sha256": "e111bef828ddf6c9f79c46ba0244f341876477242540db7c452f8e72f02eaf1f"
+        },
+        {
+          "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+          "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "ordinary-source/archives/Lean.Collections.1.0.0.nupkg",
+          "sha256": "48d66923a26fa720f49536d10c20f2c330e2be827cab4724978c0820af692da9"
+        },
+        {
+          "path": "reviewed-ir/archives/Lean.Collections.1.0.0.nupkg",
+          "sha256": "599aebb4fb430c78429e0770c6c50927856c5ebc5bbe8bcee43a494168b1178a"
+        }
+      ]
+    },
+    {
       "id": "ruby-collections-installed",
       "kind": "installed",
       "revision": "4a83322cfc92383634f243f546537002120f0bfb",
@@ -165,11 +722,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/consume/ruby.md",
-          "sha256": "b0e2cbbf76186e2209e642a72122bac9a5696d4337db3d527e7669bb17b675c5"
+          "sha256": "33f38e7cf8581a10ded1e3dc5cfc6b69778329ddff4fcd34473fbb24279aabf7"
         },
         {
           "path": "docs/evidence/ruby-collections-20260922.json",
@@ -185,7 +742,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -344,7 +901,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/consume/c.md",
@@ -372,7 +929,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -583,7 +1140,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -754,7 +1311,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/wit-variants-20260921.json",
@@ -766,7 +1323,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -957,7 +1514,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-wasm-variants-20260921.json",
@@ -969,7 +1526,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1216,7 +1773,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-native-variants-20260921.json",
@@ -1228,7 +1785,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1439,7 +1996,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1602,7 +2159,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/ruby-variants-20260921.json",
@@ -1614,7 +2171,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1793,7 +2350,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/jvm-variants-20260921.json",
@@ -1805,7 +2362,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2032,7 +2589,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/dotnet-variants-20260921.json",
@@ -2044,7 +2601,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2084,15 +2641,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d751d14ba62c896381b4a8bf93497a90ee481fbe51018bf0ee34149b0c4bc8a9"
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "3462671108844a5f378eeeac0b91b588588ee84782601550427ccf01921d833a"
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "2300a756919415e1f71a72efa81fd2aa9b313f1d1738edb45f39469e78e1035c"
+          "sha256": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2120,11 +2677,11 @@
         },
         {
           "path": "tests/dotnet-variant-contract.test.mjs",
-          "sha256": "a219c91fbf9eacf0615ace1a95d7f5f23af12599f3a1742f2fdbbcf411852bd6"
+          "sha256": "c397bc9e74290fb99fc443084e0130b1f5ec7edf3d03519f704368414ded34a2"
         },
         {
           "path": "tests/dotnet-variant-evidence.test.mjs",
-          "sha256": "5b1f472907c330879fd9064cd86709aa3dda56cf5787ce67290965fadb7d6264"
+          "sha256": "6270bf6355f2f991580b7090675a96f3a7f283cd7ffafa3cc11b74a2e44fbc27"
         },
         {
           "path": "tests/dotnet-variants.test.mjs",
@@ -2227,7 +2784,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/rust-variants-20260921.json",
@@ -2239,7 +2796,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2422,7 +2979,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/python-variants-20260921.json",
@@ -2434,7 +2991,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2478,15 +3035,15 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "1e3495f006c9e02ab27cff324e7643de57e6d552ce4a91356b9a10fbbca28742"
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "4ceb45ddbcca8604edd8161f05d2a494ce8ae3aee3a32d63162b8e3e57b3a37f"
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "0fb8ba1b0ef111797ef40944b1218a3e82c4ebfbca50c7d3740b6f5ceb5589b6"
+          "sha256": "acb9f56c4596ef83085cdd685cb9eeaf0620b75f9f32568e56aa574a90d2f74f"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -2506,7 +3063,7 @@
         },
         {
           "path": "src/release/native-pypi.mjs",
-          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+          "sha256": "dfade7eebe7f4e0dd2a36e6810680353df9c3d81d8ffdd751d28e221746525e5"
         },
         {
           "path": "tests/fixtures/onboarding/native-variants/LICENSE",
@@ -2613,7 +3170,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/c-variants-20260921.json",
@@ -2625,7 +3182,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2800,7 +3357,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.json",
@@ -2812,7 +3369,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2951,7 +3508,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/wit-aliases-20260921.json",
@@ -2963,7 +3520,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3122,7 +3679,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-wasm-aliases-20260921.json",
@@ -3134,7 +3691,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3349,7 +3906,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-native-aliases-20260921.json",
@@ -3361,7 +3918,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3512,7 +4069,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3647,7 +4204,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/ruby-aliases-20260921.json",
@@ -3659,7 +4216,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3798,7 +4355,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
@@ -3810,7 +4367,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3993,7 +4550,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "config/checked-javascript.json",
@@ -4021,7 +4578,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4049,15 +4606,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d751d14ba62c896381b4a8bf93497a90ee481fbe51018bf0ee34149b0c4bc8a9"
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "3462671108844a5f378eeeac0b91b588588ee84782601550427ccf01921d833a"
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "2300a756919415e1f71a72efa81fd2aa9b313f1d1738edb45f39469e78e1035c"
+          "sha256": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -4168,7 +4725,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -4180,7 +4737,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4311,7 +4868,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -4323,7 +4880,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4347,15 +4904,15 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "1e3495f006c9e02ab27cff324e7643de57e6d552ce4a91356b9a10fbbca28742"
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "4ceb45ddbcca8604edd8161f05d2a494ce8ae3aee3a32d63162b8e3e57b3a37f"
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "0fb8ba1b0ef111797ef40944b1218a3e82c4ebfbca50c7d3740b6f5ceb5589b6"
+          "sha256": "acb9f56c4596ef83085cdd685cb9eeaf0620b75f9f32568e56aa574a90d2f74f"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -4371,7 +4928,7 @@
         },
         {
           "path": "src/release/native-pypi.mjs",
-          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+          "sha256": "dfade7eebe7f4e0dd2a36e6810680353df9c3d81d8ffdd751d28e221746525e5"
         },
         {
           "path": "tests/fixtures/alias-consumers/python-invalid.py",
@@ -4446,7 +5003,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -4458,7 +5015,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4581,7 +5138,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -4609,7 +5166,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4724,7 +5281,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -4760,7 +5317,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4883,7 +5440,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -4899,7 +5456,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5078,7 +5635,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -5094,7 +5651,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5317,7 +5874,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -5333,7 +5890,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5524,7 +6081,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -5540,7 +6097,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5747,7 +6304,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5958,7 +6515,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -5974,7 +6531,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6137,7 +6694,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -6153,7 +6710,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6344,7 +6901,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -6360,7 +6917,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6408,15 +6965,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d751d14ba62c896381b4a8bf93497a90ee481fbe51018bf0ee34149b0c4bc8a9"
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "3462671108844a5f378eeeac0b91b588588ee84782601550427ccf01921d833a"
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "2300a756919415e1f71a72efa81fd2aa9b313f1d1738edb45f39469e78e1035c"
+          "sha256": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -6762,15 +7319,15 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "1e3495f006c9e02ab27cff324e7643de57e6d552ce4a91356b9a10fbbca28742"
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "4ceb45ddbcca8604edd8161f05d2a494ce8ae3aee3a32d63162b8e3e57b3a37f"
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "0fb8ba1b0ef111797ef40944b1218a3e82c4ebfbca50c7d3740b6f5ceb5589b6"
+          "sha256": "acb9f56c4596ef83085cdd685cb9eeaf0620b75f9f32568e56aa574a90d2f74f"
         },
         {
           "path": "src/backends/python/package-audit.mjs",
@@ -6794,7 +7351,7 @@
         },
         {
           "path": "src/release/native-pypi.mjs",
-          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+          "sha256": "dfade7eebe7f4e0dd2a36e6810680353df9c3d81d8ffdd751d28e221746525e5"
         },
         {
           "path": "tests/fixtures/list-consumers/python.py",
@@ -6838,7 +7395,7 @@
         },
         {
           "path": "tests/python-lists.test.mjs",
-          "sha256": "64bdde413064e60b4fce5b806708b4922bc8eab331647db9e2edc1aa93f7eaea"
+          "sha256": "c794e013d075489db75772d947ec9c2ac2ff8607af6cc97a30515e75b25c14af"
         }
       ],
       "artifacts": [
@@ -7036,7 +7593,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -7068,7 +7625,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -7175,7 +7732,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -7191,7 +7748,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7394,7 +7951,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -7410,7 +7967,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7609,7 +8166,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7820,7 +8377,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -7836,7 +8393,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7999,7 +8556,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -8015,7 +8572,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8206,7 +8763,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -8222,7 +8779,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8270,15 +8827,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d751d14ba62c896381b4a8bf93497a90ee481fbe51018bf0ee34149b0c4bc8a9"
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "3462671108844a5f378eeeac0b91b588588ee84782601550427ccf01921d833a"
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "2300a756919415e1f71a72efa81fd2aa9b313f1d1738edb45f39469e78e1035c"
+          "sha256": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -8620,15 +9177,15 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "1e3495f006c9e02ab27cff324e7643de57e6d552ce4a91356b9a10fbbca28742"
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "4ceb45ddbcca8604edd8161f05d2a494ce8ae3aee3a32d63162b8e3e57b3a37f"
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "0fb8ba1b0ef111797ef40944b1218a3e82c4ebfbca50c7d3740b6f5ceb5589b6"
+          "sha256": "acb9f56c4596ef83085cdd685cb9eeaf0620b75f9f32568e56aa574a90d2f74f"
         },
         {
           "path": "src/backends/python/package-audit.mjs",
@@ -8652,7 +9209,7 @@
         },
         {
           "path": "src/release/native-pypi.mjs",
-          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+          "sha256": "dfade7eebe7f4e0dd2a36e6810680353df9c3d81d8ffdd751d28e221746525e5"
         },
         {
           "path": "tests/fixtures/compound-consumers/python.py",
@@ -8890,7 +9447,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -9093,7 +9650,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -9256,7 +9813,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -9296,7 +9853,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e23d11e1ef2a7253147dafdad98e2f029878f2027253209059b7d09ba88fd899"
+          "sha256": "fca6a75ad284d543e363468521065e69eff5eac3246df5e33829e8befc281183"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -9304,7 +9861,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9527,11 +10084,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -9666,11 +10223,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -9789,11 +10346,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "fe7b224e018bd60a5e796e9dbae7b4a509357683d56933d9a70427b5be5c437f"
+          "sha256": "df53009aec642ea16833dda3420077932df8ceaafc460f9dbc4a2662a7d93dd8"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -9821,7 +10378,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -10028,11 +10585,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "fe7b224e018bd60a5e796e9dbae7b4a509357683d56933d9a70427b5be5c437f"
+          "sha256": "df53009aec642ea16833dda3420077932df8ceaafc460f9dbc4a2662a7d93dd8"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -10060,7 +10617,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -10219,7 +10776,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -10243,7 +10800,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -10358,15 +10915,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "3462671108844a5f378eeeac0b91b588588ee84782601550427ccf01921d833a"
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "2300a756919415e1f71a72efa81fd2aa9b313f1d1738edb45f39469e78e1035c"
+          "sha256": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d751d14ba62c896381b4a8bf93497a90ee481fbe51018bf0ee34149b0c4bc8a9"
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -10442,7 +10999,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -10462,7 +11019,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -10641,11 +11198,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "flake.nix",
@@ -10852,11 +11409,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -11047,11 +11604,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -11178,11 +11735,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -11217,15 +11774,15 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "4ceb45ddbcca8604edd8161f05d2a494ce8ae3aee3a32d63162b8e3e57b3a37f"
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "0fb8ba1b0ef111797ef40944b1218a3e82c4ebfbca50c7d3740b6f5ceb5589b6"
+          "sha256": "acb9f56c4596ef83085cdd685cb9eeaf0620b75f9f32568e56aa574a90d2f74f"
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "1e3495f006c9e02ab27cff324e7643de57e6d552ce4a91356b9a10fbbca28742"
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
         },
         {
           "path": "src/backends/python/copied-assets.mjs",
@@ -11257,7 +11814,7 @@
         },
         {
           "path": "src/release/native-pypi.mjs",
-          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+          "sha256": "dfade7eebe7f4e0dd2a36e6810680353df9c3d81d8ffdd751d28e221746525e5"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -11309,11 +11866,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -11428,11 +11985,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -11539,11 +12096,11 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "859338b10bb1b88e408d4d275f21b72cee677b0a4a4b8e2b9e4c70a7dbfb7400"
+          "sha256": "934fda6241d1ecc2e95a5cb975e59beb1ac4323c4dbc30e0d81efc1c5d803d7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -11634,7 +12191,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -11674,7 +12231,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e23d11e1ef2a7253147dafdad98e2f029878f2027253209059b7d09ba88fd899"
+          "sha256": "fca6a75ad284d543e363468521065e69eff5eac3246df5e33829e8befc281183"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -11682,7 +12239,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -11722,11 +12279,11 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d751d14ba62c896381b4a8bf93497a90ee481fbe51018bf0ee34149b0c4bc8a9"
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "3462671108844a5f378eeeac0b91b588588ee84782601550427ccf01921d833a"
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
@@ -11762,11 +12319,11 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "1e3495f006c9e02ab27cff324e7643de57e6d552ce4a91356b9a10fbbca28742"
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "4ceb45ddbcca8604edd8161f05d2a494ce8ae3aee3a32d63162b8e3e57b3a37f"
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -11834,7 +12391,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "859338b10bb1b88e408d4d275f21b72cee677b0a4a4b8e2b9e4c70a7dbfb7400"
+          "sha256": "934fda6241d1ecc2e95a5cb975e59beb1ac4323c4dbc30e0d81efc1c5d803d7c"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -12013,7 +12570,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
@@ -12025,7 +12582,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -12045,11 +12602,11 @@
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d751d14ba62c896381b4a8bf93497a90ee481fbe51018bf0ee34149b0c4bc8a9"
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "3462671108844a5f378eeeac0b91b588588ee84782601550427ccf01921d833a"
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
         },
         {
           "path": "src/backends/jvm/copied-conversions.mjs",
@@ -12085,11 +12642,11 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "1e3495f006c9e02ab27cff324e7643de57e6d552ce4a91356b9a10fbbca28742"
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "4ceb45ddbcca8604edd8161f05d2a494ce8ae3aee3a32d63162b8e3e57b3a37f"
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
         },
         {
           "path": "src/backends/ruby/copied-conversions.mjs",
@@ -12760,7 +13317,7 @@
         },
         {
           "path": "src/backends/python/copied-model.mjs",
-          "sha256": "4ceb45ddbcca8604edd8161f05d2a494ce8ae3aee3a32d63162b8e3e57b3a37f"
+          "sha256": "93bcec6ec6bfda5845f3df5f0295eedc2078985a34effdd842cfdf52d6beafc9"
         },
         {
           "path": "src/backends/python/copied-assets.mjs",
@@ -12768,11 +13325,11 @@
         },
         {
           "path": "src/backends/python/copied-conversions.mjs",
-          "sha256": "1e3495f006c9e02ab27cff324e7643de57e6d552ce4a91356b9a10fbbca28742"
+          "sha256": "658271a8cfad111215b7072f8df29189f71f56dc15e3f7104e82bd8b50f2f936"
         },
         {
           "path": "src/backends/python/copied-values.mjs",
-          "sha256": "0fb8ba1b0ef111797ef40944b1218a3e82c4ebfbca50c7d3740b6f5ceb5589b6"
+          "sha256": "acb9f56c4596ef83085cdd685cb9eeaf0620b75f9f32568e56aa574a90d2f74f"
         },
         {
           "path": "src/backends/python/generate.mjs",
@@ -12800,7 +13357,7 @@
         },
         {
           "path": "src/release/native-pypi.mjs",
-          "sha256": "adcc2768f1590d9e7cd00e685c501cf14ccdf73ba7cedf9d7aeb62a20f90a7a3"
+          "sha256": "dfade7eebe7f4e0dd2a36e6810680353df9c3d81d8ffdd751d28e221746525e5"
         },
         {
           "path": "tests/native-python.test.mjs",
@@ -12831,7 +13388,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "31f90a6149ea325952ee58a7c20bd78928facdd81590a3e395b60cf16b5d3b02"
+          "sha256": "3470b4ce2343d66cf0f2d05eec48559a803edfd0fa30cda3699691019ee9b722"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -12847,7 +13404,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "e2e4de786e320787bec1e152650e52833be55b0a86ac4aaac317668b50834dd3"
+          "sha256": "5516a03e7c773155c8a3ba4891fec95b856718aeb448adc30eb879882e21b04f"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -13319,15 +13876,15 @@
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
-          "sha256": "3462671108844a5f378eeeac0b91b588588ee84782601550427ccf01921d833a"
+          "sha256": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4"
         },
         {
           "path": "src/backends/dotnet/copied-conversions.mjs",
-          "sha256": "d751d14ba62c896381b4a8bf93497a90ee481fbe51018bf0ee34149b0c4bc8a9"
+          "sha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77"
         },
         {
           "path": "src/backends/dotnet/copied-values.mjs",
-          "sha256": "2300a756919415e1f71a72efa81fd2aa9b313f1d1738edb45f39469e78e1035c"
+          "sha256": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd"
         },
         {
           "path": "src/backends/dotnet/generate.mjs",
@@ -15158,7 +15715,7 @@
       "limitations": [
         "Concrete non-recursive copied variants only; generic, indexed, proof-bearing, callable and identity-bearing payloads are not admitted.",
         "32-level type nesting and separate 16 MiB managed/native conversion budgets do not bound all managed allocations or Lean working memory.",
-        "Record properties are init-only, but contained arrays remain mutable and ordinary C# record equality compares array references. Unknown derived records reject at the boundary.",
+        "Record properties are init-only, but contained arrays remain mutable. Unknown derived records reject at the boundary.",
         "This .NET 8 Linux x86-64 glibc record does not cover other targets, recursion or compound callable payloads."
       ],
       "conversionNotes": {
@@ -15227,7 +15784,7 @@
       "limitations": [
         "Concrete non-recursive copied variants only; generic, indexed, proof-bearing, callable and identity-bearing payloads are not admitted.",
         "32-level type nesting and separate 16 MiB managed/native conversion budgets do not bound all managed allocations or Lean working memory.",
-        "Record properties are init-only, but contained arrays remain mutable and ordinary C# record equality compares array references. Unknown derived records reject at the boundary.",
+        "Record properties are init-only, but contained arrays remain mutable. Unknown derived records reject at the boundary.",
         "This .NET 8 Linux x86-64 glibc record does not cover other targets, recursion or compound callable payloads."
       ],
       "conversionNotes": {
@@ -26645,101 +27202,6 @@
       }
     },
     {
-      "id": "alpha-other-scalars-dotnet-1-retained",
-      "profiles": [
-        "dotnet"
-      ],
-      "shapes": [
-        "unit",
-        "uint8",
-        "uint16",
-        "uint64",
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "nat",
-        "int",
-        "float32",
-        "float64"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "The fixed Alpha interface has no general mapping for this type.",
-      "hostTypes": {
-        "unit": {
-          "field": null
-        },
-        "uint8": {
-          "field": null
-        },
-        "uint16": {
-          "field": null
-        },
-        "uint64": {
-          "field": null
-        },
-        "int8": {
-          "field": null
-        },
-        "int16": {
-          "field": null
-        },
-        "int32": {
-          "field": null
-        },
-        "int64": {
-          "field": null
-        },
-        "nat": {
-          "field": null
-        },
-        "int": {
-          "field": null
-        },
-        "float32": {
-          "field": null
-        },
-        "float64": {
-          "field": null
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "managed-mapping-audit"
-          ],
-          "note": "The fixed Alpha interface has no general mapping for this type."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": [
-        "Keeping Alpha declaration names does not make a changed signature executable."
-      ]
-    },
-    {
       "id": "alpha-resource-dotnet-1-retained",
       "profiles": [
         "dotnet"
@@ -28657,7 +29119,7 @@
       "conversionNotes": {
         "option": "None is nil; Some.new(value) retains presence. Some.new(nil) represents an outer Some of an inner None; Some.new(UNIT) preserves present Unit. Some is a frozen Data class with equality and pattern matching. Concrete payload types are validated at the call; nil is valid only in Option positions.",
         "result": "Lean `Except E T` becomes Ok.new(value) or Err.new(error), both exposing value. Exact branch classes preserve success/error identity, including same-typed payloads. Frozen Data wrappers support equality and patterns. Domain errors return Err; bridge failures raise.",
-        "tuple": "Exactly two Array elements, preserving binary nesting and per-position validation. Inputs are copied; returned arrays and strings own independent storage. Branch wrapper fields are frozen, but nested mutable payloads are not. Generated record classes retain object-identity equality."
+        "tuple": "Exactly two Array elements, preserving binary nesting and per-position validation. Inputs are copied; returned arrays and strings own independent storage. Branch wrapper fields are frozen, but nested mutable payloads are not. Generated record classes compare fields by value within the same record class."
       }
     },
     {
@@ -28802,7 +29264,7 @@
       "conversionNotes": {
         "option": "None is nil; Some.new(value) retains presence. Some.new(nil) represents an outer Some of an inner None; Some.new(UNIT) preserves present Unit. Some is a frozen Data class with equality and pattern matching. Concrete payload types are validated at the call; nil is valid only in Option positions.",
         "result": "Lean `Except E T` becomes Ok.new(value) or Err.new(error), both exposing value. Exact branch classes preserve success/error identity, including same-typed payloads. Frozen Data wrappers support equality and patterns. Domain errors return Err; bridge failures raise.",
-        "tuple": "Exactly two Array elements, preserving binary nesting and per-position validation. Inputs are copied; returned arrays and strings own independent storage. Branch wrapper fields are frozen, but nested mutable payloads are not. Generated record classes retain object-identity equality."
+        "tuple": "Exactly two Array elements, preserving binary nesting and per-position validation. Inputs are copied; returned arrays and strings own independent storage. Branch wrapper fields are frozen, but nested mutable payloads are not. Generated record classes compare fields by value within the same record class."
       }
     },
     {
@@ -35939,7 +36401,7 @@
         }
       },
       "limitations": [
-        "Pure copied acyclic types only, nesting at most 32. No ordinary optional, variant, resource, callback or effect support.",
+        "This observation covers copied acyclic values with nesting at most 32. Other copied constructors and primitive callables have separate acceptance records. Recursive and identity-bearing copied payloads remain separate work.",
         "Rust conversions and native copying have separate 16 MiB accounting budgets. Not all Rust allocation overhead or Lean working memory is bounded. RAII applies to errors and unwinding, not abort.",
         "Rust/Cargo 1.90.0 on Linux x86-64 GNU. Local glibc 2.36 acceptance; production floor 2.38. Writable /tmp and Linux /proc required. Forked reuse and foreign runtime loaders are rejected."
       ],
@@ -36118,7 +36580,7 @@
         }
       },
       "limitations": [
-        "Pure copied acyclic types only, nesting at most 32. No ordinary optional, variant, resource, callback or effect support.",
+        "This observation covers copied acyclic values with nesting at most 32. Other copied constructors and primitive callables have separate acceptance records. Recursive and identity-bearing copied payloads remain separate work.",
         "Native input/output and Python conversions have separate 16 MiB accounting budgets. Python object overhead and Lean working memory are separate.",
         "CPython 3.11.2 on Linux x86-64. Local glibc 2.36 acceptance; production floor 2.38. Free-threading and post-fork calls are rejected; subinterpreters and other implementations have not been accepted."
       ],
@@ -37015,7 +37477,7 @@
         }
       },
       "limitations": [
-        "This observation covers copied acyclic values with nesting at most 32. Primitive callable acceptance is recorded separately; optional values, variants, resources and async delivery remain outside this profile.",
+        "This observation covers copied acyclic values with nesting at most 32. Other copied constructors and primitive callables have separate acceptance records. Recursive and identity-bearing copied payloads remain separate work.",
         "Input and output share a 16 MiB native conversion budget; managed input scratch is also bounded. Lean internal allocations are separate.",
         "Linux x86-64, .NET 8; local glibc 2.36 acceptance and production floor 2.38."
       ],
@@ -39358,118 +39820,6 @@
       ]
     },
     {
-      "id": "python-primitives-python-1",
-      "profiles": [
-        "python"
-      ],
-      "shapes": [
-        "unit",
-        "bool",
-        "uint8",
-        "uint16",
-        "uint32",
-        "uint64",
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "nat",
-        "int",
-        "float32",
-        "float64",
-        "string",
-        "bytes"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Historical reviewed Python copied-field inspection only. Installed primitive input/result and callable positions have separate evidence.",
-      "hostTypes": {
-        "unit": {
-          "field": "None"
-        },
-        "bool": {
-          "field": "bool"
-        },
-        "uint8": {
-          "field": "int"
-        },
-        "uint16": {
-          "field": "int"
-        },
-        "uint32": {
-          "field": "int"
-        },
-        "uint64": {
-          "field": "int"
-        },
-        "int8": {
-          "field": "int"
-        },
-        "int16": {
-          "field": "int"
-        },
-        "int32": {
-          "field": "int"
-        },
-        "int64": {
-          "field": "int"
-        },
-        "nat": {
-          "field": "int"
-        },
-        "int": {
-          "field": "int"
-        },
-        "float32": {
-          "field": "float"
-        },
-        "float64": {
-          "field": "float"
-        },
-        "string": {
-          "field": "str"
-        },
-        "bytes": {
-          "field": "bytes"
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "python-mapping-audit"
-          ],
-          "note": "Generated Python type spellings; compiled Alpha coverage is narrower."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": [
-        "Integer validation must reject Python bool inputs.",
-        "Float width and arbitrary-integer transport need type-specific installed tests."
-      ]
-    },
-    {
       "id": "python-compounds-ordinary-source",
       "profiles": [
         "python"
@@ -39769,9 +40119,6 @@
         "record"
       ],
       "positions": [
-        "parameter",
-        "result",
-        "field",
         "callback-parameter",
         "callback-result"
       ],
@@ -39779,16 +40126,10 @@
       "scope": "Generated copied-value annotations only.",
       "hostTypes": {
         "array": {
-          "parameter": "tuple[T, ...]",
-          "result": "tuple[T, ...]",
-          "field": "tuple[T, ...]",
           "callback-parameter": "tuple[T, ...]",
           "callback-result": "tuple[T, ...]"
         },
         "record": {
-          "parameter": "Generated frozen dataclass (Alpha: Payload)",
-          "result": "Generated frozen dataclass (Alpha: Payload)",
-          "field": "Generated frozen dataclass (Alpha: Payload)",
           "callback-parameter": "Generated frozen dataclass (Alpha: Payload)",
           "callback-result": "Generated frozen dataclass (Alpha: Payload)"
         }
@@ -39931,160 +40272,6 @@
       "limitations": [
         "Legacy Alpha annotations do not establish installed support for additional copied shapes."
       ]
-    },
-    {
-      "id": "rust-primitives-rust-1",
-      "profiles": [
-        "rust"
-      ],
-      "shapes": [
-        "unit",
-        "bool",
-        "uint8",
-        "uint16",
-        "uint32",
-        "uint64",
-        "int8",
-        "int16",
-        "int32",
-        "int64",
-        "float32",
-        "float64",
-        "string",
-        "bytes"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Generated Rust scalar spelling only; no installed archive-wide scalar acceptance. Historical Alpha field inspection only; installed primitive callable positions are recorded separately.",
-      "hostTypes": {
-        "unit": {
-          "field": "()"
-        },
-        "bool": {
-          "field": "bool"
-        },
-        "uint8": {
-          "field": "u8"
-        },
-        "uint16": {
-          "field": "u16"
-        },
-        "uint32": {
-          "field": "u32"
-        },
-        "uint64": {
-          "field": "u64"
-        },
-        "int8": {
-          "field": "i8"
-        },
-        "int16": {
-          "field": "i16"
-        },
-        "int32": {
-          "field": "i32"
-        },
-        "int64": {
-          "field": "i64"
-        },
-        "float32": {
-          "field": "f32"
-        },
-        "float64": {
-          "field": "f64"
-        },
-        "string": {
-          "field": "String"
-        },
-        "bytes": {
-          "field": "Vec<u8>"
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "inspected",
-          "evidence": [
-            "rust-mapping-audit"
-          ],
-          "note": "Generated Rust scalar spelling only; no installed archive-wide scalar acceptance."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": []
-    },
-    {
-      "id": "rust-bigints-rust-1",
-      "profiles": [
-        "rust"
-      ],
-      "shapes": [
-        "nat",
-        "int"
-      ],
-      "positions": [
-        "field"
-      ],
-      "path": "reviewed-ir",
-      "scope": "Rust has no arbitrary-precision integer backend mapping. Historical Alpha field inspection only; installed primitive callable positions are recorded separately.",
-      "hostTypes": {
-        "nat": {
-          "field": null
-        },
-        "int": {
-          "field": null
-        }
-      },
-      "stages": {
-        "analysis": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "generation": {
-          "state": "rejected",
-          "evidence": [
-            "rust-mapping-audit"
-          ],
-          "note": "unsupported-arbitrary-integer; required work remains in VO1218."
-        },
-        "compilation": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "packaging": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        },
-        "installedExecution": {
-          "state": "unreviewed",
-          "evidence": [],
-          "note": "No type-specific execution evidence is recorded for this stage and position."
-        }
-      },
-      "limitations": []
     },
     {
       "id": "rust-compounds-ordinary-source",
@@ -40386,9 +40573,6 @@
         "record"
       ],
       "positions": [
-        "parameter",
-        "result",
-        "field",
         "callback-parameter",
         "callback-result"
       ],
@@ -40396,16 +40580,10 @@
       "scope": "Legacy Rust Alpha generated copied-value types; ordinary installed types have separate evidence.",
       "hostTypes": {
         "array": {
-          "parameter": "Vec<T>",
-          "result": "Vec<T>",
-          "field": "Vec<T>",
           "callback-parameter": "Vec<T>",
           "callback-result": "Vec<T>"
         },
         "record": {
-          "parameter": "Generated owned struct (Alpha: Payload)",
-          "result": "Generated owned struct (Alpha: Payload)",
-          "field": "Generated owned struct (Alpha: Payload)",
           "callback-parameter": "Generated owned struct (Alpha: Payload)",
           "callback-result": "Generated owned struct (Alpha: Payload)"
         }
@@ -41105,32 +41283,8 @@
       "limitations": []
     },
     {
-      "id": "alpha-fields-dotnet-1",
-      "profiles": ["dotnet"],
-      "shapes": ["bool","uint32","string","bytes","array"],
-      "positions": ["field"],
-      "path": "reviewed-ir",
-      "scope": "Only canonical Alpha.Payload fields; Array means Array UInt32 here.",
-      "hostTypes": {
-        "bool": {"field":"bool"},
-        "uint32": {"field":"uint"},
-        "string": {"field":"string"},
-        "bytes": {"field":"ReadOnlyMemory<byte>"},
-        "array": {"field":"ReadOnlyMemory<uint>"}
-      },
-      "stages": {
-        "analysis": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "generation": {"state":"inspected","evidence":["managed-mapping-audit"],"note":"Only canonical Alpha.Payload fields; Array means Array UInt32 here."},
-        "compilation": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "packaging": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."},
-        "installedExecution": {"state":"unreviewed","evidence":[],"note":"No type-specific execution evidence is recorded for this stage and position."}
-      },
-      "limitations": ["This fixed template has no general mapping."]
-    },
-    {
       "id": "alpha-record-dotnet-1",
       "profiles": [
-        "dotnet",
         "java",
         "kotlin"
       ],
@@ -44036,6 +44190,594 @@
         "Finite acyclic copied shapes with a 32-level schema limit and shared 16 MiB native conversion budget. Ruby scratch has a separate 16 MiB budget; these limits do not bound all host allocations or Lean working memory.",
         "Snapshots preserve bounded local values, not an atomic view of concurrently mutated nested inputs. Frozen wrappers can contain mutable payloads; do not mutate payloads while their containing values are Hash keys.",
         "Recursive copied values, compound callable completion and explicitly owned identity aggregates remain separate work."
+      ]
+    },
+    {
+      "id": "dotnet-collections-reviewed",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations.",
+      "hostTypes": {
+        "array": {
+          "parameter": "T[]",
+          "result": "T[]",
+          "field": "T[]"
+        },
+        "record": {
+          "parameter": "Generated sealed record",
+          "result": "Generated sealed record",
+          "field": "Generated sealed record"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        }
+      },
+      "limitations": [
+        "Acyclic copied shapes with a 32-level schema limit and separate 16 MiB managed-input and shared native-input/output accounting budgets. These do not bound every managed allocation or Lean working memory.",
+        "Init-only records may contain mutable arrays. Do not mutate nested contents while values are dictionary keys or hash-set members. Direct C# containers retain their language equality; use StructuralComparisons for their nested contents.",
+        "Recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Typed T[] preserves every primitive, element order, empty and nested arrays and records. Returned mutable storage is independent. Null arrays, invalid nested values and oversized copies reject without retaining scratch.",
+        "record": "Named sealed C# records preserve declared typed fields through init-only properties, constructors, deconstruction and with expressions. Empty and one-field records remain distinct. Records compare nested payloads structurally and hash consistently; floating equality follows .NET NaN and signed-zero semantics."
+      }
+    },
+    {
+      "id": "dotnet-collection-reviewed-fields",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations.",
+      "hostTypes": {
+        "unit": {
+          "field": "Unit"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "byte"
+        },
+        "uint16": {
+          "field": "ushort"
+        },
+        "uint32": {
+          "field": "uint"
+        },
+        "uint64": {
+          "field": "ulong"
+        },
+        "int8": {
+          "field": "sbyte"
+        },
+        "int16": {
+          "field": "short"
+        },
+        "int32": {
+          "field": "int"
+        },
+        "int64": {
+          "field": "long"
+        },
+        "nat": {
+          "field": "BigInteger"
+        },
+        "int": {
+          "field": "BigInteger"
+        },
+        "float32": {
+          "field": "float"
+        },
+        "float64": {
+          "field": "double"
+        },
+        "string": {
+          "field": "string"
+        },
+        "bytes": {
+          "field": "byte[]"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original NuGet packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 660,970 assertions, 3,364 calls, 57 runtime rejections and sixteen compiler-rejected callers. Installed records compare nested contents by value. Separate copies inject 391 host and 551 real-native conversion failures, check 64 partial inputs per mode and release tracked scratch. The suite verifies unchanged installed files, removes sources and caches, and repeats the relocated caller twice with no SDK. The consumer documentation example runs against the same assembly. An independent rebuild reproduces original archives, package contents and public observations."
+        }
+      },
+      "limitations": [
+        "Acyclic copied shapes with a 32-level schema limit and separate 16 MiB managed-input and shared native-input/output accounting budgets. These do not bound every managed allocation or Lean working memory.",
+        "Init-only records may contain mutable arrays. Do not mutate nested contents while values are dictionary keys or hash-set members. Direct C# containers retain their language equality; use StructuralComparisons for their nested contents.",
+        "Recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
+      ]
+    },
+    {
+      "id": "python-collections-reviewed",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations.",
+      "hostTypes": {
+        "array": {
+          "parameter": "tuple[T, ...] (also list[T] input)",
+          "result": "tuple[T, ...]",
+          "field": "tuple[T, ...] (also list[T] input)"
+        },
+        "record": {
+          "parameter": "Generated frozen dataclass",
+          "result": "Generated frozen dataclass",
+          "field": "Generated frozen dataclass"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        }
+      },
+      "limitations": [
+        "Acyclic copied shapes with a 32-level schema limit and shared 16 MiB Python conversion accounting. Native conversion has its own 16 MiB input/output budget. These do not bound all Python allocations or Lean working memory.",
+        "Frozen dataclasses may contain caller-supplied mutable lists. Returned arrays are tuples and returned byte arrays are bytes. Python structural equality follows Python floating-point and sequence semantics.",
+        "Recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Exact tuples and lists preserve element order and nesting on input; owned tuples preserve all nineteen primitives and nested records on output. Invalid elements, misaligned nonempty native buffers and oversized copies reject. Runtime aliases bound repeated deep annotation expansion without widening installed static types.",
+        "record": "Generated frozen dataclasses preserve declared field order, nominal record identity, empty and one-field records and nested values. Python keywords and reserved names gain a checked underscore suffix without changing Lean field names. pip installs the typing backport automatically on Python 3.11 only when deep shapes require runtime aliases."
+      }
+    },
+    {
+      "id": "python-collection-reviewed-fields",
+      "profiles": [
+        "python"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations.",
+      "hostTypes": {
+        "unit": {
+          "field": "None"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "int"
+        },
+        "uint16": {
+          "field": "int"
+        },
+        "uint32": {
+          "field": "int"
+        },
+        "uint64": {
+          "field": "int"
+        },
+        "int8": {
+          "field": "int"
+        },
+        "int16": {
+          "field": "int"
+        },
+        "int32": {
+          "field": "int"
+        },
+        "int64": {
+          "field": "int"
+        },
+        "nat": {
+          "field": "int"
+        },
+        "int": {
+          "field": "int"
+        },
+        "float32": {
+          "field": "float"
+        },
+        "float64": {
+          "field": "float"
+        },
+        "string": {
+          "field": "str"
+        },
+        "bytes": {
+          "field": "bytes"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "python-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original wheels on ordinary-source and independently reviewed paths. Python 3.11 with minimum/current typing_extensions and Python 3.12 without the backport each pass 158,365 assertions, 3,225 calls and 119 runtime rejections. All nineteen primitives, seven records and 24 fixed Array levels retain meaning and public annotations; strict mypy accepts valid calls and rejects thirteen errors. Isolated probes check 80 allocation failures, 305 conversion failures, 64 partial inputs, seven malformed values and 405 clears. Original files and dependencies remain unchanged after relocation and repeated compiler-free execution. The publisher and consumer documentation examples execute against their original wheel. An independent rebuild reproduces archives, installed contents and public observations."
+        }
+      },
+      "limitations": [
+        "Acyclic copied shapes with a 32-level schema limit and shared 16 MiB Python conversion accounting. Native conversion has its own 16 MiB input/output budget. These do not bound all Python allocations or Lean working memory.",
+        "Frozen dataclasses may contain caller-supplied mutable lists. Returned arrays are tuples and returned byte arrays are bytes. Python structural equality follows Python floating-point and sequence semantics.",
+        "Recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
+      ]
+    },
+    {
+      "id": "rust-collections-reviewed",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "array",
+        "record"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations.",
+      "hostTypes": {
+        "array": {
+          "parameter": "&[T]",
+          "result": "Vec<T>",
+          "field": "Vec<T>"
+        },
+        "record": {
+          "parameter": "&Generated struct",
+          "result": "Generated struct",
+          "field": "Generated struct"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        }
+      },
+      "limitations": [
+        "Acyclic copied shapes with a 32-level schema limit and separate 16 MiB Rust-conversion and native-input/output accounting budgets. These do not bound every Rust allocation or Lean working memory.",
+        "Generated structs derive Clone, Debug and PartialEq. Nested vectors compare by contents; floating equality follows Rust semantics, including NaN inequality and equal signed zeros. Cleanup covers errors and unwinding, not process abort.",
+        "Recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
+      ],
+      "conversionNotes": {
+        "array": "Borrowed `&[T]` inputs and owned `Vec<T>` outputs preserve all nineteen primitives, element order, empty containers, nested arrays and records. Rust rejects wrong element types and borrowed-result assumptions at compile time. Returned storage is independent; invalid native buffers and copy-budget failures return checked errors.",
+        "record": "Generated nominal structs preserve declared typed public fields, empty and one-field records, changed field order and nested values. Clone and PartialEq operate through nested owned vectors. Wrong record types and missing or unknown fields fail compilation. Consumers need no unsafe code or private transport types."
+      }
+    },
+    {
+      "id": "rust-collection-reviewed-fields",
+      "profiles": [
+        "rust"
+      ],
+      "shapes": [
+        "unit",
+        "bool",
+        "uint8",
+        "uint16",
+        "uint32",
+        "uint64",
+        "int8",
+        "int16",
+        "int32",
+        "int64",
+        "nat",
+        "int",
+        "float32",
+        "float64",
+        "string",
+        "bytes"
+      ],
+      "positions": [
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations.",
+      "hostTypes": {
+        "unit": {
+          "field": "()"
+        },
+        "bool": {
+          "field": "bool"
+        },
+        "uint8": {
+          "field": "u8"
+        },
+        "uint16": {
+          "field": "u16"
+        },
+        "uint32": {
+          "field": "u32"
+        },
+        "uint64": {
+          "field": "u64"
+        },
+        "int8": {
+          "field": "i8"
+        },
+        "int16": {
+          "field": "i16"
+        },
+        "int32": {
+          "field": "i32"
+        },
+        "int64": {
+          "field": "i64"
+        },
+        "nat": {
+          "field": "BigUint"
+        },
+        "int": {
+          "field": "BigInt"
+        },
+        "float32": {
+          "field": "f32"
+        },
+        "float64": {
+          "field": "f64"
+        },
+        "string": {
+          "field": "String"
+        },
+        "bytes": {
+          "field": "Vec<u8>"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "rust-collections-installed"
+          ],
+          "note": "Thirty-five compiler-authenticated exports preserve copied arrays and records through original Cargo packages on ordinary-source and independently reviewed paths. Each public execution checks all nineteen primitives, seven records and 24 fixed Array levels with 321,191 assertions, 3,274 calls and twelve runtime rejections; fifteen invalid callers fail compilation. Separate crate copies exercise 112 host allocation and unwinding checkpoints and 1,546 real-native allocation/panic checks with recovered calls and cleared native outputs. Offline consumers use empty Cargo homes, exact vendored dependencies and a link-only C driver. Original packages remain unchanged. Relocated binaries repeat without sources or compilers, including the documentation example. An independent rebuild reproduces original archives, installed contents, dependencies and public observations."
+        }
+      },
+      "limitations": [
+        "Acyclic copied shapes with a 32-level schema limit and separate 16 MiB Rust-conversion and native-input/output accounting budgets. These do not bound every Rust allocation or Lean working memory.",
+        "Generated structs derive Clone, Debug and PartialEq. Nested vectors compare by contents; floating equality follows Rust semantics, including NaN inequality and equal signed zeros. Cleanup covers errors and unwinding, not process abort.",
+        "Recursive copied values, compound callable payloads and explicitly owned aggregates remain separate work."
       ]
     }
   ]

@@ -1,0 +1,18 @@
+[
+  { "name": "wrong-scalar", "statement": "Api.ArrayReverseUint32(new[] { new[] { true } });", "code": "CS1503" },
+  { "name": "mixed-elements", "statement": "Api.ArrayReverseUint32(new[] { new uint[] { 1, \"two\" } });", "code": "CS0029" },
+  { "name": "text-natural", "statement": "Api.ArrayReverseNat(new[] { new[] { \"1\" } });", "code": "CS1503" },
+  { "name": "bytes-as-text", "statement": "Api.ArrayReverseString(new[] { new[] { new byte[] { 0, 255 } } });", "code": "CS1503" },
+  { "name": "text-as-char", "statement": "Api.ArrayReverseChar(new[] { new[] { \"x\" } });", "code": "CS1503" },
+  { "name": "wrong-depth", "statement": "Api.Deep(new[] { new uint[] { 7 } });", "code": "CS1503" },
+  { "name": "nominal-record", "statement": "Api.RecordSingle(new Count(1));", "code": "CS1503" },
+  { "name": "unit-as-record", "statement": "Api.RecordEmpty(default(Unit));", "code": "CS1503" },
+  { "name": "missing-field", "statement": "_ = new Pair(1);", "code": "CS7036" },
+  { "name": "unknown-field", "statement": "_ = new Pair(1, \"\") with { Unknown = 0 };", "code": "CS0117" },
+  { "name": "wrong-field", "statement": "_ = new Pair(\"1\", \"\");", "code": "CS1503" },
+  { "name": "init-only", "statement": "var value = new Pair(1, \"\"); value.First = 2;", "code": "CS8852" },
+  { "name": "wrong-result", "statement": "uint[] result = Api.ArrayReverseUint32(System.Array.Empty<uint[]>());", "code": "CS0029" },
+  { "name": "unsigned-overflow", "statement": "Api.ArrayReverseUint8(new[] { new byte[] { 256 } });", "code": "CS0031" },
+  { "name": "signed-overflow", "statement": "Api.ArrayReverseInt8(new[] { new sbyte[] { 128 } });", "code": "CS0031" },
+  { "name": "null-array", "statement": "Api.ArrayReverseUint32(null);", "code": "CS8625" }
+]

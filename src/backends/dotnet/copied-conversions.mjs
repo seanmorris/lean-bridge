@@ -9,6 +9,17 @@ const nativeAlignment = copy => copy.variant ? Math.max(4, ...copy.cases.flatMap
 		: copy.aggregate ? 8 : ["unit", "bool", "uint8", "int8"].includes(copy.scalarName) ? 1
 			: ["uint16", "int16"].includes(copy.scalarName) ? 2 : ["char", "uint32", "int32", "float32"].includes(copy.scalarName) ? 4 : 8;
 
+const checkedBuffer = `    private static ReadOnlySpan<T> CheckedBuffer<T>(nint data, nuint length, int alignment) where T : unmanaged
+    {
+        if (length > (nuint)((16 * 1024 * 1024) / sizeof(T)))
+            throw new ArgumentException("Lean Bridge native buffer exceeds the 16 MiB copy limit");
+        if (length == 0) return ReadOnlySpan<T>.Empty;
+        if (data == 0 || (nuint)data % (nuint)alignment != 0)
+            throw new InvalidOperationException("Invalid native buffer");
+        return new ReadOnlySpan<T>((void*)data, checked((int)length));
+    }
+`;
+
 /**
  * Render all unmanaged C structs, including nested and empty records.
  *
@@ -48,7 +59,7 @@ ${copy.compound ? `${copy.compound === "tuple" ? "" : "    internal byte Flag;\n
  *
  * @param model - Closed copied-value C# model.
  */
-export const copiedConversions = model => model.surface.copies.map(copy => {
+export const copiedConversions = model => checkedBuffer + model.surface.copies.map(copy => {
 	const i = copy.index, type = model.publicType(copy), native = model.nativeType(copy);
 	let input, output;
 	if(copy.variant)
@@ -107,8 +118,8 @@ ${copy.cases.map((branch, index) => `            ${index} => new ${branch.public
         return result;`;
 	} else switch(copy.scalarName)
 	{
-		case "unit": input = "return 0;"; output = "return default;"; break;
-		case "bool": input = "return value ? (byte)1 : (byte)0;"; output = "return value != 0;"; break;
+		case "unit": input = "return 0;"; output = 'if (value != 0) throw new InvalidOperationException("Invalid native Unit marker");\n        return default;'; break;
+		case "bool": input = "return value ? (byte)1 : (byte)0;"; output = 'return value switch { 0 => false, 1 => true, _ => throw new InvalidOperationException("Invalid native Bool value") };'; break;
 		case "char": input = "return (uint)value.Value;"; output = "return new global::System.Text.Rune(value);"; break;
 		case "string":
 			input = `ArgumentNullException.ThrowIfNull(value);
@@ -116,20 +127,22 @@ ${copy.cases.map((branch, index) => `            ${index} => new ${branch.public
         var data = scope.Allocate(length, 1);
         Utf8.GetBytes(value, new Span<byte>((void*)data, length));
         return new ${native} { Data = data, Length = (nuint)length };`;
-			output = "return Utf8.GetString(new ReadOnlySpan<byte>((void*)value.Data, checked((int)value.Length)));"; break;
+			output = "return Utf8.GetString(CheckedBuffer<byte>(value.Data, value.Length, 1));"; break;
 		case "bytes":
 			input = `ArgumentNullException.ThrowIfNull(value);
         var data = scope.Allocate(value.Length, 1);
         value.AsSpan().CopyTo(new Span<byte>((void*)data, value.Length));
         return new ${native} { Data = data, Length = (nuint)value.Length };`;
-			output = "return new ReadOnlySpan<byte>((void*)value.Data, checked((int)value.Length)).ToArray();"; break;
+			output = "return CheckedBuffer<byte>(value.Data, value.Length, 1).ToArray();"; break;
 		case "nat": case "int":
 			input = `${copy.scalarName === "nat" ? 'if (value.Sign < 0) throw new ArgumentOutOfRangeException(nameof(value), "Lean Nat cannot be negative");\n        ' : ""}var magnitude = global::System.Numerics.BigInteger.Abs(value);
         var limbs = value.IsZero ? 0 : checked((magnitude.GetByteCount(isUnsigned: true) + 3) / 4);
         var data = scope.Allocate(limbs, sizeof(uint));
         if (limbs != 0 && !magnitude.TryWriteBytes(new Span<byte>((void*)data, checked(limbs * 4)), out _, isUnsigned: true, isBigEndian: false)) throw new InvalidOperationException("Integer conversion failed");
         return new ${native} { Data = data, Length = (nuint)limbs${copy.scalarName === "int" ? ", Negative = value.Sign < 0 ? (byte)1 : (byte)0" : ""} };`;
-			output = `var result = new global::System.Numerics.BigInteger(new ReadOnlySpan<byte>((void*)value.Data, checked((int)value.Length * 4)), isUnsigned: true, isBigEndian: false);
+			output = `${copy.scalarName === "int" ? 'if (value.Negative > 1) throw new InvalidOperationException("Invalid native Int sign");\n        ' : ""}var digits = CheckedBuffer<uint>(value.Data, value.Length, 4);
+        if (!digits.IsEmpty && digits[^1] == 0) throw new InvalidOperationException("Invalid native integer magnitude");
+        ${copy.scalarName === "int" ? 'if (digits.IsEmpty && value.Negative != 0) throw new InvalidOperationException("Invalid native negative zero");\n        ' : ""}var result = new global::System.Numerics.BigInteger(global::System.Runtime.InteropServices.MemoryMarshal.AsBytes(digits), isUnsigned: true, isBigEndian: false);
         return ${copy.scalarName === "int" ? "value.Negative != 0 ? -result : result" : "result"};`; break;
 		default: input = "return value;"; output = "return value;";
 	}
@@ -154,6 +167,10 @@ public readonly record struct Option<T>
     public T Value => IsSome ? value : throw new global::System.InvalidOperationException("None has no value");
     public static Option<T> None => default;
     public static Option<T> Some(T value) => new(value);
+    public bool Equals(Option<T> other) => IsSome == other.IsSome
+        && (!IsSome || global::System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(value, other.value));
+    public override int GetHashCode() => global::System.HashCode.Combine(IsSome,
+        IsSome ? global::System.Collections.StructuralComparisons.StructuralEqualityComparer.GetHashCode(value!) : 0);
     public override string ToString() => IsSome ? $"Some({value})" : "None";
 }
 /// <summary>A copied Lean Except. Use Ok or Err; default has no branch and cannot cross the boundary.</summary>
@@ -170,6 +187,18 @@ public readonly record struct Result<T, E>
     public E Error => IsError ? error : throw new global::System.InvalidOperationException("Result has no error value");
     public static Result<T, E> Ok(T value) => new(1, value, default!);
     public static Result<T, E> Err(E error) => new(2, default!, error);
+    public bool Equals(Result<T, E> other) => state == other.state && (state switch
+    {
+        1 => global::System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(value, other.value),
+        2 => global::System.Collections.StructuralComparisons.StructuralEqualityComparer.Equals(error, other.error),
+        _ => true
+    });
+    public override int GetHashCode() => global::System.HashCode.Combine(state, state switch
+    {
+        1 => global::System.Collections.StructuralComparisons.StructuralEqualityComparer.GetHashCode(value!),
+        2 => global::System.Collections.StructuralComparisons.StructuralEqualityComparer.GetHashCode(error!),
+        _ => 0
+    });
     public override string ToString() => IsOk ? $"Ok({value})" : IsError ? $"Err({error})" : "Uninitialized Result";
 }
 `;
