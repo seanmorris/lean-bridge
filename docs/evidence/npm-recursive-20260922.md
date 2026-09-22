@@ -3,6 +3,10 @@
 VO 1219, 2026-09-22. Ordinary Lean source and independently reviewed IR now build
 installed npm packages containing bounded recursive copied values.
 
+The [callable-alias compiler repair](callable-alias-ci-repair-20260922.md) includes
+a subsequent rebuild of these packages and the alias/variant regressions on all
+three browsers. Its new receipt retains the original installed record unchanged.
+
 ## Public values
 
 Generated TypeScript retains recursive names, constructor names, fields and

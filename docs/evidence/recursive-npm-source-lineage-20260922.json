@@ -29,7 +29,7 @@
       "sources": {
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "86a40ac04f7c5bb3888ca5ca9986db66b7e4de21963dd620b2b8314f558c038d"
+          "currentSha256": "94bf425467d51dbe8401580c48445cb70780a879f7e3100dcabd3a53560c71c9"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -44,6 +44,12 @@
       "previousSha256": "434bcb7e6f4bf4fe358c080b40b4764b37c84a83ef8808f801fbaac5f61dead2",
       "currentSha256": "86a40ac04f7c5bb3888ca5ca9986db66b7e4de21963dd620b2b8314f558c038d",
       "change": "Add the native-copied-graph-layout contract test. Existing profile registrations and historical installed receipts are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "86a40ac04f7c5bb3888ca5ca9986db66b7e4de21963dd620b2b8314f558c038d",
+      "currentSha256": "94bf425467d51dbe8401580c48445cb70780a879f7e3100dcabd3a53560c71c9",
+      "change": "Add native-recursive-transport checks, including explicit opt-in compiled Lean/C acceptance. Historical installed receipts are unchanged."
     }
   ]
 }

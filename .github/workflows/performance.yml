@@ -109,6 +109,12 @@ jobs:
         run: |
           source scripts/env.sh
           node --test --test-name-pattern='fresh Lean recursive graphs' tests/compiler-variant-metadata.test.mjs
+      - name: Check compiled native recursive copied values
+        env:
+          LEAN_BRIDGE_NATIVE_RECURSIVE_TEST: "1"
+        run: |
+          source scripts/env.sh
+          node --test tests/native-recursive-transport.test.mjs
 
   spatial:
     name: Startup and composition profiles

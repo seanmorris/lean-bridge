@@ -20,7 +20,15 @@ Stages can finish independently. Plan 1208 stays open until every required cell 
 | Packages and verification | 1240, 1224 | Produce native ecosystem packages and generic local receipts, verify exact installed archives, and retain signed-receipt compatibility. |
 | Documentation and acceptance | 1227, 1225, 1226 | Execute documentation examples, pass the complete matrix and latency/throughput thresholds, and reconcile every remaining gap. |
 
-Task 1219 now has [compiled npm nested arrays](../evidence/npm-arrays-20260920.md) across all nineteen primitive element types. The versioned transport validates descriptors against Binding IR, bounds recursive copies and clears partial output. Node, strict TypeScript, browser pages, React and workers exercise installed archives on both source paths. Nested binary products, explicit Option tags and Except branches now have [installed compiler-backed npm checks](../evidence/npm-compounds-20260920.md), including mixtures with arrays and records. [Named copied records](../evidence/npm-records-20260920.md) now compile through Lean-generated constructors and field accessors. Variants and recursive copied types remain later steps in the same task.
+Task 1219 has installed arrays, Lists, products, Option, Except, copied records,
+aliases and variants across all seventeen consumer profiles. The
+[structured-types record](../evidence/structured-types-20260921.md) links the
+ordinary-source and independently reviewed package checks.
+[Recursive npm values](../evidence/npm-recursive-20260922.md) also pass installed
+checks in Node, TypeScript, browser pages, React and workers. The remaining
+twelve profiles still need recursive installed acceptance. Compound callback
+and closure payloads, and aggregates with explicit identity ownership, remain
+part of the same task.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [Python wheels](../evidence/python-compounds-20260920.md),

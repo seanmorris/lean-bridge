@@ -74,10 +74,28 @@ def nativeIdentifier (name : String) : Bool :=
 -- Callable signatures use the checked value representation. Traverse aliases
 -- only after the finite table has been checked and acyclic types expanded.
 def callableTarget (value : Json) : MetaM Json := do
+  let original := value
   let mut value := value
-  while (value.getObjValAs? String "kind").toOption == some "alias" do
-    value ← ofExcept <| value.getObjVal? "target"
-  return value
+  let mut types : Array Json := #[]
+  if (value.getObjValAs? String "kind").toOption == some "graph" then
+    types ← ofExcept <| value.getObjValAs? (Array Json) "types"
+    value ← ofExcept <| value.getObjVal? "root"
+  -- Alias depth is not value nesting. A finite alias table can still denote a
+  -- primitive callable argument; do not leave it disguised as a copied graph.
+  for _ in [:1025] do
+    let kind := (value.getObjValAs? String "kind").toOption.getD ""
+    if kind == "alias" then
+      value ← ofExcept <| value.getObjVal? "target"
+    else if kind == "reference" then
+      let name ← ofExcept <| value.getObjValAs? String "name"
+      let some type := types.find? (fun item => (item.getObjValAs? String "name").toOption == some name)
+        | throwError "missing callable alias definition: {name}"
+      if (type.getObjValAs? String "kind").toOption != some "alias" then return original
+      value ← ofExcept <| type.getObjVal? "target"
+    else
+      -- Compound graphs retain their table and their separate adapter gate.
+      return if types.isEmpty || kind == "primitive" then value else original
+  throwError "callable alias chain exceeds the nominal type limit"
 
 def nominalReference (e : Expr) (name : Name) : MetaM Json := do
   return obj [("kind", str "reference"), ("name", str name.toString),

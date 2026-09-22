@@ -35,8 +35,10 @@ test("both compiler profiles retain callable ownership through checked alias cha
 		, "def echoBox (value : BoxChain) : BoxChain := value"
 		, "def hiddenBoxes (value : Array BoxChain) : Array BoxChain := value"
 		, ...Array.from({ length: 33 }, (_, i) => `abbrev A${i + 1} := A${i}`)
-		, "abbrev TooDeep := A33 → UInt32"
-		, "def deep (value : TooDeep) : TooDeep := value"
+		, "abbrev LongUnary := A33 → UInt32"
+		, "def deep (value : LongUnary) : LongUnary := value"
+		, `abbrev DeepCopied := ${"Array (".repeat(33)}UInt32${")".repeat(33)}`
+		, "def copiedDepth (value : DeepCopied) : DeepCopied := value"
 		, "end CallableAliases"].join("\n");
 	await saveLakeFile(directory, "CallableAliases.lean", source);
 	await capture(["-o", "CallableAliases.olean", "CallableAliases.lean"]);
@@ -51,14 +53,14 @@ test("both compiler profiles retain callable ownership through checked alias cha
 	{
 		const request = createMetadataRequest({ profile
 			, modules: ["CallableAliases"], exportModules: ["CallableAliases"]
-			, exports: ["echo", "apply", "nested", "record", "deep"].map(name => `CallableAliases.${name}`)
+			, exports: ["echo", "apply", "nested", "record", "deep", "copiedDepth"].map(name => `CallableAliases.${name}`)
 			, resources: []
 			, arities: [["CallableAliases.echo", 1], ["CallableAliases.deep", 1]] }, context);
 		await saveLakeFile(directory, "request.json", canonicalJson(request));
 		const metadata = JSON.parse((await capture(["--run", extractor, "--metadata", "request.json"])).stdout);
 		validateElaboratedMetadata(metadata, request);
 		const declarations = metadata.modules[0].declarations;
-		for(const name of ["echo", "apply"])
+		for(const name of ["echo", "apply", "deep"])
 		{
 			const item = declarations.find(item => item.identity === `CallableAliases.${name}`);
 			assert.equal(item.projection.status, "supported", canonicalJson(item.projection));
@@ -67,9 +69,9 @@ test("both compiler profiles retain callable ownership through checked alias cha
 			assert.equal(callback.parameters[0].kind, "primitive");
 			assert.equal(callback.parameters[0].name, "uint32");
 			assert.equal(callback.result.kind, "primitive");
-			if(name === "echo") assert.deepEqual(item.projection.result, callback);
+			if(name !== "apply") assert.deepEqual(item.projection.result, callback);
 		}
-		for(const name of ["nested", "record", "deep"])
+		for(const name of ["nested", "record", "copiedDepth"])
 			assert.equal(declarations.find(item => item.identity === `CallableAliases.${name}`).projection.status, "unsupported", `${profile}/${name}`);
 		const ir = createElaboratedSemanticModel({ metadata, request
 			, component: { id: "callable-aliases@1.0.0", name: "callable-aliases", version: "1.0.0" }
@@ -77,6 +79,9 @@ test("both compiler profiles retain callable ownership through checked alias cha
 		const echo = ir.declarations.find(item => item.name === "echo");
 		assert.equal(echo.parameters[0].ownership, "borrow");
 		assert.equal(echo.result.ownership, "lease");
+		const deep = ir.declarations.find(item => item.name === "deep");
+		assert.equal(deep.parameters[0].ownership, "borrow");
+		assert.equal(deep.result.ownership, "lease");
 		identities.push(sourceApiIdentity(ir).sha256);
 	}
 	assert.equal(identities[0], identities[1]);

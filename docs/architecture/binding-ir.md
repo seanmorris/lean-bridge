@@ -99,8 +99,10 @@ execute with input validation and partial-output cleanup.
 [Compiled npm packages](../evidence/npm-recursive-20260922.md) use private ABI 8
 for recursive graphs. A native allocation ledger owns the result; the loader
 checks each returned buffer against that ledger before copying it. Cleanup does
-not follow result pointers. Other consumer targets still need recursive adapters
-and installed acceptance.
+not follow result pointers. [Native C transport checks](../evidence/native-recursive-transport-20260922.md)
+now execute typed layouts, bounded conversions and private allocation cleanup
+against freshly compiled Lean. Native package admission and the remaining
+consumer targets still need integration and installed acceptance.
 
 Compiled npm variants use private ABI 7, with a closed named-type table and
 constructor-specific copied fields. Generated Lean helpers construct and match

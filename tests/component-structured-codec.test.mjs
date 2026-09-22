@@ -888,7 +888,12 @@ test("public recursive loader shares heap retirement and recovers from symbol al
 });
 
 test("recursive npm evidence binds installed archives to both source paths and every browser context", async () => {
-	const record = JSON.parse(await readFile("docs/evidence/npm-recursive-20260922.json"));
+	const record = JSON.parse(await readFile("docs/evidence/npm-recursive-callable-repair-20260922.json"));
+	assert.equal(record.baseline.path, "docs/evidence/npm-recursive-20260922.json");
+	assert.equal(record.baseline.sha256, "edbf2bcd8e330cf42cbbf1d9e9a1c9eb9ad0ab7c89fe5afa2329bffdde397212");
+	assert.equal(sha256(await readFile(record.baseline.path)), record.baseline.sha256, "historical installed receipt is immutable");
+	const baseline = JSON.parse(await readFile(record.baseline.path));
+	assert.deepEqual(Object.keys(record.sourceHashes).sort(), Object.keys(baseline.sourceHashes).sort());
 	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
 	assert.deepEqual(record.runs.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.runs)

@@ -47,8 +47,9 @@ follow the root's constructor tag or child pointers.
 The executed cleanup test supplies an independently allocated test arena,
 replaces the root's tag and recursive pointer with invalid values, and clears
 the root twice. Its release function runs once, and the borrowed input stays
-intact. This verifies the generated clear helper. The native output allocator
-and Lean conversion path still need implementation and fault-injection tests.
+intact. This verifies the generated clear helper. The subsequent
+[native conversion checks](native-recursive-transport-20260922.md) exercise the
+output allocator and freshly compiled Lean, including partial-failure cleanup.
 
 ## Checks
 
@@ -67,9 +68,10 @@ The contract test is registered in the repository's default test profile.
 The [source-lineage record](recursive-npm-source-lineage-20260922.json) records
 that registration change without rewriting historical installed receipts.
 
-Next: bounded native argument validation, total typed Lean carrier conversion,
-output arena allocation and failure cleanup, then installed C/C++ acceptance on
-ordinary and independently reviewed source paths. The remaining native, Perl
+Bounded native argument validation, typed Lean conversion and arena cleanup now
+have [compiled transport checks](native-recursive-transport-20260922.md).
+Next is native package integration and installed C/C++ acceptance on ordinary
+and independently reviewed source paths. The remaining native, Perl
 and PHP-Wasm projections must execute their own installed recursive consumers
 before their coverage cells change. Compound callable payloads and explicitly
 owned identity aggregates remain part of the structured-types work.
