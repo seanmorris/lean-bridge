@@ -181,6 +181,7 @@ const profileManifest = Object.freeze({
 		, "multi-profile-project"
 		, "native-c-family"
 		, "native-c-copied"
+		, "native-copied-graph-layout"
 		, "native-compound-contract"
 		, "native-alias-contract"
 		, "native-variant-contract"
