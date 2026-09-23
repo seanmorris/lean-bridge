@@ -122,8 +122,10 @@ APIs, including compiler-free execution after source and header removal.
 [Rust graph declarations and conversions](../evidence/rust-recursive-conversions-20260923.md)
 use owned structs/enums, native containers and boxed recursive fields. Their
 guarded calls validate inputs, release native results through RAII and reject
-publication after runtime retirement. Prepared recursive Cargo packages remain
-the next Rust integration step.
+publication after runtime retirement. [Prepared recursive Cargo packages](../evidence/rust-recursive-packages-20260923.md)
+connect these conversions to authenticated embedded libraries and automatic
+shared-runtime loading. Installed consumers compile offline and execute after
+the author and installed source trees are removed.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail

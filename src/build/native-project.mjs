@@ -16,7 +16,7 @@ import { readReviewedSource } from "../analyze/reviewed-source.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { compilePrimitiveCppModel } from "../backends/cpp/primitives.mjs";
 import { validateGmpSurface } from "../backends/c/gmp-projection.mjs";
-import { compileCopiedGraphPackageModel } from "../backends/c/graph-package.mjs";
+import { compileNativeGraphProjection } from "./native-graph-projection.mjs";
 import { projectNativeCFamily } from "./native-c-projection.mjs";
 import { validateNativeCSettings } from "../release/native-c-family.mjs";
 import { compileCopiedDotnetModel, validateOrdinaryNugetSettings } from "../backends/dotnet/copied-model.mjs";
@@ -85,10 +85,10 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, configurationSha256: record.sha256
 			, lakeSnapshot
 			, targets
-			, copiedGraphs: targets.every(target => ["c", "cpp"].includes(target))
+			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo"].includes(target))
 			, validateModel: model => {
 				if(model.copiedGraph)
-				{ compileCopiedGraphPackageModel(model.bindingIr, targets); return; }
+				{ compileNativeGraphProjection(model.bindingIr, targets); return; }
 				if(targets.includes("cpan")) validatePerlModel(model);
 				if(!cTargets.length) return;
 				const cSurface = compilePrimitiveCSurface(model.bindingIr, { variants: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });

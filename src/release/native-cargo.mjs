@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { ordinaryRustEvidence } from "../build/native-rust-artifacts.mjs";
 import { generateCopiedRustPackage, copiedRustLock } from "../backends/rust/copied-values.mjs";
+import { generateCopiedRustGraphPackage } from "../backends/rust/copied-graph-package.mjs";
 import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
@@ -29,16 +30,17 @@ import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
  */
 export const packageOrdinaryCargo = async ({ working, rustRoot, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings = {}, glibcMinimumVersion }) => {
 	validateOrdinaryCargoSettings(settings);
-	const { model, projection, evidence, receipt } = await ordinaryRustEvidence({ nativeRoot, runtimeRoot, adapterRoot });
+	const { model, prefix, evidence, receipt } = await ordinaryRustEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const compiled = JSON.parse(await readFile(join(rustRoot, "native-rust.json"), "utf8"));
-	const name = settings.name ?? `lean_bridge_${projection.surface.prefix}`, version = settings.version ?? model.component.version;
+	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version;
 	validateOrdinaryCargoSettings({ name, version });
 	await verifyNativeFiles(rustRoot, compiled.files);
 	if(compiled.schemaVersion !== 1 || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.name !== name || compiled.version !== version || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| !/^rustc 1\.(?:9\d|[1-9]\d{2,})\.\d+ /.test(compiled.rustc)
 		|| (await nativeArtifactPaths(rustRoot)).some(path => path !== "native-rust.json" && !Object.hasOwn(compiled.files, path))) throw new Error("Compiled Rust projection differs from source or native evidence");
-	for(const [path, contents] of Object.entries(generateCopiedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) })))
+	const generate = model.copiedGraph ? generateCopiedRustGraphPackage : generateCopiedRustPackage;
+	for(const [path, contents] of Object.entries(generate(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) })))
 		if(await readFile(join(rustRoot, path), "utf8") !== contents) throw new Error("Generated Rust source differs from compiled package model");
 	if(await readFile(join(rustRoot, "Cargo.lock"), "utf8") !== await copiedRustLock(name, version)) throw new Error("Cargo dependency lock differs from checked projection");
 	for(const [file, hash] of Object.entries(evidence.libraries))

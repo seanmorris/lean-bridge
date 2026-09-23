@@ -31,7 +31,7 @@ The build compiles Lean and its C adapter, checks the generated Rust with a pinn
 
 The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). Set [shared license terms](../publishing.md#declare-license-terms) in `package.license` to populate Cargo's `license` field. Without a declaration, the field remains unset; it never borrows Lean Bridge's MIT license.
 
-This path supports pure copied primitives, nested arrays and Lists, acyclic records, tagged variants, options, results, binary products and synchronous primitive callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. All 19 primitives are tested on ordinary-source and reviewed-IR callable paths. Compound callables, resources and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
+This path supports pure copied primitives, nested arrays and Lists, copied records, tagged variants, options, results, binary products and finite recursive values. Components without recursive values can also export synchronous primitive callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. All 19 primitives are tested on ordinary-source and reviewed-IR callable paths. Compound callables, resources and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
@@ -81,9 +81,9 @@ helpers. Alias inputs keep the target's borrowing rules; results own their data.
 
 No Cargo-specific alias configuration is needed. See the
 [consumer example](../consume/rust.md#named-aliases) and
-[installed crate checks](../evidence/rust-aliases-20260921.md). Recursive targets,
-compound callables and identity-bearing aggregates remain
-separate work. All selected targets must accept an alias's complete type graph.
+[installed crate checks](../evidence/rust-aliases-20260921.md). Recursive targets
+use the graph profile below. Compound callables and identity-bearing aggregates
+remain separate work. All selected targets must accept an alias's complete type graph.
 
 ## Export copied tagged variants
 
@@ -106,6 +106,27 @@ proof-bearing, callable and identity-bearing payloads are not admitted by this
 profile. Native multi-target variant builds currently admit C, C++, Python,
 Rust, .NET, Java, Kotlin, Ruby and Perl when every selected target accepts the complete API.
 Other targets retain their own admission checks.
+
+## Export recursive copied values
+
+Select concrete recursive exports in the shared configuration or an independently
+reviewed contract, then build with `--target cargo`. The build chooses the graph
+adapter automatically. It produces named Rust enums and structs, using `Box`
+for recursive or oversized fields and native `Vec`, `Option`, `Result` and tuples
+for their containers. Transparent aliases keep their public names.
+
+Cargo-only graph builds need the native C compiler but do not require a public
+C package, GMP or Boost. You can combine `cargo`, `c` and `cpp` when all selected
+targets accept the API. Other recursive native targets remain in progress.
+Callables, resources, asynchronous operations, open generics, dependent types
+and proof-bearing payloads are not part of this graph profile.
+
+The graph limit is depth 128, 262,144 visited nodes, 16 MiB of accounted native
+copy storage and a separate 16 MiB Rust conversion-storage budget per call.
+These budgets cover inputs and output; they do not bound Lean working memory.
+The prepared crate embeds authenticated libraries and loads the shared runtime
+automatically. See the [consumer example](../consume/rust.md#recursive-values)
+and [installed-package evidence](../evidence/rust-recursive-packages-20260923.md).
 
 ## Export callbacks and closures
 

@@ -721,6 +721,8 @@ jobs:
           test -s build/recursive/rust-values.json
           test -s build/recursive/rust-conversions.json
           test -s build/recursive/rust-native.json
+          LEAN_BRIDGE_RUST_GRAPH_TEST=1 LEAN_BRIDGE_RUST_GRAPH_PACKAGE_TEST=1 node --test tests/rust-graph-package.test.mjs
+          test -s build/recursive/rust-packages.json
           LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs
           test -s build/collections/rust.json
           test -s build/type-corpus/rust.json
@@ -744,6 +746,7 @@ jobs:
             build/recursive/rust-values.json
             build/recursive/rust-conversions.json
             build/recursive/rust-native.json
+            build/recursive/rust-packages.json
             build/collections/rust.json
           if-no-files-found: error
           retention-days: 30
@@ -792,6 +795,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 node --test tests/rust-copied-graph-values.test.mjs tests/rust-copied-graph-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_NATIVE_TEST=1 node --test --test-name-pattern='ordinary and reviewed Lean graphs' tests/rust-copied-graph-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 LEAN_BRIDGE_RUST_GRAPH_PACKAGE_TEST=1 node --test tests/rust-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs"
               if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ]; then
                 result=failed

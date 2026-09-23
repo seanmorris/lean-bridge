@@ -188,6 +188,7 @@ const profileManifest = Object.freeze({
 		, "cpp-copied-graph-conversions"
 		, "rust-copied-graph-values"
 		, "rust-copied-graph-conversions"
+		, "rust-graph-package"
 		, "native-recursive-transport"
 		, "native-allocation-guard"
 		, "native-graph-model"

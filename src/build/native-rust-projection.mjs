@@ -7,6 +7,7 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generateCopiedRustPackage, copiedRustLock } from "../backends/rust/copied-values.mjs";
+import { generateCopiedRustGraphPackage } from "../backends/rust/copied-graph-package.mjs";
 import { auditRustPackage } from "../backends/rust/package-audit.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { ordinaryRustEvidence } from "./native-rust-artifacts.mjs";
@@ -29,10 +30,11 @@ import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
  * @param options.signal - Cancellation signal.
  */
 export const projectOrdinaryRust = async ({ working, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings = {}, glibcMinimumVersion, environment, signal }) => {
-	const { model, projection, evidence, receipt } = await ordinaryRustEvidence({ nativeRoot, runtimeRoot, adapterRoot });
-	const name = settings.name ?? `lean_bridge_${projection.surface.prefix}`, version = settings.version ?? model.component.version;
+	const { model, prefix, evidence, receipt } = await ordinaryRustEvidence({ nativeRoot, runtimeRoot, adapterRoot });
+	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version;
 	const root = join(working, "native/rust"), scratch = join(working, "rust-compiler");
-	const files = generateCopiedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) });
+	const generate = model.copiedGraph ? generateCopiedRustGraphPackage : generateCopiedRustPackage;
+	const files = generate(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) });
 	auditRustPackage(model.bindingIr, files);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	for(const [path, contents] of Object.entries(files)) await save(path, contents);

@@ -43,9 +43,9 @@ fn main() -> Result<(), cedar_api::Error> {
 
 Run `cargo run --release`. Cargo resolves the crate's normal Rust dependencies, `num-bigint` and `sha2`; it does not compile Lean or a C extension. For an offline build, cache or vendor the dependencies first and use `--offline`. For a registry release, replace the path dependency with your publisher's exact version and registry settings. See [Cargo publication and installation](../publish/cargo.md#verify-the-published-crate-and-consumer).
 
-Ordinary packages support pure functions over 19 primitive types, arrays, Lists, acyclic records, tagged variants, options, results and nested binary products. Fixed-width integers use Rust's matching integer types, and Lean `Char` uses Rust `char`. Native Lean `USize` and `ISize` use `u64` and `i64`, matching the compiled core rather than Rust's pointer-sized types. `Nat` uses `BigUint`, and `Int` uses `BigInt`, both re-exported from `num-bigint`. Strings, slices, records, compounds and big integers are borrowed as inputs. Results own their `String`, `Vec` and generated struct values. Calls return `Result<T, Error>`; propagate bridge failures with `?`.
+Ordinary packages support pure functions over 19 primitive types, arrays, Lists, copied records, tagged variants, options, results, nested binary products and finite recursive values. Fixed-width integers use Rust's matching integer types, and Lean `Char` uses Rust `char`. Native Lean `USize` and `ISize` use `u64` and `i64`, matching the compiled core rather than Rust's pointer-sized types. `Nat` uses `BigUint`, and `Int` uses `BigInt`, both re-exported from `num-bigint`. Strings, slices, records, compounds and big integers are borrowed as inputs. Results own their `String`, `Vec` and generated struct values. Calls return `Result<T, Error>`; propagate bridge failures with `?`.
 
-Rust conversion and native copying each use a 16 MiB accounting budget. Array and List conversion count at least eight bytes per element. These budgets do not bound every Rust allocation or Lean working memory. Native results and temporary buffers are released on errors and Rust unwinding. Process abort cannot run destructors.
+Rust conversion and native copying each use a 16 MiB accounting budget. Non-recursive adapters count at least eight bytes per Array or List element. Recursive adapters also limit depth and visited nodes, as described below. These budgets do not bound every Rust allocation or Lean working memory. Native results and temporary buffers are released on errors and Rust unwinding. Process abort cannot run destructors.
 
 Compiled libraries are embedded in your executable. The first call verifies their hashes and loads them through a private temporary directory; compatible crates share one runtime. You can move the executable without retaining the Cargo source tree. Each crate embeds its assets, so multi-crate executable size can grow even when loading is shared. Loading needs Linux `/proc` and writable `/tmp` that permits shared-library loading, not a `noexec` mount. Temporary library files are removed after loading, and a small process registry is removed at normal exit. The libraries stay loaded until process exit. Calls from multiple threads are supported; reuse after `fork` and composition with foreign runtime loaders are rejected. See the [installed-crate evidence](../evidence/native-rust-20260915.md).
 
@@ -210,8 +210,46 @@ fields use snake_case, with reserved words gaining a trailing underscore.
 The existing 32-level type bound and separate Rust/native 16 MiB conversion
 budgets apply. Conversion failures and unwinding release temporary buffers and
 native outputs. See the [installed variant checks](../evidence/rust-variants-20260921.md).
-Recursive variants, compound callables and identity-bearing payloads remain
-separate work.
+Recursive packages use the bounded graph adapter described below. Compound
+callables and identity-bearing payloads remain separate work.
+
+### Recursive values
+
+Finite recursive Lean values become owned Rust structs and enums. Recursive
+fields use `Box<T>` where needed; arrays and Lists use `Vec<T>`. A recursive
+optional child can use `Option<Box<T>>`. Concrete aliases keep their public
+names. Inputs are borrowed, and returned values own independent copies.
+
+For the `recursive-api` acceptance package, add its prepared crate as your
+Cargo dependency and save this as `src/main.rs`:
+
+```rust
+use recursive_api::{grow, spine, Error, Spine};
+
+fn main() -> Result<(), Error> {
+    let leaf = Spine::Leaf { value: 7 };
+    let nested = Spine::Next { value: Box::new(leaf.clone()) };
+    assert_eq!(spine(&nested)?, nested);
+    assert_eq!(grow(&leaf)?, nested);
+    Ok(())
+}
+```
+
+Run `cargo run --release`. No constructor numbers, native declarations or manual
+runtime initialization are needed. Rust drops returned values normally.
+
+Each call permits depth 128 and 262,144 visited nodes. Inputs and the result
+share a 16 MiB native-copy budget and a separate 16 MiB accounted Rust storage
+budget. Over-limit values return `Error::Limit`. Recoverable conversion
+allocation failures return `Error::Allocation`; aborting allocations cannot be
+recovered. Malformed native output returns `Error::InvalidNative` and retires
+the shared runtime. Previously returned Rust values remain usable and droppable.
+Callbacks, closures and resources cannot be carried inside recursive copies.
+
+The [installed recursive checks](../evidence/rust-recursive-packages-20260923.md)
+cover ordinary source and independently reviewed contracts, offline Cargo
+installation, compiler-negative callers, allocation/unwind cleanup and execution
+after removing the author and installed source trees.
 
 ### Callbacks and returned Lean closures
 
@@ -367,7 +405,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Owned named structs and enums, Box children, Vec/Option/Result/tuples and transparent aliases` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Borrow aggregates, text and slices; pass fixed-width scalars by value. Results own independent Rust values. Box breaks recursive or oversized fields; Vec supplies sequence indirection. RAII clears native outputs and temporaries on errors or unwinding. Malformed native output retires the shared runtime; earlier owned Rust results remain usable. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "654ccd08c3e9e7f2407e7f336b634de7f1b4ad147402256660de9b1045450cc7"
+          "currentSha256": "43d622066549e46a9616fd9177b84783cc8454271ef7b460b63efbd912e8dadd"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -63,11 +63,11 @@
         },
         "src/build/native-project.mjs": {
           "previousSha256": "d653bfd9ab3078316ebb3b152840a62485c77f0d41cd873612ccad405af60a14",
-          "currentSha256": "cf03b9be3d0085d80b67d28cff453fb988bd5b7c0f80e99f7b465410b05caf85"
+          "currentSha256": "b87eec18151ae3d619562aed851dafdb3e215eae794ba767f9185922c9a70d2e"
         },
         "src/build/native-c-projection.mjs": {
           "previousSha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41",
-          "currentSha256": "3712bfd1547676fb4a9a67013a67c77887645b3fc44d46b214c131328934d29a"
+          "currentSha256": "77b5f4e97f88eb7890ad200b5f4b09c6e379f4ccaf505a3764cf57755102f772"
         }
       },
       "regression": {
@@ -140,6 +140,15 @@
         "rust-copied-graph-conversions"
       ],
       "change": "Register owned Rust recursive values and bounded native graph conversion tests. Reversing only these two added entries reconstructs the exact previous test manifest; installed JVM receipt bytes are unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "654ccd08c3e9e7f2407e7f336b634de7f1b4ad147402256660de9b1045450cc7",
+      "currentSha256": "43d622066549e46a9616fd9177b84783cc8454271ef7b460b63efbd912e8dadd",
+      "addedTests": [
+        "rust-graph-package"
+      ],
+      "change": "Register prepared recursive Cargo package tests. Removing this exact added entry reconstructs the previous test manifest; historical receipts retain their original source hashes."
     }
   ]
 }

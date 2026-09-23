@@ -12,6 +12,7 @@ import { generateGmpProjection } from "../backends/c/gmp-projection.mjs";
 import { generateCopiedGraphPackage } from "../backends/c/graph-package.mjs";
 import { generateNativeCopiedGraphAdapters } from "../backends/c/native-graph-adapters.mjs";
 import { nativeGraphCarrierAbi } from "./native-graph-model.mjs";
+import { compileNativeGraphProjection } from "./native-graph-projection.mjs";
 import { buildNativeGmp } from "./native-gmp.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { generateNativePrimitiveC } from "../backends/c/native-primitives.mjs";
@@ -42,12 +43,14 @@ import { packageOrdinaryPhp } from "../release/native-composer.mjs";
  */
 export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp"].includes(target)) });
-	const graph = model.copiedGraph ? generateCopiedGraphPackage(model.bindingIr, targets) : null;
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo"].includes(target)) });
+	const graph = model.copiedGraph ? compileNativeGraphProjection(model.bindingIr, targets) : null;
 	const surface = graph ? null : compilePrimitiveCSurface(model.bindingIr, { variants: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), lists: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: targets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 	const p = graph ? graph.prefix : surface.prefix;
 	const root = join(working, "native/c-binding");
-	const files = graph ? { ...graph.files } : { ...generateCBindingPackage(model.bindingIr), "src/native.c": generateNativePrimitiveC(model, receipt) };
+	const cGraphTargets = targets.filter(target => ["c", "cpp"].includes(target));
+	const files = graph ? { ...cGraphTargets.length ? generateCopiedGraphPackage(model.bindingIr, cGraphTargets).files : {} }
+		: { ...generateCBindingPackage(model.bindingIr), "src/native.c": generateNativePrimitiveC(model, receipt) };
 	if(graph)
 	{
 		const native = generateNativeCopiedGraphAdapters(model.bindingIr, nativeGraphCarrierAbi(model), { initializer: receipt.initializer });

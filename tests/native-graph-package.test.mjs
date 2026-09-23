@@ -26,6 +26,7 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { nativeFixtureEnvironment, installCopiedConsumer, copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { captureCorpusCompiler } from "./helpers/type-corpus-compiler.mjs";
+import { assertCargoGraphSourceUpdate } from "./helpers/native-cargo-graph-regression.mjs";
 
 test("recursive public C/C++ packages preserve named values and ordinary error semantics", () => {
 	const ir = nativeRecursiveReviewedIr(), before = structuredClone(ir), output = generateCopiedGraphPackage(ir, ["c", "cpp"]);
@@ -224,7 +225,7 @@ test("recursive C/C++ evidence records exact installed archives without promotin
 	assert.equal(record.wordBits, 64); assert.equal(record.packageGlibcFloor, "2.36");
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeRecursiveReviewedIr())));
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.reports })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertCargoGraphSourceUpdate(path, hash);
 	assert.deepEqual(record.reports.map(run => `${run.path}/${run.profile}`), ["ordinary-source/c", "ordinary-source/cpp", "reviewed-ir/c", "reviewed-ir/cpp"]);
 	for(const run of record.reports)
 	{

@@ -2,8 +2,9 @@
 
 Rust has owned value declarations and bounded conversions for the finite native
 graph model. The generated helpers connect to the compiler-checked Lean/C
-boundary. Cargo package admission remains closed for recursive exports until
-prepared-crate installation and source-free execution pass.
+boundary. This conversion milestone preceded Cargo package admission. The
+subsequent [prepared-crate checks](rust-recursive-packages-20260923.md) cover
+installation, automatic loading and source-free execution.
 
 ## Values
 
@@ -77,7 +78,6 @@ LEAN_BRIDGE_RUST_GRAPH_TEST=1 LEAN_BRIDGE_RUST_GRAPH_NATIVE_TEST=1 \
   tests/rust-copied-graph-conversions.test.mjs
 ```
 
-CI runs both suites and retains their reports. Prepared Cargo archives,
-automatic asset loading, relocated installations and compiler-free deployment
-still need integration and acceptance. This milestone does not promote Rust's
-installed recursive coverage or publish a crate.
+CI runs both suites and retains their reports. This milestone did not promote
+Rust's installed recursive coverage or publish a crate. The later prepared-crate
+record supplies the installed acceptance evidence.
