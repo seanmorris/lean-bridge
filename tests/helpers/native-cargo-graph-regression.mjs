@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
+import { assertPythonGraphSourceUpdate } from "./native-python-graph-regression.mjs";
 
 const recordPath = "docs/evidence/rust-recursive-regressions-20260923.json";
 const shared = ["src/build/native-project.mjs", "src/build/native-c-projection.mjs"];
@@ -17,7 +18,7 @@ export const assertCargoGraphRegressions = async () => {
 	const record = JSON.parse(await readFile(recordPath));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	for(const [path, hash] of Object.entries(record.sourceHashes))
-		await assertAdministrativeSourceUpdate(path, hash);
+		await assertPythonGraphSourceUpdate(path, hash);
 	const baselines = {};
 	for(const [key, entry] of Object.entries(record.baselines))
 	{
@@ -117,5 +118,5 @@ export const assertCargoGraphSourceUpdate = async (path, expected) => {
 	if(!shared.includes(path)) return assertAdministrativeSourceUpdate(path, expected);
 	const { record, baselines } = await assertCargoGraphRegressions();
 	assert.ok([baselines.c, baselines.jvm].some(item => item.sourceHashes[path] === expected), `Unknown native build baseline: ${path}`);
-	assert.equal(sha256(source), record.sourceHashes[path], path);
+	await assertPythonGraphSourceUpdate(path, record.sourceHashes[path]);
 };

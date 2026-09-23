@@ -10,8 +10,7 @@ import { generateCppBindingPackage } from "../backends/cpp/generate.mjs";
 import { boostSources } from "../backends/cpp/boost.mjs";
 import { generateGmpProjection } from "../backends/c/gmp-projection.mjs";
 import { generateCopiedGraphPackage } from "../backends/c/graph-package.mjs";
-import { generateNativeCopiedGraphAdapters } from "../backends/c/native-graph-adapters.mjs";
-import { nativeGraphCarrierAbi } from "./native-graph-model.mjs";
+import { nativeGraphProjectionSources } from "./native-graph-sources.mjs";
 import { compileNativeGraphProjection } from "./native-graph-projection.mjs";
 import { buildNativeGmp } from "./native-gmp.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
@@ -43,7 +42,7 @@ import { packageOrdinaryPhp } from "../release/native-composer.mjs";
  */
 export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo"].includes(target)) });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi"].includes(target)) });
 	const graph = model.copiedGraph ? compileNativeGraphProjection(model.bindingIr, targets) : null;
 	const surface = graph ? null : compilePrimitiveCSurface(model.bindingIr, { variants: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), lists: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: targets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 	const p = graph ? graph.prefix : surface.prefix;
@@ -53,15 +52,7 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		: { ...generateCBindingPackage(model.bindingIr), "src/native.c": generateNativePrimitiveC(model, receipt) };
 	if(graph)
 	{
-		const native = generateNativeCopiedGraphAdapters(model.bindingIr, nativeGraphCarrierAbi(model), { initializer: receipt.initializer });
-		files[`include/detail/${p}-graph-types.h`] = native.typesHeader;
-		files[`include/detail/${p}-graph.h`] = `${native.header}\n#ifdef __cplusplus\nextern "C" {\n#endif\nuint32_t ${p}_graph_initialize(void);\nint ${p}_graph_ready(void);\nvoid ${p}_graph_retire(void);\n#ifdef __cplusplus\n}\n#endif\n`;
-		files["src/native.c"] = `#include "component.h"\n${native.source}
-uint32_t ${p}_graph_initialize(void) { return lean_bridge_native_component_initialize(${JSON.stringify(model.component.id)}, ng_initialize) ? 0 : 5; }
-int ${p}_graph_ready(void) { return ng_ready(); }
-void ${p}_graph_retire(void) { lean_bridge_native_runtime_retire(); }
-__attribute__((destructor)) static void lb_graph_detach(void) { lean_bridge_native_component_detach(${JSON.stringify(model.component.id)}); }
-`;
+		Object.assign(files, nativeGraphProjectionSources(model, receipt));
 		if(targets.includes("cpp") && graph.bigint) Object.assign(files, boostSources());
 	}
 	if(targets.includes("cpp") && !graph)

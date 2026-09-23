@@ -75,8 +75,9 @@ LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 \
   node --test tests/python-copied-graph-conversions.test.mjs
 ```
 
-CI requires both suites and their reports. Prepared recursive wheels remain the
-next milestone: automatic authenticated loading, offline installation, strict
-typing, shared-runtime and fork checks, source-free execution and deterministic
-archives. Python package admission remains closed for recursive exports until
-those installed checks pass. This milestone promotes no installed coverage cells.
+CI requires both suites and their reports. These conversion checks do not by
+themselves promote installed coverage cells. The subsequent
+[prepared wheel milestone](python-recursive-packages-20260923.md) adds
+authenticated automatic loading, offline installation, strict typing,
+shared-runtime and fork checks, source-free execution and deterministic archives.
+Those installed checks now pass and open recursive Python package admission.

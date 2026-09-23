@@ -16,6 +16,7 @@ test("source registration history reverses exact additions and rejects unrelated
 		, ["nix/perl-engine-source-boundary.json", '    "src/backends/python/copied-graph-values.mjs",']
 		, ["config/checked-javascript.json", '\t\t{ "path": "src/backends/python/copied-graph-values.mjs", "classification": "strict-migration-backlog" },']
 		, [".github/workflows/consumer-matrix.yml", "          LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs"]
+		, [".github/workflows/consumer-matrix.yml", '          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"']
 	]){
 		const before = "unchanged-prefix\nunchanged-suffix\n", after = before.replace("unchanged-suffix", added + "\nunchanged-suffix");
 		const updates = [{ path, previousSha256: sha256(before), currentSha256: sha256(after), addedLines: [added] }];
@@ -37,6 +38,8 @@ test("source registrations cannot disguise scripts, checked-module removal or sh
 		, ["config/checked-javascript.json", '\t\t{ "path": "src/backends/python/copied-graph-values.mjs", "classification": "checked" },']
 		, [".github/workflows/consumer-matrix.yml", "          LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs || true"]
 		, [".github/workflows/consumer-matrix.yml", "          rm -rf build/recursive"]
+		, [".github/workflows/consumer-matrix.yml", '          export CARGO_HOME="/unreviewed/cache"']
+		, [".github/workflows/consumer-matrix.yml", '          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"; true']
 	]){
 		const before = "before\n", after = before + added + "\n";
 		assert.throws(() => verifyAddedSourceRegistrations(path, after, sha256(before), [{ path, previousSha256: sha256(before), currentSha256: sha256(after), addedLines: [added] }]));

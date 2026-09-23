@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "582a9859e50249aa6b34d85812613e8dee5078cae5b7a32a5fed1a562e1ff163"
+          "currentSha256": "e30a46959877b8fb1c7d59cddbf1a3d0d661ce52ac69b68d26bc36beebaff58e"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -63,11 +63,11 @@
         },
         "src/build/native-project.mjs": {
           "previousSha256": "d653bfd9ab3078316ebb3b152840a62485c77f0d41cd873612ccad405af60a14",
-          "currentSha256": "b87eec18151ae3d619562aed851dafdb3e215eae794ba767f9185922c9a70d2e"
+          "currentSha256": "8429c2edab0ec52e48155721c14b030e4808da67b3ebae1d7c23b61bbcdde5ce"
         },
         "src/build/native-c-projection.mjs": {
           "previousSha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41",
-          "currentSha256": "77b5f4e97f88eb7890ad200b5f4b09c6e379f4ccaf505a3764cf57755102f772"
+          "currentSha256": "ca089aaa24cc0ed0d9668b1c7eadf74614d9f53fbdc1966f5b07928c0f68e6ac"
         }
       },
       "regression": {
@@ -168,6 +168,15 @@
         "python-copied-graph-conversions"
       ],
       "change": "Add checked Python recursive conversions and independent C/compiled Lean probes. Historical installed receipts and existing registrations remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "582a9859e50249aa6b34d85812613e8dee5078cae5b7a32a5fed1a562e1ff163",
+      "currentSha256": "e30a46959877b8fb1c7d59cddbf1a3d0d661ce52ac69b68d26bc36beebaff58e",
+      "addedTests": [
+        "python-graph-package"
+      ],
+      "change": "Require original recursive Python wheel installation and public/typed/failure acceptance; preserve all earlier test registrations and receipts."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -257,6 +266,65 @@
         "            build/recursive/python-conversions.json",
         "            build/recursive/python-native.json",
         "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "bc12c9b20fed3f0c69811aaaf2d0537e8e54ee1e9a1e6ee08c032f3a82c99947",
+      "currentSha256": "176d84a0d01f845176d9ad941ee46a694dc6d5f01c0616c95ddb4718864bcd55",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-package.mjs\",",
+        "    \"src/build/native-graph-sources.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "3060e3f64e8f95c28025a73828d96931c4cb9f74c7248f4b4cd7859316899828",
+      "currentSha256": "7c22fb04779d1535398712cb7639d09e0921e769e9905793552d4c625692e381",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-package.mjs\",",
+        "    \"src/build/native-graph-sources.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "6bb69e45156c74302da22792488250655203977186879ad720244a87dc83f76f",
+      "currentSha256": "fb21c6aabf0f635c56707b46f281197c93c6e8b614f18e706a6ab8ffaae745ae",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/python/copied-graph-package.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/build/native-graph-sources.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "c85572e84d8408b5f0a9aa00e4c33f3590e9b80eb8c89f098c46e101aa4bd133",
+      "currentSha256": "dcd3de0f5fbe33902fee67c426b576bba772e2728cc101017643477818372efc",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-package.mjs\",",
+        "    \"src/build/native-graph-sources.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2cfaaa419c630aa3f854576f27b6781074fb54ccf04a6f88ca5c6f7d00a10a41",
+      "currentSha256": "fe7725b91b21bd7ceb8d343410a4dbcb0465a3a742385bfdbef093be413a1435",
+      "addedLines": [
+        "          LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs",
+        "          test -s build/recursive/python-packages.json",
+        "            build/recursive/python-packages.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2cfaaa419c630aa3f854576f27b6781074fb54ccf04a6f88ca5c6f7d00a10a41",
+      "currentSha256": "c186605b61d26039ec618ac4b5d28e4656ad571bdbb3305915227d9e95a00be5",
+      "addedLines": [
+        "          LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs",
+        "          test -s build/recursive/python-packages.json",
+        "            build/recursive/python-packages.json",
+        "          export CARGO_HOME=\"${CARGO_HOME:-$HOME/.cargo}\"",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs\""
       ]
     }
   ]

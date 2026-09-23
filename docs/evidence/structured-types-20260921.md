@@ -2,14 +2,16 @@
 
 VO1219 remains open. Copied Lists have [installed acceptance across all seventeen
 consumer profiles](lists-acceptance-20260921.md). The remaining structured-type
-work covers recursive copied data in the remaining ten consumer profiles,
+work covers recursive copied data in the remaining eight consumer profiles,
 compound callback/closure payloads, and aggregates with explicit identity
 ownership. Copied aliases and tagged variants have installed acceptance across
 all seventeen profiles. [Recursive npm values](npm-recursive-20260922.md) have
 installed acceptance across the five npm profiles. [C/C++ recursive packages](native-recursive-packages-20260923.md)
-pass both source paths. [Rust recursive conversions](rust-recursive-conversions-20260923.md)
-pass compiled Lean checks; prepared Cargo packages remain open. The identity work also
-belongs to VO1221.
+pass both source paths. [Rust/Cargo](rust-recursive-packages-20260923.md) and
+[Python wheels](python-recursive-packages-20260923.md) also have installed
+recursive acceptance. Ruby, Perl, C#, Java, Kotlin, native PHP, PHP-Wasm and
+WIT/WASI still need recursive installed support. The identity work also belongs
+to VO1221.
 
 ## Delivery stages
 

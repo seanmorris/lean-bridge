@@ -8,7 +8,7 @@ Upload the generated platform wheel with Twine, then download and verify that sa
 
 ## Build an ordinary Lean project
 
-Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, concrete copied aliases, arrays, Lists, acyclic records, tagged variants, `Option`, `Except` and nested binary products, plus synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
+Prepare the source and select exports using [shared export configuration](../lean/existing-package.md#configure-exports). The ordinary Python path accepts pure functions over nineteen copied primitives, concrete copied aliases, arrays, Lists, copied records, tagged variants, `Option`, `Except` and nested binary products, including bounded recursive values. A separate callable profile accepts synchronous primitive callbacks and returned closures. Set the distribution name and an exact normalized three-part PEP 440 version:
 
 ```json
 {
@@ -87,8 +87,9 @@ branch when payload types match. `Except` errors remain returned values.
 
 The wheel includes the wrappers, type aliases and stubs. Consumers need no
 constructor numbers, serialization layer or manual runtime configuration.
-Python conversions and native copies each have a 16 MiB call budget. Resources,
-callbacks inside copied values and recursive data types are not admitted.
+Python conversions and native copies each have a 16 MiB call budget. Resources
+and callbacks inside copied values are not admitted. Recursive data uses the
+[graph adapter](#export-recursive-values).
 Compound arguments/results inside callables remain unsupported.
 
 Run the [compound consumer example](../consume/python.md#options-results-and-products)
@@ -121,8 +122,8 @@ An alias of `Nat` still rejects negative values. Python's numeric annotations do
 not encode fixed-width ranges, so runtime validation remains necessary.
 See the [consumer example](../consume/python.md#named-aliases) and
 [installed wheel and stub checks](../evidence/python-aliases-20260921.md).
-Generic and recursive aliases, and compound callable payloads
-still need adapter support.
+Concrete aliases can also name supported recursive values. Generic aliases,
+alias cycles and compound callable payloads still need adapter support.
 
 ## Export tagged variants
 
@@ -137,14 +138,54 @@ Payloads can contain all nineteen primitives and supported copied containers,
 records and other variants. The adapter reads only the active case and releases
 native output even if Python conversion raises. Generated constructor names and
 escaped field names must be unique. Naming collisions fail before compilation.
-Recursive, generic, indexed, callable and identity-bearing payloads remain
-outside this projection.
+Recursive values use the graph adapter below. Generic, indexed, callable and
+identity-bearing payloads remain outside the copied projection.
 
 Run the [variant consumer example](../consume/python.md#tagged-variants) before
 publishing. The [installed acceptance record](../evidence/python-variants-20260921.md)
 covers original offline-installed wheels, independent source contracts, strict
 type checking and failure cleanup. Combined builds require every selected
 target to accept the same signatures.
+
+## Export recursive values
+
+Export concrete recursive records and inductives without a Python-specific
+annotation. For example:
+
+```lean
+namespace Recursive
+inductive Spine where
+  | next (value : Spine)
+  | leaf (value : UInt32)
+def spine (value : Spine) : Spine := value
+end Recursive
+```
+
+Select `Recursive.spine` in `lean-bridge.exports.json` and build with
+`--target pypi`. The wheel contains named constructor dataclasses, precise recursive
+stubs, checked native conversions and the automatic runtime loader. Consumers
+do not need Lean, a C compiler, GMP or Boost.
+
+Both source paths support direct and mutual recursion, copied records,
+transparent concrete aliases, all nineteen primitives and nested containers,
+options, results and products. Schema references stay finite; values have a
+128-level depth limit and a 262,144-node visit limit. Arguments and output share
+the 16 MiB native-copy allowance, with a separate 16 MiB accounted Python
+conversion-storage allowance. These budgets do not bound Lean working memory
+or all Python allocator overhead.
+
+Names and escaped fields must be unique. Cycles, malformed native branches,
+uninhabited inputs and unsupported effect or ownership policies are rejected.
+Calls use exact generated classes; Python subclasses are not alternate
+constructors. Native results clear on conversion exceptions. Run the
+[recursive consumer example](../consume/python.md#recursive-values) against the
+prepared wheel before publishing. Combined builds require each selected
+target to support the same recursive API.
+
+The [installed wheel checks](../evidence/python-recursive-packages-20260923.md)
+cover ordinary and reviewed contracts, original offline-installed archives,
+relocation, strict typing and deterministic rebuilds. The package assembler
+checks graph metadata and regenerated native adapter sources before packaging.
 
 ## Export callbacks and closures
 

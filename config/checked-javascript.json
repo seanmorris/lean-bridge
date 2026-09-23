@@ -7,6 +7,8 @@
 	],
 	"deferred": [
 		{ "path": "src/backends/python/copied-graph-conversions.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/python/copied-graph-package.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/native-graph-sources.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/python/copied-graph-values.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/rust/copied-graph-package.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/native-graph-projection.mjs", "classification": "strict-migration-backlog" },

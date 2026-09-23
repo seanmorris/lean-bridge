@@ -18,7 +18,7 @@ import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.
 import { nativeRecursiveReviewedIr } from "./helpers/native-recursive-reviewed.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
-import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-history.mjs";
+import { assertPythonGraphSourceUpdate } from "./helpers/native-python-graph-regression.mjs";
 import { assertCargoGraphRegressions } from "./helpers/native-cargo-graph-regression.mjs";
 
 test("recursive Cargo APIs borrow containers, preserve aliases and hide native loading", () => {
@@ -45,8 +45,9 @@ test("recursive Cargo admission validates every requested target without requiri
 	const ir = nativeRecursiveReviewedIr(), model = compileNativeGraphProjection(ir, ["cargo"]);
 	assert.equal(model.prefix, "recursive");
 	assert.equal(compileNativeGraphProjection(ir, ["c", "cpp", "cargo"]).layoutSha256, model.layoutSha256);
+	assert.equal(compileNativeGraphProjection(ir, ["cargo", "pypi"]).layoutSha256, model.layoutSha256);
 	assert.equal(generateCopiedGraphPackage(ir, ["c", "cpp"]).layoutSha256, model.layoutSha256);
-	for(const targets of [[], ["cargo", "cargo"], ["cargo", "pypi"], ["cargo", "cpan"], ["maven"]])
+	for(const targets of [[], ["cargo", "cargo"], ["cargo", "cpan"], ["maven"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 	for(const name of ["dispatch", "assets", "graphRuntime", "graphReady", "call0"])
 	{
@@ -117,7 +118,7 @@ test("recursive Cargo evidence binds installed archives, typed callers and uncha
 	assert.equal(record.reportSha256, sha256(canonicalJson(record.report)));
 	assert.equal(record.log.sha256, sha256(record.log.text));
 	assert.match(record.log.text, /# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0/);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertAdministrativeSourceUpdate(path, hash);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertPythonGraphSourceUpdate(path, hash);
 	const ir = nativeRecursiveReviewedIr();
 	ir.declarations.sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 	const generated = generateCopiedRustGraphPackage(ir, null, { name: "recursive-api", version: "1.0.0" });

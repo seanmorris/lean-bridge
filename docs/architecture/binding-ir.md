@@ -131,9 +131,12 @@ provide named frozen dataclasses, constructor unions and bounded runtime type
 annotations, with CPython execution and strict typing checks.
 [Python native graph conversions](../evidence/python-recursive-conversions-20260923.md)
 now pass independent C layout checks and ordinary/reviewed compiled Lean calls,
-including bounded copies, allocation failures and retirement cleanup. Prepared
-wheel integration remains pending; the Python package path still rejects
-recursive exports.
+including bounded copies, allocation failures and retirement cleanup.
+[Prepared recursive Python wheels](../evidence/python-recursive-packages-20260923.md)
+connect those conversions to precise public functions and the authenticated
+automatic loader. Private loader imports cannot be shadowed by public type names.
+Offline-installed wheels run after relocation and removal of author inputs and
+archive handoffs. Compatible recursive and acyclic packages share one runtime.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail

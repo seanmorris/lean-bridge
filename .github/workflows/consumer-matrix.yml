@@ -666,6 +666,8 @@ jobs:
           LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs
           test -s build/recursive/python-conversions.json
           test -s build/recursive/python-native.json
+          LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs
+          test -s build/recursive/python-packages.json
           test -s build/type-corpus/python.json
           test -s build/type-corpus/reviewed-native-python.json
       - name: Upload the real-Lean type corpus report
@@ -688,6 +690,7 @@ jobs:
             build/recursive/python-values.json
             build/recursive/python-conversions.json
             build/recursive/python-native.json
+            build/recursive/python-packages.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -710,6 +713,7 @@ jobs:
           export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
           export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
           source scripts/env.sh
+          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
           npm run test:type-corpus:rust && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=rust node --test tests/type-corpus-reviewed-native.test.mjs
           LEAN_BRIDGE_CHAR_PROFILES=rust node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=rust node --test tests/native-words.test.mjs
@@ -790,6 +794,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false

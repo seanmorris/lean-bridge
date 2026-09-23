@@ -19,7 +19,8 @@ const allowedLine = (path, line) => {
 		, /^ {10}test -s build\/recursive\/[a-z0-9-]+\.json$/
 		, /^ {12}build\/recursive\/[a-z0-9-]+\.json$/
 		, /^ {14}consumer_command="\$consumer_command && (?:LEAN_BRIDGE_[A-Z_]+_TEST=1 )+node --test tests\/[a-z0-9-]+\.test\.mjs"$/
-	].some(pattern => pattern.test(line));
+	].some(pattern => pattern.test(line))
+		|| line === '          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"';
 	if(path === "config/checked-javascript.json")
 	{
 		if(!/^\t\t\{.*\},$/.test(line)) return false;

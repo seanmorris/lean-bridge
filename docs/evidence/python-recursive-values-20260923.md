@@ -26,9 +26,8 @@ LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 \
 ```
 
 CI retains `build/recursive/python-values.json`. These tests generate and execute
-Python declarations, not compiled Lean calls or installed wheels. The ordinary
-Python package path still rejects recursive exports. Checked ctypes layouts,
-bounded input/output conversion, lifecycle and failure cleanup are covered by
-the subsequent [native conversion milestone](python-recursive-conversions-20260923.md).
-Prepared, source-free wheel acceptance remains pending. No installed type cells
-are promoted by either milestone.
+Python declarations, not compiled Lean calls or installed wheels. The subsequent
+[native conversion milestone](python-recursive-conversions-20260923.md) checks
+ctypes layouts, bounded input/output conversion, lifecycle and failure cleanup.
+[Prepared recursive wheels](python-recursive-packages-20260923.md) now provide
+installed acceptance and promote the Python input, result and field cells.

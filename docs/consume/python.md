@@ -53,7 +53,7 @@ For deeply nested APIs, use a current static checker. The 24-level collection
 fixture passes strict checking with mypy 2.3.1. Mypy 1.17.1 expands its nested
 union aliases excessively, even when a consumer only imports the package.
 
-Ordinary packages support pure functions over 19 primitive types, concrete copied aliases, arrays, Lists, acyclic records, tagged variants, options, results and nested binary products. `Unit` is `None`; integers are exact Python `int` values with fixed-width range checks. `Bool` requires `bool`, and floating-point inputs require `float`. `Char` requires a `str` containing exactly one Unicode scalar. `String` is strict Unicode `str`, including embedded NUL; `ByteArray` requires `bytes`. Arrays and Lists accept exact lists or tuples and return owned tuples. Records are generated frozen dataclasses; returned nested values are independent copies.
+Ordinary packages support pure functions over 19 primitive types, concrete copied aliases, arrays, Lists, copied records, tagged variants, options, results and nested binary products, including bounded recursive values. `Unit` is `None`; integers are exact Python `int` values with fixed-width range checks. `Bool` requires `bool`, and floating-point inputs require `float`. `Char` requires a `str` containing exactly one Unicode scalar. `String` is strict Unicode `str`, including embedded NUL; `ByteArray` requires `bytes`. Arrays and Lists accept exact lists or tuples and return owned tuples. Records are generated frozen dataclasses; returned nested values are independent copies.
 
 Reserved Python field names gain a trailing underscore, such as Lean `bytes`
 becoming Python `bytes_`. Conflicting projected names stop generation. The native
@@ -168,8 +168,8 @@ assert reverse_rows([[1, 2], []]) == ((2, 1), ())
 Run `./.venv/bin/python aliases.py` after installing its prepared wheel.
 The [installed alias checks](../evidence/python-aliases-20260921.md) exercise
 all nineteen primitive targets, chains, records and nested containers, including
-strict checking of the installed stubs. Recursive alias targets and
-compound callable payloads remain unsupported.
+strict checking of the installed stubs. Concrete aliases can also refer to the
+[recursive values](#recursive-values) below. Compound callable payloads remain unsupported.
 
 ### Tagged variants
 
@@ -204,7 +204,61 @@ results and products. Returned containers are independent tuples, even when
 inputs use lists. The 32-level type limit and existing copy budgets apply.
 The [installed variant checks](../evidence/python-variants-20260921.md) cover
 both source paths, strict stubs, relocation and conversion-failure cleanup.
-Recursive data and callable or identity-bearing payloads remain unsupported.
+Recursive values use the graph adapter described below. Callable and
+identity-bearing variant payloads remain unsupported.
+
+### Recursive values
+
+Prepared wheels expose finite recursive records and inductives as named frozen
+dataclasses. Mutually recursive types and concrete aliases work the same way.
+Construct values with the generated classes and call ordinary typed functions;
+the wheel loads its native libraries and shared Lean runtime automatically.
+
+After installing the Recursive acceptance wheel, save this as `recursive.py`:
+
+```python
+from typing import assert_never
+from lean_recursive import Spine, SpineLeaf, SpineNext, spine
+
+
+def depth(value: Spine) -> int:
+    match value:
+        case SpineLeaf():
+            return 0
+        case SpineNext(child):
+            return 1 + depth(child)
+    assert_never(value)
+
+
+original = SpineNext(SpineNext(SpineLeaf(42)))
+copied = spine(original)
+assert copied == original and copied is not original
+print(f"Depth: {depth(copied)}")
+```
+
+Run `./.venv/bin/python recursive.py`. It prints `Depth: 2`.
+Lists and arrays accept exact lists or tuples and return independent tuples.
+`Some`, `Ok`, and `Err` preserve option and result constructors inside recursive
+values. A domain error returned as `Err` does not raise a bridge exception.
+
+Calls accept at most 128 levels and 262,144 visited nodes. Arguments and the
+result share a 16 MiB native-copy budget and a separate 16 MiB accounted Python
+conversion-storage budget. Cycles, invalid constructors, wrong scalar types,
+out-of-range integers and invalid Unicode are rejected. The adapter releases
+native output and temporary buffers even if a Python conversion raises.
+Malformed native output retires the shared runtime; earlier copied Python
+results remain usable. Start a fresh interpreter after `fork`.
+
+Stubs retain recursive unions and container types for strict type checking.
+Runtime annotations use finite `TypeAliasType` references; `__value__` exposes
+their targets. On Python 3.11, pip installs `typing_extensions` automatically
+when container aliases need it.
+Python 3.12 and newer use the standard library. Recursive callback, closure and
+resource payloads remain unsupported.
+
+The [recursive wheel checks](../evidence/python-recursive-packages-20260923.md)
+exercise both source paths on CPython 3.11 and 3.12, strict typing, three-package
+runtime sharing, failed conversions and fork rejection with a held runtime lock.
 
 ### Callbacks and returned Lean closures
 
@@ -342,7 +396,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named frozen dataclasses, constructor unions, transparent aliases and owned tuple/Some/Ok/Err values` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use exact generated constructor classes and scalar types. Arrays and Lists accept exact lists or tuples and return independent tuples. TypeAliasType bounds runtime hints; precise stubs preserve static recursive unions. Input validation precedes native allocation or initialization. Finally blocks release native results and temporary owners; malformed output retires the shared runtime. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |
