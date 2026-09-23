@@ -62,6 +62,8 @@ const profileManifest = Object.freeze({
 		, "python-collection-contract"
 		, "python-collection-evidence"
 		, "python-variant-evidence"
+		, "python-copied-graph-values"
+		, "source-registration-history"
 		, "ruby-callable-contract"
 		, "ruby-callable-evidence"
 		, "ruby-compound-contract"

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { assertSourceRegistrationUpdate } from "./source-registration-history.mjs";
 
 /**
  * Undo only recorded, uniquely occurring manifest entries and verify each hash.
@@ -45,6 +46,7 @@ export const verifyAddedTestRegistrations = (source, expected, updates) => {
 export const assertAdministrativeSourceUpdate = async (path, expected) => {
 	let source = await readFile(path, "utf8");
 	if(sha256(source) === expected) return;
+	if(await assertSourceRegistrationUpdate(path, source, expected)) return;
 	if(path === "src/adoption/test-profiles.mjs")
 	{
 		const history = JSON.parse(await readFile("docs/evidence/recursive-npm-source-lineage-20260922.json"));

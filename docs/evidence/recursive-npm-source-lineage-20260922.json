@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "43d622066549e46a9616fd9177b84783cc8454271ef7b460b63efbd912e8dadd"
+          "currentSha256": "19d3837c7db216dcc70bb5ebcc9374f31d8c3357451a5fddaf63093ae58f25a2"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -149,6 +149,61 @@
         "rust-graph-package"
       ],
       "change": "Register prepared recursive Cargo package tests. Removing this exact added entry reconstructs the previous test manifest; historical receipts retain their original source hashes."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "43d622066549e46a9616fd9177b84783cc8454271ef7b460b63efbd912e8dadd",
+      "currentSha256": "19d3837c7db216dcc70bb5ebcc9374f31d8c3357451a5fddaf63093ae58f25a2",
+      "addedTests": [
+        "python-copied-graph-values",
+        "source-registration-history"
+      ],
+      "change": "Add recursive Python value declarations, runtime and strict typing checks, and strict additive source-registration validation. Historical installed receipts and existing registrations remain unchanged."
+    }
+  ],
+  "sourceRegistrationUpdates": [
+    {
+      "path": "package.json",
+      "previousSha256": "3d81729afc272c549df7ab8c97673e0892f2a1af2a8eb163045c7fed31d37f6c",
+      "currentSha256": "7024d4be4b6e2f16cd5c72a16b216d9eafe6a91c3f0d3c560eb6870ac77d6075",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "bd0208572053b530933ca49b35e44ef058a8db7b5c54e8202e9014a94123952b",
+      "currentSha256": "5c9e24160c858168e786ee28fa9969ed21dbafb82eed6a09eced5366f5b29fd3",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "19ccbb39bddf7dcc9a70f5645da6d8ed4f38ec095e8c4e9451c8b0ef87adf0ae",
+      "currentSha256": "f948147fa8f51aeb9ce43eff78309dde72645e54be0a18b2baf4c6ce71350732",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/python/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "ab65424a2d79ca9468420cd4d40e270f95fde40aa3e03eac96a1a9ae31c721bb",
+      "currentSha256": "efc424f0781a54777a98aed5093cc1173e2125efdeb604998dd3742d05b10726",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "2d21408282a482fce95205c6bf3858c4515b745ce175fdc2954b220c4527057e",
+      "currentSha256": "bcd558391aac637236b9f31ca9874c2c8b7983eb0e6084592611b5ad7e509f69",
+      "addedLines": [
+        "          LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs",
+        "          test -s build/recursive/python-values.json",
+        "            build/recursive/python-values.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs\""
+      ]
     }
   ]
 }

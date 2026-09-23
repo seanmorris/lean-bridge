@@ -6,6 +6,7 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/python/copied-graph-values.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/rust/copied-graph-package.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/native-graph-projection.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/rust/copied-graph-conversions.mjs", "classification": "strict-migration-backlog" },

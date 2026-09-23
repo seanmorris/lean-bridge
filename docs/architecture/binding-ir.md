@@ -126,6 +126,10 @@ publication after runtime retirement. [Prepared recursive Cargo packages](../evi
 connect these conversions to authenticated embedded libraries and automatic
 shared-runtime loading. Installed consumers compile offline and execute after
 the author and installed source trees are removed.
+[Python recursive declarations](../evidence/python-recursive-values-20260923.md)
+provide named frozen dataclasses, constructor unions and bounded runtime type
+annotations. Their CPython and strict-typing checks precede native conversion
+and wheel integration; the Python package path still rejects recursive exports.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail
