@@ -113,8 +113,12 @@ check all arguments before creating views and release native results after
 copying, including on allocation failure. [Native runtime retirement](../evidence/native-retirement-20260923.md)
 rejects later calls through cached components while preserving owned-value
 cleanup. The checked graph boundary retires malformed native results and
-preserves recovery for input, limit and bridge-allocation failures. The C/GMP
-value facade and installed C/C++ recursive package admission remain open.
+preserves recovery for input, limit and bridge-allocation failures.
+[C/GMP graph values and conversions](../evidence/gmp-recursive-conversions-20260923.md)
+use exact GMP integers, borrowed input children and independently owned results.
+Root-relative integer finalizers remain valid when the result moves into caller
+storage. Prepared C/C++ recursive package integration and installed acceptance
+remain open.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail

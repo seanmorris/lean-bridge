@@ -73,7 +73,7 @@ test("non-graph native models and emitted adapters are unchanged", () => {
 	assert.deepEqual(generateCompiledNativeLeanAdapters(compiled), generateNativeLeanAdapters(legacy));
 });
 
-test("ordinary and reviewed native graph components execute independent C and C++ callers", {
+test("ordinary and reviewed native graph components execute independent C, GMP and C++ callers", {
 	skip: process.env.LEAN_BRIDGE_NATIVE_RECURSIVE_TEST !== "1", timeout: 900000
 }, async t => {
 	const results = [];
@@ -86,8 +86,9 @@ test("ordinary and reviewed native graph components execute independent C and C+
 			assert.equal(result.checks, 169840); assert.equal(result.exports, 18);
 			assert.ok(result.cppChecks >= 250, `C++ assertions executed: ${result.cppChecks}`);
 			assert.ok(result.lifecycleChecks > result.cppChecks, `Guarded C++ assertions executed: ${result.lifecycleChecks}`);
+			assert.ok(result.gmpChecks > 500, `C/GMP assertions executed: ${result.gmpChecks}`);
 			assert.equal(result.reviewed, reviewed); results.push(result);
-			t.diagnostic(`${reviewed ? "reviewed" : "ordinary"} component: ${result.checks} C checks, ${result.cppChecks} C++ checks, ${result.lifecycleChecks} lifecycle checks, binary ${result.binarySha256}`);
+			t.diagnostic(`${reviewed ? "reviewed" : "ordinary"} component: ${result.checks} C checks, ${result.cppChecks} C++ checks, ${result.lifecycleChecks} lifecycle checks, ${result.gmpChecks} GMP checks, binary ${result.binarySha256}`);
 		}
 		finally
 		{ await rm(directory, { recursive: true, force: true }); }
@@ -95,4 +96,5 @@ test("ordinary and reviewed native graph components execute independent C and C+
 	assert.equal(results[0].binarySha256, results[1].binarySha256);
 	assert.equal(results[0].cppChecks, results[1].cppChecks);
 	assert.equal(results[0].lifecycleChecks, results[1].lifecycleChecks);
+	assert.equal(results[0].gmpChecks, results[1].gmpChecks);
 });

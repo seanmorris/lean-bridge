@@ -25,6 +25,7 @@
             cargo
             dotnet-sdk_8
             flex
+            gmp
             gperf
             git
             jdk22_headless

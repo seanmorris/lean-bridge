@@ -113,6 +113,7 @@ jobs:
         env:
           LEAN_BRIDGE_NATIVE_RECURSIVE_TEST: "1"
         run: |
+          sudo apt-get update && sudo apt-get install -y libgmp-dev
           source scripts/env.sh
           node --test --test-concurrency=1 tests/native-recursive-transport.test.mjs tests/native-allocation-guard.test.mjs tests/native-graph-model.test.mjs
 

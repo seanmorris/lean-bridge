@@ -22,6 +22,7 @@ import { nativeRecursiveReviewedIr } from "./native-recursive-reviewed.mjs";
 import { recursiveCarrierAbi } from "./recursive-carriers.mjs";
 import { recursiveSignatures } from "./recursive-fixture.mjs";
 import { checkNativeRecursiveCpp } from "./native-recursive-cpp.mjs";
+import { checkNativeRecursiveGmp } from "./native-recursive-gmp.mjs";
 
 const spellings = {
 	unit: "Unit", bool: "Bool", uint8: "UInt8", uint16: "UInt16"
@@ -198,8 +199,11 @@ def main : IO Unit := do
 		directory, ir, compiled, runtime, run
 		, lifecycle: true
 		, output: generateNativeCopiedGraphAdapters(ir, abi, { initializer: compiled.receipt.initializer }) }) : null;
+	const gmpChecks = cpp ? await checkNativeRecursiveGmp({
+		directory, ir, compiled, runtime, run
+		, output: generateNativeCopiedGraphAdapters(ir, abi, { initializer: compiled.receipt.initializer }) }) : null;
 	return { checks: Number(observed.stdout.trim().split(" ").at(-1))
 		, exports: abi.exports.length, width, stack
-		, ...cpp ? { cppChecks, lifecycleChecks } : {}
+		, ...cpp ? { cppChecks, lifecycleChecks, gmpChecks } : {}
 		, ...compiled ? { modelSha256: compiled.receipt.modelSha256, binarySha256: compiled.receipt.nativeLibrary.sha256, reviewed } : {} };
 };

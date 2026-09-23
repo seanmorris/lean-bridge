@@ -11,6 +11,12 @@ npm ci --ignore-scripts
 mkdir -p build
 ```
 
+The C/GMP graph contract tests require a C compiler, AddressSanitizer/UBSan and
+GMP development headers. The development shell includes GMP. On Debian or
+Ubuntu, install `build-essential libgmp-dev` before running the contract suite.
+These tests use the host GMP library; prepared C package tests build the pinned
+GMP source bundled with the release.
+
 ## Build the example artifacts as a maintainer
 
 Build the universal Alpha bundle, then project its Python, Rust, C, and C++ packages:
