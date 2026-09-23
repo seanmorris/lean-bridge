@@ -189,6 +189,7 @@ const profileManifest = Object.freeze({
 		, "native-recursive-transport"
 		, "native-allocation-guard"
 		, "native-graph-model"
+		, "native-graph-package"
 		, "native-compound-contract"
 		, "native-alias-contract"
 		, "native-variant-contract"

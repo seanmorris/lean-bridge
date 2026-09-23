@@ -513,7 +513,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_c_family\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_c_family\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-c-family-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/c-cpp\.json\n\s*build\/type-corpus\/reviewed-native-c-cpp\.json\n\s*build\/char-native\/c-cpp\.json\n\s*build\/word-native\/c-cpp\.json\n\s*build\/callables\/c\.json\n\s*build\/callables\/cpp\.json\n\s*build\/compounds\/native\.json\n\s*build\/lists\/native\.json\n\s*build\/collections\/native\.json\n\s*build\/aliases\/native\.json\n\s*build\/variants\/cpp\.json\n\s*build\/variants\/c\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/c-cpp\.json\n\s*build\/type-corpus\/reviewed-native-c-cpp\.json\n\s*build\/char-native\/c-cpp\.json\n\s*build\/word-native\/c-cpp\.json\n\s*build\/callables\/c\.json\n\s*build\/callables\/cpp\.json\n\s*build\/compounds\/native\.json\n\s*build\/lists\/native\.json\n\s*build\/collections\/native\.json\n\s*build\/aliases\/native\.json\n\s*build\/variants\/cpp\.json\n\s*build\/variants\/c\.json\n\s*build\/recursive\/c-family\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_COMPOUND_TEST=1 node --test tests\/native-compounds\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_LIST_TEST=1 node --test tests\/native-lists\.test\.mjs/);
   assert.match(workflow, /test -s build\/lists\/native\.json/);
@@ -524,6 +524,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/variants\/cpp\.json/);
   assert.match(workflow, /LEAN_BRIDGE_C_VARIANT_TEST=1 node --test tests\/c-variants\.test\.mjs/);
   assert.match(workflow, /test -s build\/variants\/c\.json/);
+  assert.match(workflow, /LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests\/native-graph-package\.test\.mjs/);
+  assert.match(workflow, /test -s build\/recursive\/c-family\.json/);
   assert.match(workflow, /test -s build\/aliases\/native\.json/);
   assert.match(workflow, /id: type_corpus_rust/);
   assert.match(workflow, /node --test tests\/native-rust\.test\.mjs && npm run test:type-corpus:rust/);

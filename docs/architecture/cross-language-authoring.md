@@ -25,8 +25,10 @@ aliases and variants across all seventeen consumer profiles. The
 [structured-types record](../evidence/structured-types-20260921.md) links the
 ordinary-source and independently reviewed package checks.
 [Recursive npm values](../evidence/npm-recursive-20260922.md) also pass installed
-checks in Node, TypeScript, browser pages, React and workers. The remaining
-twelve profiles still need recursive installed acceptance. Compound callback
+checks in Node, TypeScript, browser pages, React and workers.
+[Recursive C/C++ packages](../evidence/native-recursive-packages-20260923.md)
+also pass both source paths. The remaining ten profiles still need recursive
+installed acceptance. Compound callback
 and closure payloads, and aggregates with explicit identity ownership, remain
 part of the same task.
 

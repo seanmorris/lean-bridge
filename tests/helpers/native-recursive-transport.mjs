@@ -41,25 +41,9 @@ const render = type => {
 };
 
 /**
- * Build the real source, extractor evidence, carriers, C walkers and caller.
- *
- * @param directory - Test-owned temporary workspace.
- * @param options - Exercise the component build instead of standalone carriers.
- * @param options.component - Build a verified native shared component and runtime.
- * @param options.reviewed - Check an independently authored contract against Lean.
- * @param options.cpp - Also execute owned C++ conversion and cleanup checks.
+ * Source shared by the compiled transport and prepared-package acceptance.
  */
-export const checkNativeRecursiveTransport = async (directory, { component = false, reviewed = false, cpp = false } = {}) => {
-	if(cpp && !component) throw new TypeError("C++ graph checks require a verified native component");
-	const root = process.cwd();
-	const prefix = (await processBuildRunner.capture({ command: join(root, ".toolchains/elan/bin/lean"), args: ["--print-prefix"], cwd: root })).stdout.trim();
-	const lean = join(prefix, "bin/lean"), extractor = join(root, "src/analyze/NativeExports.lean");
-	const run = (command, args) => processBuildRunner.capture({
-		command, args, cwd: directory
-		, env: { ...process.env, LEAN_PATH: directory, PATH: `${join(prefix, "bin")}:${process.env.PATH}` }
-		, timeoutMs: 180000
-	})
-		.catch(error => { throw new Error(JSON.stringify({ message: error.message, details: error.details }), { cause: error }); });
+export const nativeRecursiveSource = async () => {
 	const source = await readFile("tests/fixtures/onboarding/npm-recursive/Recursive.lean", "utf8");
 	// Keep the source constructor below the pinned runtime's 1024-byte small
 	// allocation ceiling. Its 256 carrier arguments still stress wide C calls.
@@ -80,7 +64,30 @@ def marker (value : Marker) : Marker := value
 structure EmptyRecord where
 def emptyRecord (value : EmptyRecord) : EmptyRecord := value
 end Recursive\n`;
-	const original = `set_option maxRecDepth 10000\n${source}${extra}`;
+	return `set_option maxRecDepth 10000\n${source}${extra}`;
+};
+
+/**
+ * Build and execute the independent raw C, C++ and GMP transport checks.
+ *
+ * @param directory - Test-owned temporary workspace.
+ * @param options - Compile ordinary or reviewed native carriers.
+ * @param options.component - Build a verified native component.
+ * @param options.reviewed - Check the independently authored contract.
+ * @param options.cpp - Also exercise C++/GMP and runtime lifecycle behavior.
+ */
+export const checkNativeRecursiveTransport = async (directory, { component = false, reviewed = false, cpp = false } = {}) => {
+	if(cpp && !component) throw new TypeError("C++ graph checks require a verified native component");
+	const root = process.cwd();
+	const prefix = (await processBuildRunner.capture({ command: join(root, ".toolchains/elan/bin/lean"), args: ["--print-prefix"], cwd: root })).stdout.trim();
+	const lean = join(prefix, "bin/lean"), extractor = join(root, "src/analyze/NativeExports.lean");
+	const run = (command, args) => processBuildRunner.capture({
+		command, args, cwd: directory
+		, env: { ...process.env, LEAN_PATH: directory, PATH: `${join(prefix, "bin")}:${process.env.PATH}` }
+		, timeoutMs: 180000
+	})
+		.catch(error => { throw new Error(JSON.stringify({ message: error.message, details: error.details }), { cause: error }); });
+	const original = await nativeRecursiveSource(), width = 255;
 	await writeFile(join(directory, "Recursive.lean"), original);
 	const selection = {
 		profile: "native-library-v1"

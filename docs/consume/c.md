@@ -242,8 +242,47 @@ output slot, following the package's [cleanup rules](#values-and-cleanup).
 Payloads may nest supported copied primitives, records, variants and containers.
 Constructor fields use snake_case, with a trailing underscore for C keywords.
 The [installed checks](../evidence/c-variants-20260921.md) cover plain C and C/GMP
-archives on both source paths. Recursive, callable and identity-bearing payloads
-remain separate work.
+archives on both source paths. Packages containing recursive types use the
+graph API below. Callable and identity-bearing payloads remain separate work.
+
+## Recursive copied values
+
+A package containing recursive copied types exposes named structs and constructor
+tags. Recursive fields use typed pointers or spans. `Nat` and `Int` use GMP,
+which the prepared archive includes and links through CMake or pkg-config.
+
+For the recursive acceptance package, this copies an empty branch through Lean:
+
+```c
+#include <recursive.h>
+
+int main(void) {
+    recursive_tree_t input, output;
+    recursive_tree_t_init(&input);
+    recursive_tree_t_init(&output);
+    recursive_tree_t_select(&input, RECURSIVE_TREE_T_KIND_BRANCH);
+    recursive_error error = {0};
+    recursive_status status = recursive_tree(&input, &output, &error);
+    recursive_tree_t_clear(&output);
+    recursive_tree_t_clear(&input);
+    return status != RECURSIVE_STATUS_OK;
+}
+```
+
+Graph variants start without an active constructor. Call `_select` before filling
+one; `_clear` restores that unselected state. Calls replace an initialized output
+on success and preserve it on failure. Input pointer/span children are borrowed.
+Returned roots own independent copies. Clear or select the root, never a borrowed
+child view, and do not shallow-copy owned results. Inline returned values can be
+owned by a caller-built parent and released when that parent is cleared.
+
+Calls share limits of 128 levels, 262,144 visited nodes and 16 MiB native copied
+storage across inputs and output. Host conversion storage has a separate 16 MiB
+budget. Cycles, invalid fields and exceeded limits return `INVALID_ARGUMENT`.
+Bridge allocation failures return `UNEXPECTED_ERROR`; GMP keeps its default
+fatal allocation policy. Malformed native results retire the shared runtime,
+but previously owned values remain clearable. See the
+[C/GMP ownership rules](../evidence/gmp-recursive-conversions-20260923.md).
 
 ## Exact integers
 
@@ -326,7 +365,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named structs, constructor tags, typed borrowed children and GMP integers` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Initialize outputs and select named constructors before filling their fields. Success replaces the initialized output; failure preserves it. Borrow input pointer/span children. Clear only owning result roots, not nested views; do not shallow-copy owners. GMP retains its default fatal allocation policy. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

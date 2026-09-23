@@ -216,8 +216,41 @@ keywords gain a trailing underscore, as in `bool_` and `char_`. Naming collision
 reject during generation.
 
 The [installed variant checks](../evidence/cpp-variants-20260921.md) cover both
-source paths, malformed inputs and allocation-failure cleanup. Recursive types,
-variant callback payloads and identity-bearing fields are not supported yet.
+source paths, malformed inputs and allocation-failure cleanup. Variant callback
+payloads and identity-bearing fields remain separate work.
+
+## Recursive copied values
+
+Packages containing recursive types expose named structs, owned standard
+containers and `Box<T>` where a recursive field needs indirection. Copying a box
+duplicates its contents. Variant constructors remain named types; inspect their
+`value` member with `std::get`, `std::holds_alternative` or `std::visit`.
+
+For the recursive acceptance package:
+
+```cpp
+#include <recursive.hpp>
+#include <cassert>
+
+int main() {
+    namespace api = lean_bridge::recursive;
+    const api::Spine input = api::SpineNext{api::SpineLeaf{41}};
+    const auto output = api::spine(input);
+    const auto& next = std::get<api::SpineNext>(output.value);
+    assert(std::get<api::SpineLeaf>(next.value->value).value == 41);
+}
+```
+
+The package loads its shared Lean runtime automatically. Results own independent
+copies, including exact Boost integers. Required empty boxes reject; nested
+options preserve `None` versus `Some(None)`.
+
+Calls share limits of 128 levels, 262,144 visited nodes and 16 MiB native copied
+storage across inputs and result. C++ conversion storage has a separate 16 MiB
+budget. Invalid values and exceeded limits throw `Error` with status
+`INVALID_ARGUMENT`. C++ allocation failures propagate `std::bad_alloc`; scoped
+cleanup releases the native result. Malformed results retire the shared runtime.
+See the [C++ conversion checks](../evidence/cpp-recursive-conversions-20260922.md).
 
 ### Type conversions
 
@@ -259,7 +292,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named structs and variants, standard containers and deep-copy Box<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Owned standard containers and named alternatives retain recursive identities. Copying `Box<T>` makes an independent copy; missing required boxes reject. Scoped cleanup releases native output on exceptions. Invalid input or limits throw Error; C++ allocation failures throw std::bad_alloc. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

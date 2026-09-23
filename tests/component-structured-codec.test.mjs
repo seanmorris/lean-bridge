@@ -21,6 +21,7 @@ import { generateJavaScriptPackage } from "../src/backends/javascript/generate.m
 import { sha256 } from "../src/capsule/node.mjs";
 import { readFile } from "node:fs/promises";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
+import { assertRecursiveSourceHistory } from "./helpers/recursive-source-history.mjs";
 
 const primitive = name => ({ kind: "primitive", name });
 const apply = (constructor, ...args) => ({ kind: "apply", constructor, arguments: args });
@@ -894,7 +895,7 @@ test("recursive npm evidence binds installed archives to both source paths and e
 	assert.equal(sha256(await readFile(record.baseline.path)), record.baseline.sha256, "historical installed receipt is immutable");
 	const baseline = JSON.parse(await readFile(record.baseline.path));
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), Object.keys(baseline.sourceHashes).sort());
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertRecursiveSourceHistory("npm-recursive-callable-repair-20260922", path, hash);
 	assert.deepEqual(record.runs.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.runs)
 	{
@@ -924,7 +925,7 @@ test("recursive npm evidence binds installed archives to both source paths and e
 	}
 	const { document, ...contracts } = await readTypeSurface();
 	const cells = typeSurfaceCells(document, contracts);
-	const recursive = cells.filter(cell => cell.shape === "recursive" && cell.stages.installedExecution.state === "passed");
+	const recursive = cells.filter(cell => cell.shape === "recursive" && cell.stages.installedExecution.state === "passed" && cell.stages.installedExecution.evidence.includes("npm-recursive-installed"));
 	assert.equal(recursive.length, 30);
 	assert.deepEqual([...new Set(recursive.map(cell => cell.profile))].sort(), ["browser-javascript", "browser-react", "browser-worker", "node-javascript", "node-typescript"]);
 	assert.deepEqual([...new Set(recursive.map(cell => cell.position))].sort(), ["field", "parameter", "result"]);

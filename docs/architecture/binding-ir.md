@@ -104,8 +104,7 @@ now execute typed layouts, bounded conversions and private allocation cleanup
 against freshly compiled Lean. [Native graph components](../evidence/native-graph-components-20260922.md)
 compile and verify ordinary and independently reviewed exports through the
 shared runtime. Host adapters must explicitly support their finite graph model.
-Native package admission and the remaining
-consumer targets still need integration and installed acceptance.
+Each consumer adapter must pass its own installed acceptance.
 [C++ recursive value declarations](../evidence/cpp-recursive-values-20260922.md)
 use named constructors, standard containers and deep-copy boxes.
 [Bounded C++ conversions](../evidence/cpp-recursive-conversions-20260922.md)
@@ -117,8 +116,9 @@ preserves recovery for input, limit and bridge-allocation failures.
 [C/GMP graph values and conversions](../evidence/gmp-recursive-conversions-20260923.md)
 use exact GMP integers, borrowed input children and independently owned results.
 Root-relative integer finalizers remain valid when the result moves into caller
-storage. Prepared C/C++ recursive package integration and installed acceptance
-remain open.
+storage. [Prepared C/C++ graph packages](../evidence/native-recursive-packages-20260923.md)
+pass ordinary-source and reviewed-contract installed checks through both public
+APIs, including compiler-free execution after source and header removal.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail
