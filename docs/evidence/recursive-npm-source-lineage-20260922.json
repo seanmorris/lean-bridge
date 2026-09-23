@@ -46,7 +46,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "78a5f7fcdf6445295a4cb140053db1fca196353b8d0bb9e63b06c3b8b6cf470d"
+          "currentSha256": "9f1249dffbc5348a2fba9f178a61e150d9d8e2dc878dc4e698eeaf66abb2b503"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -91,6 +91,12 @@
       "previousSha256": "233b6bc16f3e5de4477f887988503167381b888be6373b8266232fa494dbbe39",
       "currentSha256": "78a5f7fcdf6445295a4cb140053db1fca196353b8d0bb9e63b06c3b8b6cf470d",
       "change": "Register independent C++ recursive conversion and allocation-failure checks. Historical installed receipts remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "78a5f7fcdf6445295a4cb140053db1fca196353b8d0bb9e63b06c3b8b6cf470d",
+      "currentSha256": "9f1249dffbc5348a2fba9f178a61e150d9d8e2dc878dc4e698eeaf66abb2b503",
+      "change": "Register native broker retirement and retained-owner cleanup checks. Historical installed receipts remain unchanged."
     }
   ]
 }

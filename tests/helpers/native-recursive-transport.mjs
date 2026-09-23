@@ -194,8 +194,12 @@ def main : IO Unit := do
 	assert.match(observed.stdout, /^native-graphs-ok \d+\n$/u); assert.equal(observed.stderr, "");
 	assert.equal(await readFile(join(directory, "Recursive.lean"), "utf8"), original);
 	const cppChecks = cpp ? await checkNativeRecursiveCpp({ directory, ir, compiled, runtime, output, run }) : null;
+	const lifecycleChecks = cpp ? await checkNativeRecursiveCpp({
+		directory, ir, compiled, runtime, run
+		, lifecycle: true
+		, output: generateNativeCopiedGraphAdapters(ir, abi, { initializer: compiled.receipt.initializer }) }) : null;
 	return { checks: Number(observed.stdout.trim().split(" ").at(-1))
 		, exports: abi.exports.length, width, stack
-		, ...cpp ? { cppChecks } : {}
+		, ...cpp ? { cppChecks, lifecycleChecks } : {}
 		, ...compiled ? { modelSha256: compiled.receipt.modelSha256, binarySha256: compiled.receipt.nativeLibrary.sha256, reviewed } : {} };
 };

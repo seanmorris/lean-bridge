@@ -167,7 +167,9 @@ export const generateCopiedNativeCalls = (model, surface) => {
 	});
 	const exports = new Map(model.exports.map(item => [`lean:${item.name}`, item]));
 	const calls = surface.functions.filter(fn => ![...fn.declaration.parameters, fn.declaration.result].some(site => surface.callbacks.has(site.type.id))).map(fn => {
-		const native = exports.get(fn.declaration.id), lines = [`static ${p}_status lb_call_${fn.field}(${fn.signature}) {`, "  (void)context; size_t budget = 16u * 1024u * 1024u;"];
+		const native = exports.get(fn.declaration.id), lines = [`static ${p}_status lb_call_${fn.field}(${fn.signature}) {`
+			, "  (void)context; size_t budget = 16u * 1024u * 1024u;"
+			, `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`];
 		const args = fn.parameters.map(({ name }, i) => {
 			const type = native.parameters[i].type, value = copy(type).aggregate ? name : `&${name}`;
 			lines.push(`  if (!${id(type)}_check(${value}, &budget)) return lb_invalid(error, "Invalid copied input or 16 MiB call limit exceeded");`);
@@ -181,8 +183,9 @@ export const generateCopiedNativeCalls = (model, surface) => {
 			lines.push('  if (status == 0) return lb_invalid(error, "16 MiB call limit exceeded");'
 				, '  if (status == -2) return lb_failure(error, "Invalid native Unicode scalar result");'
 				, ...(model.types.some(type => type.kind === "variant") ? ['  if (status == -3) return lb_failure(error, "Invalid native variant result");'] : [])
-				, '  if (status < 0) return lb_failure(error, "Cannot allocate copied result");', "  *out = result;");
-		} else lines.push("  lean_dec(value); (void)budget;");
+				, '  if (status < 0) return lb_failure(error, "Cannot allocate copied result");'
+				, `  if (lb_ready(error) != ${macro}_STATUS_OK) { ${copy(native.result).aggregate ? `${copy(native.result).name}_clear(&result); ` : ""}return ${macro}_STATUS_UNEXPECTED_ERROR; }`, "  *out = result;");
+		} else lines.push("  lean_dec(value); (void)budget;", `  if (lb_ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;`);
 		lines.push(`  if (error) *error = (${p}_error){0};`, `  return ${macro}_STATUS_OK;`, "}");
 		return lines.join("\n");
 	});

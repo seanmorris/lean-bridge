@@ -80,9 +80,9 @@ out of the executable's direct link interface.
 
 ## Remaining integration
 
-Runtime initialization and retirement remain caller policy. The private helper
-accepts a supplied native function after the caller establishes readiness. The
-compiled failure-injection test deliberately bypasses retirement to check
-cleanup and recovery in isolation. Public admission still requires the runtime
-failure policy, the C/GMP value facade, prepared C/C++ archives and ordinary and
-reviewed installed-consumer acceptance.
+The private helper accepts a supplied native function. The compiled lifecycle
+fixture now selects the [runtime-checked graph adapter](native-retirement-20260923.md),
+which initializes through the shared broker and retires malformed results. The
+separate failure-injection fixture bypasses retirement to check each cleanup
+path in isolation. Public admission still requires the C/GMP value facade,
+prepared C/C++ archives and ordinary and reviewed installed-consumer acceptance.

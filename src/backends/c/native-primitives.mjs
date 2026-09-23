@@ -33,6 +33,10 @@ static inline ${p}_status lb_failure(${p}_error *error, const char *message) {
   if (error) *error = (${p}_error){${macro}_ERROR_UNEXPECTED, message, strlen(message)};
   return ${macro}_STATUS_UNEXPECTED_ERROR;
 }
+static inline ${p}_status lb_ready(${p}_error *error) {
+  return lean_bridge_native_component_ready(${JSON.stringify(model.component.id)})
+    ? ${macro}_STATUS_OK : lb_failure(error, "Lean runtime is not ready or has been retired");
+}
 static inline int lb_charge(size_t *budget, size_t length, size_t width) {
   if (length > *budget / width) return 0;
   *budget -= length * width; return 1;

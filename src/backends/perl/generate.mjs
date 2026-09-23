@@ -231,8 +231,10 @@ ${name}(...)
   PPCODE:
     if (items != ${parameters.length}) croak("${name} expects ${parameters.length} arguments");
     lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
     ${parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ NULL, ST(${i}));`).join("\n    ")}
     ${nativeCType(result)} result = ${symbol}(${parameters.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"});
+    lbp_component_ready(aTHX);
     ST(0) = ${write(result)}(aTHX_ NULL, result);
     XSRETURN(1);
 `;
@@ -241,13 +243,18 @@ void
 ${name}(...)
   PPCODE:
     if (items != ${parameters.length}) croak("${name} expects ${parameters.length} arguments");
+    lbp_check_interpreter(aTHX);
+    lbp_component_ready(aTHX);
     LBP_ENTER();
     ${parameters.map((type, i) => `${nativeCType(type)} a${i} = ${read(type)}(aTHX_ scope, ST(${i}));`).join("\n    ")}
     ${parameters.map((type, i) => retain(type, `a${i}`)).join(" ")}
     ${nativeCType(result)} result = ${symbol}(${parameters.map((_, i) => `a${i}`).join(", ") || "lean_box(0)"});
     ${nativeObjectType(result) ? "lbp_keep(scope, result);" : ""}
     lbp_finish(aTHX_ scope);
-    SV *out = SvREFCNT_inc(${write(result)}(aTHX_ scope, result));
+    lbp_component_ready(aTHX);
+    SV *out = ${write(result)}(aTHX_ scope, result);
+    lbp_component_ready(aTHX);
+    SvREFCNT_inc(out);
     LBP_LEAVE();
     ST(0) = sv_2mortal(out);
     XSRETURN(1);
@@ -295,7 +302,11 @@ export const validatePerlModel = model => {
 export const generatePerlBindingPackage = (model, receipt) => {
 	const branches = validatePerlModel(model);
 	const aliases = perlCopiedAliases(model);
-	const lines = ['#include "runtime.h"', '#include "component.h"', ""];
+	const lines = ['#include "runtime.h"', '#include "component.h"'
+		, `static void lbp_component_ready(pTHX) {
+  if (!lean_bridge_native_component_ready(${q(`${model.component.id}:${receipt.nativeLibrary.sha256}`)})) croak("Lean runtime is not ready or has been retired");
+}`
+		, ""];
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{
 		lines.push(`typedef struct { ${type.parameters.map((p, i) => `${nativeCType(p)} argument${i};`).join(" ")} ${nativeCType(type.result)} result; int returned; } lb_callback_frame_${type.key};`);
@@ -324,6 +335,7 @@ void
 _callback_${type.key}(...)
   PPCODE:
     lbp_invocation *invocation = lbp_callback_current(aTHX);
+    lbp_component_ready(aTHX);
     if (invocation->callback->invoker != cv) croak("wrong generated callback converter");
     lb_callback_frame_${type.key} *frame = invocation->frame;
     LBP_ENTER();
@@ -334,6 +346,7 @@ _callback_${type.key}(...)
     SPAGAIN;
     if (count != 1) croak("host callback must return one value");
     SV *returned = POPs;
+    lbp_component_ready(aTHX);
     frame->result = ${read(type.result)}(aTHX_ scope, returned);
     ${retain(type.result, "frame->result")}
     frame->returned = 1;

@@ -43,6 +43,7 @@ const profileManifest = Object.freeze({
 		, "component-callable-contract"
 		, "component-char-contract"
 		, "native-char-contract"
+		, "native-runtime-retirement"
 		, "word-contract"
 		, "word-evidence"
 		, "reviewed-callables"

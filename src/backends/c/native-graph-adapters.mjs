@@ -29,7 +29,7 @@ _Static_assert(sizeof(bool) == 1, "native graph transport requires byte Bool sto
 #ifndef LB_GRAPH_ENCODE
 #define LB_GRAPH_ENCODE(value) (value)
 #endif
-enum { NG_OK = 0, NG_INVALID = 1, NG_LIMIT = 2, NG_ALLOC = 3, NG_RESULT = 4 };
+enum { NG_OK = 0, NG_INVALID = 1, NG_LIMIT = 2, NG_ALLOC = 3, NG_RESULT = 4, NG_RUNTIME = 5 };
 typedef struct {
   size_t bytes, nodes;
   struct { const void *address; size_t type; } path[${componentRecursiveLimits.valueDepth + 1}];
@@ -127,14 +127,23 @@ static inline uint32_t ng_nat_out(lean_object *value, ng_arena *arena, const uin
  *
  * @param ir - Pure copied Binding IR.
  * @param abi - Matching total-carrier signatures and nominal graph.
+ * @param options - Optional shared-runtime lifecycle for compiled components.
+ * @param options.initializer - Verified component initializer, absent for isolated transport tests.
  */
-export const generateNativeCopiedGraphAdapters = (ir, abi) => {
+export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null } = {}) => {
 	assertComponentRecursiveBindings(abi, ir);
+	if(initializer !== null && (typeof initializer !== "string" || !/^initialize_LeanBridgeNative[0-9a-f]{16}$/.test(initializer))) throw new TypeError("Invalid native graph initializer identity");
 	const { layout, header: typesHeader } = generateCopiedCGraphTypes(ir);
 	const table = new Map(layout.nodes.map((node, index) => [node.id, { ...node, index }]));
 	const walker = id => `ng_${sha256(id).slice(0, 20)}`;
 	const helper = node => componentRecursiveHelper(abi, node.ref);
 	const lines = [`#include "${layout.prefix}-graph.h"`, runtime];
+	if(initializer) lines.push('#include "lean_bridge_native_runtime.h"'
+		, '#if !defined(LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION) || LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION != 1'
+		, '#error "native graph calls require the retirement-aware shared runtime"', "#endif"
+		, `extern lean_object *${initializer}(uint8_t);`
+		, `static void *ng_initialize(uint8_t builtin) { return ${initializer}(builtin); }`
+		, `static int ng_ready(void) { return lean_bridge_native_component_ready(${JSON.stringify(ir.component.id)}); }`);
 	const declarations = [];
 	for(const node of table.values())
 	{
@@ -324,11 +333,15 @@ export const generateNativeCopiedGraphAdapters = (ir, abi) => {
 			, ...root.parameters.map((type, index) => `  if ((status = ${walker(type)}_check(a${index}, 0, 1, &budget))) return status;`)
 			, "  if ((status = ng_charge(&budget, 1, sizeof(*out)))) return status;"
 			, "  if (!budget.nodes) return NG_LIMIT;"
+			, ...initializer ? [`  if (!lean_bridge_native_component_initialize(${JSON.stringify(ir.component.id)}, ng_initialize)) return NG_RUNTIME;`] : []
 			, "  ng_arena arena = { .head = NULL, .budget = &budget };"
 			, ...root.parameters.map((type, index) => `  lean_object *v${index} = ${walker(type)}_in(a${index});`)
 			, `  lean_object *value = ${item.symbol}_lean(${root.parameters.length ? root.parameters.map((_, index) => `v${index}`).join(", ") : "lean_box(0)"});`
+			, ...initializer ? ["  if (!ng_ready()) { lean_dec(value); return NG_RUNTIME; }"] : []
 			, `  ${result.name} result = {0};`, `  status = ${walker(root.result)}_out(&result, value, 0, &arena);`
+			, ...initializer ? ["  if (status == NG_RESULT) lean_bridge_native_runtime_retire();"] : []
 			, "  if (status) { ng_release(arena.head); return status; }"
+			, ...initializer ? ["  if (!ng_ready()) { ng_release(arena.head); return NG_RUNTIME; }"] : []
 			, ...result.aggregate ? ["  result._bridge_owner = arena.head;", "  result._bridge_release = arena.head ? ng_release : NULL;"] : []
 			, "  *out = result; return NG_OK;", "}");
 	}

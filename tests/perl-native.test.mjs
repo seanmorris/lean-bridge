@@ -515,6 +515,35 @@ test("shared configuration drives a compiled and installed native package", { sk
 	const consumer = await run(perl, ["-MLeanBridge::Selected", "-e", "print LeanBridge::Selected::bump(41)"], working,
 		{ ...process.env, PERL5LIB: join(prefix, "lib/perl5") });
 	assert.equal(consumer.stdout, "42");
+	// A separate test-only XS module retires the real shared broker. The installed
+	// component's cached BOOT state must not allow another scalar call afterward.
+	await saveLakeFile(working, "retire.c", `#include "EXTERN.h"
+#include "perl.h"
+#include "XSUB.h"
+#include "lean_bridge_native_runtime.h"
+XS(retire_shared_runtime) { dXSARGS; (void)items; lean_bridge_native_runtime_retire(); XSRETURN_EMPTY; }
+`);
+	await saveLakeFile(working, "retire.pl", `use strict; use warnings;
+use ExtUtils::CBuilder; use DynaLoader; use LeanBridge::Selected;
+my ($runtime) = @ARGV;
+my $builder = ExtUtils::CBuilder->new(quiet => 1);
+my $object = $builder->compile(source => 'retire.c', include_dirs => ["$runtime/include"]);
+my $library = $builder->link(objects => $object, module_name => 'RetirementProbe',
+  extra_linker_flags => "-L$runtime/lib -llean_bridge_native -Wl,-rpath,$runtime/lib");
+my $handle = DynaLoader::dl_load_file("./$library", 0) or die DynaLoader::dl_error();
+my $symbol = DynaLoader::dl_find_symbol($handle, 'retire_shared_runtime') or die DynaLoader::dl_error();
+my $retire = DynaLoader::dl_install_xsub('RetirementProbe::retire', $symbol);
+die 'normal call failed' unless LeanBridge::Selected::bump(41) == 42;
+$retire->();
+eval { LeanBridge::Selected::bump(41) };
+die 'retired component remained usable' unless $@ =~ /Lean runtime is not ready or has been retired/;
+my $snapshot = LeanBridge::Runtime::_snapshot();
+die 'retirement leaked owners' if $snapshot->{live_identities} || $snapshot->{live_scopes} || $snapshot->{live_callbacks};
+print 'perl-retirement-ok';
+`);
+	const retired = await run(perl, ["retire.pl", join(output, "native/runtime")], working,
+		{ ...process.env, PERL5LIB: join(prefix, "lib/perl5") });
+	assert.equal(retired.stdout, "perl-retirement-ok"); assert.equal(retired.stderr, "");
 	assert.deepEqual(await readExportConfiguration(projectRoot), before);
 });
 

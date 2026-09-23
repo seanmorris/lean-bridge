@@ -68,6 +68,8 @@ typedef enum { SAMPLE_ERROR_UNEXPECTED = 1 } sample_error_code;
 typedef struct { sample_error_code code; const char *message; size_t message_length; } sample_error;
 static _Thread_local int pending;
 static int lb_native_callback_take_error(void) { int result = pending; pending = 0; return result; }
+static int retired;
+static sample_status lb_ready(sample_error *error) { (void)error; return retired ? SAMPLE_STATUS_UNEXPECTED_ERROR : SAMPLE_STATUS_OK; }
 ${scopes}
 static void *exercise(void *context) {
   (void)context;
@@ -107,6 +109,9 @@ int main(void) {
   assert(lb_leave(parent, &error) == SAMPLE_STATUS_INVALID_ARGUMENT);
   assert(strcmp(error.message, "Expired or wrong-thread host callback") == 0);
   exercise(NULL);
+  parent = lb_enter(); retired = 1;
+  assert(lb_leave(parent, &error) == SAMPLE_STATUS_UNEXPECTED_ERROR);
+  assert(strcmp(error.message, "Lean runtime is not ready or has been retired") == 0);
   return 0;
 }
 `);

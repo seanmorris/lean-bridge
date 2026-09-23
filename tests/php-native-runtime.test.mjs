@@ -21,7 +21,16 @@ import {
 } from "../src/backends/php/native-runtime.mjs";
 import { generatePhpZendExtensionPackage } from "../src/backends/php/zend-extension.mjs";
 
-const run = promisify(execFile);
+const execute = promisify(execFile);
+const run = async (...args) => {
+	try
+	{ return await execute(...args); }
+	catch(error)
+	{
+		error.message += `\nstdout:\n${error.stdout ?? ""}\nstderr:\n${error.stderr ?? ""}`;
+		throw error;
+	}
+};
 
 const writePackage = async (directory, files) => {
 	for(const [relativePath, source] of Object.entries(files))
@@ -111,6 +120,12 @@ PHP_METHOD(LeanBetaProbe, snapshot)
     snapshot_result(return_value);
 }
 
+PHP_METHOD(LeanBetaProbe, retire)
+{
+    ZEND_PARSE_PARAMETERS_NONE();
+    lean_bridge_native_runtime_retire();
+}
+
 PHP_METHOD(LeanBetaProbe, ping)
 {
     zend_long value;
@@ -125,6 +140,7 @@ PHP_METHOD(LeanBetaProbe, ping)
 static const zend_function_entry probe_methods[] = {
     PHP_ME(LeanBetaProbe, initialize, arginfo_initialize, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(LeanBetaProbe, snapshot, arginfo_snapshot, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    PHP_ME(LeanBetaProbe, retire, arginfo_initialize, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(LeanBetaProbe, ping, arginfo_ping, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_FE_END
 };
@@ -383,9 +399,47 @@ echo json_encode($trace, JSON_THROW_ON_ERROR);
       , runtimeInitRuns: 1
       , componentInitRuns: 2
       , attachedComponents: 2
-      , liveIdentitySlope: [2, 3, 2]
+      // Each value has one native Lean identity and one Zend wrapper identity.
+      , liveIdentitySlope: [4, 6, 4]
       , liveAfterClose: 0
     });
+
+    await writeFile(join(directory, "retirement.php"), `<?php
+require __DIR__ . '/package/vendor/autoload.php';
+$transport = new \\LeanAlpha\\Internal\\NativeTransport();
+$transport->initialize();
+$box = $transport->leanAlphaBox(41);
+$closure = $transport->leanAlphaMakeAdder(2);
+\\LeanBeta\\Internal\\RuntimeProbe::initialize();
+$payload = new \\LeanAlpha\\Payload(false, 8, 'held', \\LeanAlpha\\Bytes::fromString('abc'), [1, 2]);
+$rejected = 0;
+function rejects($action) {
+    global $rejected;
+    try { $action(); } catch (\\LeanAlpha\\Internal\\TransportError $error) {
+        if (!str_contains($error->getMessage(), 'retired')) throw $error;
+        ++$rejected; return;
+    }
+    throw new RuntimeException('Retired call succeeded');
+}
+rejects(fn() => $transport->leanAlphaWithCallback(40, function($value) {
+    \\LeanBeta\\Internal\\RuntimeProbe::retire(); return $value;
+}));
+foreach ([
+    fn() => $transport->leanAlphaBox(1),
+    fn() => $transport->leanAlphaBoxRead($box),
+    fn() => $transport->bridgeAlphaBoxIdentity($box),
+    fn() => $transport->leanAlphaRoundTrip($payload),
+    fn() => $transport->leanAlphaWithCallback(1, fn($n) => $n),
+    fn() => $transport->leanAlphaMakeAdder(1),
+    fn() => $transport->transformCall($closure, 40),
+] as $call) rejects($call);
+$transport->boxClose($box); $transport->transformClose($closure);
+$state = $transport->runtimeSnapshot();
+if ($state['runtimeState'] !== 3 || $state['liveIdentities'] !== 0 || $rejected !== 8) throw new RuntimeException('Retirement state mismatch');
+echo 'php-retirement-ok';
+`);
+    const retirement = await run("php", ["-n", "-d", `extension=${alphaExtension}`, "-d", `extension=${betaExtension}`, "retirement.php"], { cwd: directory, env: phpEnvironment });
+    assert.equal(retirement.stdout, "php-retirement-ok"); assert.equal(retirement.stderr, "");
 
     for(const extension of [alphaExtension, betaExtension])
 {

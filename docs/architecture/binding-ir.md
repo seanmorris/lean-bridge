@@ -110,8 +110,11 @@ consumer targets still need integration and installed acceptance.
 use named constructors, standard containers and deep-copy boxes.
 [Bounded C++ conversions](../evidence/cpp-recursive-conversions-20260922.md)
 check all arguments before creating views and release native results after
-copying, including on allocation failure. Runtime failure policy and installed
-C/C++ package admission remain separate.
+copying, including on allocation failure. [Native runtime retirement](../evidence/native-retirement-20260923.md)
+rejects later calls through cached components while preserving owned-value
+cleanup. The checked graph boundary retires malformed native results and
+preserves recovery for input, limit and bridge-allocation failures. The C/GMP
+value facade and installed C/C++ recursive package admission remain open.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail

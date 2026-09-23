@@ -16,6 +16,9 @@ namespace api = lean_bridge::recursive;
 namespace d = api::detail;
 static size_t checks, attempts, fail_at, live;
 static const char* stage = "initialization";
+#ifdef LB_GRAPH_LIFECYCLE
+static void retained_callback() {}
+#endif
 #define CHECK(expression) do { ++checks; assert(expression); } while (0)
 void* operator new(size_t size) {
   if (++attempts == fail_at) throw std::bad_alloc();
@@ -29,13 +32,13 @@ void operator delete[](void* value) noexcept { ::operator delete(value); }
 void operator delete(void* value, size_t) noexcept { ::operator delete(value); }
 void operator delete[](void* value, size_t) noexcept { ::operator delete(value); }
 template<class F> static void reject(uint32_t status, F&& action) {
-  const size_t before = live;
+  const size_t before = live, native_before = cpp_graph_live;
   try { action(); CHECK(false); }
   catch (const d::GraphConversionError& error) {
     if (error.status != status) std::fprintf(stderr, "Expected status %u, got %u: %s\n", status, error.status, error.what());
     CHECK(error.status == status);
   }
-  CHECK(live == before); CHECK(cpp_graph_live == 0);
+  CHECK(live == before); CHECK(cpp_graph_live == native_before);
 }
 static void exercise() {
   stage = "scalar round trips";
@@ -130,14 +133,48 @@ static void exercise() {
     CHECK(live == before); CHECK(cpp_graph_live == 0);
   }
   CHECK(input_failures); CHECK(output_failures);
+#ifdef LB_GRAPH_LIFECYCLE
+  // A second component, callback and identity must all observe the same failure.
+  CHECK(lean_bridge_native_component_initialize("peer@1.0.0", COMPONENT_INITIALIZER));
+  auto identity = lean_bridge_native_identity_acquire("retained", &checks);
+  auto token = lb_native_callback_register(retained_callback, &checks);
+  CHECK(identity); CHECK(token);
+  recursive_scalars_t held_input{}, owned{};
+  held_input.text.data = "held"; held_input.text.length = 4;
+  CHECK(recursive_scalars_graph(&held_input, &owned) == 0);
+  CHECK(cpp_graph_live > 0);
+#endif
   stage = "malformed carrier";
   cpp_graph_encodes = 0; cpp_graph_bad_encode = 1;
   reject(4, call); cpp_graph_bad_encode = 0;
-  // This private test bypasses retirement policy; public admission stays off.
+#ifdef LB_GRAPH_LIFECYCLE
+  CHECK(!lean_bridge_native_component_ready("recursive@1.0.0"));
+  CHECK(!lean_bridge_native_component_ready("peer@1.0.0"));
+  CHECK(!lean_bridge_native_component_initialize("recursive@1.0.0", COMPONENT_INITIALIZER));
+  CHECK(!lean_bridge_native_component_initialize("new@1.0.0", COMPONENT_INITIALIZER));
+  cpp_graph_decodes = 0; reject(5, call); CHECK(cpp_graph_decodes == 0);
+  CHECK(!lb_native_callback_lookup(token).invoke); CHECK(lb_native_callback_take_error());
+  CHECK(!lb_native_callback_register(retained_callback, nullptr));
+  lb_native_callback_release(token);
+  CHECK(lean_bridge_native_identity_release(identity, "retained", &checks) == 1);
+  CHECK(!lean_bridge_native_identity_acquire("retained", &checks));
+  lean_bridge_native_snapshot snapshot{}; lean_bridge_native_snapshot_read(&snapshot);
+  CHECK(snapshot.runtime_state == 3); CHECK(snapshot.runtime_init_runs == 1);
+  CHECK(snapshot.live_identities == 0);
+  recursive_scalars_t_clear(&owned); recursive_scalars_t_clear(&owned);
+  CHECK(cpp_graph_live == 0);
+  lean_bridge_native_component_detach("peer@1.0.0");
+#else
+  // Isolated transport tests retain recovery to check individual allocation sites.
   call(); CHECK(cpp_graph_live == 0);
+#endif
 }
 int main() {
+#ifdef LB_GRAPH_LIFECYCLE
+  CHECK(!lean_bridge_native_component_ready("recursive@1.0.0"));
+#else
   CHECK(lean_bridge_native_component_initialize("recursive@1.0.0", COMPONENT_INITIALIZER));
+#endif
   const size_t before = live;
   try { exercise(); }
   catch (const d::GraphConversionError& error) {

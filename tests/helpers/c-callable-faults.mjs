@@ -35,7 +35,7 @@ export const checkCCallableFaults = async (output, working, environment) => {
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-static int remaining = -1, live, calls;
+static int remaining = -1, live, calls, retire_in_callback;
 static unsigned checks;
 #define CHECK(x) do { ++checks; assert(x); } while (0)
 static int allowed(void) { if (!remaining) return 0; if (remaining > 0) --remaining; return 1; }
@@ -45,10 +45,14 @@ void *lb_test_realloc(void *p, size_t n) { if (!allowed()) return NULL; int fres
 void lb_test_free(void *p) { if (p) { --live; free(p); } }
 static unsigned identities(void) { lean_bridge_native_snapshot snapshot; lean_bridge_native_snapshot_read(&snapshot); return snapshot.live_identities; }
 static callables_status echo(void *raw, const callables_string *value, callables_string *out, callables_error *error) {
-  (void)raw; (void)error; ++calls; *out = *value; return CALLABLES_STATUS_OK;
+  (void)raw; (void)error; ++calls; *out = *value;
+  if (retire_in_callback) lean_bridge_native_runtime_retire();
+  return CALLABLES_STATUS_OK;
 }
 int main(void) {
   callables_error error = {0}; unsigned before = identities();
+  uint32_t word_bits = 0;
+  CHECK(callables_word_bits(&word_bits, &error) == CALLABLES_STATUS_OK && word_bits == 64);
   callables_owned_callback${ref("makeUInt32")} *owned = NULL;
   remaining = 0;
   CHECK(callables_make_uint32(42, &owned, &error) == CALLABLES_STATUS_UNEXPECTED_ERROR);
@@ -76,6 +80,27 @@ int main(void) {
   remaining = -1;
   CHECK(callables_owned_callback${ref("makeString")}_call(text, true, &value, &result, &error) == CALLABLES_STATUS_OK);
   callables_string_clear(&result); callables_owned_callback${ref("makeString")}_dispose(&text);
+  CHECK(!live && identities() == before);
+  CHECK(callables_make_string(&value, &text, &error) == CALLABLES_STATUS_OK);
+  CHECK(callables_make_uint32(42, &owned, &error) == CALLABLES_STATUS_OK);
+  callables_string held = {0};
+  CHECK(callables_owned_callback${ref("makeString")}_call(text, true, &value, &held, &error) == CALLABLES_STATUS_OK);
+  int held_live = live; calls = 0; retire_in_callback = 1;
+  result.length = 123;
+  CHECK(callables_twice_string(&value, &callback, &result, &error) == CALLABLES_STATUS_UNEXPECTED_ERROR);
+  CHECK(calls == 1 && !result.data && result.length == 123 && live == held_live);
+  CHECK(callables_owned_callback${ref("makeString")}_call(text, true, &value, &result, &error) == CALLABLES_STATUS_UNEXPECTED_ERROR);
+  CHECK(!result.data && result.length == 123 && live == held_live);
+  uint32_t scalar = 777;
+  CHECK(callables_owned_callback${ref("makeUInt32")}_call(owned, true, 1, &scalar, &error) == CALLABLES_STATUS_UNEXPECTED_ERROR);
+  CHECK(scalar == 777);
+  callables_owned_callback${ref("makeUInt32")} *never = NULL;
+  CHECK(callables_make_uint32(0, &never, &error) == CALLABLES_STATUS_UNEXPECTED_ERROR && !never);
+  word_bits = 999;
+  CHECK(callables_word_bits(&word_bits, &error) == CALLABLES_STATUS_UNEXPECTED_ERROR && word_bits == 999);
+  callables_string_clear(&held);
+  callables_owned_callback${ref("makeString")}_dispose(&text);
+  callables_owned_callback${ref("makeUInt32")}_dispose(&owned);
   CHECK(!live && identities() == before);
   printf("fault-ok:%u\\n", checks); return 0;
 }

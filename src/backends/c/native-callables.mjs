@@ -47,6 +47,7 @@ static void lb_record(lb_frame *frame, ${p}_status status, const ${p}_error *err
   memcpy(frame->message, text, length); frame->message[length] = 0; frame->message_length = length;
 }
 static void lb_observe(lb_frame *frame) {
+  if (lb_ready(NULL) != ${m}_STATUS_OK) lb_record(frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Lean runtime is not ready or has been retired");
   if (lb_native_callback_take_error()) lb_record(frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Expired or wrong-thread host callback");
 }
 static lb_frame *lb_enter(void) {
@@ -152,8 +153,11 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 
 	const render = (signature, parameters, result, symbol, leaseType = null) => {
 		const hostArgs = parameters.filter(parameter => parameter.type.kind === "callback");
-		const lines = [signature, "  (void)context; lb_frame *_lb_frame = lb_enter();"
+		const lines = [signature
+			, `  (void)context; if (lb_ready(error) != ${m}_STATUS_OK) return ${m}_STATUS_UNEXPECTED_ERROR;`
+			, "  lb_frame *_lb_frame = lb_enter();"
 			, '  if (!_lb_frame) return lb_failure(error, "C callback reentry limit (64) exceeded");'
+			, ...unit(result) ? [] : [`  ${result.kind === "callback" ? "uintptr_t" : copy(result).name} _lb_result = {0};`]
 			, ...hostArgs.map(({ name, type }) => `  uint64_t _lb_token_${name} = 0; lb_host_${nativeTypeKey(type)} _lb_host_${name} = {0};`)];
 		const kind = t => JSON.stringify(`${model.component.id}:callback:${nativeTypeKey(t)}`);
 		if(leaseType) lines.push(`  lean_object *_lb_closure = lb_lease_borrow(self, ${kind(leaseType)});`
@@ -180,21 +184,27 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 		lines.push("  lb_observe(_lb_frame);");
 		if(result.kind === "callback") lines.push(`  if (_lb_frame->status == ${m}_STATUS_OK) {`
 			, `    uintptr_t token = lb_lease_store(_lb_value, ${kind(result)});`
-			, "    if (token) { *out = token; _lb_value = NULL; }"
+			, "    if (token) { _lb_result = token; _lb_value = NULL; }"
 			, `    else lb_record(_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Lean closure registry full");`, "  }"
 			, "  if (_lb_value) lean_dec(_lb_value);");
 		else
 		{
 			if(!unit(result)) lines.push(`  if (_lb_frame->status == ${m}_STATUS_OK) {`
-				, `    ${copy(result).name} copied = {0}; int status = ${id(result)}_out(_lb_value, &copied, &_lb_frame->budget);`
-				, "    if (status == 1) *out = copied;"
-				, `    else lb_record(_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Cannot copy Lean result or 16 MiB call limit exceeded");`, "  }");
+				, `    int status = ${id(result)}_out(_lb_value, &_lb_result, &_lb_frame->budget);`
+				, `    if (status != 1) lb_record(_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Cannot copy Lean result or 16 MiB call limit exceeded");`, "  }");
 			if(nativeObjectType(result)) lines.push("  lean_dec(_lb_value);");
 		}
-		lines.push("done:");
+		lines.push("done:;");
 		if(leaseType) lines.push("  if (_lb_closure) lean_dec(_lb_closure);");
 		for(const { name } of hostArgs) lines.push(`  if (_lb_token_${name}) lb_native_callback_release(_lb_token_${name});`);
-		lines.push("  return lb_leave(_lb_frame, error);", "}");
+		lines.push(`  ${p}_status _lb_status = lb_leave(_lb_frame, error);`);
+		if(!unit(result))
+		{
+			lines.push(`  if (_lb_status == ${m}_STATUS_OK) *out = _lb_result;`);
+			const drop = result.kind === "callback" ? `lb_lease_drop(_lb_result, ${kind(result)});` : cleanup(result, "_lb_result");
+			if(drop) lines.push(`  else { ${drop} }`);
+		}
+		lines.push("  return _lb_status;", "}");
 		return lines.join("\n");
 	};
 	for(const fn of surface.functions)

@@ -116,6 +116,12 @@ static ${stem}_status fail(${stem}_status status, ${stem}_error_code code, const
   return status;
 }
 
+static ${stem}_status ready(${stem}_error *error)
+{
+  return lean_bridge_native_component_ready(component_id) ? ${macro}_STATUS_OK
+    : fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "Lean runtime is not ready or has been retired", error);
+}
+
 static void release_heap(void *owner) { free(owner); }
 
 static void *copy_bytes(const void *source, size_t length)
@@ -138,12 +144,16 @@ static ${stem}_status initialize(void *context, ${stem}_error *error)
 static ${stem}_status box_create(void *context, uint32_t value, uintptr_t *out, ${stem}_error *error)
 {
   (void)context;
-  (void)error;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   lean_object *box = lean_link_alpha_box(value);
   if (box == NULL) return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "Lean returned a null Box", error);
   if (lean_bridge_native_identity_acquire(box_identity_kind, box) == 0) {
     lean_dec(box);
     return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "native Box identity capacity is exhausted", error);
+  }
+  if (ready(error) != ${macro}_STATUS_OK) {
+    lean_bridge_native_identity_release_pointer(box_identity_kind, box); lean_dec(box);
+    return ${macro}_STATUS_UNEXPECTED_ERROR;
   }
   *out = (uintptr_t)box;
   return ${macro}_STATUS_OK;
@@ -152,16 +162,20 @@ static ${stem}_status box_create(void *context, uint32_t value, uintptr_t *out, 
 static ${stem}_status box_read(void *context, uintptr_t self, uint32_t *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   if (self == 0) return fail(${macro}_STATUS_DECLARED_ERROR, ${macro}_ERROR_DISPOSED_RESOURCE, "Box is closed", error);
   lean_object *box = (lean_object *)self;
   lean_inc(box);
-  *out = lean_link_alpha_read(box);
+  uint32_t result = lean_link_alpha_read(box);
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
+  *out = result;
   return ${macro}_STATUS_OK;
 }
 
 static ${stem}_status box_identity(void *context, uintptr_t self, uintptr_t *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   if (self == 0) return fail(${macro}_STATUS_DECLARED_ERROR, ${macro}_ERROR_DISPOSED_RESOURCE, "Box is closed", error);
   *out = self;
   return ${macro}_STATUS_OK;
@@ -170,6 +184,7 @@ static ${stem}_status box_identity(void *context, uintptr_t self, uintptr_t *out
 static ${stem}_status round_trip(void *context, const ${stem}_${payload} *input, ${stem}_${payload} *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   lean_object *label = lean_mk_string_from_bytes(input->label.length == 0 ? "" : input->label.data, input->label.length);
   lean_object *bytes = lean_alloc_sarray(1, input->bytes.length, input->bytes.length);
   if (input->bytes.length != 0) memcpy(lean_sarray_cptr(bytes), input->bytes.data, input->bytes.length);
@@ -214,6 +229,10 @@ static ${stem}_status round_trip(void *context, const ${stem}_${payload} *input,
     free(values_copy);
     return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "native Payload copy allocation failed", error);
   }
+  if (ready(error) != ${macro}_STATUS_OK) {
+    free(label_copy); free(bytes_copy); free(values_copy);
+    return ${macro}_STATUS_UNEXPECTED_ERROR;
+  }
   *out = (${stem}_${payload}){
     .enabled = enabled,
     .count = count,
@@ -237,13 +256,15 @@ static lean_object *callback_apply(lean_object *frame_value, lean_object *argume
   lean_dec(frame_value);
   lean_dec(argument);
   uint32_t result = 0;
-  frame->status = frame->callback->call(frame->callback->context, value, &result, &frame->error);
+  frame->status = ready(&frame->error);
+  if (frame->status == ${macro}_STATUS_OK) frame->status = frame->callback->call(frame->callback->context, value, &result, &frame->error);
   return lean_box_uint32(result);
 }
 
 static ${stem}_status with_callback(void *context, uint32_t value, const ${stem}_${callback} *callback_value, uint32_t *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   callback_frame frame = {callback_value, ${macro}_STATUS_OK, {0}};
   lean_object *callback = lean_alloc_closure((void *)callback_apply, 2, 1);
   lean_closure_set(callback, 0, lean_box_usize((size_t)(uintptr_t)&frame));
@@ -252,6 +273,7 @@ static ${stem}_status with_callback(void *context, uint32_t value, const ${stem}
     if (error != NULL) *error = frame.error;
     return frame.status;
   }
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   *out = result;
   return ${macro}_STATUS_OK;
 }
@@ -259,12 +281,16 @@ static ${stem}_status with_callback(void *context, uint32_t value, const ${stem}
 static ${stem}_status make_adder(void *context, uint32_t base, uintptr_t *out, ${stem}_error *error)
 {
   (void)context;
-  (void)error;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   lean_object *transform = lean_link_alpha_make_adder(base);
   if (transform == NULL) return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "Lean returned a null Transform", error);
   if (lean_bridge_native_identity_acquire(transform_identity_kind, transform) == 0) {
     lean_dec(transform);
     return fail(${macro}_STATUS_UNEXPECTED_ERROR, ${macro}_ERROR_UNEXPECTED, "native Transform identity capacity is exhausted", error);
+  }
+  if (ready(error) != ${macro}_STATUS_OK) {
+    lean_bridge_native_identity_release_pointer(transform_identity_kind, transform); lean_dec(transform);
+    return ${macro}_STATUS_UNEXPECTED_ERROR;
   }
   *out = (uintptr_t)transform;
   return ${macro}_STATUS_OK;
@@ -282,12 +308,15 @@ static void box_dispose(void *context, uintptr_t value)
 static ${stem}_status transform_call(void *context, uintptr_t self, uint32_t value, uint32_t *out, ${stem}_error *error)
 {
   (void)context;
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
   if (self == 0) return fail(${macro}_STATUS_DECLARED_ERROR, ${macro}_ERROR_DISPOSED_RESOURCE, "Transform is closed", error);
   lean_object *transform = (lean_object *)self;
   lean_inc(transform);
   lean_object *result = lean_apply_1(transform, lean_box_uint32(value));
-  *out = lean_unbox_uint32(result);
+  uint32_t copied = lean_unbox_uint32(result);
   lean_dec(result);
+  if (ready(error) != ${macro}_STATUS_OK) return ${macro}_STATUS_UNEXPECTED_ERROR;
+  *out = copied;
   return ${macro}_STATUS_OK;
 }
 

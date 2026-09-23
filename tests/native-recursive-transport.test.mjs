@@ -21,6 +21,12 @@ test("native recursive transport authenticates carrier identities before emittin
 	assert.doesNotMatch(output.source, /lean_ctor_get|lean_ctor_set|lean_alloc_ctor/u);
 	const changed = structuredClone(abi); changed.types.find(type => type.id === "lean:Recursive.Spine").cases.reverse();
 	assert.throws(() => generateNativeCopiedGraphAdapters(ir, changed), /nominal definitions differ/u);
+	const checked = generateNativeCopiedGraphAdapters(ir, abi, { initializer: "initialize_LeanBridgeNative0123456789abcdef" });
+	assert.match(checked.source, /NG_RUNTIME = 5/u);
+	assert.match(checked.source, /if \(status == NG_RESULT\) lean_bridge_native_runtime_retire\(\)/u);
+	assert.match(checked.source, /if \(!ng_ready\(\)\) \{ ng_release\(arena.head\); return NG_RUNTIME; \}/u);
+	assert.doesNotMatch(output.source, /lean_bridge_native_runtime_retire/u);
+	assert.throws(() => generateNativeCopiedGraphAdapters(ir, abi, { initializer: "initialize_other" }), /initializer identity/u);
 });
 
 test("fresh native recursive graphs validate, copy and recover with total Lean carriers", {

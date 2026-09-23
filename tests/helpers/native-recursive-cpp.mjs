@@ -20,8 +20,9 @@ import { saveLakeFile } from "./lake-workspace.mjs";
  * @param options.runtime - Matching native runtime artifacts.
  * @param options.output - Generated C graph adapters.
  * @param options.run - Checked process runner in the temporary workspace.
+ * @param options.lifecycle - Exercise the shared runtime's permanent retirement.
  */
-export const checkNativeRecursiveCpp = async ({ directory, ir, compiled, runtime, output, run }) => {
+export const checkNativeRecursiveCpp = async ({ directory, ir, compiled, runtime, output, run, lifecycle = false }) => {
 	const generated = generateCopiedCppGraphConversions(ir);
 	for(const [path, content] of Object.entries(boostSources())) await saveLakeFile(directory, path, content);
 	await saveLakeFile(directory, "recursive-values.hpp", generated.valuesHeader);
@@ -59,10 +60,11 @@ ${output.source}
 	// interposes its unwinder ahead of libgcc_s and breaks C++ exception handling.
 	await run("cc", ["-shared", "cpp-native.o", "-L", compiled.root
 		, "-L", join(runtime.root, "lib"), `-l:${compiled.receipt.library}`
-		, "-lleanshared", "-Wl,--no-undefined"
+		, "-llean_bridge_native", "-lleanshared", "-Wl,--no-undefined"
 		, `-Wl,-rpath,${compiled.root}:${join(runtime.root, "lib")}`
 		, "-o", "libcpp-native-test.so"]);
 	await run("c++", ["-std=c++20", "-O1", "-Wall", "-Wextra", "-Werror"
+		, ...lifecycle ? ["-DLB_GRAPH_LIFECYCLE=1"] : []
 		, "-UNDEBUG", "-I", "include", "-I", join(runtime.root, "include")
 		, "cpp-check.cpp", "-L", directory, "-l:libcpp-native-test.so"
 		, "-L", compiled.root, "-L", join(runtime.root, "lib")

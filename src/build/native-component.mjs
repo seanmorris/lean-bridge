@@ -44,6 +44,9 @@ static lb_callback_slot callback_slots[4096];
 static _Thread_local int callback_error;
 uint64_t lb_native_callback_register(void (*invoke)(void), void *context) {
   pthread_mutex_lock(&runtime_mutex);
+  if (!invoke || runtime_state != LEAN_BRIDGE_RUNTIME_READY) {
+    pthread_mutex_unlock(&runtime_mutex); return 0;
+  }
   for (size_t i = 0; i < 4096; ++i) if (!callback_slots[i].callback.invoke && callback_slots[i].generation < (UINT64_MAX >> 12)) {
     lb_callback_slot *slot = &callback_slots[i];
     slot->callback = (lb_native_callback){invoke, context};
@@ -62,7 +65,8 @@ void lb_native_callback_release(uint64_t token) {
 lb_native_callback lb_native_callback_lookup(uint64_t token) {
   pthread_mutex_lock(&runtime_mutex);
   lb_callback_slot *slot = &callback_slots[token & 4095];
-  lb_native_callback result = slot->generation == (token >> 12) ? slot->callback : (lb_native_callback){0};
+  lb_native_callback result = runtime_state == LEAN_BRIDGE_RUNTIME_READY && slot->generation == (token >> 12)
+    ? slot->callback : (lb_native_callback){0};
   if (result.invoke && !pthread_equal(slot->thread, pthread_self())) {
     slot->wrong_thread = 1; result = (lb_native_callback){0};
   }

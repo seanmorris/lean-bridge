@@ -46,7 +46,7 @@ for(const [name, change] of Object.entries({
 test("wasm32 callback generations retire without token truncation or reuse", { skip: !existsSync("/usr/bin/cc") }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-wasm-callback-registry-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	await saveLakeFile(root, "registry.c", `#include <stdint.h>\n#include <stddef.h>\n#include <pthread.h>\n#include <assert.h>\nstatic pthread_mutex_t runtime_mutex = PTHREAD_MUTEX_INITIALIZER;\n${nativeCallbackHeader}\n${phpWasmCallbackBroker}\nstatic void invoke(void) {}\nint main(void) {
+	await saveLakeFile(root, "registry.c", `#include <stdint.h>\n#include <stddef.h>\n#include <pthread.h>\n#include <assert.h>\nstatic pthread_mutex_t runtime_mutex = PTHREAD_MUTEX_INITIALIZER;\nenum { LEAN_BRIDGE_RUNTIME_READY = 2 };\nstatic unsigned runtime_state = LEAN_BRIDGE_RUNTIME_READY;\n${nativeCallbackHeader}\n${phpWasmCallbackBroker}\nstatic void invoke(void) {}\nint main(void) {
   callback_slots[0].generation = (UINT32_MAX >> 12) - 1;
   uint64_t last = lb_native_callback_register(invoke, NULL);
   assert(last != 0 && last <= UINT32_MAX && (last & 4095) == 0);
