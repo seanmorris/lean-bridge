@@ -8,19 +8,19 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 
-const metadata = new Set(["package.json", "config/cli-package.v1.json", "config/checked-javascript.json", "nix/perl-engine-source-boundary.json", ".github/workflows/consumer-matrix.yml"]);
+const metadata = new Set(["package.json", "config/cli-package.v1.json", "config/checked-javascript.json", "nix/perl-engine-source-boundary.json", ".github/workflows/consumer-matrix.yml", ".github/workflows/perl-consumer.yml"]);
 const sourcePath = /^src\/(?:backends|build|release)\/[a-z0-9/-]+\.mjs$/;
 const checkerImport = 'import { assertSourceRegistrationUpdate } from "./source-registration-history.mjs";\n';
 const checkerCall = '\tif(await assertSourceRegistrationUpdate(path, source, expected)) return;\n';
 const allowedLine = (path, line) => {
 	if(typeof line !== "string" || line.includes("\n") || line.includes("\r")) return false;
-	if(path === ".github/workflows/consumer-matrix.yml") return [
+	if(path === ".github/workflows/consumer-matrix.yml" || path === ".github/workflows/perl-consumer.yml") return [
 		/^ {10}(?:LEAN_BRIDGE_[A-Z_]+_TEST=1 )+node --test tests\/[a-z0-9-]+\.test\.mjs$/
 		, /^ {10}test -s build\/recursive\/[a-z0-9-]+\.json$/
 		, /^ {12}build\/recursive\/[a-z0-9-]+\.json$/
 		, /^ {14}consumer_command="\$consumer_command && (?:LEAN_BRIDGE_[A-Z_]+_TEST=1 )+node --test tests\/[a-z0-9-]+\.test\.mjs"$/
 	].some(pattern => pattern.test(line))
-		|| line === '          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"';
+		|| (path === ".github/workflows/consumer-matrix.yml" && line === '          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"');
 	if(path === "config/checked-javascript.json")
 	{
 		if(!/^\t\t\{.*\},$/.test(line)) return false;

@@ -153,8 +153,12 @@ lock acquisition; independent builds reproduce archives and installed files.
 
 [Perl recursive declarations](../evidence/perl-recursive-values-20260923.md)
 preserve mutable named-field classes, recursive nominal edges and transparent
-aliases. The declaration test runs on all four pinned Perl ABIs. Recursive XS
-conversion and installed CPAN acceptance remain separate, unfinished stages.
+aliases. The declaration test runs on all four pinned Perl ABIs.
+[Perl native graph conversions](../evidence/perl-recursive-conversions-20260923.md)
+use bounded XS readers and writers with destructor-registered native cleanup.
+Ordinary and reviewed Lean calls test exceptions, signals and retirement during
+result construction. Authenticated CPAN integration and source-free installed
+acceptance remain unfinished.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail

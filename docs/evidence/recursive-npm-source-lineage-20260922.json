@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "79c8b3ddc63084712e55fae56bac71390f9a631efd845c2756a5893da655357f"
+          "currentSha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -213,6 +213,15 @@
         "perl-copied-graph-values"
       ],
       "change": "Require finite recursive Perl declarations and selected pinned-ABI execution without promoting native or installed coverage."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "79c8b3ddc63084712e55fae56bac71390f9a631efd845c2756a5893da655357f",
+      "currentSha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015",
+      "addedTests": [
+        "perl-copied-graph-conversions"
+      ],
+      "change": "Require bounded Perl XS graph conversion, exception and signal cleanup, and ordinary/reviewed compiled Lean execution on each selected ABI. CPAN admission and installed coverage remain gated."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -532,6 +541,58 @@
       "currentSha256": "2d3d063778bdcd639e8dd2b8f86b57a0eecff4c1ee48e8d0e41358afcb1e761a",
       "addedLines": [
         "    \"src/backends/perl/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "beed44a4b77d717b4a4df1b7ac443287369d2cf521f11a56cb30ad49a4a6354d",
+      "currentSha256": "a8bd7d7bc3e5f94e1ab107bede563592887d1806ac07a94e820ee41df6df3451",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-conversions.mjs\",",
+        "    \"src/backends/perl/copied-graph-runtime.mjs\",",
+        "    \"src/backends/perl/copied-graph-xs.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "45322c12ebdcb413e793df198e4a8c91a891b895fa7e0cc3107fc65a75c983ad",
+      "currentSha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-conversions.mjs\",",
+        "    \"src/backends/perl/copied-graph-runtime.mjs\",",
+        "    \"src/backends/perl/copied-graph-xs.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "e6f0b4ae7661686b9f0b782e493345bdf3d85d4f592c58272e957d868e5abae2",
+      "currentSha256": "310634019dd3f2f387aa67ce67ceca77d69bc1e0b9423e506e7d7d9ab98a6b74",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-xs.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "2d3d063778bdcd639e8dd2b8f86b57a0eecff4c1ee48e8d0e41358afcb1e761a",
+      "currentSha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-conversions.mjs\",",
+        "    \"src/backends/perl/copied-graph-runtime.mjs\",",
+        "    \"src/backends/perl/copied-graph-xs.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "6525cdf64975b31e3772ef9230e0154eb3ebdb8b70c2e1fb06b6f7f1af0df0b4",
+      "currentSha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103",
+      "addedLines": [
+        "          LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 node --test tests/perl-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/perl-conversions.json",
+        "          test -s build/recursive/perl-native.json",
+        "            build/recursive/perl-conversions.json",
+        "            build/recursive/perl-native.json"
       ]
     }
   ]

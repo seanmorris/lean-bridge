@@ -40,7 +40,9 @@ By default the enabled local test selects all four pinned interpreters under
 matrix job requires execution on its selected interpreter and retains
 `build/recursive/perl-values.json`.
 
-These declarations do not enable recursive native calls or CPAN builds and
-promote no installed coverage. XS conversion, bounded allocation, cleanup across
-Perl exceptions, shared runtime behavior and original source-free installations
+These declarations alone do not enable recursive native calls or CPAN builds
+and promote no installed coverage. The subsequent
+[native conversion milestone](perl-recursive-conversions-20260923.md) exercises
+bounded XS conversion and exception cleanup through compiled Lean. Authenticated
+CPAN loading, shared package composition and original source-free installations
 on all four ABIs remain the next Perl acceptance stages in VO 1219.

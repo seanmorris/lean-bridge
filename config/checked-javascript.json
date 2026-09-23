@@ -6,6 +6,9 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/perl/copied-graph-conversions.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/perl/copied-graph-runtime.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/perl/copied-graph-xs.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/perl/copied-graph-values.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/python/copied-graph-conversions.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/python/copied-graph-package.mjs", "classification": "strict-migration-backlog" },

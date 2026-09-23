@@ -1317,6 +1317,29 @@ For development on an older glibc host, `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36`
 
 The native target accepts ordinary local Lean modules. Tests cover all sixteen scalars, copied records and arrays, shared resource identity, callbacks, returned closures, invalid inputs, runtime mismatch, compiler-free installation, and independent build reproducibility. Additional checks reject partial implementations, admitted definitions, dependent or generic signatures, unreviewed foreign code and scalar values incorrectly declared as identity resources.
 
+### Recursive Perl conversion
+
+Run the staged recursive XS checks with the four pinned Perl installations,
+the pinned Lean compiler and a native C compiler:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 \
+  node --test tests/perl-copied-graph-conversions.test.mjs
+```
+
+`LEAN_BRIDGE_CORPUS_PERL` selects one absolute interpreter path;
+`LEAN_BRIDGE_PERLS` selects a JSON array. Without either override, the test uses
+all four local configurations. CI selects each matrix interpreter explicitly.
+
+The [conversion record](../evidence/perl-recursive-conversions-20260923.md)
+distinguishes isolated C round-trips from ordinary/reviewed compiled Lean calls.
+It covers recursive and wide values, malformed native results, every scratch
+and native arena allocation, exceptions, signals and shared-runtime retirement.
+Reports are retained in `build/recursive/perl-conversions.json` and
+`build/recursive/perl-native.json`. These are private module tests, not CPAN
+installation evidence; recursive CPAN admission remains gated.
+
 ## Release tooling checks
 
 From the checkout with its Node dependencies installed, run the focused release tests:
