@@ -151,6 +151,11 @@ Original offline-installed gems run after relocation and producer removal.
 Three-package checks cover shared retirement and fork rejection before loader
 lock acquisition; independent builds reproduce archives and installed files.
 
+[Perl recursive declarations](../evidence/perl-recursive-values-20260923.md)
+preserve mutable named-field classes, recursive nominal edges and transparent
+aliases. The declaration test runs on all four pinned Perl ABIs. Recursive XS
+conversion and installed CPAN acceptance remain separate, unfinished stages.
+
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail
 before linking. Component receipts bind that check and native packages retain

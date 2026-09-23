@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "407b38aae834f1ae5a88d9ce24bc25001357b63aa73ee7febfd61bd31469ad2f"
+          "currentSha256": "79c8b3ddc63084712e55fae56bac71390f9a631efd845c2756a5893da655357f"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -204,6 +204,15 @@
         "ruby-graph-package"
       ],
       "change": "Require original installed recursive gems, shared loading, cleanup and source-free consumers."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "407b38aae834f1ae5a88d9ce24bc25001357b63aa73ee7febfd61bd31469ad2f",
+      "currentSha256": "79c8b3ddc63084712e55fae56bac71390f9a631efd845c2756a5893da655357f",
+      "addedTests": [
+        "perl-copied-graph-values"
+      ],
+      "change": "Require finite recursive Perl declarations and selected pinned-ABI execution without promoting native or installed coverage."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -491,6 +500,38 @@
         "          test -s build/recursive/ruby-packages.json",
         "            build/recursive/ruby-packages.json",
         "              consumer_command=\"$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "08c6e8c6c7edfc2765edc60605e20b66d6b9799f474efa012d1790f77725566b",
+      "currentSha256": "beed44a4b77d717b4a4df1b7ac443287369d2cf521f11a56cb30ad49a4a6354d",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "3aa2ebac088c69df1428b088a1e99a7afa31a3cdd23030c2d695d7ffee575ae1",
+      "currentSha256": "45322c12ebdcb413e793df198e4a8c91a891b895fa7e0cc3107fc65a75c983ad",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "2c0a6a94bc6f488f711cfafa738b4b61c35645adca8238a144e6526ef3fc7123",
+      "currentSha256": "e6f0b4ae7661686b9f0b782e493345bdf3d85d4f592c58272e957d868e5abae2",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "a16b8f03b198c7d9cb1550740e8d22b5b2dacde54e7e2e257fb7b774cf126bd5",
+      "currentSha256": "2d3d063778bdcd639e8dd2b8f86b57a0eecff4c1ee48e8d0e41358afcb1e761a",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-values.mjs\","
       ]
     }
   ]
