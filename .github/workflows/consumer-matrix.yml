@@ -91,7 +91,9 @@ jobs:
   node-consumers:
     name: Node and browser npm consumers
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    # The full type corpus plus installed multi-profile/CLI acceptance exceeds
+    # two hours on cold runners. Keep the final registry/browser gate enabled.
+    timeout-minutes: 180
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -714,6 +716,11 @@ jobs:
           test -s build/variants/rust.json
           LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs
           test -s build/collections/rust-conversions.json
+          LEAN_BRIDGE_RUST_GRAPH_TEST=1 node --test tests/rust-copied-graph-values.test.mjs tests/rust-copied-graph-conversions.test.mjs
+          LEAN_BRIDGE_RUST_GRAPH_NATIVE_TEST=1 node --test --test-name-pattern='ordinary and reviewed Lean graphs' tests/rust-copied-graph-conversions.test.mjs
+          test -s build/recursive/rust-values.json
+          test -s build/recursive/rust-conversions.json
+          test -s build/recursive/rust-native.json
           LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs
           test -s build/collections/rust.json
           test -s build/type-corpus/rust.json
@@ -734,6 +741,9 @@ jobs:
             build/aliases/rust.json
             build/variants/rust.json
             build/collections/rust-conversions.json
+            build/recursive/rust-values.json
+            build/recursive/rust-conversions.json
+            build/recursive/rust-native.json
             build/collections/rust.json
           if-no-files-found: error
           retention-days: 30
@@ -780,6 +790,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_VARIANT_TEST=1 node --test tests/rust-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CONVERSION_TEST=1 node --test tests/rust-collection-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_TEST=1 node --test tests/rust-copied-graph-values.test.mjs tests/rust-copied-graph-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUST_GRAPH_NATIVE_TEST=1 node --test --test-name-pattern='ordinary and reviewed Lean graphs' tests/rust-copied-graph-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COLLECTION_TEST=1 node --test tests/rust-collections.test.mjs"
               if [ "${{ steps.ordinary_rust.outcome }}" != success ] || [ "${{ steps.type_corpus_rust.outcome }}" != success ]; then
                 result=failed

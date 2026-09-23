@@ -119,6 +119,11 @@ Root-relative integer finalizers remain valid when the result moves into caller
 storage. [Prepared C/C++ graph packages](../evidence/native-recursive-packages-20260923.md)
 pass ordinary-source and reviewed-contract installed checks through both public
 APIs, including compiler-free execution after source and header removal.
+[Rust graph declarations and conversions](../evidence/rust-recursive-conversions-20260923.md)
+use owned structs/enums, native containers and boxed recursive fields. Their
+guarded calls validate inputs, release native results through RAII and reject
+publication after runtime retirement. Prepared recursive Cargo packages remain
+the next Rust integration step.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail

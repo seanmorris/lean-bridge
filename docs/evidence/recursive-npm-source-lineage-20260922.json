@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "623a92d73e2ab4a8fb14db56cbdeb5f933e3c36bbba991ebd5d6e1fcdc386c19"
+          "currentSha256": "654ccd08c3e9e7f2407e7f336b634de7f1b4ad147402256660de9b1045450cc7"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -130,6 +130,16 @@
       "previousSha256": "105b552f4d4b53cbae12730f36e38860353866bd36354ea08c87443422e4fb00",
       "currentSha256": "623a92d73e2ab4a8fb14db56cbdeb5f933e3c36bbba991ebd5d6e1fcdc386c19",
       "change": "Register public C/C++ recursive package and installed-consumer checks. Historical installed receipts remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "623a92d73e2ab4a8fb14db56cbdeb5f933e3c36bbba991ebd5d6e1fcdc386c19",
+      "currentSha256": "654ccd08c3e9e7f2407e7f336b634de7f1b4ad147402256660de9b1045450cc7",
+      "addedTests": [
+        "rust-copied-graph-values",
+        "rust-copied-graph-conversions"
+      ],
+      "change": "Register owned Rust recursive values and bounded native graph conversion tests. Reversing only these two added entries reconstructs the exact previous test manifest; installed JVM receipt bytes are unchanged."
     }
   ]
 }

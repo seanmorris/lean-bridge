@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { nativeAllocationGuardHeader } from "../../src/build/native-allocation-guard.mjs";
+import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
 
 const digest = value => sha256(canonicalJson(value));
 
@@ -25,7 +26,7 @@ export const assertNativeGraphJvmRegression = async (lineage, original) => {
 	assert.deepEqual(regression.baseline, { path: "docs/evidence/kotlin-collections-20260922.json", sha256: lineage.receiptSha256 });
 	assert.equal(regression.log.sha256, sha256(regression.log.text));
 	assert.match(regression.log.text, /# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0/);
-	for(const [path, hash] of Object.entries(regression.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(regression.sourceHashes)) await assertAdministrativeSourceUpdate(path, hash);
 	for(const path of ["src/build/native-project.mjs", "src/build/native-c-projection.mjs"])
 		assert.equal(regression.sourceHashes[path], lineage.sources[path].currentSha256);
 	assert.equal(regression.sourceHashes["tests/jvm-collections.test.mjs"], original.sourceHashes["tests/jvm-collections.test.mjs"]);

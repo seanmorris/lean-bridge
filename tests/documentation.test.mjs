@@ -293,6 +293,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /^\s*pull_request:\s*$/m);
   assert.match(workflow, /^\s*workflow_dispatch:\s*$/m);
   assert.match(workflow, /NODE_VERSION: "22"/);
+  const nodeJob = workflow.split("  node-consumers:\n")[1].split("\n  browser-consumer:\n")[0];
+  assert.match(nodeJob, /^ {4}timeout-minutes: 180$/m);
+  assert.match(nodeJob, /node scripts\/check-local-npm-release\.mjs/);
+  assert.match(nodeJob, /--backend nix --browsers chromium,firefox,webkit/);
   const nativeJob = workflow.split("  native-consumers:\n")[1].split("\n  managed-consumers:\n")[0];
   assert.match(nativeJob, /^ {4}timeout-minutes: 240$/m);
   assert.match(workflow, /LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build\/consumer-ci\/performance/);
@@ -420,7 +424,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/collections\/rust\.json/);
   assert.match(workflow, /test -s build\/variants\/rust\.json/);
   assert.match(workflow, /test -s build\/aliases\/rust\.json/);
-  assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/recursive\/rust-values\.json\n\s*build\/recursive\/rust-conversions\.json\n\s*build\/recursive\/rust-native\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /build\/word-native\/ruby\.json\n\s*build\/callables\/ruby\.json\n\s*build\/compounds\/ruby\.json\n\s*build\/lists\/ruby\.json\n\s*build\/aliases\/ruby\.json\n\s*build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   for(const target of ["npm", "php-wasm"])
@@ -532,7 +536,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_rust\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_rust\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-rust-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/recursive\/rust-values\.json\n\s*build\/recursive\/rust-conversions\.json\n\s*build\/recursive\/rust-native\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:node"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:browser"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:npm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript,browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");

@@ -1,0 +1,138 @@
+{
+  "conversions": {
+    "checkpoints": 159,
+    "compiledLean": false,
+    "installedPackage": false,
+    "layoutChecks": 478,
+    "nativeSha256": "c29d04e6547210a88374c4c1d85c97b910feb5c5c351561ce126ce25bda88efe",
+    "probeSha256": "41842857e4271c8d1d1d8b954e5a0ee0e1a365b4216d1d77f7b534b9790c91ce",
+    "schemaVersion": 1,
+    "sourceSha256": "14ba444531db2ae996c9a21235a1f96269f5d5d083de097b977bad6097fde5d8",
+    "stdout": "\nrunning 8 tests\ntest native::tests::all_inputs_validate_before_allocations_or_invocation ... ok\ntest native::tests::allocation_errors_and_panics_release_every_owner ... graph-failure-checkpoints:159\nok\ntest native::tests::guarded_calls_retire_unknown_status_and_check_readiness_before_publishing ... ok\ntest native::tests::independent_native_values_and_statuses ... ok\ntest native::tests::malformed_native_values_release_the_root ... ok\ntest native::tests::node_and_byte_budgets_cover_input_and_output ... ok\ntest native::tests::raw_layout_matches_c ... ok\ntest native::tests::recursive_copies_are_owned_and_bounded ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n",
+    "tests": 8,
+    "valuesSha256": "3d501d07da219cf5dcb5fd25f8bf4babfd1ad5b3cf20b6c01b8c0b5e81f6f148"
+  },
+  "installedPackage": false,
+  "native": {
+    "compiledLean": true,
+    "installedPackage": false,
+    "observations": [
+      {
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "exports": 18,
+        "modelSha256": "8c17a2eb76ca6f8013f7a13b4a02440ae13798c7fc587013ade7555729f12793",
+        "nativeSourceSha256": "84c610b64d7924612c6a7e3e3bcdb9d1d5d45481f72199b8055f82b955ea0ae1",
+        "probeSha256": "75aaabafe7497f50384bd5db01371fdef226b712bf3f1d2b03677d9c36979eb5",
+        "reviewed": false,
+        "rustSourceSha256": "fe3b18ee71fff26cf9acb63d103cfbd10c3d4ff09796c9d00c3abaa22fdd08d5",
+        "rustValuesSha256": "b89bebc5bae145486cc1ae6e9da31084327ad5a1177d6a8325e431ca9fafbb72",
+        "scenarios": [
+          {
+            "checks": 784,
+            "mode": "carrier",
+            "nativeCheckpoints": 26,
+            "rustCheckpoints": 70,
+            "stdout": "\nrunning 1 test\ntest native::tests::compiled_lean_graphs ... rust-lean-graphs:784:26:70\nok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s\n\n"
+          },
+          {
+            "checks": 784,
+            "mode": "raw",
+            "nativeCheckpoints": 26,
+            "rustCheckpoints": 70,
+            "stdout": "\nrunning 1 test\ntest native::tests::compiled_lean_graphs ... rust-lean-graphs:784:26:70\nok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s\n\n"
+          },
+          {
+            "checks": 784,
+            "mode": "during",
+            "nativeCheckpoints": 26,
+            "rustCheckpoints": 70,
+            "stdout": "\nrunning 1 test\ntest native::tests::compiled_lean_graphs ... rust-lean-graphs:784:26:70\nok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s\n\n"
+          }
+        ]
+      },
+      {
+        "binarySha256": "aa2db3227555cc4a790a09a6364955b64a23999ae5822cf9a8dd2968686da112",
+        "exports": 18,
+        "modelSha256": "4319ef34881082af5fa2184fcee3cdafdf386bc0b9b8a14226509a4e550956e1",
+        "nativeSourceSha256": "84c610b64d7924612c6a7e3e3bcdb9d1d5d45481f72199b8055f82b955ea0ae1",
+        "probeSha256": "75aaabafe7497f50384bd5db01371fdef226b712bf3f1d2b03677d9c36979eb5",
+        "reviewed": true,
+        "rustSourceSha256": "fe3b18ee71fff26cf9acb63d103cfbd10c3d4ff09796c9d00c3abaa22fdd08d5",
+        "rustValuesSha256": "b89bebc5bae145486cc1ae6e9da31084327ad5a1177d6a8325e431ca9fafbb72",
+        "scenarios": [
+          {
+            "checks": 784,
+            "mode": "carrier",
+            "nativeCheckpoints": 26,
+            "rustCheckpoints": 70,
+            "stdout": "\nrunning 1 test\ntest native::tests::compiled_lean_graphs ... rust-lean-graphs:784:26:70\nok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s\n\n"
+          },
+          {
+            "checks": 784,
+            "mode": "raw",
+            "nativeCheckpoints": 26,
+            "rustCheckpoints": 70,
+            "stdout": "\nrunning 1 test\ntest native::tests::compiled_lean_graphs ... rust-lean-graphs:784:26:70\nok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s\n\n"
+          },
+          {
+            "checks": 784,
+            "mode": "during",
+            "nativeCheckpoints": 26,
+            "rustCheckpoints": 70,
+            "stdout": "\nrunning 1 test\ntest native::tests::compiled_lean_graphs ... rust-lean-graphs:784:26:70\nok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s\n\n"
+          }
+        ]
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "planNode": 1219,
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "src/backends/rust/copied-graph-conversions.mjs": "0ea5214b5d099a3c99361c8d8a3adeb60731c3a418a0de43fc2b4140fa10947e",
+    "src/backends/rust/copied-graph-values.mjs": "38339e1f0af95c27853dc0da4a9e8c37820f08c32eaaa940b91967d8a2115c3b",
+    "tests/fixtures/structured-types/recursive-conversions.rs": "41842857e4271c8d1d1d8b954e5a0ee0e1a365b4216d1d77f7b534b9790c91ce",
+    "tests/fixtures/structured-types/recursive-rust-lean.rs": "75aaabafe7497f50384bd5db01371fdef226b712bf3f1d2b03677d9c36979eb5",
+    "tests/fixtures/structured-types/recursive-rust-native.c": "c29d04e6547210a88374c4c1d85c97b910feb5c5c351561ce126ce25bda88efe",
+    "tests/fixtures/structured-types/recursive-values.rs": "0716c472a47b1273b84568ad2424c6755c06e68553e736915a604182a828b8fe",
+    "tests/helpers/rust-native-graphs.mjs": "cf14b86b3d79aee36369338687f03e6dbb2f5a2e9f55cc976e396a62530e445a"
+  },
+  "values": {
+    "compiledLean": false,
+    "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+    "installedPackage": false,
+    "linkedSourceSha256": "6b824c9cbdb33dd3cedfe6134b7d07b908838af92ca503e9e7ee0981d56b55e4",
+    "probeSha256": "0716c472a47b1273b84568ad2424c6755c06e68553e736915a604182a828b8fe",
+    "rejections": [
+      {
+        "code": "E0308",
+        "name": "negative_nat",
+        "sourceSha256": "efcc449965fc3c8547d1bcc004bcd2f6a05fb6a3871d031342e367e39eb0ed85"
+      },
+      {
+        "code": "E0308",
+        "name": "missing_box",
+        "sourceSha256": "337844f91d29595a76f05d96afb1b2fe7fde70f16af244002a67bf74d8b08921"
+      },
+      {
+        "code": "E0308",
+        "name": "wrong_unit",
+        "sourceSha256": "5af236006e163e2a78200a713c2a702da6a39436fd037ea0d758ae56b7a4ae5c"
+      },
+      {
+        "code": "E0063",
+        "name": "missing_field",
+        "sourceSha256": "257157628fc8410c5a76ba684c8a1ca5cf2fa4b161bcfc0ec078dbddb5f93c66"
+      },
+      {
+        "code": "E0599",
+        "name": "wrong_case",
+        "sourceSha256": "ab589e01a16fc3daa23d21eb396cabf442fc19a68175681442d4b13cf4a63cfd"
+      }
+    ],
+    "schemaVersion": 1,
+    "sourceSha256": "b89bebc5bae145486cc1ae6e9da31084327ad5a1177d6a8325e431ca9fafbb72",
+    "stdout": "\nrunning 6 tests\ntest tests::containers_keep_distinct_constructors ... ok\ntest tests::mutually_recursive_values ... ok\ntest tests::optional_recursive_record ... ok\ntest tests::direct_recursive_ownership ... ok\ntest tests::wide_constructor ... ok\ntest tests::primitive_values_and_tree_copies ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+    "tests": 6
+  }
+}

@@ -28,7 +28,8 @@ ordinary-source and independently reviewed package checks.
 checks in Node, TypeScript, browser pages, React and workers.
 [Recursive C/C++ packages](../evidence/native-recursive-packages-20260923.md)
 also pass both source paths. The remaining ten profiles still need recursive
-installed acceptance. Compound callback
+installed acceptance. [Rust values and native conversions](../evidence/rust-recursive-conversions-20260923.md)
+are implemented; prepared Cargo package acceptance remains open. Compound callback
 and closure payloads, and aggregates with explicit identity ownership, remain
 part of the same task.
 
