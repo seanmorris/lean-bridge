@@ -14,6 +14,7 @@ import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ordinaryRubyEvidence } from "../build/native-ruby-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCopiedRubyPackage } from "../backends/ruby/copied-values.mjs";
+import { generateCopiedRubyGraphPackage } from "../backends/ruby/copied-graph-package.mjs";
 import { rubyLiteral } from "../backends/ruby/copied-assets.mjs";
 import { validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { auditManagedBindingPackage } from "../backends/managed/package-audit.mjs";
@@ -34,10 +35,10 @@ import { auditManagedBindingPackage } from "../backends/managed/package-audit.mj
  */
 export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings = {}, glibcMinimumVersion, environment = process.env, signal }) => {
 	validateOrdinaryRubySettings(settings);
-	const { model, projection, evidence, receipt } = await ordinaryRubyEvidence({ nativeRoot, runtimeRoot, adapterRoot });
-	const name = settings.name ?? `lean_bridge_${projection.surface.prefix}`, version = settings.version ?? model.component.version.replace("-", ".pre.");
+	const { model, projection, prefix, evidence, receipt } = await ordinaryRubyEvidence({ nativeRoot, runtimeRoot, adapterRoot });
+	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version.replace("-", ".pre.");
 	validateOrdinaryRubySettings({ name, version });
-	const root = join(working, "packages/rubygems/package"), files = generateCopiedRubyPackage(model.bindingIr, evidence);
+	const root = join(working, "packages/rubygems/package"), files = (model.copiedGraph ? generateCopiedRubyGraphPackage : generateCopiedRubyPackage)(model.bindingIr, evidence);
 	auditManagedBindingPackage(model.bindingIr, files, "ruby");
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (source, path) => save(path, await readFile(source));
@@ -48,6 +49,8 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
 		await copy(join(nativeRoot, path), `lean-bridge/component/${path}`);
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined) await copy(join(nativeRoot, "lake-generated-sources.json"), "lean-bridge/component/lake-generated-sources.json");
 	await copy(join(adapterRoot, "native-c-adapter.json"), "lean-bridge/native-c-adapter.json");
+	if(model.copiedGraph) for(const path of [`include/detail/${prefix}-graph-types.h`, `include/detail/${prefix}-graph.h`, "src/ruby-graph-clear.c"])
+		await copy(join(adapterRoot, path), `lean-bridge/${path}`);
 	await copy(join(runtimeRoot, "runtime.json"), "lean-bridge/runtime.json");
 	await copy(join(leanPrefix, "LICENSE"), "lean-bridge/licenses/Lean-LICENSE");
 	await copy(join(leanPrefix, "LICENSES"), "lean-bridge/licenses/Lean-LICENSES");

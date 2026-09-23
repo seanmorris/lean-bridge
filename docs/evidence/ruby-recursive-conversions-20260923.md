@@ -71,7 +71,8 @@ LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 \
   node --test tests/ruby-copied-graph-conversions.test.mjs
 ```
 
-CI requires both suites and retains their reports. Prepared gem integration,
+CI requires both suites and retains their reports. The subsequent
+[prepared gem milestone](ruby-recursive-packages-20260923.md) verifies
 authenticated loading, process/fork checks, source-free offline installation
-and reproducible archives remain to be verified. Ruby's package path still
-rejects recursive exports; these conversion checks promote no installed cells.
+and reproducible archives. These conversion checks themselves promote no
+installed cells.

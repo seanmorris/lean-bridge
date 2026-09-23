@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
+import { assertRubyGraphSourceUpdate } from "./native-ruby-graph-regression.mjs";
 
 const recordPath = "docs/evidence/python-recursive-regressions-20260923.json";
 const shared = ["src/build/native-project.mjs", "src/build/native-c-projection.mjs", "src/build/native-graph-projection.mjs"];
@@ -19,7 +19,7 @@ const same = (run, previous, keys) => {
 export const assertPythonGraphRegressions = async () => {
 	const record = JSON.parse(await readFile(recordPath));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertAdministrativeSourceUpdate(path, hash);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertRubyGraphSourceUpdate(path, hash);
 	const baselines = {};
 	for(const [key, entry] of Object.entries(record.baselines))
 	{
@@ -144,8 +144,8 @@ export const assertPythonGraphSourceUpdate = async (path, expected) => {
 	{
 		assert.equal(sha256(restoreVerification(source, path)), expected, path); return;
 	}
-	if(!shared.includes(path)) return assertAdministrativeSourceUpdate(path, expected);
+	if(!shared.includes(path)) return assertRubyGraphSourceUpdate(path, expected);
 	const { record, baselines } = await assertPythonGraphRegressions();
 	assert.ok(Object.values(baselines).some(item => item.sourceHashes?.[path] === expected), `Unknown shared build baseline: ${path}`);
-	assert.equal(sha256(source), record.sourceHashes[path], path);
+	await assertRubyGraphSourceUpdate(path, record.sourceHashes[path]);
 };

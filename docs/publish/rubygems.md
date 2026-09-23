@@ -1,6 +1,6 @@
 # Build and publish Ruby packages
 
-Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, acyclic copied records, tagged variants, options, results, nested binary products, named copied aliases, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, copied records, tagged variants, options, results, nested binary products, named copied aliases, bounded recursive values, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/willow --target rubygems \
 
 The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `native-release.json` with its hash. The gem includes Ruby sources, compiled native libraries, compiler evidence and dependency license notices. Its README lists the Lean-derived module and function names. Changing the gem coordinate does not rename that module.
 
-Copied types can nest up to 32 levels, and native input/output conversion shares a 16 MiB budget. Ruby conversion scratch has a separate 16 MiB budget. Recursive values, resources, compound callbacks and asynchronous effects remain outside this ordinary profile. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
+The acyclic copied profile supports up to 32 type levels. Packages with recursive types use the [recursive limits](#export-recursive-values). Native input/output conversion shares a 16 MiB budget; Ruby conversion scratch has a separate 16 MiB budget. Resources, compound callbacks and asynchronous effects remain outside these copied profiles. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
@@ -95,9 +95,9 @@ Ordinary-source and reviewed-IR builds share this behavior. A reviewed contract
 must retain named alias references and their definitions; replacing them with
 flattened primitive or container types fails compiler reconciliation. See the
 [consumer example](../consume/ruby.md#named-copied-aliases) and
-[installed evidence](../evidence/ruby-aliases-20260921.md). Bounded recursion,
-compound callable payloads and identity-bearing alias targets
-remain separate work.
+[installed evidence](../evidence/ruby-aliases-20260921.md). Aliases can also refer
+to [recursive copied types](#export-recursive-values). Compound callable payloads
+and identity-bearing alias targets remain unsupported.
 
 ## Export copied tagged variants
 
@@ -114,8 +114,9 @@ adapter checks aligned C union layouts and converts only the active payload.
 Generated Lean helpers keep runtime tags and object offsets private.
 
 Payloads can contain all nineteen primitives and supported copied containers,
-records and other admitted variants. Generic, indexed, recursive, proof-bearing,
-callable and identity-bearing payloads remain outside this copied profile.
+records and other admitted variants. Recursive families use the profile below.
+Generic, indexed, proof-bearing, callable and identity-bearing payloads remain
+outside this copied profile.
 Combined native variant builds admit C, C++, Python, Rust, .NET, JVM, Ruby and Perl
 when every selected target accepts the complete API.
 
@@ -152,6 +153,44 @@ end Compounds
 Select `Compounds` in `modules` and its three functions in `exports`. Set the RubyGems name and version, then use the ordinary build command above. The [consumer example](../consume/ruby.md#options-results-and-products) calls this API without native glue.
 
 Ruby maps `Option` to `nil` or `Some`, `Except` to `Ok` or `Err`, and each `Prod` to an exactly two-element array. Constructors are generated inside the package's public module only when needed. Each call checks the concrete payload types and preserves nested options and products. Mutable payloads are copied. Both ordinary source and [reviewed contracts](../lean/existing-package.md#compile-a-reviewed-contract) have [installed package evidence](../evidence/ruby-compounds-20260920.md); compiler validation still checks reviewed contracts against the Lean definitions.
+
+## Export recursive values
+
+In a Lake package named `recursive`, add these definitions to `Recursive.lean`:
+
+```lean
+namespace Recursive
+
+inductive Spine where
+  | next (value : Spine)
+  | leaf (value : UInt32)
+
+def spine (value : Spine) : Spine := value
+
+end Recursive
+```
+
+Select `Recursive` in `modules` and `Recursive.spine` in `exports`. Set
+`targets.rubygems.name` to `recursive-api` and `version` to `1.0.0`, then build
+with `--target rubygems`. The Lake package name determines the Ruby namespace;
+the gem coordinate does not change it.
+The [Ruby caller](../consume/ruby.md#recursive-values) uses
+`LeanBridge::Recursive::Spine::Next` and `Spine::Leaf` with required `value:`
+keywords. The gem bundles its compiled component and runtime; installation does
+not invoke a compiler.
+
+The compiler validates finite, concrete copied type graphs, including direct
+and mutual recursion, aliases, records and nested containers. Conversion permits
+up to 128 levels and 262,144 nodes, with a shared 16 MiB native-copy budget and a
+separate 16 MiB accounted conversion-storage budget. Cyclic Ruby objects and
+uninhabited values are rejected. Generated APIs preserve all nineteen primitive
+conversions and return independent copies. Recursive callables, resources and
+asynchronous payloads remain unsupported.
+
+Recursive Ruby packages can share a native build with C, C++, Rust and Python
+when every selected target accepts the complete API. Native calls hold MRI's
+GVL; post-fork calls, Ractors and experimental M:N threads are rejected. A
+malformed native result retires the shared runtime across compatible packages.
 
 ## Export callbacks and closures
 

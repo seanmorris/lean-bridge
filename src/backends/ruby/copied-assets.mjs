@@ -12,6 +12,22 @@ import { canonicalJson, sha256 } from "../../capsule/node.mjs";
  */
 export const rubyLiteral = value => JSON.stringify(value).replaceAll("#", "\\#");
 
+export const copiedRubyRuntime = `# frozen_string_literal: true
+module LeanBridge
+  module NativeCopiedRuntimeV1
+    PID = ::Process.pid
+    LOCK = ::Mutex.new
+    STATE = { components: {}, handles: [] }
+    def self.context_error
+      return "Lean packages cannot be used from another Ractor" unless ::Ractor.current.equal?(::Ractor.main)
+      return "Lean packages cannot be used after fork; start a fresh process" unless ::Process.pid == PID
+      nil
+    end
+  end
+  private_constant :NativeCopiedRuntimeV1
+end
+`;
+
 /**
  * Bind compiled native identities into the generated loader.
  *
@@ -19,6 +35,7 @@ export const rubyLiteral = value => JSON.stringify(value).replaceAll("#", "\\#")
  * @param evidence - Optional verified native library evidence.
  */
 export const copiedRubyAssets = (model, evidence) => !evidence ? '      raise LoadError, "Build a compiled RubyGems release before calling this API"\n' : `      raise LoadError, "This Lean package requires MRI Ruby 3.3 on Linux x86-64" unless RUBY_ENGINE == "ruby" && RUBY_VERSION.start_with?("3.3.") && RUBY_PLATFORM.include?("x86_64-linux") && ::Fiddle::SIZEOF_VOIDP == 8 && [1].pack("I") == [1].pack("L<")
+      raise LoadError, "Lean packages cannot be loaded from another Ractor" unless ::Ractor.current.equal?(::Ractor.main)
       root = ::File.expand_path("native/linux-x64", __dir__)
       libraries = ${JSON.stringify(evidence.libraries).replaceAll(":", " => ")}
       libraries.each do |name, expected|
@@ -26,6 +43,9 @@ export const copiedRubyAssets = (model, evidence) => !evidence ? '      raise Lo
         raise LoadError, "Native library differs from compiled evidence: #{name}" unless ::File.lstat(path).file? && ::Digest::SHA256.file(path).hexdigest == expected
       end
       require "lean_bridge/native_copied_runtime_v1"
+      if (reason = NativeCopiedRuntimeV1.context_error)
+        raise LoadError, reason
+      end
       LIBRARY = NativeCopiedRuntimeV1::LOCK.synchronize do
         state = NativeCopiedRuntimeV1::STATE
         raise LoadError, "Lean native loading failed earlier" if state[:failed]

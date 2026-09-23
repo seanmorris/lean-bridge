@@ -145,7 +145,11 @@ execution covers direct and mutual recursion and shared structural aliases.
 [Ruby native graph conversions](../evidence/ruby-recursive-conversions-20260923.md)
 pass independent C layout probes and ordinary/reviewed compiled Lean calls.
 Scoped buffers and pre-bound native cleanup release results on allocation errors
-and interruptions. Prepared gem integration and installed acceptance remain pending.
+and interruptions. [Prepared recursive Ruby gems](../evidence/ruby-recursive-packages-20260923.md)
+connect these conversions to named public functions and authenticated loading.
+Original offline-installed gems run after relocation and producer removal.
+Three-package checks cover shared retirement and fork rejection before loader
+lock acquisition; independent builds reproduce archives and installed files.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail

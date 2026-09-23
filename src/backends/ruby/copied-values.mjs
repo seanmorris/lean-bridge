@@ -5,7 +5,7 @@
  */
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { compileCopiedRubyModel } from "./copied-model.mjs";
-import { copiedRubyAssets } from "./copied-assets.mjs";
+import { copiedRubyAssets, copiedRubyRuntime } from "./copied-assets.mjs";
 import { copiedRubyConversions, copiedRubyHelpers, readRubyValue } from "./copied-conversions.mjs";
 import { rubyCopiedAliases, rubyAliasCatalogDocs, rubyAliasSiteDocs, rubyAliasReadme } from "./copied-aliases.mjs";
 import { rubyValue, rubyClosurePublic, rubyNativeCall, rubyCallableTypes, rubyCallableSupport } from "./callables.mjs";
@@ -89,6 +89,9 @@ ${model.surface.functions.map((fn, index) => {
 	if(model.surface.callbacks.size) return rubyNativeCall(model, { ...fn.declaration, name: `call${index}`, symbol: `CALL${index}` });
 	const copy = model.surface.copy(fn.declaration.result.type), unit = fn.resultType === "void";
 	return `      def call${index}(${args(fn).join(", ")})
+        if (reason = NativeCopiedRuntimeV1.context_error)
+          raise LeanBridgeError, reason
+        end
         ::Thread.handle_interrupt(Exception => :never) do
           scope = Scope.new
           begin
@@ -123,7 +126,7 @@ export const renderCopiedRubyPackage = (model, evidence = null) => {
 	const shared = "lib/lean_bridge/native_copied_runtime_v1.rb";
 	const files = { [entry]: publicSource(model)
 		, [internal]: nativeSource(model, evidence)
-		, [shared]: '# frozen_string_literal: true\nmodule LeanBridge\n  module NativeCopiedRuntimeV1\n    LOCK = ::Mutex.new\n    STATE = { components: {}, handles: [] }\n  end\n  private_constant :NativeCopiedRuntimeV1\nend\n'
+		, [shared]: copiedRubyRuntime
 		, "README.md": `# ${model.namespace}\n\nRequire "${model.requirePath}" and call ${model.namespace} functions. Prepared gems include the native component and shared runtime, which load automatically. Requires MRI Ruby 3.3 on Linux x86-64. No Lean compiler or extension build is needed by consumers.\n\nUnit is ${model.namespace}::UNIT in every position. Integers remain exact; fixed-width values are range checked and Nat rejects negatives. Float32 rounds to binary32. Strings require valid UTF-8 or US-ASCII, including embedded NUL; ByteArray uses binary String. Arrays and generated keyword-initialized record values are copied at each call. Nil is rejected outside Option positions; implicit numeric coercions are rejected. Copied types must be pure, acyclic and at most 32 levels deep. Native input/output copies share a 16 MiB budget; input scratch is separately bounded. Native buffers are freed on failure. Compatible gems share one runtime for the process lifetime. Ractors and native-library unloading are not supported.\n\n${model.surface.functions.map(fn => `- ${model.namespace}.${fn.field}: ${fn.declaration.id}`).join("\n")}\n` };
 	if(model.surface.callbacks.size) files["README.md"] += "\nSynchronous primitive callbacks accept callable objects or a final Ruby block. Borrowed callbacks expire when the exporting call returns. Returned LeanClosure values support call, close, closed?, and with { |closure| ... } for scoped cleanup. Invoke them on their creating thread. Exceptions are re-raised after native cleanup; non-local block exits raise LocalJumpError. Re-entry is limited to 64 native calls. Closures cannot be copied or serialized. Forked children, Ractors and RUBY_MN_THREADS are unsupported.\n";
 	if(model.surface.copies.some(copy => copy.compound === "option")) files["README.md"] += "\nOptions use nil or Some.new(value). Some.new(nil) is an outer Some containing an inner None; Some.new(UNIT) retains presence for Unit. Nil is admitted only at Option positions.\n";

@@ -119,7 +119,8 @@ the constructor class and its fields. The
 existing 32-level type limit and conversion budgets apply. Scoped cleanup
 releases partial conversions on failure. See the
 [installed variant checks](../evidence/ruby-variants-20260921.md).
-Recursive, callable and identity-bearing payloads remain separate work.
+For recursive families, use the [recursive value profile](#recursive-values).
+Callable and identity-bearing payloads remain unsupported.
 
 ### Named copied aliases
 
@@ -209,7 +210,51 @@ Run `ruby compounds.rb`. Products use exactly two `Array` elements. Nested produ
 
 `Some`, `Ok` and `Err` are frozen Ruby `Data` classes with value equality, hashing and positional or keyword pattern matching. Freezing the wrapper does not freeze its nested arrays or strings. Calls copy those payloads, and returned buffers do not alias the input or one another. Generated record classes are also frozen and compare their fields by value.
 
-Copied types must be acyclic and no more than 32 levels deep. The budgets above cover conversion storage, not all Ruby allocations or Lean working memory. Resources and callbacks cannot be stored inside copied compounds; compound callback arguments and results are not supported. The [installed compound checks](../evidence/ruby-compounds-20260920.md) cover ordinary-source and reviewed-IR builds.
+The acyclic profile supports up to 32 type levels. Packages with recursive types use the limits below. The budgets cover conversion storage, not all Ruby allocations or Lean working memory. Resources and callbacks cannot be stored inside copied compounds; compound callback arguments and results are not supported. The [installed compound checks](../evidence/ruby-compounds-20260920.md) cover ordinary-source and reviewed-IR builds.
+
+### Recursive values
+
+Recursive Lean records and inductives use the same generated Ruby classes.
+For the prepared `recursive-api` gem, save `recursive.rb`:
+
+```ruby
+require "lean_bridge/recursive"
+
+API = LeanBridge::Recursive
+input = API::Spine::Next.new(value: API::Spine::Leaf.new(value: 7))
+result = API.spine(input)
+
+raise "Wrong value" unless result == input
+raise "Shared result" if result.equal?(input) || result.value.equal?(input.value)
+case result
+in API::Spine::Next(value: API::Spine::Leaf(value: value))
+  puts value
+else
+  raise "Unexpected constructor"
+end
+```
+
+Run `ruby recursive.rb`. It prints `7`. The
+[author example](../publish/rubygems.md#export-recursive-values) defines this API.
+Direct and mutual recursion can combine with arrays, Lists, records, aliases,
+variants, nested options, results and products. Each returned value owns its
+copies; shared input branches do not create shared mutable output payloads.
+
+Recursive packages allow a maximum depth of 128 and 262,144 nodes. Input and
+output share a 16 MiB native-copy budget and a separate 16 MiB accounted
+conversion-storage budget. These limits do not include Lean working memory or
+every Ruby allocation overhead. Cyclic object graphs and values of uninhabited
+types raise exceptions. The adapter validates all arguments before native
+allocation or runtime initialization.
+
+Cleanup releases native outputs and temporary storage even when allocation
+fails or another Ruby thread interrupts the call. Invalid native output retires
+the shared runtime; further calls fail, but already returned Ruby values remain
+usable. Independent calls can use Ruby threads. Native execution holds the GVL.
+Calls after `fork`, calls from Ractors and `RUBY_MN_THREADS` are rejected; use a
+fresh process after forking. Compatible packages share the runtime automatically.
+Callbacks, closures, resources and asynchronous operations cannot be nested in
+this copied profile.
 
 ### Callbacks and returned Lean closures
 
@@ -367,7 +412,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named frozen keyword-initialized records and constructors, exact Arrays and Strings, explicit UNIT/Some/Ok/Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass exact generated classes with required keywords. Arrays and Lists use exact Ruby Arrays. Returned mutable payloads own independent storage. All arguments validate before native allocation or runtime initialization; ensure blocks release temporary storage and owned native results on failures and interruptions. Malformed output retires the shared runtime. Native calls hold the GVL; post-fork reuse, Ractors and M:N threads reject. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

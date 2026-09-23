@@ -35,5 +35,6 @@ CI requires this execution and retains `build/recursive/ruby-values.json`.
 These declaration checks do not exercise compiled Lean calls or prepared gems.
 The subsequent [native conversion milestone](ruby-recursive-conversions-20260923.md)
 verifies layouts, bounded copies and lifecycle/failure cleanup with compiled
-Lean. Original installed gem acceptance remains pending. Ruby's package path
-still rejects recursive exports; these milestones promote no installed cells.
+Lean. The subsequent [prepared gem milestone](ruby-recursive-packages-20260923.md)
+adds original installed-package acceptance and reproducible archives. The
+declaration checks themselves promote no installed cells.

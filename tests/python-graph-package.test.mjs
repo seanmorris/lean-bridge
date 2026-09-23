@@ -15,7 +15,7 @@ import { compileNativeGraphProjection } from "../src/build/native-graph-projecti
 import { nativeRecursiveReviewedIr } from "./helpers/native-recursive-reviewed.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-history.mjs";
+import { assertRubyGraphSourceUpdate } from "./helpers/native-ruby-graph-regression.mjs";
 import { assertPythonGraphRegressions } from "./helpers/native-python-graph-regression.mjs";
 
 test("recursive Python packages expose typed functions and isolate native loading", () => {
@@ -45,7 +45,8 @@ test("recursive Python admission checks all selected hosts and protects loader n
 	const ir = nativeRecursiveReviewedIr(), model = compileNativeGraphProjection(ir, ["pypi"]);
 	assert.equal(model.prefix, "recursive");
 	assert.equal(compileNativeGraphProjection(ir, ["c", "cpp", "cargo", "pypi"]).layoutSha256, model.layoutSha256);
-	for(const targets of [[], ["pypi", "pypi"], ["pypi", "cpan"], ["pypi", "maven"], ["rubygems"]])
+	assert.equal(compileNativeGraphProjection(ir, ["pypi", "rubygems"]).layoutSha256, model.layoutSha256);
+	for(const targets of [[], ["pypi", "pypi"], ["pypi", "cpan"], ["pypi", "maven"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 	for(const name of ["native", "assets", "scope", "value", "_GraphNative"])
 	{
@@ -85,7 +86,7 @@ test("recursive Python receipts bind installed wheels, public calls, typing and 
 	assert.equal(record.reportSha256, sha256(canonicalJson(record.report)));
 	assert.equal(record.log.sha256, sha256(record.log.text));
 	assert.match(record.log.text, /# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0/);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertAdministrativeSourceUpdate(path, hash);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertRubyGraphSourceUpdate(path, hash);
 	assert.deepEqual(record.report.observations.map(run => run.reviewed), [false, true]);
 	for(const run of record.report.observations)
 	{

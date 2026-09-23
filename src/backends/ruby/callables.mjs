@@ -111,6 +111,9 @@ const leaseSupport = `      PID = ::Process.pid
         pointer
       end
       def ensure_process
+        if (reason = NativeCopiedRuntimeV1.context_error)
+          raise LeanBridgeError, reason
+        end
         raise LeanBridgeError, "Lean packages cannot be used after fork; start a fresh process" unless ::Process.pid == PID
         active = ::Thread.current.thread_variable_get(:lean_bridge_native_call_fiber_v1)
         raise LeanBridgeError, "A native Lean call is suspended on another Fiber" if active && !active[0].equal?(::Fiber.current)

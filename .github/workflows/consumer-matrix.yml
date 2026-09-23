@@ -1022,6 +1022,8 @@ jobs:
           LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs
           test -s build/recursive/ruby-conversions.json
           test -s build/recursive/ruby-native.json
+          LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs
+          test -s build/recursive/ruby-packages.json
           test -s build/callables/ruby.json
           test -s build/compounds/ruby.json
           test -s build/lists/ruby.json
@@ -1049,6 +1051,7 @@ jobs:
             build/recursive/ruby-values.json
             build/recursive/ruby-conversions.json
             build/recursive/ruby-native.json
+            build/recursive/ruby-packages.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -1100,6 +1103,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_PACKAGE_TEST=1 node --test tests/ruby-graph-package.test.mjs"
               if [ "${{ steps.ordinary_ruby.outcome }}" != success ] || [ "${{ steps.type_corpus_ruby.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
