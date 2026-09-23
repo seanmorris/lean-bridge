@@ -163,6 +163,12 @@ builds reproduce archives across all four Perl ABIs and both installation modes.
 Shared-package checks cover private symbol collisions, coordinate conflicts,
 retirement and inherited-closure cleanup while the runtime lock is held at fork.
 
+[C# recursive declarations](../evidence/dotnet-recursive-values-20260923.md)
+preserve nominal records and cases, typed arrays, nested value tuples and
+transparent aliases. Compiled consumer checks cover bounded structural equality,
+matching hashes, patterns and cycle rejection. Native graph conversion and
+installed recursive NuGet acceptance remain pending.
+
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail
 before linking. Component receipts bind that check and native packages retain

@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { assertTestManifestRegistration } from "./source-registration-upgrade.mjs";
 
 const metadata = new Set(["package.json", "config/cli-package.v1.json", "config/checked-javascript.json", "nix/perl-engine-source-boundary.json", ".github/workflows/consumer-matrix.yml", ".github/workflows/perl-consumer.yml"]);
 const sourcePath = /^src\/(?:backends|build|release)\/[a-z0-9/-]+\.mjs$/;
@@ -71,6 +72,7 @@ export const verifyAddedSourceRegistrations = (path, source, expected, updates) 
  * @param expected - Immutable baseline digest.
  */
 export const assertSourceRegistrationUpdate = async (path, source, expected) => {
+	if(await assertTestManifestRegistration(path, source, expected)) return true;
 	if(path === "tests/helpers/test-registration-history.mjs")
 	{
 		const integration = 'import { assertPerlGraphSourceTransition } from "./native-perl-graph-regression.mjs";\n';

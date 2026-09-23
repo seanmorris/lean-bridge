@@ -66,6 +66,7 @@ const profileManifest = Object.freeze({
 		, "python-copied-graph-conversions"
 		, "python-graph-package"
 		, "source-registration-history"
+		, "dotnet-copied-graph-values"
 		, "ruby-callable-contract"
 		, "ruby-callable-evidence"
 		, "ruby-compound-contract"

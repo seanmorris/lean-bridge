@@ -893,6 +893,8 @@ jobs:
           test -s build/collections/dotnet.json
           LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs
           test -s build/equality/dotnet.json
+          LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs
+          test -s build/recursive/dotnet-values.json
           test -s build/type-corpus/dotnet.json
           test -s build/type-corpus/reviewed-native-dotnet.json
       - name: Upload the .NET real-Lean type corpus report
@@ -913,6 +915,7 @@ jobs:
             build/collections/dotnet-conversions.json
             build/collections/dotnet.json
             build/equality/dotnet.json
+            build/recursive/dotnet-values.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -1072,6 +1075,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_CONVERSION_TEST=1 node --test tests/dotnet-collection-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COLLECTION_TEST=1 node --test tests/dotnet-collections.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs"
               if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ]; then
                 test_result=failed
                 executed=false

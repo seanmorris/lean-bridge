@@ -1383,9 +1383,24 @@ libraries before loading those files; restored installations must still run.
 Reports go to `build/recursive/perl-packages.json`,
 `build/recursive/perl-component-collision.json`,
 `build/recursive/perl-composition.json` and
-`build/recursive/perl-documentation.json`. Package acceptance is still in progress.
-Do not promote the installed-support inventory from the private conversion
-reports or a single-ABI package run.
+`build/recursive/perl-documentation.json`. The
+[installed CPAN acceptance record](../evidence/perl-recursive-packages-20260923.md)
+includes all four ABIs and both source paths. Private conversion reports or a
+single-ABI package run do not establish that full matrix.
+
+### Recursive C# declarations
+
+```sh
+LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 \
+  node --test tests/dotnet-copied-graph-values.test.mjs
+```
+
+This test compiles a .NET 8 library and a separate consumer assembly, checks
+recursive value semantics and rejects invalid consumer programs. Downstream CI
+requires the execution and retains `build/recursive/dotnet-values.json`.
+The [declaration record](../evidence/dotnet-recursive-values-20260923.md) describes
+the equality, cycle and structural-type limits. These tests do not load Lean;
+native conversion and installed recursive NuGet acceptance remain pending.
 
 ## Release tooling checks
 

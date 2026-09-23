@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
+          "currentSha256": "903e2cd39dcf0427700dbbeaedc4e5654bfe8f5ae5c1907e65de30e798912d7c"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -231,6 +231,15 @@
         "perl-graph-package"
       ],
       "change": "Add finite recursive CPAN generation and original source-free package installation checks. Installed type coverage is unchanged pending complete CPAN acceptance and regressions."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf",
+      "currentSha256": "903e2cd39dcf0427700dbbeaedc4e5654bfe8f5ae5c1907e65de30e798912d7c",
+      "addedTests": [
+        "dotnet-copied-graph-values"
+      ],
+      "change": "Require compiled recursive C# declaration, structural equality and rejected-consumer checks. Native conversions and installed NuGet coverage remain pending."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -650,6 +659,53 @@
         "            build/recursive/perl-component-collision.json",
         "            build/recursive/perl-composition.json",
         "            build/recursive/perl-documentation.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3",
+      "currentSha256": "5dd8bf05172eed7b1b60cd2c48ee69606e9994588785bd24602b79c04d1cde7f",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-equality.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069",
+      "currentSha256": "9a9df1cc4871286ef4906f7c87543527da4ca2be696067fe8252d4908bab6f39",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-equality.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a",
+      "currentSha256": "59d037740aa90590f3b09b9b5a05be4622a9a21dea2e95e78407ac7bb89db0e7",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-equality.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc",
+      "currentSha256": "61fe0e7c95e8f83327dc4509666109a8a2251fe9f97c80bc964e127356ab7af8",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-equality.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "b88b5a46751b7d00b4ee8d4494093f6789d1599ff0d9c58bf9f53033b88cd95b",
+      "currentSha256": "b9b6f4d172d3b2947a3d2c1caccc3a72066622ef01a6954e46a74105a05d9266",
+      "addedLines": [
+        "          LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs",
+        "          test -s build/recursive/dotnet-values.json",
+        "            build/recursive/dotnet-values.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs\""
       ]
     }
   ]
