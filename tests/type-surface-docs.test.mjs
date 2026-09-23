@@ -81,6 +81,23 @@ test("PHP keeps checked collection fields and primitive callables separate from 
 	assert.doesNotMatch(row(source, "Task α / asynchronous result"), /Installed checks passed/u);
 });
 
+test("Perl recursive documentation exposes installed values without promoting callback payloads", async () => {
+	const source = await readFile("docs/consume/perl.md", "utf8");
+	const recursive = row(source, "Recursive copied structures");
+	assert.match(recursive, /Named Perl record\/constructor classes/u);
+	assert.match(recursive, /Ordinary source: Installed checks passed \(input, result, field\)/u);
+	assert.match(recursive, /Reviewed IR: Installed checks passed \(input, result, field\)/u);
+	for(const cell of cells.filter(cell => cell.profile === "perl" && cell.shape === "recursive"))
+	{
+		if(cell.position.startsWith("callback-")) assert.notEqual(cell.stages.installedExecution.state, "passed");
+		else assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-recursive-installed"]);
+	}
+	assert.match(source, /\[installed recursive checks\]\(\.\.\/evidence\/perl-recursive-packages-20260923\.md\)/u);
+	const reference = await readFile("docs/reference/types.md", "utf8");
+	assert.match(reference, /\[Perl CPAN archives\]\(\.\.\/evidence\/perl-recursive-packages-20260923\.md\)/u);
+	assert.doesNotMatch(reference, /recursive values in the other seven profiles/iu);
+});
+
 test("Java and Kotlin distinguish callable, collection-field and asynchronous evidence", async () => {
 	const java = await readFile("docs/consume/java.md", "utf8");
 	const kotlin = await readFile("docs/consume/kotlin.md", "utf8");

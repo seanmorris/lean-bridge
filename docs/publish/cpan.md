@@ -145,7 +145,7 @@ Select `Compounds` in `modules` and its three functions in `exports`. Set `targe
 
 Perl uses `undef` or `Some` for options, distinct `Ok` and `Err` wrappers for results, and two-element array references for binary products. Constructors appear under the component namespace when needed; record or resource names that collide with them are rejected before linking. All nineteen primitives work inside these copied types, including `Math::BigInt`, Unit, Unicode strings and octet strings. Fields and arrays may contain compounds.
 
-Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32. Recursive copied types and compound callback signatures require further adapter work. Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
+Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32 for acyclic schemas. [Recursive values](#export-recursive-values) use a bounded graph adapter. Compound callback signatures require further adapter work. Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
 
 ## Export copied tagged variants
 
@@ -162,9 +162,10 @@ active payload without exposing runtime constructor numbers or object offsets.
 
 Payloads can contain all nineteen primitives and supported copied containers,
 records and other admitted variants. Constructors and payloads remain mutable;
-the bridge copies their contents at each call. Recursive, generic, indexed,
+the bridge copies their contents at each call. Generic, indexed,
 proof-bearing, callable and identity-bearing payloads are not admitted by this
-copied profile. Names that collide with Perl object methods or phase hooks such
+copied profile. Recursive families use the [recursive adapter](#export-recursive-values).
+Names that collide with Perl object methods or phase hooks such
 as `BEGIN` and `END` reject before compilation.
 
 Use the [consumer example](../consume/perl.md#tagged-variants). The build compiles
@@ -201,7 +202,8 @@ replace Perl constructors, object methods or phase hooks fail before linking.
 The copied-value budget is 16 MiB per call and schema nesting is limited to
 32 levels. The [installed collection checks](../evidence/perl-collections-20260921.md)
 cover both source paths and all four pinned Perl ABIs. Recursive copied types
-and resources hidden inside copied fields require further adapter work.
+use the [recursive adapter](#export-recursive-values). Resources hidden inside
+copied fields require an ownership contract and remain unsupported.
 
 ## Export Lists
 
@@ -253,10 +255,56 @@ existing limits still apply.
 
 An independently reviewed contract must retain the same aliases and references;
 replacing every alias with its target does not reproduce the source API.
-Generic aliases, recursive copies, compound callable payloads
+Generic aliases, compound callable payloads
 and identity-bearing alias targets require further work. The
 [installed acceptance record](../evidence/perl-aliases-20260921.md) covers both
 source paths and all four pinned Perl ABIs.
+
+## Export recursive values
+
+Add `RecursiveDemo.lean`:
+
+```lean
+namespace RecursiveDemo
+inductive Tree where
+  | leaf (value : UInt32)
+  | next (child : Tree)
+def wrap (value : Tree) : Tree := .next value
+end RecursiveDemo
+```
+
+Select the export in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["RecursiveDemo"],
+  "exports": ["RecursiveDemo.wrap"],
+  "targets": { "cpan": { "module": "LeanBridge::RecursiveDemo" } }
+}
+```
+
+Use the ordinary CPAN build command above. The builder selects the recursive
+adapter from the compiled type graph; it does not need a public C target or
+Perl-specific type declarations. A reviewed contract can describe the same
+finite graph with named references. Keep its declarations separate from the
+shared configuration, as in [reviewed contracts](../lean/existing-package.md#compile-a-reviewed-contract).
+
+The generated module provides `Tree::Leaf` and `Tree::Next` classes under
+`LeanBridge::RecursiveDemo`. The [consumer example](../consume/perl.md#recursive-values)
+constructs a leaf, calls `wrap`, and changes the independent returned copy.
+Mutually recursive copied families, records, aliases and nested containers use
+the same adapter. No runtime constructor numbers enter the public API.
+
+Each call limits conversion to depth 128, 262,144 nodes and 16 MiB of native
+copied data, with a separate 16 MiB conversion-storage allowance. Cycles,
+malformed values and over-limit copies reject. These limits do not bound the
+whole Perl heap or Lean's working memory. Structured callback signatures and
+resource-containing aggregates remain unsupported.
+
+The [recursive acceptance record](../evidence/perl-recursive-packages-20260923.md)
+records independent builds, source-free installations, failure cleanup and
+execution of the exact author and consumer examples.
 
 ## Verify the release candidate
 

@@ -85,8 +85,8 @@ The default local selection uses all four pinned interpreters. Set
 both suites and retains `build/recursive/perl-conversions.json` and
 `build/recursive/perl-native.json`.
 
-CPAN integration remains gated. These private module checks do not establish
-authenticated package loading, source-free installation, cross-package
-composition or reproducible archives. Those are the next Perl acceptance
-requirements in VO 1219. Installed coverage remains unchanged; structured
-callable payloads and explicitly owned resource aggregates also remain open.
+These private module checks establish conversion behavior and cleanup. The
+subsequent [CPAN package milestone](perl-recursive-packages-20260923.md) records
+authenticated loading, source-free installations, shared package lifecycle and
+reproducible archives. Structured callable payloads and explicitly owned resource
+aggregates remain open in VO 1219.

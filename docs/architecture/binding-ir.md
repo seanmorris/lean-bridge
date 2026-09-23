@@ -157,8 +157,11 @@ aliases. The declaration test runs on all four pinned Perl ABIs.
 [Perl native graph conversions](../evidence/perl-recursive-conversions-20260923.md)
 use bounded XS readers and writers with destructor-registered native cleanup.
 Ordinary and reviewed Lean calls test exceptions, signals and retirement during
-result construction. Authenticated CPAN integration and source-free installed
-acceptance remain unfinished.
+result construction. [Prepared recursive CPAN packages](../evidence/perl-recursive-packages-20260923.md)
+connect those converters to authenticated automatic loading. Two independent
+builds reproduce archives across all four Perl ABIs and both installation modes.
+Shared-package checks cover private symbol collisions, coordinate conflicts,
+retirement and inherited-closure cleanup while the runtime lock is held at fork.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail

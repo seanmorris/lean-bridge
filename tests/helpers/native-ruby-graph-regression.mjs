@@ -134,5 +134,5 @@ export const assertRubyGraphSourceUpdate = async (path, expected) => {
 	if(!shared.includes(path)) return assertAdministrativeSourceUpdate(path, expected);
 	const { record, baselines } = await assertRubyGraphRegressions();
 	assert.ok(Object.values(baselines).some(item => item.sourceHashes?.[path] === expected), `Unknown shared build baseline: ${path}`);
-	assert.equal(sha256(source), record.sourceHashes[path], path);
+	await assertAdministrativeSourceUpdate(path, record.sourceHashes[path]);
 };

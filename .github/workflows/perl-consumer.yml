@@ -149,6 +149,7 @@ jobs:
           LEAN_BRIDGE_PERL_VARIANT_TEST=1 node --test tests/perl-variants.test.mjs
           LEAN_BRIDGE_PERL_GRAPH_TEST=1 node --test tests/perl-copied-graph-values.test.mjs
           LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 node --test tests/perl-copied-graph-conversions.test.mjs
+          LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test tests/perl-graph-package.test.mjs
           test -s build/type-corpus/perl.json
           test -s build/type-corpus/reviewed-native-perl.json
           test -s build/compounds/perl.json
@@ -159,6 +160,10 @@ jobs:
           test -s build/recursive/perl-values.json
           test -s build/recursive/perl-conversions.json
           test -s build/recursive/perl-native.json
+          test -s build/recursive/perl-packages.json
+          test -s build/recursive/perl-component-collision.json
+          test -s build/recursive/perl-composition.json
+          test -s build/recursive/perl-documentation.json
       - name: Upload this configuration's real-Lean corpus report
         if: always()
         uses: actions/upload-artifact@v7
@@ -178,6 +183,10 @@ jobs:
             build/recursive/perl-values.json
             build/recursive/perl-conversions.json
             build/recursive/perl-native.json
+            build/recursive/perl-packages.json
+            build/recursive/perl-component-collision.json
+            build/recursive/perl-composition.json
+            build/recursive/perl-documentation.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30

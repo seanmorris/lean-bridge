@@ -12,6 +12,13 @@
 export const perlExportName = value => value.replace(/([a-z0-9])([A-Z])/g, "$1_$2").toLowerCase();
 
 /**
+ * Quote source data without Perl interpolation or JSON escape semantics.
+ *
+ * @param value - Literal string to preserve in generated Perl source.
+ */
+export const perlStringLiteral = value => `'${value.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}'`;
+
+/**
  * Validate one Perl projection without changing the canonical source declarations.
  *
  * @param moduleName - Selected CPAN module namespace.

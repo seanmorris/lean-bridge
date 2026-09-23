@@ -7,6 +7,8 @@ import { nativeCType, nativeObjectType, nativeTypeKey, validateNativeType, nativ
 import { fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 import { perlCopiedAliases, perlAliasApiDocs, perlAliasPod } from "./copied-aliases.mjs";
 import { validatePerlVariants, perlVariantConversions, perlVariantClasses, perlVariantPod } from "./copied-variants.mjs";
+import { compileCopiedPerlGraphPackageModel, generateCopiedPerlGraphPackage } from "./copied-graph-package.mjs";
+import { perlStringLiteral } from "./naming.mjs";
 
 const q = JSON.stringify;
 const read = type => `lb_read_${nativeTypeKey(type)}`;
@@ -268,6 +270,12 @@ ${name}(...)
  */
 export const validatePerlModel = model => {
 	if(model?.profile !== "native-library-v1" || model.pointerBits !== 64) throw new TypeError("Perl requires the checked native-library-v1 model");
+	if(model.copiedGraph)
+	{
+		const { types } = compileCopiedPerlGraphPackageModel(model.bindingIr, model.moduleName);
+		return [...types.some(type => type.kind === "option") ? ["Some"] : []
+			, ...types.some(type => type.kind === "result") ? ["Ok", "Err"] : []];
+	}
 	const containsCompound = type => ["option", "result", "tuple", "list", "variant"].includes(type.kind)
 		|| (type.kind === "array" && containsCompound(type.element))
 		|| (type.kind === "record" && type.fields.some(field => containsCompound(field.type)));
@@ -300,6 +308,7 @@ export const validatePerlModel = model => {
  * @param receipt - Native compilation receipt with exact library and runtime identities.
  */
 export const generatePerlBindingPackage = (model, receipt) => {
+	if(model.copiedGraph) return generateCopiedPerlGraphPackage(model, receipt);
 	const branches = validatePerlModel(model);
 	const aliases = perlCopiedAliases(model);
 	const lines = ['#include "runtime.h"', '#include "component.h"'
@@ -368,7 +377,7 @@ _callback_${type.key}(...)
 		, "use LeanBridge::Runtime;"
 		, "use XSLoader;"
 		, `our $VERSION = '0.001';`
-		, `LeanBridge::Runtime::_load_component(__FILE__, ${q(receipt.library)}, ${q(receipt.nativeLibrary.sha256)}, ${q(receipt.runtimeIdentity)}, { ${model.sourceIdentity.modules.map(item => `${q(item.module)} => ${q(item.source.sha256)}`).join(", ")} });`
+		, `LeanBridge::Runtime::_load_component(__FILE__, ${perlStringLiteral(receipt.library)}, ${perlStringLiteral(receipt.nativeLibrary.sha256)}, ${perlStringLiteral(receipt.runtimeIdentity)}, { ${model.sourceIdentity.modules.map(item => `${perlStringLiteral(item.module)} => ${perlStringLiteral(item.source.sha256)}`).join(", ")} }, ${perlStringLiteral(model.component.id)});`
 		, `XSLoader::load(__PACKAGE__, $VERSION);`
 		, "sub true () { !!1 }"
 		, "sub false () { !!0 }"

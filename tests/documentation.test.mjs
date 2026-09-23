@@ -349,6 +349,11 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.ok(perlWorkflow.includes("test -s build/aliases/perl.json"));
   assert.ok(perlWorkflow.includes("LEAN_BRIDGE_PERL_VARIANT_TEST=1 node --test tests/perl-variants.test.mjs"));
   assert.ok(perlWorkflow.includes("test -s build/variants/perl.json"));
+  assert.ok(perlWorkflow.includes("LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test tests/perl-graph-package.test.mjs"));
+  for(const report of ["perl-packages", "perl-component-collision", "perl-composition", "perl-documentation"])
+  {
+    assert.ok(perlWorkflow.includes(`test -s build/recursive/${report}.json`));
+  }
   assert.match(perlWorkflow, /test -s build\/compounds\/perl\.json/);
   assert.match(perlWorkflow, /test -s build\/lists\/perl\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs"));
@@ -613,7 +618,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /npm run test:type-corpus:perl/);
   assert.match(perlWorkflow, /LEAN_BRIDGE_CORPUS_PERL="\$PWD\/\.toolchains\/perl\/\$CORPUS_PERL_CONFIGURATION\/bin\/perl"/);
   assert.match(perlWorkflow, /name: type-corpus-perl-\$\{\{ matrix\.configuration \}\}-\$\{\{ github\.sha \}\}/);
-  assert.match(perlWorkflow, /path: \|\n\s*build\/type-corpus\/perl\.json\n\s*build\/type-corpus\/reviewed-native-perl\.json\n\s*build\/char-native\/perl\.json\n\s*build\/word-native\/perl\.json\n\s*build\/callables\/perl\.json\n\s*build\/compounds\/perl\.json\n\s*build\/lists\/perl\.json\n\s*build\/collections\/perl\.json\n\s*build\/aliases\/perl\.json\n\s*build\/variants\/perl\.json\n\s*build\/recursive\/perl-values\.json\n\s*build\/recursive\/perl-conversions\.json\n\s*build\/recursive\/perl-native\.json\n\s*if-no-files-found: error/);
+  assert.match(perlWorkflow, /path: \|\n\s*build\/type-corpus\/perl\.json\n\s*build\/type-corpus\/reviewed-native-perl\.json\n\s*build\/char-native\/perl\.json\n\s*build\/word-native\/perl\.json\n\s*build\/callables\/perl\.json\n\s*build\/compounds\/perl\.json\n\s*build\/lists\/perl\.json\n\s*build\/collections\/perl\.json\n\s*build\/aliases\/perl\.json\n\s*build\/variants\/perl\.json\n\s*build\/recursive\/perl-values\.json\n\s*build\/recursive\/perl-conversions\.json\n\s*build\/recursive\/perl-native\.json\n\s*build\/recursive\/perl-packages\.json\n\s*build\/recursive\/perl-component-collision\.json\n\s*build\/recursive\/perl-composition\.json\n\s*build\/recursive\/perl-documentation\.json\n\s*if-no-files-found: error/);
   assert.match(perlWorkflow, /needs\.perl\.result == 'success'/);
   assert.match(perlWorkflow, /nix run \.#perl-build-engine/);
   assert.match(perlWorkflow, /nix shell --inputs-from \. nixpkgs#perl/);

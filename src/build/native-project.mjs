@@ -85,10 +85,10 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, configurationSha256: record.sha256
 			, lakeSnapshot
 			, targets
-			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems"].includes(target))
+			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan"].includes(target))
 			, validateModel: model => {
 				if(model.copiedGraph)
-				{ compileNativeGraphProjection(model.bindingIr, targets); return; }
+				{ compileNativeGraphProjection(model.bindingIr, targets, model.moduleName); return; }
 				if(targets.includes("cpan")) validatePerlModel(model);
 				if(!cTargets.length) return;
 				const cSurface = compilePrimitiveCSurface(model.bindingIr, { variants: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), lists: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: cTargets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: cTargets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });

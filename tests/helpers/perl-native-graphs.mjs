@@ -18,7 +18,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { perlGraphCommands, perlGraphInstrumentation, perlGraphProbeXs, preparePerlGraphProbe, compilePerlGraphProbe } from "./perl-graph-probes.mjs";
 
-const nativeHooks = `#include <lean/lean.h>
+export const nativeHooks = `#include <lean/lean.h>
 #include <assert.h>
 #include <stdlib.h>
 static size_t native_live, native_attempts, native_fail, native_decodes, native_encodes, native_bad, native_mode;
@@ -37,7 +37,7 @@ static lean_object *perl_encode(lean_object *value) {
 #define LB_GRAPH_ENCODE(value) perl_encode(value)
 `;
 
-const nativeProbes = `
+export const nativeProbes = `
 void perl_native_reset(size_t fail, size_t bad, size_t mode) { native_attempts = native_decodes = native_encodes = 0; native_fail = fail; native_bad = bad; native_mode = mode; }
 size_t perl_native_live(void) { return native_live; }
 size_t perl_native_attempts(void) { return native_attempts; }
@@ -85,7 +85,7 @@ static void lpg_retire(void) { ++probe_retired; perl_native_retire(); }
 #define recursive_tree_graph perl_native_tree
 `;
 
-const nativeXs = `
+export const nativeXs = `
 void
 native_reset(fail=0, bad=0, mode=0)
     unsigned int fail

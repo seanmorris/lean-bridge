@@ -82,6 +82,13 @@ static HV *lbp_wrappers(pTHX) {
 }
 static void lbp_handle_close(pTHX_ lbp_handle *handle) {
   if (!handle->object) return;
+  /* A fork copies Perl wrappers, not a usable Lean runtime. Automatic child
+     cleanup must never enter inherited broker locks or touch Lean refcounts. */
+  if (lbp_pid != getpid()) {
+    handle->object = NULL;
+    --lbp_live_wrappers;
+    return;
+  }
   if (handle->interpreter != LBP_CONTEXT) croak("wrong Perl interpreter for Lean resource");
   char key[32]; int size = snprintf(key, sizeof(key), "%" PRIu64, handle->token);
   hv_delete(lbp_wrappers(aTHX), key, size, G_DISCARD);
@@ -197,6 +204,12 @@ MODULE = LeanBridge::Runtime    PACKAGE = LeanBridge::Runtime
 PROTOTYPES: DISABLE
 
 void
+_check_context()
+  PPCODE:
+    lbp_check_interpreter(aTHX);
+    XSRETURN_EMPTY;
+
+void
 _snapshot(...)
   PPCODE:
     lbp_check_interpreter(aTHX);
@@ -226,7 +239,7 @@ closed(value)
     XPUSHs(boolSV(lbp_get_handle(aTHX_ value)->object == NULL));
 
 BOOT:
-  if (lbp_interpreter && lbp_interpreter != LBP_CONTEXT) croak("a different Perl interpreter already owns Lean Bridge");
+  if (lbp_interpreter) lbp_check_interpreter(aTHX);
   lbp_interpreter = LBP_CONTEXT;
   lbp_thread = pthread_self();
   lbp_pid = getpid();

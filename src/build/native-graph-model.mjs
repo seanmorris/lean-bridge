@@ -12,6 +12,7 @@ import { componentRecordDefinitions } from "../abi/component-records.mjs";
 import { assertComponentRecursiveBindings, componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveHelper, componentRecursiveLeanSource, componentRecursiveTypes } from "./component-recursive-lean.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "./native-model.mjs";
+import { projectPerlNames } from "../backends/perl/naming.mjs";
 
 const primitives = {
 	unit: "Unit", bool: "Bool", uint8: "UInt8", uint16: "UInt16"
@@ -66,7 +67,6 @@ export const createCompiledNativeModel = options => {
 	const { metadata, component, moduleName, sourceIdentity } = options;
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true });
 	if(!elaborated.declarations.some(containsGraph)) return createNativeModel(options);
-	if(moduleName !== undefined) throw Object.assign(new TypeError("Copied graph components require a graph-capable host projection; Perl integration is not yet available"), { code: "native-graph-projection-unavailable" });
 	const semantic = createElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });
@@ -82,7 +82,9 @@ export const createCompiledNativeModel = options => {
 		, profile: "native-library-v1", pointerBits: 64, byteOrder: "little"
 		, component, bindingIr, bindingIrSha256: hashBindingIr(bindingIr)
 		, sourceIdentity
-		, exports, types: [], copiedGraph };
+		, ...(moduleName === undefined ? {} : { moduleName })
+		, exports: moduleName === undefined ? exports : projectPerlNames(moduleName, exports)
+		, types: [], copiedGraph };
 	nativeGraphCarrierAbi(model);
 	return Object.freeze(model);
 };

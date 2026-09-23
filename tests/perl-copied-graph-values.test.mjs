@@ -35,7 +35,8 @@ test("Perl recursive declarations retain nominal edges and transparent aliases",
 		, target: { kind: "named", id: "lean:Recursive.Tree" }
 		, contractType: "Tree", perlType: "LeanBridge::Recursive::Tree" });
 	assert.doesNotMatch(model.source, /XSLoader|DynaLoader|lean_object|constructor_tag|JSON|sub spine|package LeanBridge::Recursive::(?:Forest|TreeAlias);/);
-	assert.throws(() => compileNativeGraphProjection(ir, ["cpan"]), { code: "native-graph-projection-unavailable" });
+	assert.throws(() => compileNativeGraphProjection(ir, ["cpan"]), /module/);
+	assert.equal(compileNativeGraphProjection(ir, ["cpan"], "LeanBridge::Recursive").moduleName, "LeanBridge::Recursive");
 });
 
 test("Perl graph declarations reject unsafe namespace, lifecycle and constructor names", () => {

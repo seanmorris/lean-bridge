@@ -73,6 +73,16 @@ export const verifyAddedSourceRegistrations = (path, source, expected, updates) 
 export const assertSourceRegistrationUpdate = async (path, source, expected) => {
 	if(path === "tests/helpers/test-registration-history.mjs")
 	{
+		const integration = 'import { assertPerlGraphSourceTransition } from "./native-perl-graph-regression.mjs";\n';
+		if(source.includes(integration))
+		{
+			for(const addition of [integration, '\tif(await assertPerlGraphSourceTransition(path, source, expected)) return;\n'])
+			{
+				assert.equal(source.split(addition).length, 2, "Exactly one installed-regression verifier addition");
+				source = source.replace(addition, "");
+			}
+			if(sha256(source) === expected) return true;
+		}
 		for(const addition of [checkerImport, checkerCall])
 		{
 			assert.equal(source.split(addition).length, 2, "Exactly one additive-source verifier change");

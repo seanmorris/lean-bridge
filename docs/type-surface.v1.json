@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.82.0",
+  "contractVersion": "0.83.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -157,6 +157,521 @@
   ],
   "evidence": [
     {
+      "id": "perl-recursive-installed",
+      "kind": "installed",
+      "revision": "3f265ed0b1cb7eb0814cf407ab5b7ff83c4d7f9b",
+      "command": "LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test tests/perl-graph-package.test.mjs",
+      "scope": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass.",
+      "files": [
+        {
+          "path": ".github/workflows/perl-consumer.yml",
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
+        },
+        {
+          "path": "config/checked-javascript.json",
+          "sha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a"
+        },
+        {
+          "path": "config/cli-package.v1.json",
+          "sha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-conversions-20260923.json",
+          "sha256": "e5a990073852c99cc29cf2ec8d58d35844e5a183a01aa9d45a2edb4c9526acc1"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-packages-20260923.json",
+          "sha256": "ac4899f912ce4c4982facfa723c5a8a1c85ef5e064a2030ccbb81fb5d3c73516"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-packages-20260923.md",
+          "sha256": "f411cd2be181007dc9a6215ff7e08644459352d1ef59d72e1be891f8cf95528b"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "nix/perl-engine-source-boundary.json",
+          "sha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc"
+        },
+        {
+          "path": "package.json",
+          "sha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3"
+        },
+        {
+          "path": "src/abi/component-recursive-abi.mjs",
+          "sha256": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4"
+        },
+        {
+          "path": "src/abi/component-recursive.mjs",
+          "sha256": "684f81daabbb20b8e61ce22a56fb26c5e565213dde1d08942f46afa3640bdba9"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
+        },
+        {
+          "path": "src/analyze/NativeExports.lean",
+          "sha256": "680431258f3f3cb184d97a2bbe752ad467f44e8dae2d1e581dcadf233142935d"
+        },
+        {
+          "path": "src/analyze/elaborated-metadata.mjs",
+          "sha256": "de3874c97bec82ed5188ffe94a23a1d2b668ab9d9e5e0454e23b89d14e07ec6a"
+        },
+        {
+          "path": "src/analyze/lean-project.mjs",
+          "sha256": "d79232cd247ea9968bce615e5579888504d616b90eb33cb9cb7e36c24d588702"
+        },
+        {
+          "path": "src/analyze/semantic-model.mjs",
+          "sha256": "03293750476dcd780ecccfdbffc5fe58bd2194383d5a792dacc0042870e4e7cf"
+        },
+        {
+          "path": "src/backends/c/copied-graph-layout.mjs",
+          "sha256": "d3682b19adfb22fc39560d60c03daeb4b1f14593b2f190a3c4327956148d9f3d"
+        },
+        {
+          "path": "src/backends/c/gmp-graph-conversions.mjs",
+          "sha256": "72dd1e39000293315efb21b1b8efb118c8dc34e45f5d6f83ed84a37504cafcc0"
+        },
+        {
+          "path": "src/backends/c/gmp-graph-values.mjs",
+          "sha256": "4be2d24defb93830b66d8643221946fa1bc6c694239d625844b8faac4bd81208"
+        },
+        {
+          "path": "src/backends/c/gmp.mjs",
+          "sha256": "f1e593796a33ccfa804a93e6ded229a55c43e5a6e7670be5a2d429bba19224e0"
+        },
+        {
+          "path": "src/backends/c/graph-package.mjs",
+          "sha256": "4ac39d3b1888b28b84fdae479d42c3c3314e7e8336e45060f6b26bb747391547"
+        },
+        {
+          "path": "src/backends/c/native-copied-values.mjs",
+          "sha256": "d7c9b1e0654524d5b605087b712b65c64781128f75c7e8a70db371a867b5594a"
+        },
+        {
+          "path": "src/backends/c/native-graph-adapters.mjs",
+          "sha256": "6fc401617a64e628f188ca87d7ef5aba179402a8653a3cb0077331bb5eb2820d"
+        },
+        {
+          "path": "src/backends/c/native-primitives.mjs",
+          "sha256": "335e9a43e986507ad5230618fa8b5a6ca682edc3d97997d505028bf700471a91"
+        },
+        {
+          "path": "src/backends/cpp/boost.mjs",
+          "sha256": "3743a22d0186963a2100f404b14a19b8fda2554ae497eb83a35f3081f4da914d"
+        },
+        {
+          "path": "src/backends/cpp/copied-graph-conversions.mjs",
+          "sha256": "2d4c25f0d98c672ee97fea136500dd25aa02885f0868d70ff71f674bddc4e0b1"
+        },
+        {
+          "path": "src/backends/cpp/copied-graph-values.mjs",
+          "sha256": "1ebd4782ee9fcdbdadd4f25078f236c34792321b01a77c6ea84baec69e81b844"
+        },
+        {
+          "path": "src/backends/jvm/callables.mjs",
+          "sha256": "53a0b9b60608bb9350728c5654d33b6c3500ab73b41008ade3bafcd292c702eb"
+        },
+        {
+          "path": "src/backends/jvm/copied-aliases.mjs",
+          "sha256": "1428ce4c2a583668b0d2a835bcf9179082b7b396b065952d0649b157055c637e"
+        },
+        {
+          "path": "src/backends/jvm/copied-assets.mjs",
+          "sha256": "847302ed2a8ddab834a09c8b677f039ca8c9504f937c9ececea5f5fd212d2037"
+        },
+        {
+          "path": "src/backends/jvm/copied-conversions.mjs",
+          "sha256": "d41050ddcad1ebbbe19c74d681f311903764128ebed212616b0f6098b4fbefbe"
+        },
+        {
+          "path": "src/backends/jvm/copied-kotlin.mjs",
+          "sha256": "658118d92e67ad14469541f931cd757d241fa0a5b6a96d668f0574a12eff7a3d"
+        },
+        {
+          "path": "src/backends/jvm/copied-model.mjs",
+          "sha256": "28fdea63186791b5a0b2dd9cd8762253916aafb681219bb02c676b9deb31a644"
+        },
+        {
+          "path": "src/backends/jvm/copied-runtime.mjs",
+          "sha256": "705592d8f75088679d3b7df4080adba5d7903d447a2e8e9aa0e46ae78ea71f6f"
+        },
+        {
+          "path": "src/backends/jvm/copied-values.mjs",
+          "sha256": "4a881800e3d767468d255770fa268af84848896ba56aed5c80c7b7b993b230a1"
+        },
+        {
+          "path": "src/backends/jvm/generate.mjs",
+          "sha256": "402aa70059d2fc22b435427141e2bc658ea76f5978f14399e94842b642697752"
+        },
+        {
+          "path": "src/backends/native/runtime-broker.mjs",
+          "sha256": "7382b18f0b1efb38c8922aaadf5353f62d0f4f7c2b81cd93f272289a84c7842c"
+        },
+        {
+          "path": "src/backends/perl/Runtime.pm",
+          "sha256": "97dce682c88612c8f94488f7f498f38c0733333b06b1161acb2791af79887f86"
+        },
+        {
+          "path": "src/backends/perl/Runtime.xs",
+          "sha256": "b808aa6d88e1ede84fc4e4a079e288cc52ecfd670584b6bbdd839b0d88541bc8"
+        },
+        {
+          "path": "src/backends/perl/copied-graph-conversions.mjs",
+          "sha256": "eac9937c2361496fd38011e812b3a0c1f37cbbb386e3ea46b666f75e65391c42"
+        },
+        {
+          "path": "src/backends/perl/copied-graph-package.mjs",
+          "sha256": "9cc3467d0ce3549b8d8b10c785bdd0b2b43698dacfc94b4333221248c503b852"
+        },
+        {
+          "path": "src/backends/perl/copied-graph-runtime.mjs",
+          "sha256": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f"
+        },
+        {
+          "path": "src/backends/perl/copied-graph-values.mjs",
+          "sha256": "01990917bc261d4875f96fad26918563617f0ce3c8e462b8340efbb9f0eef734"
+        },
+        {
+          "path": "src/backends/perl/copied-graph-xs.mjs",
+          "sha256": "a493440cd6a34d11860ab8c98e06abd8715866e4e2077b2fc3bf1472a84a8610"
+        },
+        {
+          "path": "src/backends/perl/generate.mjs",
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
+        },
+        {
+          "path": "src/backends/perl/naming.mjs",
+          "sha256": "052c47c48e5528fab5de26790dbf96d71be72516487d9e977700754ed5f6ae0d"
+        },
+        {
+          "path": "src/backends/python/copied-assets.mjs",
+          "sha256": "01be4dbe0c3e92f8791b888ff58c07bc64408166f7551645372e7a5d388fdb33"
+        },
+        {
+          "path": "src/backends/python/copied-graph-conversions.mjs",
+          "sha256": "855e15d2d56cc4a54e66abbc2db6d45ddd7290d50cd3eb2a74d21bf30fb328cd"
+        },
+        {
+          "path": "src/backends/python/copied-graph-package.mjs",
+          "sha256": "9f82bb2f7f20437671263b3e84da390841dcfda2baa89808de4709ed33dda428"
+        },
+        {
+          "path": "src/backends/python/copied-graph-values.mjs",
+          "sha256": "7e3070d8a43e01fea41ce423557f0d7233fd656a476fe32335018d9b2a24e868"
+        },
+        {
+          "path": "src/backends/ruby/callables.mjs",
+          "sha256": "21e585671c360c41317569c05c602d3286d9585731b87416a0591e57e732da49"
+        },
+        {
+          "path": "src/backends/ruby/copied-assets.mjs",
+          "sha256": "431bfb6bcc74b7177d208a88305ed88eb5541c75d1b3ec105b8ae2a21d3001e2"
+        },
+        {
+          "path": "src/backends/ruby/copied-graph-conversions.mjs",
+          "sha256": "1aab7ed78d91035febe851e157b78f3d9e58cb06f3b2b156f8caa37774b155f9"
+        },
+        {
+          "path": "src/backends/ruby/copied-graph-layout.mjs",
+          "sha256": "bedda7fded4be4f5d8fec667e2a49abb2009266cf050694a85bee1c783579e9e"
+        },
+        {
+          "path": "src/backends/ruby/copied-graph-package.mjs",
+          "sha256": "37e4c6f2a0d9480b5667b5a67e456e2766956f87f8e40ee8373ed12af7042507"
+        },
+        {
+          "path": "src/backends/ruby/copied-graph-runtime.mjs",
+          "sha256": "ab8879ea2e281cd77231c1f7a693f19da28bbe59a1e703b95d1410744e842635"
+        },
+        {
+          "path": "src/backends/ruby/copied-graph-values.mjs",
+          "sha256": "1bf99fe069be4a45ce7c8da1a0ec3d6fbfb7ee7803ac4bf57bd92c0433060067"
+        },
+        {
+          "path": "src/backends/ruby/copied-values.mjs",
+          "sha256": "495c2a2c3ddfa3d65d47672e8328041d03dd60863908c53c65f0c3c2d7ffdc95"
+        },
+        {
+          "path": "src/backends/rust/callables.mjs",
+          "sha256": "9f8abbf0da0c2f469ad9e647775a08933473467080b1a6e46abd6e0f470668db"
+        },
+        {
+          "path": "src/backends/rust/copied-assets.mjs",
+          "sha256": "03d4d432a1d4e0bfdd444908d527ea9095a6791ef32a10974c35e16a8859be9f"
+        },
+        {
+          "path": "src/backends/rust/copied-graph-conversions.mjs",
+          "sha256": "0ea5214b5d099a3c99361c8d8a3adeb60731c3a418a0de43fc2b4140fa10947e"
+        },
+        {
+          "path": "src/backends/rust/copied-graph-package.mjs",
+          "sha256": "28ca469064d697f80a5032a4349b636bc3dcf1c8901a64efb180d6002907037b"
+        },
+        {
+          "path": "src/backends/rust/copied-graph-values.mjs",
+          "sha256": "38339e1f0af95c27853dc0da4a9e8c37820f08c32eaaa940b91967d8a2115c3b"
+        },
+        {
+          "path": "src/backends/rust/copied-values.mjs",
+          "sha256": "254acb7d95a4e478504d8b9376e189b921a22d80312561661a6116f8e99bb960"
+        },
+        {
+          "path": "src/build/canonical-build.mjs",
+          "sha256": "bb1d1ff0a1753a129420f241a7c598c9e17aa68e8a452ab38c5749f03f37e1c7"
+        },
+        {
+          "path": "src/build/compile-jvm-sources.mjs",
+          "sha256": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c"
+        },
+        {
+          "path": "src/build/component-recursive-lean.mjs",
+          "sha256": "7bcff37a068738a5fc029621f411ae422ae6e286b5f31b13dfb5360fb0e74c28"
+        },
+        {
+          "path": "src/build/native-allocation-guard.mjs",
+          "sha256": "8afef64367c009b05953a08b4a92d97c0a2f5fc7b47443ff2051784394f2c174"
+        },
+        {
+          "path": "src/build/native-artifacts.mjs",
+          "sha256": "56614f680bba8aa78aad782abe8f47b89631f0b47a413dbc6802b86854d78f6a"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "3c4af09ebd1a471bb77011516debd4e4978eb460671180f0449a2710ad673c73"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "50df9c79885e1b12459815463a13ec3ecc19c829be9f161cb04368e4b521a41f"
+        },
+        {
+          "path": "src/build/native-gmp.mjs",
+          "sha256": "2bc6ca37ebda72f0433f8fa808ef28509f0851c453f053c319b2195a3707f272"
+        },
+        {
+          "path": "src/build/native-graph-model.mjs",
+          "sha256": "f5865134f17bc9f5d6536c5082f1d8813b22b6aa3141c9cc218fe0985fb504c9"
+        },
+        {
+          "path": "src/build/native-graph-projection.mjs",
+          "sha256": "bd3843e49f904e91e177ccfbbbdcdbdb632eac298d2a21413af6f187e398c044"
+        },
+        {
+          "path": "src/build/native-graph-sources.mjs",
+          "sha256": "f0a3edbab5da8ac0026a3d6ddb7530b6f881cf6dc8d854f8c70bafc8236dedc5"
+        },
+        {
+          "path": "src/build/native-jvm-artifacts.mjs",
+          "sha256": "69f360fcd6c7c6e870c683025bc3357deb46c7ef472d061169b2afd93c47dd7a"
+        },
+        {
+          "path": "src/build/native-jvm-projection.mjs",
+          "sha256": "0cef5c5761c81cd4709db554b5fd3cbfe10dd2e16709a13fb0f575dfab9c7b73"
+        },
+        {
+          "path": "src/build/native-model.mjs",
+          "sha256": "be475bc83d89dd16d9fa717dd4678ff4a0e551e2ac8caeff1ff82b3c1675ebfd"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
+        },
+        {
+          "path": "src/build/native-python-artifacts.mjs",
+          "sha256": "33ffedd1ec533d5b4091249a0c8a03bd9e5e9b4ec1fbfb722e3ed123ee803be2"
+        },
+        {
+          "path": "src/build/native-ruby-artifacts.mjs",
+          "sha256": "dfce07c6d73d83f9d8f60ebb6f12d9891df04db9f96711a367eac3abd6a9ede1"
+        },
+        {
+          "path": "src/build/native-rust-artifacts.mjs",
+          "sha256": "c59c21309f299cfc5820c4d79f30af372cd9121b3321114a2e0a621d6b030805"
+        },
+        {
+          "path": "src/build/native-rust-projection.mjs",
+          "sha256": "447a4d802de819467ccd54c03cc099227babc22d4f224b34668ee814b7bed44d"
+        },
+        {
+          "path": "src/release/cpan-package.mjs",
+          "sha256": "04a6549d5ac3faca8197fce6fedd474a6b59ee60bd3074b84bf03424d2e995af"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "bffe30b0fef58f400f4f7088e923959bef1686820df4b465b72a68dd788670fb"
+        },
+        {
+          "path": "src/release/native-cargo.mjs",
+          "sha256": "60e6e4d6aa1b61384dd7e2f1bd341e7f6eb5e60852d16489cf1c8ab40ac3437d"
+        },
+        {
+          "path": "src/release/native-maven.mjs",
+          "sha256": "e37fbda26182e3014a560a0d09fc8e94059b221b4200431bb9d7542cb28d51d2"
+        },
+        {
+          "path": "src/release/native-pypi.mjs",
+          "sha256": "29914ffa70620777320414aa9b67734d192c70318115d2029a1ab80b4e77420f"
+        },
+        {
+          "path": "src/release/native-rubygems.mjs",
+          "sha256": "bfd36e553f335646db807f3783a0b832f7e64f5c63db8eb5a2b6167948a61d17"
+        },
+        {
+          "path": "src/release/package-set-receipt.mjs",
+          "sha256": "e28e53184bfffba6bcc90adb113916483423c07ad1f3c77a24eba36721e9c249"
+        },
+        {
+          "path": "tests/fixtures/onboarding/npm-recursive/Recursive.lean",
+          "sha256": "e63ad95cf9c5cea264803a470498b0e2c6a1b419382d671894785e3b998009f3"
+        },
+        {
+          "path": "tests/fixtures/structured-types/recursive-perl-composition.c",
+          "sha256": "b86d71eb3f3e29c680dfeabb0da97e87187d6814d416b7694e552df821f62e70"
+        },
+        {
+          "path": "tests/fixtures/structured-types/recursive-perl-composition.pl",
+          "sha256": "89f96cb03a92817742abe95247ce412d849488509c2e16406ddf7b0437bb6e45"
+        },
+        {
+          "path": "tests/fixtures/structured-types/recursive-perl-conversions.pl",
+          "sha256": "152fc400f9aee490e6f3f8629236db0a5c7b43702c2cffe0ac22c4feb9788600"
+        },
+        {
+          "path": "tests/fixtures/structured-types/recursive-perl-fixture.pl",
+          "sha256": "713d1271699e40058a711f7502516aab589c55cacfc1a3c35b5d41945d50ee78"
+        },
+        {
+          "path": "tests/fixtures/structured-types/recursive-perl-lean.pl",
+          "sha256": "2f7162945a20b8df7fb8a531ceba3e5fb265254b97b8016169ae3dee7c84bbdf"
+        },
+        {
+          "path": "tests/fixtures/structured-types/recursive-perl-package.pl",
+          "sha256": "37de623441cda1fa42807501370a5cde21887f05d543489477ccec96c69c71cd"
+        },
+        {
+          "path": "tests/helpers/copied-fixture-install.mjs",
+          "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+        },
+        {
+          "path": "tests/helpers/lake-workspace.mjs",
+          "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
+        },
+        {
+          "path": "tests/helpers/native-recursive-reviewed.mjs",
+          "sha256": "110c4cd45b95b3f0660cac0aae48f0db3af989b21e79fec83aa3baad75d3e439"
+        },
+        {
+          "path": "tests/helpers/native-recursive-transport.mjs",
+          "sha256": "f6fa961b51501f6c287c614f351ad32746a3be82645517cd87d855e6fcbbc6eb"
+        },
+        {
+          "path": "tests/helpers/package-set.mjs",
+          "sha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+        },
+        {
+          "path": "tests/helpers/perl-component-collision.mjs",
+          "sha256": "55aa949b96a3609512eb8c58a876984196f7f5acb758c89cc8a03b954d14902a"
+        },
+        {
+          "path": "tests/helpers/perl-graph-composition.mjs",
+          "sha256": "181a08a66b96d046ac122679cc50b8c69fa55f4f0fe066e3f2d31cb479def160"
+        },
+        {
+          "path": "tests/helpers/perl-graph-documentation.mjs",
+          "sha256": "9eeced0ef9666af2191784bc2200408db6279bb6cd4fad874fe7b5e6fe16ef81"
+        },
+        {
+          "path": "tests/helpers/perl-graph-package-drift.mjs",
+          "sha256": "c19a1f3474f9501a2504c09fd5b3c9664f2853814a2f27420e750eda602a372a"
+        },
+        {
+          "path": "tests/helpers/perl-graph-package-faults.mjs",
+          "sha256": "e15f3313ce0905bf4005bcbbe11e2bf2d72f70bd6c332fad2afbab8ff3c208f1"
+        },
+        {
+          "path": "tests/helpers/perl-graph-packages.mjs",
+          "sha256": "9536866fe95e7066f76e730d981370675bc8288b1a72bfdce1a80f43db5d36b4"
+        },
+        {
+          "path": "tests/helpers/perl-graph-probes.mjs",
+          "sha256": "09edd3d0b5c652e5ed5bff776bad894475a3351094134bb47fc237dc5b96d143"
+        },
+        {
+          "path": "tests/helpers/perl-graph-receipt.mjs",
+          "sha256": "e35bb25e729181ba9ea0b2593874cc32d6be3ef9ec978aa915caa8a46637341b"
+        },
+        {
+          "path": "tests/helpers/perl-native-graphs.mjs",
+          "sha256": "d11d5e8bb3295b36233c6fd2224524f02f7bc39acea3a0230dc34bc4eb656644"
+        },
+        {
+          "path": "tests/helpers/recursive-fixture.mjs",
+          "sha256": "18973bd78828c2bf98b3cf26191f2ff1b5d8fa32ab1d16dad31374b59a928dbb"
+        },
+        {
+          "path": "tests/helpers/source-registration-history.mjs",
+          "sha256": "a87ca4705ceb6ca0ef1e0e64f7c9415dea2f9998be4655e319a50fefe89d54d8"
+        },
+        {
+          "path": "tests/helpers/test-registration-history.mjs",
+          "sha256": "dea17c3abf47768810303525a87e63cfd146dbef0c6088ba6b6952eb8e9145d8"
+        },
+        {
+          "path": "tests/perl-copied-graph-conversions.test.mjs",
+          "sha256": "4864ffb7cfef8ee0d9b048f91bfaecc62b5c99105050362f40f51af4706de397"
+        },
+        {
+          "path": "tests/perl-graph-package.test.mjs",
+          "sha256": "4f86e10b76683b1e8f72485bc39bbfa8f4671e4f8608443be372df758f5c2913"
+        },
+        {
+          "path": "tests/source-registration-history.test.mjs",
+          "sha256": "4ea2baeb91efe1d3056eddf4accb529cfb3eb713a0d1e791fd814e0bcfea2380"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "perl/build-0/ordinary-source/archives/LeanBridge-Recursive-0.001.tar.gz",
+          "sha256": "3f7960bbd431b5f33ba78b8ba77a098a8ec9aac58a67506832ef6155d3822892"
+        },
+        {
+          "path": "perl/build-0/ordinary-source/archives/LeanBridge-Runtime-0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891.tar.gz",
+          "sha256": "3bd658273dae8b782f9ff211a6e1c3af2e7b904a335c7ccca0352cd00abd801d"
+        },
+        {
+          "path": "perl/build-0/reviewed-ir/archives/LeanBridge-Recursive-0.001.tar.gz",
+          "sha256": "bb2116d8a81bc034317e3ecde2ec0645d2674fc689a16555a0abe7d63c73eba5"
+        },
+        {
+          "path": "perl/build-0/reviewed-ir/archives/LeanBridge-Runtime-0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891.tar.gz",
+          "sha256": "3bd658273dae8b782f9ff211a6e1c3af2e7b904a335c7ccca0352cd00abd801d"
+        },
+        {
+          "path": "perl/build-1/ordinary-source/archives/LeanBridge-Recursive-0.001.tar.gz",
+          "sha256": "3f7960bbd431b5f33ba78b8ba77a098a8ec9aac58a67506832ef6155d3822892"
+        },
+        {
+          "path": "perl/build-1/ordinary-source/archives/LeanBridge-Runtime-0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891.tar.gz",
+          "sha256": "3bd658273dae8b782f9ff211a6e1c3af2e7b904a335c7ccca0352cd00abd801d"
+        },
+        {
+          "path": "perl/build-1/reviewed-ir/archives/LeanBridge-Recursive-0.001.tar.gz",
+          "sha256": "bb2116d8a81bc034317e3ecde2ec0645d2674fc689a16555a0abe7d63c73eba5"
+        },
+        {
+          "path": "perl/build-1/reviewed-ir/archives/LeanBridge-Runtime-0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891.tar.gz",
+          "sha256": "3bd658273dae8b782f9ff211a6e1c3af2e7b904a335c7ccca0352cd00abd801d"
+        }
+      ]
+    },
+    {
       "id": "ruby-recursive-installed",
       "kind": "installed",
       "revision": "1f6e06290688ddddb48fcdd62ca5cc3eaa5164b3",
@@ -169,11 +684,11 @@
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "310634019dd3f2f387aa67ce67ceca77d69bc1e0b9423e506e7d7d9ab98a6b74"
+          "sha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416"
+          "sha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069"
         },
         {
           "path": "docs/evidence/ruby-recursive-conversions-20260923.json",
@@ -193,11 +708,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f"
+          "sha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc"
         },
         {
           "path": "package.json",
-          "sha256": "a8bd7d7bc3e5f94e1ab107bede563592887d1806ac07a94e820ee41df6df3451"
+          "sha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -209,7 +724,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -413,11 +928,11 @@
         },
         {
           "path": "src/build/native-graph-model.mjs",
-          "sha256": "540f7c3f1ba8fbd3929e57327884ed1bf928c922cfeb5c9245c0dfd626576b84"
+          "sha256": "f5865134f17bc9f5d6536c5082f1d8813b22b6aa3141c9cc218fe0985fb504c9"
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "7737e599a182241c6e0598561834ef19d7b4ad39979f070e77cee9563480987d"
+          "sha256": "bd3843e49f904e91e177ccfbbbdcdbdb632eac298d2a21413af6f187e398c044"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -437,7 +952,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -513,7 +1028,7 @@
         },
         {
           "path": "tests/helpers/native-ruby-graph-regression.mjs",
-          "sha256": "29979c18c444592ad0f64b5915d6c3e6dcb154a6a83fbc995858cae9c5b338a0"
+          "sha256": "98cdf1c34c692fbb49136ed6067746d8fe82c6369f95014db12a891badd4085e"
         },
         {
           "path": "tests/helpers/package-set.mjs",
@@ -529,11 +1044,19 @@
         },
         {
           "path": "tests/helpers/test-registration-history.mjs",
-          "sha256": "ba664a763120e97ad0ff698ea6cffe5f72911d597779ef18e8fa3fea6633b18a"
+          "sha256": "dea17c3abf47768810303525a87e63cfd146dbef0c6088ba6b6952eb8e9145d8"
         },
         {
           "path": "tests/ruby-graph-package.test.mjs",
           "sha256": "d7e67e0c932d25fd7e9563f70bba50e61bad350dfa6311f3714e9c19d267c230"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -560,11 +1083,11 @@
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "310634019dd3f2f387aa67ce67ceca77d69bc1e0b9423e506e7d7d9ab98a6b74"
+          "sha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416"
+          "sha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069"
         },
         {
           "path": "docs/evidence/python-recursive-conversions-20260923.json",
@@ -584,11 +1107,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f"
+          "sha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc"
         },
         {
           "path": "package.json",
-          "sha256": "a8bd7d7bc3e5f94e1ab107bede563592887d1806ac07a94e820ee41df6df3451"
+          "sha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -600,7 +1123,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -772,11 +1295,11 @@
         },
         {
           "path": "src/build/native-graph-model.mjs",
-          "sha256": "540f7c3f1ba8fbd3929e57327884ed1bf928c922cfeb5c9245c0dfd626576b84"
+          "sha256": "f5865134f17bc9f5d6536c5082f1d8813b22b6aa3141c9cc218fe0985fb504c9"
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "7737e599a182241c6e0598561834ef19d7b4ad39979f070e77cee9563480987d"
+          "sha256": "bd3843e49f904e91e177ccfbbbdcdbdb632eac298d2a21413af6f187e398c044"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -796,7 +1319,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -896,11 +1419,19 @@
         },
         {
           "path": "tests/helpers/test-registration-history.mjs",
-          "sha256": "ba664a763120e97ad0ff698ea6cffe5f72911d597779ef18e8fa3fea6633b18a"
+          "sha256": "dea17c3abf47768810303525a87e63cfd146dbef0c6088ba6b6952eb8e9145d8"
         },
         {
           "path": "tests/python-graph-package.test.mjs",
           "sha256": "c14636a59e6325c95826fdf3800ae09bf56ee1f0eb71c94e147d9dab37c455f5"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -927,11 +1458,11 @@
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "310634019dd3f2f387aa67ce67ceca77d69bc1e0b9423e506e7d7d9ab98a6b74"
+          "sha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416"
+          "sha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069"
         },
         {
           "path": "docs/evidence/rust-recursive-conversions-20260923.json",
@@ -951,11 +1482,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f"
+          "sha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc"
         },
         {
           "path": "package.json",
-          "sha256": "a8bd7d7bc3e5f94e1ab107bede563592887d1806ac07a94e820ee41df6df3451"
+          "sha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -967,7 +1498,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1123,11 +1654,11 @@
         },
         {
           "path": "src/build/native-graph-model.mjs",
-          "sha256": "540f7c3f1ba8fbd3929e57327884ed1bf928c922cfeb5c9245c0dfd626576b84"
+          "sha256": "f5865134f17bc9f5d6536c5082f1d8813b22b6aa3141c9cc218fe0985fb504c9"
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "7737e599a182241c6e0598561834ef19d7b4ad39979f070e77cee9563480987d"
+          "sha256": "bd3843e49f904e91e177ccfbbbdcdbdb632eac298d2a21413af6f187e398c044"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -1143,7 +1674,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -1215,7 +1746,7 @@
         },
         {
           "path": "tests/helpers/source-registration-history.mjs",
-          "sha256": "3d157ed2b6f78fea83948ddcf0dc0dc1f1adc45b978354c61ec3650b44f0b383"
+          "sha256": "a87ca4705ceb6ca0ef1e0e64f7c9415dea2f9998be4655e319a50fefe89d54d8"
         },
         {
           "path": "tests/source-registration-history.test.mjs",
@@ -1223,7 +1754,7 @@
         },
         {
           "path": "tests/helpers/test-registration-history.mjs",
-          "sha256": "ba664a763120e97ad0ff698ea6cffe5f72911d597779ef18e8fa3fea6633b18a"
+          "sha256": "dea17c3abf47768810303525a87e63cfd146dbef0c6088ba6b6952eb8e9145d8"
         },
         {
           "path": "tests/helpers/type-corpus-compiler.mjs",
@@ -1236,6 +1767,14 @@
         {
           "path": "tests/rust-graph-package.test.mjs",
           "sha256": "b4d013ea6c59b5eb5fe1f0bbbcbfa3050f14404c9b8db116c65c25ca5bfa519d"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -1354,11 +1893,11 @@
         },
         {
           "path": "src/build/native-graph-model.mjs",
-          "sha256": "540f7c3f1ba8fbd3929e57327884ed1bf928c922cfeb5c9245c0dfd626576b84"
+          "sha256": "f5865134f17bc9f5d6536c5082f1d8813b22b6aa3141c9cc218fe0985fb504c9"
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -1422,11 +1961,19 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "7737e599a182241c6e0598561834ef19d7b4ad39979f070e77cee9563480987d"
+          "sha256": "bd3843e49f904e91e177ccfbbbdcdbdb632eac298d2a21413af6f187e398c044"
         },
         {
           "path": "src/backends/rust/copied-graph-package.mjs",
           "sha256": "28ca469064d697f80a5032a4349b636bc3dcf1c8901a64efb180d6002907037b"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -1461,7 +2008,7 @@
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416"
+          "sha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069"
         },
         {
           "path": "docs/evidence/npm-recursive-20260922.json",
@@ -1477,7 +2024,7 @@
         },
         {
           "path": "docs/evidence/recursive-npm-source-lineage-20260922.json",
-          "sha256": "e3232d16a9127dc72d566245c3f01903a8392e500433cff0a2b4c2dd6449e98d"
+          "sha256": "54ce4f822b59230a7c15dc842003a475ccbbd5eb20a4e1e5f14fa2afc1d60618"
         },
         {
           "path": "nix/component-engine-source-boundary.json",
@@ -1676,7 +2223,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -1736,7 +2283,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -2140,11 +2687,19 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "7737e599a182241c6e0598561834ef19d7b4ad39979f070e77cee9563480987d"
+          "sha256": "bd3843e49f904e91e177ccfbbbdcdbdb632eac298d2a21413af6f187e398c044"
         },
         {
           "path": "src/backends/rust/copied-graph-package.mjs",
           "sha256": "28ca469064d697f80a5032a4349b636bc3dcf1c8901a64efb180d6002907037b"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -2191,7 +2746,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2474,7 +3029,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2793,7 +3348,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2869,7 +3424,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-composer.mjs",
@@ -3026,6 +3581,14 @@
         {
           "path": "tests/php-variants.test.mjs",
           "sha256": "fe3d2db381d39e51be49badad6c5b25769638913027335180f18f29ae03f548e"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -3068,7 +3631,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3132,7 +3695,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -3305,6 +3868,14 @@
         {
           "path": "src/build/compile-jvm-sources.mjs",
           "sha256": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -3355,7 +3926,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3538,7 +4109,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3717,7 +4288,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3912,7 +4483,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4099,7 +4670,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4290,11 +4861,11 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/consume/perl.md",
-          "sha256": "b1c69e7b5582492b45ea3f45dc0b373bf10ff5e20b99389c8933c241468e2533"
+          "sha256": "0e23ffe2d379845249fa7136fbb7fd5e15b71d92e9eacbede9827fcb2a40457f"
         },
         {
           "path": "docs/evidence/perl-collections-20260921.json",
@@ -4306,11 +4877,11 @@
         },
         {
           "path": "docs/publish/cpan.md",
-          "sha256": "3d8e8c558d2e1a249cf47c4bc2d8257ac277c95874682ab1360593e0efd2a061"
+          "sha256": "c7e53151c64f04699c90444dca0a1fd7fbf44a868426251091751baff5159016"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4326,7 +4897,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -4419,6 +4990,14 @@
         {
           "path": "tests/perl-collections.test.mjs",
           "sha256": "d1545f7d2d3e36cb9daeef3376a018790f8c067a696670c89422fc1b0d3615c5"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -4493,7 +5072,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4549,7 +5128,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -4658,6 +5237,14 @@
         {
           "path": "tests/wit-variants.test.mjs",
           "sha256": "ff6b8318f2629be6d7eb2f012d1a811d1a919cdf8d4c4f04a182c8a08160c9d5"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -4696,7 +5283,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4955,7 +5542,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5027,7 +5614,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-composer.mjs",
@@ -5128,6 +5715,14 @@
         {
           "path": "tests/php-variants.test.mjs",
           "sha256": "fe3d2db381d39e51be49badad6c5b25769638913027335180f18f29ae03f548e"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -5150,7 +5745,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/evidence/perl-variants-20260921.json",
@@ -5162,11 +5757,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f"
+          "sha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5182,7 +5777,7 @@
         },
         {
           "path": "src/backends/perl/Runtime.xs",
-          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+          "sha256": "b808aa6d88e1ede84fc4e4a079e288cc52ecfd670584b6bbdd839b0d88541bc8"
         },
         {
           "path": "src/backends/perl/copied-aliases.mjs",
@@ -5194,7 +5789,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -5206,7 +5801,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/cpan-install.mjs",
@@ -5214,7 +5809,7 @@
         },
         {
           "path": "src/release/cpan-package.mjs",
-          "sha256": "c251a3bb72c24e42c901b5f53679ea441b5d9be6f178900c88ed58e9195777ed"
+          "sha256": "04a6549d5ac3faca8197fce6fedd474a6b59ee60bd3074b84bf03424d2e995af"
         },
         {
           "path": "tests/fixtures/list-consumers/perl-probe-build.pl",
@@ -5299,6 +5894,14 @@
         {
           "path": "tests/perl-variants.test.mjs",
           "sha256": "dd80da25efca1e992570921d0eb7f25ce8aad3fd38ac446f4cd45ba6f1c347b3"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -5341,7 +5944,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5401,7 +6004,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -5498,6 +6101,14 @@
         {
           "path": "tests/ruby-variants.test.mjs",
           "sha256": "3780a221b3e72484f074969d98329b777d4ed05ea52fcd1510bfbbf45b3c202c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -5532,7 +6143,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5600,7 +6211,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -5749,6 +6360,14 @@
         {
           "path": "src/build/compile-jvm-sources.mjs",
           "sha256": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -5807,7 +6426,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5875,7 +6494,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -5968,6 +6587,14 @@
         {
           "path": "tests/helpers/variant-fixture.mjs",
           "sha256": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -6002,7 +6629,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6062,7 +6689,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-rust-artifacts.mjs",
@@ -6163,6 +6790,14 @@
         {
           "path": "tests/rust-variants.test.mjs",
           "sha256": "ac2c9cdf750c1b0c01a0986b8b1a1394e2bd7cff37110683519210886209df6a"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -6197,7 +6832,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6261,7 +6896,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-python-artifacts.mjs",
@@ -6354,6 +6989,14 @@
         {
           "path": "tests/python-variants.test.mjs",
           "sha256": "3f4f08355f951991664e58f53e9a88b48f5acc9b9e1cb8cd7cd3ee35aba7871e"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -6388,7 +7031,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6444,7 +7087,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -6533,6 +7176,14 @@
         {
           "path": "tests/helpers/variant-fixture.mjs",
           "sha256": "9db382869427054bf82e0f8a73e42f9a93b522886f577ed43a4f28669d3f2754"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -6575,7 +7226,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6623,7 +7274,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -6692,6 +7343,14 @@
         {
           "path": "tests/native-variant-contract.test.mjs",
           "sha256": "cbbb7ceeed8e06515439718ebe10a5ca47e1b7f63292de973de410467b5766f3"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -6726,7 +7385,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6897,7 +7556,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7124,7 +7783,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7263,7 +7922,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/evidence/perl-aliases-20260921.json",
@@ -7275,7 +7934,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7291,7 +7950,7 @@
         },
         {
           "path": "src/backends/perl/Runtime.xs",
-          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+          "sha256": "b808aa6d88e1ede84fc4e4a079e288cc52ecfd670584b6bbdd839b0d88541bc8"
         },
         {
           "path": "src/backends/perl/copied-aliases.mjs",
@@ -7299,7 +7958,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -7315,7 +7974,7 @@
         },
         {
           "path": "src/release/cpan-package.mjs",
-          "sha256": "c251a3bb72c24e42c901b5f53679ea441b5d9be6f178900c88ed58e9195777ed"
+          "sha256": "04a6549d5ac3faca8197fce6fedd474a6b59ee60bd3074b84bf03424d2e995af"
         },
         {
           "path": "tests/fixtures/alias-consumers/perl-faults.pl",
@@ -7380,6 +8039,14 @@
         {
           "path": "tests/perl-aliases.test.mjs",
           "sha256": "2972b609153716b794750ae9d92a74b9d85f51c0b3db8212f29dbc08b48d62df"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -7422,7 +8089,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7573,7 +8240,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7796,11 +8463,11 @@
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "310634019dd3f2f387aa67ce67ceca77d69bc1e0b9423e506e7d7d9ab98a6b74"
+          "sha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416"
+          "sha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069"
         },
         {
           "path": "docs/evidence/dotnet-aliases-20260921.json",
@@ -7812,15 +8479,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f"
+          "sha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc"
         },
         {
           "path": "package.json",
-          "sha256": "a8bd7d7bc3e5f94e1ab107bede563592887d1806ac07a94e820ee41df6df3451"
+          "sha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7979,7 +8646,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8122,7 +8789,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8257,7 +8924,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8384,7 +9051,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/evidence/npm-aliases-20260921.json",
@@ -8408,7 +9075,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8559,7 +9226,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8698,7 +9365,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8770,7 +9437,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -8851,6 +9518,14 @@
         {
           "path": "tests/wit-lists.test.mjs",
           "sha256": "5feb3c8a3f08f9404396368b46137de679f98de60e77a79beb6b425f4b1497bb"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -8893,7 +9568,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9132,7 +9807,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9224,7 +9899,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -9301,6 +9976,14 @@
         {
           "path": "tests/php-lists.test.mjs",
           "sha256": "d9b13ace79dafb5c44f77290768b6e703c9188667bb529bf5ec05d4a96668248"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -9339,7 +10022,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9431,7 +10114,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -9508,6 +10191,14 @@
         {
           "path": "tests/php-lists.test.mjs",
           "sha256": "d9b13ace79dafb5c44f77290768b6e703c9188667bb529bf5ec05d4a96668248"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -9530,7 +10221,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/evidence/perl-lists-20260921.json",
@@ -9546,7 +10237,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9578,19 +10269,19 @@
         },
         {
           "path": "src/backends/perl/Runtime.pm",
-          "sha256": "b6b4ace67b0d73e53505d1c88df386c10f5c5f38eeef14e3778140c794e741c1"
+          "sha256": "97dce682c88612c8f94488f7f498f38c0733333b06b1161acb2791af79887f86"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
-          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+          "sha256": "b808aa6d88e1ede84fc4e4a079e288cc52ecfd670584b6bbdd839b0d88541bc8"
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/perl/naming.mjs",
-          "sha256": "e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"
+          "sha256": "052c47c48e5528fab5de26790dbf96d71be72516487d9e977700754ed5f6ae0d"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -9610,7 +10301,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -9622,7 +10313,7 @@
         },
         {
           "path": "src/release/cpan-package.mjs",
-          "sha256": "c251a3bb72c24e42c901b5f53679ea441b5d9be6f178900c88ed58e9195777ed"
+          "sha256": "04a6549d5ac3faca8197fce6fedd474a6b59ee60bd3074b84bf03424d2e995af"
         },
         {
           "path": "tests/fixtures/list-consumers/perl-faults.pl",
@@ -9679,6 +10370,14 @@
         {
           "path": "tests/perl-lists.test.mjs",
           "sha256": "ba011c626bc11cbb46370450959041afdc007e0f7173c12642eb01fc43aeb10f"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -9773,7 +10472,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9857,7 +10556,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -9914,6 +10613,14 @@
         {
           "path": "tests/ruby-lists.test.mjs",
           "sha256": "889105c2a9ba12910b885667f2500b40641f3000160cb7b0c3db45e3999bc4ff"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -9952,7 +10659,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10044,7 +10751,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -10149,6 +10856,14 @@
         {
           "path": "src/build/compile-jvm-sources.mjs",
           "sha256": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -10195,7 +10910,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10283,7 +10998,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -10344,6 +11059,14 @@
         {
           "path": "tests/helpers/list-fixture.mjs",
           "sha256": "99cbf368695326e68d0ac73bb310db99bfbe5ed1727b3576051f653e87c9826c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -10450,7 +11173,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -10511,6 +11234,14 @@
         {
           "path": "tests/rust-lists.test.mjs",
           "sha256": "14fe73db23c8314f2858cff4cfe83bf8cc4a5d8f5ddd22d0b5fce08c42d78557"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -10625,7 +11356,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -10674,6 +11405,14 @@
         {
           "path": "tests/python-lists.test.mjs",
           "sha256": "c794e013d075489db75772d947ec9c2ac2ff8607af6cc97a30515e75b25c14af"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -10764,7 +11503,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -10780,7 +11519,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -10841,6 +11580,14 @@
         {
           "path": "tests/native-lists.test.mjs",
           "sha256": "04de2b24817f1fc7a95519ab0d51428cd02ebcf07c1740a761958d937ad9630e"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -10903,7 +11650,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -11026,7 +11773,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11245,7 +11992,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11329,7 +12076,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/php-wasm-copied-component.mjs",
@@ -11406,6 +12153,14 @@
         {
           "path": "tests/php-compounds.test.mjs",
           "sha256": "ac05b91728838114119374b6b328978c34dcd7aac345154907afc51446f82c11"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -11428,7 +12183,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/evidence/perl-compounds-20260920.json",
@@ -11444,7 +12199,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11476,19 +12231,19 @@
         },
         {
           "path": "src/backends/perl/Runtime.pm",
-          "sha256": "b6b4ace67b0d73e53505d1c88df386c10f5c5f38eeef14e3778140c794e741c1"
+          "sha256": "97dce682c88612c8f94488f7f498f38c0733333b06b1161acb2791af79887f86"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
-          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+          "sha256": "b808aa6d88e1ede84fc4e4a079e288cc52ecfd670584b6bbdd839b0d88541bc8"
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/perl/naming.mjs",
-          "sha256": "e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"
+          "sha256": "052c47c48e5528fab5de26790dbf96d71be72516487d9e977700754ed5f6ae0d"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -11508,7 +12263,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -11520,7 +12275,7 @@
         },
         {
           "path": "src/release/cpan-package.mjs",
-          "sha256": "c251a3bb72c24e42c901b5f53679ea441b5d9be6f178900c88ed58e9195777ed"
+          "sha256": "04a6549d5ac3faca8197fce6fedd474a6b59ee60bd3074b84bf03424d2e995af"
         },
         {
           "path": "tests/fixtures/compound-consumers/perl-faults.pl",
@@ -11577,6 +12332,14 @@
         {
           "path": "tests/perl-compounds.test.mjs",
           "sha256": "5419909a922dfab83999a7138925f4713e813170f4d348a41af2fcbef592d596"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -11671,7 +12434,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11755,7 +12518,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-ruby-artifacts.mjs",
@@ -11812,6 +12575,14 @@
         {
           "path": "tests/ruby-compounds.test.mjs",
           "sha256": "c238836db1a7ee8627917672b1caafc0e49f86ab48f5de7ae63c05e2c2bab3bb"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -11850,7 +12621,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11942,7 +12713,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-maven.mjs",
@@ -12047,6 +12818,14 @@
         {
           "path": "src/build/compile-jvm-sources.mjs",
           "sha256": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -12093,7 +12872,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -12181,7 +12960,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-nuget.mjs",
@@ -12242,6 +13021,14 @@
         {
           "path": "tests/helpers/dotnet-copied-install.mjs",
           "sha256": "ba2081792d64254a49a26bd78958a72df90bdd10eff8e945a2969b5dd285d936"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -12348,7 +13135,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-cargo.mjs",
@@ -12405,6 +13192,14 @@
         {
           "path": "tests/rust-compounds.test.mjs",
           "sha256": "0d884951523f08f789fb5e153a0305ffb1d8380367ff06ecb1cfe85a0c4979f2"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -12519,7 +13314,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -12564,6 +13359,14 @@
         {
           "path": "tests/python-compounds.test.mjs",
           "sha256": "b0a607b672117e9d93ca6316fc9dd8a6e4bfcf535e41373a1568f763f6eb39ec"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -12654,7 +13457,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -12670,7 +13473,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -12731,6 +13534,14 @@
         {
           "path": "tests/native-compounds.test.mjs",
           "sha256": "b131201cce24c15c77c960d03f4adb1ba90495d699760160d89b40064c8dfc80"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -13167,7 +13978,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "113f39a2e623fbfd75c9a60369e8af903b6a3820ef789e3c8a1402c92570fb78"
+          "sha256": "9aa415f1740547d76c391a76666f94b0c2f0bedd03edef76747f862f81593f6c"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -13175,7 +13986,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -13398,7 +14209,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -13517,7 +14328,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -13537,7 +14348,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -13550,6 +14361,14 @@
         {
           "path": "docs/evidence/wit-callables-20260919.json",
           "sha256": "6a32c250b235a474a75ea301c65fda99d15e7e026e6993e807c69dcd26116c2a"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -13660,11 +14479,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4511c672905f056be96b6c9b0c3bd69111b5db26d3b751058cc043da6813fb4e"
+          "sha256": "6a6a392852f9d42f26e5ad6fec04775fb528018a96b3e856c27b6e593010bb1f"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -13847,7 +14666,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -13899,11 +14718,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4511c672905f056be96b6c9b0c3bd69111b5db26d3b751058cc043da6813fb4e"
+          "sha256": "6a6a392852f9d42f26e5ad6fec04775fb528018a96b3e856c27b6e593010bb1f"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -13940,6 +14759,14 @@
         {
           "path": "docs/evidence/php-callables-20260919.json",
           "sha256": "1fc42a4fcbda2992e1af881a80b59367d3e1522ea2d9b7cd629c31431b04f865"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -14022,7 +14849,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -14090,7 +14917,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -14159,6 +14986,14 @@
         {
           "path": "src/build/compile-jvm-sources.mjs",
           "sha256": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -14285,7 +15120,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -14349,7 +15184,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -14382,6 +15217,14 @@
         {
           "path": "tests/helpers/dotnet-copied-install.mjs",
           "sha256": "ba2081792d64254a49a26bd78958a72df90bdd10eff8e945a2969b5dd285d936"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -14464,7 +15307,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -14548,7 +15391,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -14565,6 +15408,14 @@
         {
           "path": "docs/evidence/c-gmp-20260919.json",
           "sha256": "449715df995e9f4f80488c8cc1b61e95d7829f80a537528d0049c8adb52f5f13"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -14675,7 +15526,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -14759,7 +15610,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -14772,6 +15623,14 @@
         {
           "path": "docs/evidence/cpp-callables-20260919.json",
           "sha256": "f7e844451e1e145f4f8a0f112217fb74123d79eb84b2cc842daea6b9904d71da"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -14874,7 +15733,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -14954,7 +15813,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -14967,6 +15826,14 @@
         {
           "path": "docs/evidence/rust-callables-20260919.json",
           "sha256": "be77b712b41cd83f69f8c4fdcb4b9a87a99dec95e5ea17e95221ba5e95450cef"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -15021,7 +15888,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -15085,7 +15952,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -15098,6 +15965,14 @@
         {
           "path": "docs/evidence/ruby-callables-20260919.json",
           "sha256": "dc9ec6de2f8640038a055f984c14071835932db1f826b8851d772f4934d7a617"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -15152,7 +16027,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -15216,7 +16091,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -15229,6 +16104,14 @@
         {
           "path": "docs/evidence/python-callables-20260918.json",
           "sha256": "3f441e6e2a2e787f2f6567871bc8915802efa6f4b97328285be430f07ba058cc"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -15279,7 +16162,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -15335,7 +16218,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
@@ -15348,6 +16231,14 @@
         {
           "path": "docs/evidence/c-callables-20260918.json",
           "sha256": "3e83089e4a0931593556070100d88377ac2dd0df5724ee5f7eea21bdc797727a"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -15402,11 +16293,11 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
-          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+          "sha256": "b808aa6d88e1ede84fc4e4a079e288cc52ecfd670584b6bbdd839b0d88541bc8"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -15446,15 +16337,15 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "279a8f5fd11b22c2f6db39166b53dbc52827616129030e937438b73af8e0dc77"
+          "sha256": "e0eaf600251f698a7ba8cb61d42bd7109b1dc0255cddb4fbb47dd7a6095f57bb"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/evidence/perl-callables-20260918.json",
@@ -15463,6 +16354,14 @@
         {
           "path": "docs/evidence/perl-callables-20260918.md",
           "sha256": "e70085afe1361e9f8241d6f25de2717e8c657fd9c98d9deac06bb33245aa65b7"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -15545,7 +16444,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/evidence/php-platform-words-20260922.json",
@@ -15589,7 +16488,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "113f39a2e623fbfd75c9a60369e8af903b6a3820ef789e3c8a1402c92570fb78"
+          "sha256": "9aa415f1740547d76c391a76666f94b0c2f0bedd03edef76747f862f81593f6c"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -15597,7 +16496,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -15657,7 +16556,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -15749,7 +16648,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "279a8f5fd11b22c2f6db39166b53dbc52827616129030e937438b73af8e0dc77"
+          "sha256": "e0eaf600251f698a7ba8cb61d42bd7109b1dc0255cddb4fbb47dd7a6095f57bb"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -15862,6 +16761,14 @@
         {
           "path": "tests/word-evidence.test.mjs",
           "sha256": "cf0feac62dfdde6db19c58c0f7636f26c31767003b30d374ed1fe30650afd2a6"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -15932,7 +16839,7 @@
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103"
+          "sha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c"
         },
         {
           "path": "docs/evidence/char-native-20260918.md",
@@ -15940,7 +16847,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -15976,7 +16883,7 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/php/copied-conversions.mjs",
@@ -16117,6 +17024,14 @@
         {
           "path": "tests/native-char.test.mjs",
           "sha256": "c373449c48a095b94fd1531a410e1125da54f6c32fe4cd4e07b3bbe4194c6c31"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -16302,7 +17217,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -16395,6 +17310,14 @@
         {
           "path": "tests/php-brick-math.test.mjs",
           "sha256": "cb15aab8ed6582772108d235c6b8051a64a67fe13ad4669d519c01500a95484c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -16449,7 +17372,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -16526,6 +17449,14 @@
         {
           "path": "tests/php-brick-math.test.mjs",
           "sha256": "cb15aab8ed6582772108d235c6b8051a64a67fe13ad4669d519c01500a95484c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -16596,7 +17527,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -16633,6 +17564,14 @@
         {
           "path": "scripts/bootstrap-rust-ci.sh",
           "sha256": "c42f473d210e2ec64eb78090b991f4a90d763d61da6f2ebb1e1fa72de478c582"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -16699,7 +17638,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -16724,6 +17663,14 @@
         {
           "path": "tests/fixtures/documentation/consumers/python/ordinary.py",
           "sha256": "b40ab87c935d052c0971efe7edc0abee48a9f7e3d52ad88f0d197caca9eb8298"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -16762,7 +17709,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "sha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -16834,7 +17781,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-wit-artifacts.mjs",
@@ -16899,6 +17846,14 @@
         {
           "path": "tests/wit-compounds.test.mjs",
           "sha256": "860583d729df68d3921e27d0d8f8733d8bcc2161632445d07be03570da613f52"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -16961,7 +17916,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -16990,6 +17945,14 @@
         {
           "path": "tests/fixtures/documentation/consumers/wit-wasi/ordinary.c",
           "sha256": "85a20c04ebd9235f83d1c10f6790040ca9f2b872018c3459e18038c53a697bb2"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -17056,7 +18019,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -17085,6 +18048,14 @@
         {
           "path": "tests/multi-profile-project.test.mjs",
           "sha256": "cf341c9ed64d7741bd553858f918e47dfaab7c589e68a0128452902532decfd5"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -17151,7 +18122,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -17220,6 +18191,14 @@
         {
           "path": "src/build/compile-jvm-sources.mjs",
           "sha256": "f13202c0c78d1be63ae56d208ef0994b72630ebeabb39ae5c248a3131396cf7c"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -17290,7 +18269,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -17323,6 +18302,14 @@
         {
           "path": "tests/multi-profile-project.test.mjs",
           "sha256": "cf341c9ed64d7741bd553858f918e47dfaab7c589e68a0128452902532decfd5"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -17405,7 +18392,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/release/native-c-family.mjs",
@@ -17426,6 +18413,14 @@
         {
           "path": "tests/native-c-family.test.mjs",
           "sha256": "9c83225a7c9754db1350e65424cd5e0dfadd18b02467e5cf61a175af09bbcced"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -17480,7 +18475,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -17533,6 +18528,14 @@
         {
           "path": "docs/evidence/native-c-copied-20260914.md",
           "sha256": "240da0bd4c30067249cce6a4fa7bbb5c80529d74edd071484d8a0f89fb41c586"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -17567,7 +18570,7 @@
         },
         {
           "path": "src/backends/perl/naming.mjs",
-          "sha256": "e3e4d88dacd0c45613738bd0caacdbacd3b9b9b19c7d62204923220c871277de"
+          "sha256": "052c47c48e5528fab5de26790dbf96d71be72516487d9e977700754ed5f6ae0d"
         },
         {
           "path": "src/build/multi-profile-project.mjs",
@@ -17707,7 +18710,7 @@
         },
         {
           "path": "src/build/native-project.mjs",
-          "sha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "sha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         {
           "path": "src/build/perl-xs.mjs",
@@ -17719,11 +18722,11 @@
         },
         {
           "path": "src/backends/perl/generate.mjs",
-          "sha256": "5b185d42a3546e8a125b85338be6745eb3022ae675635afb4bea7f609ee65544"
+          "sha256": "14daddeae16d98400ecab273c6125bdd332768129ed34768556c96bf77cdb6af"
         },
         {
           "path": "src/backends/perl/Runtime.xs",
-          "sha256": "d99bd8d61f0efa1e5bf344b2c30b4d375fded166465bd609a87268fbdd9b783b"
+          "sha256": "b808aa6d88e1ede84fc4e4a079e288cc52ecfd670584b6bbdd839b0d88541bc8"
         },
         {
           "path": "src/backends/perl/runtime.h",
@@ -17731,7 +18734,7 @@
         },
         {
           "path": "src/backends/perl/Runtime.pm",
-          "sha256": "b6b4ace67b0d73e53505d1c88df386c10f5c5f38eeef14e3778140c794e741c1"
+          "sha256": "97dce682c88612c8f94488f7f498f38c0733333b06b1161acb2791af79887f86"
         },
         {
           "path": "src/backends/perl/Build.pm",
@@ -17743,7 +18746,7 @@
         },
         {
           "path": "src/release/cpan-package.mjs",
-          "sha256": "c251a3bb72c24e42c901b5f53679ea441b5d9be6f178900c88ed58e9195777ed"
+          "sha256": "04a6549d5ac3faca8197fce6fedd474a6b59ee60bd3074b84bf03424d2e995af"
         },
         {
           "path": "src/release/cpan-install-trace.mjs",
@@ -17751,7 +18754,7 @@
         },
         {
           "path": "tests/perl-native.test.mjs",
-          "sha256": "e01a1712c0de45a1905c002919656699701a0ccde368196b8a3a9b1339281cdf"
+          "sha256": "074649d7eb57d9786a60e4f415f3b336c3632a71352e7f4b02e44e382fffebdc"
         },
         {
           "path": "tests/fixtures/perl/ordinary/Workshop.lean",
@@ -17788,6 +18791,14 @@
         {
           "path": "tests/fixtures/perl/benchmark.pl",
           "sha256": "a5e4af0ef45bc8c578ea952582e570677692a51d6cb412d2f7f0837af5e587ad"
+        },
+        {
+          "path": "docs/evidence/perl-recursive-regressions-20260923.json",
+          "sha256": "9b7598325c9bf4fa34b967e46ea23c04d3471e9404c1371ed03a9c16b123afc7"
+        },
+        {
+          "path": "tests/helpers/native-perl-graph-regression.mjs",
+          "sha256": "42180cee5c088a756fd22383f08794e2b88466b37b52eb5c81bf1ad261ae05a3"
         }
       ],
       "artifacts": [
@@ -17858,7 +18869,7 @@
         },
         {
           "path": "docs/architecture/binding-ir.md",
-          "sha256": "37beb493b19437a01d39fd56aac1f4141e576e1ad942bd52d33ea6227ab3db82"
+          "sha256": "1db169c569e4365e663c309a7812e28d8bff6312cade6d43c1ca25ce5f1f4a10"
         },
         {
           "path": "src/backends/javascript/generate.mjs",
@@ -18220,6 +19231,142 @@
   ],
   "observations": [
     {
+      "id": "native-recursive-perl-ordinary-source",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err",
+          "result": "Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err",
+          "field": "Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        }
+      },
+      "limitations": [
+        "Concrete pure copied values on Linux x86-64, tested on Perl 5.36.3 and 5.38.2 with and without interpreter threads. Generic, dependent, indexed, proof-bearing, callable and identity-bearing graph payloads remain unsupported.",
+        "Depth 128, 262144 node visits and 16 MiB native-copy storage across arguments and result, plus a separate 16 MiB conversion-storage budget. These limits do not bound all Perl allocations or Lean working memory.",
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
+      ],
+      "conversionNotes": {
+        "recursive": "Use exact generated classes and named fields. Arrays and Lists use plain dense array references; aliases retain their target representation. Unit uses undef, Option presence uses Some, and Nat/Int use Math::BigInt. Values own independent copied storage. Calls reject cycles, malformed branches and excessive copies before native entry. Registered destructors release scratch storage and native outputs on exceptions and delivered signals. Malformed native output retires the shared runtime; retained copied values remain usable. Process, interpreter and thread ownership remain enforced."
+      }
+    },
+    {
+      "id": "native-recursive-perl-reviewed-ir",
+      "profiles": [
+        "perl"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err",
+          "result": "Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err",
+          "field": "Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "perl-recursive-installed"
+          ],
+          "note": "Original recursive CPAN archives preserve eighteen exports across ordinary source and independently reviewed contracts. Two independent builds reproduce archives and installed payloads across four pinned Perl ABIs, both prebuilt-only and generated-XS-only installation, for 32 source-free relocated installations. Each passes 213 threaded or 212 unthreaded public assertions twice. Instrumented archive-XS copies use the installed runtime for 128 fresh-process fault scenarios without changing installed files. Sixteen three-package lifecycle checks cover shared retirement and held-lock fork cleanup; eight coordinate-collision checks reject before loading code. Eight exact documentation executions and 24 installed native-library tamper rejections pass."
+        }
+      },
+      "limitations": [
+        "Concrete pure copied values on Linux x86-64, tested on Perl 5.36.3 and 5.38.2 with and without interpreter threads. Generic, dependent, indexed, proof-bearing, callable and identity-bearing graph payloads remain unsupported.",
+        "Depth 128, 262144 node visits and 16 MiB native-copy storage across arguments and result, plus a separate 16 MiB conversion-storage budget. These limits do not bound all Perl allocations or Lean working memory.",
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
+      ],
+      "conversionNotes": {
+        "recursive": "Use exact generated classes and named fields. Arrays and Lists use plain dense array references; aliases retain their target representation. Unit uses undef, Option presence uses Some, and Nat/Int use Math::BigInt. Values own independent copied storage. Calls reject cycles, malformed branches and excessive copies before native entry. Registered destructors release scratch storage and native outputs on exceptions and delivered signals. Malformed native output retires the shared runtime; retained copied values remain usable. Process, interpreter and thread ownership remain enforced."
+      }
+    },
+    {
       "id": "native-recursive-ruby-ordinary-source",
       "profiles": [
         "ruby"
@@ -18281,7 +19428,7 @@
       "limitations": [
         "Concrete pure copied values on MRI Ruby 3.3 and Linux x86-64. Generic, dependent, indexed, proof-bearing, callable and identity-bearing graph payloads remain unsupported.",
         "Maximum depth 128, 262144 nodes and 16 MiB native-copy storage across arguments and result, plus a separate 16 MiB accounted Ruby conversion-storage budget. These limits do not bound Lean working memory or all Ruby allocator overhead.",
-        "Structured callback/closure payloads, explicitly owned resource aggregates and recursive installed acceptance in the other seven profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Pass exact generated classes with required keywords. Arrays and Lists use exact Ruby Arrays. Returned mutable payloads own independent storage. All arguments validate before native allocation or runtime initialization; ensure blocks release temporary storage and owned native results on failures and interruptions. Malformed output retires the shared runtime. Native calls hold the GVL; post-fork reuse, Ractors and M:N threads reject."
@@ -18349,7 +19496,7 @@
       "limitations": [
         "Concrete pure copied values on MRI Ruby 3.3 and Linux x86-64. Generic, dependent, indexed, proof-bearing, callable and identity-bearing graph payloads remain unsupported.",
         "Maximum depth 128, 262144 nodes and 16 MiB native-copy storage across arguments and result, plus a separate 16 MiB accounted Ruby conversion-storage budget. These limits do not bound Lean working memory or all Ruby allocator overhead.",
-        "Structured callback/closure payloads, explicitly owned resource aggregates and recursive installed acceptance in the other seven profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Pass exact generated classes with required keywords. Arrays and Lists use exact Ruby Arrays. Returned mutable payloads own independent storage. All arguments validate before native allocation or runtime initialization; ensure blocks release temporary storage and owned native results on failures and interruptions. Malformed output retires the shared runtime. Native calls hold the GVL; post-fork reuse, Ractors and M:N threads reject."
@@ -18417,7 +19564,7 @@
       "limitations": [
         "Concrete pure copied values on GIL-enabled CPython 3.11+ and Linux x86-64. Generic, dependent, indexed, proof-bearing, callable and identity-bearing graph payloads remain unsupported.",
         "Depth 128, 262144 visited nodes and 16 MiB native-copy storage across arguments and output, plus a separate 16 MiB accounted Python conversion-storage budget. These bounds do not cover Lean working memory or all Python allocator overhead.",
-        "Structured callback/closure payloads, explicitly owned resource aggregates and recursive installed acceptance in the other eight profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Use exact generated constructor classes and scalar types. Arrays and Lists accept exact lists or tuples and return independent tuples. TypeAliasType bounds runtime hints; precise stubs preserve static recursive unions. Input validation precedes native allocation or initialization. Finally blocks release native results and temporary owners; malformed output retires the shared runtime."
@@ -18485,7 +19632,7 @@
       "limitations": [
         "Concrete pure copied values on GIL-enabled CPython 3.11+ and Linux x86-64. Generic, dependent, indexed, proof-bearing, callable and identity-bearing graph payloads remain unsupported.",
         "Depth 128, 262144 visited nodes and 16 MiB native-copy storage across arguments and output, plus a separate 16 MiB accounted Python conversion-storage budget. These bounds do not cover Lean working memory or all Python allocator overhead.",
-        "Structured callback/closure payloads, explicitly owned resource aggregates and recursive installed acceptance in the other eight profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Use exact generated constructor classes and scalar types. Arrays and Lists accept exact lists or tuples and return independent tuples. TypeAliasType bounds runtime hints; precise stubs preserve static recursive unions. Input validation precedes native allocation or initialization. Finally blocks release native results and temporary owners; malformed output retires the shared runtime."
@@ -18553,7 +19700,7 @@
       "limitations": [
         "Concrete pure copied values on Linux x86-64 only. Generic, dependent, indexed, proof-bearing, callable and identity-bearing graph payloads are unsupported.",
         "Depth 128, 262144 visited nodes and 16 MiB native-copy storage across arguments and output, plus a separate 16 MiB accounted Rust conversion budget. Rust allocation abort and Lean working memory are outside recoverable conversion guarantees.",
-        "Structured callback/closure payloads, explicitly owned resource aggregates and recursive installed acceptance in the other nine profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Borrow aggregates, text and slices; pass fixed-width scalars by value. Results own independent Rust values. Box breaks recursive or oversized fields; Vec supplies sequence indirection. RAII clears native outputs and temporaries on errors or unwinding. Malformed native output retires the shared runtime; earlier owned Rust results remain usable."
@@ -18621,7 +19768,7 @@
       "limitations": [
         "Concrete pure copied values on Linux x86-64 only. Generic, dependent, indexed, proof-bearing, callable and identity-bearing graph payloads are unsupported.",
         "Depth 128, 262144 visited nodes and 16 MiB native-copy storage across arguments and output, plus a separate 16 MiB accounted Rust conversion budget. Rust allocation abort and Lean working memory are outside recoverable conversion guarantees.",
-        "Structured callback/closure payloads, explicitly owned resource aggregates and recursive installed acceptance in the other nine profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Borrow aggregates, text and slices; pass fixed-width scalars by value. Results own independent Rust values. Box breaks recursive or oversized fields; Vec supplies sequence indirection. RAII clears native outputs and temporaries on errors or unwinding. Malformed native output retires the shared runtime; earlier owned Rust results remain usable."
@@ -18689,7 +19836,7 @@
       "limitations": [
         "Concrete pure copied values on Linux x86-64 only. Generic, indexed, dependent, proof-bearing and identity-bearing payloads remain unsupported.",
         "128 levels, 262144 visited nodes and 16 MiB native copied storage across inputs and output, plus a separate 16 MiB host conversion budget. Lean working memory is outside these budgets.",
-        "Compound callback and closure payloads, explicitly owned resource aggregates and recursive acceptance for the remaining ten profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Initialize outputs and select named constructors before filling their fields. Success replaces the initialized output; failure preserves it. Borrow input pointer/span children. Clear only owning result roots, not nested views; do not shallow-copy owners. GMP retains its default fatal allocation policy."
@@ -18757,7 +19904,7 @@
       "limitations": [
         "Concrete pure copied values on Linux x86-64 only. Generic, indexed, dependent, proof-bearing and identity-bearing payloads remain unsupported.",
         "128 levels, 262144 visited nodes and 16 MiB native copied storage across inputs and output, plus a separate 16 MiB host conversion budget. Lean working memory is outside these budgets.",
-        "Compound callback and closure payloads, explicitly owned resource aggregates and recursive acceptance for the remaining ten profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Initialize outputs and select named constructors before filling their fields. Success replaces the initialized output; failure preserves it. Borrow input pointer/span children. Clear only owning result roots, not nested views; do not shallow-copy owners. GMP retains its default fatal allocation policy."
@@ -18825,7 +19972,7 @@
       "limitations": [
         "Concrete pure copied values on Linux x86-64 only. Generic, indexed, dependent, proof-bearing and identity-bearing payloads remain unsupported.",
         "128 levels, 262144 visited nodes and 16 MiB native copied storage across inputs and output, plus a separate 16 MiB host conversion budget. Lean working memory is outside these budgets.",
-        "Compound callback and closure payloads, explicitly owned resource aggregates and recursive acceptance for the remaining ten profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Owned standard containers and named alternatives retain recursive identities. Copying `Box<T>` makes an independent copy; missing required boxes reject. Scoped cleanup releases native output on exceptions. Invalid input or limits throw Error; C++ allocation failures throw std::bad_alloc."
@@ -18893,7 +20040,7 @@
       "limitations": [
         "Concrete pure copied values on Linux x86-64 only. Generic, indexed, dependent, proof-bearing and identity-bearing payloads remain unsupported.",
         "128 levels, 262144 visited nodes and 16 MiB native copied storage across inputs and output, plus a separate 16 MiB host conversion budget. Lean working memory is outside these budgets.",
-        "Compound callback and closure payloads, explicitly owned resource aggregates and recursive acceptance for the remaining ten profiles remain open."
+        "Structured callback/closure payloads and explicitly owned resource aggregates require separate acceptance."
       ],
       "conversionNotes": {
         "recursive": "Owned standard containers and named alternatives retain recursive identities. Copying `Box<T>` makes an independent copy; missing required boxes reject. Scoped cleanup releases native output on exceptions. Invalid input or limits throw Error; C++ allocation failures throw std::bad_alloc."

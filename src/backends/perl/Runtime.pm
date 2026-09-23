@@ -12,6 +12,7 @@ our $VERSION = '0.001';
 sub dl_load_flags { 0x01 }
 my @libraries;
 my %module_sources;
+my %component_libraries;
 my $root = __FILE__; $root =~ s/\.pm\z//;
 sub _read {
   open my $file, '<:raw', $_[0] or die "Cannot read $_[0]: $!\n";
@@ -39,8 +40,13 @@ for my $name ('libleanshared.so', 'liblean_bridge_native.so') {
 }
 __PACKAGE__->bootstrap($VERSION);
 sub _load_component {
-  my ($path, $library, $sha256, $runtime_identity, $sources) = @_;
+  _check_context();
+  my ($path, $library, $sha256, $runtime_identity, $sources, $component_id) = @_;
   die "Incompatible shared Lean runtime\n" unless $identity eq $runtime_identity;
+  die "Missing compiled Lean component identity\n"
+    unless defined($component_id) && !ref($component_id) && length($component_id);
+  die "Conflicting compiled Lean component: $component_id\n"
+    if exists($component_libraries{$component_id}) && $component_libraries{$component_id} ne $sha256;
   $path =~ s/\.pm\z//;
   LeanBridge::Runtime::Platform::installed_abi(JSON::PP->new->decode(_read("$path/install-receipt.json")));
   for my $module (keys %$sources) {
@@ -48,6 +54,7 @@ sub _load_component {
       if exists($module_sources{$module}) && $module_sources{$module} ne $sources->{$module};
   }
   _load("$path/native/$library", $sha256);
+  $component_libraries{$component_id} = $sha256;
   @module_sources{keys %$sources} = values %$sources;
 }
 sub CLONE_SKIP { 1 }
@@ -68,7 +75,9 @@ required. LEAN_BRIDGE_PERL_INSTALL_MODE selects auto, prebuilt-only or build-xs.
 =head1 LIFETIME
 
 Generated components load this runtime automatically. Resource objects provide
-close and closed methods. Calls and callbacks stay on the initiating Perl
-interpreter thread. Host callbacks may not escape their initiating call.
+close and closed methods. Calls and callbacks stay in the initiating process
+and Perl interpreter thread. After fork, automatic cleanup discards inherited
+wrappers without calling Lean. Start a fresh process to use the bridge.
+Host callbacks may not escape their initiating call.
 
 =cut

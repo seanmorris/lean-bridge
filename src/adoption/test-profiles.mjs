@@ -87,6 +87,7 @@ const profileManifest = Object.freeze({
 		, "perl-variant-evidence"
 		, "perl-copied-graph-values"
 		, "perl-copied-graph-conversions"
+		, "perl-graph-package"
 		, "php-alias-contract"
 		, "php-alias-evidence"
 		, "php-variant-contract"

@@ -54,7 +54,12 @@ test("compiled native graph models preserve finite metadata and authenticate car
 		const changed = structuredClone(model); mutate(changed);
 		assert.throws(() => nativeGraphCarrierAbi(changed), /differ/u);
 	}
-	assert.throws(() => createCompiledNativeModel({ ...input, moduleName: "LeanBridge::Sample" }), error => error.code === "native-graph-projection-unavailable");
+	const perl = createCompiledNativeModel({ ...input, moduleName: "LeanBridge::Sample" });
+	assert.equal(perl.moduleName, "LeanBridge::Sample");
+	assert.equal(perl.exports[0].publicName, "increment");
+	assert.deepEqual(perl.bindingIr, model.bindingIr);
+	assert.deepEqual(generateCompiledNativeLeanAdapters(perl), generateCompiledNativeLeanAdapters(model));
+	assert.throws(() => createCompiledNativeModel({ ...input, moduleName: "LeanBridge::Runtime" }), /module/);
 });
 
 test("native graph helpers use total typed arrays and explicit prototype checks", () => {

@@ -155,7 +155,8 @@ Perl does not check that every constructor has a matching branch. Input fields
 are pinned before converters can invoke Perl code, and scoped cleanup releases
 partial conversions on failure. The existing 32-level schema limit and 16 MiB
 conversion budget apply; they do not bound the entire Perl heap or Lean working
-memory. Recursive, callable and identity-bearing payloads remain separate work.
+memory. [Recursive values](#recursive-values) use a separate bounded adapter.
+Callable and identity-bearing payloads remain separate work.
 The [installed variant checks](../evidence/perl-variants-20260921.md) cover both
 source paths and all four pinned Perl ABIs.
 
@@ -196,8 +197,8 @@ independent storage; reference equality does not compare their contents.
 Input and output conversion share a 16 MiB copied-value budget. Schema nesting
 is limited to 32 levels. These limits do not bound the whole Perl heap or Lean
 working memory. The [installed collection checks](../evidence/perl-collections-20260921.md)
-cover both source paths and all four pinned Perl ABIs. Recursive copies and
-identity-bearing fields remain separate work.
+cover both source paths and all four pinned Perl ABIs. [Recursive copies](#recursive-values)
+use a separate bounded adapter. Identity-bearing fields remain separate work.
 
 ### Lists
 
@@ -258,6 +259,43 @@ accept native Perl booleans as 0 or 1. Containers and record payloads copy
 independently. Aliases retain the existing copy budget and schema-depth bound. See the
 [installed alias checks](../evidence/perl-aliases-20260921.md).
 
+### Recursive values
+
+For the package in the [author example](../publish/cpan.md#export-recursive-values),
+save `recursive.pl`:
+
+```perl
+use strict;
+use warnings;
+use LeanBridge::RecursiveDemo;
+
+my $leaf = LeanBridge::RecursiveDemo::Tree::Leaf->new(value => 41);
+my $wrapped = LeanBridge::RecursiveDemo::wrap($leaf);
+die "Expected Tree::Next" unless $wrapped->isa('LeanBridge::RecursiveDemo::Tree::Next');
+print $wrapped->child->value, "\n"; # 41
+
+$wrapped->child->{value} = 99;
+print $wrapped->child->value, "\n"; # 99
+print $leaf->value, "\n";           # 41, the input is unchanged
+```
+
+Run `perl recursive.pl`. Named constructor classes preserve each branch and
+its fields. Calls check the exact generated classes and field sets. Arrays
+and Lists use plain dense array references; records use named-field classes.
+Returned values own independent storage, even when input branches share a
+reference. Perl reference equality does not compare their contents.
+
+Input and output conversion share limits of depth 128, 262,144 nodes and
+16 MiB of native copied data, with a separate 16 MiB conversion-storage
+allowance. Calls reject cycles, tied or sparse containers, malformed fields
+and over-limit copies. A rejected input leaves the runtime usable. These
+limits do not bound Lean working memory or every Perl allocation. Callbacks,
+closures and resources cannot appear inside these copied values.
+
+The [installed recursive checks](../evidence/perl-recursive-packages-20260923.md)
+cover both source paths, four pinned Perl ABIs and both prebuilt and XS-only
+installation. They also execute the example above from relocated packages.
+
 ## Values and cleanup
 
 ### Type conversions
@@ -300,7 +338,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use exact generated classes and named fields. Arrays and Lists use plain dense array references; aliases retain their target representation. Unit uses undef, Option presence uses Some, and Nat/Int use Math::BigInt. Values own independent copied storage. Calls reject cycles, malformed branches and excessive copies before native entry. Registered destructors release scratch storage and native outputs on exceptions and delivered signals. Malformed native output retires the shared runtime; retained copied values remain usable. Process, interpreter and thread ownership remain enforced. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |
@@ -339,11 +377,16 @@ Float parameters accept integer or floating-point scalars. Native boolean scalar
 
 ## Ownership and failures
 
-Arrays, finite acyclic records, options, results and products are copied. Identity resources remain in the shared Lean runtime and retain their nominal type across components. Call `close` when finished; finalization is a fallback. Closing twice is harmless.
+Arrays, records, options, results, products and finite recursive values are copied. Identity resources remain in the shared Lean runtime and retain their nominal type across components. Call `close` when finished; finalization is a fallback. Closing twice is harmless.
 
 Callbacks may reenter the generated API. A callback can close the resource or closure involved in its own call; the active call retains what it needs until it returns. Perl exceptions, including exception objects, are rethrown after native cleanup. Lean may not retain a host callback beyond that call. An expired callback fails safely when invoked later.
 
-Keep calls and handles on the creating Perl interpreter and thread. Fork after loading, cross-interpreter handles, retained host callbacks, asynchronous calls and iterators are not supported. Start a fresh process before importing the module when process isolation is needed.
+Keep calls and handles in the creating process, Perl interpreter and thread.
+Calls and fresh imports reject inherited runtime state after a fork. Automatic
+cleanup discards inherited wrappers without entering Lean or changing the
+parent's resources. Start a fresh process before importing the module when
+process isolation is needed. Cross-interpreter handles, retained host callbacks,
+asynchronous calls and iterators are not supported.
 
 ### Verify the installation
 

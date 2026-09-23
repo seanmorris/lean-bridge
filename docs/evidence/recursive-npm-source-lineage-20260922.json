@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015"
+          "currentSha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -63,7 +63,7 @@
         },
         "src/build/native-project.mjs": {
           "previousSha256": "d653bfd9ab3078316ebb3b152840a62485c77f0d41cd873612ccad405af60a14",
-          "currentSha256": "8746d5c636f303a351108fb857624420425a445c37ff930363d50f2560be8c0b"
+          "currentSha256": "506b316710c4c7d1c92071567601c0b62c57b9e33f468a608874358bfbbf80d9"
         },
         "src/build/native-c-projection.mjs": {
           "previousSha256": "e818c6e6d126ea1f00823f66943e0800d6e8cf26b61ea26f73b8eb4f17f6cd41",
@@ -222,6 +222,15 @@
         "perl-copied-graph-conversions"
       ],
       "change": "Require bounded Perl XS graph conversion, exception and signal cleanup, and ordinary/reviewed compiled Lean execution on each selected ABI. CPAN admission and installed coverage remain gated."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "0053bf61ab479a351ab8e34a4b3be8e12a2d106431b6976860026950c088c015",
+      "currentSha256": "5b4b707728593d9b2710b3ac614cd85a8dac2c7c1ffbcfba85227ad9212299cf",
+      "addedTests": [
+        "perl-graph-package"
+      ],
+      "change": "Add finite recursive CPAN generation and original source-free package installation checks. Installed type coverage is unchanged pending complete CPAN acceptance and regressions."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -593,6 +602,54 @@
         "          test -s build/recursive/perl-native.json",
         "            build/recursive/perl-conversions.json",
         "            build/recursive/perl-native.json"
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "a8bd7d7bc3e5f94e1ab107bede563592887d1806ac07a94e820ee41df6df3451",
+      "currentSha256": "eb4faa5d1cc1c385c8367dd72d3d0c0977cfec0db3fb24b71b8aa63b3c6befa3",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "5435d6971b759ceab5faa9bb086498c1f9b677aeac4bfe230225e73d3fe77416",
+      "currentSha256": "11631722ed96c43d3b7083fb4ac936e907cb9cb6f4fc29e09435cf1aece4c069",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "310634019dd3f2f387aa67ce67ceca77d69bc1e0b9423e506e7d7d9ab98a6b74",
+      "currentSha256": "e20968e322d906e4abf8a36872c815f44ab3ca42fcc4498c01365928297b006a",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/perl/copied-graph-package.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "fa118aa22f78c17a05177b4f3ecfa768420e4e11afb08ebb44bb7385b0243d7f",
+      "currentSha256": "bc1e44c1157bb70591db761c1c508a235f0c47f139cdbfb9a20d09da318d9afc",
+      "addedLines": [
+        "    \"src/backends/perl/copied-graph-package.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/perl-consumer.yml",
+      "previousSha256": "d6941458b0db7db7fc403e0880be9b577b98cc3ed977f368da661db029e86103",
+      "currentSha256": "171925cae06e79dbb537b3b846c882b0c7fc873dedbd0808929df98b1ed5c66c",
+      "addedLines": [
+        "          LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test tests/perl-graph-package.test.mjs",
+        "          test -s build/recursive/perl-packages.json",
+        "          test -s build/recursive/perl-component-collision.json",
+        "          test -s build/recursive/perl-composition.json",
+        "          test -s build/recursive/perl-documentation.json",
+        "            build/recursive/perl-packages.json",
+        "            build/recursive/perl-component-collision.json",
+        "            build/recursive/perl-composition.json",
+        "            build/recursive/perl-documentation.json"
       ]
     }
   ]

@@ -1337,8 +1337,55 @@ distinguishes isolated C round-trips from ordinary/reviewed compiled Lean calls.
 It covers recursive and wide values, malformed native results, every scratch
 and native arena allocation, exceptions, signals and shared-runtime retirement.
 Reports are retained in `build/recursive/perl-conversions.json` and
-`build/recursive/perl-native.json`. These are private module tests, not CPAN
-installation evidence; recursive CPAN admission remains gated.
+`build/recursive/perl-native.json`. These are private module tests. They do not
+establish installed CPAN support.
+
+### Recursive Perl package acceptance
+
+Run the installed package, component-collision, composition and documentation checks:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 \
+LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 \
+LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 \
+LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 \
+  node --test tests/perl-graph-package.test.mjs
+```
+
+The default selects all four pinned Perl configurations. Set
+`LEAN_BRIDGE_CORPUS_PERL` to one absolute interpreter path for a single-ABI run.
+The package suite builds ordinary-source and reviewed-contract releases twice
+in independent directories. It installs original archives through both
+prebuilt-only and XS-only paths, relocates the installations, and removes
+producer sources and archive handoffs before calling the public APIs. Archive
+hashes, installed package files and consumer results must match across
+independent builds. The comparison normalizes only MakeMaker's installation
+prefixes in `.packlist` and `perllocal.pod`, and the latter's installation dates.
+The report also retains those files' original hashes.
+
+Fault checks compile a separate instrumented copy of the authenticated archive's
+XS against the installed runtime. They inject allocation failures, exceptions,
+signals and malformed results without replacing installed files. Composition
+checks combine recursive and acyclic packages, exercise colliding private C
+names, reject calls and fresh imports after a fork with the broker lock held,
+check inherited-closure cleanup and parent ownership, and check shared
+retirement. Conflicting component coordinates must reject
+before reading or opening the second native library; reloading the same
+library identity must still work.
+
+Documentation checks compile the publishing guide's recursive example through
+ordinary source and an independent reviewed contract. They execute the consumer
+guide's exact Perl snippet after source and handoff removal on all selected
+ABIs. Separate subprocesses reject altered runtime, broker and component native
+libraries before loading those files; restored installations must still run.
+
+Reports go to `build/recursive/perl-packages.json`,
+`build/recursive/perl-component-collision.json`,
+`build/recursive/perl-composition.json` and
+`build/recursive/perl-documentation.json`. Package acceptance is still in progress.
+Do not promote the installed-support inventory from the private conversion
+reports or a single-ABI package run.
 
 ## Release tooling checks
 

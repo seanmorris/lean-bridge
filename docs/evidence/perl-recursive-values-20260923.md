@@ -43,6 +43,7 @@ matrix job requires execution on its selected interpreter and retains
 These declarations alone do not enable recursive native calls or CPAN builds
 and promote no installed coverage. The subsequent
 [native conversion milestone](perl-recursive-conversions-20260923.md) exercises
-bounded XS conversion and exception cleanup through compiled Lean. Authenticated
-CPAN loading, shared package composition and original source-free installations
-on all four ABIs remain the next Perl acceptance stages in VO 1219.
+bounded XS conversion and exception cleanup through compiled Lean. The
+[CPAN package milestone](perl-recursive-packages-20260923.md) adds authenticated
+loading, shared package composition and original source-free installations on
+all four ABIs.

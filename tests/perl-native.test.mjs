@@ -274,7 +274,7 @@ done_testing;
 		await assert.rejects(() => stageCpanPackage({ componentRoot: nativeRoot
 			, runtimeRoot: join(releases[0].outputRoot, "native/runtime"), leanPrefix
 			, outputRoot: join(context.working, `forged-${mode}`) }), mode === "application"
-			? /model differs from shared compiler metadata/ : /violates its configured export contract/);
+			? /native component differs from compiler metadata or runtime/ : /violates its configured export contract/);
 	}
 });
 
@@ -404,7 +404,7 @@ test("native shared metadata preserves checked aliases, docs and proof relations
 		artifacts.files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
 	}
 	await writeFile(join(outputRoot, "artifacts.json"), canonicalJson(artifacts));
-	await assert.rejects(() => stageCpanPackage({ ...context, componentRoot: outputRoot, outputRoot: join(context.working, "package") }), /model differs from shared compiler metadata/);
+	await assert.rejects(() => stageCpanPackage({ ...context, componentRoot: outputRoot, outputRoot: join(context.working, "package") }), /native component differs from compiler metadata or runtime/);
 });
 
 test("native extraction rejects forged reports, interface drift and ABI disagreement without releasing output", { skip: !enabled, timeout: 300_000 }, async t => {
@@ -720,7 +720,7 @@ test("Perl installs ordinary Lean packages through prebuilt and XS-only paths", 
     await assert.rejects(run(perl, ["-MLeanBridge::Workshop"
     , "-MLeanBridge::Runtime"
     , "-e"
-      , 'LeanBridge::Runtime::_load_component($INC{"LeanBridge/Workshop.pm"}, "unused.so", "unused", LeanBridge::Runtime::_identity(), { Workshop => "different" })'], working, env),
+      , `LeanBridge::Runtime::_load_component($INC{"LeanBridge/Workshop.pm"}, "unused.so", "unused", LeanBridge::Runtime::_identity(), { Workshop => "different" }, 'conflicting-source@1.0.0')`], working, env),
     error => /Conflicting compiled Lean module/.test(errorText(error)));
 
     for(const [label, mutate, mode, pattern, testEnv] of [

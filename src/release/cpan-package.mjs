@@ -9,9 +9,7 @@ import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generatePerlBindingPackage } from "../backends/perl/generate.mjs";
 import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./deterministic-archive.mjs";
-import { readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
-import { createNativeModel } from "../build/native-model.mjs";
-import { nativeAllocationGuardHeader } from "../build/native-allocation-guard.mjs";
+import { readVerifiedNativeRuntime, readVerifiedNativeComponent } from "../build/native-artifacts.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { cpanPackageMetadata, verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 
@@ -164,24 +162,7 @@ export const stageCpanPackage = async ({ outputRoot
 	let packageMetadata = {}, runtimeVersion = version;
 	if(componentRoot)
 	{
-		const model = JSON.parse(await readFile(join(componentRoot, "model.json"), "utf8"));
-		const receipt = JSON.parse(await readFile(join(componentRoot, "native-component.json"), "utf8"));
-		await verifyNativeFiles(componentRoot, JSON.parse(await readFile(join(componentRoot, "artifacts.json"), "utf8")).files);
-		if(receipt.schemaVersion !== 2
-      || receipt.allocationGuardSha256 !== sha256(nativeAllocationGuardHeader)
-      || await readFile(join(componentRoot, "allocation-guard.h"), "utf8") !== nativeAllocationGuardHeader
-      || sha256(canonicalJson(model)) !== receipt.modelSha256
-      || sha256(await readFile(join(componentRoot, "metadata.json"))) !== receipt.metadataSha256
-      || canonicalJson(model.sourceIdentity) !== canonicalJson(receipt.sourceIdentity)
-      || sha256(await readFile(join(componentRoot, "component.h"))) !== receipt.headerSha256)
-			throw new Error("native component metadata or header identity differs from compilation");
-		const reconstructed = createNativeModel({ metadata: JSON.parse(await readFile(join(componentRoot, "metadata.json"), "utf8"))
-			, component: model.component, moduleName: model.moduleName
-			, sourceIdentity: receipt.sourceIdentity });
-		if(canonicalJson(reconstructed) !== canonicalJson(model)) throw new Error("native model differs from shared compiler metadata");
-		if(!/^libcomponent_[0-9a-f]{20}\.so$/.test(receipt.library)) throw new Error("invalid native component library path");
-		if(receipt.runtimeIdentity !== nativeRuntimeIdentity) throw new Error("component and runtime identities differ");
-		if(sha256(await readFile(join(componentRoot, receipt.library))) !== receipt.nativeLibrary.sha256) throw new Error("corrupt native component");
+		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity, { copiedGraphs: true });
 		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
 		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
 		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");
