@@ -56,6 +56,7 @@ The downstream CI job requires this test and retains
 `build/recursive/dotnet-values.json`. It contains generated-source hashes,
 the consumer hash, execution observations and expected rejection diagnostics.
 These are public declaration tests. They do not invoke Lean, enable recursive
-NuGet builds, or promote installed-support coverage. Bounded native converters
-and original offline-installed NuGet acceptance are the next C# steps in
-VO 1219.
+NuGet builds, or promote installed-support coverage.
+[Bounded native converters](dotnet-recursive-conversions-20260923.md) now have
+separate ordinary/reviewed Lean execution and failure-cleanup evidence. Original
+offline-installed NuGet acceptance remains the next C# step in VO 1219.

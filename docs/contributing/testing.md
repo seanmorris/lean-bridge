@@ -1399,8 +1399,27 @@ This test compiles a .NET 8 library and a separate consumer assembly, checks
 recursive value semantics and rejects invalid consumer programs. Downstream CI
 requires the execution and retains `build/recursive/dotnet-values.json`.
 The [declaration record](../evidence/dotnet-recursive-values-20260923.md) describes
-the equality, cycle and structural-type limits. These tests do not load Lean;
-native conversion and installed recursive NuGet acceptance remain pending.
+the equality, cycle and structural-type limits. These declaration tests do not
+load Lean.
+
+### Recursive C# native conversions
+
+```sh
+LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 \
+LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 \
+  node --test tests/dotnet-copied-graph-conversions.test.mjs
+```
+
+The isolated C/.NET probe checks native layouts, bounded conversions, public-name
+collisions and failure cleanup. The native probe compiles both ordinary-source
+and reviewed-IR Lean components, executes all exports, and tests allocation
+failure, malformed outputs and retirement during result construction. Each
+retirement scenario runs in a separate process.
+
+CI requires both executions and retains `build/recursive/dotnet-conversions.json`
+and `build/recursive/dotnet-native.json`. The
+[conversion record](../evidence/dotnet-recursive-conversions-20260923.md) describes
+the exact scope. Installed recursive NuGet acceptance remains pending.
 
 ## Release tooling checks
 

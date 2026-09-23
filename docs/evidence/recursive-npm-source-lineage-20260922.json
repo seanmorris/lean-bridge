@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "903e2cd39dcf0427700dbbeaedc4e5654bfe8f5ae5c1907e65de30e798912d7c"
+          "currentSha256": "1c3eca7c687e6e23cd94789a00ab0093cb2bc3926e82e95eba19e09757e8b2f8"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -240,6 +240,15 @@
         "dotnet-copied-graph-values"
       ],
       "change": "Require compiled recursive C# declaration, structural equality and rejected-consumer checks. Native conversions and installed NuGet coverage remain pending."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "903e2cd39dcf0427700dbbeaedc4e5654bfe8f5ae5c1907e65de30e798912d7c",
+      "currentSha256": "1c3eca7c687e6e23cd94789a00ab0093cb2bc3926e82e95eba19e09757e8b2f8",
+      "addedTests": [
+        "dotnet-copied-graph-conversions"
+      ],
+      "change": "Add bounded C# graph conversion checks and ordinary/reviewed native Lean execution. Historical installed receipts and coverage remain unchanged."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -706,6 +715,63 @@
         "          test -s build/recursive/dotnet-values.json",
         "            build/recursive/dotnet-values.json",
         "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "5dd8bf05172eed7b1b60cd2c48ee69606e9994588785bd24602b79c04d1cde7f",
+      "currentSha256": "1a79cf1802cfa0ec1fae20e2374f438c3c23780b51bed3ca90f4d1073c13e239",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-conversions.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-layout.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-runtime.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "9a9df1cc4871286ef4906f7c87543527da4ca2be696067fe8252d4908bab6f39",
+      "currentSha256": "b383bcf21b1740c41c4315f89b3efbe740d9c6d5bd6e4ab628997c0cc39dd639",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-conversions.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-layout.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-runtime.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "59d037740aa90590f3b09b9b5a05be4622a9a21dea2e95e78407ac7bb89db0e7",
+      "currentSha256": "bc1c0c8cf31b7a9e91f0cbf1b5f3ca782a1376cd5010011420ec56125440ba2e",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-layout.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/dotnet/copied-graph-scalars.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "61fe0e7c95e8f83327dc4509666109a8a2251fe9f97c80bc964e127356ab7af8",
+      "currentSha256": "21c861cc0b928389bf10988689ee2b3c53408b2821683efc1f81dc2c407e09fa",
+      "addedLines": [
+        "    \"src/backends/dotnet/copied-graph-conversions.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-layout.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-runtime.mjs\",",
+        "    \"src/backends/dotnet/copied-graph-scalars.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "b9b6f4d172d3b2947a3d2c1caccc3a72066622ef01a6954e46a74105a05d9266",
+      "currentSha256": "cc50b17f95e9543ae07fd39f58c36d09c0c8eb33725382495442838452e6921a",
+      "addedLines": [
+        "          LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/dotnet-conversions.json",
+        "          test -s build/recursive/dotnet-native.json",
+        "            build/recursive/dotnet-conversions.json",
+        "            build/recursive/dotnet-native.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs\""
       ]
     }
   ]

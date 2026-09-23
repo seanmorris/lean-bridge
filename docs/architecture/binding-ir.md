@@ -166,8 +166,12 @@ retirement and inherited-closure cleanup while the runtime lock is held at fork.
 [C# recursive declarations](../evidence/dotnet-recursive-values-20260923.md)
 preserve nominal records and cases, typed arrays, nested value tuples and
 transparent aliases. Compiled consumer checks cover bounded structural equality,
-matching hashes, patterns and cycle rejection. Native graph conversion and
-installed recursive NuGet acceptance remain pending.
+matching hashes, patterns and cycle rejection.
+[Bounded C# native converters](../evidence/dotnet-recursive-conversions-20260923.md)
+validate every argument before allocation and initialization, copy results into
+managed values, and release native arenas on failure. Ordinary and reviewed Lean
+components exercise malformed-output retirement, allocation failures and cleanup.
+Installed recursive NuGet acceptance remains pending.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail
