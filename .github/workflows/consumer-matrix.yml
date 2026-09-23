@@ -663,6 +663,9 @@ jobs:
           test -s build/collections/python-docs.json
           LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs
           test -s build/recursive/python-values.json
+          LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs
+          test -s build/recursive/python-conversions.json
+          test -s build/recursive/python-native.json
           test -s build/type-corpus/python.json
           test -s build/type-corpus/reviewed-native-python.json
       - name: Upload the real-Lean type corpus report
@@ -683,6 +686,8 @@ jobs:
             build/collections/python.json
             build/collections/python-docs.json
             build/recursive/python-values.json
+            build/recursive/python-conversions.json
+            build/recursive/python-native.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -784,6 +789,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests/python-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs tests/python-collection-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false

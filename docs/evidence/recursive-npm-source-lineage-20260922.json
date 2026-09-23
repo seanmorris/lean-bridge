@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "19d3837c7db216dcc70bb5ebcc9374f31d8c3357451a5fddaf63093ae58f25a2"
+          "currentSha256": "582a9859e50249aa6b34d85812613e8dee5078cae5b7a32a5fed1a562e1ff163"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -159,6 +159,15 @@
         "source-registration-history"
       ],
       "change": "Add recursive Python value declarations, runtime and strict typing checks, and strict additive source-registration validation. Historical installed receipts and existing registrations remain unchanged."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "19d3837c7db216dcc70bb5ebcc9374f31d8c3357451a5fddaf63093ae58f25a2",
+      "currentSha256": "582a9859e50249aa6b34d85812613e8dee5078cae5b7a32a5fed1a562e1ff163",
+      "addedTests": [
+        "python-copied-graph-conversions"
+      ],
+      "change": "Add checked Python recursive conversions and independent C/compiled Lean probes. Historical installed receipts and existing registrations remain unchanged."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -203,6 +212,51 @@
         "          test -s build/recursive/python-values.json",
         "            build/recursive/python-values.json",
         "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "7024d4be4b6e2f16cd5c72a16b216d9eafe6a91c3f0d3c560eb6870ac77d6075",
+      "currentSha256": "bc12c9b20fed3f0c69811aaaf2d0537e8e54ee1e9a1e6ee08c032f3a82c99947",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-conversions.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "5c9e24160c858168e786ee28fa9969ed21dbafb82eed6a09eced5366f5b29fd3",
+      "currentSha256": "3060e3f64e8f95c28025a73828d96931c4cb9f74c7248f4b4cd7859316899828",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-conversions.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "f948147fa8f51aeb9ce43eff78309dde72645e54be0a18b2baf4c6ce71350732",
+      "currentSha256": "6bb69e45156c74302da22792488250655203977186879ad720244a87dc83f76f",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/python/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "efc424f0781a54777a98aed5093cc1173e2125efdeb604998dd3742d05b10726",
+      "currentSha256": "c85572e84d8408b5f0a9aa00e4c33f3590e9b80eb8c89f098c46e101aa4bd133",
+      "addedLines": [
+        "    \"src/backends/python/copied-graph-conversions.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "bcd558391aac637236b9f31ca9874c2c8b7983eb0e6084592611b5ad7e509f69",
+      "currentSha256": "2cfaaa419c630aa3f854576f27b6781074fb54ccf04a6f88ca5c6f7d00a10a41",
+      "addedLines": [
+        "          LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/python-conversions.json",
+        "          test -s build/recursive/python-native.json",
+        "            build/recursive/python-conversions.json",
+        "            build/recursive/python-native.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs\""
       ]
     }
   ]
