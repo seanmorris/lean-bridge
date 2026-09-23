@@ -138,6 +138,12 @@ automatic loader. Private loader imports cannot be shadowed by public type names
 Offline-installed wheels run after relocation and removal of author inputs and
 archive handoffs. Compatible recursive and acyclic packages share one runtime.
 
+[Ruby recursive declarations](../evidence/ruby-recursive-values-20260923.md)
+provide frozen keyword-initialized records and named constructor families,
+pattern matching, exact-class value equality and finite alias metadata. MRI
+execution covers direct and mutual recursion and shared structural aliases.
+Ruby native conversion and prepared gem acceptance remain pending.
+
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail
 before linking. Component receipts bind that check and native packages retain

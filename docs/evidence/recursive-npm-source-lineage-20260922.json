@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "e30a46959877b8fb1c7d59cddbf1a3d0d661ce52ac69b68d26bc36beebaff58e"
+          "currentSha256": "d733fbdbc3cd960f48f2fdcca27a2bc58fd56c9b236a7883b4e67c76e883289b"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -177,6 +177,15 @@
         "python-graph-package"
       ],
       "change": "Require original recursive Python wheel installation and public/typed/failure acceptance; preserve all earlier test registrations and receipts."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "e30a46959877b8fb1c7d59cddbf1a3d0d661ce52ac69b68d26bc36beebaff58e",
+      "currentSha256": "d733fbdbc3cd960f48f2fdcca27a2bc58fd56c9b236a7883b4e67c76e883289b",
+      "addedTests": [
+        "ruby-copied-graph-values"
+      ],
+      "change": "Require finite Ruby recursive declarations and MRI execution without promoting compiled or installed acceptance; preserve earlier test registrations."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -325,6 +334,49 @@
         "            build/recursive/python-packages.json",
         "          export CARGO_HOME=\"${CARGO_HOME:-$HOME/.cargo}\"",
         "              consumer_command=\"$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "176d84a0d01f845176d9ad941ee46a694dc6d5f01c0616c95ddb4718864bcd55",
+      "currentSha256": "86120622e94fcbbf73773a669798e8940d99fb3149b493aeb7711644072159d9",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "7c22fb04779d1535398712cb7639d09e0921e769e9905793552d4c625692e381",
+      "currentSha256": "01f1e76ca7ed5f862fa1a39ddf6797686ce5874dca52f30d1e221581a8cbd195",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "fb21c6aabf0f635c56707b46f281197c93c6e8b614f18e706a6ab8ffaae745ae",
+      "currentSha256": "7704479ed6d1dd6270fe13b14715cb6fc239087bb92a3f904863e5a14f14b8cb",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-values.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "dcd3de0f5fbe33902fee67c426b576bba772e2728cc101017643477818372efc",
+      "currentSha256": "a7cd8481d0be4beb00129d59147a63bbef5052411fdd801526807da99402318b",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-values.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "c186605b61d26039ec618ac4b5d28e4656ad571bdbb3305915227d9e95a00be5",
+      "currentSha256": "88994d80f918c8f4096ba569816cebf89156129ee6cd9f76a8e036f88384cef2",
+      "addedLines": [
+        "          LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs",
+        "          test -s build/recursive/ruby-values.json",
+        "            build/recursive/ruby-values.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs\""
       ]
     }
   ]

@@ -75,6 +75,7 @@ const profileManifest = Object.freeze({
 		, "ruby-variant-evidence"
 		, "ruby-collection-contract"
 		, "ruby-collection-evidence"
+		, "ruby-copied-graph-values"
 		, "perl-compound-contract"
 		, "perl-list-contract"
 		, "perl-collection-contract"
