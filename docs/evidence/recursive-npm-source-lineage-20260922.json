@@ -55,7 +55,7 @@
         },
         "src/adoption/test-profiles.mjs": {
           "previousSha256": "80462db6c482f6b9c338a71866659d7ae6ef23645b9d165a250d005ba4b97a68",
-          "currentSha256": "d733fbdbc3cd960f48f2fdcca27a2bc58fd56c9b236a7883b4e67c76e883289b"
+          "currentSha256": "34c87e0dac138faf277de9b0e1cdea1d81853390d995cfaa3d035c90f4b2db56"
         },
         "tests/kotlin-collection-evidence.test.mjs": {
           "previousSha256": "b7322b6a38052301abe927c2a20a9e1d9f8dcd739c0538fcbe317c6e5db089dc",
@@ -186,6 +186,15 @@
         "ruby-copied-graph-values"
       ],
       "change": "Require finite Ruby recursive declarations and MRI execution without promoting compiled or installed acceptance; preserve earlier test registrations."
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "d733fbdbc3cd960f48f2fdcca27a2bc58fd56c9b236a7883b4e67c76e883289b",
+      "currentSha256": "34c87e0dac138faf277de9b0e1cdea1d81853390d995cfaa3d035c90f4b2db56",
+      "addedTests": [
+        "ruby-copied-graph-conversions"
+      ],
+      "change": "Require independent C layout/failure probes and ordinary/reviewed compiled Lean Ruby conversions; no prepared gem promotion."
     }
   ],
   "sourceRegistrationUpdates": [
@@ -377,6 +386,59 @@
         "          test -s build/recursive/ruby-values.json",
         "            build/recursive/ruby-values.json",
         "              consumer_command=\"$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 node --test tests/ruby-copied-graph-values.test.mjs\""
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "86120622e94fcbbf73773a669798e8940d99fb3149b493aeb7711644072159d9",
+      "currentSha256": "9b115f44cd27bf8cc06e6e3d17c46cfa0110c3c3ff88475acd1a5f4f565a3e35",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-conversions.mjs\",",
+        "    \"src/backends/ruby/copied-graph-layout.mjs\",",
+        "    \"src/backends/ruby/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "01f1e76ca7ed5f862fa1a39ddf6797686ce5874dca52f30d1e221581a8cbd195",
+      "currentSha256": "c69e5c53ddb2b2dda2e7775b6c2cbfe37500f4c8262181fe43b3630688722281",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-conversions.mjs\",",
+        "    \"src/backends/ruby/copied-graph-layout.mjs\",",
+        "    \"src/backends/ruby/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "7704479ed6d1dd6270fe13b14715cb6fc239087bb92a3f904863e5a14f14b8cb",
+      "currentSha256": "bd50c98f8b5f9ec6afdbc158b9788a5910563c896466720d6f6bf59241f22a36",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-layout.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/ruby/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "a7cd8481d0be4beb00129d59147a63bbef5052411fdd801526807da99402318b",
+      "currentSha256": "8383c5a1bea19d68cf0c103f196f106fc2da321e1cb50d92a7854f0b78d59734",
+      "addedLines": [
+        "    \"src/backends/ruby/copied-graph-conversions.mjs\",",
+        "    \"src/backends/ruby/copied-graph-layout.mjs\",",
+        "    \"src/backends/ruby/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "88994d80f918c8f4096ba569816cebf89156129ee6cd9f76a8e036f88384cef2",
+      "currentSha256": "c7359eaf73d1745efeec63e98cbfb10ea1f69c58b14a2b1aaa02b17c23697916",
+      "addedLines": [
+        "          LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs",
+        "          test -s build/recursive/ruby-conversions.json",
+        "          test -s build/recursive/ruby-native.json",
+        "            build/recursive/ruby-conversions.json",
+        "            build/recursive/ruby-native.json",
+        "              consumer_command=\"$consumer_command && LEAN_BRIDGE_RUBY_GRAPH_TEST=1 LEAN_BRIDGE_RUBY_GRAPH_NATIVE_TEST=1 node --test tests/ruby-copied-graph-conversions.test.mjs\""
       ]
     }
   ]

@@ -32,8 +32,8 @@ LEAN_BRIDGE_RUBY_GRAPH_TEST=1 \
 ```
 
 CI requires this execution and retains `build/recursive/ruby-values.json`.
-These checks execute generated Ruby declarations, not compiled Lean calls or
-prepared gems. Native layouts, bounded conversions, lifecycle/failure cleanup
-and original installed gem acceptance remain the next stages. Ruby's package
-path still rejects recursive exports; this milestone promotes no installed
-coverage cells.
+These declaration checks do not exercise compiled Lean calls or prepared gems.
+The subsequent [native conversion milestone](ruby-recursive-conversions-20260923.md)
+verifies layouts, bounded copies and lifecycle/failure cleanup with compiled
+Lean. Original installed gem acceptance remains pending. Ruby's package path
+still rejects recursive exports; these milestones promote no installed cells.
