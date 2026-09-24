@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "recursive-managed-installed-acceptance",
+  "finalAcceptance": false,
+  "baselineRevision": "62d98e0521425b4798737c5becbe3e95fbf076ae",
+  "profiles": [
+    "dotnet",
+    "java",
+    "kotlin",
+    "php-native",
+    "php-wasm"
+  ],
+  "positions": [
+    "parameter",
+    "result",
+    "field"
+  ],
+  "paths": [
+    "ordinary-source",
+    "reviewed-ir"
+  ],
+  "acceptedCells": 30,
+  "sources": {
+    "dotnet": {
+      "path": "docs/evidence/dotnet-current-graph-packages-20260924.json",
+      "sha256": "fbcc5a3eb0132ecd4174dd962277b7abafe52cc4598a88d46b56999b8a05b8a0"
+    },
+    "jvm": {
+      "path": "docs/evidence/jvm-recursive-packages-20260923.json",
+      "sha256": "21e1d56463a6464d634a4835ff85a3cdb03699a23d17257e4844215dff20745a"
+    },
+    "php": {
+      "path": "docs/evidence/php-recursive-packages-20260923.json",
+      "sha256": "d372e0d6516b8353cde14dcee91d7eaf9f6e25309039cbc5a25f0a05041f17b0"
+    },
+    "phpWasm": {
+      "path": "docs/evidence/php-wasm-recursive-packages-20260924.json",
+      "sha256": "8b3831e1b79729d1e5c6a6745d99a93014b5b0da2035e7104f72b97fba906f76"
+    },
+    "phpWasmLoading": {
+      "path": "docs/evidence/php-wasm-recursive-loading-20260924.json",
+      "sha256": "2fff42ca2ba935e1d3c7e8e0ebb453dcfb304766dae3f1bd80efe10e3e5baeca"
+    },
+    "shared": {
+      "path": "docs/evidence/native-shared-regressions-20260924.json",
+      "sha256": "dea040a6dcc1c4450a4fc743b559741302760618fd8d97db2e5571e0cff85669"
+    },
+    "phpWasmShared": {
+      "path": "docs/evidence/php-wasm-shared-regressions-20260924.json",
+      "sha256": "482d36cb3697ae4661a7ef851270b92fb5f4b510d070e018566d6aebc713ec2f"
+    },
+    "phpFamilies": {
+      "path": "docs/evidence/php-current-family-regressions-20260924.json",
+      "sha256": "b1d1d81511582800818f503ce827588d349debd2c019d00a04769f16f9c4d7d4"
+    },
+    "sourceRefresh": {
+      "path": "docs/evidence/structured-source-refresh-20260924.json",
+      "sha256": "6946fb2d0fe99093e3f3524c0e0f5ff26739431d2e77000558f4596622bb895e"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "dotnet/ordinary-source/archives/Lean.Recursive.1.0.0.nupkg",
+      "sha256": "bd5a18d767761f680bd4ea0df8043298ccd4c1f6701150ba54baf07e9e0cdb77"
+    },
+    {
+      "path": "dotnet/reviewed-ir/archives/Lean.Recursive.1.0.0.nupkg",
+      "sha256": "939e2def0477faf493d72e2451a6010cf9fff2532b49828072e372ef262aa87a"
+    },
+    {
+      "path": "jvm/ordinary-source/archives/recursive-1.0.0.jar",
+      "sha256": "d75d592ad9f7bc2679887b3b8fc13597099aa766b0f0c0f9ced046027f76d856"
+    },
+    {
+      "path": "jvm/ordinary-source/archives/recursive-1.0.0.pom",
+      "sha256": "159abb6a51447f8088b46d2d8481662b0a9613db688efc9478e63b303ab9fbe7"
+    },
+    {
+      "path": "jvm/reviewed-ir/archives/recursive-1.0.0.jar",
+      "sha256": "46e4fd5e06e54fa376e3d18688b4f0873f4acfa4c1667a6f70a3ae83d87cf658"
+    },
+    {
+      "path": "jvm/reviewed-ir/archives/recursive-1.0.0.pom",
+      "sha256": "159abb6a51447f8088b46d2d8481662b0a9613db688efc9478e63b303ab9fbe7"
+    },
+    {
+      "path": "php-native/ordinary-source/archives/lean-bridge-recursive-1.0.0-linux-x86_64.zip",
+      "sha256": "bd96c290e985aeb1e8995a119d12883750f75114f7dfc6a48f2b1552d7f1dd28"
+    },
+    {
+      "path": "php-native/reviewed-ir/archives/lean-bridge-recursive-1.0.0-linux-x86_64.zip",
+      "sha256": "b07357b45bac4ceb55d08d5557da4a7561d1af31258b4b0371bb8e0ba2563213"
+    },
+    {
+      "path": "php-wasm/ordinary-source/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9f12eed7bad30ec3e102bb0a9ada6a1b713ccf7551073f49311621104d8a48df.tgz",
+      "sha256": "2481618bd6028b7d6b851047f5cf7d60ed4c3c13387a5dc4d0284e13d2a153bb"
+    },
+    {
+      "path": "php-wasm/ordinary-source/archives/lean-bridge-test-recursive-php-wasm-1.0.0.tgz",
+      "sha256": "70783f4bf259195f35573204430f96f413aa382d79d9c2eb04f5bd21a571f4aa"
+    },
+    {
+      "path": "php-wasm/ordinary-source/archives/lean-bridge-test-recursive-php-wasm-1.0.0-php-wasm.zip",
+      "sha256": "926df89860d3d5d430faa88144b4957e899c8ef0863868daec6ee1362ab7f961"
+    },
+    {
+      "path": "php-wasm/reviewed-ir/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9f12eed7bad30ec3e102bb0a9ada6a1b713ccf7551073f49311621104d8a48df.tgz",
+      "sha256": "2481618bd6028b7d6b851047f5cf7d60ed4c3c13387a5dc4d0284e13d2a153bb"
+    },
+    {
+      "path": "php-wasm/reviewed-ir/archives/lean-bridge-test-recursive-php-wasm-1.0.0.tgz",
+      "sha256": "345937f3e4aedb1e04492079c81e99bb8deabfeb44ecd10e6e4e52a610269a0c"
+    },
+    {
+      "path": "php-wasm/reviewed-ir/archives/lean-bridge-test-recursive-php-wasm-1.0.0-php-wasm.zip",
+      "sha256": "93c2970544b070d1c2c12fe6e33df4fd0c36d4974ecff494b38dd72333b19209"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "695d6ac8b49b469126a5bd8f607ecf0558bc7c6faee2674fff05672003ba5b93",
+      "currentSha256": "5f91322e638b4a4e463d1a35d54a1aba1ff5a9fa876ff981385f0a2f15ab3492",
+      "edits": [
+        {
+          "previous": "\n### Recursive values\n\nThe recursive NuGet integration is under acceptance testing. Its generated API\nuses named records and variant cases, including direct and mutual recursion.\nArrays and Lists still use typed arrays. Consumers do not supply native pointers,\nconstructor numbers or serialized JSON.\n",
+          "current": "\n### Recursive values\n\nPrepared recursive NuGet packages have installed acceptance on both authoring paths. The generated API\nuses named records and variant cases, including direct and mutual recursion.\nArrays and Lists still use typed arrays. Consumers do not supply native pointers,\nconstructor numbers or serialized JSON.\n"
+        },
+        {
+          "previous": "32-level type bound and 16 MiB native copy budget apply. Failures release\nscoped scratch buffers and native outputs. See the\n[installed variant checks](../evidence/dotnet-variants-20260921.md).\nRecursive, callable and identity-bearing payloads remain separate work.\n\n### Comparing copied values\n\n",
+          "current": "32-level type bound and 16 MiB native copy budget apply. Failures release\nscoped scratch buffers and native outputs. See the\n[installed variant checks](../evidence/dotnet-variants-20260921.md).\nSee [recursive values](#recursive-values) for recursive families. Structured callable and identity-bearing payloads remain separate work.\n\n### Comparing copied values\n\n"
+        },
+        {
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |\n| `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "current": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n| `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Generated records and cases preserve direct and mutual recursion. Typed arrays remain mutable; calls return independent copied storage. Cycles, null payloads and malformed branches reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB native-copy and scratch/output budgets. Native outputs and partial input allocations are released on failure. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |\n| `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/java.md",
+      "previousSha256": "1e4d68fc61018ad38552ec2878ac9766d8b68f2b2c020b1934085abd616dfc96",
+      "currentSha256": "82cd3881fc6ab86693ac4b4715d24acdb136335c79266287f56e7b8378aa5e1e",
+      "edits": [
+        {
+          "previous": "typed accessors and a typed `builder()`. Set every field before `build()`.\n\nThe [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)\nexecute this example on both compiler source paths. Final cross-language\nacceptance is still in progress; the conversion table retains the last accepted\ninventory.\n\n### Callbacks and returned Lean functions\n\n",
+          "current": "typed accessors and a typed `builder()`. Set every field before `build()`.\n\nThe [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)\nexecute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. Structured callable and resource-containing values remain separate work.\n\n### Callbacks and returned Lean functions\n\n"
+        },
+        {
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |\n| `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "current": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n| `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Named records and sealed cases preserve recursive fields without JSON or numeric tags. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Cycles, null payloads and invalid cases reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB copy budgets; partial outputs are released on failure. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |\n| `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "dfa80f75a2b568ac73ec225939fe0532af89519123ccab2b3b54a14b952f60f8",
+      "currentSha256": "c7560b52fcf648c7312d0f9dd160635e000a718132e2f44209d9e8685f25f0f8",
+      "edits": [
+        {
+          "previous": "apply to both APIs, including cycle rejection and the 128-level value limit.\n\nThe [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)\nexecute this example on both compiler source paths. Final cross-language\nacceptance remains in progress; the conversion table retains the last accepted\ninventory.\n\n### Callbacks and returned Lean functions\n\n",
+          "current": "apply to both APIs, including cycle rejection and the 128-level value limit.\n\nThe [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)\nexecute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. Structured callable and resource-containing values remain separate work.\n\n### Callbacks and returned Lean functions\n\n"
+        },
+        {
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |\n| `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "current": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n| `Recursive copied structures` | `Named non-null Kotlin records and sealed cases; typed arrays and generated Option, Result and Pair` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Generated non-null Kotlin classes preserve recursive families without widening to Any. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Foreign JVM nulls, cycles and invalid cases reject. The shared Java conversion engine enforces 128 value levels, 262,144 visited values and separate 16 MiB copy budgets. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |\n| `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "previousSha256": "71889bf6c1e613fdac4c4c931af41f8939b441a68c32ae246e3251848ee47d3c",
+      "currentSha256": "4f65d6dcfa5e8121ac316dcf6dbe39cddf28f4b03d4ed49a4cd716c8fedb5c06",
+      "edits": [
+        {
+          "previous": "Native Composer and PHP-Wasm packages can expose recursive records and variant families.\nThe generated classes keep their named fields and constructor identity. Calls\naccept shared acyclic subvalues, reject cycles and return independent copies.\nThis API currently has installed tests for ordinary Lean source and reviewed IR;\nfinal cross-language acceptance remains open. PHP-Wasm also has\n[installed npm/Composer checks](contributing/testing.md#recursive-php-wasm-packages)\nand [separate conversion and cleanup tests](contributing/testing.md#recursive-php-wasm-conversions).\n\n",
+          "current": "Native Composer and PHP-Wasm packages can expose recursive records and variant families.\nThe generated classes keep their named fields and constructor identity. Calls\naccept shared acyclic subvalues, reject cycles and return independent copies.\n[Installed recursive acceptance](evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields on ordinary Lean source and reviewed IR. PHP-Wasm also has\n[installed npm/Composer checks](contributing/testing.md#recursive-php-wasm-packages)\nand [separate conversion and cleanup tests](contributing/testing.md#recursive-php-wasm-conversions).\n\n"
+        },
+        {
+          "previous": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |\n| `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n",
+          "current": "| `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |\n| `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n| `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |\n| `Recursive copied structures` | `Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Readonly named classes preserve recursive constructors and aliases. Calls validate every scalar and array element under weak and strict callers, reject cycles, and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets. Native output owners and partial conversions are released on failure.; PHP-Wasm: The same named PHP classes preserve recursive constructors on wasm32. UInt32, UInt64, Int64, Nat, Int and USize use Brick Math integers; ISize uses a 32-bit PHP integer. Weak and strict calls reject cycles and invalid payloads and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets; Zend failures release owned outputs. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |\n| `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |\n| `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |\n| `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dotnet-current-graph-evidence.mjs",
+      "previousSha256": "c47d3bc11ae998f17b05022d81096a7ed0d90533c50edf547201822d97774416",
+      "currentSha256": "e0b2090e87d5a90065ce69ebfc41e313db81178dade3a33ae57745d84055c020",
+      "edits": [
+        {
+          "previous": "import { assertDotnetGraphPackageReports } from \"./dotnet-graph-receipt.mjs\";\nimport { assertDotnetFamilyRegressions } from \"./dotnet-installed-regressions.mjs\";\nimport { beforeDotnetCurrentPackageVerification } from \"./native-shared-test-updates.mjs\";\n\nconst graphTest = \"tests/dotnet-graph-package.test.mjs\";\nconst normalizeConsumer = (inventory, sized) => {\n",
+          "current": "import { assertDotnetGraphPackageReports } from \"./dotnet-graph-receipt.mjs\";\nimport { assertDotnetFamilyRegressions } from \"./dotnet-installed-regressions.mjs\";\nimport { beforeDotnetCurrentPackageVerification } from \"./native-shared-test-updates.mjs\";\nimport { beforeRecursiveAcceptance } from \"./recursive-acceptance-updates.mjs\";\n\nconst graphTest = \"tests/dotnet-graph-package.test.mjs\";\nconst normalizeConsumer = (inventory, sized) => {\n"
+        },
+        {
+          "previous": "\tfor(const [path, expected] of Object.entries(record.sourceHashes))\n\t{\n\t\tlet source = await readFile(path, \"utf8\");\n\t\tif(path === graphTest)\n\t\t{\n\t\t\tconst executionSource = beforeDotnetCurrentPackageVerification(source);\n",
+          "current": "\tfor(const [path, expected] of Object.entries(record.sourceHashes))\n\t{\n\t\tlet source = await readFile(path, \"utf8\");\n\t\tif(path === \"docs/consume/dotnet.md\") source = beforeRecursiveAcceptance(path, source, expected);\n\t\tif(path === graphTest)\n\t\t{\n\t\t\tconst executionSource = beforeDotnetCurrentPackageVerification(source);\n"
+        },
+        {
+          "previous": "\t\tassert.equal(sha256(source), expected, path);\n\t}\n\tassert.deepEqual(Object.keys(record.verifierSources).sort(), dotnetGraphVerifierPaths);\n\tfor(const [path, expected] of Object.entries(record.verifierSources)) assert.equal(sha256(await readFile(path)), expected, path);\n\tassert.equal(record.reportsSha256, sha256(canonicalJson(record.reports)));\n\tassert.equal(previous.reportSha256, sha256(canonicalJson(previous.reports)));\n\tassertRepeatedDotnetGraphs(record.reports, previous.reports);\n",
+          "current": "\t\tassert.equal(sha256(source), expected, path);\n\t}\n\tassert.deepEqual(Object.keys(record.verifierSources).sort(), dotnetGraphVerifierPaths);\n\tfor(const [path, expected] of Object.entries(record.verifierSources))\n\t\tassert.equal(sha256(beforeRecursiveAcceptance(path, await readFile(path, \"utf8\"), expected)), expected, path);\n\tassert.equal(record.reportsSha256, sha256(canonicalJson(record.reports)));\n\tassert.equal(previous.reportSha256, sha256(canonicalJson(previous.reports)));\n\tassertRepeatedDotnetGraphs(record.reports, previous.reports);\n"
+        }
+      ]
+    }
+  ],
+  "remaining": [
+    "WIT/WASI copied recursion",
+    "Structured callback and closure payloads",
+    "Explicitly owned resource-containing aggregates",
+    "Final full structured-type acceptance"
+  ]
+}

@@ -64,6 +64,24 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
+test("recursive acceptance covers sixteen profiles and leaves callable and WIT positions open", () => {
+	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "recursive");
+	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
+	assert.equal(installed.length, 96);
+	assert.equal(new Set(installed.map(cell => cell.profile)).size, 16);
+	const promoted = installed.filter(cell => ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile));
+	assert.equal(promoted.length, 30);
+	for(const cell of promoted)
+	{
+		assert.ok(["parameter", "result", "field"].includes(cell.position));
+		assert.ok(cell.hostType && cell.conversionNote);
+		for(const stage of Object.values(cell.stages))
+		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["managed-recursive-installed"]); }
+	}
+	for(const cell of cells.filter(cell => cell.profile === "wit-wasi" || cell.position.startsWith("callback-")))
+		assert.notEqual(cell.stages.installedExecution.state, "passed", cell.id);
+});
+
 test("Char installed evidence distinguishes npm record fields from scalar and callable evidence", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	const hosts = { c: "uint32_t", cpp: "char32_t", python: "str", rust: "char", dotnet: "System.Text.Rune", java: "int", kotlin: "Int", ruby: "String", perl: "text scalar", "php-native": "string", "php-wasm": "string", "wit-wasi": "char" };
@@ -299,7 +317,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const lists = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["list"] : [];
 	const aliases = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["alias"] : [];
 	const variants = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["variant"] : [];
-	const recursive = ["rust", "python", "ruby"].includes(profile) ? ["recursive"] : [];
+	const recursive = ["rust", "python", "ruby", "dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(profile) ? ["recursive"] : [];
+	const recursiveEvidence = ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(profile) ? "managed-recursive-installed" : `${profile}-recursive-installed`;
 	const variantEvidence = ["java", "kotlin"].includes(profile) ? "jvm-variants-installed" : `${profile}-variants-installed`;
 	const aliasEvidence = ["java", "kotlin"].includes(profile) ? "jvm-aliases-installed" : `${profile}-aliases-installed`;
 	const compoundEvidence = ["java", "kotlin"].includes(profile) ? "jvm-compounds-installed" : `${profile}-compounds-installed`;
@@ -311,7 +330,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 		for(const stage of Object.values(cell.stages))
 		{
 			assert.equal(stage.state, "passed");
-			assert.deepEqual(stage.evidence, [recursive.includes(cell.shape) ? `${profile}-recursive-installed` : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
+			assert.deepEqual(stage.evidence, [recursive.includes(cell.shape) ? recursiveEvidence : variants.includes(cell.shape) ? variantEvidence : aliases.includes(cell.shape) ? aliasEvidence : lists.includes(cell.shape) ? ["java", "kotlin"].includes(profile) ? "jvm-lists-installed" : profile === "php-native" ? "php-native-lists-ffi-installed" : `${profile}-lists-installed` : compounds.includes(cell.shape) ? compoundEvidence : cell.shape === "char" ? "native-installed-char" : ["usize", "isize"].includes(cell.shape) ? "platform-words-installed" : evidence]);
 		}
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile

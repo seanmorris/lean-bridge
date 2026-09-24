@@ -2,7 +2,7 @@
 
 VO1219 remains open. Copied Lists have [installed acceptance across all seventeen
 consumer profiles](lists-acceptance-20260921.md), as do copied aliases and tagged
-variants. Recursive copied values have accepted installed coverage in eleven
+variants. Recursive copied values have accepted installed coverage in sixteen
 profiles: [the five npm profiles](npm-recursive-20260922.md),
 [C/C++](native-recursive-packages-20260923.md),
 [Rust/Cargo](rust-recursive-packages-20260923.md),
@@ -10,12 +10,9 @@ profiles: [the five npm profiles](npm-recursive-20260922.md),
 [Ruby](ruby-recursive-packages-20260923.md) and
 [Perl](perl-recursive-packages-20260923.md).
 
-[C#](dotnet-recursive-packages-20260923.md),
-[Java/Kotlin](jvm-recursive-packages-20260923.md),
-[native PHP](php-recursive-packages-20260923.md) and
-[PHP-Wasm](php-wasm-recursive-packages-20260924.md) now have compiled package
-tests. Their final acceptance still requires the
-[shared regression and source-evidence checks](native-shared-admission-20260924.md).
+[C#, Java, Kotlin, native PHP and PHP-Wasm](recursive-managed-acceptance-20260924.md)
+now also have installed acceptance for copied inputs, results and fields on both
+authoring paths. Their shared regressions and source-evidence checks pass.
 WIT/WASI recursive values remain unimplemented.
 
 The remaining cross-language features are structured callback/closure payloads

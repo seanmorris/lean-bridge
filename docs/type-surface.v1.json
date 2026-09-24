@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.83.0",
+  "contractVersion": "0.84.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -156,6 +156,153 @@
     {"id":"wit-wasi","consumer":"wit-wasi","language":"wit","context":"Wasmtime Component Model wrapper over an x86-64 native Lean host","wordBits":64}
   ],
   "evidence": [
+    {
+      "id": "managed-recursive-installed",
+      "kind": "installed",
+      "revision": "62d98e0521425b4798737c5becbe3e95fbf076ae",
+      "command": "node --test tests/current-source-evidence.test.mjs tests/dotnet-current-graphs.test.mjs tests/jvm-graph-package.test.mjs tests/php-graph-package.test.mjs tests/php-wasm-graph-package.test.mjs tests/php-wasm-graph-loading.test.mjs; run the compiled gates retained in the referenced records",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "files": [
+        {
+          "path": "docs/consume/dotnet.md",
+          "sha256": "5f91322e638b4a4e463d1a35d54a1aba1ff5a9fa876ff981385f0a2f15ab3492"
+        },
+        {
+          "path": "docs/consume/java.md",
+          "sha256": "82cd3881fc6ab86693ac4b4715d24acdb136335c79266287f56e7b8378aa5e1e"
+        },
+        {
+          "path": "docs/consume/kotlin.md",
+          "sha256": "c7560b52fcf648c7312d0f9dd160635e000a718132e2f44209d9e8685f25f0f8"
+        },
+        {
+          "path": "docs/evidence/dotnet-current-graph-packages-20260924.json",
+          "sha256": "fbcc5a3eb0132ecd4174dd962277b7abafe52cc4598a88d46b56999b8a05b8a0"
+        },
+        {
+          "path": "docs/evidence/jvm-recursive-packages-20260923.json",
+          "sha256": "21e1d56463a6464d634a4835ff85a3cdb03699a23d17257e4844215dff20745a"
+        },
+        {
+          "path": "docs/evidence/native-shared-regressions-20260924.json",
+          "sha256": "dea040a6dcc1c4450a4fc743b559741302760618fd8d97db2e5571e0cff85669"
+        },
+        {
+          "path": "docs/evidence/php-current-family-regressions-20260924.json",
+          "sha256": "b1d1d81511582800818f503ce827588d349debd2c019d00a04769f16f9c4d7d4"
+        },
+        {
+          "path": "docs/evidence/php-recursive-packages-20260923.json",
+          "sha256": "d372e0d6516b8353cde14dcee91d7eaf9f6e25309039cbc5a25f0a05041f17b0"
+        },
+        {
+          "path": "docs/evidence/php-wasm-recursive-loading-20260924.json",
+          "sha256": "2fff42ca2ba935e1d3c7e8e0ebb453dcfb304766dae3f1bd80efe10e3e5baeca"
+        },
+        {
+          "path": "docs/evidence/php-wasm-recursive-packages-20260924.json",
+          "sha256": "8b3831e1b79729d1e5c6a6745d99a93014b5b0da2035e7104f72b97fba906f76"
+        },
+        {
+          "path": "docs/evidence/php-wasm-shared-regressions-20260924.json",
+          "sha256": "482d36cb3697ae4661a7ef851270b92fb5f4b510d070e018566d6aebc713ec2f"
+        },
+        {
+          "path": "docs/evidence/recursive-managed-acceptance-20260924.json",
+          "sha256": "dc33953b4bcc74cb854c1055170284253726fdeb64db5fed35c9ca095682ae05"
+        },
+        {
+          "path": "docs/evidence/structured-source-refresh-20260924.json",
+          "sha256": "6946fb2d0fe99093e3f3524c0e0f5ff26739431d2e77000558f4596622bb895e"
+        },
+        {
+          "path": "docs/php.md",
+          "sha256": "4f65d6dcfa5e8121ac316dcf6dbe39cddf28f4b03d4ed49a4cd716c8fedb5c06"
+        },
+        {
+          "path": "tests/current-source-evidence.test.mjs",
+          "sha256": "8fc44a168b5ad3d6b4e4e298ab06b5fa7573b70f62b2700a6a7689c3cfdc1ef4"
+        },
+        {
+          "path": "tests/helpers/dotnet-current-graph-evidence.mjs",
+          "sha256": "e0b2090e87d5a90065ce69ebfc41e313db81178dade3a33ae57745d84055c020"
+        },
+        {
+        "path": "tests/helpers/recursive-acceptance-updates.mjs",
+        "sha256": "dfb4efda4405e23b367d1533cd60355b9f5f9ee324cbb22f6d2f2249894b4ff2"
+        },
+        {
+          "path": "tests/helpers/recursive-documentation-history.mjs",
+          "sha256": "e5fb54e10def355c35980ebfc8f83ef6ac0cb7171ef7b7d130083fc54fd44261"
+        },
+        {
+          "path": "tests/helpers/recursive-managed-acceptance.mjs",
+          "sha256": "82ab7e809daf424467261e0becbecb8cf67a093e8a36b2f93eb7919c2e82cd53"
+        },
+        {
+          "path": "tests/type-surface.test.mjs",
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "dotnet/ordinary-source/archives/Lean.Recursive.1.0.0.nupkg",
+          "sha256": "bd5a18d767761f680bd4ea0df8043298ccd4c1f6701150ba54baf07e9e0cdb77"
+        },
+        {
+          "path": "dotnet/reviewed-ir/archives/Lean.Recursive.1.0.0.nupkg",
+          "sha256": "939e2def0477faf493d72e2451a6010cf9fff2532b49828072e372ef262aa87a"
+        },
+        {
+          "path": "jvm/ordinary-source/archives/recursive-1.0.0.jar",
+          "sha256": "d75d592ad9f7bc2679887b3b8fc13597099aa766b0f0c0f9ced046027f76d856"
+        },
+        {
+          "path": "jvm/ordinary-source/archives/recursive-1.0.0.pom",
+          "sha256": "159abb6a51447f8088b46d2d8481662b0a9613db688efc9478e63b303ab9fbe7"
+        },
+        {
+          "path": "jvm/reviewed-ir/archives/recursive-1.0.0.jar",
+          "sha256": "46e4fd5e06e54fa376e3d18688b4f0873f4acfa4c1667a6f70a3ae83d87cf658"
+        },
+        {
+          "path": "jvm/reviewed-ir/archives/recursive-1.0.0.pom",
+          "sha256": "159abb6a51447f8088b46d2d8481662b0a9613db688efc9478e63b303ab9fbe7"
+        },
+        {
+          "path": "php-native/ordinary-source/archives/lean-bridge-recursive-1.0.0-linux-x86_64.zip",
+          "sha256": "bd96c290e985aeb1e8995a119d12883750f75114f7dfc6a48f2b1552d7f1dd28"
+        },
+        {
+          "path": "php-native/reviewed-ir/archives/lean-bridge-recursive-1.0.0-linux-x86_64.zip",
+          "sha256": "b07357b45bac4ceb55d08d5557da4a7561d1af31258b4b0371bb8e0ba2563213"
+        },
+        {
+          "path": "php-wasm/ordinary-source/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9f12eed7bad30ec3e102bb0a9ada6a1b713ccf7551073f49311621104d8a48df.tgz",
+          "sha256": "2481618bd6028b7d6b851047f5cf7d60ed4c3c13387a5dc4d0284e13d2a153bb"
+        },
+        {
+          "path": "php-wasm/ordinary-source/archives/lean-bridge-test-recursive-php-wasm-1.0.0.tgz",
+          "sha256": "70783f4bf259195f35573204430f96f413aa382d79d9c2eb04f5bd21a571f4aa"
+        },
+        {
+          "path": "php-wasm/ordinary-source/archives/lean-bridge-test-recursive-php-wasm-1.0.0-php-wasm.zip",
+          "sha256": "926df89860d3d5d430faa88144b4957e899c8ef0863868daec6ee1362ab7f961"
+        },
+        {
+          "path": "php-wasm/reviewed-ir/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.9f12eed7bad30ec3e102bb0a9ada6a1b713ccf7551073f49311621104d8a48df.tgz",
+          "sha256": "2481618bd6028b7d6b851047f5cf7d60ed4c3c13387a5dc4d0284e13d2a153bb"
+        },
+        {
+          "path": "php-wasm/reviewed-ir/archives/lean-bridge-test-recursive-php-wasm-1.0.0.tgz",
+          "sha256": "345937f3e4aedb1e04492079c81e99bb8deabfeb44ecd10e6e4e52a610269a0c"
+        },
+        {
+          "path": "php-wasm/reviewed-ir/archives/lean-bridge-test-recursive-php-wasm-1.0.0-php-wasm.zip",
+          "sha256": "93c2970544b070d1c2c12fe6e33df4fd0c36d4974ecff494b38dd72333b19209"
+        }
+      ]
+    },
     {
       "id": "perl-recursive-installed",
       "kind": "installed",
@@ -2207,7 +2354,7 @@
         },
         {
           "path": "docs/consume/kotlin.md",
-          "sha256": "dfa80f75a2b568ac73ec225939fe0532af89519123ccab2b3b54a14b952f60f8"
+          "sha256": "c7560b52fcf648c7312d0f9dd160635e000a718132e2f44209d9e8685f25f0f8"
         },
         {
           "path": "docs/evidence/kotlin-collections-20260922.json",
@@ -3025,7 +3172,7 @@
         },
         {
           "path": "docs/php.md",
-          "sha256": "71889bf6c1e613fdac4c4c931af41f8939b441a68c32ae246e3251848ee47d3c"
+          "sha256": "4f65d6dcfa5e8121ac316dcf6dbe39cddf28f4b03d4ed49a4cd716c8fedb5c06"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -3344,7 +3491,7 @@
         },
         {
           "path": "docs/php.md",
-          "sha256": "71889bf6c1e613fdac4c4c931af41f8939b441a68c32ae246e3251848ee47d3c"
+          "sha256": "4f65d6dcfa5e8121ac316dcf6dbe39cddf28f4b03d4ed49a4cd716c8fedb5c06"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -3615,11 +3762,11 @@
         },
         {
           "path": "docs/consume/java.md",
-          "sha256": "1e4d68fc61018ad38552ec2878ac9766d8b68f2b2c020b1934085abd616dfc96"
+          "sha256": "82cd3881fc6ab86693ac4b4715d24acdb136335c79266287f56e7b8378aa5e1e"
         },
         {
           "path": "docs/consume/kotlin.md",
-          "sha256": "dfa80f75a2b568ac73ec225939fe0532af89519123ccab2b3b54a14b952f60f8"
+          "sha256": "c7560b52fcf648c7312d0f9dd160635e000a718132e2f44209d9e8685f25f0f8"
         },
         {
           "path": "docs/evidence/java-collections-20260922.json",
@@ -4272,7 +4419,7 @@
         },
         {
           "path": "docs/consume/dotnet.md",
-          "sha256": "695d6ac8b49b469126a5bd8f607ecf0558bc7c6faee2674fff05672003ba5b93"
+          "sha256": "5f91322e638b4a4e463d1a35d54a1aba1ff5a9fa876ff981385f0a2f15ab3492"
         },
         {
           "path": "docs/evidence/dotnet-collections-20260922.json",
@@ -14475,7 +14622,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -14714,7 +14861,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
@@ -14913,7 +15060,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -15180,7 +15327,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -15387,7 +15534,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -15606,7 +15753,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -15809,7 +15956,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -15948,7 +16095,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16087,7 +16234,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16214,7 +16361,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
@@ -16333,7 +16480,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "tests/documentation.test.mjs",
@@ -16752,7 +16899,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "90d3b144d9618e1523ecb3053919faf96f139c25934b1e8ed90c560ced9ac32c"
+          "sha256": "d12ad5fe49e683f36f17e8a589cd22a0449edf71db5ebdd2f3711b25fad9750a"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -19230,6 +19377,696 @@
     }
   ],
   "observations": [
+    {
+      "id": "managed-recursive-dotnet-ordinary-source",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples",
+          "result": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples",
+          "field": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "Generated records and cases preserve direct and mutual recursion. Typed arrays remain mutable; calls return independent copied storage. Cycles, null payloads and malformed branches reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB native-copy and scratch/output budgets. Native outputs and partial input allocations are released on failure."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-dotnet-reviewed-ir",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples",
+          "result": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples",
+          "field": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "Generated records and cases preserve direct and mutual recursion. Typed arrays remain mutable; calls return independent copied storage. Cycles, null payloads and malformed branches reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB native-copy and scratch/output budgets. Native outputs and partial input allocations are released on failure."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-java-ordinary-source",
+      "profiles": [
+        "java"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>",
+          "result": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>",
+          "field": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "Named records and sealed cases preserve recursive fields without JSON or numeric tags. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Cycles, null payloads and invalid cases reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB copy budgets; partial outputs are released on failure."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-java-reviewed-ir",
+      "profiles": [
+        "java"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>",
+          "result": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>",
+          "field": "Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "Named records and sealed cases preserve recursive fields without JSON or numeric tags. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Cycles, null payloads and invalid cases reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB copy budgets; partial outputs are released on failure."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-kotlin-ordinary-source",
+      "profiles": [
+        "kotlin"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named non-null Kotlin records and sealed cases; typed arrays and generated Option, Result and Pair",
+          "result": "Named non-null Kotlin records and sealed cases; typed arrays and generated Option, Result and Pair",
+          "field": "Named non-null Kotlin records and sealed cases; typed arrays and generated Option, Result and Pair"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "Generated non-null Kotlin classes preserve recursive families without widening to Any. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Foreign JVM nulls, cycles and invalid cases reject. The shared Java conversion engine enforces 128 value levels, 262,144 visited values and separate 16 MiB copy budgets."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-kotlin-reviewed-ir",
+      "profiles": [
+        "kotlin"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named non-null Kotlin records and sealed cases; typed arrays and generated Option, Result and Pair",
+          "result": "Named non-null Kotlin records and sealed cases; typed arrays and generated Option, Result and Pair",
+          "field": "Named non-null Kotlin records and sealed cases; typed arrays and generated Option, Result and Pair"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "Generated non-null Kotlin classes preserve recursive families without widening to Any. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Foreign JVM nulls, cycles and invalid cases reject. The shared Java conversion engine enforces 128 value levels, 262,144 visited values and separate 16 MiB copy budgets."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-php-native-ordinary-source",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases",
+          "result": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases",
+          "field": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "Readonly named classes preserve recursive constructors and aliases. Calls validate every scalar and array element under weak and strict callers, reject cycles, and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets. Native output owners and partial conversions are released on failure."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-php-native-reviewed-ir",
+      "profiles": [
+        "php-native"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases",
+          "result": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases",
+          "field": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "Readonly named classes preserve recursive constructors and aliases. Calls validate every scalar and array element under weak and strict callers, reject cycles, and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets. Native output owners and partial conversions are released on failure."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-php-wasm-ordinary-source",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "ordinary-source",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases",
+          "result": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases",
+          "field": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "The same named PHP classes preserve recursive constructors on wasm32. UInt32, UInt64, Int64, Nat, Int and USize use Brick Math integers; ISize uses a 32-bit PHP integer. Weak and strict calls reject cycles and invalid payloads and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets; Zend failures release owned outputs."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
+    {
+      "id": "managed-recursive-php-wasm-reviewed-ir",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "parameter",
+        "result",
+        "field"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only.",
+      "hostTypes": {
+        "recursive": {
+          "parameter": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases",
+          "result": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases",
+          "field": "Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases"
+        }
+      },
+      "conversionNotes": {
+        "recursive": "The same named PHP classes preserve recursive constructors on wasm32. UInt32, UInt64, Int64, Nat, Int and USize use Brick Math integers; ISize uses a 32-bit PHP integer. Weak and strict calls reject cycles and invalid payloads and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets; Zend failures release owned outputs."
+      },
+      "limitations": [
+        "Copied recursive positions only; structured callback/closure payloads and resource-containing aggregates remain unaccepted.",
+        "Finite copied values only. Host cycles reject. Budgets cover conversion storage, not all host or Lean working memory.",
+        "Native installed evidence targets Linux x86-64; PHP-Wasm evidence targets the pinned wasm32 host, Node and Chromium.",
+        "Source-free fixture archives are tested releases, not registry publications."
+      ],
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "managed-recursive-installed"
+          ],
+          "note": "Original installed NuGet, Maven, Composer and PHP-Wasm archives preserve eighteen recursive exports on ordinary-source and independently reviewed paths. Runtime-only relocated consumers cover all nineteen primitives, recursive and mutually recursive fields, nominal cases, aliases, nested containers, options, results and products. Independent rebuilds reproduce archives; invalid callers and values reject; shared-runtime retirement, conflicting builds, asset tampering and allocation cleanup have separate checked execution records. This acceptance covers copied parameters, results and fields only."
+        }
+      }
+    },
     {
       "id": "native-recursive-perl-ordinary-source",
       "profiles": [

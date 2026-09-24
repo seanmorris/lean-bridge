@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { beforeRecursiveAcceptanceDocument } from "./recursive-acceptance-updates.mjs";
 
 const recordPath = "docs/evidence/recursive-documentation-updates-20260924.json";
 const lineagePath = "docs/evidence/recursive-npm-source-lineage-20260922.json";
@@ -21,6 +22,7 @@ const paths = ["docs/architecture/binding-ir.md", "docs/consume/dotnet.md"
  * @param update - Reviewed edits and original/current hashes.
  */
 export const reverseRecursiveDocumentation = (source, update) => {
+	source = beforeRecursiveAcceptanceDocument(source, update.currentSha256);
 	assert.equal(sha256(source), update.currentSha256);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	for(const { current, previous } of update.edits.toReversed())
@@ -93,6 +95,7 @@ export const assertRecursiveDocumentationSource = async (path, source, expected)
 		assert.equal(expected, record.lineage.previousSha256);
 		return true;
 	}
+	source = beforeRecursiveAcceptanceDocument(source, record.files[path].currentSha256);
 	assert.equal(sha256(source), record.files[path].currentSha256);
 	assert.ok(expected === record.files[path].previousSha256
 		|| path.startsWith("docs/") && expected === previous.sourceHashes[path], "Unknown documentation predecessor");

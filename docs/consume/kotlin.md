@@ -229,9 +229,7 @@ argument-slot limit use typed builders, with every field required before
 apply to both APIs, including cycle rejection and the 128-level value limit.
 
 The [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)
-execute this example on both compiler source paths. Final cross-language
-acceptance remains in progress; the conversion table retains the last accepted
-inventory.
+execute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. Structured callable and resource-containing values remain separate work.
 
 ### Callbacks and returned Lean functions
 
@@ -389,7 +387,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named non-null Kotlin records and sealed cases; typed arrays and generated Option, Result and Pair` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Generated non-null Kotlin classes preserve recursive families without widening to Any. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Foreign JVM nulls, cycles and invalid cases reject. The shared Java conversion engine enforces 128 value levels, 262,144 visited values and separate 16 MiB copy budgets. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

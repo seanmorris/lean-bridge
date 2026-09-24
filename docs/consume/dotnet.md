@@ -84,7 +84,7 @@ themselves retain their language equality behavior. See
 
 ### Recursive values
 
-The recursive NuGet integration is under acceptance testing. Its generated API
+Prepared recursive NuGet packages have installed acceptance on both authoring paths. The generated API
 uses named records and variant cases, including direct and mutual recursion.
 Arrays and Lists still use typed arrays. Consumers do not supply native pointers,
 constructor numbers or serialized JSON.
@@ -234,7 +234,7 @@ by value and retain constructor identity. The existing
 32-level type bound and 16 MiB native copy budget apply. Failures release
 scoped scratch buffers and native outputs. See the
 [installed variant checks](../evidence/dotnet-variants-20260921.md).
-Recursive, callable and identity-bearing payloads remain separate work.
+See [recursive values](#recursive-values) for recursive families. Structured callable and identity-bearing payloads remain separate work.
 
 ### Comparing copied values
 
@@ -430,7 +430,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Generated records and cases preserve direct and mutual recursion. Typed arrays remain mutable; calls return independent copied storage. Cycles, null payloads and malformed branches reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB native-copy and scratch/output budgets. Native outputs and partial input allocations are released on failure. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

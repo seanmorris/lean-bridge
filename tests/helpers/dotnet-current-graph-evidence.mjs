@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertDotnetGraphPackageReports } from "./dotnet-graph-receipt.mjs";
 import { assertDotnetFamilyRegressions } from "./dotnet-installed-regressions.mjs";
 import { beforeDotnetCurrentPackageVerification } from "./native-shared-test-updates.mjs";
+import { beforeRecursiveAcceptance } from "./recursive-acceptance-updates.mjs";
 
 const graphTest = "tests/dotnet-graph-package.test.mjs";
 const normalizeConsumer = (inventory, sized) => {
@@ -85,6 +86,7 @@ export const assertDotnetCurrentGraphEvidence = async record => {
 	for(const [path, expected] of Object.entries(record.sourceHashes))
 	{
 		let source = await readFile(path, "utf8");
+		if(path === "docs/consume/dotnet.md") source = beforeRecursiveAcceptance(path, source, expected);
 		if(path === graphTest)
 		{
 			const executionSource = beforeDotnetCurrentPackageVerification(source);
@@ -94,7 +96,8 @@ export const assertDotnetCurrentGraphEvidence = async record => {
 		assert.equal(sha256(source), expected, path);
 	}
 	assert.deepEqual(Object.keys(record.verifierSources).sort(), dotnetGraphVerifierPaths);
-	for(const [path, expected] of Object.entries(record.verifierSources)) assert.equal(sha256(await readFile(path)), expected, path);
+	for(const [path, expected] of Object.entries(record.verifierSources))
+		assert.equal(sha256(beforeRecursiveAcceptance(path, await readFile(path, "utf8"), expected)), expected, path);
 	assert.equal(record.reportsSha256, sha256(canonicalJson(record.reports)));
 	assert.equal(previous.reportSha256, sha256(canonicalJson(previous.reports)));
 	assertRepeatedDotnetGraphs(record.reports, previous.reports);

@@ -13,6 +13,8 @@ import { assertAdditiveRecursiveHistory, assertRecursiveDocumentationRecord, ass
 import { assertPhpFamilyRegressionEvidence } from "./helpers/php-installed-regressions.mjs";
 import { assertDotnetFamilyRegressionEvidence } from "./helpers/dotnet-installed-regressions.mjs";
 import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-history.mjs";
+import { beforeRecursiveAcceptance, recursiveAcceptanceRecord, reverseAcceptanceUpdate } from "./helpers/recursive-acceptance-updates.mjs";
+import { assertRecursiveManagedAcceptance, assertRecursiveManagedAcceptanceIndex } from "./helpers/recursive-managed-acceptance.mjs";
 
 const documentPath = "docs/evidence/recursive-documentation-updates-20260924.json";
 const receipt = async () => JSON.parse(await readFile(documentPath));
@@ -49,6 +51,42 @@ test("documentation verification rejects unrelated edits, unknown predecessors a
 		const changed = structuredClone(original); mutate(changed);
 		assert.throws(() => assertAdditiveRecursiveHistory(JSON.stringify(changed), record.lineage.previousText));
 	}
+});
+
+test("five recursive profiles have original installed evidence on both paths without promoting callable payloads", async () => {
+	const record = recursiveAcceptanceRecord();
+	await assertRecursiveManagedAcceptance(record);
+	for(const mutate of [
+		r => { r.profiles.pop(); }
+		, r => { r.profiles.push("wit-wasi"); }
+		, r => { r.positions.push("callback-result"); }
+		, r => { r.paths.pop(); }
+		, r => { r.acceptedCells++; }
+		, r => { r.finalAcceptance = true; }
+		, r => { delete r.sources.shared; }
+		, r => { r.sources.php.sha256 = "0".repeat(64); }
+		, r => { r.artifacts.pop(); }
+		, r => { r.artifacts[0].sha256 = "0".repeat(64); }
+		, r => { r.updates[0].previousSha256 = "0".repeat(64); }
+	]) {
+		const changed = structuredClone(record); mutate(changed);
+		await assert.rejects(() => assertRecursiveManagedAcceptanceIndex(changed));
+	}
+});
+
+test("acceptance table updates retain executed examples and reject unrelated source changes", async () => {
+	for(const update of recursiveAcceptanceRecord().updates)
+	{
+		const source = await readFile(update.path, "utf8");
+		assert.equal(sha256(reverseAcceptanceUpdate(source, update)), update.previousSha256);
+		assert.throws(() => reverseAcceptanceUpdate(source + "\nunreviewed\n", update));
+		assert.throws(() => reverseAcceptanceUpdate(source, { ...update, edits: [] }));
+		assert.throws(() => reverseAcceptanceUpdate(source, { ...update, edits: [...update.edits, update.edits[0]] }));
+		assert.throws(() => beforeRecursiveAcceptance(update.path, source, "0".repeat(64)));
+	}
+	const update = recursiveAcceptanceRecord().updates[0];
+	const source = await readFile(update.path, "utf8");
+	assert.throws(() => reverseAcceptanceUpdate(source, { ...update, path: "src/build/native-project.mjs" }));
 });
 
 test("collection and Composer checker upgrades retain their complete previous test bodies", async () => {
@@ -106,9 +144,10 @@ test("support inventory source updates require their compiled regressions or exa
 	const inventory = JSON.parse(await readFile("docs/type-surface.v1.json"));
 	for(const entry of record.entries)
 	{
-		const source = await readFile(entry.path, "utf8");
+		const currentSource = await readFile(entry.path, "utf8");
+		const source = beforeRecursiveAcceptance(entry.path, currentSource, entry.currentSha256);
 		assert.equal(sha256(source), entry.currentSha256, entry.path);
-		assert.ok(inventory.evidence.some(e => e.files.some(f => f.path === entry.path && f.sha256 === entry.currentSha256)), entry.path);
+		assert.ok(inventory.evidence.some(e => e.files.some(f => f.path === entry.path && f.sha256 === sha256(currentSource))), entry.path);
 		if(entry.verification === "dotnet-family-regressions")
 		{
 			assert.equal(record.dotnetPredecessors[entry.path].sha256, entry.previousSha256);
