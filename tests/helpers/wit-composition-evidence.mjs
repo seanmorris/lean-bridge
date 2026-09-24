@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertWitHostExecution } from "./wit-host-evidence.mjs";
 import { reverseWitCompositionUpdate, witCompositionChangedPaths } from "./wit-composition-source-history.mjs";
+import { beforeWitAcceptance } from "./wit-acceptance-source-history.mjs";
 
 export const witCompositionExecutionPath = "docs/evidence/wit-recursive-composition-20260924.json";
 export const witCompositionAddedPaths = [
@@ -166,11 +167,11 @@ export const assertWitCompositionIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), witCompositionAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...witCompositionChangedPaths, ...witCompositionAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await readFile(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(beforeWitAcceptance(path, await readFile(path, "utf8"), record.sourceHashes[path])), record.sourceHashes[path], path);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		reverseWitCompositionUpdate(await readFile(update.path, "utf8"), update);
+		reverseWitCompositionUpdate(beforeWitAcceptance(update.path, await readFile(update.path, "utf8"), update.currentSha256), update);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
 	assert.equal(record.execution.path, witCompositionExecutionPath);

@@ -64,11 +64,11 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
-test("recursive acceptance covers sixteen profiles and leaves callable and WIT positions open", () => {
+test("recursive copied acceptance covers all seventeen profiles without promoting callable payloads", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "recursive");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(installed.length, 96);
-	assert.equal(new Set(installed.map(cell => cell.profile)).size, 16);
+	assert.equal(installed.length, 102);
+	assert.equal(new Set(installed.map(cell => cell.profile)).size, 17);
 	const promoted = installed.filter(cell => ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile));
 	assert.equal(promoted.length, 30);
 	for(const cell of promoted)
@@ -78,7 +78,11 @@ test("recursive acceptance covers sixteen profiles and leaves callable and WIT p
 		for(const stage of Object.values(cell.stages))
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["managed-recursive-installed"]); }
 	}
-	for(const cell of cells.filter(cell => cell.profile === "wit-wasi" || cell.position.startsWith("callback-")))
+	const wit = installed.filter(cell => cell.profile === "wit-wasi");
+	assert.equal(wit.length, 6);
+	for(const cell of wit) for(const stage of Object.values(cell.stages))
+	{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["wit-wasi-recursive-installed"]); }
+	for(const cell of cells.filter(cell => cell.position.startsWith("callback-")))
 		assert.notEqual(cell.stages.installedExecution.state, "passed", cell.id);
 });
 
@@ -317,7 +321,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	const lists = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["list"] : [];
 	const aliases = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["alias"] : [];
 	const variants = ["python", "rust", "dotnet", "java", "kotlin", "ruby", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["variant"] : [];
-	const recursive = ["rust", "python", "ruby", "dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(profile) ? ["recursive"] : [];
+	const recursive = ["rust", "python", "ruby", "dotnet", "java", "kotlin", "php-native", "php-wasm", "wit-wasi"].includes(profile) ? ["recursive"] : [];
 	const recursiveEvidence = ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(profile) ? "managed-recursive-installed" : `${profile}-recursive-installed`;
 	const variantEvidence = ["java", "kotlin"].includes(profile) ? "jvm-variants-installed" : `${profile}-variants-installed`;
 	const aliasEvidence = ["java", "kotlin"].includes(profile) ? "jvm-aliases-installed" : `${profile}-aliases-installed`;

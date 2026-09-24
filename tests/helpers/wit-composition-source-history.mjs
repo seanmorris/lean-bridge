@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitAcceptance } from "./wit-acceptance-source-history.mjs";
 
 export const witCompositionHistoryPath = "docs/evidence/wit-recursive-composition-integration-20260924.json";
 export const witCompositionChangedPaths = [
@@ -63,6 +64,7 @@ export const reverseWitCompositionUpdate = (source, update) => {
  * @param expected - Optional historical digest at which normalization stops.
  */
 export const beforeWitCompositionIntegration = (path, source, expected) => {
+	source = beforeWitAcceptance(path, source, expected);
 	if(sha256(source) === expected || !witCompositionChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(witCompositionHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);

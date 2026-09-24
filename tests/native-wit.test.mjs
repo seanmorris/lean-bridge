@@ -22,7 +22,10 @@ import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 const enabled = process.env.LEAN_BRIDGE_NATIVE_WIT_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 const environment = { ...process.env, LEAN_BRIDGE_LEAN_PREFIX: leanPrefix, LEAN_BRIDGE_PERLS: '["/must/not/invoke/perl"]' };
-const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env });
+const run = (command, args, cwd, env = environment) => processBuildRunner.capture({ command, args, cwd, env }).catch(error => {
+	if(error.details) error.message += `\n${JSON.stringify(error.details)}`;
+	throw error;
+});
 const synthetic = () => createNativeModel({ ...nativeMetadataFixture(), component: { id: "example@1.0.0", name: "example", version: "1.0.0" } }).bindingIr;
 const scalars = [
 	["unit", "Unit", 'unit()']
@@ -312,7 +315,12 @@ const allocationFaultCheck = async (root, consumer, projection) => {
 	const record = projection.surface.copy(projection.surface.functions.find(fn => fn.field === "echo_record").declaration.result.type).name;
 	const array = projection.surface.copy(projection.surface.functions.find(fn => fn.field === "replicate").declaration.result.type).name;
 	const fault = join(consumer, "fault"); await mkdir(fault);
-	await saveLakeFile(fault, "fault.h", `#include <stdlib.h>
+	// A forced include runs before the host's feature macros. Enable its loader
+	// declarations before this test header includes any libc headers.
+	await saveLakeFile(fault, "fault.h", `#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+#include <stdlib.h>
 #include "${p}.h"
 void *wit_test_calloc(size_t, size_t);
 void wit_test_free(void *);

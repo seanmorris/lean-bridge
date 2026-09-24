@@ -98,6 +98,19 @@ test("Perl recursive documentation exposes installed values without promoting ca
 	assert.doesNotMatch(reference, /recursive values in the other seven profiles/iu);
 });
 
+test("WIT recursive tables record installed copied values and retain callback gaps", async () => {
+	const source = await readFile("docs/consume/wit-wasi.md", "utf8");
+	const recursive = row(source, "Recursive copied structures");
+	assert.match(recursive, /Named C records and tagged unions/u);
+	assert.match(recursive, /Ordinary source: Installed checks passed \(input, result, field\)/u);
+	assert.match(recursive, /Reviewed IR: Installed checks passed \(input, result, field\)/u);
+	assert.match(recursive, /Not audited \(callback input, callback result\)/u);
+	assert.match(source, /wit-recursive-acceptance-20260924\.md/u);
+	const reference = await readFile("docs/reference/types.md", "utf8");
+	assert.match(reference, /Recursive copied values have installed checks across all seventeen profiles/u);
+	assert.doesNotMatch(reference, /Recursive values in the remaining profiles/u);
+});
+
 test("Java and Kotlin distinguish callable, collection-field and asynchronous evidence", async () => {
 	const java = await readFile("docs/consume/java.md", "utf8");
 	const kotlin = await readFile("docs/consume/kotlin.md", "utf8");

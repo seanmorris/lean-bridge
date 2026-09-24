@@ -177,6 +177,7 @@ const profileManifest = Object.freeze({
 		, "wit-host-packages"
 		, "wit-graph-composition"
 		, "wit-composition-evidence"
+		, "wit-recursive-acceptance"
 		, "wit-alias-contract"
 		, "wit-alias-evidence"
 		, "wit-variant-contract"
