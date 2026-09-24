@@ -1,5 +1,5 @@
 /**
- * Reconcile a reviewed copied-value or synchronous primitive callable contract
+ * Reconcile a reviewed copied-value or synchronous copied-payload callable contract
  * with fresh compiler-owned facts.
  * Review documents select declarations, never native layouts or proof evidence.
  *
@@ -82,10 +82,10 @@ const checkReview = document => {
 				|| !same(callable.failure, callbackFailure) || !callable.parameters.length || callable.parameters.length > 16, `${definition.id}.callable`);
 			for(const [index, value] of callable.parameters.entries())
 			{
-				reject(value.type.kind !== "primitive", `${definition.id}.parameters[${index}].type`);
+				type(value.type, `${definition.id}.parameters[${index}].type`);
 				parameter(value, `${definition.id}.parameters[${index}]`);
 			}
-			reject(callable.result.type.kind !== "primitive", `${definition.id}.result.type`);
+			type(callable.result.type, `${definition.id}.result.type`);
 			site(callable.result, `${definition.id}.result`, true);
 			continue;
 		}

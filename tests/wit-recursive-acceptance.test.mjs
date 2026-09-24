@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { beforeWitAcceptance, reverseWitAcceptanceUpdate, witAcceptancePath } from "./helpers/wit-acceptance-source-history.mjs";
 import { assertWitOrdinaryRegression, assertWitRecursiveAcceptance, witOrdinaryRegressionPath } from "./helpers/wit-recursive-acceptance.mjs";
+import { beforeCStructuredCallables } from "./helpers/c-structured-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -54,7 +55,7 @@ test("WIT acceptance reverses exact edits and retains unrelated source changes",
 	const record = await json(witAcceptancePath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeCStructuredCallables(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseWitAcceptanceUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeWitAcceptance(update.path, source)), update.previousSha256);
 		assert.notEqual(sha256(beforeWitAcceptance(update.path, source + "\n// unrelated\n")), update.previousSha256);

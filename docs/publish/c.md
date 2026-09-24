@@ -117,7 +117,7 @@ See the [consumer example](../consume/c.md#tagged-variants) and
 
 ## Export callbacks and closures
 
-For target `c`, ordinary source and reviewed contracts accept callbacks with one to sixteen primitive arguments and one primitive result. All nineteen primitives use the same C representation as copied values, including GMP `mpz_t` for `Nat`/`Int`, scalar-valued `Char`, and 64-bit `USize`/`ISize`.
+For target `c`, ordinary source and reviewed contracts accept callbacks with one to sixteen copied arguments and one copied result. All nineteen primitives use the same C representation as copied values, including GMP `mpz_t` for `Nat`/`Int`, scalar-valued `Char`, and 64-bit `USize`/`ISize`. Arrays, Lists, options, results, nested products, acyclic records, variants and transparent aliases also work as payloads.
 
 ```lean
 namespace Sample
@@ -132,7 +132,19 @@ Select both exports and set `"arities": { "Sample.makeChooser": 1 }` in an ordin
 
 Host functions are borrowed for the synchronous call. Lean must not retain them for later use. Returned Lean closures have explicit leases and generated `_call`/`_dispose` functions. The public header supplies signature-specific callback names. See [C callback ownership](../consume/c.md#callbacks-and-returned-closures) and the [installed acceptance checks](../evidence/c-callables-20260918.md).
 
-These callable signatures do not admit arrays, records, nested callbacks, asynchronous delivery, or retained host functions. Copied arrays and records remain available outside callable signatures.
+For example, the callback in this export can inspect or replace an entire row:
+
+```lean
+def editRow (row : Array (Option String))
+    (edit : Array (Option String) → Array (Option String)) :=
+  edit row
+```
+
+The [structured C checks](../evidence/c-structured-callables-20260924.md) exercise
+mixed payloads and owned returned closures through installed archives. This
+support is specific to target `c`; other targets still require primitive callable
+payloads. Recursive callback payloads, nested callbacks, resources, asynchronous
+delivery and retained host functions remain unsupported.
 
 ## GMP dependency and redistribution
 

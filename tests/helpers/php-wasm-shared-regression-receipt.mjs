@@ -12,6 +12,7 @@ import { recursiveCarrierAbi } from "./recursive-carriers.mjs";
 import { recursiveReviewedIr } from "./recursive-fixture.mjs";
 import { nativeRecursiveReviewedIr } from "./native-recursive-reviewed.mjs";
 import { beforeJvmSharedVerification } from "./jvm-shared-verifier-updates.mjs";
+import { beforeCStructuredCallables } from "./c-structured-callable-source-history.mjs";
 import { phpLinkedGraphIr } from "./php-graph-values-fixture.mjs";
 import { assertPhpWasmLegacyPackageComparison, phpWasmPreGraphRecords, phpWasmPreGraphSources, phpWasmSharedRegressionSources } from "./php-wasm-legacy-comparison.mjs";
 
@@ -87,7 +88,8 @@ export const assertPhpWasmSharedRegressionEvidence = async record => {
 	assert.equal(report.schemaVersion, 1); assert.equal(report.kind, "php-wasm-pre-graph-comparison");
 	assert.equal(report.compiledLean, true); assert.deepEqual(report.baselines, phpWasmPreGraphRecords);
 	assert.deepEqual(Object.keys(report.sourceHashes).sort(), phpWasmSharedRegressionSources);
-	for(const [path, hash] of Object.entries(report.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(report.sourceHashes))
+		assert.equal(sha256(beforeCStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(report.native, nativeBaseline);
 	const fixtures = { recursiveReviewedIr, nativeRecursiveReviewedIr, phpLinkedGraphIr };
 	for(const item of report.native)

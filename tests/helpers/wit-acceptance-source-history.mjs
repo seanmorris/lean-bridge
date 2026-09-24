@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeCStructuredCallables } from "./c-structured-callable-source-history.mjs";
 
 export const witAcceptancePath = "docs/evidence/wit-recursive-acceptance-20260924.json";
 export const witAcceptanceChangedPaths = [
@@ -63,6 +64,7 @@ export const reverseWitAcceptanceUpdate = (source, update) => {
  * @param expected - Historical digest at which normalization stops.
  */
 export const beforeWitAcceptance = (path, source, expected) => {
+	source = beforeCStructuredCallables(path, source, expected);
 	if(sha256(source) === expected || !witAcceptanceChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(witAcceptancePath, "utf8"));
 	const update = record.updates.find(item => item.path === path);

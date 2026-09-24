@@ -43,7 +43,7 @@ for(const [label, change] of Object.entries({
 	assert.throws(() => validateReviewedSource(callableReviewInput(document)), { code: "reviewed-ir-build-unsupported" });
 });
 
-for(const position of ["parameter", "result"]) test(`reviewed copied-container callback ${position} remains unsupported`, () => {
+for(const position of ["parameter", "result"]) test(`reviewed copied-container callback ${position} preserves its checked type`, () => {
 	const document = callableReviewedIr(), definition = document.types[0];
 	const site = position === "parameter" ? definition.callable.parameters[0] : definition.callable.result;
 	site.type = { kind: "apply", constructor: "array", arguments: [site.type] };
@@ -52,7 +52,9 @@ for(const position of ["parameter", "result"]) test(`reviewed copied-container c
 	definition.name = name; definition.id = `bridge:${name}`; definition.source.declaration = name;
 	for(const declaration of document.declarations)
 		for(const item of [...declaration.parameters, declaration.result]) if(item.type.id === old) item.type.id = definition.id;
-	assert.throws(() => validateReviewedSource(callableReviewInput(document)), { code: "reviewed-ir-build-unsupported" });
+	const checked = validateReviewedSource(callableReviewInput(document));
+	assert.deepEqual(checked, document);
+	assert.throws(() => compilePrimitiveCSurface(checked, { callables: true }), { code: "unsupported-native-c-signature" });
 });
 
 const input = () => {

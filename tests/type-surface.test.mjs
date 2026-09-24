@@ -129,10 +129,10 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 	}
 });
 
-test("List evidence covers all seventeen copied profiles on both paths without promoting callback payloads", () => {
+test("List evidence covers all copied profiles and independently accepted C callback payloads", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 102);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 106);
 	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
 	for(const cell of cells)
 	{
@@ -145,6 +145,10 @@ test("List evidence covers all seventeen copied profiles on both paths without p
 			assert.equal(cell.hostType, wit ? "list<T> (owned Wasmtime component values)" : php ? "list<T> (consecutive-key PHP array)" : perl ? "Plain array reference" : ruby ? "Array" : jvm ? cell.profile === "java" ? "T[] (primitive arrays for primitive elements)" : "primitive arrays or Array<T>" : dotnet ? "T[]" : rust ? cell.position === "parameter" ? "&[T]" : "Vec<T>" : python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
 			for(const stage of Object.values(cell.stages))
 			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [wit ? "wit-wasi-lists-installed" : php ? cell.profile === "php-native" ? "php-native-lists-ffi-installed" : "php-wasm-lists-installed" : perl ? "perl-lists-installed" : ruby ? "ruby-lists-installed" : jvm ? "jvm-lists-installed" : dotnet ? "dotnet-lists-installed" : rust ? "rust-lists-installed" : python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
+		} else if(cell.profile === "c" && cell.position.startsWith("callback-"))
+		{
+			assert.equal(cell.stages.installedExecution.state, "passed");
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["c-structured-callables-installed"]);
 		} else
 		{
 			assert.equal(cell.stages.installedExecution.state, "unreviewed");

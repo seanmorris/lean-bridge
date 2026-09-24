@@ -82,6 +82,10 @@ export const nativeObjectType = type => nativeCType(type) === "lean_object *";
 export const nativeCallbackDefault = type => {
 	if(type.kind === "array") return "lean_mk_empty_array()";
 	if(type.kind === "list") return `lb_t${nativeTypeKey(type)}_from_array(lean_mk_empty_array())`;
+	if(type.kind === "option") return `lb_t${nativeTypeKey(type)}_none(lean_box(0))`;
+	if(type.kind === "result") return `lb_t${nativeTypeKey(type)}_ok(${nativeCallbackDefault(type.arguments[0])})`;
+	if(type.kind === "tuple") return `lb_t${nativeTypeKey(type)}_make(${type.arguments.map(nativeCallbackDefault).join(", ")})`;
+	if(type.kind === "variant") return `lb_t${nativeTypeKey(type)}_make0(${type.cases[0].fields.map(field => nativeCallbackDefault(field.type)).join(", ") || "lean_box(0)"})`;
 	if(type.kind === "record") return `lb_t${nativeTypeKey(type)}_make(${type.fields.map(f => nativeCallbackDefault(f.type)).join(", ") || "lean_box(0)"})`;
 	if(type.kind !== "primitive") fail("callback results must be copied values; identity results need a failure representation");
 	if(type.name === "string") return 'lean_mk_string("")';

@@ -6,6 +6,7 @@
 import { cIdentifier, cVariantTag } from "./generate.mjs";
 import { compilePrimitiveCSurface, rejectPrimitiveSurface } from "./primitive-surface.mjs";
 import { gmpAddress, gmpInput, gmpInteger, gmpName, gmpOutput, renderGmpValues } from "./gmp-values.mjs";
+import { generateCallableBorrowViews } from "./native-callables.mjs";
 
 /**
  * Reject public GMP identifiers that would collide before native compilation.
@@ -40,7 +41,7 @@ export const validateGmpSurface = surface => {
  * @param ir - Compiler-checked Binding IR.
  */
 export const generateGmpProjection = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true }), p = surface.prefix, g = `${p}_gmp`, m = p.toUpperCase(), gm = g.toUpperCase();
+	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), p = surface.prefix, g = `${p}_gmp`, m = p.toUpperCase(), gm = g.toUpperCase();
 	validateGmpSurface(surface);
 	const copied = renderGmpValues(surface), functions = [], implementations = [], callbacks = [];
 	const site = ref => surface.callbacks.get(ref.id) ?? surface.copy(ref);
@@ -52,9 +53,11 @@ export const generateGmpProjection = ir => {
 	const statusNames = ["OK", "INVALID_ARGUMENT", "RUNTIME_UNAVAILABLE", "RUNTIME_REJECTED", "DECLARED_ERROR", "UNEXPECTED_ERROR"];
 	const describe = (name, result, parameters, args) => { const fn = { name, result, parameters, args }; functions.push(fn); return `${result} ${name}(${parameters.join(", ")})`; };
 	const converters = [...surface.callbacks.values()];
+	const structured = converters.some(callback => [...callback.type.callable.parameters, callback.type.callable.result].some(site => site.type.kind !== "primitive"));
 	for(const [index, callback] of converters.entries())
 	{
 		const c = callback.type.callable, params = c.parameters.map(parameter => surface.copy(parameter.type)), result = surface.copy(c.result.type);
+		const nested = c.parameters.some(site => site.type.kind !== "primitive");
 		const n = gmpName(surface, callback), o = publicOwned(callback);
 		callbacks.push(`typedef ${g}_status (*${n}_fn)(${["void* context", ...params.map((copy, i) => input(copy, `arg${i}`)), ...unit(result) ? [] : [output(result, "out")], `${g}_error* error`].join(", ")});`
 			, `typedef struct ${n} { ${n}_fn call; void* context; } ${n};`, `typedef struct ${o} ${o};`);
@@ -62,12 +65,15 @@ export const generateGmpProjection = ir => {
 		const lines = [`struct lb_gmp_callback${index} { ${n} const* callback; };`
 			, `static inline ${p}_status lb_gmp_callback${index}_call(${rawParameters.join(", ")}) {`
 			, `  struct lb_gmp_callback${index}* self = context; ${p}_status status = ${m}_STATUS_OK;`
-			, `  ${g}_error host_error = {0}; ${p}_error failure = {0}; char message[1024]; size_t budget = 16u * 1024u * 1024u; int converted = 1; (void)converted; (void)budget;`];
+			, `  ${g}_error host_error = {0}; ${p}_error failure = {0}; char message[1024]; size_t budget = 16u * 1024u * 1024u; int converted = 1; (void)converted; (void)budget;`
+			, ...nested ? ["  lb_borrow_owner* borrowed = NULL;"] : []];
 		for(const [i, copy] of params.entries()) lines.push(`  ${gmpName(surface, copy)} value${i}; lb_gmp_init${copy.index}(${gmpAddress(copy, `value${i}`)});`);
 		if(!unit(result)) lines.push(`  ${gmpName(surface, result)} result; lb_gmp_init${result.index}(${gmpAddress(result, "result")});`, `  ${result.name} wire = {0};`);
 		for(const [i, copy] of params.entries()) lines.push(`  if ((converted = lb_gmp_from${copy.index}(${copy.aggregate ? "" : "&"}arg${i}, ${gmpAddress(copy, `value${i}`)}, &budget)) != 1) { status = lb_gmp_failure(converted, &failure); goto finish; }`);
-		for(const [i, copy] of params.entries()) if(copy.aggregate && !gmpInteger(copy)) lines.push(`  ${gmpName(surface, copy)} borrow${i} = value${i}; borrow${i}.owner = NULL; borrow${i}.release = NULL;`);
-		lines.push(`  status = (${p}_status)self->callback->call(${["self->callback->context", ...params.map((copy, i) => copy.aggregate && !gmpInteger(copy) ? `&borrow${i}` : `value${i}`), ...unit(result) ? [] : [gmpAddress(result, "result")], "&host_error"].join(", ")});`
+		for(const [i, copy] of params.entries()) if(copy.aggregate && !gmpInteger(copy)) lines.push(...nested
+			? [`  if ((converted = lb_borrow_${copy.index}(&value${i}, &borrowed, &budget)) != 1) { status = lb_gmp_failure(converted, &failure); goto finish; }`]
+			: [`  ${gmpName(surface, copy)} borrow${i} = value${i}; borrow${i}.owner = NULL; borrow${i}.release = NULL;`]);
+		lines.push(`  status = (${p}_status)self->callback->call(${["self->callback->context", ...params.map((copy, i) => copy.aggregate && !gmpInteger(copy) ? `&${nested ? "value" : "borrow"}${i}` : `value${i}`), ...unit(result) ? [] : [gmpAddress(result, "result")], "&host_error"].join(", ")});`
 			, `  failure = (${p}_error){(${p}_error_code)host_error.code, host_error.message, host_error.message_length};`
 			, `  if (status != ${m}_STATUS_OK) goto finish;`);
 		if(!unit(result)) lines.push(`  if ((converted = lb_gmp_to${result.index}(${gmpAddress(result, "result")}, &wire, &budget)) != 1) { status = lb_gmp_failure(converted, &failure); goto finish; }`
@@ -75,6 +81,7 @@ export const generateGmpProjection = ir => {
 		lines.push("finish:", "  lb_gmp_save_error(&failure, message);");
 		for(const [i, copy] of params.entries()) lines.push(`  lb_gmp_clear${copy.index}(${gmpAddress(copy, `value${i}`)});`);
 		if(!unit(result)) lines.push(`  lb_gmp_clear${result.index}(${gmpAddress(result, "result")});`, ...result.aggregate ? [`  ${result.name}_clear(&wire);`] : []);
+		if(nested) lines.push("  lb_borrow_clear(borrowed);");
 		lines.push("  lb_gmp_publish_error(&failure); if (error) *error = failure; return status;", "}");
 		implementations.push(lines.join("\n"));
 	}
@@ -200,6 +207,6 @@ static ${g}_status lb_gmp_finish(${p}_status status, ${p}_error* failure, ${g}_e
   return (${g}_status)status;
 }
 ${copied.definitions}
-${implementations.join("\n\n")}
+${structured ? generateCallableBorrowViews(surface, { name: copy => gmpName(surface, copy), integer: gmpInteger }) + "\n" : ""}${implementations.join("\n\n")}
 ` } };
 };

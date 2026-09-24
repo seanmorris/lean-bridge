@@ -31,11 +31,12 @@ export const rejectPrimitiveSurface = (declaration, message) => {
  * @param options - Fixed compiled Lean profile, independent of the consumer process.
  * @param options.wordBits - Lean machine-word width; native-library-v1 uses 64.
  * @param options.callables - Admit the synchronous primitive callable adapter for implemented host projections.
+ * @param options.structuredCallables - Admit copied payloads only for implemented callable projections.
  * @param options.compounds - Admit options, results and binary products only for implemented host projections.
  * @param options.lists - Admit copied Lists only for implemented host projections.
  * @param options.variants - Admit acyclic tagged values only for implemented host projections.
  */
-export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false, compounds = false, lists = false, variants = false } = {}) => {
+export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false, structuredCallables = false, compounds = false, lists = false, variants = false } = {}) => {
 	if(![32, 64].includes(wordBits)) throw new TypeError("Copied platform integers require a 32-bit or 64-bit compiled target");
 	const copies = new Map(), visiting = new Set(), typeNames = new Set(reserved), cTypeNames = new Set();
 	const callbacks = new Map();
@@ -136,7 +137,7 @@ export const compilePrimitiveCSurface = (ir, { wordBits = 64, callables = false,
 				rejectPrimitiveSurface(declaration, "C callbacks require synchronous primitive signatures, call borrows and explicit closure leases");
 			for(const value of [...callable.parameters, callable.result])
 			{
-				if(value.type.kind !== "primitive" || value.ownership !== "copy" || value.lifetime !== null)
+				if((!structuredCallables && value.type.kind !== "primitive") || value.ownership !== "copy" || value.lifetime !== null)
 					rejectPrimitiveSurface(declaration, "C callbacks currently require copied primitive parameters and results");
 				visit(value.type, declaration);
 			}

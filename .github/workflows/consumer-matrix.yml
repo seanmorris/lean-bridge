@@ -626,6 +626,8 @@ jobs:
           test -s build/variants/c.json
           LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs
           test -s build/callables/c.json
+          LEAN_BRIDGE_C_STRUCTURED_CALLABLE_TEST=1 node --test tests/c-structured-callables.test.mjs
+          test -s build/structured-callables/c.json
           LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs
           test -s build/callables/cpp.json
           LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs
@@ -643,6 +645,7 @@ jobs:
             build/char-native/c-cpp.json
             build/word-native/c-cpp.json
             build/callables/c.json
+            build/structured-callables/c.json
             build/callables/cpp.json
             build/compounds/native.json
             build/lists/native.json
@@ -825,6 +828,7 @@ jobs:
             fi
             if [ "$consumer" = c ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_C_STRUCTURED_CALLABLE_TEST=1 node --test tests/c-structured-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs"
             fi
             if [ "$consumer" = python ]; then

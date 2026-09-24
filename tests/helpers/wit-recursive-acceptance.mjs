@@ -10,6 +10,7 @@ import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surfa
 import { assertWitCompositionIntegration, witCompositionExecutionPath } from "./wit-composition-evidence.mjs";
 import { witCompositionHistoryPath } from "./wit-composition-source-history.mjs";
 import { reverseWitAcceptanceUpdate, witAcceptanceChangedPaths } from "./wit-acceptance-source-history.mjs";
+import { beforeCStructuredCallables } from "./c-structured-callable-source-history.mjs";
 
 export const witOrdinaryRegressionPath = "docs/evidence/wit-ordinary-regression-20260924.json";
 export const witAcceptanceAddedPaths = [
@@ -78,12 +79,13 @@ export const assertWitRecursiveAcceptance = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), witAcceptanceAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...witAcceptanceChangedPaths, ...witAcceptanceAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await readFile(path)), record.sourceHashes[path], path);
+	const priorSource = async path => beforeCStructuredCallables(path, await readFile(path, "utf8"), record.sourceHashes[path]);
+	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseWitAcceptanceUpdate(await readFile(update.path, "utf8"), update);
+		restored[update.path] = reverseWitAcceptanceUpdate(await priorSource(update.path), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
@@ -97,7 +99,9 @@ export const assertWitRecursiveAcceptance = async record => {
 	assert.equal(regression.source.previousSha256, sha256(restored[regression.source.path]));
 	assert.equal(regression.source.currentSha256, record.sourceHashes[regression.source.path]);
 	assert.match(await readFile(regression.source.path, "utf8"), /#ifndef _GNU_SOURCE\n#define _GNU_SOURCE\n#endif\n#include <stdlib.h>/u);
-	const { document, ...contracts } = await readTypeSurface();
+	const { document: current, ...contracts } = await readTypeSurface();
+	assert.ok(current.contractVersion);
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
 	assert.equal(oldInventory.contractVersion, record.inventory.previousVersion);
 	assert.equal(document.contractVersion, record.inventory.version);
 	const oldCells = typeSurfaceCells(oldInventory, contracts), cells = typeSurfaceCells(document, contracts);

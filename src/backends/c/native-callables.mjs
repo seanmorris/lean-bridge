@@ -7,6 +7,80 @@ import { nativeCType, nativeObjectType, nativeTypeKey, nativeCallbackDefault } f
 import { nativeCReference } from "./native-copied-values.mjs";
 
 /**
+ * Detach generated allocation owners while exposing borrowed nested values.
+ * Recorded releases survive clearing or returning the borrowed view. Every
+ * detached owner is released once, including partial traversal failures.
+ *
+ * @param surface - Checked acyclic copied C surface.
+ * @param options - Optional public GMP type spelling and integer exception.
+ * @param options.name - Name of a projected copied value.
+ * @param options.integer - True for GMP integers without release fields.
+ */
+export const generateCallableBorrowViews = (surface, { name = copy => copy.name, integer = () => false } = {}) => {
+	const lines = [`
+typedef struct lb_borrow_owner {
+  struct lb_borrow_owner *next;
+  void *value;
+  void (*release)(void *);
+} lb_borrow_owner;
+static inline int lb_borrow_take(lb_borrow_owner **owners, void **value, void (**release)(void *), size_t *budget) {
+  if (!*value || !*release) { *value = NULL; *release = NULL; return 1; }
+  if (*budget < sizeof(lb_borrow_owner)) return 0;
+  lb_borrow_owner *entry = malloc(sizeof(*entry));
+  if (!entry) return -1;
+  *budget -= sizeof(*entry);
+  *entry = (lb_borrow_owner){*owners, *value, *release}; *owners = entry;
+  *value = NULL; *release = NULL; return 1;
+}
+static inline void lb_borrow_clear(lb_borrow_owner *owners) {
+  while (owners) {
+    lb_borrow_owner *next = owners->next;
+    owners->release(owners->value); free(owners); owners = next;
+  }
+}
+`];
+	const borrowed = copy => copy.aggregate && !integer(copy);
+	for(const copy of surface.copies.filter(borrowed))
+	{
+		const body = [], call = (child, expression) => {
+			if(!borrowed(child)) return;
+			body.push(`  { int status = lb_borrow_${child.index}(${expression}, owners, budget); if (status != 1) return status; }`);
+		};
+		if(copy.element)
+		{
+			if(borrowed(copy.element))
+			{
+				body.push("  for (size_t index = 0; index < value->length; ++index) {");
+				call(copy.element, `(${name(copy.element)} *)&value->data[index]`); body.push("  }");
+			}
+		}
+		else if(copy.variant)
+		{
+			body.push("  switch (value->kind) {");
+			copy.cases.forEach((branch, index) => {
+				body.push(`  case ${index}:`);
+				for(const field of branch.fields) call(field.type, `&value->cases.${branch.name}.${field.name}`);
+				body.push("    break;");
+			});
+			body.push("  default: return 0;", "  }");
+		}
+		else for(const [index, field] of copy.fields.entries())
+		{
+			const flag = { option: "has_value", result: "is_ok" }[copy.compound];
+			if(flag) body.push(`  if (${index === 1 ? "!" : ""}value->${flag}) {`);
+			call(field.type, `&value->${field.name}`);
+			if(flag) body.push("  }");
+		}
+		if(copy.element || ["string", "bytes", "nat", "int"].includes(copy.scalarName))
+			body.push("  return lb_borrow_take(owners, &value->owner, &value->release, budget);");
+		else body.push("  return 1;");
+		lines.push(`static inline int lb_borrow_${copy.index}(${name(copy)} *value, lb_borrow_owner **owners, size_t *budget) {`
+			, "  (void)value; (void)owners; (void)budget;", ...body, "}");
+	}
+	return lines.join("\n");
+};
+
+/**
  * Connect the public C callable ABI to the compiler-emitted Lean trampolines.
  *
  * @param model - Verified compiler model.
@@ -21,6 +95,7 @@ export const generateNativeCallables = (model, surface) => {
 	const unit = type => type.kind === "primitive" && type.name === "unit";
 	const cleanup = (type, name) => copy(type).aggregate ? `${copy(type).name}_clear(&${name});` : "";
 	const types = model.types.filter(type => type.kind === "callback");
+	const structured = types.some(type => [...type.parameters, type.result].some(value => value.kind !== "primitive"));
 	const wasm = model.pointerBits === 32;
 	const source = [`
 /* The first error wins. Its text survives callback cleanup and nested calls. */
@@ -118,24 +193,31 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
   pthread_mutex_unlock(&lb_lease_mutex);
   if (value) lean_dec(value);
 }
-`];
+`
+	, ...(structured ? [generateCallableBorrowViews(surface)] : [])];
 	for(const type of types)
 	{
 		const cb = callback(type), key = nativeTypeKey(type);
+		const nested = type.parameters.some(value => value.kind !== "primitive");
 		const lines = [`typedef struct { ${cb.name} host; lb_frame *frame; } lb_host_${key};`
 			, `static inline ${nativeCType(type.result)} lb_invoke_${key}(void *raw, ${type.parameters.map((t, i) => `${nativeCType(t)} value${i}`).join(", ")}) {`
 			, `  lb_host_${key} *host = raw; lb_frame *frame = host->frame;`
 			, `  ${nativeCType(type.result)} result = ${nativeCallbackDefault(type.result)};`
 			, `  ${copy(type.result).name} returned = {0};`
+			, ...nested ? ["  lb_borrow_owner *borrowed = NULL;"] : []
 			, ...type.parameters.map((t, i) => `  ${copy(t).name} arg${i} = {0};`)
 			, `  if (frame->status != ${m}_STATUS_OK) goto done;`];
 		for(const [i, t] of type.parameters.entries())
 		{
 			lines.push(`  if (${id(t)}_out(value${i}, &arg${i}, &frame->budget) != 1) {`
 				, `    lb_record(frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Cannot copy callback argument or 16 MiB call limit exceeded"); goto done;`, "  }");
-			if(copy(t).aggregate) lines.push(`  ${copy(t).name} view${i} = arg${i}; view${i}.owner = NULL; view${i}.release = NULL;`);
+			if(copy(t).aggregate) lines.push(...nested
+				? [`  if (lb_borrow_${copy(t).index}(&arg${i}, &borrowed, &frame->budget) != 1) {`
+					, `    lb_record(frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Cannot prepare borrowed callback input or 16 MiB call limit exceeded"); goto done;`
+					, "  }"]
+				: [`  ${copy(t).name} view${i} = arg${i}; view${i}.owner = NULL; view${i}.release = NULL;`]);
 		}
-		const args = type.parameters.map((t, i) => copy(t).aggregate ? `&view${i}` : `arg${i}`);
+		const args = type.parameters.map((t, i) => copy(t).aggregate ? `&${nested ? "arg" : "view"}${i}` : `arg${i}`);
 		lines.push(`  ${p}_error error = {0};`
 			, `  ${p}_status status = host->host.call(${["host->host.context", ...args, ...(!unit(type.result) ? ["&returned"] : []), "&error"].join(", ")});`
 			, `  if (status != ${m}_STATUS_OK) lb_record(frame, status, &error, "Host callback failed");`
@@ -147,6 +229,7 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 			, `      result = ${id(type.result)}_in(&returned);`, "    }", "  }", "done:"
 			, `  ${cleanup(type.result, "returned")}`
 			, ...type.parameters.map((t, i) => `  ${cleanup(t, `arg${i}`)} ${nativeObjectType(t) ? `lean_dec(value${i});` : ""}`)
+			, ...nested ? ["  lb_borrow_clear(borrowed);"] : []
 			, "  return result;", "}");
 		source.push(lines.join("\n"));
 	}
