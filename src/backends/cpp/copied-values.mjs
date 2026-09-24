@@ -8,16 +8,27 @@
  * Name an admitted C++ value without leaking C storage details.
  *
  * @param copy - Admitted copied type.
+ * @param qualifier - Optional public namespace for names used inside helpers.
  */
-export const copiedCppType = copy => {
-	if(copy.compound === "option") return `std::optional<${copiedCppType(copy.fields[0].type)}>`;
-	if(copy.compound) return `${copy.compound === "tuple" ? "std::pair" : "Result"}<${copy.fields.map(field => copiedCppType(field.type)).join(", ")}>`;
-	if(copy.element) return `std::vector<${copiedCppType(copy.element)}>`;
-	if(copy.variant) return copy.variant.name;
-	if(copy.record) return copy.record.name;
+export const copiedCppType = (copy, qualifier = "") => {
+	if(copy.compound === "option") return `std::optional<${copiedCppType(copy.fields[0].type, qualifier)}>`;
+	if(copy.compound) return `${copy.compound === "tuple" ? "std::pair" : `${qualifier}Result`}<${copy.fields.map(field => copiedCppType(field.type, qualifier)).join(", ")}>`;
+	if(copy.element) return `std::vector<${copiedCppType(copy.element, qualifier)}>`;
+	if(copy.variant) return qualifier + copy.variant.name;
+	if(copy.record) return qualifier + copy.record.name;
 	const name = copy.scalarName;
-	return ({ char: "char32_t", unit: "std::monostate", string: "std::string", bytes: "std::vector<uint8_t>", nat: "Nat", int: "Int", bool: "bool", float32: "float", float64: "double" }[name] ?? `${name}_t`);
+	return ({ char: "char32_t", unit: "std::monostate", string: "std::string", bytes: "std::vector<uint8_t>", nat: `${qualifier}Nat`, int: `${qualifier}Int`, bool: "bool", float32: "float", float64: "double" }[name] ?? `${name}_t`);
 };
+
+/**
+ * Keep copied names distinct from callable implementation-local type names.
+ * Existing primitive-only package output retains its original spelling.
+ *
+ * @param surface - Admitted C ABI surface and callback signatures.
+ */
+export const cppCopiedNamespace = surface => [...surface.callbacks.values()].some(callback =>
+	[...callback.type.callable.parameters, callback.type.callable.result].some(site => surface.copy(site.type).ref.kind !== "primitive"))
+	? `::lean_bridge::${surface.prefix}::` : "";
 
 /**
  * Generate dependency-ordered records and per-type C views/converters.
@@ -26,11 +37,12 @@ export const copiedCppType = copy => {
  */
 export const renderCppCopiedValues = surface => {
 	const p = surface.prefix;
+	const qualifier = cppCopiedNamespace(surface), type = copy => copiedCppType(copy, qualifier);
 	const records = surface.copies.filter(copy => copy.record || copy.variant).map(copy => copy.variant
-		? `${copy.cases.map(branch => `struct ${branch.cppName} {\n${branch.fields.map(field => `  ${copiedCppType(field.type)} ${field.name}{};`).join("\n")}\n  friend bool operator==(const ${branch.cppName}&, const ${branch.cppName}&) = default;\n};`).join("\n")}\nusing ${copy.variant.name} = std::variant<${copy.cases.map(branch => branch.cppName).join(", ")}>;`
-		: `struct ${copy.record.name} {\n${copy.fields.map(field => `  ${copiedCppType(field.type)} ${field.name}{};`).join("\n")}\n  friend bool operator==(const ${copy.record.name}&, const ${copy.record.name}&) = default;\n};`).join("\n");
+		? `${copy.cases.map(branch => `struct ${branch.cppName} {\n${branch.fields.map(field => `  ${type(field.type)} ${field.name}{};`).join("\n")}\n  friend bool operator==(const ${branch.cppName}&, const ${branch.cppName}&) = default;\n};`).join("\n")}\nusing ${copy.variant.name} = std::variant<${copy.cases.map(branch => branch.cppName).join(", ")}>;`
+		: `struct ${copy.record.name} {\n${copy.fields.map(field => `  ${type(field.type)} ${field.name}{};`).join("\n")}\n  friend bool operator==(const ${copy.record.name}&, const ${copy.record.name}&) = default;\n};`).join("\n");
 	const conversions = surface.copies.map(copy => {
-		const { index, name, element, fields, record, ref } = copy, host = copiedCppType(copy);
+		const { index, name, element, fields, record, ref } = copy, host = type(copy);
 		const view = [], constructor = [], initializers = [], check = [], output = [];
 		if(element)
 		{
@@ -57,7 +69,7 @@ export const renderCppCopiedValues = surface => {
 					check.push(`  check${child.index}(${payload}, budget);`);
 				});
 				check.push("  break;"); constructor.push("  break;");
-				output.push(`case ${i}: return ${branch.cppName}{${branch.fields.map(field => `from${field.type.index}(source.cases.${branch.name}.${field.name})`).join(", ")}};`);
+				output.push(`case ${i}: return ${qualifier}${branch.cppName}{${branch.fields.map(field => `from${field.type.index}(source.cases.${branch.name}.${field.name})`).join(", ")}};`);
 			});
 			check.push('default: invalid("Variant has no active branch");', "}");
 			constructor.push('default: invalid("Variant has no active branch");', "}");
@@ -76,8 +88,8 @@ export const renderCppCopiedValues = surface => {
 			});
 			constructor.push(`value.${flag} = ${option ? "source.has_value()" : "source.index() == 0"};`);
 			if(option) output.push(`if (!source.has_value) return std::nullopt;`, `return ${host}{std::in_place, from${fields[0].type.index}(source.value)};`);
-			else output.push(`if (source.is_ok) return ${host}{Ok<${copiedCppType(fields[0].type)}>{from${fields[0].type.index}(source.ok)}};`
-				, `return ${host}{Err<${copiedCppType(fields[1].type)}>{from${fields[1].type.index}(source.error)}};`);
+			else output.push(`if (source.is_ok) return ${host}{Ok<${type(fields[0].type)}>{from${fields[0].type.index}(source.ok)}};`
+				, `return ${host}{Err<${type(fields[1].type)}>{from${fields[1].type.index}(source.error)}};`);
 		} else if(record || copy.compound === "tuple")
 		{
 			fields.forEach((field, i) => {

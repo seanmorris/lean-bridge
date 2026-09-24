@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { copiedCppType } from "./copied-values.mjs";
+import { copiedCppType, cppCopiedNamespace } from "./copied-values.mjs";
 
 /**
  * Resolve an admitted copied value or callback.
@@ -24,15 +24,15 @@ export const cppUnit = copy => copy.scalarName === "unit";
  * @param copy - Admitted type description.
  */
 export const cppCallable = copy => Boolean(copy.type?.callable);
-const returned = copy => cppUnit(copy) ? "void" : copiedCppType(copy);
-const signature = (surface, callback) => `${returned(surface.copy(callback.type.callable.result.type))}(${callback.type.callable.parameters.map(site => copiedCppType(surface.copy(site.type))).join(", ")})`;
+const returned = (surface, copy) => cppUnit(copy) ? "void" : copiedCppType(copy, cppCopiedNamespace(surface));
+const signature = (surface, callback) => `${returned(surface, surface.copy(callback.type.callable.result.type))}(${callback.type.callable.parameters.map(site => copiedCppType(surface.copy(site.type), cppCopiedNamespace(surface))).join(", ")})`;
 /**
  * Spell a public copied or owned-callable result.
  *
  * @param surface - Admitted C ABI surface.
  * @param copy - Admitted result description.
  */
-export const cppResult = (surface, copy) => cppCallable(copy) ? `LeanClosure<${signature(surface, copy)}>` : returned(copy);
+export const cppResult = (surface, copy) => cppCallable(copy) ? `LeanClosure<${signature(surface, copy)}>` : returned(surface, copy);
 
 /**
  * Generate the shared ownership and exception boundary without public C pointers.
@@ -116,10 +116,11 @@ struct ClosureFactory {
 export const cppCallableHelpers = surface => [...surface.callbacks.values()].map((callback, index) => {
 	const p = surface.prefix, m = p.toUpperCase(), native = `${p}_owned_${callback.field}`;
 	const parameters = callback.type.callable.parameters.map(site => surface.copy(site.type));
-	const result = surface.copy(callback.type.callable.result.type), host = returned(result);
+	const result = surface.copy(callback.type.callable.result.type), host = returned(surface, result);
+	const type = copy => copiedCppType(copy, cppCopiedNamespace(surface));
 	const inputs = parameters.map((copy, i) => `${copy.name}${copy.aggregate ? " const*" : ""} arg${i}`);
 	const converted = parameters.map((copy, i) => `from${copy.index}(${copy.aggregate ? "*" : ""}arg${i})`).join(", ");
-	const publicInputs = parameters.map((copy, i) => `${copiedCppType(copy)} arg${i}`);
+	const publicInputs = parameters.map((copy, i) => `${type(copy)} arg${i}`);
 	const body = [`  ${p}_error error{}; size_t budget = 16u * 1024u * 1024u;`];
 	for(const [i, copy] of parameters.entries()) body.push(`  check${copy.index}(arg${i}, budget);`);
 	const args = parameters.map((copy, i) => { body.push(`  View${copy.index} input${i}(arg${i});`); return `${copy.aggregate ? "&" : ""}input${i}.value`; });
@@ -132,8 +133,8 @@ export const cppCallableHelpers = surface => [...surface.callbacks.values()].map
 	body.push(`  check(${native}_call(static_cast<${native}*>(lease.pointer), ${[...args, "&error"].join(", ")}), error);`);
 	if(!cppUnit(result)) body.push(`  return from${result.index}(output);`);
 	return `
-template<class Function> concept Accepts${index} = std::invocable<Function&, ${parameters.map(copiedCppType).join(", ")}>
-  && std::same_as<std::invoke_result_t<Function&, ${parameters.map(copiedCppType).join(", ")}>, ${host}>;
+template<class Function> concept Accepts${index} = std::invocable<Function&, ${parameters.map(type).join(", ")}>
+  && std::same_as<std::invoke_result_t<Function&, ${parameters.map(type).join(", ")}>, ${host}>;
 template<class Function> struct Callback${index} {
   Function& function;
   CallbackState& state;

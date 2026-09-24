@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "cpp-structured-codegen-regression",
+  "baselineRevision": "9e6eb510535a6907c37d63f89ecbe0ac66927c32",
+  "predecessors": {
+    "src/backends/cpp/callables.mjs": "6ee7287978d83a87c3a32dd07401057a5e02b64257171561f295c69c32d6a4a6",
+    "src/backends/cpp/copied-values.mjs": "633d801ab0d4874685f4645c8bbba9b10f0b00375357d771e8fd129196a6886b",
+    "src/backends/cpp/primitives.mjs": "975715895da0d663e71a67a04ceea932f7d987dbd4dfec0c0f0d9331947711e2"
+  },
+  "sourceHashes": {
+    "src/backends/cpp/callables.mjs": "65bfad6fb37bc24d699f205ac1d4164d0300ffaedf4210644d6454796ae9c61d",
+    "src/backends/cpp/copied-values.mjs": "ca8300d00227c4789b34ffbad22b33c64769a31856bc86b64e9d5d56c6ea331c",
+    "src/backends/cpp/primitives.mjs": "6aaf142530630bc7a21bdea06b5072d18b190381becadd80933b191d84d61ec9"
+  },
+  "fixtures": [
+    {
+      "name": "callables",
+      "bindingIrSha256": "010e3acb3cc4b9aff9aed875f56a7074dbd6ec21a918ef8cd2f0e7d7ee25ba75",
+      "identicalToPredecessor": true,
+      "files": {
+        "include/callables.hpp": {
+          "bytes": 128099,
+          "sha256": "db44bcad1841d6bf3d836b29d59c3d7ec7e81f65392e44e8c736318099566635"
+        },
+        "src/callables.cpp": {
+          "bytes": 25,
+          "sha256": "ef9d0f6d1d893e100ea5ef75ba1d492cdc96a00eb5ed5200fd7014aeb6ba93b4"
+        },
+        "README.md": {
+          "bytes": 367,
+          "sha256": "2a97737ba5b7fffba75c928e2e39686cef2795ddb8534bfaeb0c97de04c06bde"
+        },
+        "binding-manifest.json": {
+          "bytes": 1583,
+          "sha256": "6b0e21287e315bb12ab7e70b165f2c8744f0655bd5eb76bbd28456e62ca36a74"
+        }
+      }
+    },
+    {
+      "name": "collections",
+      "bindingIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+      "identicalToPredecessor": true,
+      "files": {
+        "include/collections.hpp": {
+          "bytes": 136678,
+          "sha256": "844120eb63012cbe71ae5ed56c9bce28b075228bce16781495af88b28fe4b1d1"
+        },
+        "src/collections.cpp": {
+          "bytes": 27,
+          "sha256": "2cfbce9e594de074a80a3008a3c3affacfb1f3935334bf725682b8476f75672b"
+        },
+        "README.md": {
+          "bytes": 369,
+          "sha256": "54f378d0c27441c59191df7ff2461a136f6bf51b23e026c99f709b4d344a126d"
+        },
+        "binding-manifest.json": {
+          "bytes": 1334,
+          "sha256": "5a3b351688e1551ef10adc9be740082d7eea692318771e17beb4a94e15496b24"
+        }
+      }
+    },
+    {
+      "name": "compounds",
+      "bindingIrSha256": "5cfc48f125066df442d39c3a1d5b66886f704b2db9cf9a7544c0b63769827325",
+      "identicalToPredecessor": true,
+      "files": {
+        "include/compounds.hpp": {
+          "bytes": 174731,
+          "sha256": "53ddd0c6878c59aaef4a8bd57c585ae338e06687df353489cd1fc69bcfa92c94"
+        },
+        "src/compounds.cpp": {
+          "bytes": 25,
+          "sha256": "6219deab387add337e705855d87b74c9699a48cc97b12210f79d09b8bdd1755f"
+        },
+        "README.md": {
+          "bytes": 367,
+          "sha256": "497231c9679c614434e36bf628e319b3ddd72e6949242f4b48ac394a3627f5dd"
+        },
+        "binding-manifest.json": {
+          "bytes": 1708,
+          "sha256": "7415b88ac183dfbe0722019db71332a39938b58fa8dd1b638df2c5610de7cdd7"
+        }
+      }
+    },
+    {
+      "name": "lists",
+      "bindingIrSha256": "c96dd2a962a7034e806902705fd0ac23d0f208d2a51f66b2bf0a9b4e18f61ee3",
+      "identicalToPredecessor": true,
+      "files": {
+        "include/lists.hpp": {
+          "bytes": 112812,
+          "sha256": "b4091d228a4b221ea1e5f1639700b4160daa564bc2bc2fa733a49af4def8a7d4"
+        },
+        "src/lists.cpp": {
+          "bytes": 21,
+          "sha256": "7908b299079bed5ef89300c7dbcf31cfc5b0e97b5c81bb820dc2177b1e9f4b06"
+        },
+        "README.md": {
+          "bytes": 363,
+          "sha256": "4cb63410273f615b3e7a1f6e8b45936a5b0768ae1da14c267eac16b6d60a8fde"
+        },
+        "binding-manifest.json": {
+          "bytes": 977,
+          "sha256": "59c61b798e3c1ea18eddbd02ac9a7d3e677c9a3ca23651a07b80713cc813bbda"
+        }
+      }
+    },
+    {
+      "name": "aliases",
+      "bindingIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+      "identicalToPredecessor": true,
+      "files": {
+        "include/aliases.hpp": {
+          "bytes": 34966,
+          "sha256": "172f0ffba61e63cc25a55d2bd2a1d5013932320507fae51394d8353a76600e62"
+        },
+        "src/aliases.cpp": {
+          "bytes": 23,
+          "sha256": "ad09eb2cbcae35acc8f5df04af9b1c4cde793ab1c421ac51cc949dcd89559788"
+        },
+        "README.md": {
+          "bytes": 365,
+          "sha256": "4d046b492a84d3773f4aa887e0a002b8e169d2a99dd37a3adabe4ca016cf1a92"
+        },
+        "binding-manifest.json": {
+          "bytes": 1032,
+          "sha256": "71196c9478df8b1c2289e789442a6388d49ca5afe5b8362249d9549fb19fdd30"
+        }
+      }
+    },
+    {
+      "name": "variants",
+      "bindingIrSha256": "21cba6e0f721d83261c4b21eb7cde9f9e476789dd6c3dad4adf7bd29b72c1069",
+      "identicalToPredecessor": true,
+      "files": {
+        "include/variants.hpp": {
+          "bytes": 40477,
+          "sha256": "04b8c081e14142604d0add236588c7b1668cd98463153919a030479d9b0f4820"
+        },
+        "src/variants.cpp": {
+          "bytes": 24,
+          "sha256": "b30456eb00fd7c7000787b0ae533764e448165cdb8e7817becac5773b80db83b"
+        },
+        "README.md": {
+          "bytes": 366,
+          "sha256": "cf534adb2d205541f5e6254d72f8a1681b366144771985228324ae5dc9f4f771"
+        },
+        "binding-manifest.json": {
+          "bytes": 708,
+          "sha256": "d2566723ba459c98a8f522ae4a8bf019111bfbe83b34a0d355c517f26c97d44c"
+        }
+      }
+    }
+  ]
+}

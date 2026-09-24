@@ -630,6 +630,8 @@ jobs:
           test -s build/structured-callables/c.json
           LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs
           test -s build/callables/cpp.json
+          LEAN_BRIDGE_CPP_STRUCTURED_CALLABLE_TEST=1 node --test tests/cpp-structured-callables.test.mjs
+          test -s build/structured-callables/cpp.json
           LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs
           test -s build/recursive/c-family.json
           test -s build/type-corpus/c-cpp.json
@@ -647,6 +649,7 @@ jobs:
             build/callables/c.json
             build/structured-callables/c.json
             build/callables/cpp.json
+            build/structured-callables/cpp.json
             build/compounds/native.json
             build/lists/native.json
             build/collections/native.json
@@ -830,6 +833,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_STRUCTURED_CALLABLE_TEST=1 node --test tests/c-structured-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_CPP_STRUCTURED_CALLABLE_TEST=1 node --test tests/cpp-structured-callables.test.mjs"
             fi
             if [ "$consumer" = python ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 node --test tests/native-python.test.mjs && npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs"

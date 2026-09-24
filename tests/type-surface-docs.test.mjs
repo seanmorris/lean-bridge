@@ -123,6 +123,18 @@ test("C copied callback rows reflect installed acceptance without promoting recu
 	assert.match(source, /c-structured-callables-20260924\.md/u);
 });
 
+test("C++ copied callback rows retain their recursive and resource exclusions", async () => {
+	const source = await readFile("docs/consume/cpp.md", "utf8");
+	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+	{
+		const mapping = row(source, shape);
+		assert.match(mapping, /callback input, callback result/u);
+		assert.doesNotMatch(mapping, /Not audited/u);
+	}
+	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.match(source, /cpp-structured-callables-20260924\.md/u);
+});
+
 test("Java and Kotlin distinguish callable, collection-field and asynchronous evidence", async () => {
 	const java = await readFile("docs/consume/java.md", "utf8");
 	const kotlin = await readFile("docs/consume/kotlin.md", "utf8");

@@ -49,7 +49,7 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { copiedGraphs: true });
 	const graph = model.copiedGraph ? compileCopiedGraphPackageModel(model.bindingIr, [target]) : null;
-	const surface = graph ? null : compilePrimitiveCSurface(model.bindingIr, { callables: true, structuredCallables: target === "c", compounds: true, lists: true, variants: true }), p = graph ? graph.prefix : surface.prefix;
+	const surface = graph ? null : compilePrimitiveCSurface(model.bindingIr, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), p = graph ? graph.prefix : surface.prefix;
 	const bigint = target === "cpp" && (graph ? graph.bigint : surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName)));
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	const gmp = target === "c" && (graph !== null || surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName)));

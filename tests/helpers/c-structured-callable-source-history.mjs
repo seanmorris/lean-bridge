@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeCppStructuredCallables } from "./cpp-structured-callable-source-history.mjs";
 
 export const cStructuredCallableHistoryPath = "docs/evidence/c-structured-callable-integration-20260924.json";
 export const cStructuredCallableChangedPaths = [
@@ -70,6 +71,7 @@ export const reverseCStructuredCallableUpdate = (source, update) => {
  * @param expected - Optional historical digest where normalization stops.
  */
 export const beforeCStructuredCallables = (path, source, expected) => {
+	source = beforeCppStructuredCallables(path, source, expected);
 	if(sha256(source) === expected || !cStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(cStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);

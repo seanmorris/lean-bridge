@@ -4,7 +4,7 @@
  * @file
  */
 import { compilePrimitiveCSurface } from "../c/primitive-surface.mjs";
-import { copiedCppType, renderCppCopiedValues } from "./copied-values.mjs";
+import { copiedCppType, cppCopiedNamespace, renderCppCopiedValues } from "./copied-values.mjs";
 import { cppCallable, cppCallableHelpers, cppCallablePublic, cppClosureReturn, cppResult, cppSite, cppUnit } from "./callables.mjs";
 
 const wrapper = (surface, fn) => {
@@ -15,7 +15,7 @@ const wrapper = (surface, fn) => {
 	const lines = [];
 	if(callbacks.length) lines.push(`template<${callbacks.map(({ index }) => `class Function${index}`).join(", ")}>`
 		, `requires (${callbacks.map(({ copy, index }) => `detail::Accepts${copy.cppIndex}<Function${index}>`).join(" && ")})`);
-	lines.push(`inline ${cppResult(surface, result)} ${fn.field}(${parameters.map(({ name, copy, index }) => `${cppCallable(copy) ? `Function${index}&&` : `${copiedCppType(copy)}${copy.aggregate ? " const&" : ""}`} ${name}`).join(", ")}) {`
+	lines.push(`inline ${cppResult(surface, result)} ${fn.field}(${parameters.map(({ name, copy, index }) => `${cppCallable(copy) ? `Function${index}&&` : `${copiedCppType(copy, cppCopiedNamespace(surface))}${copy.aggregate ? " const&" : ""}`} ${name}`).join(", ")}) {`
 		, `  ${p}_error _lb_error{}; size_t _lb_budget = 16u * 1024u * 1024u; (void)_lb_budget;`);
 	if(callbacks.length) lines.push("  detail::CallbackState _lb_scope;");
 	for(const { name, copy } of parameters) if(!cppCallable(copy)) lines.push(`  detail::check${copy.index}(${name}, _lb_budget);`);
@@ -59,7 +59,7 @@ const wrapper = (surface, fn) => {
  * @param ir - Canonical Binding IR.
  */
 export const compilePrimitiveCppModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true });
+	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true });
 	if(surface.copies.some(copy => ["LeanClosure", "Ok", "Err", "Result"].includes(copy.record?.name))) throw new TypeError("C++ record name collides with a generated callable or compound type");
 	const occupied = new Set(["LeanClosure", "Ok", "Err", "Result", "Nat", "Int"
 		, "Error", "detail", "std", "boost"
@@ -119,7 +119,7 @@ ${surface.copies.some(copy => copy.compound === "result") ? `template<class T> s
 template<class E> struct Err { E value; friend bool operator==(const Err&, const Err&) = default; };
 template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;` : ""}
 ${bigint ? "using Nat = boost::multiprecision::cpp_int;\nusing Int = boost::multiprecision::cpp_int;" : ""}
-${values.records}${surface.aliases.length ? `\n${surface.aliases.map(alias => `using ${alias.definition.name} = ${copiedCppType(alias.copy)};`).join("\n")}` : ""}
+${values.records}${surface.aliases.length ? `\n${surface.aliases.map(alias => `using ${alias.definition.name} = ${copiedCppType(alias.copy, cppCopiedNamespace(surface))};`).join("\n")}` : ""}
 class Error final : public std::runtime_error {
 public:
   ${p}_status status;

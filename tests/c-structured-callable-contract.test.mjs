@@ -13,7 +13,7 @@ import test from "node:test";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
 import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mjs";
 import { generateCallableBorrowViews } from "../src/backends/c/native-callables.mjs";
-import { compilePrimitiveCppModel } from "../src/backends/cpp/primitives.mjs";
+import { compileCopiedPythonModel } from "../src/backends/python/copied-model.mjs";
 import { nativeCallbackDefault } from "../src/build/native-model.mjs";
 import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -24,7 +24,7 @@ const surface = ir => compilePrimitiveCSurface(ir, options);
 test("structured C callables require explicit admission without enabling other hosts", () => {
 	const ir = structuredCallableReviewedIr();
 	assert.throws(() => compilePrimitiveCSurface(ir, { ...options, structuredCallables: false }), { code: "unsupported-native-c-signature" });
-	assert.throws(() => compilePrimitiveCppModel(ir), { code: "unsupported-native-c-signature" });
+	assert.throws(() => compileCopiedPythonModel(ir), { code: "unsupported-native-c-signature" });
 	const selected = surface(ir);
 	assert.equal(selected.functions.length, 26); assert.equal(selected.callbacks.size, 14);
 	assert.equal(selected.copies.length, 25);

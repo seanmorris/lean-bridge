@@ -22,7 +22,7 @@ trailing underscore. See the [Parcel export](c.md#copied-arrays-and-records),
 [consumer example](../consume/cpp.md#arrays-and-records) and
 [installed collection checks](../evidence/native-collections-20260921.md).
 
-`Option T` uses `std::optional<T>`, including `std::optional<std::monostate>` for `Option Unit` and nested optionals for nested options. `Except E T` uses `Result<T, E>`, an alias for `std::variant<Ok<T>, Err<E>>`. Construct `Ok<T>{value}` or `Err<E>{error}` and read its `value` member with `std::get` or `std::visit`. Products use `std::pair<A, B>` and retain their binary nesting. All three can contain supported primitives, arrays, copied records and each other. These constructors are not admitted in callback signatures. The [installed compound checks](../evidence/native-compounds-20260920.md) cover ordinary-source and reviewed-IR packages.
+`Option T` uses `std::optional<T>`, including `std::optional<std::monostate>` for `Option Unit` and nested optionals for nested options. `Except E T` uses `Result<T, E>`, an alias for `std::variant<Ok<T>, Err<E>>`. Construct `Ok<T>{value}` or `Err<E>{error}` and read its `value` member with `std::get` or `std::visit`. Products use `std::pair<A, B>` and retain their binary nesting. All three can contain supported primitives, arrays, copied records and each other, including in synchronous callback signatures. The [installed compound checks](../evidence/native-compounds-20260920.md) cover ordinary-source and reviewed-IR packages.
 
 Concrete copied aliases export source-named `using` declarations for the target's
 C++ type. Alias chains and aliases of supported primitives, records and containers
@@ -48,8 +48,9 @@ adapter does not inspect Lean object tags or constructor offsets. Inputs and
 outputs share the 16 MiB copy budget and the 32-level type nesting limit.
 Payloads may nest supported copied records and containers. Case and field name
 collisions fail during generation; C++ keywords in fields gain a trailing
-underscore. Recursive values, callable payloads and retained identities remain
-outside this copied profile.
+underscore. Variants can be synchronous callback arguments and results; their
+fields cannot retain callback or resource identities. For recursive APIs, see
+[recursive copied values](../consume/cpp.md#recursive-copied-values).
 
 Select `--target cpp` for these packages. Add `--target c` for the
 [public C/C-GMP representation](c.md#copied-tagged-variants). Combined native
@@ -59,7 +60,8 @@ variant builds also admit [Python](pypi.md#export-tagged-variants),
 [Java/Kotlin](maven.md#export-copied-tagged-variants),
 [Ruby](rubygems.md#export-copied-tagged-variants) and
 [Perl](cpan.md#export-copied-tagged-variants) when each selected target accepts
-the full API. Other native hosts, PHP-Wasm and WIT variants remain pending.
+the full API. Native PHP, PHP-Wasm and WIT/WASI also support copied variants;
+structured callback signatures still require support from every selected target.
 The C transport included
 in a C++ archive is an implementation layer; use the C target for its public API
 and GMP integer handling.
@@ -72,7 +74,15 @@ Ordinary-source and independently reviewed builds support synchronous callbacks 
 
 Generated trampolines catch C++ exceptions before returning to C and rethrow the original exception once the native call returns. The first failure suppresses later callbacks in the same call. Returned `LeanClosure<Result(Args...)>` values are move-only, provide `call`, `operator()`, `close` and `is_closed`, and release automatically on destruction. Invoke and explicitly close them on their creating thread. Moving them does not transfer thread ownership. Self-close during an active call defers disposal until the call returns.
 
-For an ordinary export that returns a function, set its outer parameter count in `arities`. Reviewed contracts carry that count in their declaration instead. Call-scoped host callbacks must not escape into a retained Lean closure. The adapter rejects expired borrows, calls after close, and post-fork use. Primitive callables share the C adapter's 16 MiB conversion budget, 64-level nesting limit and 4,096 live-closure capacity. Arrays, records, resources and asynchronous callables are not part of this callable profile. See the [installed acceptance record](../evidence/cpp-callables-20260919.md).
+For an ordinary export that returns a function, set its outer parameter count in `arities`. Reviewed contracts carry that count in their declaration instead. Call-scoped host callbacks must not escape into a retained Lean closure. The adapter rejects expired borrows, calls after close, and post-fork use. Callables share the C adapter's 16 MiB conversion budget, 64-level call nesting limit and 4,096 live-closure capacity. See the [installed primitive acceptance record](../evidence/cpp-callables-20260919.md).
+
+### Export copied callback payloads
+
+Arrays, Lists, options, results, products, acyclic records, tagged variants and aliases work in callback and returned-closure signatures on both authoring paths. Declare their Lean types directly. The [structured fixture](../../tests/fixtures/onboarding/structured-callables/Structured.lean) and [C++ consumer example](../consume/cpp.md#structured-callbacks-and-closures) show the generated API.
+
+C++ receives owned values in callbacks and copies the returned value into Lean. Consumers use standard containers and generated value types without C buffers or ownership hooks. Callback and closure results receive the same validation as ordinary arguments, including nonnegative `Nat`, valid UTF-8 and the conversion budget. Copied type nesting is limited to 32 levels. Recursive callable payloads, callback identities inside copied fields, resource aggregates and asynchronous calls remain unsupported.
+
+Select `--target cpp`, or combine `--target c --target cpp` for APIs supported by both. Other targets still reject structured callback signatures until their host projection is implemented. The [installed structured acceptance](../evidence/cpp-structured-callables-20260924.md) includes typed compiler rejections, exception recovery, allocation-failure cleanup and runtime-only deployment.
 
 ## Build the reviewed Alpha example
 
