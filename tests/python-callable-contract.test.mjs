@@ -28,7 +28,7 @@ test("Python primitive callables emit typed closures without enabling other host
 for(const [label, change] of Object.entries({
 	"retained callback": ir => { ir.declarations[0].parameters[1].lifetime.scope = "explicit"; }
 	, "async callback": ir => { ir.types[0].callable.resultMode = "promise"; }
-	, "nonprimitive callback": ir => { ir.types[0].callable.result.type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint8" }] }; }
+	, "higher-order callback": ir => { ir.types[0].callable.result.type = { kind: "named", id: ir.types[0].id }; }
 	, "callable builtin collision": ir => { ir.declarations[0].parameters[0].name = "callable"; }
 })) test(`Python callable admission rejects ${label}`, () => {
 	const ir = callableReviewedIr(); change(ir);

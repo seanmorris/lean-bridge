@@ -55,10 +55,12 @@ for(const name of ["Some", "Option", "Ok", "Err", "Result"])
 		assert.throws(() => compileCopiedPythonModel(record), /record name collides/);
 	});
 
-test("Python compounds do not enable identity-bearing or callable containers", () => {
+test("Python compounds admit copied callback results but reject borrowed copied identities", () => {
 	const ir = callableReviewedIr();
 	ir.types[0].callable.result.type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "unit" }] };
-	assert.throws(() => compileCopiedPythonModel(ir), /callbacks currently require copied primitive/);
+	const model = compileCopiedPythonModel(ir);
+	assert.equal(model.surface.copy(ir.types[0].callable.result.type).publicType, "Option[None]");
+	assert.match(generateCopiedPythonPackage(ir)["lean_callables/__init__.pyi"], /_Callable\[\[None\], Option\[None\]\]/);
 	const nested = compoundReviewedIr();
 	nested.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedPythonModel(nested), /copy ownership/);

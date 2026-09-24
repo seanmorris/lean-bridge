@@ -95,6 +95,18 @@ export const renderCopiedPythonPackage = (model, evidence = null) => {
 	if(model.surface.aliases.length)
 		files["README.md"] += "\nConcrete copied Lean aliases export named Python TypeAlias declarations in both the module and its type stub. Aliases reuse their target values and validation without NewType wrappers. Aliased arrays and Lists retain tuple-or-list inputs and return independent tuples. Aliased records remain the same frozen dataclass. An alias of Nat still rejects negative input. Recursive and identity-bearing alias targets, and compound callable payloads remain unsupported.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: { id: "lean-wasm/python-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), publicModule, typeStub, internalModule: `${packageDir}/_native.py`, exports: names(model), files: [...Object.keys(files), "binding-manifest.json"], capabilityGaps: [{ feature: "additional-identity-and-effects", reason: "Ordinary PyPI packages admit copied values and synchronous primitive callables; other identity and effect shapes remain unsupported." }, { feature: "additional-platforms", reason: "The accepted native profile is GIL-enabled Python 3.11+ on Linux x86-64." }] }, null, 2)}\n`;
+	const structured = [...model.surface.callbacks.values()].some(callback => [...callback.type.callable.parameters, callback.type.callable.result].some(site => model.surface.copy(site.type).ref.kind !== "primitive"));
+	if(structured)
+	{
+		files["README.md"] = files["README.md"]
+			.replace("Synchronous primitive host callbacks", "Synchronous primitive and acyclic copied structured callbacks")
+			.replace("the same checked primitive conversions", "the same checked copied-value conversions")
+			.replace("List callback payloads remain unsupported.", "List callback arguments arrive as owned tuples; callback results accept exact lists or tuples.")
+			.replace("Recursive and identity-bearing alias targets, and compound callable payloads remain unsupported.", "Acyclic copied aliases work in callback and closure payloads. Recursive callable payloads and identity-bearing alias targets remain unsupported.")
+			.replace("recursive, callable and identity-bearing payloads remain unsupported.", "callback identities and resources cannot be copied fields; recursive callable payloads remain unsupported.");
+		files["README.md"] += "\nCallback arguments own independent copied values. Callback results use the same input types as exported functions; arrays and Lists may be exact lists or tuples. Returned closures also accept input containers and return owned tuples. Some(None) preserves nested presence. Ok and Err carry domain results, while callback exceptions propagate after native cleanup. Nested callback result buffers stay alive until native copying finishes. Recursive callback payloads and resource-containing aggregates remain unsupported.\n";
+		files["binding-manifest.json"] = files["binding-manifest.json"].replace("Ordinary PyPI packages admit copied values and synchronous primitive callables; other identity and effect shapes remain unsupported.", "Ordinary PyPI packages admit copied values and synchronous primitive or acyclic structured callables; recursive callable payloads, resource-containing aggregates and asynchronous operations remain unsupported.");
+	}
 	return Object.freeze(files);
 };
 

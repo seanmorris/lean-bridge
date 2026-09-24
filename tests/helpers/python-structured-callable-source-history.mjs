@@ -1,31 +1,31 @@
 /**
- * Preserve exact historical sources around the structured Rust callable change.
+ * Preserve exact predecessor sources around structured Python callable support.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePythonStructuredCallables } from "./python-structured-callable-source-history.mjs";
 
-export const rustStructuredCallableHistoryPath = "docs/evidence/rust-structured-callable-integration-20260924.json";
-export const rustStructuredCallableChangedPaths = [
+export const pythonStructuredCallableHistoryPath = "docs/evidence/python-structured-callable-integration-20260924.json";
+export const pythonStructuredCallableChangedPaths = [
 	".github/workflows/consumer-matrix.yml"
-	, "docs/consume/rust.md", "docs/lean/existing-package.md"
-	, "docs/lean/export-decisions.md", "docs/publish/cargo.md"
+	, "docs/consume/python.md", "docs/lean/existing-package.md"
+	, "docs/lean/export-decisions.md", "docs/publish/pypi.md"
 	, "docs/reference/types.md", "docs/type-surface.v1.json"
 	, "scripts/generate-type-docs.mjs", "src/adoption/test-profiles.mjs"
-	, "site/workflows.test.mjs"
-	, "src/backends/rust/callables.mjs", "src/backends/rust/copied-model.mjs"
-	, "src/backends/rust/copied-values.mjs"
+	, "src/backends/python/copied-model.mjs"
+	, "src/backends/python/copied-values.mjs"
 	, "src/build/native-c-projection.mjs", "src/build/native-project.mjs"
-	, "tests/cpp-structured-callable-evidence.test.mjs"
+	, "tests/c-structured-callable-contract.test.mjs"
 	, "tests/documentation.test.mjs"
-	, "tests/helpers/cpp-structured-callable-evidence.mjs"
-	, "tests/helpers/cpp-structured-callable-source-history.mjs"
-	, "tests/rust-callable-contract.test.mjs"
-	, "tests/rust-collection-evidence.test.mjs"
-	, "tests/rust-compound-contract.test.mjs", "tests/rust-list-contract.test.mjs"
+	, "tests/helpers/rust-structured-callable-evidence.mjs"
+	, "tests/helpers/rust-structured-callable-source-history.mjs"
+	, "tests/python-callable-contract.test.mjs"
+	, "tests/python-collection-evidence.test.mjs"
+	, "tests/python-compound-contract.test.mjs"
+	, "tests/python-list-contract.test.mjs"
+	, "tests/rust-structured-callable-evidence.test.mjs"
 	, "tests/type-surface-docs.test.mjs", "tests/type-surface.test.mjs"
 ].sort();
 let history;
@@ -40,13 +40,13 @@ const reverse = (source, update) => {
 };
 
 /**
- * Authenticate complete sources and each ordered, nonoverlapping literal edit.
+ * Authenticate complete source bytes and every ordered literal edit.
  *
- * @param source - Complete current source at this milestone.
+ * @param source - Complete source at this milestone.
  * @param update - Explicit predecessor and replacement spans.
  */
-export const reverseRustStructuredCallableUpdate = (source, update) => {
-	assert.ok(rustStructuredCallableChangedPaths.includes(update.path));
+export const reversePythonStructuredCallableUpdate = (source, update) => {
+	assert.ok(pythonStructuredCallableChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let end = 0;
@@ -64,16 +64,15 @@ export const reverseRustStructuredCallableUpdate = (source, update) => {
 };
 
 /**
- * Undo recorded Rust changes, leaving any unrelated drift visible to old checks.
+ * Undo only recorded Python edits, leaving unrelated changes visible to checks.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or predecessor source.
- * @param expected - Optional intermediate digest at which to stop.
+ * @param expected - Optional intermediate identity at which to stop.
  */
-export const beforeRustStructuredCallables = (path, source, expected) => {
-	source = beforePythonStructuredCallables(path, source, expected);
-	if(sha256(source) === expected || !rustStructuredCallableChangedPaths.includes(path)) return source;
-	const record = history ??= JSON.parse(readFileSync(rustStructuredCallableHistoryPath, "utf8"));
+export const beforePythonStructuredCallables = (path, source, expected) => {
+	if(sha256(source) === expected || !pythonStructuredCallableChangedPaths.includes(path)) return source;
+	const record = history ??= JSON.parse(readFileSync(pythonStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
 	return update ? reverse(source, update) : source;
 };

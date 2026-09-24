@@ -25,7 +25,7 @@ export const validateOrdinaryPythonSettings = (settings = {}) => {
  * @param ir - Authoritative compiler-derived Binding IR.
  */
 export const compileCopiedPythonModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true }), packageDir = `lean_${surface.prefix}`;
+	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), packageDir = `lean_${surface.prefix}`;
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-python-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -99,7 +99,7 @@ export const compileCopiedPythonModel = ir => {
 		const signature = callback.type.callable;
 		callback.index = index;
 		callback.ctype = `_B${index}`;
-		callback.inputType = `_Callable[[${signature.parameters.map(site => surface.copy(site.type).inputType).join(", ")}], ${surface.copy(signature.result.type).publicType}]`;
+		callback.inputType = `_Callable[[${signature.parameters.map(site => surface.copy(site.type).publicType).join(", ")}], ${surface.copy(signature.result.type).inputType}]`;
 		callback.publicType = `LeanClosure[[${signature.parameters.map(site => surface.copy(site.type).inputType).join(", ")}], ${surface.copy(signature.result.type).publicType}]`;
 	}
 	for(const fn of surface.functions)

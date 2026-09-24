@@ -90,7 +90,7 @@ constructor numbers, serialization layer or manual runtime configuration.
 Python conversions and native copies each have a 16 MiB call budget. Resources
 and callbacks inside copied values are not admitted. Recursive data uses the
 [graph adapter](#export-recursive-values).
-Compound arguments/results inside callables remain unsupported.
+Acyclic compound values also work as [callback and closure payloads](#structured-callback-values).
 
 Run the [compound consumer example](../consume/python.md#options-results-and-products)
 before publishing. The [acceptance record](../evidence/python-compounds-20260920.md)
@@ -122,8 +122,9 @@ An alias of `Nat` still rejects negative values. Python's numeric annotations do
 not encode fixed-width ranges, so runtime validation remains necessary.
 See the [consumer example](../consume/python.md#named-aliases) and
 [installed wheel and stub checks](../evidence/python-aliases-20260921.md).
-Concrete aliases can also name supported recursive values. Generic aliases,
-alias cycles and compound callable payloads still need adapter support.
+Concrete aliases can also name supported recursive values. Acyclic copied aliases
+work in callbacks and returned closures. Generic aliases, alias cycles and
+recursive callable payloads still need adapter support.
 
 ## Export tagged variants
 
@@ -189,7 +190,7 @@ checks graph metadata and regenerated native adapter sources before packaging.
 
 ## Export callbacks and closures
 
-Callback arguments and results can use any of the nineteen primitives. The generated Python API accepts typed callables and returns callable `LeanClosure` objects with `close()` and context-manager support. Consumers do not write native declarations.
+Callback arguments and results can use any of the nineteen primitives and the acyclic copied structures below. The generated Python API accepts typed callables and returns callable `LeanClosure` objects with `close()` and context-manager support. Consumers do not write native declarations.
 
 For example, add these definitions to your Lean module:
 
@@ -206,6 +207,44 @@ Select both exports and set `"arities": { "Callables.makeString": 1 }` in `lean-
 Both source paths enforce synchronous value delivery, repeated invocation, same-agent re-entry, deferred self-disposal and the native callback failure policy. Host callbacks are call-scoped borrows; returned closures are explicit leases. Retained host callbacks, callable containers and asynchronous delivery are rejected. All native-runtime targets admit primitive callables. Combined builds still require every selected target to accept the same API and author configuration.
 
 Run the [installed callable example](../consume/python.md#callbacks-and-returned-lean-closures) before publishing. The [acceptance record](../evidence/python-callables-20260918.md) includes exact wheel identities, source-hidden offline installation and lifetime checks.
+
+## Structured callback values
+
+Arrays, Lists, options, results, binary products, acyclic records, variants and
+concrete aliases can cross callbacks and returned closures on both source paths.
+For example:
+
+```lean
+namespace Structured
+
+def callArray (value : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) :=
+  callback value
+
+def makeArray (captured : Array (Option String)) :
+    Bool → Array (Option String) → Array (Option String) :=
+  fun selected value => if selected then captured else value
+
+end Structured
+```
+
+Select `Structured.callArray` and `Structured.makeArray`. For ordinary source,
+set `"arities": { "Structured.makeArray": 1 }`. A reviewed contract owns the
+outer arity instead. Build with `--target pypi`; consumers use the generated
+functions from the wheel without configuring native callbacks.
+
+Python callbacks receive owned tuples for arrays and Lists, and can return exact
+lists or tuples. Returned closures accept those input containers and return
+owned copies. Nested options retain every presence layer; `Except` uses `Ok` and
+`Err` independently of Python exceptions. The generated stubs distinguish input
+containers from callback arguments and closure results. Run the
+[structured consumer example](../consume/python.md#structured-callback-values)
+against the prepared wheel before publishing.
+
+Host callbacks remain call-scoped borrows. Recursive callable payloads,
+resource-containing aggregates, higher-order callbacks and asynchronous
+delivery still need adapter support. Combined builds require every selected
+target to accept the same structured signature.
 
 ## Choose the package name and platform
 

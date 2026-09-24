@@ -21,13 +21,16 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 const options = { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true };
 const surface = ir => compilePrimitiveCSurface(ir, options);
 
-test("structured C callables require explicit admission without enabling other hosts", () => {
+test("structured callables require explicit admission and Python admits the copied surface", () => {
 	const ir = structuredCallableReviewedIr();
 	assert.throws(() => compilePrimitiveCSurface(ir, { ...options, structuredCallables: false }), { code: "unsupported-native-c-signature" });
-	assert.throws(() => compileCopiedPythonModel(ir), { code: "unsupported-native-c-signature" });
+	const python = compileCopiedPythonModel(ir).surface;
 	const selected = surface(ir);
 	assert.equal(selected.functions.length, 26); assert.equal(selected.callbacks.size, 14);
 	assert.equal(selected.copies.length, 25);
+	assert.equal(python.functions.length, selected.functions.length);
+	assert.equal(python.callbacks.size, selected.callbacks.size);
+	assert.equal(python.copies.length, selected.copies.length);
 });
 
 test("structured C callables retain copy ownership, lifetime and recursion gates", () => {

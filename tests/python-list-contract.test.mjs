@@ -55,14 +55,17 @@ test("Python Lists preserve distinct List/Array identities and precise copied si
 	assert.match(files["README.md"], /Lean List values accept exact Python lists or tuples/);
 });
 
-test("Python Lists reject callbacks, borrowed ownership and source-name collisions", () => {
+test("Python Lists admit copied callback payloads but reject borrowed ownership and name collisions", () => {
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
 		const list = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "uint32" }] };
 		if(position === "parameter") callback.callable.parameters[0].type = list;
 		else callback.callable.result.type = list;
-		assert.throws(() => compileCopiedPythonModel(ir), /callbacks currently require copied primitive/);
+		const model = compileCopiedPythonModel(ir);
+		assert.equal(model.surface.copy(list).publicType, "tuple[int, ...]");
+		assert.match(generateCopiedPythonPackage(ir)["lean_callables/__init__.pyi"], position === "parameter"
+			? /_Callable\[\[tuple\[int, \.\.\.\]\], None\]/ : /_Callable\[\[None\], _Array\d+\]/);
 	}
 	const borrowed = listReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedPythonModel(borrowed), /copy ownership/);

@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
 import { pythonTypingWheels } from "./helpers/python-wheel-install.mjs";
+import { beforePythonStructuredCallables } from "./helpers/python-structured-callable-source-history.mjs";
 
 test("Python collection evidence binds original wheels, offline dependencies and public types", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/python-collections-20260922.json"));
@@ -24,7 +25,8 @@ test("Python collection evidence binds original wheels, offline dependencies and
 		return { ...run, signatures: record.signatures };
 	});
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(beforePythonStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.executions)
 	{
@@ -136,7 +138,10 @@ test("Python collections advance only copied reviewed positions and require orig
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["python-collections-installed"]); }
 	}
 	for(const cell of cells.filter(cell => cell.profile === "python" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["python-structured-callables-installed"]);
+	}
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_COLLECTION_TEST=1 node --test tests/python-collections.test.mjs"));
 	for(const report of ["python", "python-docs"])
