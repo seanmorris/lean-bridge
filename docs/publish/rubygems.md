@@ -1,6 +1,6 @@
 # Build and publish Ruby packages
 
-Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, copied records, tagged variants, options, results, nested binary products, named copied aliases, bounded recursive values, synchronous primitive callbacks and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target rubygems` to produce an installable gem. Generated Ruby APIs support all nineteen primitives, nested arrays and Lists, copied records, tagged variants, options, results, nested binary products, named copied aliases, bounded recursive values, synchronous primitive and acyclic structured callbacks, and returned Lean closures. Consumers install the package without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -96,8 +96,9 @@ must retain named alias references and their definitions; replacing them with
 flattened primitive or container types fails compiler reconciliation. See the
 [consumer example](../consume/ruby.md#named-copied-aliases) and
 [installed evidence](../evidence/ruby-aliases-20260921.md). Aliases can also refer
-to [recursive copied types](#export-recursive-values). Compound callable payloads
-and identity-bearing alias targets remain unsupported.
+to [recursive copied types](#export-recursive-values). Acyclic copied aliases
+work in [callback and closure payloads](#structured-callback-values).
+Recursive callable payloads and identity-bearing alias targets remain unsupported.
 
 ## Export copied tagged variants
 
@@ -128,7 +129,7 @@ publishing the original gem.
 
 Ordinary-source and reviewed-IR builds support `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested Lists and arrays, records, `Option`, `Except` and binary products. Select concrete exports as usual; no List-specific configuration is required.
 
-Ruby callers use exact `Array` instances. Conversions preserve empty Lists, order, duplicates, nesting and independent result storage. The existing 16 MiB accounting budgets and 32-level type limit apply. List callback payloads remain unsupported. See the [consumer example](../consume/ruby.md#lists) and [installed gem evidence](../evidence/ruby-lists-20260921.md).
+Ruby callers use exact `Array` instances. Conversions preserve empty Lists, order, duplicates, nesting and independent result storage. The existing 16 MiB accounting budgets and 32-level type limit apply. Lists also work in [structured callbacks and closures](#structured-callback-values). See the [consumer example](../consume/ruby.md#lists) and [installed gem evidence](../evidence/ruby-lists-20260921.md).
 
 ## Export options, results and products
 
@@ -194,7 +195,7 @@ malformed native result retires the shared runtime across compatible packages.
 
 ## Export callbacks and closures
 
-Callback arguments and results can use any of the nineteen primitives. Add these definitions to a Lean module:
+Callback arguments and results can use any of the nineteen primitives or [acyclic copied structures](#structured-callback-values). Add these definitions to a Lean module:
 
 ```lean
 namespace Callables
@@ -209,6 +210,45 @@ Select both exports and set `"arities": { "Callables.makeString": 1 }` in `lean-
 For a [reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), the outer signature determines the arity instead; omit configuration `arities`. The callback contract requires repeated invocation, same-agent re-entry, deferred self-disposal, synchronous value delivery and the native callback failure policy. Arguments borrow the call; returned closures have explicit leases. Both source paths receive fresh Lean compiler checks before linking.
 
 Generated Ruby functions accept callable objects or a final block. Returned `LeanClosure` objects have `call`, `close`, `closed?` and `with` for scoped cleanup. Exceptions return to Ruby after native cleanup. Non-local block exits are rejected. Calls use MRI's default 1:1 threading, and closure invocation stays on its creating thread. See the [consumer example](../consume/ruby.md#callbacks-and-returned-lean-closures) and [installed evidence](../evidence/ruby-callables-20260919.md).
+
+### Structured callback values
+
+Arrays, Lists, options, results, products, records, variants and transparent
+aliases can appear in callback signatures and returned closures. Select concrete
+acyclic copied types. In a Lake package named `structured`, add `Structured.lean`:
+
+```lean
+namespace Structured
+def callArray (value : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) := callback value
+def makeArray (captured : Array (Option String)) :
+    Bool → Array (Option String) → Array (Option String) :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select the exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callArray", "Structured.makeArray"],
+  "arities": { "Structured.makeArray": 1 },
+  "targets": { "rubygems": { "name": "structured-api", "version": "1.0.0" } }
+}
+```
+
+Build with `--target rubygems`. The [Ruby example](../consume/ruby.md#structured-callback-values)
+calls these functions from the prepared gem. Reviewed contracts state the outer
+signature instead of using configuration `arities`.
+
+Callback arguments and results copy their nested storage. Returned closures copy
+captured values and expose `with` and `close` for cleanup. `Some.new(API::UNIT)`
+preserves a present Unit; domain errors use `Err`, while callback exceptions
+return to Ruby after native cleanup. Recursive callback payloads, resources in
+copied structures, retained host callbacks and asynchronous delivery remain
+unsupported.
 
 ## Build the gem
 

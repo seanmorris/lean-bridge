@@ -61,14 +61,16 @@ test("Ruby Lists use checked owned arrays with distinct List/Array native identi
 	assert.match(files["README.md"], /Lean List inputs, results and record fields use copied Ruby Array values/);
 });
 
-test("Ruby Lists reject borrowed identities, compound callbacks and record name collisions", () => {
+test("Ruby Lists admit copied callback payloads but reject borrowed identities and name collisions", () => {
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
 		const list = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "uint32" }] };
 		if(position === "parameter") callback.callable.parameters[0].type = list;
 		else callback.callable.result.type = list;
-		assert.throws(() => compileCopiedRubyModel(ir), /callbacks currently require copied primitive/);
+		const model = compileCopiedRubyModel(ir);
+		assert.equal(model.surface.copy(list).element.scalarName, "uint32");
+		assert.equal(model.surface.copy(list).ref.constructor, "list");
 	}
 	const borrowed = listReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedRubyModel(borrowed), /copy ownership/);

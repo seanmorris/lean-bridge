@@ -145,6 +145,17 @@ export const renderCopiedRubyPackage = (model, evidence = null) => {
 		files["README.md"] += "\nConcrete copied Lean variants use named constructor classes such as Signal::Data.new(count: 42, label: \"ready\"). Constructor payloads use required keyword arguments and read-only accessors; deconstruct_keys supports Ruby pattern matching. Constructor objects are frozen, but contained strings and arrays remain mutable and are copied at the boundary. The abstract family cannot be constructed with new. Unknown subclasses, nil cases, wrong field values and invalid native tags reject. Only the active payload is converted. Empty constructors and UNIT payloads remain distinct. Ruby does not check match exhaustiveness. Generic, indexed, recursive, proof-bearing, callable and identity-bearing payloads remain unsupported.\n";
 	if(model.surface.aliases.length)
 		files["binding-manifest.json"] = `${JSON.stringify({ ...JSON.parse(files["binding-manifest.json"]), aliases: rubyCopiedAliases(model) }, null, 2)}\n`;
+	const structured = [...model.surface.callbacks.values()].some(callback => [...callback.type.callable.parameters, callback.type.callable.result].some(site => model.surface.copy(site.type).ref.kind !== "primitive"));
+	if(structured)
+	{
+		files["README.md"] = files["README.md"]
+			.replace("Synchronous primitive callbacks", "Synchronous primitive and acyclic copied structured callbacks")
+			.replace("List callback payloads remain unsupported.", "List callback arguments and results use independent copied Array values.")
+			.replace("Recursion, compound callable payloads and identity-bearing targets remain unsupported.", "Acyclic copied aliases work in callback and closure payloads. Recursive callable payloads and identity-bearing alias targets remain unsupported.")
+			.replace("recursive, proof-bearing, callable and identity-bearing payloads remain unsupported.", "proof-bearing payloads, callback identities and resources cannot be copied fields; recursive callable payloads remain unsupported.");
+		files["README.md"] += "\nCallback arguments and results own independent copied values, including nested arrays, Lists, options, results, products, records, variants and aliases. Returned closures copy their arguments, results and captured values. UNIT retains presence inside Some. Callback exceptions propagate after native cleanup. Scoped owners retain nested callback result buffers until native copying finishes. Recursive callback payloads and resource-containing aggregates remain unsupported.\n";
+		files["binding-manifest.json"] = files["binding-manifest.json"].replace("Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported.", "Ordinary RubyGems admits copied values and synchronous primitive or acyclic structured callables; recursive callable payloads, resource-containing aggregates and asynchronous operations remain unsupported.");
+	}
 	return Object.freeze(files);
 };
 

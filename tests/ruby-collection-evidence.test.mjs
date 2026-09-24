@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
 import { arrayPrimitives } from "./helpers/array-fixture.mjs";
+import { beforeRubyStructuredCallables } from "./helpers/ruby-structured-callable-source-history.mjs";
 
 test("Ruby collection receipts bind both source paths, original gems and failure cleanup", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/ruby-collections-20260922.json"));
@@ -24,7 +25,8 @@ test("Ruby collection receipts bind both source paths, original gems and failure
 		return { ...run, signatures: record.signatures };
 	});
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(beforeRubyStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.executions)
 	{
@@ -96,7 +98,7 @@ test("the Ruby documentation example binds its executed source and installed ori
 	assert.equal(Object.keys(documentation.installedFiles).length, 24);
 });
 
-test("Ruby collections fill reviewed copied-value and primitive-field gaps without broadening callbacks", async () => {
+test("Ruby collection cells remain separate from newly accepted structured callbacks", async () => {
 	const { document, ...contracts } = await readTypeSurface();
 	const cells = typeSurfaceCells(document, contracts);
 	const observed = cells.filter(cell => cell.stages.installedExecution.evidence.includes("ruby-collections-installed"));
@@ -110,7 +112,10 @@ test("Ruby collections fill reviewed copied-value and primitive-field gaps witho
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["ruby-collections-installed"]); }
 	}
 	for(const cell of cells.filter(cell => cell.profile === "ruby" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["ruby-structured-callables-installed"]);
+	}
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	assert.match(workflow, /LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests\/ruby-collections\.test\.mjs tests\/ruby-collection-contract\.test\.mjs/);
 	assert.match(workflow, /test -s build\/collections\/ruby\.json/);

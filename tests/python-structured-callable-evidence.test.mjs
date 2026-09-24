@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertPythonStructuredCallableExecution, assertPythonStructuredCallableIntegration, pythonStructuredCallableExecutionPath } from "./helpers/python-structured-callable-evidence.mjs";
 import { beforePythonStructuredCallables, pythonStructuredCallableHistoryPath, reversePythonStructuredCallableUpdate } from "./helpers/python-structured-callable-source-history.mjs";
+import { beforeRubyStructuredCallables } from "./helpers/ruby-structured-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -58,7 +59,7 @@ test("Python structured source history preserves unrelated source drift", async 
 	const record = await json(pythonStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeRubyStructuredCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePythonStructuredCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePythonStructuredCallables(update.path, source)), update.previousSha256);
 		assert.notEqual(sha256(beforePythonStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);

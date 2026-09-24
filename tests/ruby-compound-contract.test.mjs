@@ -47,10 +47,11 @@ for(const name of ["Some", "Ok", "Err"]) test(`Ruby compound ${name} cannot coll
 	assert.throws(() => compileCopiedRubyModel(component), /component name collides/);
 });
 
-test("Ruby compounds reject compound callbacks, borrowed identity and keyword record fields", () => {
+test("Ruby compounds admit copied callbacks but reject borrowed identity and keyword fields", () => {
 	const ir = callableReviewedIr();
 	ir.types[0].callable.result.type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "unit" }] };
-	assert.throws(() => compileCopiedRubyModel(ir), /callbacks currently require copied primitive/);
+	const model = compileCopiedRubyModel(ir);
+	assert.equal(model.surface.copy(ir.types[0].callable.result.type).compound, "option");
 	const borrowed = compoundReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedRubyModel(borrowed), /copy ownership/);
 	const field = compoundReviewedIr(); field.types.find(type => type.kind === "record").fields[0].name = "next";
