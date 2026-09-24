@@ -9,6 +9,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { assertWitPackageReports, assertWitPackageExecution, assertWitPackageIntegration, assertWitPackageRegressions, beforeWitPackageInventory, witPackageExecutionPath, witPackageRegressionPath } from "./helpers/wit-package-evidence.mjs";
 import { beforeWitPackageIntegration, reverseWitPackageUpdate, witPackageHistoryPath } from "./helpers/wit-package-source-history.mjs";
+import { beforeWitHostIntegration } from "./helpers/wit-host-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -46,7 +47,7 @@ test("WIT package integration reconstructs entire predecessors without hiding un
 	const record = await json(witPackageHistoryPath);
 	for(const path of [...new Set(record.updates.map(update => update.path))])
 	{
-		const current = await readFile(path, "utf8");
+		const current = beforeWitHostIntegration(path, await readFile(path, "utf8"));
 		let source = current;
 		for(const update of record.updates.filter(update => update.path === path).toReversed())
 		{

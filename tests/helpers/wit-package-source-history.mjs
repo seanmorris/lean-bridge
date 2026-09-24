@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitHostIntegration } from "./wit-host-source-history.mjs";
 
 export const witPackageHistoryPath = "docs/evidence/wit-recursive-package-integration-20260924.json";
 export const witPackageChangedPaths = [
@@ -81,6 +82,7 @@ export const reverseWitPackageUpdate = (source, update) => {
  * @param expected - Optional intermediate predecessor at which to stop.
  */
 export const beforeWitPackageIntegration = (path, source, expected) => {
+	source = beforeWitHostIntegration(path, source, expected);
 	if(sha256(source) === expected || !witPackageChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(witPackageHistoryPath, "utf8"));
 	for(const update of record.updates.filter(update => update.path === path).toReversed())

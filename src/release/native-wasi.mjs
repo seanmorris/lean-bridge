@@ -13,6 +13,7 @@ import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifact
 import { ordinaryWitEvidence, wasmtimeCapiIdentity } from "../build/native-wit-artifacts.mjs";
 import { renderWitHostHeader, renderWitHostSource } from "../backends/wit/copied-host.mjs";
 import { renderWitGraphHostSource } from "../backends/wit/copied-graph-host.mjs";
+import { guardWitHostSource, witHostDependencies } from "../backends/wit/host-evidence.mjs";
 import { witGraphPackageReadme } from "../backends/wit/copied-graph-package.mjs";
 import { witAliasReadme } from "../backends/wit/copied-aliases.mjs";
 import { witVariantReadme } from "../backends/wit/copied-variants.mjs";
@@ -25,7 +26,8 @@ import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
  */
 export const packageOrdinaryWasi = async options => {
 	const { working, nativeRoot, runtimeRoot, adapterRoot, witRoot, leanPrefix, settings = {}, glibcMinimumVersion } = options;
-	const { model, receipt, projection, adapter, runtime, runtimeIdentity } = await ordinaryWitEvidence(options);
+	const evidence = await ordinaryWitEvidence(options);
+	const { model, receipt, projection, adapter, runtime, runtimeIdentity } = evidence;
 	const graph = Boolean(model.copiedGraph), p = graph ? projection.prefix : projection.surface.prefix;
 	const compiled = JSON.parse(await readFile(join(witRoot, "native-wit-adapter.json"), "utf8"));
 	await verifyNativeFiles(witRoot, compiled.files);
@@ -41,13 +43,13 @@ export const packageOrdinaryWasi = async options => {
 	const expected = { [`wit/${projection.name}.wit`]: projection.wit
 		, [`component/${projection.name}.wat`]: projection.wat
 		, [`include/${p}_wasmtime.h`]: graph ? projection.hostHeader : renderWitHostHeader(projection)
-		, [`src/${p}_wasmtime.c`]: (graph ? renderWitGraphHostSource : renderWitHostSource)(projection, await readFile(join(witRoot, compiled.component)))
+		, [`src/${p}_wasmtime.c`]: guardWitHostSource((graph ? renderWitGraphHostSource : renderWitHostSource)(projection, await readFile(join(witRoot, compiled.component))), p, witHostDependencies(evidence, compiled.wasmtime.files))
 		, "binding-manifest.json": canonicalJson(projection.manifest) };
 	for(const [path, contents] of Object.entries(expected)) if(await readFile(join(witRoot, path), "utf8") !== contents) throw new Error(`WIT generated source differs: ${path}`);
 	const { name, version } = projection, archiveRoot = `${name}-${version}-wit-wasi`, root = join(working, "packages/wit-wasi", archiveRoot);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (from, path) => save(path, await readFile(from));
-	const saveReadme = bytes => save("README.md", graph ? witGraphPackageReadme(projection, glibcMinimumVersion) : (projection.resources.length ? callableReadme(projection, glibcMinimumVersion) : bytes) + witAliasReadme(projection) + witVariantReadme(projection));
+	const saveReadme = bytes => save("README.md", (graph ? witGraphPackageReadme(projection, glibcMinimumVersion) : (projection.resources.length ? callableReadme(projection, glibcMinimumVersion) : bytes) + witAliasReadme(projection) + witVariantReadme(projection)) + hostReceiptReadme);
 	for(const path of await nativeArtifactPaths(witRoot))
 		await copy(join(witRoot, path), path === "wasmtime/LICENSE" ? "share/lean-bridge/licenses/Wasmtime-LICENSE" : path.startsWith("wasmtime/") ? path.slice(9) : path);
 	await copy(join(adapterRoot, "lib", adapter.library), `lib/${adapter.library}`);
@@ -87,6 +89,12 @@ Cflags: -I\${includedir}
 };
 
 const surfaceList = projection => (projection.wire ?? projection).surface.functions.map(fn => `- ${fn.witName}: ${fn.declaration.id}`).join("\n");
+
+const hostReceiptReadme = `
+## Loaded-library identity
+
+The host checks the loaded native adapter, Lean component, both runtime libraries and Wasmtime against the sizes and SHA-256 hashes in its compiler receipts. A conflicting library already loaded under the same name makes session opens, calls and custom-linker imports return an error. Keep the installed library files unchanged while loading hosts. Inherited hosts reject calls and session opens after fork; exec a fresh consumer process. Closing an inherited session in the child does nothing. The parent still owns its session.
+`;
 
 const callableReadme = (projection, glibc) => {
 	const { name, version, surface: { prefix: p } } = projection;

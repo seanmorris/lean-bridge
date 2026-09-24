@@ -17,6 +17,7 @@ import { assertDotnetSharedRegressions } from "./dotnet-shared-regressions.mjs";
 import { validateWitEvidence } from "./type-corpus-wit-evidence.mjs";
 import { validateWitCollectionSignatures, witCollectionConsumer } from "./wit-collection-fixture.mjs";
 import { beforeWitPackageIntegration, reverseWitPackageUpdate, witPackageChangedPaths } from "./wit-package-source-history.mjs";
+import { beforeWitHostIntegration } from "./wit-host-source-history.mjs";
 
 export const witPackageExecutionPath = "docs/evidence/wit-recursive-packages-20260924.json";
 export const witPackageRegressionPath = "docs/evidence/wit-recursive-package-regressions-20260924.json";
@@ -57,6 +58,7 @@ const passingLog = (entry, passes = 1, skipped = 0) => {
  * @param updates - Authenticated production and verifier source transitions.
  */
 export const beforeWitPackageInventory = (source, refresh, updates) => {
+	source = beforeWitHostIntegration("docs/type-surface.v1.json", source, refresh.currentSha256);
 	assert.equal(refresh.path, "docs/type-surface.v1.json");
 	assert.equal(refresh.previousSha256, "d9434c7aa2a196d3efded9878281457668a681d1da603837711dc5b5f1494e6c");
 	assert.equal(sha256(source), refresh.currentSha256);
@@ -194,11 +196,11 @@ export const assertWitPackageIntegration = async record => {
 	assert.deepEqual([...new Set(record.updates.map(update => update.path))].sort(), witPackageChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), witPackageAddedPaths);
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), [...new Set([...Object.keys(execution.sourceHashes), ...witPackageChangedPaths, ...witPackageAddedPaths])].sort());
-	for(const [path, expected] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), expected, path);
+	for(const [path, expected] of Object.entries(record.sourceHashes)) assert.equal(sha256(beforeWitHostIntegration(path, await readFile(path, "utf8"), expected)), expected, path);
 	for(const path of witPackageAddedPaths) assert.equal(record.additions[path], record.sourceHashes[path]);
 	for(const path of witPackageChangedPaths)
 	{
-		let source = await readFile(path, "utf8");
+		let source = beforeWitHostIntegration(path, await readFile(path, "utf8"));
 		for(const update of record.updates.filter(update => update.path === path).toReversed()) source = reverseWitPackageUpdate(source, update);
 	}
 	beforeWitPackageInventory(await readFile(record.inventory.path, "utf8"), record.inventory, record.updates);

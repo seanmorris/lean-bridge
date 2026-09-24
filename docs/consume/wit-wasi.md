@@ -64,6 +64,14 @@ The program prints `42`. It calls `echo-u32` through the embedded component. The
 
 Keep the installed libraries together. Arguments borrow caller-owned Wasmtime values for one call; results own independent storage and remain valid after the session closes. Delete results with `wasmtime_component_val_delete` and errors with `wasmtime_error_delete`. An error leaves the result unchanged. Each session belongs to one calling thread; separate sessions share the native Lean runtime.
 
+At load time, the host checks the loaded native adapter, Lean component, shared
+runtime and Wasmtime libraries against its recorded sizes and SHA-256 hashes.
+It rejects a conflicting package already loaded under the same library name,
+instead of calling that package's implementation. Keep installed library files
+unchanged while loading hosts. After `fork`, inherited hosts reject calls and
+session opens; use `exec` to start a fresh consumer process.
+See the [installed library-isolation checks](../evidence/wit-host-isolation-20260924.md).
+
 `Unit` uses a single-case WIT enum in all positions. `Nat` uses least-significant-first `u32` limbs, with an empty list for zero. `Int` adds a `negative` flag. Trailing zero limbs and negative zero are rejected. Arrays and records copy recursively; strings preserve UTF-8 and embedded NUL. Empty records use a single-case enum. The adapter caps conversion work at 16 MiB, and canonical-ABI scratch memory at 64 MiB. The session helper resets successful calls and replaces trapped stores before reuse. Custom embeddings must discard trapped instances. These limits do not bound the Lean algorithm's working memory.
 
 See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for the exercised types and failure paths.
@@ -285,8 +293,8 @@ The builder now produces prepared WIT packages for recursive records and
 variants, including mutually recursive types and their copied containers.
 Both ordinary-source and reviewed-IR archives passed
 [installation and independent rebuild checks](../evidence/wit-recursive-packages-20260924.md).
-Cross-package composition, conflict handling and the documented consumer example
-still need acceptance checks. The audit table below has not promoted this family
+Final acceptance still needs cross-package lifetime and retirement checks and
+an executed consumer example. The audit table below has not promoted this family
 to final installed acceptance.
 
 Use the package's generated `<prefix>_wasmtime.h` header. Its
