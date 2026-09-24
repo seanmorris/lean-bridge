@@ -9,6 +9,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { assertWitHostIsolation, assertWitHostExecution, assertWitHostIntegration, witHostExecutionPath } from "./helpers/wit-host-evidence.mjs";
 import { beforeWitHostIntegration, reverseWitHostUpdate, reverseWitHostInventory, witHostHistoryPath } from "./helpers/wit-host-source-history.mjs";
+import { beforeWitCompositionIntegration } from "./helpers/wit-composition-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -64,14 +65,14 @@ test("WIT host lineage preserves full predecessor sources and inventory support 
 	await assertWitHostIntegration(record);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeWitCompositionIntegration(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(beforeWitHostIntegration(update.path, source)), update.previousSha256);
 		assert.equal(sha256(reverseWitHostUpdate(source, update)), update.previousSha256);
 		assert.throws(() => reverseWitHostUpdate(source + "\n// unrelated edit\n", update));
 		assert.throws(() => reverseWitHostUpdate(source, { ...update, edits: [] }));
 		assert.notEqual(sha256(beforeWitHostIntegration(update.path, source + "\n// unrelated edit\n")), update.previousSha256);
 	}
-	const inventory = await readFile(record.inventory.path, "utf8");
+	const inventory = beforeWitCompositionIntegration(record.inventory.path, await readFile(record.inventory.path, "utf8"), record.inventory.currentSha256);
 	assert.throws(() => reverseWitHostInventory(inventory + "\n", record.inventory));
 	const changed = inventory.replace('"contractVersion": "0.84.0"', '"contractVersion": "1.0.0"');
 	assert.throws(() => reverseWitHostInventory(changed, { ...record.inventory, currentSha256: sha256(changed) }));

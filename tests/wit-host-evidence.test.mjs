@@ -59,6 +59,9 @@ test("copied, callable and graph hosts guard public calls and custom-linker impo
 		assert.ok(entries.length > 3);
 		for(const entry of entries) assert.ok(guarded.slice(entry.index + entry[0].length).startsWith("\n  const char *package_failure = lb_package_failure();\n  if (package_failure) return wasmtime_error_new(package_failure);"));
 		assert.match(guarded, /if \(getpid\(\) != lb_package_pid\) return;/);
+		assert.match(guarded, /pid_t __lean_bridge_wit_host_process_origin_v1\(void\)/);
+		assert.match(guarded, /owner\.dli_fbase == \(void \*\)info->dlpi_addr/);
+		assert.ok(guarded.indexOf("dl_iterate_phdr(lb_package_process, &scan)") < guarded.indexOf("dl_iterate_phdr(lb_package_library, &scan)"));
 		for(const { name, bytes, sha256: digest } of dependencies)
 			assert.ok(guarded.includes(`{"${name}", UINT64_C(${bytes}), "${digest}"}`));
 		assert.throws(() => guardWitHostSource(source.replace(`${prefix}_wasmtime_open(`, `${prefix}_not_open(`), prefix, dependencies), /Missing guarded/);

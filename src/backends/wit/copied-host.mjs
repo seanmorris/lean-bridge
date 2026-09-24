@@ -142,6 +142,7 @@ wasmtime_error_t *${p}_wasmtime_call(${p}_wasmtime *session, const char *name,
   if (!session || !session->store || !name || !out || (count && !args)) return wasmtime_error_new("Invalid WIT call arguments or unavailable session");
   /* Validate before Wasmtime copies caller buffers, including allocation bounds. */
   lb_scope scope = {.remaining = 16u * 1024u * 1024u};
+  (void)scope; /* A package may contain only zero-argument exports. */
   bool valid = false;
 ${surface.functions.map(fn => `  if (strcmp(name, "${fn.witName}") == 0) valid = count == ${fn.parameters.length}${fn.parameters.map((parameter, i) => ` && lb_in_${parameter.copy.index}(&args[${i}], &scope, NULL)`).join("")};`).join("\n")}
   if (!valid) return wasmtime_error_new("Unknown export, invalid WIT input or 16 MiB conversion limit");

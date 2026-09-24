@@ -69,7 +69,9 @@ runtime and Wasmtime libraries against its recorded sizes and SHA-256 hashes.
 It rejects a conflicting package already loaded under the same library name,
 instead of calling that package's implementation. Keep installed library files
 unchanged while loading hosts. After `fork`, inherited hosts reject calls and
-session opens; use `exec` to start a fresh consumer process.
+session opens. A newly loaded host also checks already-loaded WIT hosts and
+rejects an inherited host process, before opening a Wasmtime engine. Use `exec`
+to start a fresh consumer process.
 See the [installed library-isolation checks](../evidence/wit-host-isolation-20260924.md).
 
 `Unit` uses a single-case WIT enum in all positions. `Nat` uses least-significant-first `u32` limbs, with an empty list for zero. `Int` adds a `negative` flag. Trailing zero limbs and negative zero are rejected. Arrays and records copy recursively; strings preserve UTF-8 and embedded NUL. Empty records use a single-case enum. The adapter caps conversion work at 16 MiB, and canonical-ABI scratch memory at 64 MiB. The session helper resets successful calls and replaces trapped stores before reuse. Custom embeddings must discard trapped instances. These limits do not bound the Lean algorithm's working memory.
@@ -293,9 +295,9 @@ The builder now produces prepared WIT packages for recursive records and
 variants, including mutually recursive types and their copied containers.
 Both ordinary-source and reviewed-IR archives passed
 [installation and independent rebuild checks](../evidence/wit-recursive-packages-20260924.md).
-Final acceptance still needs cross-package lifetime and retirement checks and
-an executed consumer example. The audit table below has not promoted this family
-to final installed acceptance.
+The [cross-package checks](../evidence/wit-recursive-composition-20260924.md)
+exercise result lifetimes, shared-runtime retirement, mixed C/WIT consumers and
+the executable example below on both source paths.
 
 Use the package's generated `<prefix>_wasmtime.h` header. Its
 `<prefix>_wasmtime_value_<export>` helpers accept named C values and call the
@@ -308,6 +310,59 @@ with their generated `_init` helper, then release successful results with their
 `_clear` helper. Results own independent storage and remain valid after session
 close. Clear a result before reusing its output slot. Use the generated named
 constructor constants, not numeric tags or Lean object layouts.
+
+For the `recursive` acceptance package, save this as `main.c`:
+
+```c file=wit-wasi/recursive.c
+#include "recursive_wasmtime.h"
+#include <stdio.h>
+
+static int report(wasmtime_error_t *error)
+{
+    if (!error) return 0;
+    wasm_name_t message;
+    wasmtime_error_message(error, &message);
+    fprintf(stderr, "%.*s\n", (int)message.size, message.data);
+    wasm_name_delete(&message);
+    wasmtime_error_delete(error);
+    return 1;
+}
+
+int main(void)
+{
+    recursive_wasmtime *session = NULL;
+    if (report(recursive_wasmtime_open(&session))) return 1;
+    recursive_spine_t leaf = {
+        .kind = RECURSIVE_SPINE_T_KIND_LEAF, .cases.leaf.value = 71
+    };
+    recursive_spine_t grown;
+    recursive_spine_t_init(&grown);
+    int failed = report(recursive_wasmtime_value_grow(session, &leaf, &grown));
+    recursive_wasmtime_close(session);
+    if (!failed) {
+        /* The result owns its storage even after the session closes. */
+        failed = grown.kind != RECURSIVE_SPINE_T_KIND_NEXT
+            || !grown.cases.next.value
+            || grown.cases.next.value->kind != RECURSIVE_SPINE_T_KIND_LEAF
+            || grown.cases.next.value->cases.leaf.value != 71;
+        if (!failed) puts("next(leaf(71))");
+    }
+    recursive_spine_t_clear(&grown);
+    return failed;
+}
+```
+
+Set `PKG_CONFIG_PATH` to the extracted package's `lib/pkgconfig` directory, then
+compile and run:
+
+```sh
+cc main.c $(pkg-config --cflags --libs recursive-wit) -o recursive-example
+./recursive-example
+```
+
+The program prints `next(leaf(71))`. The package loads its native Lean runtime
+automatically; consumers install no separate Lean toolchain. Keep the package's
+libraries installed alongside the application.
 
 Conversion rejects cycles and enforces a depth limit of 128, 262,144 expanded
 node visits and a 16 MiB copy budget. A limit error leaves the output unchanged

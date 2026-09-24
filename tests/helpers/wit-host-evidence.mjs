@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { witHostLibraryHash } from "../../src/backends/wit/host-library-hash.mjs";
 import { assertWitPackageReports } from "./wit-package-evidence.mjs";
 import { witHostChangedPaths, reverseWitHostUpdate, reverseWitHostInventory } from "./wit-host-source-history.mjs";
+import { beforeWitCompositionIntegration } from "./wit-composition-source-history.mjs";
 
 export const witHostExecutionPath = "docs/evidence/wit-host-isolation-20260924.json";
 export const witHostAddedPaths = [
@@ -21,6 +22,7 @@ export const witHostAddedPaths = [
 	, "tests/wit-host-packages.test.mjs"
 ].sort();
 const digest = value => sha256(canonicalJson(value));
+const priorSource = async (path, expected) => beforeWitCompositionIntegration(path, await readFile(path, "utf8"), expected);
 const passing = (log, passes, skipped = 0) => {
 	assert.equal(sha256(log.text), log.sha256);
 	assert.match(log.text, new RegExp(`# pass ${passes}\\n# fail 0\\n# cancelled 0\\n# skipped ${skipped}\\n`));
@@ -155,19 +157,19 @@ export const assertWitHostIntegration = async record => {
 	assert.deepEqual(execution.sourceHashes, record.sourceHashes);
 	assert.deepEqual(record.updates.map(item => item.path).sort(), witHostChangedPaths.filter(path => path !== record.inventory.path));
 	assert.deepEqual(Object.keys(record.additions).sort(), witHostAddedPaths);
-	for(const [path, expected] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), expected, path);
+	for(const [path, expected] of Object.entries(record.sourceHashes)) assert.equal(sha256(await priorSource(path, expected)), expected, path);
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sourceHashes[update.path], update.path);
-		reverseWitHostUpdate(await readFile(update.path, "utf8"), update);
+		reverseWitHostUpdate(await priorSource(update.path, update.currentSha256), update);
 	}
 	assert.equal(record.inventory.previousSha256, previous.inventory.currentSha256);
-	const inventory = await readFile(record.inventory.path, "utf8"); reverseWitHostInventory(inventory, record.inventory);
+	const inventory = await priorSource(record.inventory.path, record.inventory.currentSha256); reverseWitHostInventory(inventory, record.inventory);
 	for(const entry of record.inventory.entries)
 	{
 		const update = record.updates.find(update => update.path === entry.path); assert.ok(update);
 		assert.equal(entry.previousSha256, update.previousSha256); assert.equal(entry.currentSha256, update.currentSha256);
 	}
-	for(const [path, expected] of Object.entries(execution.sourceHashes)) assert.equal(sha256(await readFile(path)), expected, path);
+	for(const [path, expected] of Object.entries(execution.sourceHashes)) assert.equal(sha256(await priorSource(path, expected)), expected, path);
 };

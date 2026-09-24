@@ -57,11 +57,43 @@ export const guardWitHostSource = (source, prefix, dependencies) => {
 ${witHostLibraryHash}
 
 static pid_t lb_package_pid;
+/* Private loader handshake, not a consumer API. Keep each host's origin local
+ * even when another host exports the same handshake symbol. */
+__attribute__((visibility("default"))) pid_t __lean_bridge_wit_host_process_origin_v1(void) {
+  return lb_package_pid;
+}
 static const char *lb_package_problem = "WIT package dependencies have not been verified";
 static const struct { const char *name; uint64_t bytes; const char *sha256; } lb_package_libraries[] = {
 ${dependencies.map(item => `  {${JSON.stringify(item.name)}, UINT64_C(${item.bytes}), ${JSON.stringify(item.sha256)}}`).join(",\n")}
 };
 typedef struct { unsigned seen[${dependencies.length}]; const char *failure; } lb_package_scan;
+static int lb_package_process(struct dl_phdr_info *info, size_t size, void *data) {
+  (void)size;
+  lb_package_scan *scan = data;
+  const char *path = info->dlpi_name;
+  if (!path || !*path) return 0;
+  const char *slash = strrchr(path, '/'), *name = slash ? slash+1 : path;
+  const char suffix[] = "_wasmtime.so";
+  size_t length = strlen(name);
+  if (length <= 3 + sizeof(suffix)-1 || strncmp(name, "lib", 3)
+      || strcmp(name+length-(sizeof(suffix)-1), suffix)) return 0;
+  void *loaded = dlopen(path, RTLD_NOW | RTLD_NOLOAD);
+  if (!loaded) { scan->failure = "Cannot inspect loaded WIT host"; return 1; }
+  void *address = dlsym(loaded, "__lean_bridge_wit_host_process_origin_v1");
+  Dl_info owner;
+  /* dlsym also searches dependencies. Only use this library's own marker. */
+  if (address && dladdr(address, &owner) && owner.dli_fbase == (void *)info->dlpi_addr) {
+    pid_t (*origin)(void);
+    _Static_assert(sizeof(origin) == sizeof(address), "POSIX function pointer");
+    memcpy(&origin, &address, sizeof(origin));
+    pid_t process = origin();
+    /* A host whose constructor has not run yet has no Wasmtime state. */
+    if (process && process != getpid())
+      scan->failure = "WIT hosts cannot be used after fork; exec a fresh process";
+  }
+  dlclose(loaded);
+  return scan->failure != NULL;
+}
 static int lb_package_library(struct dl_phdr_info *info, size_t size, void *data) {
   (void)size;
   lb_package_scan *scan = data;
@@ -85,7 +117,8 @@ static int lb_package_library(struct dl_phdr_info *info, size_t size, void *data
 __attribute__((constructor)) static void lb_package_verify(void) {
   lb_package_pid = getpid();
   lb_package_scan scan = {0};
-  dl_iterate_phdr(lb_package_library, &scan);
+  dl_iterate_phdr(lb_package_process, &scan);
+  if (!scan.failure) dl_iterate_phdr(lb_package_library, &scan);
   for (size_t i = 0; i < sizeof(scan.seen)/sizeof(scan.seen[0]); ++i)
     if (!scan.seen[i] && !scan.failure) scan.failure = "WIT package dependency is missing from the loaded libraries";
   lb_package_problem = scan.failure;

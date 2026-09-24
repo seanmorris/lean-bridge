@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitCompositionIntegration } from "./wit-composition-source-history.mjs";
 
 export const witHostHistoryPath = "docs/evidence/wit-host-isolation-integration-20260924.json";
 export const witHostChangedPaths = [
@@ -84,6 +85,7 @@ export const reverseWitHostUpdate = (source, update) => {
  * @param expected - Optional original digest at which normalization stops.
  */
 export const beforeWitHostIntegration = (path, source, expected) => {
+	source = beforeWitCompositionIntegration(path, source, expected);
 	if(sha256(source) === expected || !witHostChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(witHostHistoryPath, "utf8"));
 	if(path === "docs/type-surface.v1.json") return reverseInventoryEntries(source, record.inventory);
