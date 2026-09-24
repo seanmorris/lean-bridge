@@ -64,14 +64,17 @@ test("Rust Lists borrow slices and return owned vectors while retaining distinct
 	assert.match(files["README.md"], /Lean List inputs borrow Rust slices and return owned Vec values/);
 });
 
-test("Rust Lists reject borrowed identities, compound callbacks and record name collisions", () => {
+test("Rust List callbacks admit copied payloads but reject borrowed identities and name collisions", () => {
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
 		const list = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "uint32" }] };
 		if(position === "parameter") callback.callable.parameters[0].type = list;
 		else callback.callable.result.type = list;
-		assert.throws(() => compileCopiedRustModel(ir), /callbacks currently require copied primitive/);
+		const model = compileCopiedRustModel(ir);
+		assert.equal(model.surface.copy(list).publicType, "Vec<u32>");
+		assert.match(generateCopiedRustPackage(ir)["src/lib.rs"], position === "parameter"
+			? /FnMut\(Vec<u32>\) -> Result<\(\), Error>/ : /FnMut\(\(\)\) -> Result<Vec<u32>, Error>/);
 	}
 	const borrowed = listReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedRustModel(borrowed), /copy ownership/);

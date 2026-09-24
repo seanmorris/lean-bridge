@@ -62,10 +62,12 @@ for(const name of ["Option", "Some", "Result", "Ok", "Err"])
 		assert.throws(() => compileCopiedRustModel(ir), /record name collides/);
 	});
 
-test("Rust compounds do not enable compound callbacks or borrowed copied identities", () => {
+test("Rust compounds admit copied callback results but reject borrowed copied identities", () => {
 	const ir = callableReviewedIr();
 	ir.types[0].callable.result.type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "unit" }] };
-	assert.throws(() => compileCopiedRustModel(ir), /callbacks currently require copied primitive/);
+	const model = compileCopiedRustModel(ir);
+	assert.equal(model.surface.copy(ir.types[0].callable.result.type).publicType, "Option<()>");
+	assert.match(generateCopiedRustPackage(ir)["src/lib.rs"], /FnMut\(\(\)\) -> Result<Option<\(\)>, Error>/);
 	const borrowed = compoundReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedRustModel(borrowed), /copy ownership/);
 });

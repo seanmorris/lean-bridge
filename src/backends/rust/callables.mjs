@@ -144,6 +144,11 @@ impl Drop for CallGuard<'_> {
 }
 `;
 
+const borrowsOwner = copy => ["string", "bytes"].includes(copy.scalarName)
+	|| Boolean(copy.element && borrowsOwner(copy.element))
+	|| Boolean(copy.fields?.some(field => borrowsOwner(field.type)))
+	|| Boolean(copy.cases?.some(branch => branch.fields.some(field => borrowsOwner(field.type))));
+
 const trampoline = callback => {
 	const result = callback.result, callbackType = `dyn FnMut(${callback.parameters.map(copy => copy.publicType).join(", ")}) -> Result<${result.publicType}, Error>`;
 	return `#[repr(C)]
@@ -162,7 +167,7 @@ ${callback.parameters.map((copy, i) => `        let value${i} = from${copy.index
         let result = (context.function.try_borrow_mut().map_err(|_| Error::CallbackReentry)?)(${callback.parameters.map((_, i) => `value${i}`).join(", ")})?;
         let mut scope = context.state.scope.borrow_mut();
         let converted = to${result.index}(&result, &mut scope)?;
-${["string", "bytes"].includes(result.scalarName) ? `        // The C caller copies after this trampoline returns. Retain the Rust owner.
+${borrowsOwner(result) ? `        // The C caller copies after this trampoline returns. Retain the Rust owner.
         let mut retained = scope.vector(1)?;
         retained.push(result);
         scope.keep(retained)?;` : ""}

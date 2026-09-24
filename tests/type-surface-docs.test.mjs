@@ -135,6 +135,18 @@ test("C++ copied callback rows retain their recursive and resource exclusions", 
 	assert.match(source, /cpp-structured-callables-20260924\.md/u);
 });
 
+test("Rust copied callback rows preserve recursive and owned-resource exclusions", async () => {
+	const source = await readFile("docs/consume/rust.md", "utf8");
+	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+	{
+		const mapping = row(source, shape);
+		assert.match(mapping, /callback input, callback result/u);
+		assert.doesNotMatch(mapping, /Not audited/u);
+	}
+	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.match(source, /rust-structured-callables-20260924\.md/u);
+});
+
 test("Java and Kotlin distinguish callable, collection-field and asynchronous evidence", async () => {
 	const java = await readFile("docs/consume/java.md", "utf8");
 	const kotlin = await readFile("docs/consume/kotlin.md", "utf8");
@@ -335,8 +347,8 @@ test("Rust collection docs retain typed Markdown and position-specific installed
 	const source = await readFile("docs/consume/rust.md", "utf8");
 	for(const lean of ["Array α", "Copied structure"])
 	{
-		assert.match(row(source, lean), /Reviewed IR: Installed checks passed \(input, result, field\)/u);
-		assert.match(row(source, lean), /Generator inspected \(callback input, callback result\)/u);
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed \|/u);
+		assert.match(row(source, lean), /callback input, callback result/u);
 	}
 	assert.match(row(source, "Array α"), /Borrowed `&\[T\]` inputs and owned `Vec<T>` outputs/u);
 	assert.match(row(source, "Nat"), /Reviewed IR: Installed checks passed \|/u);
@@ -347,7 +359,7 @@ test("Rust collection docs retain typed Markdown and position-specific installed
 test("Rust compound docs distinguish domain results from bridge errors", async () => {
 	const source = await readFile("docs/consume/rust.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
-		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed \|/u);
 	assert.match(row(source, "Option α"), /`&Option<T>`/u);
 	assert.match(row(source, "Except ε α"), /`Result<T, E>`/u);
 	assert.match(source, /Result<Result<T, E>, Error>/u);

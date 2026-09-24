@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { generateCopiedRustPackage } from "../src/backends/rust/copied-values.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
+import { beforeRustStructuredCallables } from "./helpers/rust-structured-callable-source-history.mjs";
 
 const observations = run => Object.fromEntries(["checks", "calls", "rejected", "faultTests", "nativeFaultChecks", "conversionCheckpoints"].map(key => [key, run[key]]));
 
@@ -26,7 +27,8 @@ test("Rust collection evidence binds original crates, exact public types and fai
 		return { ...run, signatures: record.signatures };
 	});
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(beforeRustStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	const negatives = JSON.parse(await readFile("tests/fixtures/collection-consumers/rust-invalid.json"));
 	const guide = (await readFile("docs/consume/rust.md", "utf8")).split("### Arrays and records\n")[1].split("\n### ")[0];
@@ -128,7 +130,10 @@ test("Rust collections advance only copied reviewed positions and require origin
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["rust-collections-installed"]); }
 	}
 	for(const cell of cells.filter(cell => cell.profile === "rust" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["rust-structured-callables-installed"]);
+	}
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	for(const [flag, file, report] of [["COLLECTION", "rust-collections", "rust"], ["CONVERSION", "rust-collection-conversions", "rust-conversions"]])
 	{

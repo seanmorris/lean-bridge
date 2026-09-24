@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeRustStructuredCallables } from "./rust-structured-callable-source-history.mjs";
 
 export const cppStructuredCallableHistoryPath = "docs/evidence/cpp-structured-callable-integration-20260924.json";
 export const cppStructuredCallableChangedPaths = [
@@ -68,6 +69,7 @@ export const reverseCppStructuredCallableUpdate = (source, update) => {
  * @param expected - Optional intermediate source identity at which to stop.
  */
 export const beforeCppStructuredCallables = (path, source, expected) => {
+	source = beforeRustStructuredCallables(path, source, expected);
 	if(sha256(source) === expected || !cppStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(cppStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);

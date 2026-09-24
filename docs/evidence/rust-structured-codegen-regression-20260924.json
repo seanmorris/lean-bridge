@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "rust-structured-codegen-regression",
+  "baselineRevision": "646aceda428705779adc34a2b96a0c0dcd7356b5",
+  "predecessors": {
+    "src/backends/rust/callables.mjs": "9f8abbf0da0c2f469ad9e647775a08933473467080b1a6e46abd6e0f470668db",
+    "src/backends/rust/copied-model.mjs": "30c05760fed097b5e380d2dfe8be71a227d7971e31504b8de861ce19ec9ab611",
+    "src/backends/rust/copied-values.mjs": "254acb7d95a4e478504d8b9376e189b921a22d80312561661a6116f8e99bb960"
+  },
+  "sourceHashes": {
+    "src/backends/rust/callables.mjs": "a5ade1f4a0a053ae4e8887fcc5ef36e2e81a20131ed0a72e9475682a41d7f0c2",
+    "src/backends/rust/copied-model.mjs": "9133f206341c29bd0b796cf6d9e7f11797a2b624ba6410b0ba2918141fd676c7",
+    "src/backends/rust/copied-values.mjs": "720d7e2426558db9513f2b994f533bf7e9abee3e8ac340e420f04de1c4940373"
+  },
+  "fixtures": [
+    {
+      "name": "callables",
+      "bindingIrSha256": "010e3acb3cc4b9aff9aed875f56a7074dbd6ec21a918ef8cd2f0e7d7ee25ba75",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/lib.rs": {
+          "bytes": 18370,
+          "sha256": "9668902f792f4cf687128f0e2c3cf3363907cc67b80a30397f8efe6ee6adf1cf"
+        },
+        "src/__runtime.rs": {
+          "bytes": 185479,
+          "sha256": "0734e4b706d4de8689e89bfe4f8d5c04e22f57bea7d9f351bf9220bed5764029"
+        },
+        "src/assets.rs": {
+          "bytes": 145,
+          "sha256": "a91d8c05b832e9b705bc1c82b28fd1166a71ff3de4b7b7042589f39b1a8bf17d"
+        },
+        "Cargo.toml": {
+          "bytes": 342,
+          "sha256": "5be53230301a6d5ea1fa770d44665bf1fe7c7c76473a1040ef0e9b06962d1847"
+        },
+        "README.md": {
+          "bytes": 4681,
+          "sha256": "41146beb59b8f5c6b79a54d726b24ea2fa82090c5a74220879389f11ea8ff757"
+        },
+        "binding-manifest.json": {
+          "bytes": 2002,
+          "sha256": "321bf0b34e0445df3ac2c7e9a9550e3ac3c5ee29b8348970ce4eef84100677a3"
+        }
+      }
+    },
+    {
+      "name": "collections",
+      "bindingIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/lib.rs": {
+          "bytes": 8406,
+          "sha256": "7ff32680754ac3db3904a56ed73fc428e5890cdfd286781292fbe235d18ff571"
+        },
+        "src/__runtime.rs": {
+          "bytes": 119071,
+          "sha256": "4095a8e69d6bc2f75a92d943da4a3a066a47da50847307ce2be5c6b47673c633"
+        },
+        "src/assets.rs": {
+          "bytes": 145,
+          "sha256": "a91d8c05b832e9b705bc1c82b28fd1166a71ff3de4b7b7042589f39b1a8bf17d"
+        },
+        "Cargo.toml": {
+          "bytes": 344,
+          "sha256": "39b3eace352d474d7514197a7d1921679f9e05008f4662f40b6a025728b2666e"
+        },
+        "README.md": {
+          "bytes": 4141,
+          "sha256": "003bb581f130d1b7870256c3dcb01c32fc506b013212df5e7e875389a166a553"
+        },
+        "binding-manifest.json": {
+          "bytes": 1826,
+          "sha256": "3a17915dc9245dd25c3b41e177da1a1f65e2460131fcb674b721e7428d97046a"
+        }
+      }
+    },
+    {
+      "name": "compounds",
+      "bindingIrSha256": "5cfc48f125066df442d39c3a1d5b66886f704b2db9cf9a7544c0b63769827325",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/lib.rs": {
+          "bytes": 11624,
+          "sha256": "98e7a4f6e6b48d16e4d25422d1b9fc63cfaf70fe5086f2c1f28eb2db56aac24a"
+        },
+        "src/__runtime.rs": {
+          "bytes": 147141,
+          "sha256": "f395ffa7fa559aa78c34f0770c434f1d147b8f06d681176f0f3d96fb55b183d1"
+        },
+        "src/assets.rs": {
+          "bytes": 145,
+          "sha256": "a91d8c05b832e9b705bc1c82b28fd1166a71ff3de4b7b7042589f39b1a8bf17d"
+        },
+        "Cargo.toml": {
+          "bytes": 342,
+          "sha256": "e1887fdcfba844b0b50ebf55940a5fc78c30ad0deb852f6a5b8fd1975e3f4da4"
+        },
+        "README.md": {
+          "bytes": 5522,
+          "sha256": "ed5e45d609113c57b40a7dd566d14b609524b6154c347da5f191f396492141b0"
+        },
+        "binding-manifest.json": {
+          "bytes": 2134,
+          "sha256": "4350c61ef6f584b3e3cfae85b734ce8abca5d8fc7aeb58d341d2e93a7780c268"
+        }
+      }
+    },
+    {
+      "name": "lists",
+      "bindingIrSha256": "c96dd2a962a7034e806902705fd0ac23d0f208d2a51f66b2bf0a9b4e18f61ee3",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/lib.rs": {
+          "bytes": 5399,
+          "sha256": "f160fd97cf2f40cdff21f703c6ac106596cded0a0863809d81520e0900933f58"
+        },
+        "src/__runtime.rs": {
+          "bytes": 97595,
+          "sha256": "40dd7b7d272f0201eac9a2a8a85b589c57032db3c3ef6aee5ec6c0ca828c59cf"
+        },
+        "src/assets.rs": {
+          "bytes": 145,
+          "sha256": "a91d8c05b832e9b705bc1c82b28fd1166a71ff3de4b7b7042589f39b1a8bf17d"
+        },
+        "Cargo.toml": {
+          "bytes": 338,
+          "sha256": "408e2ab819ae692a58bd71f20ca0e37ffc04e86b3eec191b7ae48e522f3ba140"
+        },
+        "README.md": {
+          "bytes": 3584,
+          "sha256": "f3d8e2192aca5970d4001f26c7cec6adbabba0a071cd1a085a8389e7fe76c9bd"
+        },
+        "binding-manifest.json": {
+          "bytes": 1407,
+          "sha256": "ab4a826d2901df3c54136175a5f5057c9088c6eb1fd77b378631a7c82f71ff5f"
+        }
+      }
+    },
+    {
+      "name": "aliases",
+      "bindingIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/lib.rs": {
+          "bytes": 6580,
+          "sha256": "216c7874b466d812f1a9a1935ff26a086ee5eba1d2e81a75fdbff6e857c5a0a6"
+        },
+        "src/__runtime.rs": {
+          "bytes": 42328,
+          "sha256": "661f4401fb10ea2db30fa9e2e2b20ef8a25f357a12bd5347079881a364db7469"
+        },
+        "src/assets.rs": {
+          "bytes": 145,
+          "sha256": "a91d8c05b832e9b705bc1c82b28fd1166a71ff3de4b7b7042589f39b1a8bf17d"
+        },
+        "Cargo.toml": {
+          "bytes": 340,
+          "sha256": "6145ddb35c75737cc5e5b972f9bf45252783feb1909e47e0461f30e3c73b5325"
+        },
+        "README.md": {
+          "bytes": 4254,
+          "sha256": "a05e31176f989799663c4a99156e2b9f0f693ffcc4ef9091259faee59527a497"
+        },
+        "binding-manifest.json": {
+          "bytes": 1832,
+          "sha256": "b9fbbbbd4e744ca2289e15c4f4149420c927b6590335b49f8623de7941310841"
+        }
+      }
+    },
+    {
+      "name": "variants",
+      "bindingIrSha256": "21cba6e0f721d83261c4b21eb7cde9f9e476789dd6c3dad4adf7bd29b72c1069",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/lib.rs": {
+          "bytes": 4163,
+          "sha256": "3f7691cdebd983ecfbafbc199fb23e4695b992a65245325f65865bbdd1f9bee1"
+        },
+        "src/__runtime.rs": {
+          "bytes": 42622,
+          "sha256": "5b15a0c6d0966e9826877772233dee3b9128ce115f0855804e2479f99d4009c5"
+        },
+        "src/assets.rs": {
+          "bytes": 145,
+          "sha256": "a91d8c05b832e9b705bc1c82b28fd1166a71ff3de4b7b7042589f39b1a8bf17d"
+        },
+        "Cargo.toml": {
+          "bytes": 341,
+          "sha256": "de20aaf310c04d24ab0080303a1f80d995a7fa01984824630b5c0b48c1dab400"
+        },
+        "README.md": {
+          "bytes": 3720,
+          "sha256": "f0b2763c0ad06413009a05868975f45e6f4663df6f52882db971190b5e4d878f"
+        },
+        "binding-manifest.json": {
+          "bytes": 1224,
+          "sha256": "5ff13e12335e5a2f71245e959610a3f9b73e12d144c9576f09e604f998a754bd"
+        }
+      }
+    }
+  ]
+}

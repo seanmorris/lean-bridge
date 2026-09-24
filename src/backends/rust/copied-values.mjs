@@ -142,6 +142,18 @@ export const renderCopiedRustPackage = (model, evidence = null, settings = {}) =
 	if(model.surface.copies.some(copy => copy.variant))
 		files["README.md"] += "\nConcrete copied Lean variants export named Rust enums. Empty cases are unit variants; payload cases have named fields. Construct and match these cases without numeric tags or unsafe code. Constructor names use PascalCase and fields use snake_case, with reserved words gaining a trailing underscore. Inputs borrow the enum and outputs own independent copied contents. Only the active payload is converted. Variants can contain supported copied records, containers and other non-recursive variants. Conversion errors and unwinding release temporary storage and native outputs through RAII. Recursive, callable and identity-bearing payloads remain unsupported.\n";
 	files["binding-manifest.json"] = `${JSON.stringify({ schemaVersion: 1, generator: { id: "lean-wasm/rust-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), publicModule: "src/lib.rs", internalModule: "src/__runtime.rs", exports: exported(model), files: [...Object.keys(files), "binding-manifest.json"], capabilityGaps: [{ feature: "identity-and-effects", reason: "Cargo supports copied values and synchronous primitive callables; resources, compound callables and asynchronous operations remain outside this profile." }, { feature: "additional-platforms", reason: "The native profile requires Rust 1.90+ on Linux x86-64 with glibc." }] }, null, 2)}\n`;
+	const structured = [...model.surface.callbacks.values()].some(callback => [...callback.parameters, callback.result].some(copy => copy.ref.kind !== "primitive"));
+	if(structured)
+	{
+		files["README.md"] = files["README.md"]
+			.replace("Synchronous primitive callbacks", "Synchronous primitive and acyclic copied structured callbacks")
+			.replace("Compound callables, resources and async remain unsupported.", "Recursive callable payloads, resource-containing aggregates, higher-order callbacks and async remain unsupported.")
+			.replace("List callback payloads remain unsupported.", "List callback payloads use owned Vec values, including nested copied contents.")
+			.replace("Recursive and identity-bearing alias targets, and compound callable payloads remain unsupported.", "Acyclic copied aliases are supported in callback and closure payloads. Recursive and identity-bearing alias targets remain unsupported in this adapter.")
+			.replace("Recursive, callable and identity-bearing payloads remain unsupported.", "Acyclic variants can be callback and closure payloads. Their copied fields cannot contain callback identities or resources. Recursive callable payloads remain unsupported.");
+		files["README.md"] += "\nCallbacks receive owned values and return Result<T, Error>. For a Lean Except result, T is itself Result<Success, Failure>, keeping domain errors distinct from bridge failures. Retained callback results keep all nested Rust string and byte owners alive until native copying finishes. Returned closures borrow their call inputs and return owned copies.\n";
+		files["binding-manifest.json"] = files["binding-manifest.json"].replace("Cargo supports copied values and synchronous primitive callables; resources, compound callables and asynchronous operations remain outside this profile.", "Cargo supports copied values and synchronous primitive or acyclic structured callables; recursive callable payloads, resource-containing aggregates and asynchronous operations remain outside this profile.");
+	}
 	return Object.freeze(files);
 };
 

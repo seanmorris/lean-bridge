@@ -15,6 +15,7 @@ import { assertCppStructuredCodegenRegression } from "./cpp-structured-callable-
 import { cStructuredCallableHistoryPath } from "./c-structured-callable-source-history.mjs";
 import { assertCStructuredCallableIntegration } from "./c-structured-callable-evidence.mjs";
 import { cppStructuredCallableChangedPaths, reverseCppStructuredCallableUpdate } from "./cpp-structured-callable-source-history.mjs";
+import { beforeRustStructuredCallables } from "./rust-structured-callable-source-history.mjs";
 
 export const cppStructuredCallableExecutionPath = "docs/evidence/cpp-structured-callables-20260924.json";
 export const cppStructuredCodegenPath = "docs/evidence/cpp-structured-codegen-regression-20260924.json";
@@ -105,6 +106,7 @@ export const assertCppStructuredCallableExecution = async record => {
  * @param record - Current implementation, inventory delta and original receipts.
  */
 export const assertCppStructuredCallableIntegration = async record => {
+	const priorSource = async path => beforeRustStructuredCallables(path, await readFile(path, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "cpp-structured-callable-integration");
 	assert.equal(record.baselineRevision, "9e6eb510535a6907c37d63f89ecbe0ac66927c32");
@@ -123,12 +125,12 @@ export const assertCppStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), cppStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...cppStructuredCallableChangedPaths, ...cppStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await readFile(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseCppStructuredCallableUpdate(await readFile(update.path, "utf8"), update);
+		restored[update.path] = reverseCppStructuredCallableUpdate(await priorSource(update.path), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
@@ -137,7 +139,9 @@ export const assertCppStructuredCallableIntegration = async record => {
 		assert.equal(expected, sha256(restored[path]));
 		assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]);
 	}
-	const { document, ...contracts } = await readTypeSurface();
+	const { document: current, ...contracts } = await readTypeSurface();
+	assert.ok(current.contractVersion);
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
 	const oldDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(oldDocument.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(oldDocument, contracts);
