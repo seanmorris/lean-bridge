@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertRubyStructuredCallableExecution, assertRubyStructuredCallableIntegration, rubyStructuredCallableExecutionPath } from "./helpers/ruby-structured-callable-evidence.mjs";
 import { beforeRubyStructuredCallables, rubyStructuredCallableHistoryPath, reverseRubyStructuredCallableUpdate } from "./helpers/ruby-structured-callable-source-history.mjs";
+import { beforeDotnetStructuredCallables } from "./helpers/dotnet-structured-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -58,7 +59,7 @@ test("Ruby structured source history preserves unrelated source drift", async ()
 	const record = await json(rubyStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeDotnetStructuredCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseRubyStructuredCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRubyStructuredCallables(update.path, source)), update.previousSha256);
 		assert.notEqual(sha256(beforeRubyStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);

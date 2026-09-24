@@ -35,7 +35,7 @@ test(".NET callables expose delegates and disposable closures without FFI", () =
 for(const [label, change] of Object.entries({
 	"retained callback": ir => { ir.declarations[0].parameters[1].lifetime.scope = "explicit"; }
 	, "async callback": ir => { ir.types[0].callable.resultMode = "promise"; }
-	, "nonprimitive callback": ir => { ir.types[0].callable.result.type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint8" }] }; }
+	, "higher-order callback": ir => { ir.types[0].callable.result.type = { kind: "named", id: ir.types[0].id }; }
 	, "closure name collision": ir => { ir.declarations[0].name = "leanClosure"; }
 })) test(`.NET callable admission rejects ${label}`, () => {
 	const ir = callableReviewedIr(); change(ir); assert.throws(() => compileDotnetPackageModel(ir));

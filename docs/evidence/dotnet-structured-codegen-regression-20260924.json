@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "dotnet-structured-codegen-regression",
+  "baselineRevision": "35d11c8f9a623faaf294e2e475f82ef847f831ed",
+  "predecessors": {
+    "src/backends/dotnet/copied-model.mjs": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4",
+    "src/backends/dotnet/copied-values.mjs": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd"
+  },
+  "sourceHashes": {
+    "src/backends/dotnet/copied-model.mjs": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b",
+    "src/backends/dotnet/copied-values.mjs": "b096d55b3e71c125cbb63a26d6d1a960be0fa8e6975205f09e288f275e1986f3"
+  },
+  "fixtures": [
+    {
+      "name": "callables",
+      "bindingIrSha256": "44cb06d4936de2d450151c82b333327fc3f00b8d72970980f83fbe4d9a654f61",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/LeanBridge.Callables/Api.cs": {
+          "bytes": 10397,
+          "sha256": "19c2a85a79fd267d8f4505e9e1c2c73822a87bcfdd0b7584357301e1d09c8abe"
+        },
+        "src/LeanBridge.Callables/Runtime.cs": {
+          "bytes": 162642,
+          "sha256": "c0819d6068f2debdbaab7e8e30ef1ba23b4c6908e32dc92ec3d81f5d0b4a6549"
+        },
+        "src/LeanBridge.Callables/LeanBridge.Callables.csproj": {
+          "bytes": 605,
+          "sha256": "1ebb8c83928aa8a09a62b6bb47676d3dfd7d0424d0de33ac0db6780d3cbc51b1"
+        },
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 2390,
+          "sha256": "aa80835f287e8281edad3ddce482acdfde24ccfb55e9310800dd7a047a897f97"
+        },
+        "binding-manifest.json": {
+          "bytes": 1220,
+          "sha256": "b8d565b6372ace747adb4dcc8455194765e8c2aefa983888da6e4873fcb0ebdc"
+        }
+      }
+    },
+    {
+      "name": "collections",
+      "bindingIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/LeanBridge.Collections/Api.cs": {
+          "bytes": 14752,
+          "sha256": "9bb4f186e9bd3b47b2ecc29a216e52ad7ddc1ba7e4060086a19e7edca9fd6f43"
+        },
+        "src/LeanBridge.Collections/Runtime.cs": {
+          "bytes": 133992,
+          "sha256": "1f8041c5bb1de43f04fc2938e238b8b370b219e833f2d95102a30ba0bc776eb4"
+        },
+        "src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+          "bytes": 607,
+          "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+        },
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 2394,
+          "sha256": "6b2e2fde354ae509c5caabdeccba047dad434ddee7d89d45c3a0da4ac3c706ec"
+        },
+        "binding-manifest.json": {
+          "bytes": 1193,
+          "sha256": "db043adab1d43a6cddfb9bd004d3f7ccc5d0f9155bfa6eb396584cc98d000582"
+        }
+      }
+    },
+    {
+      "name": "compounds",
+      "bindingIrSha256": "d98b9496e222f1dc20cfb17e1adfbc840bf1026cf21c173aaccd2d93dce7c5e7",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/LeanBridge.Compounds/Api.cs": {
+          "bytes": 12791,
+          "sha256": "47c0955bb488935607ca2a93043038b7bdf849c138932d8036092231cdf99eb1"
+        },
+        "src/LeanBridge.Compounds/Runtime.cs": {
+          "bytes": 156076,
+          "sha256": "cc7485f4104b715081ba8e534226d3b1ded6d7000f4a00965fe3a88c95370e88"
+        },
+        "src/LeanBridge.Compounds/LeanBridge.Compounds.csproj": {
+          "bytes": 605,
+          "sha256": "f588fc784b8c9663505dd56d812f30c5af4a70929f1ea6b8feebdc2cade423eb"
+        },
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 2390,
+          "sha256": "dbf88201e9c3f7a2ef36a114fcf2de212892b442dc570ddcf54a7a3649405b20"
+        },
+        "binding-manifest.json": {
+          "bytes": 1171,
+          "sha256": "7a43601edca9a31256c5f1065dade42e87bf002a0b7e918bdbe8d5ec4b2803e0"
+        }
+      }
+    },
+    {
+      "name": "lists",
+      "bindingIrSha256": "c96dd2a962a7034e806902705fd0ac23d0f208d2a51f66b2bf0a9b4e18f61ee3",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/LeanBridge.Lists/Api.cs": {
+          "bytes": 7445,
+          "sha256": "7dbd9568add79ceedbe6ebfa1abe359d033088d65ca42d15b66e9f69bac1d3a5"
+        },
+        "src/LeanBridge.Lists/Runtime.cs": {
+          "bytes": 109956,
+          "sha256": "4de9db4bae95da5fcc7a243f77869744ce9732bcfbf468a5ef16891fbed1d784"
+        },
+        "src/LeanBridge.Lists/LeanBridge.Lists.csproj": {
+          "bytes": 601,
+          "sha256": "da69aeadc85442adbd9475a44e7b51d0471596334dd7c746fafd20725d16327f"
+        },
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 2737,
+          "sha256": "3cb6b14becf32d355573b62b20c74d6466264ae2b54f70b9b673e8d6f966f523"
+        },
+        "binding-manifest.json": {
+          "bytes": 1127,
+          "sha256": "eada6b91c5674d0c637899d743a138237b989e709597665aaa0c119626d4eb01"
+        }
+      }
+    },
+    {
+      "name": "aliases",
+      "bindingIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/LeanBridge.Aliases/Api.cs": {
+          "bytes": 21217,
+          "sha256": "5f86151bd1feeadc9c71400a57b97e6d3dad531142d8e7851bd45bad4e025a3b"
+        },
+        "src/LeanBridge.Aliases/Runtime.cs": {
+          "bytes": 39226,
+          "sha256": "f0980e6119137af9d49b86a2b422721f732968f6e7b47d493ce2bd59706883bb"
+        },
+        "src/LeanBridge.Aliases/LeanBridge.Aliases.csproj": {
+          "bytes": 603,
+          "sha256": "53de63ee852a3024dd2fb3e619fb99442cf17df900941eb175c5ff429d9795d6"
+        },
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 4440,
+          "sha256": "c1c400d333cbd4120c5f651a26e9190cbfbf277d31d5c50f2cae7a2cc499c882"
+        },
+        "binding-manifest.json": {
+          "bytes": 7332,
+          "sha256": "21d741645fb8f811d5eddecb9c507213736f769de9dfb1a9f49457bab04a9dc8"
+        }
+      }
+    },
+    {
+      "name": "variants",
+      "bindingIrSha256": "4c2f6c0dba1625eda88a2fe2ae6f750bee11c6dacd9ca0d5a0f9e72a9fec45a4",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/LeanBridge.Variants/Api.cs": {
+          "bytes": 20450,
+          "sha256": "9a222c86d9c0a4b318c65c3d5aa56ff4404ffb08d1968f0a94bee4b9b2976e51"
+        },
+        "src/LeanBridge.Variants/Runtime.cs": {
+          "bytes": 38576,
+          "sha256": "53e8c85f58caf64040c47314371a839e5b98c8df8d3d845e68d23dd456b508f6"
+        },
+        "src/LeanBridge.Variants/LeanBridge.Variants.csproj": {
+          "bytes": 604,
+          "sha256": "7cde3822584b778b752caded476dcd9a93b3c0fba17586fcf93f354929366977"
+        },
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 3432,
+          "sha256": "9d1f86ecee79e1892c7811c4566c23e04e543140c988acb7186136786626fb86"
+        },
+        "binding-manifest.json": {
+          "bytes": 1160,
+          "sha256": "f3e81e604fd663d6f42b17801a57a3a757e9a48b260ae71e33d08cf75b903cb2"
+        }
+      }
+    }
+  ]
+}

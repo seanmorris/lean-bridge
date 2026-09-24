@@ -67,14 +67,14 @@ test(".NET Lists use typed owned arrays with separate List/Array contract and na
 	assert.match(files["README.md"], /Lean List inputs, results and record fields use typed C# arrays/);
 });
 
-test(".NET Lists reject borrowed identities, compound callbacks and record name collisions", () => {
+test(".NET Lists admit copied callbacks but reject borrowed identities and record name collisions", () => {
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
 		const list = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "uint32" }] };
 		if(position === "parameter") callback.callable.parameters[0].type = list;
 		else callback.callable.result.type = list;
-		assert.throws(() => compileCopiedDotnetModel(ir), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => compileCopiedDotnetModel(ir));
 	}
 	const borrowed = listReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedDotnetModel(borrowed), /copy ownership/);

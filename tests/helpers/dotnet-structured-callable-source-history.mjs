@@ -1,31 +1,30 @@
 /**
- * Preserve exact predecessor sources around structured Ruby callable support.
+ * Preserve exact predecessor sources around structured C# callable support.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeDotnetStructuredCallables } from "./dotnet-structured-callable-source-history.mjs";
 
-export const rubyStructuredCallableHistoryPath = "docs/evidence/ruby-structured-callable-integration-20260924.json";
-export const rubyStructuredCallableChangedPaths = [
+export const dotnetStructuredCallableHistoryPath = "docs/evidence/dotnet-structured-callable-integration-20260924.json";
+export const dotnetStructuredCallableChangedPaths = [
 	".github/workflows/consumer-matrix.yml"
-	, "docs/consume/ruby.md", "docs/lean/existing-package.md"
-	, "docs/lean/export-decisions.md", "docs/publish/rubygems.md"
+	, "docs/consume/dotnet.md", "docs/lean/existing-package.md"
+	, "docs/lean/export-decisions.md", "docs/publish/nuget.md"
 	, "docs/reference/types.md", "docs/type-surface.v1.json"
 	, "scripts/generate-type-docs.mjs", "src/adoption/test-profiles.mjs"
-	, "src/backends/ruby/copied-model.mjs"
-	, "src/backends/ruby/copied-values.mjs"
+	, "src/backends/dotnet/copied-model.mjs"
+	, "src/backends/dotnet/copied-values.mjs"
 	, "src/build/native-c-projection.mjs", "src/build/native-project.mjs"
 	, "tests/documentation.test.mjs"
-	, "tests/helpers/python-structured-callable-evidence.mjs"
-	, "tests/helpers/python-structured-callable-source-history.mjs"
-	, "tests/python-structured-callable-evidence.test.mjs"
-	, "tests/ruby-callable-contract.test.mjs"
-	, "tests/ruby-collection-evidence.test.mjs"
-	, "tests/ruby-compound-contract.test.mjs"
-	, "tests/ruby-list-contract.test.mjs"
+	, "tests/dotnet-callable-contract.test.mjs"
+	, "tests/dotnet-collection-evidence.test.mjs"
+	, "tests/dotnet-compound-contract.test.mjs"
+	, "tests/dotnet-list-contract.test.mjs"
+	, "tests/helpers/ruby-structured-callable-evidence.mjs"
+	, "tests/helpers/ruby-structured-callable-source-history.mjs"
+	, "tests/ruby-structured-callable-evidence.test.mjs"
 	, "tests/type-surface-docs.test.mjs", "tests/type-surface.test.mjs"
 ].sort();
 let history;
@@ -45,8 +44,8 @@ const reverse = (source, update) => {
  * @param source - Complete source at this milestone.
  * @param update - Explicit predecessor and replacement spans.
  */
-export const reverseRubyStructuredCallableUpdate = (source, update) => {
-	assert.ok(rubyStructuredCallableChangedPaths.includes(update.path));
+export const reverseDotnetStructuredCallableUpdate = (source, update) => {
+	assert.ok(dotnetStructuredCallableChangedPaths.includes(update.path));
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let end = 0;
@@ -64,16 +63,15 @@ export const reverseRubyStructuredCallableUpdate = (source, update) => {
 };
 
 /**
- * Undo only recorded Ruby edits, leaving unrelated changes visible to checks.
+ * Undo only recorded C# edits, leaving unrelated changes visible to checks.
  *
  * @param path - Repository-relative source path.
  * @param source - Complete current or predecessor source.
  * @param expected - Optional intermediate identity at which to stop.
  */
-export const beforeRubyStructuredCallables = (path, source, expected) => {
-	source = beforeDotnetStructuredCallables(path, source, expected);
-	if(sha256(source) === expected || !rubyStructuredCallableChangedPaths.includes(path)) return source;
-	const record = history ??= JSON.parse(readFileSync(rubyStructuredCallableHistoryPath, "utf8"));
+export const beforeDotnetStructuredCallables = (path, source, expected) => {
+	if(sha256(source) === expected || !dotnetStructuredCallableChangedPaths.includes(path)) return source;
+	const record = history ??= JSON.parse(readFileSync(dotnetStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
 	return update ? reverse(source, update) : source;
 };

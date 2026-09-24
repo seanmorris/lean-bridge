@@ -69,10 +69,10 @@ for(const name of ["Option", "Result"]) test(`.NET compound ${name} cannot colli
 	assert.throws(() => compileCopiedDotnetModel(ir), /record name collides/);
 });
 
-test(".NET compounds do not admit compound callables or borrowed copied identity", () => {
+test(".NET compounds admit copied callable payloads but reject borrowed copied identity", () => {
 	const ir = callableReviewedIr();
 	ir.types[0].callable.result.type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "unit" }] };
-	assert.throws(() => compileCopiedDotnetModel(ir), /callbacks currently require copied primitive/);
+	assert.doesNotThrow(() => compileCopiedDotnetModel(ir));
 	const borrowed = compoundReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedDotnetModel(borrowed), /copy ownership/);
 });

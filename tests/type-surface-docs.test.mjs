@@ -171,6 +171,18 @@ test("Ruby copied callback rows retain recursive and resource exclusions", async
 	assert.match(source, /ruby-structured-callables-20260924\.md/u);
 });
 
+test("C# copied callback rows retain recursive and resource exclusions", async () => {
+	const source = await readFile("docs/consume/dotnet.md", "utf8");
+	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+	{
+		const mapping = row(source, shape);
+		assert.match(mapping, /callback input, callback result/u);
+		assert.doesNotMatch(mapping, /Not audited/u);
+	}
+	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.match(source, /dotnet-structured-callables-20260924\.md/u);
+});
+
 test("Java and Kotlin distinguish callable, collection-field and asynchronous evidence", async () => {
 	const java = await readFile("docs/consume/java.md", "utf8");
 	const kotlin = await readFile("docs/consume/kotlin.md", "utf8");
@@ -393,7 +405,7 @@ test("Rust compound docs distinguish domain results from bridge errors", async (
 test("C# compound docs preserve nested options and separate domain errors from bridge failures", async () => {
 	const source = await readFile("docs/consume/dotnet.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
-		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u);
 	assert.match(row(source, "Option α"), /`Option<T>`/u);
 	assert.match(row(source, "Except ε α"), /`Result<T, E>`/u);
 	assert.match(source, /IsSome/);

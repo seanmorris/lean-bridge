@@ -1,0 +1,16 @@
+[
+  { "name": "array-element", "statement": "Api.CallArray(new string[0], value => value);", "codes": ["CS1503"] },
+  { "name": "callback-result", "statement": "Api.CallArray(new Option<string>[0], value => new string[0]);", "codes": ["CS0029", "CS1662"] },
+  { "name": "list-collection", "statement": "Api.CallList(new System.Collections.Generic.List<Result<(uint, string), string>>(), value => value);", "codes": ["CS1503"] },
+  { "name": "nested-option", "statement": "Api.CallOption(Option<Unit>.None, value => value);", "codes": ["CS1503"] },
+  { "name": "result-order", "statement": "Api.CallResult(Result<string, Option<uint>>.Ok(\"wrong\"), value => value);", "codes": ["CS1503"] },
+  { "name": "tuple-nesting", "statement": "Api.CallTuple((\"\", new byte[0], System.Numerics.BigInteger.One), value => value);", "codes": ["CS1503"] },
+  { "name": "record-identity", "statement": "Api.CallRecord(new { Text = \"\" }, value => value);", "codes": ["CS1503"] },
+  { "name": "variant-payload", "statement": "Api.CallVariant(new PacketCounts(\"wrong\", 0), value => value);", "codes": ["CS1503"] },
+  { "name": "alias-wrapper", "statement": "Api.CallAlias(new Alias(), value => value);", "codes": ["CS0246"] },
+  { "name": "nullable-record", "statement": "Api.CallRecord(null, value => value);", "codes": ["CS8625"] },
+  { "name": "nullable-callback", "statement": "Api.CallOption(Option<Option<Unit>>.None, null);", "codes": ["CS8625"] },
+  { "name": "async-callback", "statement": "Api.CallArray(new Option<string>[0], async value => { await System.Threading.Tasks.Task.Yield(); return value; });", "codes": ["CS4010"] },
+  { "name": "closure-input", "statement": "using var owned = Api.MakeArray(new Option<string>[0]); owned.Invoke(1, new Option<string>[0]);", "codes": ["CS1503"] },
+  { "name": "closure-result", "statement": "using var owned = Api.MakeArray(new Option<string>[0]); string[] value = owned.Invoke(true, new Option<string>[0]);", "codes": ["CS0029"] }
+]

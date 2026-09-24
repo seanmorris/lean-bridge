@@ -1,6 +1,6 @@
 # Build and publish C# / .NET packages
 
-Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays and Lists, acyclic copied records, tagged variants, options, results, binary products, and synchronous primitive callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays and Lists, acyclic copied records, tagged variants, options, results, binary products, and synchronous primitive and acyclic structured callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/aurora --target nuget \
 
 The result includes `archives/Acme.Aurora.2.0.0-rc.1.nupkg` and `native-release.json`, which records the exact archive digest. The archive contains the compiled .NET 8 assembly, native adapter, Lean component, shared runtime, generated sources, compiler evidence and dependency license notices. Its README identifies the generated namespace and API. A different NuGet package ID does not rename the Lean-derived C# namespace.
 
-The native profile accepts concrete functions with copied values and synchronous primitive callbacks or returned closures. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. Recursive values, resources, compound callables and asynchronous effects remain outside this ordinary NuGet profile.
+The native profile accepts concrete functions with copied values and synchronous primitive or acyclic structured callbacks and returned closures. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. [Recursive copied values](../consume/dotnet.md#recursive-values) use separately documented depth and storage limits. Recursive callable payloads, resource-containing aggregates and asynchronous delivery remain separate work.
 
 Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
 
@@ -78,7 +78,7 @@ and [installed alias evidence](../evidence/dotnet-aliases-20260921.md).
 
 Both ordinary-source and reviewed-IR builds accept `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested Lists and arrays, copied records, `Option`, `Except` and binary products. Select concrete Lean exports as usual; no List-specific configuration is required.
 
-C# consumers pass and receive typed `T[]` values. Copies preserve empty Lists, order, duplicates and every nesting level. Returned arrays have independent storage. The existing 16 MiB accounting budgets and 32-level type limit apply. List callback payloads remain unsupported. See the [consumer example](../consume/dotnet.md#lists) and [installed NuGet List evidence](../evidence/dotnet-lists-20260920.md).
+C# consumers pass and receive typed `T[]` values. Copies preserve empty Lists, order, duplicates and every nesting level. Returned arrays have independent storage. The existing 16 MiB accounting budgets and 32-level type limit apply. Lists also work in [structured callbacks](#structured-callback-values). See the [consumer example](../consume/dotnet.md#lists) and [installed NuGet List evidence](../evidence/dotnet-lists-20260920.md).
 
 ## Export copied tagged variants
 
@@ -95,7 +95,7 @@ carry values to C; consumers use only the named C# records.
 
 Payloads may contain all nineteen primitives, supported copied containers,
 records and other non-recursive variants. Unknown derived records, null cases
-and active null payloads reject. Generic, indexed, recursive, proof-bearing,
+and active null payloads reject. Generic, indexed, proof-bearing,
 callable and identity-bearing payloads are not admitted. Native multi-target
 variant builds currently accept C, C++, Python, Rust, .NET, Java, Kotlin, Ruby and Perl when
 every selected target accepts the entire API.
@@ -119,9 +119,52 @@ end Aurora
 
 Include both exports and set `"arities": { "Aurora.make_word": 1 }` to leave the final argument on the returned closure. For a reviewed Binding IR, its outer parameter count supplies that decision; do not also configure `arities`.
 
-Callbacks accept one to sixteen primitive arguments and a primitive result. They borrow one synchronous call. C# uses `Func` or `Action` delegates and `LeanClosure<TDelegate>` with `Invoke`, `IsClosed` and `Dispose`. `Nat`/`Int` stay exact `BigInteger` values, and temporary native buffers remain private. See [consumer ownership and exception behavior](../consume/dotnet.md#callbacks-and-returned-lean-functions).
+Callbacks accept one to sixteen primitive or admitted copied arguments and a primitive or copied result. They borrow one synchronous call. C# uses `Func` or `Action` delegates and `LeanClosure<TDelegate>` with `Invoke`, `IsClosed` and `Dispose`. `Nat`/`Int` stay exact `BigInteger` values, and temporary native buffers remain private. See [consumer ownership and exception behavior](../consume/dotnet.md#callbacks-and-returned-lean-functions).
 
 A combined build rejects the complete request if any selected target does not support its callable signatures. Ordinary-source and reviewed NuGet packages run through the same private C callable ABI and shared runtime.
+
+### Structured callback values
+
+Both source paths support arrays, Lists, options, results, nested binary
+products, acyclic copied records, variants and aliases in callbacks and returned
+closures. For example:
+
+```lean
+namespace Structured
+def callArray (rows : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) :=
+  callback rows
+def makeArray (captured : Array (Option String)) :
+    Bool → Array (Option String) → Array (Option String) :=
+  fun selected rows => if selected then captured else rows
+end Structured
+```
+
+Select both exports and leave the final two arguments on the returned function:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callArray", "Structured.makeArray"],
+  "arities": { "Structured.makeArray": 1 },
+  "targets": {
+    "nuget": { "name": "Lean.Structured", "version": "1.0.0" }
+  }
+}
+```
+
+C# consumers use `Func` delegates and `LeanClosure<TDelegate>`. Callback
+arguments, results and captured values own independent copied storage. Scoped
+buffers retain callback results until native copying finishes. Exceptions retain
+their original object and stack after cleanup. Closures require creating-thread
+invocation and support deterministic `Dispose` through `using`.
+
+The 32-level acyclic type bound and 16 MiB per-call copy budget apply. Recursive
+callback payloads, copied callback identities, resource-containing aggregates and
+asynchronous delivery remain separate work. See the
+[installed consumer example](../consume/dotnet.md#structured-callback-values)
+and [NuGet acceptance record](../evidence/dotnet-structured-callables-20260924.md).
 
 ## Build and inspect the package
 

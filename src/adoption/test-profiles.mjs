@@ -138,6 +138,8 @@ const profileManifest = Object.freeze({
 		, "cpp-structured-callable-evidence"
 		, "cpp-callable-evidence"
 		, "dotnet-callable-contract"
+		, "dotnet-structured-callable-contract"
+		, "dotnet-structured-callable-evidence"
 		, "dotnet-compound-contract"
 		, "dotnet-list-contract"
 		, "dotnet-alias-contract"
@@ -322,6 +324,7 @@ const profileManifest = Object.freeze({
 	])
 	, native: Object.freeze([
 		"dotnet-callables"
+		, "dotnet-structured-callables"
 		, "dotnet-compounds"
 		, "dotnet-lists"
 		, "dotnet-aliases"

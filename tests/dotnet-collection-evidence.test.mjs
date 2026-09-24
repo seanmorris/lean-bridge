@@ -9,6 +9,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
+import { beforeDotnetStructuredCallables } from "./helpers/dotnet-structured-callable-source-history.mjs";
 
 test("NuGet collection evidence binds original packages, public signatures and failure cleanup", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/dotnet-collections-20260922.json"));
@@ -23,7 +24,7 @@ test("NuGet collection evidence binds original packages, public signatures and f
 		return { ...run, signatures: record.signatures };
 	});
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(beforeDotnetStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	const negatives = JSON.parse(await readFile("tests/fixtures/collection-consumers/dotnet-invalid.json"));
 	const guide = (await readFile("docs/consume/dotnet.md", "utf8")).split("### Arrays and records\n")[1].split("\n### ")[0];
@@ -127,7 +128,7 @@ test("NuGet collections advance only copied reviewed cells and require original 
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["dotnet-collections-installed"]); }
 	}
 	for(const cell of cells.filter(cell => cell.profile === "dotnet" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["dotnet-structured-callables-installed"]);
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	for(const [flag, file, report] of [["COLLECTION", "dotnet-collections", "collections/dotnet"], ["CONVERSION", "dotnet-collection-conversions", "collections/dotnet-conversions"], ["EQUALITY", "dotnet-value-equality", "equality/dotnet"]])
 	{
