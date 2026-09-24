@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "wit-recursive-development-registration",
+  "finalAcceptance": false,
+  "baselineRevision": "976103871e12f617fd868f6e9b6b6db7a3b31866",
+  "updates": [
+    {
+      "path": "package.json",
+      "previousSha256": "b8f9e3c7062280246939714dbf38b65d1103856b9797f563e66babb1b3f7648e",
+      "currentSha256": "d0e751e42456836f58bccdd00594ce7e8fef2b5162b78be8d940b44330b6150e",
+      "addedLines": [
+        "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+        "    \"src/backends/wit/copied-graph-host.mjs\",",
+        "    \"src/backends/wit/copied-graph-model.mjs\",",
+        "    \"src/backends/wit/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "e4f1759774e0fff3415ebf4264a31cd36e4c619e541bac0c4e8bdabcc5d5dc03",
+      "currentSha256": "f314bda3a66f2023542af13913fb2e246f13c8bc90e94ed037e6f0885c89b9f1",
+      "addedLines": [
+        "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+        "    \"src/backends/wit/copied-graph-host.mjs\",",
+        "    \"src/backends/wit/copied-graph-model.mjs\",",
+        "    \"src/backends/wit/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "20d917b9b75afd8d895e2d30764be3c939380cb22b871d8e1708830c9ec998ce",
+      "currentSha256": "92ee24a84310a13959e5ff716019257797f140661d39e7889583a2767da2211f",
+      "addedLines": [
+        "\t\t{ \"path\": \"src/backends/wit/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/wit/copied-graph-host.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/wit/copied-graph-model.mjs\", \"classification\": \"strict-migration-backlog\" },",
+        "\t\t{ \"path\": \"src/backends/wit/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },"
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "6b89f0dc7edb7d5c13bd69373c057f75a5bfef1da332a95aa95759a9e59ed299",
+      "currentSha256": "ff6073d1dab2e5a0599d82c16044e012e4fc8f70d5dca8c3e64df2c176129227",
+      "addedLines": [
+        "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+        "    \"src/backends/wit/copied-graph-host.mjs\",",
+        "    \"src/backends/wit/copied-graph-model.mjs\",",
+        "    \"src/backends/wit/copied-graph-runtime.mjs\","
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "5a56a334752d19736c01e23a8b48a14f998a3128435b04af340f554659114ca5",
+      "currentSha256": "f525b043c21c0ce707a998dce78133a77df2d462341a1c3abef898af46274c69",
+      "addedLines": [
+        "\t\t, \"wit-copied-graph-model\"",
+        "\t\t, \"wit-copied-graph-conversions\"",
+        "\t\t, \"wit-copied-graph-native\""
+      ]
+    },
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "8675b1956a80e0e3a75f0702abd91e52f8076e549d164c5bec03fe3c15b588ca",
+      "currentSha256": "a7e15b2be677ff599af5611b2d6c51c4529ed1f02e2aaa1fb0154e0825a3334e",
+      "addedLines": [
+        "          LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs",
+        "          LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs"
+      ]
+    },
+    {
+      "path": "docs/evidence/recursive-npm-source-lineage-20260922.json",
+      "previousSha256": "2c3cb202dd78d5fcb0212dc76927f5ed1169549c1ce29b134ad55fd5283d61eb",
+      "currentSha256": "9b399cfc728f07c1c4e1354004e21d645469b72bea1f164c02f86d4836c3bb35",
+      "additions": {
+        "registrationUpdates": [
+          {
+            "path": "src/adoption/test-profiles.mjs",
+            "previousSha256": "5a56a334752d19736c01e23a8b48a14f998a3128435b04af340f554659114ca5",
+            "currentSha256": "f525b043c21c0ce707a998dce78133a77df2d462341a1c3abef898af46274c69",
+            "addedTests": [
+              "wit-copied-graph-model",
+              "wit-copied-graph-conversions",
+              "wit-copied-graph-native"
+            ]
+          }
+        ],
+        "sourceRegistrationUpdates": [
+          {
+            "path": "package.json",
+            "previousSha256": "b8f9e3c7062280246939714dbf38b65d1103856b9797f563e66babb1b3f7648e",
+            "currentSha256": "d0e751e42456836f58bccdd00594ce7e8fef2b5162b78be8d940b44330b6150e",
+            "addedLines": [
+              "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+              "    \"src/backends/wit/copied-graph-host.mjs\",",
+              "    \"src/backends/wit/copied-graph-model.mjs\",",
+              "    \"src/backends/wit/copied-graph-runtime.mjs\","
+            ]
+          },
+          {
+            "path": "config/cli-package.v1.json",
+            "previousSha256": "e4f1759774e0fff3415ebf4264a31cd36e4c619e541bac0c4e8bdabcc5d5dc03",
+            "currentSha256": "f314bda3a66f2023542af13913fb2e246f13c8bc90e94ed037e6f0885c89b9f1",
+            "addedLines": [
+              "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+              "    \"src/backends/wit/copied-graph-host.mjs\",",
+              "    \"src/backends/wit/copied-graph-model.mjs\",",
+              "    \"src/backends/wit/copied-graph-runtime.mjs\","
+            ]
+          },
+          {
+            "path": "config/checked-javascript.json",
+            "previousSha256": "20d917b9b75afd8d895e2d30764be3c939380cb22b871d8e1708830c9ec998ce",
+            "currentSha256": "92ee24a84310a13959e5ff716019257797f140661d39e7889583a2767da2211f",
+            "addedLines": [
+              "\t\t{ \"path\": \"src/backends/wit/copied-graph-conversions.mjs\", \"classification\": \"strict-migration-backlog\" },",
+              "\t\t{ \"path\": \"src/backends/wit/copied-graph-host.mjs\", \"classification\": \"strict-migration-backlog\" },",
+              "\t\t{ \"path\": \"src/backends/wit/copied-graph-model.mjs\", \"classification\": \"strict-migration-backlog\" },",
+              "\t\t{ \"path\": \"src/backends/wit/copied-graph-runtime.mjs\", \"classification\": \"strict-migration-backlog\" },"
+            ]
+          },
+          {
+            "path": "nix/perl-engine-source-boundary.json",
+            "previousSha256": "6b89f0dc7edb7d5c13bd69373c057f75a5bfef1da332a95aa95759a9e59ed299",
+            "currentSha256": "ff6073d1dab2e5a0599d82c16044e012e4fc8f70d5dca8c3e64df2c176129227",
+            "addedLines": [
+              "    \"src/backends/wit/copied-graph-conversions.mjs\",",
+              "    \"src/backends/wit/copied-graph-host.mjs\",",
+              "    \"src/backends/wit/copied-graph-model.mjs\",",
+              "    \"src/backends/wit/copied-graph-runtime.mjs\","
+            ]
+          },
+          {
+            "path": ".github/workflows/consumer-matrix.yml",
+            "previousSha256": "8675b1956a80e0e3a75f0702abd91e52f8076e549d164c5bec03fe3c15b588ca",
+            "currentSha256": "a7e15b2be677ff599af5611b2d6c51c4529ed1f02e2aaa1fb0154e0825a3334e",
+            "addedLines": [
+              "          LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs",
+              "          LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "tests/helpers/recursive-acceptance-updates.mjs",
+      "previousSha256": "dfb4efda4405e23b367d1533cd60355b9f5f9ee324cbb22f6d2f2249894b4ff2",
+      "currentSha256": "b1d2bbe2b8ae0a9632a0622e1ac0ec5c51171e4f26d62cd37076d885aff5e1c7",
+      "edits": [
+        {
+          "previous": "",
+          "current": "import { beforeWitGraphRegistration } from \"./wit-graph-source-lineage.mjs\";\n"
+        },
+        {
+          "previous": "",
+          "current": "\tsource = beforeWitGraphRegistration(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/recursive-documentation-history.mjs",
+      "previousSha256": "e5fb54e10def355c35980ebfc8f83ef6ac0cb7171ef7b7d130083fc54fd44261",
+      "currentSha256": "1d2ad5718dedf56f9786ed2171085ca56b8514fb859a189f4fa2e9121602f977",
+      "edits": [
+        {
+          "previous": "",
+          "current": "import { beforeWitGraphRegistration } from \"./wit-graph-source-lineage.mjs\";\n"
+        },
+        {
+          "previous": "\tconst source = await readFile(lineagePath, \"utf8\");\n",
+          "current": "\tconst source = beforeWitGraphRegistration(lineagePath, await readFile(lineagePath, \"utf8\"), record.lineage.currentSha256);\n"
+        },
+        {
+          "previous": "",
+          "current": "\t\tsource = beforeWitGraphRegistration(path, source, record.lineage.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}
+

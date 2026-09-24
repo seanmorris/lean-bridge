@@ -1274,6 +1274,8 @@ jobs:
           LEAN_BRIDGE_WIT_COLLECTION_TEST=1 node --test --test-concurrency=1 tests/wit-collections.test.mjs tests/wit-collection-contract.test.mjs tests/wit-collection-conversions.test.mjs
           test -s build/collections/wit.json
           test -s build/collections/wit-conversions.json
+          LEAN_BRIDGE_WIT_GRAPH_TEST=1 node --test tests/wit-copied-graph-conversions.test.mjs
+          LEAN_BRIDGE_WIT_GRAPH_NATIVE_TEST=1 node --test tests/wit-copied-graph-native.test.mjs
       - name: Compare installed WIT packages with the shared Lean corpus
         id: type_corpus_wit
         continue-on-error: true

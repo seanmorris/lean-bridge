@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { beforeRecursiveAcceptanceDocument } from "./recursive-acceptance-updates.mjs";
+import { beforeWitGraphRegistration } from "./wit-graph-source-lineage.mjs";
 
 const recordPath = "docs/evidence/recursive-documentation-updates-20260924.json";
 const lineagePath = "docs/evidence/recursive-npm-source-lineage-20260922.json";
@@ -66,7 +67,7 @@ export const assertRecursiveDocumentationRecord = async record => {
 	for(const [path, update] of Object.entries(record.files)) reverseRecursiveDocumentation(await readFile(path, "utf8"), update);
 	assert.equal(record.lineage.path, lineagePath);
 	assert.equal(sha256(record.lineage.previousText), record.lineage.previousSha256);
-	const source = await readFile(lineagePath, "utf8");
+	const source = beforeWitGraphRegistration(lineagePath, await readFile(lineagePath, "utf8"), record.lineage.currentSha256);
 	assert.equal(sha256(source), record.lineage.currentSha256);
 	assertAdditiveRecursiveHistory(source, record.lineage.previousText);
 	assert.equal(record.predecessor.path, "docs/evidence/php-recursive-packages-20260923.json");
@@ -91,6 +92,7 @@ export const assertRecursiveDocumentationSource = async (path, source, expected)
 	const previous = await assertRecursiveDocumentationRecord(record);
 	if(path === lineagePath)
 	{
+		source = beforeWitGraphRegistration(path, source, record.lineage.currentSha256);
 		assert.equal(sha256(source), record.lineage.currentSha256);
 		assert.equal(expected, record.lineage.previousSha256);
 		return true;

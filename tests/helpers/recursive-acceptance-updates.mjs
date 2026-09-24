@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitGraphRegistration } from "./wit-graph-source-lineage.mjs";
 
 const filename = "docs/evidence/recursive-managed-acceptance-20260924.json";
 const documentation = ["docs/consume/dotnet.md", "docs/consume/java.md", "docs/consume/kotlin.md", "docs/php.md"];
@@ -45,6 +46,7 @@ export const reverseAcceptanceUpdate = (source, update) => {
  * @param expected - Hash retained by the original execution receipt.
  */
 export const beforeRecursiveAcceptance = (path, source, expected) => {
+	source = beforeWitGraphRegistration(path, source, expected);
 	if(sha256(source) === expected) return source;
 	const record = recursiveAcceptanceRecord();
 	const matches = record.updates.filter(update => update.path === path && update.previousSha256 === expected);
