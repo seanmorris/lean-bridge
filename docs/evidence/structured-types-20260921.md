@@ -1,17 +1,27 @@
 # Structured types: remaining implementation and transport checks
 
 VO1219 remains open. Copied Lists have [installed acceptance across all seventeen
-consumer profiles](lists-acceptance-20260921.md). The remaining structured-type
-work covers recursive copied data in the remaining eight consumer profiles,
-compound callback/closure payloads, and aggregates with explicit identity
-ownership. Copied aliases and tagged variants have installed acceptance across
-all seventeen profiles. [Recursive npm values](npm-recursive-20260922.md) have
-installed acceptance across the five npm profiles. [C/C++ recursive packages](native-recursive-packages-20260923.md)
-pass both source paths. [Rust/Cargo](rust-recursive-packages-20260923.md) and
-[Python wheels](python-recursive-packages-20260923.md) also have installed
-recursive acceptance. Ruby, Perl, C#, Java, Kotlin, native PHP, PHP-Wasm and
-WIT/WASI still need recursive installed support. The identity work also belongs
-to VO1221.
+consumer profiles](lists-acceptance-20260921.md), as do copied aliases and tagged
+variants. Recursive copied values have accepted installed coverage in eleven
+profiles: [the five npm profiles](npm-recursive-20260922.md),
+[C/C++](native-recursive-packages-20260923.md),
+[Rust/Cargo](rust-recursive-packages-20260923.md),
+[Python wheels](python-recursive-packages-20260923.md),
+[Ruby](ruby-recursive-packages-20260923.md) and
+[Perl](perl-recursive-packages-20260923.md).
+
+[C#](dotnet-recursive-packages-20260923.md),
+[Java/Kotlin](jvm-recursive-packages-20260923.md),
+[native PHP](php-recursive-packages-20260923.md) and
+[PHP-Wasm](php-wasm-recursive-packages-20260924.md) now have compiled package
+tests. Their final acceptance still requires the
+[shared regression and source-evidence checks](native-shared-admission-20260924.md).
+WIT/WASI recursive values remain unimplemented.
+
+The remaining cross-language features are structured callback/closure payloads
+and resource-containing aggregates with explicit ownership. The ownership work
+also belongs to VO1221. Final acceptance includes current documentation, the
+support inventory and the complete cross-language test matrix.
 
 ## Delivery stages
 

@@ -19,7 +19,7 @@ import { nativeAliasReviewedIr } from "./helpers/native-alias-fixture.mjs";
 import { cVariantReviewedIr } from "./helpers/c-variant-fixture.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { jvmCallableSignatures } from "./helpers/jvm-callable-fixture.mjs";
-import { assertRecursiveSourceHistory } from "./helpers/recursive-source-history.mjs";
+import { assertCurrentKotlinCollectionSources } from "./helpers/current-collection-evidence.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/kotlin-collections-20260922.json"));
 const digest = value => sha256(canonicalJson(value));
@@ -70,7 +70,7 @@ test("Kotlin collections bind current sources to both original installed source 
 	assert.deepEqual(record.profiles, ["java", "kotlin"]);
 	assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.equal(record.hostGlibc, "2.36"); assert.equal(record.packageGlibcFloor, "2.36");
-	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertRecursiveSourceHistory("kotlin-collections-20260922", path, hash);
+	await assertCurrentKotlinCollectionSources(record);
 	const sort = values => [...values].sort((a, b) => a.name.localeCompare(b.name));
 	assert.deepEqual(sort(record.signatures), sort(collectionSignatures));
 	assert.equal(record.reviewedIrSha256, digest(collectionReviewedIr()));

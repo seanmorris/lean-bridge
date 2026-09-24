@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { inspectLeanProject } from "../../src/analyze/lean-project.mjs";
 import { assertSourceRegistrationUpdate } from "./source-registration-history.mjs";
+import { assertDotnetGraphSourceTransition } from "./native-dotnet-graph-regression.mjs";
 import { compoundReviewedIr as expandedCompounds } from "./compound-fixture.mjs";
 import { compoundReviewedIr as namedCompounds } from "./compound-source-fixture.mjs";
 
@@ -154,7 +155,7 @@ export const assertPerlGraphRegressions = async () => {
 	for(const [path, hash] of Object.entries(record.sourceHashes))
 	{
 		const source = await readFile(path, "utf8");
-		if(sha256(source) !== hash) assert.equal(await assertSourceRegistrationUpdate(path, source, hash), true, `Changed regression source: ${path}`);
+		if(sha256(source) !== hash) assert.equal(await assertDotnetGraphSourceTransition(path, source, hash) || await assertSourceRegistrationUpdate(path, source, hash), true, `Changed regression source: ${path}`);
 	}
 	const baselines = {};
 	for(const [name, entry] of Object.entries(record.baselines))
@@ -210,6 +211,6 @@ export const assertPerlGraphSourceTransition = async (path, source, expected) =>
 	if(!shared.includes(path)) return false;
 	const { record, baselines } = await assertPerlGraphRegressions();
 	assert.equal(baselines.sharedBaseline.sourceHashes[path], expected, `Unknown CPAN shared-build baseline: ${path}`);
-	assert.equal(sha256(source), record.sourceHashes[path], path);
+	if(sha256(source) !== record.sourceHashes[path]) assert.equal(await assertDotnetGraphSourceTransition(path, source, record.sourceHashes[path]), true, path);
 	return true;
 };

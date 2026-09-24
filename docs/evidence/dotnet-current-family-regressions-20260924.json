@@ -1,0 +1,3830 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "dotnet-current-family-regressions",
+  "finalAcceptance": false,
+  "wordBits": 64,
+  "packageGlibcFloor": "2.38",
+  "previous": {
+    "path": "docs/evidence/dotnet-recursive-family-regressions-20260923.json",
+    "sha256": "383fadcc1691da44e905e57ffc353b5461a47f834aed6d6e80aa6118d6c0e2d5"
+  },
+  "sourceHashes": {
+    "src/backends/c/copied-graph-layout.mjs": "4873e56471efc4d44d0c8e71b2cb1b35ad5dbee77d5f1ae2d21eabfc63d709cc",
+    "src/backends/c/native-graph-adapters.mjs": "1c1d36a558a121105390ed5986c3864eabf28a43de385a62566877ea6e3610df",
+    "src/backends/dotnet/callables.mjs": "d26caf5de38cdb4dcdcee40d8a961e2d59c0d244fb06158bcfbe1c6d1145f32b",
+    "src/backends/dotnet/copied-aliases.mjs": "c39fd9bcc52691dd0c024e5c1e6686fba2cfdb1d966337029b97857ebcd70c9e",
+    "src/backends/dotnet/copied-conversions.mjs": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77",
+    "src/backends/dotnet/copied-graph-assets.mjs": "47c20dcfa2ee512448d0307c4b44ce89fb370f8aeeb3ba7d6dfe90d9a10938dc",
+    "src/backends/dotnet/copied-graph-conversions.mjs": "60c347cbc9fe6fb4767cdb826e9bc6b0108f5eeb56ac7177505bad226387ced8",
+    "src/backends/dotnet/copied-graph-equality.mjs": "dc4f4f92b2c85210c28b013eac84390cd864f64cc4c7aa77ca00cfb32d7b0c97",
+    "src/backends/dotnet/copied-graph-layout.mjs": "26f6157e35607a20d3dfe6b1a7b4945611c1cd14ccff77b121bea1589eb675ec",
+    "src/backends/dotnet/copied-graph-package.mjs": "5d2e680291568264f6b50494cdadd5af034f18786add7a706d58611182c2c5c4",
+    "src/backends/dotnet/copied-graph-runtime.mjs": "c0456ef395dbea8f5fcc7a5a6f06e9050a741a2916e2cc2cda3b429e91bd8ce2",
+    "src/backends/dotnet/copied-graph-scalars.mjs": "c8639f5554f64b28b20aa5a071b07be973878dadb193a84936e211df6e8e1e26",
+    "src/backends/dotnet/copied-graph-values.mjs": "95124708cea0855cbbaf4f998d370154c499d2955bbb3b30e11f01793ccb248c",
+    "src/backends/dotnet/copied-model.mjs": "10d84df64293295d2dec75a601e189df5e58ec725b6efda7d2637cec657129b4",
+    "src/backends/dotnet/copied-values.mjs": "3fcfe36f50c81a7941c58cc35cad013225548c0dbddb99a16a9c39134fd8e6bd",
+    "src/backends/dotnet/generate.mjs": "4a270f1cee05936996eed48b57faa57405efaae103348c5e4f6ba9604ebbb73b",
+    "src/backends/managed/package-audit.mjs": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a",
+    "src/build/native-c-projection.mjs": "76c4a4dd66ce395b9d7b1fc2cd6120808707857ac746902f472bb35b170f360d",
+    "src/build/native-dotnet-artifacts.mjs": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9",
+    "src/build/native-dotnet-projection.mjs": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0",
+    "src/build/native-graph-projection.mjs": "691429007b218b2f3e65b7f42e73a6c2c3ade12f44fa1be33d8488f92e12c44b",
+    "src/build/native-project.mjs": "43645b75de02f6f66de8848bde8d8d171cfe55ae84244a605861f92144cd720f",
+    "src/release/native-nuget.mjs": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae",
+    "tests/dotnet-aliases.test.mjs": "83d7a27f8e0e79372160eec2fbf1743e67d625ecde9d845d08499a4a3e9d23cd",
+    "tests/dotnet-callables.test.mjs": "ef27f15f9d517a8e008c1162f2fa934fde8adbdf2f7c2e7ff14a45afeaf33293",
+    "tests/dotnet-collections.test.mjs": "f711c7e930148059b5f36a263b5edf65a0e7137c80b4cb489b4965df265c9f58",
+    "tests/dotnet-compounds.test.mjs": "c160b79e8ebfec06d3b9efc4d23f112a045efabaa635a719878ef3e22ab29df4",
+    "tests/dotnet-lists.test.mjs": "ead19fb87871e4d69bc52626af815a5be3d8b1ac0310794a862913a42a8758c4",
+    "tests/dotnet-variants.test.mjs": "ca8df2d4bd6cca085c7b2b89e97421fa28ac22ef91f02864b3ea586e1de96d64",
+    "tests/helpers/compound-fixture.mjs": "77f1071e6268beac5b5d197a5fac934be342a405c3cb46c48bcbc9070b50e488",
+    "tests/helpers/compound-source-fixture.mjs": "b021cb7c8c21b8551b811ed83924b3930e2d6e0be2895f92365a1581c1d76f32",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/dotnet-alias-faults.mjs": "7151cb186ba4a08df2d5b7dca242a8db7cb92b33e748bd9d7cd0ba94a3b505d6",
+    "tests/helpers/dotnet-alias-install.mjs": "52359ebba175668f2812e7964e9e40a18bd867eb927f54ee6f85223ef53b62f2",
+    "tests/helpers/dotnet-callable-fixture.mjs": "eadc90d1cdbd4c56c152e2cf238e2343f70db7224580be54ebbebcf40da1e93b",
+    "tests/helpers/dotnet-callable-install.mjs": "1fb24d4e15d599794d21cc030dc65904c3b7f5bc47079f844258411f6b208ac3",
+    "tests/helpers/dotnet-collection-install.mjs": "579d879ec0f11a765a848e34c39e4450cd1038e0c2da1e3568857571801e993b",
+    "tests/helpers/dotnet-collection-probes.mjs": "42679c290a35d21d76906b1f54e5696d744d5bc195c9fd431bc4f6067c8c7838",
+    "tests/helpers/dotnet-collection-types.mjs": "18cf0ec3b971a0d1fb6e088f4d064b2b1bdb77c9623670bd1583914363269e27",
+    "tests/helpers/dotnet-compound-faults.mjs": "996aa28ab7774ccb84d9281fc0e4ddad3609483c239c3cee0bf815ce5c35ccb6",
+    "tests/helpers/dotnet-compound-install.mjs": "6ea961f4f2a5d69665145a75a20ecb971f98966314773354240b26ff8b2be68d",
+    "tests/helpers/dotnet-copied-install.mjs": "ba2081792d64254a49a26bd78958a72df90bdd10eff8e945a2969b5dd285d936",
+    "tests/helpers/dotnet-list-faults.mjs": "55fb90317adb6abcea295ff4e222b83292248174a12babe99c37340b5198b80c",
+    "tests/helpers/dotnet-list-install.mjs": "8638483032e87a25f1509ee0b2fdba44ad81aa12add437ebbaa47c5e81187583",
+    "tests/helpers/dotnet-variant-faults.mjs": "a8319d768debdfec4cc9588664a7bcf141bb7a14fcd217898493e4303a3b4fe8",
+    "tests/helpers/native-variant-faults.mjs": "3cb4986df022489f7a470c79ee4f6a176ce5400f9c6fecdc19c991f402e4bfbc"
+  },
+  "verifierSources": {
+    "tests/dotnet-repeat-observations.test.mjs": "3178d9a0816129bea88c302f741d9ba0645960a7639e873d40d6b3e16b188e6e",
+    "tests/helpers/dotnet-installed-regressions.mjs": "91fefa2c27f3a8c99ddbd8cf0138dcdef07fc05c48f88ff6671c6d974bedcdc5",
+    "tests/helpers/dotnet-repeat-observations.mjs": "5a1e2654d9a58d21f0889a42870ade0723dc17608fddf521ea47f8f3810c36e8"
+  },
+  "baselines": {
+    "collections": {
+      "path": "docs/evidence/dotnet-collections-20260922.json",
+      "sha256": "a956e23e613efe404937693cb1e6fcac569b9206c8e800de714cf50eecf0e440"
+    },
+    "compounds": {
+      "path": "docs/evidence/dotnet-compounds-20260920.json",
+      "sha256": "0e9e580d6d246ad852dc1904566d268b324fda458455bafbe4284b95334e3d77"
+    },
+    "lists": {
+      "path": "docs/evidence/dotnet-lists-20260920.json",
+      "sha256": "0fd7ecb97d6d82ce0c2616658f0e0f2e8df04714d7613fcf0d04f2071a247253"
+    },
+    "aliases": {
+      "path": "docs/evidence/dotnet-aliases-20260921.json",
+      "sha256": "738cc6eb99d7618427c79ae04ff5c97489db4e64ee2ea454b13e71a881a548ed"
+    },
+    "variants": {
+      "path": "docs/evidence/dotnet-variants-20260921.json",
+      "sha256": "091b9d4eeb95b842128b9561f5aba44e88ca3d19057aa56485851c2d8a640020"
+    },
+    "callables": {
+      "path": "docs/evidence/dotnet-callables-20260919.json",
+      "sha256": "51b49da7c54d67ea00b324bb1c92d39e7d114335c67fc987e6c00b21576a0ec5"
+    }
+  },
+  "compoundReviewedSource": {
+    "previous": {
+      "inputs": [
+        {
+          "path": "Compounds.lean",
+          "bytes": 6884,
+          "sha256": "f1f9789ceabdb32dbd30c0076c9378a67f09a89703d945cfaa80137982dbd2e5"
+        },
+        {
+          "path": "lakefile.toml",
+          "bytes": 69,
+          "sha256": "25ee4f37bc6844424d3eede36b0a19229869c373039187fdb9d127a06a52ca78"
+        },
+        {
+          "path": "lean-bridge.exports.json",
+          "bytes": 159,
+          "sha256": "0264010791395f79e005638b427efbd5d54ade2c4598c3c8e8219960fb6a3fda"
+        },
+        {
+          "path": "lean-toolchain",
+          "bytes": 25,
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "LICENSE",
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "package.json",
+          "bytes": 55,
+          "sha256": "7114e091d2fd24e45ec89804ff3fd49eea6923c93a7b8d2953a84aa80222ad2b"
+        },
+        {
+          "path": "reviewed.binding-ir.json",
+          "bytes": 136049,
+          "sha256": "d98b9496e222f1dc20cfb17e1adfbc840bf1026cf21c173aaccd2d93dce7c5e7"
+        }
+      ],
+      "sourceTreeSha256": "6e22b5654b4cecab9774faace86a54cae4454aca3a4738711a5f2c36b7280dfb"
+    },
+    "current": {
+      "inputs": [
+        {
+          "path": "Compounds.lean",
+          "bytes": 6884,
+          "sha256": "f1f9789ceabdb32dbd30c0076c9378a67f09a89703d945cfaa80137982dbd2e5"
+        },
+        {
+          "path": "lakefile.toml",
+          "bytes": 69,
+          "sha256": "25ee4f37bc6844424d3eede36b0a19229869c373039187fdb9d127a06a52ca78"
+        },
+        {
+          "path": "lean-bridge.exports.json",
+          "bytes": 159,
+          "sha256": "0264010791395f79e005638b427efbd5d54ade2c4598c3c8e8219960fb6a3fda"
+        },
+        {
+          "path": "lean-toolchain",
+          "bytes": 25,
+          "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+        },
+        {
+          "path": "LICENSE",
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        {
+          "path": "package.json",
+          "bytes": 55,
+          "sha256": "7114e091d2fd24e45ec89804ff3fd49eea6923c93a7b8d2953a84aa80222ad2b"
+        },
+        {
+          "path": "reviewed.binding-ir.json",
+          "bytes": 123760,
+          "sha256": "5cfc48f125066df442d39c3a1d5b66886f704b2db9cf9a7544c0b63769827325"
+        }
+      ],
+      "sourceTreeSha256": "6929469afb9b4c26fb8205000b46944ccbfa1e74e40bba0d15a00abe36dd61bc"
+    }
+  },
+  "runs": {
+    "collections": {
+      "executions": [
+        {
+          "bindingIrSha256": "e34542b6a58a7935ec0616cbd37335e4bff9bd0fd0bedcc120b84445249a4163",
+          "calls": 3364,
+          "checks": 660970,
+          "deployment": {
+            "Consumer.deps.json": {
+              "bytes": 1756,
+              "sha256": "d0becd41243de91844f93d4d225e5a0be6363c418ab613971da55f9ae9631406"
+            },
+            "Consumer.dll": {
+              "bytes": 26624,
+              "sha256": "dbb39c680a519a73c1dd0a003c8b1c62c6474b8ec35f6a12d7e5d6322ff8f377"
+            },
+            "Consumer.pdb": {
+              "bytes": 15144,
+              "sha256": "f20802ae7f1edeb09b579814416aafc209c921bb45e537dcee8dbc22426e9325"
+            },
+            "Consumer.runtimeconfig.json": {
+              "bytes": 257,
+              "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+            },
+            "LeanBridge.Collections.dll": {
+              "bytes": 78336,
+              "sha256": "9ebcfc7ea599eafe7e951aee6a1acbafba6444064ead3fac4f4007627a78ee7d"
+            },
+            "runtimes/linux-x64/native/libcollections.so": {
+              "bytes": 183400,
+              "sha256": "65a5e0f31794057d37e56d9c76f71b7539be271d873ed7b0ac377eb6e01de81c"
+            },
+            "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "93d4e450a37fd33b3f4f15ac0693c76dcb48af6d61c91de41fd7a92bded1e8f5"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          },
+          "documentation": {
+            "assemblySha256": "9ebcfc7ea599eafe7e951aee6a1acbafba6444064ead3fac4f4007627a78ee7d",
+            "deploymentUnchanged": true,
+            "sdkFreeExecution": true,
+            "sourceFreeExecution": true,
+            "sourceSha256": "a1fa125e0835ca6b41bad1d0d8edc841109f0e57706e108ec72a618620c9f85f",
+            "stdout": "3, 2, 1\n1, 2, 3\n42\nTrue\n"
+          },
+          "emptyNuGetCache": true,
+          "faults": {
+            "apiSourceSha256": "75490f9328b7809be1f306bd388701d159e15e4a87cad8f8567bfeb530428b12",
+            "host": {
+              "checkpoints": 391,
+              "liveAllocations": 0,
+              "mode": "host",
+              "nativeExecuted": false,
+              "partialInputChecks": 64
+            },
+            "instrumentedRuntimeSha256": "feda9824247155009706f5c7914f1deda41d52fc96d1b6be02237e2f655bc601",
+            "isolatedInstrumentedProjection": true,
+            "native": {
+              "checkpoints": 551,
+              "liveAllocations": 0,
+              "mode": "native",
+              "nativeExecuted": true,
+              "partialInputChecks": 64
+            },
+            "probeSourceSha256": "d9e612963c1c08900676df7eb1eaae7782f9540ea24964ee61f916e8fbf68c84",
+            "replacements": [
+              178,
+              1,
+              1,
+              1,
+              35,
+              32
+            ],
+            "runtimeSourceSha256": "28d47a2a2684a572c13024662122ff8b60ad9174f6caed8008e6ec766748211b"
+          },
+          "fixedArrayDepth": 24,
+          "fxrVersion": "8.0.30",
+          "handoffRemovedBeforeExecution": true,
+          "installedFiles": {
+            "Lean.Collections.nuspec": {
+              "bytes": 474,
+              "sha256": "e8cd85faf47689a017d5181f2c3bf122b37dcb1945758696307d65a2e377cea9"
+            },
+            "README.md": {
+              "bytes": 2719,
+              "sha256": "c1d330dfb84387a0b481c3e708b2288e61ef32d78d7c480336c43becef045da6"
+            },
+            "[Content_Types].xml": {
+              "bytes": 939,
+              "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+            },
+            "_rels/.rels": {
+              "bytes": 260,
+              "sha256": "dd8c31d3209d59edcd654c63cc88dc270b10929d6cb0cf262d05315debf4ae57"
+            },
+            "lean-bridge/component/allocation-guard.h": {
+              "bytes": 1309,
+              "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+            },
+            "lean-bridge/component/artifacts.json": {
+              "bytes": 1536,
+              "sha256": "2a8f4d79dce974c11e820fac8115ae003cda915d0dea0b5913135e7ce85e3cfe"
+            },
+            "lean-bridge/component/binding-ir.json": {
+              "bytes": 107696,
+              "sha256": "70c5f8db1c03bf5edd36b183f33f2ebe04a6320c4a756d012bd828d1d18ca287"
+            },
+            "lean-bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean-bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean-bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "591700f20fba24fcf7498720bf7517a0cc66fbe3cd40d9cec68ee3bf38a625c8"
+            },
+            "lean-bridge/component/model.json": {
+              "bytes": 522302,
+              "sha256": "b5cae562ee4247f6ff21043424980471c4a5390df30fa012ef4d736737849270"
+            },
+            "lean-bridge/component/native-component.json": {
+              "bytes": 11149,
+              "sha256": "8a0b576963f89ab59b37207d6eac4cbfc5638051d92ba84d905fe2e9802376e1"
+            },
+            "lean-bridge/dotnet/binding-manifest.json": {
+              "bytes": 1193,
+              "sha256": "3732f1d884189c60d2697cb773b56299b7a41f76b4e1727a5972c49e549e0a58"
+            },
+            "lean-bridge/dotnet/global.json": {
+              "bytes": 104,
+              "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/Api.cs": {
+              "bytes": 14544,
+              "sha256": "75490f9328b7809be1f306bd388701d159e15e4a87cad8f8567bfeb530428b12"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+              "bytes": 607,
+              "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/Runtime.cs": {
+              "bytes": 137576,
+              "sha256": "28d47a2a2684a572c13024662122ff8b60ad9174f6caed8008e6ec766748211b"
+            },
+            "lean-bridge/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "lean-bridge/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "lean-bridge/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "lean-bridge/licenses/source-notices.json": {
+              "bytes": 3580,
+              "sha256": "0c0fd650398e134b721a0e9aa0d38a7a811805bc4356ca724150dfd8d8a40d39"
+            },
+            "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "lean-bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "eef1978b91825458d1cc00d6e868dc1965ba1bfd402893f83e3604ce630f9491"
+            },
+            "lean-bridge/native-dotnet.json": {
+              "bytes": 2445,
+              "sha256": "b0e11890580a12f2a0cd3603cbb19548bca48111320a92c93c8c59ab4fbbe58d"
+            },
+            "lean-bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+            },
+            "lib/net8.0/LeanBridge.Collections.dll": {
+              "bytes": 78336,
+              "sha256": "9ebcfc7ea599eafe7e951aee6a1acbafba6444064ead3fac4f4007627a78ee7d"
+            },
+            "lib/net8.0/LeanBridge.Collections.xml": {
+              "bytes": 3024,
+              "sha256": "7882bd89156b7c5aba9edeb65614c7ec6d668d60db5e266202c0c7cb12a7628f"
+            },
+            "runtimes/linux-x64/native/libcollections.so": {
+              "bytes": 183400,
+              "sha256": "65a5e0f31794057d37e56d9c76f71b7539be271d873ed7b0ac377eb6e01de81c"
+            },
+            "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "93d4e450a37fd33b3f4f15ac0693c76dcb48af6d61c91de41fd7a92bded1e8f5"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          },
+          "installedFilesUnchanged": true,
+          "installedReceiptSha256": "e9dc3e6efa2f35b88a161a2ec35f77c765f1d41c71d14653055a4bd870bbe52e",
+          "installedSnapshot": {
+            ".nupkg.metadata": {
+              "bytes": 205,
+              "sha256": "5def6894c59d6fb70f046327e2a288ac6db8ca1d32381771d444b5122ae46404"
+            },
+            "README.md": {
+              "bytes": 2719,
+              "sha256": "c1d330dfb84387a0b481c3e708b2288e61ef32d78d7c480336c43becef045da6"
+            },
+            "lean-bridge/component/allocation-guard.h": {
+              "bytes": 1309,
+              "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+            },
+            "lean-bridge/component/artifacts.json": {
+              "bytes": 1536,
+              "sha256": "2a8f4d79dce974c11e820fac8115ae003cda915d0dea0b5913135e7ce85e3cfe"
+            },
+            "lean-bridge/component/binding-ir.json": {
+              "bytes": 107696,
+              "sha256": "70c5f8db1c03bf5edd36b183f33f2ebe04a6320c4a756d012bd828d1d18ca287"
+            },
+            "lean-bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean-bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean-bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "591700f20fba24fcf7498720bf7517a0cc66fbe3cd40d9cec68ee3bf38a625c8"
+            },
+            "lean-bridge/component/model.json": {
+              "bytes": 522302,
+              "sha256": "b5cae562ee4247f6ff21043424980471c4a5390df30fa012ef4d736737849270"
+            },
+            "lean-bridge/component/native-component.json": {
+              "bytes": 11149,
+              "sha256": "8a0b576963f89ab59b37207d6eac4cbfc5638051d92ba84d905fe2e9802376e1"
+            },
+            "lean-bridge/dotnet/binding-manifest.json": {
+              "bytes": 1193,
+              "sha256": "3732f1d884189c60d2697cb773b56299b7a41f76b4e1727a5972c49e549e0a58"
+            },
+            "lean-bridge/dotnet/global.json": {
+              "bytes": 104,
+              "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/Api.cs": {
+              "bytes": 14544,
+              "sha256": "75490f9328b7809be1f306bd388701d159e15e4a87cad8f8567bfeb530428b12"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+              "bytes": 607,
+              "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/Runtime.cs": {
+              "bytes": 137576,
+              "sha256": "28d47a2a2684a572c13024662122ff8b60ad9174f6caed8008e6ec766748211b"
+            },
+            "lean-bridge/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "lean-bridge/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "lean-bridge/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "lean-bridge/licenses/source-notices.json": {
+              "bytes": 3580,
+              "sha256": "0c0fd650398e134b721a0e9aa0d38a7a811805bc4356ca724150dfd8d8a40d39"
+            },
+            "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "lean-bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "eef1978b91825458d1cc00d6e868dc1965ba1bfd402893f83e3604ce630f9491"
+            },
+            "lean-bridge/native-dotnet.json": {
+              "bytes": 2445,
+              "sha256": "b0e11890580a12f2a0cd3603cbb19548bca48111320a92c93c8c59ab4fbbe58d"
+            },
+            "lean-bridge/package-receipt.json": {
+              "bytes": 11933,
+              "sha256": "e9dc3e6efa2f35b88a161a2ec35f77c765f1d41c71d14653055a4bd870bbe52e"
+            },
+            "lean-bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+            },
+            "lean.collections.1.0.0.nupkg": {
+              "bytes": 51509866,
+              "sha256": "0ebeb5a481d140c07570be7f9d15c41b78a1db6d0801954cc8f8ec7871afc5de"
+            },
+            "lean.collections.1.0.0.nupkg.sha512": {
+              "bytes": 88,
+              "sha256": "000d693d253b425cf9dd8584e3bcd13096df25d66398fb7145cdb431cc606a14"
+            },
+            "lean.collections.nuspec": {
+              "bytes": 474,
+              "sha256": "e8cd85faf47689a017d5181f2c3bf122b37dcb1945758696307d65a2e377cea9"
+            },
+            "lib/net8.0/LeanBridge.Collections.dll": {
+              "bytes": 78336,
+              "sha256": "9ebcfc7ea599eafe7e951aee6a1acbafba6444064ead3fac4f4007627a78ee7d"
+            },
+            "lib/net8.0/LeanBridge.Collections.xml": {
+              "bytes": 3024,
+              "sha256": "7882bd89156b7c5aba9edeb65614c7ec6d668d60db5e266202c0c7cb12a7628f"
+            },
+            "runtimes/linux-x64/native/libcollections.so": {
+              "bytes": 183400,
+              "sha256": "65a5e0f31794057d37e56d9c76f71b7539be271d873ed7b0ac377eb6e01de81c"
+            },
+            "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "93d4e450a37fd33b3f4f15ac0693c76dcb48af6d61c91de41fd7a92bded1e8f5"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          },
+          "installedSourcesRemoved": true,
+          "modelSha256": "b5cae562ee4247f6ff21043424980471c4a5390df30fa012ef4d736737849270",
+          "nativeLibraries": {
+            "runtimes/linux-x64/native/libcollections.so": {
+              "bytes": 183400,
+              "sha256": "65a5e0f31794057d37e56d9c76f71b7539be271d873ed7b0ac377eb6e01de81c"
+            },
+            "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "93d4e450a37fd33b3f4f15ac0693c76dcb48af6d61c91de41fd7a92bded1e8f5"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          },
+          "offlineInstall": true,
+          "onlyPreparedDependency": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51509866,
+                  "path": "archives/Lean.Collections.1.0.0.nupkg",
+                  "sha256": "0ebeb5a481d140c07570be7f9d15c41b78a1db6d0801954cc8f8ec7871afc5de"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Collections",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "ordinary-source",
+          "primitiveShapes": 19,
+          "profile": "dotnet",
+          "publicCallerSha256": "eff9e13ec16524c0b265cf405850876d00124aa1f68ee898a81d02411b462250",
+          "publicTypes": {
+            "assemblySha256": "9ebcfc7ea599eafe7e951aee6a1acbafba6444064ead3fac4f4007627a78ee7d",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "executed": true,
+            "rejected": [
+              {
+                "code": "CS1503",
+                "name": "wrong-scalar",
+                "sourceSha256": "a5e628a169041130f77e57fc091bfeb2e4b983693aef83b67b277d587a77c47e"
+              },
+              {
+                "code": "CS0029",
+                "name": "mixed-elements",
+                "sourceSha256": "ec2bf63b54866b80f551fb40277ca6b98d46c0018ff81dcd35c2e8f22b7d381d"
+              },
+              {
+                "code": "CS1503",
+                "name": "text-natural",
+                "sourceSha256": "05377b667eee7ec9e63771e3d3ea506e0f654ff5149804f82f07d26a65ca1b8f"
+              },
+              {
+                "code": "CS1503",
+                "name": "bytes-as-text",
+                "sourceSha256": "c8ddae21578f969d88e490e9e88e35fdc0a45d0d641f60ccbe2f23bae7e1a49f"
+              },
+              {
+                "code": "CS1503",
+                "name": "text-as-char",
+                "sourceSha256": "2f0d0130b2215e187f5aafb12065e38200cf02e47d48a4c2a88a3bd0207a7978"
+              },
+              {
+                "code": "CS1503",
+                "name": "wrong-depth",
+                "sourceSha256": "75c304809413a7e6c6ed99b58f0b215d8b49a630cdf17b3c783f93e29b05d546"
+              },
+              {
+                "code": "CS1503",
+                "name": "nominal-record",
+                "sourceSha256": "4dfa21896bf073f5200165575dd18bf776b7bf1f17a88586734a4cef65339298"
+              },
+              {
+                "code": "CS1503",
+                "name": "unit-as-record",
+                "sourceSha256": "7b3f494562b48bb5a2688fb2ae84d81b6a5e846c2a6eb29e1e4fcaaf28899bb0"
+              },
+              {
+                "code": "CS7036",
+                "name": "missing-field",
+                "sourceSha256": "2caee6bd123385ceb0d5e0af07af4dd863fb0014a7d808bd2ffd87225d96e12d"
+              },
+              {
+                "code": "CS0117",
+                "name": "unknown-field",
+                "sourceSha256": "2dc93db4fee0ca4fa1ec3eec904a4a7c19362bf82c8d25430b0448a00bf8effb"
+              },
+              {
+                "code": "CS1503",
+                "name": "wrong-field",
+                "sourceSha256": "7716c5a96ce3bd34a61cd20df372ee584eb137e44e2bf0db9f3ee2d128956d8d"
+              },
+              {
+                "code": "CS8852",
+                "name": "init-only",
+                "sourceSha256": "95e37543d20934cffe7a9085ce7dbe515630cfc1b09dc89a72dac20a1dadf089"
+              },
+              {
+                "code": "CS0029",
+                "name": "wrong-result",
+                "sourceSha256": "9f7d5aa59d1c2fea3302b34c920ebc7182b9f394d3b958ba831a24e86b004966"
+              },
+              {
+                "code": "CS0031",
+                "name": "unsigned-overflow",
+                "sourceSha256": "c399c3789dda6900293e75811ba0ad9a8760aad26cb2e2eb80bab36c225a7f13"
+              },
+              {
+                "code": "CS0031",
+                "name": "signed-overflow",
+                "sourceSha256": "be5973f49b9bbf8ff63174c86c30228d58d1bdfe0040e66e5a8d4593e5013db1"
+              },
+              {
+                "code": "CS8625",
+                "name": "null-array",
+                "sourceSha256": "ac625837dae7e944f18ff5111ee944a20e54ae477a043fc4c03efb3a869f4b64"
+              }
+            ],
+            "rejectionSourceSha256": "a83a104fcf3f95c26e2cd1989d4890190c5d5fe6fa44bfbffe4bd154b0a5f13f",
+            "sdk": "8.0.424"
+          },
+          "receiptSha256": "41ec64c412cdd9ce73eccd477a8bd61214ff301b9520b5b020f6d38a88a0d49b",
+          "recordTypes": 7,
+          "rejected": 57,
+          "relocatedExecution": true,
+          "repeatExecution": true,
+          "runtimeVersion": "8.0.30",
+          "sdkFreeExecution": true,
+          "sourceApiSha256": "0a5fc140236189555ec6a0af93bcdc51370715789853673ea936a0f28c392e54",
+          "sourceFreeExecutions": 2,
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "0b6fd67421c473f6ee877b2d1fe50797981f9da9e43db1f48877ae485653c0bf",
+          "threadedCalls": 512,
+          "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43"
+        },
+        {
+          "bindingIrSha256": "9e8f89471123c8ed77a48c10b924aff85c21fb53e5db8ab3adb0de59fb2f2052",
+          "calls": 3364,
+          "checks": 660970,
+          "deployment": {
+            "Consumer.deps.json": {
+              "bytes": 1756,
+              "sha256": "c2327e8d299d8d09c96787c38b0e201246666f49dadb0af57728e0bb2ce5d102"
+            },
+            "Consumer.dll": {
+              "bytes": 26624,
+              "sha256": "b766becdb74ca073921b3b0b65318c6a7f392e8e86434c8e793165a892601c74"
+            },
+            "Consumer.pdb": {
+              "bytes": 15144,
+              "sha256": "a5fa6eea11c0aa0129ffd1f70e673472cfc351a60575c4de19746dc191dded15"
+            },
+            "Consumer.runtimeconfig.json": {
+              "bytes": 257,
+              "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+            },
+            "LeanBridge.Collections.dll": {
+              "bytes": 78336,
+              "sha256": "8b837867b88c690e104bf90d5dce6725c7eec46eb53284f954ed3c183c91997d"
+            },
+            "runtimes/linux-x64/native/libcollections.so": {
+              "bytes": 183400,
+              "sha256": "65a5e0f31794057d37e56d9c76f71b7539be271d873ed7b0ac377eb6e01de81c"
+            },
+            "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "93d4e450a37fd33b3f4f15ac0693c76dcb48af6d61c91de41fd7a92bded1e8f5"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          },
+          "documentation": {
+            "assemblySha256": "8b837867b88c690e104bf90d5dce6725c7eec46eb53284f954ed3c183c91997d",
+            "deploymentUnchanged": true,
+            "sdkFreeExecution": true,
+            "sourceFreeExecution": true,
+            "sourceSha256": "a1fa125e0835ca6b41bad1d0d8edc841109f0e57706e108ec72a618620c9f85f",
+            "stdout": "3, 2, 1\n1, 2, 3\n42\nTrue\n"
+          },
+          "emptyNuGetCache": true,
+          "faults": {
+            "apiSourceSha256": "dbd17c64f278e9a1fe3ddc160e129a0923a1ecf2f70f5fc0bef988d0a6c1da8f",
+            "host": {
+              "checkpoints": 391,
+              "liveAllocations": 0,
+              "mode": "host",
+              "nativeExecuted": false,
+              "partialInputChecks": 64
+            },
+            "instrumentedRuntimeSha256": "7b415370c3a49c99965e18a86258d74d999253f9f438f0eb0fd84cbdbd44558d",
+            "isolatedInstrumentedProjection": true,
+            "native": {
+              "checkpoints": 551,
+              "liveAllocations": 0,
+              "mode": "native",
+              "nativeExecuted": true,
+              "partialInputChecks": 64
+            },
+            "probeSourceSha256": "d9e612963c1c08900676df7eb1eaae7782f9540ea24964ee61f916e8fbf68c84",
+            "replacements": [
+              178,
+              1,
+              1,
+              1,
+              35,
+              32
+            ],
+            "runtimeSourceSha256": "8f70d68e72dfa912a662910ab3b9d5961ec706ca257f1d763976bbedb86b84a7"
+          },
+          "fixedArrayDepth": 24,
+          "fxrVersion": "8.0.30",
+          "handoffRemovedBeforeExecution": true,
+          "installedFiles": {
+            "Lean.Collections.nuspec": {
+              "bytes": 474,
+              "sha256": "e8cd85faf47689a017d5181f2c3bf122b37dcb1945758696307d65a2e377cea9"
+            },
+            "README.md": {
+              "bytes": 2719,
+              "sha256": "c1d330dfb84387a0b481c3e708b2288e61ef32d78d7c480336c43becef045da6"
+            },
+            "[Content_Types].xml": {
+              "bytes": 939,
+              "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+            },
+            "_rels/.rels": {
+              "bytes": 260,
+              "sha256": "dd8c31d3209d59edcd654c63cc88dc270b10929d6cb0cf262d05315debf4ae57"
+            },
+            "lean-bridge/component/allocation-guard.h": {
+              "bytes": 1309,
+              "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+            },
+            "lean-bridge/component/artifacts.json": {
+              "bytes": 1537,
+              "sha256": "a358729d68242fda06d030914506a58fdb182aef49bd65b3932e7ba3361f76da"
+            },
+            "lean-bridge/component/binding-ir.json": {
+              "bytes": 108385,
+              "sha256": "aad465805313b293185065fc8ea2b32ab3040be6b00ca1f4ba0048cbd81651cf"
+            },
+            "lean-bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean-bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean-bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "82257b7718b00521f29c86b0ce8cd7eab5f583e21ba4849b2c17603879169766"
+            },
+            "lean-bridge/component/model.json": {
+              "bytes": 632153,
+              "sha256": "3de75f92a181b2001a12d7e1c82cdda24fa2424149f402dbc470509634030c55"
+            },
+            "lean-bridge/component/native-component.json": {
+              "bytes": 120311,
+              "sha256": "2133c88bf89c6506974a0e95a909f53a53edc64f7380af6303eac8245b5b988c"
+            },
+            "lean-bridge/dotnet/binding-manifest.json": {
+              "bytes": 1193,
+              "sha256": "2733d45db6c6aa4aae04810fe9082dde3a61b4a5ad726f048e4a714c9a9288de"
+            },
+            "lean-bridge/dotnet/global.json": {
+              "bytes": 104,
+              "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/Api.cs": {
+              "bytes": 14752,
+              "sha256": "dbd17c64f278e9a1fe3ddc160e129a0923a1ecf2f70f5fc0bef988d0a6c1da8f"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+              "bytes": 607,
+              "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/Runtime.cs": {
+              "bytes": 137576,
+              "sha256": "8f70d68e72dfa912a662910ab3b9d5961ec706ca257f1d763976bbedb86b84a7"
+            },
+            "lean-bridge/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "lean-bridge/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "lean-bridge/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "lean-bridge/licenses/source-notices.json": {
+              "bytes": 2439,
+              "sha256": "a1fbd3cdb28e738475a610cb2322afc330c1255a72f5b91526d9a9361c498959"
+            },
+            "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "lean-bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "68d347cae9c7148952aa4056ab37fac541c74bdc3b011933f22872f6fb496b32"
+            },
+            "lean-bridge/native-dotnet.json": {
+              "bytes": 2445,
+              "sha256": "d4fa40d3befcc9b53abaca24a52d5725a5c82d9496c9215f9548050f340dff95"
+            },
+            "lean-bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+            },
+            "lib/net8.0/LeanBridge.Collections.dll": {
+              "bytes": 78336,
+              "sha256": "8b837867b88c690e104bf90d5dce6725c7eec46eb53284f954ed3c183c91997d"
+            },
+            "lib/net8.0/LeanBridge.Collections.xml": {
+              "bytes": 3024,
+              "sha256": "7882bd89156b7c5aba9edeb65614c7ec6d668d60db5e266202c0c7cb12a7628f"
+            },
+            "runtimes/linux-x64/native/libcollections.so": {
+              "bytes": 183400,
+              "sha256": "65a5e0f31794057d37e56d9c76f71b7539be271d873ed7b0ac377eb6e01de81c"
+            },
+            "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "93d4e450a37fd33b3f4f15ac0693c76dcb48af6d61c91de41fd7a92bded1e8f5"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          },
+          "installedFilesUnchanged": true,
+          "installedReceiptSha256": "34a1a9c023b73b77a1bde2263b2a4c5c3c2ad2f337733cc27e74493a56cb19f3",
+          "installedSnapshot": {
+            ".nupkg.metadata": {
+              "bytes": 205,
+              "sha256": "638720d41652d0d4c3918398b11e1a4f60ee8a9f23e7888ec1fe59432eedf938"
+            },
+            "README.md": {
+              "bytes": 2719,
+              "sha256": "c1d330dfb84387a0b481c3e708b2288e61ef32d78d7c480336c43becef045da6"
+            },
+            "lean-bridge/component/allocation-guard.h": {
+              "bytes": 1309,
+              "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+            },
+            "lean-bridge/component/artifacts.json": {
+              "bytes": 1537,
+              "sha256": "a358729d68242fda06d030914506a58fdb182aef49bd65b3932e7ba3361f76da"
+            },
+            "lean-bridge/component/binding-ir.json": {
+              "bytes": 108385,
+              "sha256": "aad465805313b293185065fc8ea2b32ab3040be6b00ca1f4ba0048cbd81651cf"
+            },
+            "lean-bridge/component/component.h": {
+              "bytes": 5537,
+              "sha256": "84f2422acde487db7dbd7ee50561933652255db0780351b790ae2d9331164e28"
+            },
+            "lean-bridge/component/generated.lean": {
+              "bytes": 15932,
+              "sha256": "a6f3a088815ce0cda79eb60f09b52da3079e1f9c1984fd1087dfd63156b55647"
+            },
+            "lean-bridge/component/metadata.json": {
+              "bytes": 259208,
+              "sha256": "82257b7718b00521f29c86b0ce8cd7eab5f583e21ba4849b2c17603879169766"
+            },
+            "lean-bridge/component/model.json": {
+              "bytes": 632153,
+              "sha256": "3de75f92a181b2001a12d7e1c82cdda24fa2424149f402dbc470509634030c55"
+            },
+            "lean-bridge/component/native-component.json": {
+              "bytes": 120311,
+              "sha256": "2133c88bf89c6506974a0e95a909f53a53edc64f7380af6303eac8245b5b988c"
+            },
+            "lean-bridge/dotnet/binding-manifest.json": {
+              "bytes": 1193,
+              "sha256": "2733d45db6c6aa4aae04810fe9082dde3a61b4a5ad726f048e4a714c9a9288de"
+            },
+            "lean-bridge/dotnet/global.json": {
+              "bytes": 104,
+              "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/Api.cs": {
+              "bytes": 14752,
+              "sha256": "dbd17c64f278e9a1fe3ddc160e129a0923a1ecf2f70f5fc0bef988d0a6c1da8f"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/LeanBridge.Collections.csproj": {
+              "bytes": 607,
+              "sha256": "636b54fd253f8239bfae64bfce6e303ebd6b2173f0b70886365fd0534250c5d0"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Collections/Runtime.cs": {
+              "bytes": 137576,
+              "sha256": "8f70d68e72dfa912a662910ab3b9d5961ec706ca257f1d763976bbedb86b84a7"
+            },
+            "lean-bridge/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "lean-bridge/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "lean-bridge/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "lean-bridge/licenses/source-notices.json": {
+              "bytes": 2439,
+              "sha256": "a1fbd3cdb28e738475a610cb2322afc330c1255a72f5b91526d9a9361c498959"
+            },
+            "lean-bridge/licenses/source-notices/b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca.txt": {
+              "bytes": 1081,
+              "sha256": "b121c8c99c58da2314235a2fcae962771d2cfd08c8543f19f0930dc0894cb9ca"
+            },
+            "lean-bridge/native-c-adapter.json": {
+              "bytes": 1367,
+              "sha256": "68d347cae9c7148952aa4056ab37fac541c74bdc3b011933f22872f6fb496b32"
+            },
+            "lean-bridge/native-dotnet.json": {
+              "bytes": 2445,
+              "sha256": "d4fa40d3befcc9b53abaca24a52d5725a5c82d9496c9215f9548050f340dff95"
+            },
+            "lean-bridge/package-receipt.json": {
+              "bytes": 121096,
+              "sha256": "34a1a9c023b73b77a1bde2263b2a4c5c3c2ad2f337733cc27e74493a56cb19f3"
+            },
+            "lean-bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+            },
+            "lean.collections.1.0.0.nupkg": {
+              "bytes": 51520063,
+              "sha256": "36f4554a8155dff8577ab47ad6bb49ab4612195b1ae0ba96e396124574b7af56"
+            },
+            "lean.collections.1.0.0.nupkg.sha512": {
+              "bytes": 88,
+              "sha256": "da0f304bd553d95aef92d81e27e6a54dc519c3405e1bff8da007a7a2b0813303"
+            },
+            "lean.collections.nuspec": {
+              "bytes": 474,
+              "sha256": "e8cd85faf47689a017d5181f2c3bf122b37dcb1945758696307d65a2e377cea9"
+            },
+            "lib/net8.0/LeanBridge.Collections.dll": {
+              "bytes": 78336,
+              "sha256": "8b837867b88c690e104bf90d5dce6725c7eec46eb53284f954ed3c183c91997d"
+            },
+            "lib/net8.0/LeanBridge.Collections.xml": {
+              "bytes": 3024,
+              "sha256": "7882bd89156b7c5aba9edeb65614c7ec6d668d60db5e266202c0c7cb12a7628f"
+            },
+            "runtimes/linux-x64/native/libcollections.so": {
+              "bytes": 183400,
+              "sha256": "65a5e0f31794057d37e56d9c76f71b7539be271d873ed7b0ac377eb6e01de81c"
+            },
+            "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "93d4e450a37fd33b3f4f15ac0693c76dcb48af6d61c91de41fd7a92bded1e8f5"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          },
+          "installedSourcesRemoved": true,
+          "modelSha256": "3de75f92a181b2001a12d7e1c82cdda24fa2424149f402dbc470509634030c55",
+          "nativeLibraries": {
+            "runtimes/linux-x64/native/libcollections.so": {
+              "bytes": 183400,
+              "sha256": "65a5e0f31794057d37e56d9c76f71b7539be271d873ed7b0ac377eb6e01de81c"
+            },
+            "runtimes/linux-x64/native/libcomponent_4b14a94f6762b3de9a61.so": {
+              "bytes": 143216,
+              "sha256": "93d4e450a37fd33b3f4f15ac0693c76dcb48af6d61c91de41fd7a92bded1e8f5"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            }
+          },
+          "offlineInstall": true,
+          "onlyPreparedDependency": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51520063,
+                  "path": "archives/Lean.Collections.1.0.0.nupkg",
+                  "sha256": "36f4554a8155dff8577ab47ad6bb49ab4612195b1ae0ba96e396124574b7af56"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Collections",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "reviewed-ir",
+          "primitiveShapes": 19,
+          "profile": "dotnet",
+          "publicCallerSha256": "eff9e13ec16524c0b265cf405850876d00124aa1f68ee898a81d02411b462250",
+          "publicTypes": {
+            "assemblySha256": "8b837867b88c690e104bf90d5dce6725c7eec46eb53284f954ed3c183c91997d",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "executed": true,
+            "rejected": [
+              {
+                "code": "CS1503",
+                "name": "wrong-scalar",
+                "sourceSha256": "a5e628a169041130f77e57fc091bfeb2e4b983693aef83b67b277d587a77c47e"
+              },
+              {
+                "code": "CS0029",
+                "name": "mixed-elements",
+                "sourceSha256": "ec2bf63b54866b80f551fb40277ca6b98d46c0018ff81dcd35c2e8f22b7d381d"
+              },
+              {
+                "code": "CS1503",
+                "name": "text-natural",
+                "sourceSha256": "05377b667eee7ec9e63771e3d3ea506e0f654ff5149804f82f07d26a65ca1b8f"
+              },
+              {
+                "code": "CS1503",
+                "name": "bytes-as-text",
+                "sourceSha256": "c8ddae21578f969d88e490e9e88e35fdc0a45d0d641f60ccbe2f23bae7e1a49f"
+              },
+              {
+                "code": "CS1503",
+                "name": "text-as-char",
+                "sourceSha256": "2f0d0130b2215e187f5aafb12065e38200cf02e47d48a4c2a88a3bd0207a7978"
+              },
+              {
+                "code": "CS1503",
+                "name": "wrong-depth",
+                "sourceSha256": "75c304809413a7e6c6ed99b58f0b215d8b49a630cdf17b3c783f93e29b05d546"
+              },
+              {
+                "code": "CS1503",
+                "name": "nominal-record",
+                "sourceSha256": "4dfa21896bf073f5200165575dd18bf776b7bf1f17a88586734a4cef65339298"
+              },
+              {
+                "code": "CS1503",
+                "name": "unit-as-record",
+                "sourceSha256": "7b3f494562b48bb5a2688fb2ae84d81b6a5e846c2a6eb29e1e4fcaaf28899bb0"
+              },
+              {
+                "code": "CS7036",
+                "name": "missing-field",
+                "sourceSha256": "2caee6bd123385ceb0d5e0af07af4dd863fb0014a7d808bd2ffd87225d96e12d"
+              },
+              {
+                "code": "CS0117",
+                "name": "unknown-field",
+                "sourceSha256": "2dc93db4fee0ca4fa1ec3eec904a4a7c19362bf82c8d25430b0448a00bf8effb"
+              },
+              {
+                "code": "CS1503",
+                "name": "wrong-field",
+                "sourceSha256": "7716c5a96ce3bd34a61cd20df372ee584eb137e44e2bf0db9f3ee2d128956d8d"
+              },
+              {
+                "code": "CS8852",
+                "name": "init-only",
+                "sourceSha256": "95e37543d20934cffe7a9085ce7dbe515630cfc1b09dc89a72dac20a1dadf089"
+              },
+              {
+                "code": "CS0029",
+                "name": "wrong-result",
+                "sourceSha256": "9f7d5aa59d1c2fea3302b34c920ebc7182b9f394d3b958ba831a24e86b004966"
+              },
+              {
+                "code": "CS0031",
+                "name": "unsigned-overflow",
+                "sourceSha256": "c399c3789dda6900293e75811ba0ad9a8760aad26cb2e2eb80bab36c225a7f13"
+              },
+              {
+                "code": "CS0031",
+                "name": "signed-overflow",
+                "sourceSha256": "be5973f49b9bbf8ff63174c86c30228d58d1bdfe0040e66e5a8d4593e5013db1"
+              },
+              {
+                "code": "CS8625",
+                "name": "null-array",
+                "sourceSha256": "ac625837dae7e944f18ff5111ee944a20e54ae477a043fc4c03efb3a869f4b64"
+              }
+            ],
+            "rejectionSourceSha256": "a83a104fcf3f95c26e2cd1989d4890190c5d5fe6fa44bfbffe4bd154b0a5f13f",
+            "sdk": "8.0.424"
+          },
+          "receiptSha256": "853322cb27def59eb7d71525039179614a7d98a240b431d6185b131e62c6fa9d",
+          "recordTypes": 7,
+          "rejected": 57,
+          "relocatedExecution": true,
+          "repeatExecution": true,
+          "runtimeVersion": "8.0.30",
+          "sdkFreeExecution": true,
+          "sourceApiSha256": "1c7f49e4367c95f4b558f8c6a8725bef2661f1be16211a2a0e2ac691e5a040c6",
+          "sourceFreeExecutions": 2,
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "18ab47d7d9a8a11695fda98acf37c979766cac292c6944e42aa39551becca2b6",
+          "threadedCalls": 512,
+          "signaturesSha256": "eb73530b3fc35c3e58cc80e8bba107c92a2af5a0cf3657db7c3bba8c9caaeb43"
+        }
+      ],
+      "executionsSha256": "ec04500c6d4b526b57686c2417310707c7a501acd4f8d30110b468e1e2b8b280"
+    },
+    "compounds": {
+      "executions": [
+        {
+          "bindingIrSha256": "f65003e4297594d0faec986deed1ab4fd2a52bca057f61009b9211f194433c2e",
+          "checks": 41534,
+          "compilerFreePath": true,
+          "consumerSha256": "b5a4c090e04d5c3786ea6e98b95e8f0b5bc57d6b5996bc822fcaedf24301bb02",
+          "faults": {
+            "apiSourceSha256": "dd44c3dab783bb13af5b83d248ec7ac91ac5c79b97610a6e20d7a8369b7f384f",
+            "checks": 94,
+            "flagChecks": 9,
+            "instrumentedRuntimeSha256": "ba6370567460b2c9b56dc8fedadf65140c0f18309c4dcc0a43a7e2a9f43b8c86",
+            "isolatedInstrumentedProjection": true,
+            "partialInputChecks": 16,
+            "probeSourceSha256": "0d61ec4523e36a4066cf444377ca5d2bf5073f5affa736dd68aae5d4fc18f1a7",
+            "releaseAssemblyUnchanged": true,
+            "replacements": [
+              250,
+              1,
+              1,
+              1,
+              64,
+              63
+            ],
+            "runtimeSourceSha256": "b2ce92e3a72f7766d9870a7cbafa72e72abaf2df7b3b8bd0883aa9addcdb2a94"
+          },
+          "installed": {
+            "assemblySha256": "5ebcaafecbf1f2692e858435e40bb938dda0d6db3aed2c51c3f4a5770f45ab84",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1742,
+                "sha256": "40295d667148f2dd24ee0f45f08df45c713468142fa1b12479718908074b3d9e"
+              },
+              "Consumer.dll": {
+                "bytes": 23552,
+                "sha256": "e9b18a0c837e1c808b2c21995ef03f20b5c5d5b1558107440f2870820abcba4b"
+              },
+              "Consumer.pdb": {
+                "bytes": 13344,
+                "sha256": "42d258c5ccf34f6b31f73b2f040e6a25940ebc372095851e6fce22f841405192"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Compounds.dll": {
+                "bytes": 97792,
+                "sha256": "5ebcaafecbf1f2692e858435e40bb938dda0d6db3aed2c51c3f4a5770f45ab84"
+              },
+              "runtimes/linux-x64/native/libcomponent_b98e04e5612654a9d0b5.so": {
+                "bytes": 259864,
+                "sha256": "26970a75769d0996f7f9bd8b8ac15f52e0bdb182e680cbea73a4aa671b4e3296"
+              },
+              "runtimes/linux-x64/native/libcompounds.so": {
+                "bytes": 246744,
+                "sha256": "29e0c82f7580629d2aefc39357881625adbb5a246d458c6d3ac678ae6a6d4eb0"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "71c3d035351c6f1d7e2335edf2ca99a726db5435740376e7c7b91b60631cf2f3",
+            "rejected": [
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "option-payload",
+                "sourceSha256": "4655db26b492ae55c876f540b6e39cc07fe9662e2d66e373d06d23216622699c"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "option-unit",
+                "sourceSha256": "f37d097165829a161a302abaf2b7f657beb7a702a1011b2d3245e8c1cfcc2b9c"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "result-payload",
+                "sourceSha256": "8bfc50036bcda3ef7cfaf3562ccc02f3b1fe30363ce5385de317445088cabe84"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "bare-payload",
+                "sourceSha256": "37948c417d0ba0ec0772c243b0f445993d0e7022c4393c2a9e932f8c6188dc70"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "nullable-option",
+                "sourceSha256": "bbf695a75468e2de09c5af31a46aa819e5e669b5b28646145d5c851fb7921ba1"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "product-arity",
+                "sourceSha256": "c7fe952e14e55456dd090dd68930bb7b8aba9a2ae9f1372b8e5655b955a3ba7e"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "product-array",
+                "sourceSha256": "5d600654ad5abd5133677f1c701c7c55000c4cf8c74032418265ad50faddcd61"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "nested-option",
+                "sourceSha256": "2172fe6d7e6759db3302b41ae9de3073f6b74fd752599fd9a1bb37d9d905d0e1"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "bare-result",
+                "sourceSha256": "920e121b258fb71d4c4cb6b4eff9789b66915110987439026f09b0498c994d85"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "fixed-overflow",
+                "sourceSha256": "95ed2fe1b83c1f821faf3038b677a7b32c129d3257adcfb3e26aff7f6567bf97"
+              },
+              {
+                "codes": [
+                  "CS0200"
+                ],
+                "name": "mutable-presence",
+                "sourceSha256": "057c9d431063310f9b96a65483483ee28e0436e2cec983b75bacb267b766955c"
+              },
+              {
+                "codes": [
+                  "CS0200"
+                ],
+                "name": "mutable-branch",
+                "sourceSha256": "c9cab771c283ea93128583324c54eb536dedcb1a625c7990e93515786b8467eb"
+              }
+            ],
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 41534,
+            "sourceFreeExecutions": 2
+          },
+          "modelSha256": "0e3b81fd720083351b0a4358bbb421743ad316ac24d446778331befdf171607e",
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51568304,
+                  "path": "archives/Lean.Compounds.1.0.0.nupkg",
+                  "sha256": "e942eac12509b63898a60bfdb0c98d6b906fbba37acf13b56003e265df37c1f4"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Compounds",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "ordinary-source",
+          "profile": "dotnet",
+          "receiptSha256": "aa704db7b155b9dea87afc07c1acb06b8bc893daf5550db1c9fd4785be3e721c",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "440afbdb49e7506dbbfcb80f5fd6196a7b83520f5919dbaee55bc756b7d74fa6",
+          "signaturesSha256": "a39ef87a8da8109d12a17334ab09c2d5e484d8ea167715ec4f377e220ea69edf"
+        },
+        {
+          "bindingIrSha256": "f74421762458912ea138f09b2cb7bba08f26490d82d3361fb3711cada00a1027",
+          "checks": 41534,
+          "compilerFreePath": true,
+          "consumerSha256": "b5a4c090e04d5c3786ea6e98b95e8f0b5bc57d6b5996bc822fcaedf24301bb02",
+          "faults": {
+            "apiSourceSha256": "17ae18105ab783be8630eb5c680a5a1523ee91337aa501e71127f18a2d9b9ca7",
+            "checks": 94,
+            "flagChecks": 9,
+            "instrumentedRuntimeSha256": "9a9bed401159ce9cbb6c5737b96f42bd7313fb1e9f0780bcf6dbab586624aaa4",
+            "isolatedInstrumentedProjection": true,
+            "partialInputChecks": 16,
+            "probeSourceSha256": "0d61ec4523e36a4066cf444377ca5d2bf5073f5affa736dd68aae5d4fc18f1a7",
+            "releaseAssemblyUnchanged": true,
+            "replacements": [
+              250,
+              1,
+              1,
+              1,
+              64,
+              63
+            ],
+            "runtimeSourceSha256": "860366dc665466e655ab40bbaa46f1883d98d033256081cbb402e4b4312995a0"
+          },
+          "installed": {
+            "assemblySha256": "26d6d7a3259063a54e5630088670afee01347a8586a6b6635dcf89f1a8797c57",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1742,
+                "sha256": "55772dc390c950323cd60a67de4e4efba9dace0655d07e0f7a2dbea1cdc520a9"
+              },
+              "Consumer.dll": {
+                "bytes": 23552,
+                "sha256": "138aad231714ce75f0dc5448f06a219efa3fa899fd1eec3a56b82fb40d01c408"
+              },
+              "Consumer.pdb": {
+                "bytes": 13344,
+                "sha256": "dcc6c39a2978a4b4e165658ae3f2c0b0028f23a70326253969a6d2e44a5685b4"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Compounds.dll": {
+                "bytes": 97792,
+                "sha256": "26d6d7a3259063a54e5630088670afee01347a8586a6b6635dcf89f1a8797c57"
+              },
+              "runtimes/linux-x64/native/libcomponent_b98e04e5612654a9d0b5.so": {
+                "bytes": 259864,
+                "sha256": "26970a75769d0996f7f9bd8b8ac15f52e0bdb182e680cbea73a4aa671b4e3296"
+              },
+              "runtimes/linux-x64/native/libcompounds.so": {
+                "bytes": 246744,
+                "sha256": "29e0c82f7580629d2aefc39357881625adbb5a246d458c6d3ac678ae6a6d4eb0"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "ce7a8b406b29638509c4aa8f02e99a3e515a94135e0be3bdf03e4cb83cda4128",
+            "rejected": [
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "option-payload",
+                "sourceSha256": "4655db26b492ae55c876f540b6e39cc07fe9662e2d66e373d06d23216622699c"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "option-unit",
+                "sourceSha256": "f37d097165829a161a302abaf2b7f657beb7a702a1011b2d3245e8c1cfcc2b9c"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "result-payload",
+                "sourceSha256": "8bfc50036bcda3ef7cfaf3562ccc02f3b1fe30363ce5385de317445088cabe84"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "bare-payload",
+                "sourceSha256": "37948c417d0ba0ec0772c243b0f445993d0e7022c4393c2a9e932f8c6188dc70"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "nullable-option",
+                "sourceSha256": "bbf695a75468e2de09c5af31a46aa819e5e669b5b28646145d5c851fb7921ba1"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "product-arity",
+                "sourceSha256": "c7fe952e14e55456dd090dd68930bb7b8aba9a2ae9f1372b8e5655b955a3ba7e"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "product-array",
+                "sourceSha256": "5d600654ad5abd5133677f1c701c7c55000c4cf8c74032418265ad50faddcd61"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "nested-option",
+                "sourceSha256": "2172fe6d7e6759db3302b41ae9de3073f6b74fd752599fd9a1bb37d9d905d0e1"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "bare-result",
+                "sourceSha256": "920e121b258fb71d4c4cb6b4eff9789b66915110987439026f09b0498c994d85"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "fixed-overflow",
+                "sourceSha256": "95ed2fe1b83c1f821faf3038b677a7b32c129d3257adcfb3e26aff7f6567bf97"
+              },
+              {
+                "codes": [
+                  "CS0200"
+                ],
+                "name": "mutable-presence",
+                "sourceSha256": "057c9d431063310f9b96a65483483ee28e0436e2cec983b75bacb267b766955c"
+              },
+              {
+                "codes": [
+                  "CS0200"
+                ],
+                "name": "mutable-branch",
+                "sourceSha256": "c9cab771c283ea93128583324c54eb536dedcb1a625c7990e93515786b8467eb"
+              }
+            ],
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 41534,
+            "sourceFreeExecutions": 2
+          },
+          "modelSha256": "50247dba2325a70d287234cacd915eaafafb588b17af78fc1f4f6dddbf11c9fd",
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51578715,
+                  "path": "archives/Lean.Compounds.1.0.0.nupkg",
+                  "sha256": "9f01a005c49faf7185fc41f48e219347d8620254fa7af4f6e187eb4e494657ea"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Compounds",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "reviewed-ir",
+          "profile": "dotnet",
+          "receiptSha256": "21b056a17f11214b4c5d33a64dc7d8dde6a8ca2b4cfde2f0a2fe0acf17d5ad63",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "6929469afb9b4c26fb8205000b46944ccbfa1e74e40bba0d15a00abe36dd61bc",
+          "signaturesSha256": "a39ef87a8da8109d12a17334ab09c2d5e484d8ea167715ec4f377e220ea69edf"
+        }
+      ],
+      "executionsSha256": "e8c5aace55c9bf88cc0b5769ce85687d3e456da083a62ddd5e06717ebcb1d3ff"
+    },
+    "lists": {
+      "executions": [
+        {
+          "bindingIrSha256": "1fdc7ca5204043d4fc5f7301eb09ac8f2e49c734f20984824b9c71c3a7d9b792",
+          "checks": 99180,
+          "compilerFreePath": true,
+          "consumerSha256": "835a6b4dec4428ed4b27729104d0dbb99412f7f1abaf6579a0516f195c432fa1",
+          "faults": {
+            "apiSourceSha256": "c6bb3334fcfc51d831de2cf84787667c85fc4fa785b7123831ea95b8f9d87a03",
+            "checks": 214,
+            "instrumentedRuntimeSha256": "fb65585c8df68a5f4f470067f7f676f7402de362252758c7c7c18d4b24ebc65b",
+            "isolatedInstrumentedProjection": true,
+            "layoutChecks": 9,
+            "partialInputChecks": 16,
+            "probeSourceSha256": "f1462e848aea7e30cfa48165119d65f993a7069d89844185b6045e40ba6043b0",
+            "releaseAssemblyUnchanged": true,
+            "replacements": [
+              156,
+              1,
+              1,
+              1,
+              27,
+              27
+            ],
+            "runtimeSourceSha256": "bdfff85e7795b5d374a883f9e52c8fead34de29dd67eddc02e31d8f7d6c1f540"
+          },
+          "installed": {
+            "assemblySha256": "8b04e1c9f1dc5ea4d2ea1bfdf646e365fa6181d6e2a462bf8e1ca3d527fdb3dd",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1714,
+                "sha256": "c5c10753db2df85e73215767b1b41d38b64cdb342862aef30327407c61c29064"
+              },
+              "Consumer.dll": {
+                "bytes": 18432,
+                "sha256": "ceb44b2fa325561d76b36f4e865c193312d95c17d7e19c86e6f8cf6d7437b565"
+              },
+              "Consumer.pdb": {
+                "bytes": 13296,
+                "sha256": "af4e662315a22df1d32967658fa78577b5936cff4e4f18d53cf8183ec1d872fa"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Lists.dll": {
+                "bytes": 60416,
+                "sha256": "8b04e1c9f1dc5ea4d2ea1bfdf646e365fa6181d6e2a462bf8e1ca3d527fdb3dd"
+              },
+              "runtimes/linux-x64/native/libcomponent_7545b0c2966a961b6086.so": {
+                "bytes": 105552,
+                "sha256": "b2292bff8f5b93bcd136a0e77c60c04611a8fd44ea727ea18473c6835d6fb3ad"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "runtimes/linux-x64/native/liblists.so": {
+                "bytes": 172608,
+                "sha256": "7a0c7e42d9f02aa8adadf0a276fbee49336359221f2b01e12a7160ad94b353bf"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "694b52ee6b9ebcf9a6cc8645b4e65fd5a66c2f52f6244d7315e4e9debb468ff2",
+            "rejected": [
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "element-type",
+                "sourceSha256": "a8f7bea990c8363c90e4a9ba51038caf5601101ebf30c10e8c2b4601cf75c774"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "unit-element",
+                "sourceSha256": "70fef6f515944dc375fe67f430530b113829b14b28c1a352c82d4019657cf92a"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "scalar-container",
+                "sourceSha256": "cb13d36b3aa514e13b502e480020fb9252208f6fde132387ff5ef14228e22eed"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-nesting",
+                "sourceSha256": "63d28cfb6d0af8fc093f4594eab228df015f31eee4e764f43c3a84a6d8b1acf5"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "option-presence",
+                "sourceSha256": "d280437a6d8276aca6dc34b8b5a507a67529419d4a6428707d009e36a9cb3fa6"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "product-arity",
+                "sourceSha256": "0ad26b9eda2f8be6fbf02650f0a4ab60e633e091cc0bbadb783f8c990ece8b38"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "enumerable-container",
+                "sourceSha256": "7652453cdfbe60306f98cdfd4479d609be562f6b6f5442965ee71f3949a58da8"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "scalar-result",
+                "sourceSha256": "464cd65338de910a2677635554553ca7a88bf7b9766198027216220d5a8b74cc"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "wrong-record-field",
+                "sourceSha256": "024cdb2110b8e718fc8a9981ff2afbfd584de41b237a191f3df1c74386697ad0"
+              },
+              {
+                "codes": [
+                  "CS0031"
+                ],
+                "name": "fixed-overflow",
+                "sourceSha256": "899fc264869f31ea1ab33990568550d439f7eb326fc25b2dd2a673a3051ba1ef"
+              },
+              {
+                "codes": [
+                  "CS1021"
+                ],
+                "name": "platform-overflow",
+                "sourceSha256": "f06e4501bcc34ae4a1353ff6dd2aeb1e6c17b8b4cbc3cd5336797ddd5c88a900"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "nullable-option",
+                "sourceSha256": "cbc71604f8526f2f6ec9a700c9fb546eb24adc8b6a33e8f534df1bd4cdea653b"
+              }
+            ],
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 99180,
+            "sourceFreeExecutions": 2
+          },
+          "modelSha256": "f615bc53aed45b9fcc16b3ff1505387fa409c871f9390d42a7c674430c2074cb",
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51474772,
+                  "path": "archives/Lean.Lists.1.0.0.nupkg",
+                  "sha256": "972779e737bc8b0ffc96b9ac14b57634271c13f5bc1768fddbad234976a37b79"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Lists",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "ordinary-source",
+          "profile": "dotnet",
+          "receiptSha256": "d3750fe1d35d24996bd70204ebadee1f72734f55b911d557e682af2b4e0f926b",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "45b9fcd21cfb489d4e56049a91d7f4b7baa6b080bd9fc47706b3349612dbc32d",
+          "signaturesSha256": "f1bb9704467e8dc735122906e8137f1f3ea4a552cb1c09352e44d79a9916ab7b"
+        },
+        {
+          "bindingIrSha256": "119425644a88fbf5fee910a2e67b10f7cd0062bc93dba7f700f965b0b5b90af0",
+          "checks": 99180,
+          "compilerFreePath": true,
+          "consumerSha256": "835a6b4dec4428ed4b27729104d0dbb99412f7f1abaf6579a0516f195c432fa1",
+          "faults": {
+            "apiSourceSha256": "0ae3aecb287aa3331b237f4c8b9a7756861c11f5491836550f1d972740263468",
+            "checks": 214,
+            "instrumentedRuntimeSha256": "533b062699022d07c3927420c0f274e84e95b4ca8b8a973ed4cdc0212e2173a1",
+            "isolatedInstrumentedProjection": true,
+            "layoutChecks": 9,
+            "partialInputChecks": 16,
+            "probeSourceSha256": "f1462e848aea7e30cfa48165119d65f993a7069d89844185b6045e40ba6043b0",
+            "releaseAssemblyUnchanged": true,
+            "replacements": [
+              156,
+              1,
+              1,
+              1,
+              27,
+              27
+            ],
+            "runtimeSourceSha256": "a2edd49288585bca8f5ee98f40781aba96385253c19b59ef5c45f52e460aece6"
+          },
+          "installed": {
+            "assemblySha256": "c541234e5d7bffeeb25fd54b1c6d34e0fbd7b545497f8c45b55ce83c28a4861a",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1714,
+                "sha256": "080384f31e75fa5df764c90297a221d427f762f4d59f55fa18109073649a3e2a"
+              },
+              "Consumer.dll": {
+                "bytes": 18432,
+                "sha256": "1d2d244cda36b787435e80799f0aa330eac22d6dac0c58ef0616d1577b1af00b"
+              },
+              "Consumer.pdb": {
+                "bytes": 13296,
+                "sha256": "5c54eb5ec81845665326f9bbde389199a60120eaa19489b3ef0bec2e214a5c0b"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Lists.dll": {
+                "bytes": 60416,
+                "sha256": "c541234e5d7bffeeb25fd54b1c6d34e0fbd7b545497f8c45b55ce83c28a4861a"
+              },
+              "runtimes/linux-x64/native/libcomponent_7545b0c2966a961b6086.so": {
+                "bytes": 105552,
+                "sha256": "b2292bff8f5b93bcd136a0e77c60c04611a8fd44ea727ea18473c6835d6fb3ad"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "runtimes/linux-x64/native/liblists.so": {
+                "bytes": 172608,
+                "sha256": "7a0c7e42d9f02aa8adadf0a276fbee49336359221f2b01e12a7160ad94b353bf"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "767fa3b26a6041f1dcf561284fd1603d2a81e22e7376f113d0662592c01098f1",
+            "rejected": [
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "element-type",
+                "sourceSha256": "a8f7bea990c8363c90e4a9ba51038caf5601101ebf30c10e8c2b4601cf75c774"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "unit-element",
+                "sourceSha256": "70fef6f515944dc375fe67f430530b113829b14b28c1a352c82d4019657cf92a"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "scalar-container",
+                "sourceSha256": "cb13d36b3aa514e13b502e480020fb9252208f6fde132387ff5ef14228e22eed"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-nesting",
+                "sourceSha256": "63d28cfb6d0af8fc093f4594eab228df015f31eee4e764f43c3a84a6d8b1acf5"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "option-presence",
+                "sourceSha256": "d280437a6d8276aca6dc34b8b5a507a67529419d4a6428707d009e36a9cb3fa6"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "product-arity",
+                "sourceSha256": "0ad26b9eda2f8be6fbf02650f0a4ab60e633e091cc0bbadb783f8c990ece8b38"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "enumerable-container",
+                "sourceSha256": "7652453cdfbe60306f98cdfd4479d609be562f6b6f5442965ee71f3949a58da8"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "scalar-result",
+                "sourceSha256": "464cd65338de910a2677635554553ca7a88bf7b9766198027216220d5a8b74cc"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "wrong-record-field",
+                "sourceSha256": "024cdb2110b8e718fc8a9981ff2afbfd584de41b237a191f3df1c74386697ad0"
+              },
+              {
+                "codes": [
+                  "CS0031"
+                ],
+                "name": "fixed-overflow",
+                "sourceSha256": "899fc264869f31ea1ab33990568550d439f7eb326fc25b2dd2a673a3051ba1ef"
+              },
+              {
+                "codes": [
+                  "CS1021"
+                ],
+                "name": "platform-overflow",
+                "sourceSha256": "f06e4501bcc34ae4a1353ff6dd2aeb1e6c17b8b4cbc3cd5336797ddd5c88a900"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "nullable-option",
+                "sourceSha256": "cbc71604f8526f2f6ec9a700c9fb546eb24adc8b6a33e8f534df1bd4cdea653b"
+              }
+            ],
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 99180,
+            "sourceFreeExecutions": 2
+          },
+          "modelSha256": "28feb01e3ebc4eee57417a24c27b9bd63701df3c0de72123be7eab358f241d90",
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51483180,
+                  "path": "archives/Lean.Lists.1.0.0.nupkg",
+                  "sha256": "89e2e90dc9f36d3dd30f6aea57cd3df25c8f88e24953a7852359550bfe8bbcd2"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Lists",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "reviewed-ir",
+          "profile": "dotnet",
+          "receiptSha256": "d47d92248bbe5aaed3c073d70e627a387974afb94b096f2eee5c0e74517d52fd",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "8911ef9c90f663616dba056e8add18eb8d44d4d5f6affbd746d8d61eb2e43ac2",
+          "signaturesSha256": "f1bb9704467e8dc735122906e8137f1f3ea4a552cb1c09352e44d79a9916ab7b"
+        }
+      ],
+      "executionsSha256": "f2a494dee51c749248aa574922073fe555fb270032a1e0407370275f252d05ab"
+    },
+    "aliases": {
+      "executions": [
+        {
+          "bindingIrSha256": "274cfc7b63166ef6b6c65afa27365aa111487f23d34a7f8557c9b3b202ecc13e",
+          "checks": 3876,
+          "compilerFreePath": true,
+          "consumerSha256": "e753c68c60db97e13034bdba1c553c9b5f479d838130feb848108c4d8b0d7621",
+          "faults": {
+            "apiSourceSha256": "63b367dd8d98e859283b28baeb3ebd441c440017e5a716404b2085ddb4984bd2",
+            "checks": 180,
+            "instrumentedRuntimeSha256": "03381b1126fb9936e97c8d2ac1abbd3d7d3366ef3c272accab33bbf63bea6f96",
+            "isolatedInstrumentedProjection": true,
+            "malformedChecks": 17,
+            "partialInputChecks": 64,
+            "probeSourceSha256": "a787b4b0b4438944bdd8f69d2da5bf74772619bc97472a0ded1f98bcadd5b902",
+            "releaseAssemblyUnchanged": true,
+            "replacements": [
+              56,
+              1,
+              1,
+              1,
+              31,
+              13
+            ],
+            "runtimeSourceSha256": "741ea8e73c3cd07fb9652236756d759329aaf404e057b4232a466b5dadf1af76"
+          },
+          "installed": {
+            "aliases": [
+              {
+                "id": "lean:Aliases.ABool",
+                "managedType": "bool",
+                "name": "ABool",
+                "target": {
+                  "kind": "primitive",
+                  "name": "bool"
+                }
+              },
+              {
+                "id": "lean:Aliases.ABytes",
+                "managedType": "byte[]",
+                "name": "ABytes",
+                "target": {
+                  "kind": "primitive",
+                  "name": "bytes"
+                }
+              },
+              {
+                "id": "lean:Aliases.AChar",
+                "managedType": "global::System.Text.Rune",
+                "name": "AChar",
+                "target": {
+                  "kind": "primitive",
+                  "name": "char"
+                }
+              },
+              {
+                "id": "lean:Aliases.AF32",
+                "managedType": "float",
+                "name": "AF32",
+                "target": {
+                  "kind": "primitive",
+                  "name": "float32"
+                }
+              },
+              {
+                "id": "lean:Aliases.AF64",
+                "managedType": "double",
+                "name": "AF64",
+                "target": {
+                  "kind": "primitive",
+                  "name": "float64"
+                }
+              },
+              {
+                "id": "lean:Aliases.AI16",
+                "managedType": "short",
+                "name": "AI16",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int16"
+                }
+              },
+              {
+                "id": "lean:Aliases.AI32",
+                "managedType": "int",
+                "name": "AI32",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int32"
+                }
+              },
+              {
+                "id": "lean:Aliases.AI64",
+                "managedType": "long",
+                "name": "AI64",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int64"
+                }
+              },
+              {
+                "id": "lean:Aliases.AI8",
+                "managedType": "sbyte",
+                "name": "AI8",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int8"
+                }
+              },
+              {
+                "id": "lean:Aliases.AInt",
+                "managedType": "global::System.Numerics.BigInteger",
+                "name": "AInt",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int"
+                }
+              },
+              {
+                "id": "lean:Aliases.ANat",
+                "managedType": "global::System.Numerics.BigInteger",
+                "name": "ANat",
+                "target": {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              },
+              {
+                "id": "lean:Aliases.ASignedWord",
+                "managedType": "long",
+                "name": "ASignedWord",
+                "target": {
+                  "kind": "primitive",
+                  "name": "isize"
+                }
+              },
+              {
+                "id": "lean:Aliases.AText",
+                "managedType": "string",
+                "name": "AText",
+                "target": {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              },
+              {
+                "id": "lean:Aliases.AU16",
+                "managedType": "ushort",
+                "name": "AU16",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint16"
+                }
+              },
+              {
+                "id": "lean:Aliases.AU32",
+                "managedType": "uint",
+                "name": "AU32",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              },
+              {
+                "id": "lean:Aliases.AU64",
+                "managedType": "ulong",
+                "name": "AU64",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint64"
+                }
+              },
+              {
+                "id": "lean:Aliases.AU8",
+                "managedType": "byte",
+                "name": "AU8",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint8"
+                }
+              },
+              {
+                "id": "lean:Aliases.AUnit",
+                "managedType": "Unit",
+                "name": "AUnit",
+                "target": {
+                  "kind": "primitive",
+                  "name": "unit"
+                }
+              },
+              {
+                "id": "lean:Aliases.AWord",
+                "managedType": "ulong",
+                "name": "AWord",
+                "target": {
+                  "kind": "primitive",
+                  "name": "usize"
+                }
+              },
+              {
+                "id": "lean:Aliases.Count",
+                "managedType": "uint",
+                "name": "Count",
+                "target": {
+                  "id": "lean:Aliases.AU32",
+                  "kind": "named"
+                }
+              },
+              {
+                "id": "lean:Aliases.Maybe",
+                "managedType": "Option<Option<Unit>>",
+                "name": "Maybe",
+                "target": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "id": "lean:Aliases.AUnit",
+                          "kind": "named"
+                        }
+                      ],
+                      "constructor": "option",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              },
+              {
+                "id": "lean:Aliases.OtherCount",
+                "managedType": "uint",
+                "name": "OtherCount",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              },
+              {
+                "id": "lean:Aliases.Outcome",
+                "managedType": "Result<(uint, byte[]), string>",
+                "name": "Outcome",
+                "target": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "id": "lean:Aliases.Count",
+                          "kind": "named"
+                        },
+                        {
+                          "id": "lean:Aliases.ABytes",
+                          "kind": "named"
+                        }
+                      ],
+                      "constructor": "tuple",
+                      "kind": "apply"
+                    },
+                    {
+                      "id": "lean:Aliases.AText",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "result",
+                  "kind": "apply"
+                }
+              },
+              {
+                "id": "lean:Aliases.PacketView",
+                "managedType": "Packet",
+                "name": "PacketView",
+                "target": {
+                  "id": "lean:Aliases.Packet",
+                  "kind": "named"
+                }
+              },
+              {
+                "id": "lean:Aliases.Packets",
+                "managedType": "Packet[]",
+                "name": "Packets",
+                "target": {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.PacketView",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              },
+              {
+                "id": "lean:Aliases.Rows",
+                "managedType": "uint[][]",
+                "name": "Rows",
+                "target": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "id": "lean:Aliases.Count",
+                          "kind": "named"
+                        }
+                      ],
+                      "constructor": "list",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              },
+              {
+                "id": "lean:Aliases.ScalarsView",
+                "managedType": "Scalars",
+                "name": "ScalarsView",
+                "target": {
+                  "id": "lean:Aliases.Scalars",
+                  "kind": "named"
+                }
+              }
+            ],
+            "assemblySha256": "1574f6b5fcbe1e255a4e3c2896e4457812a96eb735132e28a8f98ef80088b5f6",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1728,
+                "sha256": "6f0c3a5e4df6c887e0dd1f7dcfaf2e9d965a223cbb5474ef158e3fbe12688685"
+              },
+              "Consumer.dll": {
+                "bytes": 17920,
+                "sha256": "f8f956a94423f76f6ed135b0ef4549cdefa9ab3f4ce03250775aab8ddc53a63b"
+              },
+              "Consumer.pdb": {
+                "bytes": 13316,
+                "sha256": "7ed7638783bea7cc0a39df25f48ed603c659d7dd6f3dedccfc661704c7858bdc"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Aliases.dll": {
+                "bytes": 40448,
+                "sha256": "1574f6b5fcbe1e255a4e3c2896e4457812a96eb735132e28a8f98ef80088b5f6"
+              },
+              "runtimes/linux-x64/native/libaliases.so": {
+                "bytes": 87256,
+                "sha256": "2f7d5a58d9db38b597b336224f3b3f636e8718eb1bb63aad2a3fa9511ff7e203"
+              },
+              "runtimes/linux-x64/native/libcomponent_415b536a11d7304fc0bd.so": {
+                "bytes": 90864,
+                "sha256": "792feafb76058421f0a4b93c80d93a8cdfe6073e132d425f948272ffa22609e5"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "manifestSha256": "5fb86ffbc5dcd39811f5059739756fbce266e7637b7a90ac6ee7865b04ad9390",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "91dbdf7de527d2494155c688465fbec6e837a2e762076ac6900127610073a374",
+            "rejected": [
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "alias-scalar",
+                "sourceSha256": "8e7c98d93375233a048988c255d0ff48966e7bcf36139bd99edebfdd3e5edfbb"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "alias-nat",
+                "sourceSha256": "8ec97b03545c145e4d80032ee000f37dcbb60489eb0f31b2185818d82ae3003a"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "alias-unit",
+                "sourceSha256": "ad7cd97e98b9ff59df65c91cd7d91d1df626040cfad311396d5c140a52cdecbf"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-option",
+                "sourceSha256": "a0dc101c7d7e0706974287a96618d36af012c426a4ba14487e95e0a02ff42efb"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-result",
+                "sourceSha256": "b26a4b176905312cf894ea87cc848ce7a69db2d1f92a9d0d00e773a65753652c"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "wrong-field",
+                "sourceSha256": "fdec3f77db9eadb0e9ce339721c7f69763e4f8f642e321e6f3f573fa483bba49"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-row",
+                "sourceSha256": "a6122918c7f8201d9d8dce906f77a409455dbadd095630512380a80433bc31fd"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-byte",
+                "sourceSha256": "ad635f488b2201aae1d4eb68c05d7355de90887b0c368d4c57c63fd59afbdcdd"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "domain-versus-boundary",
+                "sourceSha256": "4169f93c1819b3f1d6791a3da3bc7358b891145169cfb234eade79287a21ee35"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "fixed-overflow",
+                "sourceSha256": "f9265accf067b09807091afc4d42f3cfb6c0f95cc1c1ca0964806105b1ffed8c"
+              },
+              {
+                "codes": [
+                  "CS1021"
+                ],
+                "name": "word-overflow",
+                "sourceSha256": "c6d730ef6dc5e90c6642fb36ab18922bccd76ae6a976b694d9d531e6cdb32783"
+              },
+              {
+                "codes": [
+                  "CS0234"
+                ],
+                "name": "no-wrapper-identity",
+                "sourceSha256": "f1a5fec941e3fc875edcf7703743568ce74e2064192d1dfebb3759413b963feb"
+              }
+            ],
+            "rejectionSourceSha256": "8a07c16756e51947d2e72185186dfde2c0c8f826585bc70e055fd1b1ba43705e",
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 3876,
+            "sourceFreeExecutions": 2,
+            "xmlSha256": "d0fc0c76c1a24f30f5144b2ef586e805b59eaf64dfee2acc8b3b3498c9942894"
+          },
+          "modelSha256": "98c42bf03587631b7cd904a6659db310dddbd03df992fce3490b1e57256a235a",
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51438986,
+                  "path": "archives/Lean.Aliases.1.0.0.nupkg",
+                  "sha256": "88ed62f9b6bbef7287c88494f264ac2166dfc4855bf2429fbed3dd06d116507e"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Aliases",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "ordinary-source",
+          "profile": "dotnet",
+          "receiptSha256": "d75a83996f62692b31732eb4e68bad8016824847e54d893fe3826a4a6865915d",
+          "sourceApiSha256": "554663f718365195ccfe11a399b671ef69738dd2f53e5b27add2b46e62be29fd",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "958b3d289d6e1ccbeb2c73284e9b5c6f15efe5086767f3d3b802d71c06990b8d"
+        },
+        {
+          "bindingIrSha256": "15d2137b60da85fa4329d136dd1c274458cce2151e0f0d90d0ab8514dcad3e19",
+          "checks": 3876,
+          "compilerFreePath": true,
+          "consumerSha256": "e753c68c60db97e13034bdba1c553c9b5f479d838130feb848108c4d8b0d7621",
+          "faults": {
+            "apiSourceSha256": "5dc2c7bd7bad91fce2060880ad2110d07e15e81d2613a0d1965e9ae84a4ef78b",
+            "checks": 180,
+            "instrumentedRuntimeSha256": "61cd413b1dc033f0092d4cde6e07d2f981041b75f8246a86f844c4d9cf758319",
+            "isolatedInstrumentedProjection": true,
+            "malformedChecks": 17,
+            "partialInputChecks": 64,
+            "probeSourceSha256": "a787b4b0b4438944bdd8f69d2da5bf74772619bc97472a0ded1f98bcadd5b902",
+            "releaseAssemblyUnchanged": true,
+            "replacements": [
+              56,
+              1,
+              1,
+              1,
+              31,
+              13
+            ],
+            "runtimeSourceSha256": "e8f5621f4d7ef80a57731acd6760cd9e5793a7f5ad1d1800527a49d10fd910c5"
+          },
+          "installed": {
+            "aliases": [
+              {
+                "id": "lean:Aliases.ABool",
+                "managedType": "bool",
+                "name": "ABool",
+                "target": {
+                  "kind": "primitive",
+                  "name": "bool"
+                }
+              },
+              {
+                "id": "lean:Aliases.ABytes",
+                "managedType": "byte[]",
+                "name": "ABytes",
+                "target": {
+                  "kind": "primitive",
+                  "name": "bytes"
+                }
+              },
+              {
+                "id": "lean:Aliases.AChar",
+                "managedType": "global::System.Text.Rune",
+                "name": "AChar",
+                "target": {
+                  "kind": "primitive",
+                  "name": "char"
+                }
+              },
+              {
+                "id": "lean:Aliases.AF32",
+                "managedType": "float",
+                "name": "AF32",
+                "target": {
+                  "kind": "primitive",
+                  "name": "float32"
+                }
+              },
+              {
+                "id": "lean:Aliases.AF64",
+                "managedType": "double",
+                "name": "AF64",
+                "target": {
+                  "kind": "primitive",
+                  "name": "float64"
+                }
+              },
+              {
+                "id": "lean:Aliases.AI16",
+                "managedType": "short",
+                "name": "AI16",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int16"
+                }
+              },
+              {
+                "id": "lean:Aliases.AI32",
+                "managedType": "int",
+                "name": "AI32",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int32"
+                }
+              },
+              {
+                "id": "lean:Aliases.AI64",
+                "managedType": "long",
+                "name": "AI64",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int64"
+                }
+              },
+              {
+                "id": "lean:Aliases.AI8",
+                "managedType": "sbyte",
+                "name": "AI8",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int8"
+                }
+              },
+              {
+                "id": "lean:Aliases.AInt",
+                "managedType": "global::System.Numerics.BigInteger",
+                "name": "AInt",
+                "target": {
+                  "kind": "primitive",
+                  "name": "int"
+                }
+              },
+              {
+                "id": "lean:Aliases.ANat",
+                "managedType": "global::System.Numerics.BigInteger",
+                "name": "ANat",
+                "target": {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              },
+              {
+                "id": "lean:Aliases.ASignedWord",
+                "managedType": "long",
+                "name": "ASignedWord",
+                "target": {
+                  "kind": "primitive",
+                  "name": "isize"
+                }
+              },
+              {
+                "id": "lean:Aliases.AText",
+                "managedType": "string",
+                "name": "AText",
+                "target": {
+                  "kind": "primitive",
+                  "name": "string"
+                }
+              },
+              {
+                "id": "lean:Aliases.AU16",
+                "managedType": "ushort",
+                "name": "AU16",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint16"
+                }
+              },
+              {
+                "id": "lean:Aliases.AU32",
+                "managedType": "uint",
+                "name": "AU32",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              },
+              {
+                "id": "lean:Aliases.AU64",
+                "managedType": "ulong",
+                "name": "AU64",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint64"
+                }
+              },
+              {
+                "id": "lean:Aliases.AU8",
+                "managedType": "byte",
+                "name": "AU8",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint8"
+                }
+              },
+              {
+                "id": "lean:Aliases.AUnit",
+                "managedType": "Unit",
+                "name": "AUnit",
+                "target": {
+                  "kind": "primitive",
+                  "name": "unit"
+                }
+              },
+              {
+                "id": "lean:Aliases.AWord",
+                "managedType": "ulong",
+                "name": "AWord",
+                "target": {
+                  "kind": "primitive",
+                  "name": "usize"
+                }
+              },
+              {
+                "id": "lean:Aliases.Count",
+                "managedType": "uint",
+                "name": "Count",
+                "target": {
+                  "id": "lean:Aliases.AU32",
+                  "kind": "named"
+                }
+              },
+              {
+                "id": "lean:Aliases.Maybe",
+                "managedType": "Option<Option<Unit>>",
+                "name": "Maybe",
+                "target": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "id": "lean:Aliases.AUnit",
+                          "kind": "named"
+                        }
+                      ],
+                      "constructor": "option",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              },
+              {
+                "id": "lean:Aliases.OtherCount",
+                "managedType": "uint",
+                "name": "OtherCount",
+                "target": {
+                  "kind": "primitive",
+                  "name": "uint32"
+                }
+              },
+              {
+                "id": "lean:Aliases.Outcome",
+                "managedType": "Result<(uint, byte[]), string>",
+                "name": "Outcome",
+                "target": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "id": "lean:Aliases.Count",
+                          "kind": "named"
+                        },
+                        {
+                          "id": "lean:Aliases.ABytes",
+                          "kind": "named"
+                        }
+                      ],
+                      "constructor": "tuple",
+                      "kind": "apply"
+                    },
+                    {
+                      "id": "lean:Aliases.AText",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "result",
+                  "kind": "apply"
+                }
+              },
+              {
+                "id": "lean:Aliases.PacketView",
+                "managedType": "Packet",
+                "name": "PacketView",
+                "target": {
+                  "id": "lean:Aliases.Packet",
+                  "kind": "named"
+                }
+              },
+              {
+                "id": "lean:Aliases.Packets",
+                "managedType": "Packet[]",
+                "name": "Packets",
+                "target": {
+                  "arguments": [
+                    {
+                      "id": "lean:Aliases.PacketView",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "list",
+                  "kind": "apply"
+                }
+              },
+              {
+                "id": "lean:Aliases.Rows",
+                "managedType": "uint[][]",
+                "name": "Rows",
+                "target": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "id": "lean:Aliases.Count",
+                          "kind": "named"
+                        }
+                      ],
+                      "constructor": "list",
+                      "kind": "apply"
+                    }
+                  ],
+                  "constructor": "array",
+                  "kind": "apply"
+                }
+              },
+              {
+                "id": "lean:Aliases.ScalarsView",
+                "managedType": "Scalars",
+                "name": "ScalarsView",
+                "target": {
+                  "id": "lean:Aliases.Scalars",
+                  "kind": "named"
+                }
+              }
+            ],
+            "assemblySha256": "b9889cdc58bcb511a7875a36bedd5e59911bb39924eb0db7446b4e13757de87f",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1728,
+                "sha256": "973c6aa94092d419ce27aa0420c744ffc6ae6ec343560ac1493fd96838fd012e"
+              },
+              "Consumer.dll": {
+                "bytes": 17920,
+                "sha256": "eb3ae7de1655d67ef3e6631d19a017a0c62357ffe8c03494e717cf5813822d0e"
+              },
+              "Consumer.pdb": {
+                "bytes": 13316,
+                "sha256": "baccaedff639868a9884d6859a14c6fb57269ff34709c7641966db3d969be074"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Aliases.dll": {
+                "bytes": 40448,
+                "sha256": "b9889cdc58bcb511a7875a36bedd5e59911bb39924eb0db7446b4e13757de87f"
+              },
+              "runtimes/linux-x64/native/libaliases.so": {
+                "bytes": 87256,
+                "sha256": "2f7d5a58d9db38b597b336224f3b3f636e8718eb1bb63aad2a3fa9511ff7e203"
+              },
+              "runtimes/linux-x64/native/libcomponent_415b536a11d7304fc0bd.so": {
+                "bytes": 90864,
+                "sha256": "792feafb76058421f0a4b93c80d93a8cdfe6073e132d425f948272ffa22609e5"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "manifestSha256": "112218c98796fec89dcba7eb1c0e5123720eeabfa9832843a865c97da396c06d",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "c27c987c73854b300fb88fd6798d1872cbad20fbdb40235c36ee24f082952054",
+            "rejected": [
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "alias-scalar",
+                "sourceSha256": "8e7c98d93375233a048988c255d0ff48966e7bcf36139bd99edebfdd3e5edfbb"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "alias-nat",
+                "sourceSha256": "8ec97b03545c145e4d80032ee000f37dcbb60489eb0f31b2185818d82ae3003a"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "alias-unit",
+                "sourceSha256": "ad7cd97e98b9ff59df65c91cd7d91d1df626040cfad311396d5c140a52cdecbf"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-option",
+                "sourceSha256": "a0dc101c7d7e0706974287a96618d36af012c426a4ba14487e95e0a02ff42efb"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-result",
+                "sourceSha256": "b26a4b176905312cf894ea87cc848ce7a69db2d1f92a9d0d00e773a65753652c"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "wrong-field",
+                "sourceSha256": "fdec3f77db9eadb0e9ce339721c7f69763e4f8f642e321e6f3f573fa483bba49"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-row",
+                "sourceSha256": "a6122918c7f8201d9d8dce906f77a409455dbadd095630512380a80433bc31fd"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-byte",
+                "sourceSha256": "ad635f488b2201aae1d4eb68c05d7355de90887b0c368d4c57c63fd59afbdcdd"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "domain-versus-boundary",
+                "sourceSha256": "4169f93c1819b3f1d6791a3da3bc7358b891145169cfb234eade79287a21ee35"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "fixed-overflow",
+                "sourceSha256": "f9265accf067b09807091afc4d42f3cfb6c0f95cc1c1ca0964806105b1ffed8c"
+              },
+              {
+                "codes": [
+                  "CS1021"
+                ],
+                "name": "word-overflow",
+                "sourceSha256": "c6d730ef6dc5e90c6642fb36ab18922bccd76ae6a976b694d9d531e6cdb32783"
+              },
+              {
+                "codes": [
+                  "CS0234"
+                ],
+                "name": "no-wrapper-identity",
+                "sourceSha256": "f1a5fec941e3fc875edcf7703743568ce74e2064192d1dfebb3759413b963feb"
+              }
+            ],
+            "rejectionSourceSha256": "8a07c16756e51947d2e72185186dfde2c0c8f826585bc70e055fd1b1ba43705e",
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 3876,
+            "sourceFreeExecutions": 2,
+            "xmlSha256": "8537953f9c29243dbedc4b299931b4e56468b4bbf3cea65335738f6f8288675a"
+          },
+          "modelSha256": "f7831999c2c28ffeb6c4fee06793926e09ab42f8e4ee035d7f1819f51b4e99e0",
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51446781,
+                  "path": "archives/Lean.Aliases.1.0.0.nupkg",
+                  "sha256": "976babcecb95eef8be9bea09e54c3b1c72b75985b1b2cdffe2cc77373a717d44"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Aliases",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "reviewed-ir",
+          "profile": "dotnet",
+          "receiptSha256": "45e2dcd57264df7405215d60c2689d0f049f0b5f0def47a23a345d0d99a7701f",
+          "sourceApiSha256": "594aae24fc91dcfa490fc5096df3b38d69554542f49942f34870945a6b1ac3de",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "53661b9e4f2b01a7ff41df57a04e609a6e9479f0046d8fa58d9fcf083b9f40cc"
+        }
+      ],
+      "executionsSha256": "a1cd391ac04df95370e2b45894674b5943e5c3ead92bef1dc8ad770b4ad286ed"
+    },
+    "variants": {
+      "executions": [
+        {
+          "bindingIrSha256": "98e775198a79e4831e1f29464d74348c60ec294d1f995804deca5ae2c4a07f4f",
+          "checks": 209519,
+          "compilerFreePath": true,
+          "consumerSha256": "d1c7a54664e8a7bb0f7abb07fe5a76a10f102e13ed31b96e3941655741b42741",
+          "faults": {
+            "apiSourceSha256": "2fa3cc5580698ef3aa3ca4061727d403fadcb607a14697b24c0e8d6104fc6172",
+            "checks": 152,
+            "inactiveCases": 6,
+            "instrumentedRuntimeSha256": "3252d2832016cc9f51625597f16269d3b23022ae6bfa8b70fcd2f179baed072f",
+            "isolatedInstrumentedProjection": true,
+            "malformedChecks": 13,
+            "malformedTags": 7,
+            "partialInputChecks": 64,
+            "probeSourceSha256": "141181eede05bb1935236bdcc13dc9bc4b3ffb42e34cf03058c87ce298144c1a",
+            "releaseAssemblyUnchanged": true,
+            "replacements": [
+              66,
+              1,
+              1,
+              1,
+              14,
+              12
+            ],
+            "runtimeSourceSha256": "74565d3818cfc8ee7e62101a4e21b294b2d817f63f27114ed059fe3546ef90ea"
+          },
+          "installed": {
+            "assemblySha256": "c8503ca18189d077f19a79ce9d0454c1c93c98f043628f9f267519aa91e9fa41",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1735,
+                "sha256": "4663f1a7c0d2032274452232f2518a26f0542fc13155bc7f2b5a24f096586e9a"
+              },
+              "Consumer.dll": {
+                "bytes": 21504,
+                "sha256": "168116363f460915c4bfbd0bf379d50a6ed72fd7dc89e2518ab64960c5b20bbf"
+              },
+              "Consumer.pdb": {
+                "bytes": 15036,
+                "sha256": "1578c6737fa7a1abd58eeb86dbe915c871f7f9845fb8bdd588ea671121e12284"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Variants.dll": {
+                "bytes": 61952,
+                "sha256": "c8503ca18189d077f19a79ce9d0454c1c93c98f043628f9f267519aa91e9fa41"
+              },
+              "runtimes/linux-x64/native/libcomponent_ff2699bd8e78670677f5.so": {
+                "bytes": 138584,
+                "sha256": "9094aa13414e66f7f3a74b4151d333c92976a1dc06362e31d319d8bc76c00895"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "runtimes/linux-x64/native/libvariants.so": {
+                "bytes": 83576,
+                "sha256": "6893a6bf8aff1f716f27f78dfdfbe19895b99ba1d9c3392b3680c88ad5fac9be"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "e91baddfb576072519c46b153adbb224238273a0fcc102159a0d5b8773e84b11",
+            "rejected": [
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-variant",
+                "sourceSha256": "400517b7bad4e888d3ee2aacc02f85b92a29d35ceaadf2bb6586a03c47c72eeb"
+              },
+              {
+                "codes": [
+                  "CS7036"
+                ],
+                "name": "missing-payload",
+                "sourceSha256": "31612c578109627cf9f230f3c614b665d103be1897f9d85e2e03ea1363a05393"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-payload",
+                "sourceSha256": "8ae40e85d4599f2cc25f355f8bed1c4967057390438b990f1688565f47354656"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "fixed-overflow",
+                "sourceSha256": "d25236c0afdfe402b7fcdf1d863cbf24e6cac27e64d867c6ce620a058e9f6484"
+              },
+              {
+                "codes": [
+                  "CS7036"
+                ],
+                "name": "marker-presence",
+                "sourceSha256": "b214edae03e2629a1944fbff49ec79d9facd27c9dc40d3059b6f2741a8a4ba0c"
+              },
+              {
+                "codes": [
+                  "CS0144"
+                ],
+                "name": "abstract-base",
+                "sourceSha256": "51f452654b69d68c8d7a734a76365d66456dfe649b1ca82835308ab7cf6e3d42"
+              },
+              {
+                "codes": [
+                  "CS8852"
+                ],
+                "name": "init-only-payload",
+                "sourceSha256": "57929bef1c072d843b2ac3efee56ff8e8fbd478f48881bfae72a04801206a532"
+              },
+              {
+                "codes": [
+                  "CS0122"
+                ],
+                "name": "private-runtime",
+                "sourceSha256": "4734648d01120d85ae52344743d55b88e3f98d8a71068d63977c3b5e84ff131f"
+              }
+            ],
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 209519,
+            "sourceFreeExecutions": 2
+          },
+          "installedFiles": {
+            "Lean.Variants.nuspec": {
+              "bytes": 471,
+              "sha256": "99360609927ce612f0d8c975938043a0315de2b762a193a7694a3738c158c8e9"
+            },
+            "README.md": {
+              "bytes": 3751,
+              "sha256": "8950bdbaa7efaef36403cc0b58c9b3f8cd597d1e403e2674134b8ad56666b1a4"
+            },
+            "[Content_Types].xml": {
+              "bytes": 939,
+              "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+            },
+            "_rels/.rels": {
+              "bytes": 257,
+              "sha256": "2e9a36187f36836491163fd89a2239cd05a14cc19b0e45df3663ae5d5a8b16f5"
+            },
+            "lean-bridge/component/allocation-guard.h": {
+              "bytes": 1309,
+              "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+            },
+            "lean-bridge/component/artifacts.json": {
+              "bytes": 1534,
+              "sha256": "05faca3b7634cd2fb225fcb24cede754d93d1f163553e0f57f122152cd9d1f6d"
+            },
+            "lean-bridge/component/binding-ir.json": {
+              "bytes": 42202,
+              "sha256": "d400c4fed513804c9508e89e0f61e68ae6ee5b57cf31a3e048babd13c47ebfd1"
+            },
+            "lean-bridge/component/component.h": {
+              "bytes": 6292,
+              "sha256": "fa85bc4c0d1c16ad08231e1095b1211b442f1567d8fa9cd9c82738291d23ccc8"
+            },
+            "lean-bridge/component/generated.lean": {
+              "bytes": 18954,
+              "sha256": "38fa451ac5dab460124d64f11e407309ad08e5f7c4e6a5158eab8fb4549d462e"
+            },
+            "lean-bridge/component/metadata.json": {
+              "bytes": 141285,
+              "sha256": "e3231b805ab010f69e5e0d9378d72c802110bc94a8394dd8f763c9303c406122"
+            },
+            "lean-bridge/component/model.json": {
+              "bytes": 229602,
+              "sha256": "3184b333df757629d6cb23f130ce515e3c8f08572419f844b71b6f89b94f2bde"
+            },
+            "lean-bridge/component/native-component.json": {
+              "bytes": 6137,
+              "sha256": "e57cbabd291ab3aba273e54a01b59cc7453995c58930a37f7fe33fc7c96dc398"
+            },
+            "lean-bridge/dotnet/binding-manifest.json": {
+              "bytes": 1160,
+              "sha256": "59d3baaa6dba3f0ec3a3deafd7b5c902900f5bc86116bf1e36ceb6f2ded81db7"
+            },
+            "lean-bridge/dotnet/global.json": {
+              "bytes": 104,
+              "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Variants/Api.cs": {
+              "bytes": 20485,
+              "sha256": "2fa3cc5580698ef3aa3ca4061727d403fadcb607a14697b24c0e8d6104fc6172"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Variants/LeanBridge.Variants.csproj": {
+              "bytes": 604,
+              "sha256": "7cde3822584b778b752caded476dcd9a93b3c0fba17586fcf93f354929366977"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Variants/Runtime.cs": {
+              "bytes": 42782,
+              "sha256": "74565d3818cfc8ee7e62101a4e21b294b2d817f63f27114ed059fe3546ef90ea"
+            },
+            "lean-bridge/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "lean-bridge/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "lean-bridge/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "lean-bridge/licenses/source-notices.json": {
+              "bytes": 2505,
+              "sha256": "3892c8d29cd35f1c0683ffefc5bd2126954a14bb6275bf7a649b372fdcecd9d5"
+            },
+            "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "lean-bridge/native-c-adapter.json": {
+              "bytes": 1349,
+              "sha256": "55a0c8f3b5186520f62ff99458e0836285b1fce5ce87b710942f9427f598eeea"
+            },
+            "lean-bridge/native-dotnet.json": {
+              "bytes": 2411,
+              "sha256": "29c0306cda98b9f3c6cf3f6dfef552d5a752240f8bd717a46e873679a62cf3aa"
+            },
+            "lean-bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+            },
+            "lib/net8.0/LeanBridge.Variants.dll": {
+              "bytes": 61952,
+              "sha256": "c8503ca18189d077f19a79ce9d0454c1c93c98f043628f9f267519aa91e9fa41"
+            },
+            "lib/net8.0/LeanBridge.Variants.xml": {
+              "bytes": 8015,
+              "sha256": "bd5a70c2a82851887488c32d37d59cf3703a2e67728d369ad9183cdff84090b3"
+            },
+            "runtimes/linux-x64/native/libcomponent_ff2699bd8e78670677f5.so": {
+              "bytes": 138584,
+              "sha256": "9094aa13414e66f7f3a74b4151d333c92976a1dc06362e31d319d8bc76c00895"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            },
+            "runtimes/linux-x64/native/libvariants.so": {
+              "bytes": 83576,
+              "sha256": "6893a6bf8aff1f716f27f78dfdfbe19895b99ba1d9c3392b3680c88ad5fac9be"
+            }
+          },
+          "modelSha256": "3184b333df757629d6cb23f130ce515e3c8f08572419f844b71b6f89b94f2bde",
+          "nativeFaults": {
+            "adapterSha256": "a26ee85f596e84f49538e0e91341553edf9bede556e41b0a6b62aa19a52d8fdc",
+            "allocationFailures": 242,
+            "checks": 1182,
+            "consumerSha256": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84",
+            "executableSha256": "30ecff31d20b2564d9b27d03a3eea95c506a0d976ff92423321487303ef1bc57",
+            "malformedNativeTags": 1,
+            "probeAdapterSha256": "331a95298fa8e1192165799d33c2ec7483baa3879a6eae7b66497c444fda5b43",
+            "realLeanExecution": true,
+            "rejected": 70,
+            "sanitizers": [
+              "address",
+              "leak",
+              "undefined"
+            ],
+            "startupLeakBaseline": {
+              "allocations": 12,
+              "bytes": 128,
+              "report": "\n=================================================================\n==PID==ERROR: LeakSanitizer: detected memory leaks\n\nDirect leak of 128 byte(s) in 12 object(s) allocated from:\n    #0 ADDRESS in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n    #1 ADDRESS in __gmp_default_allocate (/tmp/lean-bridge-dotnet-variant-author-SQQlim/release/native/runtime/lib/libleanshared.so+ADDRESS)\n\nSUMMARY: AddressSanitizer: 128 byte(s) leaked in 12 allocation(s).\n",
+              "unchangedAfterConversions": true
+            },
+            "syntheticTagInjection": true
+          },
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51453757,
+                  "path": "archives/Lean.Variants.1.0.0.nupkg",
+                  "sha256": "44403973faf246c4441b46a1854cd79971559a89b072563c507b24ca4a304d07"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Variants",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "ordinary-source",
+          "profile": "dotnet",
+          "receiptSha256": "3561bab16d5903e3790a3e3c806df0fd712167506962b8ceb0228dbac9c5f4ec",
+          "rejectionSourceSha256": "3522e7bba43701283e5799d85f6e6f243ac66d147b310143b6d37d686d556bc4",
+          "sourceApiSha256": "fbb764ec977521cdbe023a14229d53b453dace8157b4b5147a6e5437e242d9e0",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "08a6cc5ff541f54b535965966356aef46b9de51b9205c3e5e93e39101d2621eb"
+        },
+        {
+          "bindingIrSha256": "4b0842f0832f41e7c6e7e13b1d6ad3ae5e487a3e66730679a293db98de657902",
+          "checks": 209519,
+          "compilerFreePath": true,
+          "consumerSha256": "d1c7a54664e8a7bb0f7abb07fe5a76a10f102e13ed31b96e3941655741b42741",
+          "faults": {
+            "apiSourceSha256": "1d57c481db67476dcc4576c3de2c0fcfe11cfc173af02b678f25515bf5f1b3b2",
+            "checks": 152,
+            "inactiveCases": 6,
+            "instrumentedRuntimeSha256": "a1f48edceec1858e701d2c2f13f1ade6101f3a5f4891effc6b294f50e26b264e",
+            "isolatedInstrumentedProjection": true,
+            "malformedChecks": 13,
+            "malformedTags": 7,
+            "partialInputChecks": 64,
+            "probeSourceSha256": "141181eede05bb1935236bdcc13dc9bc4b3ffb42e34cf03058c87ce298144c1a",
+            "releaseAssemblyUnchanged": true,
+            "replacements": [
+              66,
+              1,
+              1,
+              1,
+              14,
+              12
+            ],
+            "runtimeSourceSha256": "c62e17c595fbbfa795f9c6320b76f66698d32b0209f8922ebef1ac251b102fd3"
+          },
+          "installed": {
+            "assemblySha256": "6d6f91b0a5bb1c9cd8e3e40a7f20d905c2259b8a83fb8613f6c6173debe3549d",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1735,
+                "sha256": "e243aba7514e502e8042e998e5a90e4866f83f91f2bd2c5b501f50ade978e469"
+              },
+              "Consumer.dll": {
+                "bytes": 21504,
+                "sha256": "f04cf96c7410cabf1471aec23f45c1985784ad53ae3139f9c29faeb58c06f50e"
+              },
+              "Consumer.pdb": {
+                "bytes": 15036,
+                "sha256": "7fcfa395bace9194c9ffcb382fa308725376189a6e26dbd228fcf2fa19d193e6"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Variants.dll": {
+                "bytes": 61952,
+                "sha256": "6d6f91b0a5bb1c9cd8e3e40a7f20d905c2259b8a83fb8613f6c6173debe3549d"
+              },
+              "runtimes/linux-x64/native/libcomponent_ff2699bd8e78670677f5.so": {
+                "bytes": 138584,
+                "sha256": "9094aa13414e66f7f3a74b4151d333c92976a1dc06362e31d319d8bc76c00895"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              },
+              "runtimes/linux-x64/native/libvariants.so": {
+                "bytes": 83576,
+                "sha256": "6893a6bf8aff1f716f27f78dfdfbe19895b99ba1d9c3392b3680c88ad5fac9be"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "28ae3835e10d8b4f21265a121f5eb39a9d2f90fb767818996fc1fe93a6f49374",
+            "rejected": [
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-variant",
+                "sourceSha256": "400517b7bad4e888d3ee2aacc02f85b92a29d35ceaadf2bb6586a03c47c72eeb"
+              },
+              {
+                "codes": [
+                  "CS7036"
+                ],
+                "name": "missing-payload",
+                "sourceSha256": "31612c578109627cf9f230f3c614b665d103be1897f9d85e2e03ea1363a05393"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "wrong-payload",
+                "sourceSha256": "8ae40e85d4599f2cc25f355f8bed1c4967057390438b990f1688565f47354656"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "fixed-overflow",
+                "sourceSha256": "d25236c0afdfe402b7fcdf1d863cbf24e6cac27e64d867c6ce620a058e9f6484"
+              },
+              {
+                "codes": [
+                  "CS7036"
+                ],
+                "name": "marker-presence",
+                "sourceSha256": "b214edae03e2629a1944fbff49ec79d9facd27c9dc40d3059b6f2741a8a4ba0c"
+              },
+              {
+                "codes": [
+                  "CS0144"
+                ],
+                "name": "abstract-base",
+                "sourceSha256": "51f452654b69d68c8d7a734a76365d66456dfe649b1ca82835308ab7cf6e3d42"
+              },
+              {
+                "codes": [
+                  "CS8852"
+                ],
+                "name": "init-only-payload",
+                "sourceSha256": "57929bef1c072d843b2ac3efee56ff8e8fbd478f48881bfae72a04801206a532"
+              },
+              {
+                "codes": [
+                  "CS0122"
+                ],
+                "name": "private-runtime",
+                "sourceSha256": "4734648d01120d85ae52344743d55b88e3f98d8a71068d63977c3b5e84ff131f"
+              }
+            ],
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 209519,
+            "sourceFreeExecutions": 2
+          },
+          "installedFiles": {
+            "Lean.Variants.nuspec": {
+              "bytes": 471,
+              "sha256": "99360609927ce612f0d8c975938043a0315de2b762a193a7694a3738c158c8e9"
+            },
+            "README.md": {
+              "bytes": 3751,
+              "sha256": "8950bdbaa7efaef36403cc0b58c9b3f8cd597d1e403e2674134b8ad56666b1a4"
+            },
+            "[Content_Types].xml": {
+              "bytes": 939,
+              "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+            },
+            "_rels/.rels": {
+              "bytes": 257,
+              "sha256": "2e9a36187f36836491163fd89a2239cd05a14cc19b0e45df3663ae5d5a8b16f5"
+            },
+            "lean-bridge/component/allocation-guard.h": {
+              "bytes": 1309,
+              "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+            },
+            "lean-bridge/component/artifacts.json": {
+              "bytes": 1535,
+              "sha256": "e53dc2680ae79b216176d245b9ca660d33581a66b6550fadac2b94cbcbc630fc"
+            },
+            "lean-bridge/component/binding-ir.json": {
+              "bytes": 42380,
+              "sha256": "0846e2934e0a400645183bd5751ddd3b5d7691e53166aa48993d553ec3c6bb1a"
+            },
+            "lean-bridge/component/component.h": {
+              "bytes": 6292,
+              "sha256": "fa85bc4c0d1c16ad08231e1095b1211b442f1567d8fa9cd9c82738291d23ccc8"
+            },
+            "lean-bridge/component/generated.lean": {
+              "bytes": 18954,
+              "sha256": "38fa451ac5dab460124d64f11e407309ad08e5f7c4e6a5158eab8fb4549d462e"
+            },
+            "lean-bridge/component/metadata.json": {
+              "bytes": 141285,
+              "sha256": "d83d461ee966576b3edc1cf24f4573f49f02b7b749622f83774c09b74ed35ec7"
+            },
+            "lean-bridge/component/model.json": {
+              "bytes": 274695,
+              "sha256": "711a179cdfc4b7827d1d807869f75108470c31305e340f718bbf51d9bb09dc16"
+            },
+            "lean-bridge/component/native-component.json": {
+              "bytes": 51052,
+              "sha256": "8633f22ab3fe3f498f6a72ada56451ec3dd289f79592dadff1b5f7b283f227cf"
+            },
+            "lean-bridge/dotnet/binding-manifest.json": {
+              "bytes": 1160,
+              "sha256": "f0f97b79f449f7a70820c02543f9f9966d437b0e0edbbb881d77f4df6393b1f7"
+            },
+            "lean-bridge/dotnet/global.json": {
+              "bytes": 104,
+              "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Variants/Api.cs": {
+              "bytes": 20541,
+              "sha256": "1d57c481db67476dcc4576c3de2c0fcfe11cfc173af02b678f25515bf5f1b3b2"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Variants/LeanBridge.Variants.csproj": {
+              "bytes": 604,
+              "sha256": "7cde3822584b778b752caded476dcd9a93b3c0fba17586fcf93f354929366977"
+            },
+            "lean-bridge/dotnet/src/LeanBridge.Variants/Runtime.cs": {
+              "bytes": 42782,
+              "sha256": "c62e17c595fbbfa795f9c6320b76f66698d32b0209f8922ebef1ac251b102fd3"
+            },
+            "lean-bridge/licenses/Lean-LICENSE": {
+              "bytes": 9160,
+              "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+            },
+            "lean-bridge/licenses/Lean-LICENSES": {
+              "bytes": 81854,
+              "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+            },
+            "lean-bridge/licenses/LeanBridge-LICENSE": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "lean-bridge/licenses/source-notices.json": {
+              "bytes": 2280,
+              "sha256": "1d2ce1756a3931ba5a1ca07c8c7163558df025d950f49fa3985d432836ad9c37"
+            },
+            "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+              "bytes": 1093,
+              "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+            },
+            "lean-bridge/native-c-adapter.json": {
+              "bytes": 1349,
+              "sha256": "1b68b76b3c895cad1f6bb7d9c514ddde5e1f0666fd5f6c9f7d8c0a02539b61e0"
+            },
+            "lean-bridge/native-dotnet.json": {
+              "bytes": 2411,
+              "sha256": "57d245be66ba24ec61a41ec8ed7ff3dba2e16ad01f210e0d27827074d38525ea"
+            },
+            "lean-bridge/runtime.json": {
+              "bytes": 1466,
+              "sha256": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309"
+            },
+            "lib/net8.0/LeanBridge.Variants.dll": {
+              "bytes": 61952,
+              "sha256": "6d6f91b0a5bb1c9cd8e3e40a7f20d905c2259b8a83fb8613f6c6173debe3549d"
+            },
+            "lib/net8.0/LeanBridge.Variants.xml": {
+              "bytes": 8015,
+              "sha256": "bd5a70c2a82851887488c32d37d59cf3703a2e67728d369ad9183cdff84090b3"
+            },
+            "runtimes/linux-x64/native/libcomponent_ff2699bd8e78670677f5.so": {
+              "bytes": 138584,
+              "sha256": "9094aa13414e66f7f3a74b4151d333c92976a1dc06362e31d319d8bc76c00895"
+            },
+            "runtimes/linux-x64/native/liblean_bridge_native.so": {
+              "bytes": 17136,
+              "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+            },
+            "runtimes/linux-x64/native/libleanshared.so": {
+              "bytes": 158401256,
+              "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+            },
+            "runtimes/linux-x64/native/libvariants.so": {
+              "bytes": 83576,
+              "sha256": "6893a6bf8aff1f716f27f78dfdfbe19895b99ba1d9c3392b3680c88ad5fac9be"
+            }
+          },
+          "modelSha256": "711a179cdfc4b7827d1d807869f75108470c31305e340f718bbf51d9bb09dc16",
+          "nativeFaults": {
+            "adapterSha256": "85e5aa88f3980e0a554a709b51e0807134d12ed9295121ddd3ddddea41eda3c7",
+            "allocationFailures": 242,
+            "checks": 1182,
+            "consumerSha256": "b5f440ab2cf3efebfef0caef22f7da7f8550a7a4f094b46c40cc2b4cd0d95a84",
+            "executableSha256": "53eafbec8d3b0a112b0f88e11ff8eed6d305195a50db2164c55dbad6be1ebee1",
+            "malformedNativeTags": 1,
+            "probeAdapterSha256": "010a11778b2996e0993a5e328eacc19c7ff63aa79b70f1bbf4a0ada052e3c032",
+            "realLeanExecution": true,
+            "rejected": 70,
+            "sanitizers": [
+              "address",
+              "leak",
+              "undefined"
+            ],
+            "startupLeakBaseline": {
+              "allocations": 12,
+              "bytes": 128,
+              "report": "\n=================================================================\n==PID==ERROR: LeakSanitizer: detected memory leaks\n\nDirect leak of 128 byte(s) in 12 object(s) allocated from:\n    #0 ADDRESS in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n    #1 ADDRESS in __gmp_default_allocate (/tmp/lean-bridge-dotnet-variant-author-W9ii5R/release/native/runtime/lib/libleanshared.so+ADDRESS)\n\nSUMMARY: AddressSanitizer: 128 byte(s) leaked in 12 allocation(s).\n",
+              "unchangedAfterConversions": true
+            },
+            "syntheticTagInjection": true
+          },
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51460298,
+                  "path": "archives/Lean.Variants.1.0.0.nupkg",
+                  "sha256": "f6df8826d196fcbf9a7c0c9e2dda909c430ae9a745baf3340a88fac108cbbe58"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Variants",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "reviewed-ir",
+          "profile": "dotnet",
+          "receiptSha256": "6ffaefdbc49d977a2d8384d4175992c8bab8996f23f45c6f6282973ad40141b4",
+          "rejectionSourceSha256": "3522e7bba43701283e5799d85f6e6f243ac66d147b310143b6d37d686d556bc4",
+          "sourceApiSha256": "e3e4180b471a353cd8b106ee6f80314c52d7baa13e6b54a05ab1ce637d51d9dc",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "56f4c243f53d5338ccfe93586328fbae015df23c08fd832e9a8c35540435a3c1"
+        }
+      ],
+      "executionsSha256": "5a49e29a9f960f68ba094117202e2654d1a2141b715284f58b5ef0e136d03e8d"
+    },
+    "callables": {
+      "executions": [
+        {
+          "bindingIrSha256": "2100c5b0155513d66d14bfba51e613c6597277f01384f97398b64dd955556239",
+          "checks": 128247,
+          "compilerFreePath": true,
+          "consumerSha256": "26b49c6b0729c74835d7f7479206bc0270c2ef6233cf96a1456d64d1e51f8420",
+          "installed": {
+            "assemblySha256": "8af11828533b66c8216918baf9c69690c110a9d823743073dac79a5b34392f43",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1742,
+                "sha256": "1e3d66bb8f854968556caf7278309cbde0e7f3e098b3b9799f6bdd85f4031b7e"
+              },
+              "Consumer.dll": {
+                "bytes": 51712,
+                "sha256": "b3f25886059d91e4308fd6849651b4bffdf6770ac3e2fc2e21c9df66cfcc595e"
+              },
+              "Consumer.pdb": {
+                "bytes": 26764,
+                "sha256": "910d34f8ebad9a417badf2a28fc0c2d47a78815d82109cec7254f2864170c327"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Callables.dll": {
+                "bytes": 95232,
+                "sha256": "8af11828533b66c8216918baf9c69690c110a9d823743073dac79a5b34392f43"
+              },
+              "runtimes/linux-x64/native/libcallables.so": {
+                "bytes": 215472,
+                "sha256": "8096e0343ae491e69af61ccceb5e7537f79bd3b53bca870208f889b9d4e3dd16"
+              },
+              "runtimes/linux-x64/native/libcomponent_70529187269721ee540b.so": {
+                "bytes": 222728,
+                "sha256": "17b238fdca05ed08a8f07f0c9ad3e70976a70e927df1a10ef6d0b57ee40d882f"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "c6070ec34a2a4d563c66bf42fa9fe353c0cb4e7c34d883fc91e1c7e852f96e65",
+            "rejected": [
+              {
+                "codes": [
+                  "CS0266",
+                  "CS1662"
+                ],
+                "name": "callback-result",
+                "sourceSha256": "8cf03baf50d0085caae894a7246135d9395b640ee2be20ccc82f88216f18d350"
+              },
+              {
+                "codes": [
+                  "CS0031",
+                  "CS1662",
+                  "CS0221"
+                ],
+                "name": "callback-width",
+                "sourceSha256": "ce93c9cfe39aa246bb89dd2b56004406566f8d7f9e9270677e497acd652fc1e7"
+              },
+              {
+                "codes": [
+                  "CS4010"
+                ],
+                "name": "async-result",
+                "sourceSha256": "780ffef3b40a7447644c930da8742e6db37b974ae8164d9a03fb1b77c5fecadb"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "unit-result",
+                "sourceSha256": "3b5b527d32ec909de91f5d2600f86a3408c80b262a7aa2c95d271f62318b9b0e"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "closure-signature",
+                "sourceSha256": "9cfdd816449a3ca5851352778efddd8df859c24f5f8068760108202fcf3044f4"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "closure-argument",
+                "sourceSha256": "63de8332742a50ba0acd886680411d0f6ca01ec1b911160573586a6a76748eac"
+              },
+              {
+                "codes": [
+                  "CS1729"
+                ],
+                "name": "closure-constructor",
+                "sourceSha256": "935544fe54ae2b57165ba200267983fc6b8617dd626ff408261e0e313e53d2a2"
+              }
+            ],
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 128247,
+            "sourceFreeExecutions": 2
+          },
+          "modelSha256": "680fae8b81b954611f006c52f28d943211e486ba6c861ff3902c13c7a9e59c99",
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51530181,
+                  "path": "archives/Lean.Callables.1.0.0.nupkg",
+                  "sha256": "9b270f8d25f3761f8b282acfa7f624ae7bdf37fb3525949e135b09c0bff93229"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Callables",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "ordinary-source",
+          "profile": "dotnet",
+          "receiptSha256": "8d99e08ce2a5c7bdec53af78fabcb3dde1786a8569c83304ad41d3db41876a30",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "8178e526c8eb0f826f40c1c56709b163e0ab5a0c82096240c9aadc58e2b2fb8b",
+          "signaturesSha256": "e33673820795c7e7c60115b5211c961749e6a1c1074201dd956a8b98f9b016b6"
+        },
+        {
+          "bindingIrSha256": "93cb4dd1e81aaeb90270faf89ab142dd5c146fc052b62f6ccfc4071e51824f22",
+          "checks": 128247,
+          "compilerFreePath": true,
+          "consumerSha256": "26b49c6b0729c74835d7f7479206bc0270c2ef6233cf96a1456d64d1e51f8420",
+          "installed": {
+            "assemblySha256": "cb27e91a1c8008eff67d9c7df9c1868af43449001dc1b9f6ff826f3cd57f9695",
+            "compilerSha256": "c03868a05f4e66b6325004bed60804567212d3cf66681deda3bf00208c6d51c3",
+            "deployment": {
+              "Consumer.deps.json": {
+                "bytes": 1742,
+                "sha256": "bc69292b7779fbfe1470b2e7aa3972fefd7b061bd062b9f9a54071dd5919475d"
+              },
+              "Consumer.dll": {
+                "bytes": 51712,
+                "sha256": "ca9e497ab88a67cc25fd91713e09e811963f6512bf8563864758ad030b26bb2a"
+              },
+              "Consumer.pdb": {
+                "bytes": 26764,
+                "sha256": "0329cff901c291bd24da9c3a0e9ac5f4fa50b5bf009a0f668fe45882889f5fb7"
+              },
+              "Consumer.runtimeconfig.json": {
+                "bytes": 257,
+                "sha256": "088bcc1a867d80d3923a812855f7ae9297fc8ac3d844cf9a83510bd8d1352af8"
+              },
+              "LeanBridge.Callables.dll": {
+                "bytes": 95232,
+                "sha256": "cb27e91a1c8008eff67d9c7df9c1868af43449001dc1b9f6ff826f3cd57f9695"
+              },
+              "runtimes/linux-x64/native/libcallables.so": {
+                "bytes": 215472,
+                "sha256": "8096e0343ae491e69af61ccceb5e7537f79bd3b53bca870208f889b9d4e3dd16"
+              },
+              "runtimes/linux-x64/native/libcomponent_70529187269721ee540b.so": {
+                "bytes": 222728,
+                "sha256": "17b238fdca05ed08a8f07f0c9ad3e70976a70e927df1a10ef6d0b57ee40d882f"
+              },
+              "runtimes/linux-x64/native/liblean_bridge_native.so": {
+                "bytes": 17136,
+                "sha256": "44e3106824ffc82fa7eccb682671556eeb6d5fb81209a3447b6026d016672016"
+              },
+              "runtimes/linux-x64/native/libleanshared.so": {
+                "bytes": 158401256,
+                "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+              }
+            },
+            "fxrVersion": "8.0.30",
+            "onlyPreparedDependency": true,
+            "packageReceiptSha256": "725190b6930fc08e13248312eb1c2aca89ffc8461fe8a54d22f5d6c5db128661",
+            "rejected": [
+              {
+                "codes": [
+                  "CS0266",
+                  "CS1662"
+                ],
+                "name": "callback-result",
+                "sourceSha256": "8cf03baf50d0085caae894a7246135d9395b640ee2be20ccc82f88216f18d350"
+              },
+              {
+                "codes": [
+                  "CS0031",
+                  "CS1662",
+                  "CS0221"
+                ],
+                "name": "callback-width",
+                "sourceSha256": "ce93c9cfe39aa246bb89dd2b56004406566f8d7f9e9270677e497acd652fc1e7"
+              },
+              {
+                "codes": [
+                  "CS4010"
+                ],
+                "name": "async-result",
+                "sourceSha256": "780ffef3b40a7447644c930da8742e6db37b974ae8164d9a03fb1b77c5fecadb"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "unit-result",
+                "sourceSha256": "3b5b527d32ec909de91f5d2600f86a3408c80b262a7aa2c95d271f62318b9b0e"
+              },
+              {
+                "codes": [
+                  "CS0029"
+                ],
+                "name": "closure-signature",
+                "sourceSha256": "9cfdd816449a3ca5851352778efddd8df859c24f5f8068760108202fcf3044f4"
+              },
+              {
+                "codes": [
+                  "CS1503"
+                ],
+                "name": "closure-argument",
+                "sourceSha256": "63de8332742a50ba0acd886680411d0f6ca01ec1b911160573586a6a76748eac"
+              },
+              {
+                "codes": [
+                  "CS1729"
+                ],
+                "name": "closure-constructor",
+                "sourceSha256": "935544fe54ae2b57165ba200267983fc6b8617dd626ff408261e0e313e53d2a2"
+              }
+            ],
+            "runtimeVersion": "8.0.30",
+            "sdk": "8.0.424",
+            "sourceFree": true,
+            "sourceFreeChecks": 128247,
+            "sourceFreeExecutions": 2
+          },
+          "modelSha256": "edcd2fd263eea50f591da469fc9acbff2ab96fb7820c29c6c2e7376087fc9d5a",
+          "offlineInstall": true,
+          "packages": [
+            {
+              "artifacts": [
+                {
+                  "bytes": 51544781,
+                  "path": "archives/Lean.Callables.1.0.0.nupkg",
+                  "sha256": "58c8157a938a4b11ae0e933b573eba10b90b755dec82b23440dbc07317c6151b"
+                }
+              ],
+              "ecosystem": "nuget",
+              "name": "Lean.Callables",
+              "profile": "native-library-v1",
+              "requires": [],
+              "role": "component",
+              "runtimeDelivery": "embedded",
+              "runtimeIdentity": "80c639698c9fbd799f44673629464056a2770675b9312681bc22e92b72334309",
+              "target": "nuget",
+              "version": "1.0.0"
+            }
+          ],
+          "path": "reviewed-ir",
+          "profile": "dotnet",
+          "receiptSha256": "7810d460fef2fa99ed074c684b80f68681dd1e6abb7defb353a142e16a20d9ce",
+          "sourceRemovedBeforeInstallation": true,
+          "sourceTreeSha256": "80cb1c3806b7b292f47a8f7c13de49bfbbbc935215fdbbb5121e109dc9ab110a",
+          "signaturesSha256": "e33673820795c7e7c60115b5211c961749e6a1c1074201dd956a8b98f9b016b6"
+        }
+      ],
+      "executionsSha256": "4d693b01d95cd5672a1f479290fc877463b70570e2a5d8a6bdcc2bc8a854bd73"
+    }
+  },
+  "log": {
+    "path": "build/native-shared-dotnet-families-20260924.log",
+    "sha256": "0aa136511fb901dc6afd459edcf16a0b2460bad8897662748fc1bfedb8f32591",
+    "text": "TAP version 13\n# Subtest: installed .NET aliases preserve named contracts and transparent relocated values\nok 1 - installed .NET aliases preserve named contracts and transparent relocated values\n  ---\n  duration_ms: 124294.980401\n  type: 'test'\n  ...\n# ordinary-source: compiling .NET alias metadata, documentation and values\n# ordinary-source: offline installation without producer files or Lean/C compilers\n# ordinary-source: 3876 assertions, 12 compiler rejections, 180 injected failures and two runtime-only reruns passed\n# reviewed-ir: compiling .NET alias metadata, documentation and values\n# reviewed-ir: offline installation without producer files or Lean/C compilers\n# reviewed-ir: 3876 assertions, 12 compiler rejections, 180 injected failures and two runtime-only reruns passed\n# Subtest: installed .NET callables preserve all nineteen primitives on both source paths\nok 2 - installed .NET callables preserve all nineteen primitives on both source paths\n  ---\n  duration_ms: 128154.765973\n  type: 'test'\n  ...\n# ordinary-source: compiling the 62-export .NET callable library\n# ordinary-source: installing the relocated NuGet package offline\n# ordinary-source: 128247 assertions, 7 compile rejections and two runtime-only reruns passed\n# reviewed-ir: compiling the 62-export .NET callable library\n# reviewed-ir: installing the relocated NuGet package offline\n# reviewed-ir: 128247 assertions, 7 compile rejections and two runtime-only reruns passed\n# Subtest: installed .NET arrays and records preserve values on both source paths\nok 3 - installed .NET arrays and records preserve values on both source paths\n  ---\n  duration_ms: 154642.474943\n  type: 'test'\n  ...\n# ordinary-source: compiling .NET collections\n# ordinary-source: original offline NuGet package, typed callers, isolated failure probes and relocation\n# ordinary-source: 660970 public assertions, 3364 calls, 551 injected failures\n# reviewed-ir: compiling .NET collections\n# reviewed-ir: original offline NuGet package, typed callers, isolated failure probes and relocation\n# reviewed-ir: 660970 public assertions, 3364 calls, 551 injected failures\n# Subtest: installed .NET compounds preserve copied values on both source paths\nok 4 - installed .NET compounds preserve copied values on both source paths\n  ---\n  duration_ms: 126972.507125\n  type: 'test'\n  ...\n# ordinary-source: compiling .NET compounds\n# ordinary-source: installing the relocated NuGet package offline without producer inputs\n# ordinary-source: 41534 assertions, 12 compiler rejections, 94 injected failures and two runtime-only reruns passed\n# reviewed-ir: compiling .NET compounds\n# reviewed-ir: installing the relocated NuGet package offline without producer inputs\n# reviewed-ir: 41534 assertions, 12 compiler rejections, 94 injected failures and two runtime-only reruns passed\n# Subtest: installed .NET lists preserve copied values on both source paths\nok 5 - installed .NET lists preserve copied values on both source paths\n  ---\n  duration_ms: 198193.729387\n  type: 'test'\n  ...\n# ordinary-source: compiling .NET lists\n# ordinary-source: installing the relocated NuGet package offline without producer inputs\n# ordinary-source: 99180 assertions, 12 compiler rejections, 214 injected failures and two runtime-only reruns passed\n# reviewed-ir: compiling .NET lists\n# reviewed-ir: installing the relocated NuGet package offline without producer inputs\n# reviewed-ir: 99180 assertions, 12 compiler rejections, 214 injected failures and two runtime-only reruns passed\n# Subtest: installed .NET variants preserve named constructors and runtime-only deployment\nok 6 - installed .NET variants preserve named constructors and runtime-only deployment\n  ---\n  duration_ms: 114553.201895\n  type: 'test'\n  ...\n# ordinary-source: compiling named .NET variants\n# ordinary-source: offline install without producer files or Lean/C compilers\n# ordinary-source: 209519 public assertions, 152 injected failures and two runtime-only reruns passed\n# reviewed-ir: compiling named .NET variants\n# reviewed-ir: offline install without producer files or Lean/C compilers\n# reviewed-ir: 209519 public assertions, 152 injected failures and two runtime-only reruns passed\n1..6\n# tests 6\n# suites 0\n# pass 6\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 848266.853478\n"
+  }
+}

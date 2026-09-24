@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "recursive-java-value-declarations",
+  "sourceHashes": {
+    "src/backends/jvm/copied-graph-values.mjs": "ac275aa17b794affe54796ef12aa513c17c121842dc59b6da7710ef453fee71c",
+    "src/backends/jvm/copied-graph-equality.mjs": "5b9e42ae0d520eaddd1ab71edb90ccdea44663013b8b8c9ce95f189fef809938",
+    "src/backends/c/copied-graph-layout.mjs": "d3682b19adfb22fc39560d60c03daeb4b1f14593b2f190a3c4327956148d9f3d",
+    "tests/jvm-copied-graph-values.test.mjs": "4800531ff204eb64ead6ecfe877273d166d0fa244a379ebbdaaa5284c9744ac3",
+    "tests/helpers/jvm-graph-values-fixture.mjs": "e56ca4b6445288501754959168286991c217413780439280c1b96ee217942690",
+    "tests/fixtures/structured-types/recursive-values.java": "fd53b6d1d795775950e660d69a79bdafa7cb06917d381b70756af5a4431386f4",
+    "tests/helpers/native-recursive-reviewed.mjs": "110c4cd45b95b3f0660cac0aae48f0db3af989b21e79fec83aa3baad75d3e439",
+    "tests/helpers/recursive-fixture.mjs": "18973bd78828c2bf98b3cf26191f2ff1b5d8fa32ab1d16dad31374b59a928dbb",
+    "tests/helpers/copied-fixture-install.mjs": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3",
+    "tests/helpers/type-corpus-jvm-tools.mjs": "5f21567ed7dfd107bad21bfe3e57a448d1a525890133b684cf6a7758e4a334a7"
+  },
+  "report": {
+    "compiledLean": false,
+    "generatedSourceHashes": {
+      "src/main/java/org/leanbridge/deep/GraphValues.java": "1e1bcdf7bf5dccf4e4783d3b8281b91b76d954e6b5c34492f50803b2f560d2cb",
+      "src/main/java/org/leanbridge/deep/Link.java": "54e68788ccfef5cc55033662fef9cd6ed4d8991b11aece38549fd682f6a317b6",
+      "src/main/java/org/leanbridge/deep/Option.java": "bab0fbbc0787197b655bf9a0e45267c753539cf3908cf8937aae39b52a6edd4d",
+      "src/main/java/org/leanbridge/deep/Pair.java": "aa531ef635881b1309dcb1ad47f91eb3070b9b4e9748fd64256006fe389312bb",
+      "src/main/java/org/leanbridge/deep/Result.java": "13d77dbbd0e3ffdfbf1b7e4c43406b33501c351f9535e0d7be299982b6d9cf87",
+      "src/main/java/org/leanbridge/deep/Unit.java": "b0f22a653ee55133955c5a357b0a85b2db8073c51c5b771a0ffba1d5bd7b53ee",
+      "src/main/java/org/leanbridge/linked/GraphValues.java": "79889b788a5de00c90436ac08a536673afb621dc05c1e3928623db6c885c42e4",
+      "src/main/java/org/leanbridge/linked/Link.java": "3d6afd4fb4e8f5041f74dfd252f6b3e5e8cf3cf166c375dcefc948960455165c",
+      "src/main/java/org/leanbridge/linked/Option.java": "56194c57dbd209f6e299f3791ffb8f554682b27226a2238340a2d9c092ba661b",
+      "src/main/java/org/leanbridge/linked/Pair.java": "6b62c7cced19f799787ba6819b65cafe0b9e1534997f65aa5603e2b88a6097cf",
+      "src/main/java/org/leanbridge/linked/Result.java": "6a7bbc352bab428bb668995ab99ecdcd12074f0b578286179b98ba59e5e19495",
+      "src/main/java/org/leanbridge/linked/Unit.java": "9548adb0ecc9338f9b9e041d0255152c6df99f9f0b46a92ce419ac4cb8bc2a21",
+      "src/main/java/org/leanbridge/names/Cursor.java": "8c463581e34c530295464402b8104038daeb97d3026d3cbf3e058e63628a806d",
+      "src/main/java/org/leanbridge/names/Entry.java": "f3f649906b50d3c66678e12bf174de9226b9bf2bea12d2878cc3fa86844b22ea",
+      "src/main/java/org/leanbridge/names/Frame.java": "fb21e67e19a068773de54965e1c0efebb75d1427ef1890b07f7210035cb8da4e",
+      "src/main/java/org/leanbridge/names/GraphValues.java": "1e66d9ebe063b761c60eb1e35906862d7ae7a73fe7c7d03de9acbc67b94446c3",
+      "src/main/java/org/leanbridge/names/Option.java": "118fcbd68465984d5dac9a906cfcda879657e4740f0ba697880f19cfe6943fff",
+      "src/main/java/org/leanbridge/names/Pair.java": "edb2773cf26c537633ac9fcf36fe7d0e259fa0f92295e07032c0a573393c2eb3",
+      "src/main/java/org/leanbridge/names/Result.java": "284188f2f63c8e61b28c947c8fd1a48a7e0cc07c2a14b7bc6614cc65e5a7ba54",
+      "src/main/java/org/leanbridge/names/Slots254.java": "4df6d8d38aa1f954309c4ecd839f2918c19395be83ad22a5f631c82323d57002",
+      "src/main/java/org/leanbridge/names/Slots256.java": "6f1d5f21cb79abad6cd35785b1f770cc5ee7592d20f4f15599c8b65c96e9e0e0",
+      "src/main/java/org/leanbridge/names/Unit.java": "80b30f116fe6f0e159ed5017f0d891f01c331b6639baadd3037e1e2ef1d44b1d",
+      "src/main/java/org/leanbridge/recursive/EmptyRecord.java": "ba529a9b86f37d2532485c879637b4e0b20bc83d6f5adea57773992e255bcbd6",
+      "src/main/java/org/leanbridge/recursive/Envelope.java": "b8a45697530cda42694cf25b6ca298e71422d20ecdd8108535f0155065d2e125",
+      "src/main/java/org/leanbridge/recursive/GraphValues.java": "4ee86ea48957af50ca7a172269e6e25c5e1ef6c3f9002d2f2faf6d4eac389199",
+      "src/main/java/org/leanbridge/recursive/LeftTree.java": "dcae3aa72e99f707ffb4f47e6d2586b8d2c0e5e14d662fd99485792171f0ed33",
+      "src/main/java/org/leanbridge/recursive/LeftTreeLeaf.java": "7864e4ca7230b7886d103b76531026463529c13dbebef344748e4550e610c4d2",
+      "src/main/java/org/leanbridge/recursive/LeftTreeNext.java": "27f8bb3ce0c3007f342ca5d6df2658f61fd411145bdab9489d71633f2c597afc",
+      "src/main/java/org/leanbridge/recursive/Marker.java": "05a65f65a3903a6fadc452b4c7ddfadfdd9a46f3e8c05d89753e5d23aabde02b",
+      "src/main/java/org/leanbridge/recursive/MarkerEmpty.java": "fc786efa86135343fd1f0928f3b996b30be2d480388707f2b3ff15bb469a9b88",
+      "src/main/java/org/leanbridge/recursive/MarkerNext.java": "aa9994230492d39ff1bf5477e00254f01c9507f7d60ae41a60765cafd974ea21",
+      "src/main/java/org/leanbridge/recursive/MarkerUnit.java": "0114e40ef0c3aa4cc5625f0df4dc7d85c9ac9f15277d7f8a83b13ea7b9cf4e3e",
+      "src/main/java/org/leanbridge/recursive/Never.java": "41ba3fc38515ad30e3d05fd6e3961456ef1c2a156d0af6003fca2ae5cab6d2c7",
+      "src/main/java/org/leanbridge/recursive/NeverAgain.java": "cde83a10c43263f933fcb8a0e9a0637867874d164443229f675961c34089527b",
+      "src/main/java/org/leanbridge/recursive/Option.java": "7812398e116a5b36669aef777306b7e58ae6f6f32e56a21e7d31f97592ff16f7",
+      "src/main/java/org/leanbridge/recursive/Pair.java": "f27e252c64a9d2c9bba6eae4dc3d7b449bcc06303f779ad131f3cc2a74f7a863",
+      "src/main/java/org/leanbridge/recursive/Result.java": "effa3fddef29391a475b97399e2ef714106cb058fe1a75cdcc2dc9c0c1fbe953",
+      "src/main/java/org/leanbridge/recursive/RightTree.java": "686a38a6d039158e546feba54264ee48cd97a845c60478484f0bf5874e37c583",
+      "src/main/java/org/leanbridge/recursive/RightTreeMany.java": "7b68d5e262c7f76b7d4d6f3296349e78124a2e7f490031d1cbe76c392e12787e",
+      "src/main/java/org/leanbridge/recursive/Scalars.java": "1b779df0d11939a7a716c5e2860f565fe487d86976880c22fe624bf7d80d9b4b",
+      "src/main/java/org/leanbridge/recursive/Spine.java": "e35a0db9a03efc24c42a20750b264bbc823fece12489c54349504b23d301d347",
+      "src/main/java/org/leanbridge/recursive/SpineLeaf.java": "d6addcf99228a33ebddb44ba7a3c871919c2dea798b0b86b20a905dfc04eeb82",
+      "src/main/java/org/leanbridge/recursive/SpineNext.java": "6292c6d8ef07cf6ca46ca85b1ed4feb0ef42ba74a49c6ef3fd456ffab3de2852",
+      "src/main/java/org/leanbridge/recursive/Tree.java": "8891343bdfe13d6ebf217f6de90b42b303e7999933d122e431cc8e91199a6b77",
+      "src/main/java/org/leanbridge/recursive/TreeBranch.java": "ca455996b0da01617b523b112ac5e44655dd187e4a9ca223dd8ed149d6e4b1e2",
+      "src/main/java/org/leanbridge/recursive/TreeLeaf.java": "49686f10cbff3b688fb8c232eaeb39a4c697771346d4d20399aa98abab99b699",
+      "src/main/java/org/leanbridge/recursive/Unit.java": "27a25aa7f09e953ab175584016bc2149ba67786efbb3de501ec74e43ed647dff",
+      "src/main/java/org/leanbridge/recursive/Wide.java": "21dee984fbec2601978472a233d505d3b488d1f7a87fbd4881b9e4e9dcb42db9",
+      "src/main/java/org/leanbridge/recursive/WideLeaf.java": "fe616501acce31f4ec80f3d44c317b8580f9164d9c4410cf16415da9131ab5f1",
+      "src/main/java/org/leanbridge/recursive/WideNext.java": "48fee164c1b8e8d03b9992b24362dc9471914b4a8473ce406a4640950dcca7fb"
+    },
+    "installedPackage": false,
+    "observation": {
+      "checks": 907,
+      "cycleRejections": 9,
+      "nativeCalls": 0,
+      "wideFields": 256
+    },
+    "probeSha256": "f92e122a2a83fd7ac9b1ef706dd613af4a0218d38b36be9946aa202aa1f70a0f",
+    "rejections": [
+      {
+        "diagnostic": "abstract; cannot be instantiated",
+        "name": "abstract-family"
+      },
+      {
+        "diagnostic": "incompatible types",
+        "name": "wrong-field"
+      },
+      {
+        "diagnostic": "incompatible types",
+        "name": "wrong-scalar"
+      },
+      {
+        "diagnostic": "private access",
+        "name": "immutable-field"
+      },
+      {
+        "diagnostic": "incompatible bounds",
+        "name": "wrong-option"
+      },
+      {
+        "diagnostic": "incompatible bounds",
+        "name": "wrong-result"
+      },
+      {
+        "diagnostic": "cannot find symbol",
+        "name": "unexported-alias"
+      },
+      {
+        "diagnostic": "final TreeBranch",
+        "name": "sealed-constructor"
+      },
+      {
+        "diagnostic": "sealed class",
+        "name": "closed-family"
+      },
+      {
+        "diagnostic": "cannot be accessed",
+        "name": "private-traversal"
+      },
+      {
+        "diagnostic": "incompatible types",
+        "name": "wrong-wide-field"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "log": {
+    "command": "LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test --test-name-pattern='types execute bounded' tests/jvm-copied-graph-values.test.mjs",
+    "sha256": "dfb8e7fe54034a6ba40872e7d31b9e7a5058c88f192e08fdf16345c41cbd24a5",
+    "text": "TAP version 13\n# Subtest: Java recursive types execute bounded equality, hashing, patterns and wide constructors\nok 1 - Java recursive types execute bounded equality, hashing, patterns and wide constructors\n  ---\n  duration_ms: 10125.782557\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 10234.606772\n"
+  }
+}

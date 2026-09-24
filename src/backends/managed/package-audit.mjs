@@ -5,6 +5,8 @@
  */
 
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import { generateCopiedDotnetGraphPackage } from "../dotnet/copied-graph-package.mjs";
+import { generateCopiedJvmGraphPackage } from "../jvm/copied-graph-package.mjs";
 
 /**
  * Reports managed package audit failures with stable machine-readable codes and structured diagnostic context.
@@ -65,13 +67,22 @@ export const auditManagedBindingPackage = (ir, files, target) => {
 	{
 		if(typeof files[path] !== "string") fail("missing-file", `the generated ${target} package is missing ${path}`, { path });
 	}
+	// Copied nominal types may legitimately be called NativeLibrary or MemorySegment.
+	// For this generator require the entire public source to match regeneration;
+	// never exempt a matching word in arbitrary caller-supplied public source.
+	const graph = target === "dotnet" && manifest.generator === "dotnet-copied-graph-v1"
+		? generateCopiedDotnetGraphPackage(ir) : target === "jvm" && manifest.generator === "jvm-copied-graph-v1"
+			? generateCopiedJvmGraphPackage(ir) : null;
+	if(graph && JSON.stringify(manifest.publicFiles) !== JSON.stringify(JSON.parse(graph["binding-manifest.json"]).publicFiles))
+		fail("private-ffi-public", `Recursive ${target} public file selection differs from its checked generator`);
 	for(const path of manifest.publicFiles ?? [])
 	{
 		const source = files[path];
 		if(typeof source !== "string") fail("missing-public-file", `the generated ${target} package is missing public source ${path}`);
 		// Ruby contract comments may name a copied alias Pointer or Fiddle. They are not declarations.
 		const declarations = target === "ruby" ? source.replace(/^[\t ]*#[^\r\n]*/gm, "") : source;
-		if(forbiddenPublic[target].test(declarations)) fail("private-ffi-public", `${path} exposes private ${target} FFI terms`);
+		if(graph ? source !== graph[path] : forbiddenPublic[target].test(declarations))
+			fail("private-ffi-public", `${path} exposes private ${target} FFI terms or differs from its checked public source`);
 	}
 	if(!Array.isArray(manifest.capabilityGaps) || manifest.capabilityGaps.length === 0)
 	{

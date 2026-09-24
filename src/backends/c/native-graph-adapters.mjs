@@ -10,12 +10,12 @@ import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
 import { componentRecursiveHelper } from "../../build/component-recursive-lean.mjs";
 import { generateCopiedCGraphTypes } from "./copied-graph-layout.mjs";
 
-const runtime = `
+const runtime = wordBits => `
 #include <lean/lean.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
-_Static_assert(sizeof(size_t) == 8 && sizeof(void *) == 8, "native graph transport requires 64-bit Lean");
+_Static_assert(sizeof(size_t) == ${wordBits / 8} && sizeof(void *) == ${wordBits / 8}, "native graph transport requires ${wordBits}-bit Lean");
 _Static_assert(sizeof(bool) == 1, "native graph transport requires byte Bool storage");
 #ifndef LB_GRAPH_MALLOC
 #define LB_GRAPH_MALLOC malloc
@@ -52,7 +52,10 @@ static inline uint32_t ng_charge(ng_budget *budget, size_t count, size_t width) 
   budget->bytes -= count * width; return NG_OK;
 }
 static inline int ng_pointer(const void *pointer, size_t bytes, size_t alignment) {
-  return pointer && (uintptr_t)pointer % alignment == 0 && bytes <= UINTPTR_MAX - (uintptr_t)pointer;
+${wordBits === 32 ? `#ifdef __wasm__
+  if ((uint64_t)(uintptr_t)pointer + bytes > (uint64_t)__builtin_wasm_memory_size(0) * 65536) return 0;
+#endif
+` : ""}  return pointer && (uintptr_t)pointer % alignment == 0 && bytes <= UINTPTR_MAX - (uintptr_t)pointer;
 }
 static inline uint32_t ng_enter(const void *value, size_t type, size_t depth, ng_budget *budget) {
   if (depth > ${componentRecursiveLimits.valueDepth} || !budget->nodes) return NG_LIMIT;
@@ -129,15 +132,16 @@ static inline uint32_t ng_nat_out(lean_object *value, ng_arena *arena, const uin
  * @param abi - Matching total-carrier signatures and nominal graph.
  * @param options - Optional shared-runtime lifecycle for compiled components.
  * @param options.initializer - Verified component initializer, absent for isolated transport tests.
+ * @param options.wordBits - Lean and C pointer width, either 32 or 64.
  */
-export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null } = {}) => {
+export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null, wordBits = 64 } = {}) => {
 	assertComponentRecursiveBindings(abi, ir);
 	if(initializer !== null && (typeof initializer !== "string" || !/^initialize_LeanBridgeNative[0-9a-f]{16}$/.test(initializer))) throw new TypeError("Invalid native graph initializer identity");
-	const { layout, header: typesHeader } = generateCopiedCGraphTypes(ir);
+	const { layout, header: typesHeader } = generateCopiedCGraphTypes(ir, { wordBits });
 	const table = new Map(layout.nodes.map((node, index) => [node.id, { ...node, index }]));
 	const walker = id => `ng_${sha256(id).slice(0, 20)}`;
 	const helper = node => componentRecursiveHelper(abi, node.ref);
-	const lines = [`#include "${layout.prefix}-graph.h"`, runtime];
+	const lines = [`#include "${layout.prefix}-graph.h"`, runtime(wordBits)];
 	if(initializer) lines.push('#include "lean_bridge_native_runtime.h"'
 		, '#if !defined(LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION) || LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION != 1'
 		, '#error "native graph calls require the retirement-aware shared runtime"', "#endif"
@@ -259,7 +263,11 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null 
 			{
 				const suffix = { uint32: "_uint32", int32: "_uint32", char: "_uint32", uint64: "_uint64", int64: "_uint64", usize: "_usize", isize: "_usize", float32: "_float32", float64: "_float" }[scalar] ?? "";
 				const bound = { unit: "0", bool: "1", uint8: "UINT8_MAX", int8: "UINT8_MAX", uint16: "UINT16_MAX", int16: "UINT16_MAX", uint32: "UINT32_MAX", int32: "UINT32_MAX", char: "0x10ffff" }[scalar];
-				if(bound) output.push(`if (!lean_is_scalar(child) || lean_unbox(child) > ${bound}) { lean_dec(child); return NG_RESULT; }`);
+				// On wasm32 UInt32, Int32 and Char are boxed, unlike the 64-bit
+				// immediate representation. Check the scalar box before unboxing.
+				const boxedWidth = wordBits === 32 ? { uint32: 4, int32: 4, char: 4, uint64: 8, int64: 8, usize: 4, isize: 4, float32: 4, float64: 8 }[scalar] : null;
+				if(boxedWidth) output.push(`if (lean_is_scalar(child) || !lean_is_ctor(child) || lean_ptr_tag(child) != 0 || lean_ctor_num_objs(child) != 0 || lean_object_byte_size(child) < sizeof(lean_ctor_object) + ${boxedWidth}) { lean_dec(child); return NG_RESULT; }`);
+				else if(bound) output.push(`if (!lean_is_scalar(child) || lean_unbox(child) > ${bound}) { lean_dec(child); return NG_RESULT; }`);
 				if(scalar.startsWith("int") || scalar === "isize") output.push(`${scalar === "isize" ? "size_t" : `u${name}`} bits = lean_unbox${suffix}(child);`, "memcpy(out, &bits, sizeof(*out));");
 				else output.push(`*out = (${name})lean_unbox${suffix}(child);`);
 				if(scalar === "char") output.push("if (*out > 0x10ffff || (*out >= 0xd800 && *out <= 0xdfff)) status = NG_RESULT;");

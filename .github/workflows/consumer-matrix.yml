@@ -366,6 +366,19 @@ jobs:
           export LEAN_BRIDGE_COMPOSER="$(command -v composer)"
           source scripts/env.sh
           npm run test:type-corpus:php-native && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=php-native node --test tests/type-corpus-reviewed-native.test.mjs
+          LEAN_BRIDGE_PHP_GRAPH_VALUES_TEST=1 node --test tests/php-copied-graph-values.test.mjs
+          test -s build/recursive/php-values.json
+          LEAN_BRIDGE_PHP_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PHP_GRAPH_NATIVE_TEST=1 node --test tests/php-copied-graph-conversions.test.mjs
+          test -s build/recursive/php-conversions.json
+          test -s build/recursive/php-native.json
+          LEAN_BRIDGE_PHP_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PHP_GRAPH_INSTALLED_TEST=1 node --test tests/php-graph-package.test.mjs
+          test -s build/recursive/php-package-cold.json
+          test -s build/recursive/php-packages.json
+          LEAN_BRIDGE_PHP_GRAPH_REPRO_TEST=1 node --test tests/php-graph-package.test.mjs
+          test -s build/recursive/php-reproducibility.json
+          LEAN_BRIDGE_PHP_GRAPH_LOADING_TEST=1 node --test tests/php-graph-package.test.mjs
+          test -s build/recursive/php-composition.json
+          test -s build/recursive/php-conflicts.json
           LEAN_BRIDGE_CHAR_PROFILES=php-native node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=php-native node --test tests/native-words.test.mjs
           LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests/php-callables.test.mjs tests/php-callable-contract.test.mjs
@@ -390,6 +403,14 @@ jobs:
         with:
           name: type-corpus-php-native-${{ github.sha }}
           path: |
+            build/recursive/php-values.json
+            build/recursive/php-conversions.json
+            build/recursive/php-native.json
+            build/recursive/php-package-cold.json
+            build/recursive/php-packages.json
+            build/recursive/php-reproducibility.json
+            build/recursive/php-composition.json
+            build/recursive/php-conflicts.json
             build/type-corpus/php-native.json
             build/type-corpus/reviewed-native-php-native.json
             build/char-native/php-native.json
@@ -432,6 +453,7 @@ jobs:
           export LEAN_WASM_EMSDK="$GITHUB_WORKSPACE/.toolchains/emsdk-php-wasm"
           bash scripts/build-lean-runtime.sh
           node --test tests/php-wasm-ordinary.test.mjs
+          test -s build/recursive/php-wasm-shared-regressions.json
       - name: Compare installed PHP-Wasm packages with the shared Lean corpus
         id: type_corpus_php_wasm
         continue-on-error: true
@@ -439,9 +461,22 @@ jobs:
           source scripts/env.sh
           npm run test:type-corpus:php-wasm
           npm run test:type-corpus:reviewed-php-wasm
+          LEAN_BRIDGE_PHP_WASM_GRAPH_VALUES_TEST=1 node --test tests/php-copied-graph-values.test.mjs
+          test -s build/recursive/php-wasm-values.json
           LEAN_BRIDGE_CHAR_PROFILES=php-wasm node --test tests/native-char.test.mjs
           LEAN_BRIDGE_WORD_PROFILES=php-wasm node --test tests/native-words.test.mjs
           LEAN_BRIDGE_PHP_WASM_CALLABLE_TEST=1 node --test tests/php-wasm-callables.test.mjs tests/php-wasm-callable-contract.test.mjs
+          LEAN_BRIDGE_WASM32_RECURSIVE_TEST=1 node --test tests/wasm32-recursive-transport.test.mjs
+          test -s build/recursive/wasm32-transport.json
+          LEAN_BRIDGE_PHP_WASM_GRAPH_ZEND_TEST=1 LEAN_BRIDGE_PHP_WASM_GRAPH_LEAN_TEST=1 node --test tests/php-copied-graph-zend.test.mjs
+          test -s build/recursive/php-wasm-zend.json
+          test -s build/recursive/php-wasm-zend-lean.json
+          LEAN_BRIDGE_PHP_WASM_GRAPH_PACKAGE_TEST=1 node --test tests/php-wasm-graph-package.test.mjs
+          test -s build/recursive/php-wasm-graph-packages.json
+          LEAN_BRIDGE_PHP_WASM_GRAPH_REPRO_TEST=1 node --test tests/php-wasm-graph-reproduction.test.mjs
+          test -s build/recursive/php-wasm-graph-reproduction.json
+          LEAN_BRIDGE_PHP_WASM_GRAPH_LOADING_TEST=1 node --test tests/php-wasm-graph-loading.test.mjs
+          test -s build/recursive/php-wasm-graph-loading.json
           LEAN_BRIDGE_PHP_WASM_COMPOUND_TEST=1 node --test tests/php-wasm-compounds.test.mjs tests/php-wasm-compound-contract.test.mjs tests/php-wasm-compound-zend.test.mjs
           test -s build/compounds/php-wasm.json
           test -s build/compounds/php-wasm-zend-faults.json
@@ -465,6 +500,14 @@ jobs:
         with:
           name: type-corpus-php-wasm-${{ github.sha }}
           path: |
+            build/recursive/php-wasm-values.json
+            build/recursive/wasm32-transport.json
+            build/recursive/php-wasm-zend.json
+            build/recursive/php-wasm-zend-lean.json
+            build/recursive/php-wasm-graph-packages.json
+            build/recursive/php-wasm-graph-reproduction.json
+            build/recursive/php-wasm-graph-loading.json
+            build/recursive/php-wasm-shared-regressions.json
             build/type-corpus/php-wasm.json
             build/type-corpus/reviewed-wasm-php-wasm.json
             build/char-native/php-wasm.json
@@ -898,6 +941,14 @@ jobs:
           LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs
           test -s build/recursive/dotnet-conversions.json
           test -s build/recursive/dotnet-native.json
+          LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+          test -s build/recursive/dotnet-packages.json
+          LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+          test -s build/recursive/dotnet-composition.json
+          LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+          test -s build/recursive/dotnet-reproducibility.json
+          LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs
+          test -s build/recursive/dotnet-conflicts.json
           test -s build/type-corpus/dotnet.json
           test -s build/type-corpus/reviewed-native-dotnet.json
       - name: Upload the .NET real-Lean type corpus report
@@ -921,6 +972,10 @@ jobs:
             build/recursive/dotnet-values.json
             build/recursive/dotnet-conversions.json
             build/recursive/dotnet-native.json
+            build/recursive/dotnet-packages.json
+            build/recursive/dotnet-composition.json
+            build/recursive/dotnet-reproducibility.json
+            build/recursive/dotnet-conflicts.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -968,6 +1023,20 @@ jobs:
           test -s build/variants/jvm.json
           LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs
           test -s build/equality/jvm.json
+          LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs
+          test -s build/recursive/jvm-values.json
+          LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 node --test tests/jvm-copied-graph-conversions.test.mjs
+          test -s build/recursive/jvm-conversions.json
+          test -s build/recursive/jvm-native.json
+          LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 node --test tests/jvm-copied-graph-kotlin.test.mjs
+          LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 node --test tests/jvm-graph-package.test.mjs
+          test -s build/recursive/kotlin-values.json
+          test -s build/recursive/jvm-package-cold.json
+          test -s build/recursive/jvm-packages.json
+          LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test tests/jvm-graph-package.test.mjs
+          test -s build/recursive/jvm-reproducibility.json
+          test -s build/recursive/jvm-composition.json
+          test -s build/recursive/jvm-conflicts.json
           LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs
           test -s build/collections/jvm-conversions.json
           LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs
@@ -991,6 +1060,15 @@ jobs:
             build/aliases/jvm.json
             build/variants/jvm.json
             build/equality/jvm.json
+            build/recursive/jvm-values.json
+            build/recursive/jvm-conversions.json
+            build/recursive/jvm-native.json
+            build/recursive/kotlin-values.json
+            build/recursive/jvm-package-cold.json
+            build/recursive/jvm-packages.json
+            build/recursive/jvm-reproducibility.json
+            build/recursive/jvm-composition.json
+            build/recursive/jvm-conflicts.json
             build/collections/jvm-conversions.json
             build/collections/jvm.json
           if-no-files-found: error
@@ -1082,6 +1160,10 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_EQUALITY_TEST=1 node --test tests/dotnet-value-equality.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_TEST=1 node --test tests/dotnet-copied-graph-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_NATIVE_TEST=1 node --test tests/dotnet-copied-graph-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_DOTNET_GRAPH_INSTALLED_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_COMPOSITION_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_REPRODUCIBILITY_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_GRAPH_CONFLICT_TEST=1 node --test tests/dotnet-graph-package.test.mjs"
               if [ "${{ steps.ordinary_dotnet.outcome }}" != success ] || [ "${{ steps.type_corpus_dotnet.outcome }}" != success ]; then
                 test_result=failed
                 executed=false
@@ -1095,6 +1177,11 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_VARIANT_TEST=1 node --test tests/jvm-variants.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_EQUALITY_TEST=1 node --test tests/jvm-value-equality.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_TEST=1 node --test tests/jvm-copied-graph-values.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_KOTLIN_GRAPH_TEST=1 node --test tests/jvm-copied-graph-kotlin.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 node --test tests/jvm-graph-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test tests/jvm-graph-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_JVM_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_JVM_GRAPH_NATIVE_TEST=1 node --test tests/jvm-copied-graph-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CONVERSIONS_TEST=1 node --test tests/jvm-collection-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_PREFLIGHT=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collection-callers.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs"

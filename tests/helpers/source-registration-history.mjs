@@ -8,6 +8,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertTestManifestRegistration } from "./source-registration-upgrade.mjs";
+import { assertNativeAssetTamperSourceUpdate } from "./native-asset-tamper-history.mjs";
+import { assertInventoryOrderVerification, reverseInventoryFileOrder } from "./source-inventory-order.mjs";
 
 const metadata = new Set(["package.json", "config/cli-package.v1.json", "config/checked-javascript.json", "nix/perl-engine-source-boundary.json", ".github/workflows/consumer-matrix.yml", ".github/workflows/perl-consumer.yml"]);
 const sourcePath = /^src\/(?:backends|build|release)\/[a-z0-9/-]+\.mjs$/;
@@ -16,10 +18,10 @@ const checkerCall = '\tif(await assertSourceRegistrationUpdate(path, source, exp
 const allowedLine = (path, line) => {
 	if(typeof line !== "string" || line.includes("\n") || line.includes("\r")) return false;
 	if(path === ".github/workflows/consumer-matrix.yml" || path === ".github/workflows/perl-consumer.yml") return [
-		/^ {10}(?:LEAN_BRIDGE_[A-Z_]+_TEST=1 )+node --test tests\/[a-z0-9-]+\.test\.mjs$/
+		/^ {10}(?:LEAN_BRIDGE_[A-Z0-9_]+_TEST=1 )+node --test tests\/[a-z0-9-]+\.test\.mjs$/
 		, /^ {10}test -s build\/recursive\/[a-z0-9-]+\.json$/
 		, /^ {12}build\/recursive\/[a-z0-9-]+\.json$/
-		, /^ {14}consumer_command="\$consumer_command && (?:LEAN_BRIDGE_[A-Z_]+_TEST=1 )+node --test tests\/[a-z0-9-]+\.test\.mjs"$/
+		, /^ {14}consumer_command="\$consumer_command && (?:LEAN_BRIDGE_[A-Z0-9_]+_TEST=1 )+node --test tests\/[a-z0-9-]+\.test\.mjs"$/
 	].some(pattern => pattern.test(line))
 		|| (path === ".github/workflows/consumer-matrix.yml" && line === '          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"');
 	if(path === "config/checked-javascript.json")
@@ -51,6 +53,11 @@ export const verifyAddedSourceRegistrations = (path, source, expected, updates) 
 		const candidates = updates.filter(item => item.path === path && item.currentSha256 === current);
 		assert.equal(candidates.length, 1, "Missing or ambiguous source registration lineage");
 		const update = candidates[0];
+		if(update.kind === "reorder-files")
+		{
+			source = reverseInventoryFileOrder(path, source, update);
+			continue;
+		}
 		assert.ok(Array.isArray(update.addedLines) && update.addedLines.length > 0);
 		assert.equal(new Set(update.addedLines).size, update.addedLines.length);
 		for(const line of update.addedLines)
@@ -72,6 +79,8 @@ export const verifyAddedSourceRegistrations = (path, source, expected, updates) 
  * @param expected - Immutable baseline digest.
  */
 export const assertSourceRegistrationUpdate = async (path, source, expected) => {
+	if(assertInventoryOrderVerification(path, source, expected)) return true;
+	if(await assertNativeAssetTamperSourceUpdate(path, source, expected)) return true;
 	if(await assertTestManifestRegistration(path, source, expected)) return true;
 	if(path === "tests/helpers/test-registration-history.mjs")
 	{

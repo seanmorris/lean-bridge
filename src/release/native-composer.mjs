@@ -13,6 +13,7 @@ import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { ordinaryPhpEvidence } from "../build/native-php-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCopiedPhpPackage } from "../backends/php/copied-values.mjs";
+import { generateCopiedPhpGraphPackage } from "../backends/php/copied-graph-package.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { auditPhpPackage } from "../backends/php/package-audit.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -28,10 +29,12 @@ export const packageOrdinaryPhp = async options => {
 	validateOrdinaryPhpSettings(settings);
 	if(!/^2\.\d+$/.test(glibcMinimumVersion)) throw new TypeError("Invalid PHP native glibc floor");
 	const { model, projection, evidence, receipt } = await ordinaryPhpEvidence(options);
-	const name = settings.name ?? `lean-bridge/${projection.surface.prefix.replaceAll("_", "-")}`;
+	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
+	const name = settings.name ?? `lean-bridge/${prefix.replaceAll("_", "-")}`;
 	const version = settings.version ?? (model.component.version === "0.0.0-local" ? "0.0.0" : model.component.version);
 	validateOrdinaryPhpSettings({ name, version });
-	const root = join(working, "packages/php-native/composer"), files = generateCopiedPhpPackage(model.bindingIr, evidence);
+	const root = join(working, "packages/php-native/composer"), files = model.copiedGraph
+		? generateCopiedPhpGraphPackage(model.bindingIr, evidence) : generateCopiedPhpPackage(model.bindingIr, evidence);
 	auditPhpPackage(model.bindingIr, files);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (source, path) => save(path, await readFile(source));
@@ -42,7 +45,10 @@ export const packageOrdinaryPhp = async options => {
 		await copy(join(nativeRoot, path), `lean-bridge/component/${path}`);
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined) await copy(join(nativeRoot, "lake-generated-sources.json"), "lean-bridge/component/lake-generated-sources.json");
 	await copy(join(adapterRoot, "native-c-adapter.json"), "lean-bridge/native-c-adapter.json");
-	await copy(join(adapterRoot, `include/${projection.surface.prefix}.h`), `lean-bridge/include/${projection.surface.prefix}.h`);
+	if(model.copiedGraph)
+		for(const path of [`include/detail/${prefix}-graph-types.h`, `include/detail/${prefix}-graph.h`, "src/native.c", "src/php-graph-clear.c"])
+			await copy(join(adapterRoot, path), `lean-bridge/adapter/${path}`);
+	else await copy(join(adapterRoot, `include/${prefix}.h`), `lean-bridge/include/${prefix}.h`);
 	await copy(join(runtimeRoot, "runtime.json"), "lean-bridge/runtime.json");
 	await copy(join(leanPrefix, "LICENSE"), "licenses/Lean-LICENSE");
 	await copy(join(leanPrefix, "LICENSES"), "licenses/Lean-LICENSES");

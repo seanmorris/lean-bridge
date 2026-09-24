@@ -151,8 +151,9 @@ comparison rules.
 These constructors compose with supported primitives, arrays, records and each
 other. Type nesting stops at 32 levels; the existing conversion budgets apply.
 Both PHP transports also accept the [named variants](#named-copied-variants) below.
-Compound callables, resource-containing copies and recursive copied types
-remain unsupported. See the
+Compound callables and resource-containing copies remain unsupported.
+Recursive native and PHP-Wasm packages use the [bounded graph conversion](#recursive-values)
+described below. See the
 [native compound checks](evidence/php-native-compounds-20260920.md) and
 [PHP-Wasm compound checks](evidence/php-wasm-compounds-20260920.md).
 
@@ -192,9 +193,10 @@ objects still follow their own PHP semantics. `===` compares object identity,
 and `==` applies PHP's comparison rules. Use `equals($other)` for exact nested
 content comparison. PHP does not check match exhaustiveness.
 
-Native tags and union layouts stay private. The 32-level schema limit and
-separate 16 MiB conversion budgets still apply. Generic, indexed, proof-bearing,
-recursive, callable and identity-bearing payloads need further support.
+Native tags and union layouts stay private. The acyclic adapter uses a 32-level
+schema limit and separate 16 MiB conversion budgets. Native recursive packages
+use the limits below. Generic, indexed, proof-bearing, callable and
+identity-bearing payloads need further support.
 
 PHP-Wasm uses the same named cases with its 32-bit payload mappings. Inside
 PHP code loaded through the package's [installed descriptor](#ordinary-php-wasm-packages),
@@ -217,6 +219,70 @@ PHP API with startup or first-call loading. Invalid inputs reject before a lazy
 component loads. [Native PHP checks](evidence/php-native-variants-20260921.md)
 and [PHP-Wasm checks](evidence/php-wasm-variants-20260921.md) cover both source
 paths, all constructors, independent copied results and failure cleanup.
+
+### Recursive values
+
+Native Composer and PHP-Wasm packages can expose recursive records and variant families.
+The generated classes keep their named fields and constructor identity. Calls
+accept shared acyclic subvalues, reject cycles and return independent copies.
+This API currently has installed tests for ordinary Lean source and reviewed IR;
+final cross-language acceptance remains open. PHP-Wasm also has
+[installed npm/Composer checks](contributing/testing.md#recursive-php-wasm-packages)
+and [separate conversion and cleanup tests](contributing/testing.md#recursive-php-wasm-conversions).
+
+For the native recursive acceptance package, save this as `recursive.php`
+beside your installed `vendor` directory:
+
+```php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+use LeanRecursive\{SpineLeaf, SpineNext};
+use function LeanRecursive\{spine, grow};
+
+$input = new SpineNext(new SpineLeaf(7));
+$copy = spine($input);
+echo $copy->equals($input) ? 'equal' : 'different', PHP_EOL;
+echo $copy === $input ? 'same object' : 'independent copy', PHP_EOL;
+
+$longer = grow($input);
+echo $longer->value->equals($input) ? 'one level longer' : 'unexpected', PHP_EOL;
+```
+
+Run `php recursive.php`. Composer handles Brick Math, and the package loads
+its compiled Lean libraries automatically. Recursive values can contain all
+nineteen primitive types, arrays, Lists, options, results and nested products.
+Aliases retain their target PHP values without extra wrappers.
+
+Calls allow 128 value levels and 262,144 visited values. Native copies and
+accounted PHP storage each have a 16 MiB budget. These limits do not measure
+Lean working memory or every PHP allocation overhead. Invalid inputs reject
+before Lean loads. Native output is released even if conversion fails;
+malformed native output retires the shared runtime. Copied values returned
+before retirement remain usable.
+
+See the [Composer acceptance commands](contributing/testing.md#recursive-composer-packages).
+
+For PHP-Wasm, use the prepared npm descriptor and its companion Composer
+package as described in [ordinary PHP-Wasm packages](#ordinary-php-wasm-packages). The descriptor mounts all five
+generated PHP files. Startup and first-call loading use the same public API;
+invalid inputs do not fetch a lazy component. No FFI extension or compiler is
+needed by the consumer.
+
+Use `new SpineLeaf(BigInteger::of(7))` in the PHP-Wasm version of this example,
+after importing `Brick\Math\BigInteger`. `UInt32`, `UInt64`, `Int64`, `Nat`,
+`Int`, and `USize` use `BigInteger` on that 32-bit host. `ISize` uses a signed
+32-bit PHP integer. The graph API keeps the same 128-level and 262,144-visit
+limits, with separate 16 MiB PHP, Zend and native-copy accounting budgets.
+
+The [installed PHP-Wasm record](evidence/php-wasm-recursive-packages-20260924.md)
+covers direct and bundled npm descriptors, Composer applications, Node and
+Chromium. [Independent rebuilds and shared-package checks](evidence/php-wasm-recursive-loading-20260924.md)
+reproduce the archives and verify one runtime across recursive and acyclic
+packages, including duplicate descriptors, conflicting builds, failed lazy
+loads and permanent retirement. [Compatibility checks](evidence/php-wasm-shared-regressions-20260924.md)
+also run the original verifier and packager against fresh nonrecursive builds.
+Native-backend regression closure and final cross-language acceptance remain open.
 
 ### Lean Lists
 

@@ -78,8 +78,12 @@ const components = (ids, edges) => {
  * declaration order never chooses which public field becomes a pointer.
  *
  * @param ir - Validated copied Binding IR with semantic names and constructors.
+ * @param options - Target machine-word width, independent of fixed-width integers.
+ * @param options.wordBits - Lean and C pointer width, either 32 or 64.
  */
-export const compileCopiedCGraphLayout = ir => {
+export const compileCopiedCGraphLayout = (ir, { wordBits = 64 } = {}) => {
+	if(![32, 64].includes(wordBits)) fail("machine-word width must be 32 or 64");
+	const targetScalars = { ...scalars, usize: `uint${wordBits}_t`, isize: `int${wordBits}_t` };
 	validateBindingIr(ir);
 	const definitions = componentRecordDefinitions(ir, true);
 	const { graph, resolve } = compileComponentCopiedGraph({ schemaVersion: 1, root: { kind: "primitive", name: "unit" }, types: definitions });
@@ -138,9 +142,9 @@ export const compileCopiedCGraphLayout = ir => {
 		const normalized = reference(ref), id = identity(normalized);
 		if(nodes.has(id)) return id;
 		const definition = resolve(normalized), kind = definition.kind === "apply" ? definition.constructor : definition.kind;
-		const aggregate = kind !== "primitive" || !scalars[definition.name];
+		const aggregate = kind !== "primitive" || !targetScalars[definition.name];
 		let name;
-		if(kind === "primitive") name = scalars[definition.name] ?? `${prefix}_scalar_${definition.name}_t`;
+		if(kind === "primitive") name = targetScalars[definition.name] ?? `${prefix}_scalar_${definition.name}_t`;
 		else if(normalized.kind === "named")
 		{
 			const source = sourceNames.get(normalized.id), member = cIdentifier(source);
@@ -243,7 +247,9 @@ export const compileCopiedCGraphLayout = ir => {
 		}
 		weights.set(id, weight);
 	}
-	return freeze({ schemaVersion: 1, prefix, roots, aliases, inlineValueLimit
+	return freeze({ schemaVersion: 1
+		, ...wordBits === 32 ? { wordBits } : {}
+		, prefix, roots, aliases, inlineValueLimit
 		, nodes: ids.map(id => nodes.get(id)), order
 		, boxedGroups: groups.filter(group => group.length > 1 || inline(group[0]).includes(group[0])) });
 };
@@ -255,9 +261,11 @@ export const compileCopiedCGraphLayout = ir => {
  * This header alone neither loads Lean nor supplies callable exports.
  *
  * @param ir - Pure copied Binding IR accepted by the finite layout planner.
+ * @param options - Checked target width passed to the finite layout planner.
+ * @param options.wordBits - Lean and C pointer width, either 32 or 64.
  */
-export const generateCopiedCGraphTypes = ir => {
-	const layout = compileCopiedCGraphLayout(ir), table = new Map(layout.nodes.map(node => [node.id, node]));
+export const generateCopiedCGraphTypes = (ir, { wordBits = 64 } = {}) => {
+	const layout = compileCopiedCGraphLayout(ir, { wordBits }), table = new Map(layout.nodes.map(node => [node.id, node]));
 	const guard = `${layout.prefix.toUpperCase()}_COPIED_GRAPH_H`;
 	const lines = [`#ifndef ${guard}`, `#define ${guard}`, "#include <stdbool.h>", "#include <stddef.h>", "#include <stdint.h>", "#include <string.h>", ""];
 	for(const node of layout.nodes.filter(node => node.aggregate)) lines.push(`typedef struct ${node.name} ${node.name};`);

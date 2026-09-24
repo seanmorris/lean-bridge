@@ -195,6 +195,44 @@ The [Java conversion and ownership rules](java.md#tagged-variants) apply to both
 languages. [Installed checks](../evidence/kotlin-collections-20260922.md) compile each
 consumer independently and run it without an installed compiler.
 
+### Recursive values
+
+The prepared JAR exposes separate Kotlin classes for recursive records and
+sealed constructor families. Fields use their declared Kotlin types and remain
+non-nullable. For the `org.leanbridge:recursive:1.0.0` acceptance archive, save
+`Example.kt`:
+
+```kotlin
+import org.leanbridge.recursive.kotlin.*
+
+fun main() {
+    val input: Spine = SpineNext(SpineLeaf(41))
+    val copy = Api.spine(input)
+    println(copy == input)  // true
+    println(copy === input) // false
+    val trees = arrayOf(Api.empty())
+    val copies = Api.forest(trees)
+    println(copies !== trees)       // true
+    println(copies[0] !== trees[0]) // true
+}
+```
+
+Use the [prepared JAR compilation commands](#call-an-ordinary-lean-package).
+Kotlin metadata retains nested array types. Primitive arrays use their native
+Kotlin forms; nominal values use `Array<T>`. Recursive Java and Kotlin values are
+distinct types, so use the API and value classes from the same subpackage.
+
+Generated `val` fields cannot be reassigned, but arrays remain mutable. Native
+results own independently copied arrays. Constructors exceeding the JVM
+argument-slot limit use typed builders, with every field required before
+`build()`. The [recursive Java budgets and validation rules](java.md#recursive-values)
+apply to both APIs, including cycle rejection and the 128-level value limit.
+
+The [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)
+execute this example on both compiler source paths. Final cross-language
+acceptance remains in progress; the conversion table retains the last accepted
+inventory.
+
 ### Callbacks and returned Lean functions
 
 Use Kotlin lambdas with the generated Java functional interfaces. Add these calls to the Maple example's `main` function:

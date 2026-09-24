@@ -46,7 +46,9 @@ test("recursive Python admission checks all selected hosts and protects loader n
 	assert.equal(model.prefix, "recursive");
 	assert.equal(compileNativeGraphProjection(ir, ["c", "cpp", "cargo", "pypi"]).layoutSha256, model.layoutSha256);
 	assert.equal(compileNativeGraphProjection(ir, ["pypi", "rubygems"]).layoutSha256, model.layoutSha256);
-	for(const targets of [[], ["pypi", "pypi"], ["pypi", "cpan"], ["pypi", "maven"]])
+	for(const host of ["maven", "php-native"])
+		assert.equal(compileNativeGraphProjection(ir, ["pypi", host]).layoutSha256, model.layoutSha256);
+	for(const targets of [[], ["pypi", "pypi"], ["pypi", "cpan"], ["pypi", "wit-wasi"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 	for(const name of ["native", "assets", "scope", "value", "_GraphNative"])
 	{

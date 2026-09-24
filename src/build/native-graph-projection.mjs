@@ -8,6 +8,9 @@ import { compileCopiedRustGraphPackageModel } from "../backends/rust/copied-grap
 import { compileCopiedPythonGraphPackageModel } from "../backends/python/copied-graph-package.mjs";
 import { compileCopiedRubyGraphPackageModel } from "../backends/ruby/copied-graph-package.mjs";
 import { compileCopiedPerlGraphPackageModel } from "../backends/perl/copied-graph-package.mjs";
+import { compileCopiedDotnetGraphPackageModel } from "../backends/dotnet/copied-graph-package.mjs";
+import { compileCopiedJvmGraphPackageModel } from "../backends/jvm/copied-graph-package.mjs";
+import { compileCopiedPhpGraphPackageModel } from "../backends/php/copied-graph-package.mjs";
 
 /**
  * Validate all requested graph hosts without inventing an extra public C target.
@@ -17,8 +20,8 @@ import { compileCopiedPerlGraphPackageModel } from "../backends/perl/copied-grap
  * @param moduleName - Explicit namespace when selecting CPAN.
  */
 export const compileNativeGraphProjection = (ir, targets, moduleName) => {
-	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "cargo", "pypi", "rubygems", "cpan"].includes(target)))
-		throw Object.assign(new TypeError("Native copied graphs currently require C, C++, Cargo, PyPI, RubyGems or CPAN target adapters"), { code: "native-graph-projection-unavailable" });
+	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native"].includes(target)))
+		throw Object.assign(new TypeError("Native copied graphs currently require C, C++, Cargo, PyPI, RubyGems, CPAN, NuGet, Maven or native PHP target adapters"), { code: "native-graph-projection-unavailable" });
 	if(targets.includes("cpan") && moduleName === undefined)
 		throw Object.assign(new TypeError("CPAN copied graph projection requires its checked module namespace"), { code: "native-graph-projection-unavailable" });
 	const cTargets = targets.filter(target => ["c", "cpp"].includes(target));
@@ -27,5 +30,8 @@ export const compileNativeGraphProjection = (ir, targets, moduleName) => {
 	const python = targets.includes("pypi") ? compileCopiedPythonGraphPackageModel(ir) : null;
 	const ruby = targets.includes("rubygems") ? compileCopiedRubyGraphPackageModel(ir) : null;
 	const perl = targets.includes("cpan") ? compileCopiedPerlGraphPackageModel(ir, moduleName) : null;
-	return c ?? rust ?? python ?? ruby ?? perl;
+	const dotnet = targets.includes("nuget") ? compileCopiedDotnetGraphPackageModel(ir) : null;
+	const jvm = targets.includes("maven") ? compileCopiedJvmGraphPackageModel(ir) : null;
+	const php = targets.includes("php-native") ? compileCopiedPhpGraphPackageModel(ir) : null;
+	return c ?? rust ?? python ?? ruby ?? perl ?? dotnet ?? jvm ?? php;
 };

@@ -21,6 +21,7 @@ import { zendListFaultIr } from "./helpers/php-wasm-list-faults.mjs";
 import { zendCompoundFaultIr } from "./helpers/php-wasm-compound-faults.mjs";
 import { zendAliasFaultIr } from "./helpers/php-wasm-alias-faults.mjs";
 import { zendVariantFaultIr } from "./helpers/php-wasm-variant-faults.mjs";
+import { assertCurrentPhpWasmCollectionSources } from "./helpers/current-collection-evidence.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/php-wasm-collections-20260922.json"));
 const subset = (files, prefix) => Object.fromEntries(Object.entries(files).filter(([path]) => path.startsWith(prefix)).map(([path, value]) => [path.slice(prefix.length), value]));
@@ -32,8 +33,7 @@ test("PHP-Wasm collections bind public values and executable docs to original in
 	assert.deepEqual(sort(record.signatures), sort(collectionSignatures));
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(collectionReviewedIr())));
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
-	for(const [path, hash] of Object.entries(record.generatorSourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	await assertCurrentPhpWasmCollectionSources(record);
 	const reports = record.executions.map(({ signaturesSha256, ...run }) => {
 		assert.equal(signaturesSha256, sha256(canonicalJson(record.signatures)));
 		return { ...run, signatures: record.signatures };

@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { ordinaryDotnetEvidence } from "../build/native-dotnet-artifacts.mjs";
 import { generateCopiedDotnetPackage } from "../backends/dotnet/copied-values.mjs";
+import { generateCopiedDotnetGraphPackage } from "../backends/dotnet/copied-graph-package.mjs";
 import { validateOrdinaryNugetSettings } from "../backends/dotnet/copied-model.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
@@ -37,7 +38,7 @@ export const packageOrdinaryNuget = async ({ working, dotnetRoot, nativeRoot, ru
 		|| compiled.assembly !== projection.assembly || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| !/^8\.0\.\d+$/.test(compiled.sdk)
 		|| (await nativeArtifactPaths(dotnetRoot)).some(path => path !== "native-dotnet.json" && !Object.hasOwn(compiled.files, path))) throw new Error("Compiled .NET projection differs from the source model or native evidence");
-	for(const [path, contents] of Object.entries(generateCopiedDotnetPackage(model.bindingIr, evidence)))
+	for(const [path, contents] of Object.entries((model.copiedGraph ? generateCopiedDotnetGraphPackage : generateCopiedDotnetPackage)(model.bindingIr, evidence)))
 		if(await readFile(join(dotnetRoot, path), "utf8") !== contents) throw new Error("Generated .NET source differs from the compiled package model");
 	if(await readFile(join(dotnetRoot, "global.json"), "utf8") !== canonicalJson({ sdk: { version: compiled.sdk, rollForward: "disable", allowPrerelease: false } })) throw new Error(".NET SDK selection differs from the compiled projection");
 	const name = settings.name ?? projection.assembly, version = settings.version ?? model.component.version;

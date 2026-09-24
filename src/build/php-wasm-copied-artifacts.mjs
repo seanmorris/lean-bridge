@@ -7,7 +7,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
-import { createPhpWasmCopiedModel, generateNativeLeanAdapters } from "./native-model.mjs";
+import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "./php-wasm-graph-model.mjs";
+import { generateCompiledPhpWasmGraph } from "./php-wasm-graph-component.mjs";
 import { generateCopiedPhpZendAdapter } from "../backends/php/copied-zend.mjs";
 import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
 import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
@@ -107,10 +108,13 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 	if(!closed(inventory, ["schemaVersion", "profile", "files"]) || inventory.schemaVersion !== 1 || inventory.profile !== phpWasmCopiedProfile) throw new Error("Invalid PHP-Wasm component inventory");
 	await verifyPhpWasmCopiedFiles(root, inventory.files, "artifacts.json");
 	const metadata = await read("metadata.json");
-	const reconstructed = createPhpWasmCopiedModel({ metadata, component: model.component, sourceIdentity: receipt.sourceIdentity });
-	const adapters = generateNativeLeanAdapters(reconstructed), zend = generateCopiedPhpZendAdapter(reconstructed.bindingIr);
-	const zendManifest = JSON.parse(zend["copied-zend-manifest.json"]);
-	if(!closed(receipt, ["schemaVersion", "profile", "pointerBits", "runtimeIdentity", "bindingIrSha256", "sourceIdentity", "metadataSha256", "modelSha256", "headerSha256", "adaptersSha256", "zendSha256", "initializer", "library", "wasmLibrary", "compiler", "phpHeadersSha256", "exports"])
+	const reconstructed = createCompiledPhpWasmModel({ metadata, component: model.component, sourceIdentity: receipt.sourceIdentity });
+	const adapters = generateCompiledPhpWasmLeanAdapters(reconstructed);
+	const graph = reconstructed.copiedGraph ? generateCompiledPhpWasmGraph(reconstructed, adapters) : null;
+	const zend = graph?.files ?? generateCopiedPhpZendAdapter(reconstructed.bindingIr);
+	const manifestPath = graph?.zendManifestPath ?? "copied-zend-manifest.json";
+	const zendManifest = JSON.parse(zend[manifestPath]);
+	if(!closed(receipt, ["schemaVersion", "profile", "pointerBits", "runtimeIdentity", "bindingIrSha256", "sourceIdentity", "metadataSha256", "modelSha256", "headerSha256", "adaptersSha256", "zendSha256", "initializer", "library", "wasmLibrary", "compiler", "phpHeadersSha256", "exports", ...graph ? ["copiedGraph"] : []])
 		|| receipt.schemaVersion !== 1 || receipt.profile !== phpWasmCopiedProfile || receipt.pointerBits !== 32
 		|| receipt.sourceIdentity.leanCommit !== phpWasmCopiedPins.leanCommit || !compilerIdentity(receipt.compiler) || !hash(receipt.phpHeadersSha256)
 		|| receipt.runtimeIdentity !== runtimeIdentity || !same(model, reconstructed)
@@ -119,7 +123,8 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 		|| receipt.metadataSha256 !== sha256(canonicalJson(metadata))
 		|| receipt.headerSha256 !== sha256(adapters.header) || adapters.header !== await readFile(join(root, "component.h"), "utf8")
 		|| receipt.adaptersSha256 !== sha256(adapters.leanSource) || adapters.leanSource !== await readFile(join(root, "generated.lean"), "utf8")
-		|| receipt.zendSha256 !== sha256(zend["copied-zend-manifest.json"])
+		|| receipt.zendSha256 !== sha256(zend[manifestPath])
+		|| graph && !same(receipt.copiedGraph, graph.receipt)
 		|| receipt.initializer !== `initialize_${adapters.module}`
 		|| receipt.library !== `lib/php8.4-${zendManifest.extension}.so`
 		|| !same(receipt.exports, zendManifest.exports)) throw new Error("PHP-Wasm component differs from compiler metadata, adapters or runtime");

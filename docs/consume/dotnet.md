@@ -82,6 +82,40 @@ themselves retain their language equality behavior. See
 [comparing copied values](#comparing-copied-values) and the
 [installed collection checks](../evidence/dotnet-collections-20260922.md).
 
+### Recursive values
+
+The recursive NuGet integration is under acceptance testing. Its generated API
+uses named records and variant cases, including direct and mutual recursion.
+Arrays and Lists still use typed arrays. Consumers do not supply native pointers,
+constructor numbers or serialized JSON.
+
+The local `Lean.Recursive` test package exposes `LeanBridge.Recursive.Api`.
+Reference its prepared archive and save this as `Program.cs`:
+
+```csharp
+using System;
+using LeanBridge.Recursive;
+
+Spine input = new SpineNext(new SpineLeaf(42));
+Spine copy = Api.Spine(input);
+Console.WriteLine(copy == input); // True
+Console.WriteLine(ReferenceEquals(copy, input)); // False
+Console.WriteLine(Api.Grow(copy) is SpineNext(SpineNext(SpineLeaf(42)))); // True
+Console.WriteLine(Api.Marker(new MarkerUnit(default)) is MarkerUnit); // True
+Console.WriteLine(Api.Units(new Unit[3]).Length); // 3
+```
+
+Calls reject cycles, null payloads and malformed branches. Arguments and results
+share limits of 128 nested values, 262,144 visited values and 16 MiB of native
+copies, with a separate 16 MiB conversion-storage budget. These limits do not
+bound every CLR allocation or Lean working memory. An oversized result throws
+after Lean returns; temporary buffers and native outputs are released.
+
+Native assets load automatically after input validation. Modified libraries
+fail their hash checks. Malformed native output retires the shared runtime;
+ordinary input and allocation failures remain recoverable. Structured callbacks
+and resource-containing recursive values are separate work.
+
 ### Named aliases
 
 Copied Lean aliases use their target's C# values. A `Count` alias of `UInt32`

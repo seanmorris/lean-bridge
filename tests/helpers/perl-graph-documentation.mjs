@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { mkdir, readFile, rename, rm, symlink } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { nativeArtifactPaths, verifyNativeFiles } from "../../src/build/native-artifacts.mjs";
@@ -16,6 +16,7 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { perlGraphCommands } from "./perl-graph-probes.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
+import { withCorruptedNativeAsset } from "./native-asset-tamper.mjs";
 
 const snippet = (document, heading, language) => {
 	assert.equal(document.split(`${heading}\n`).length, 2);
@@ -139,18 +140,11 @@ export const checkPerlGraphDocumentation = async (root, diagnostic = () => {}) =
 			assert.equal(native.length, 3);
 			for(const path of native)
 			{
-				const target = join(lib, path), original = await readFile(target), corrupt = Buffer.from(original);
-				corrupt[corrupt.length - 1] ^= 1;
-				try
-				{
-					await saveLakeFile(dirname(target), target.split("/").at(-1), corrupt);
+				const target = join(lib, path);
+				await withCorruptedNativeAsset(target, async () => {
 					const result = await runCopied(perl, ["tamper.pl", target], caller, env);
 					assert.equal(result.stderr, ""); assert.equal(result.stdout, "rejected before dlopen\n");
-				}
-				finally
-				{
-					await saveLakeFile(dirname(target), target.split("/").at(-1), original);
-				}
+				});
 			}
 			await execute();
 			await verifyNativeFiles(lib, files); assert.deepEqual(await nativeArtifactPaths(lib), Object.keys(files));

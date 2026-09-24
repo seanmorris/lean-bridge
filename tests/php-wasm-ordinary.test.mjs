@@ -27,6 +27,7 @@ import { buildPhpWasmCompilerInputs, readVerifiedPhpWasmCompilerInputs } from ".
 import { assertPackagedSourceNotices } from "./helpers/source-notices.mjs";
 import { tarGzipPackingIdentity } from "../src/release/deterministic-archive.mjs";
 import { brickMathMountSource } from "./helpers/brick-math.mjs";
+import { comparePhpWasmPreGraphArtifacts } from "./helpers/php-wasm-legacy-comparison.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_PHP_WASM_ORDINARY_TEST === "1";
 const leanPrefix = process.env.LEAN_BRIDGE_LEAN_PREFIX ?? join(process.cwd(), ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
@@ -199,6 +200,7 @@ test("ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm 
 	if(!cachedRuntime) await rm(runtime.root, { recursive: true });
 	assert.equal((await readVerifiedPhpWasmCopiedRuntime(relocatedRuntime)).identity, runtime.identity);
 	for(const component of components) await readVerifiedPhpWasmCopiedComponent(component.root, runtime.identity);
+	const legacyComparison = await comparePhpWasmPreGraphArtifacts({ working, components, runtimeRoot: relocatedRuntime, releases, leanPrefix });
 	// A separate test-only extension observes the production broker. The public
 	// generated APIs do not expose a runtime, pointer, counter, or FFI object.
 	await saveLakeFile(working, "probe.c", `#include <php.h>
@@ -361,4 +363,5 @@ console.log(JSON.stringify({status: 0, components: 2, pointerBits: 32, exports: 
 	inventory.files["model.json"] = { bytes: Buffer.byteLength(canonicalJson(forged)), sha256: sha256(canonicalJson(forged)) };
 	await saveLakeFile(victim.root, "artifacts.json", canonicalJson(inventory));
 	await assert.rejects(readVerifiedPhpWasmCopiedComponent(victim.root, runtime.identity), /differs/);
+	await saveLakeFile("build/recursive", "php-wasm-shared-regressions.json", canonicalJson(legacyComparison));
 });

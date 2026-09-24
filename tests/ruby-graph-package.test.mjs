@@ -50,7 +50,9 @@ test("recursive Ruby admission validates every selected host and protects librar
 	const ir = nativeRecursiveReviewedIr(), model = compileNativeGraphProjection(ir, ["rubygems"]);
 	assert.equal(model.prefix, "recursive");
 	assert.equal(compileNativeGraphProjection(ir, ["c", "cpp", "cargo", "pypi", "rubygems"]).layoutSha256, model.layoutSha256);
-	for(const targets of [[], ["rubygems", "rubygems"], ["rubygems", "cpan"], ["rubygems", "maven"]])
+	for(const host of ["maven", "php-native"])
+		assert.equal(compileNativeGraphProjection(ir, ["rubygems", host]).layoutSha256, model.layoutSha256);
+	for(const targets of [[], ["rubygems", "rubygems"], ["rubygems", "cpan"], ["rubygems", "wit-wasi"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 	for(const id of ["gmp", "leanshared", "lean-bridge-native", "a".repeat(160)])
 	{

@@ -79,7 +79,14 @@ test("CPAN finite admission validates the Perl namespace without adding a C targ
 	assert.deepEqual(compileNativeGraphProjection(ir, ["cpan"], model.moduleName), model);
 	assert.equal(model.layout.roots.length, 18); assert.equal(canonicalJson(ir), original);
 	assert.throws(() => compileNativeGraphProjection(ir, ["c", "cpan"], "LeanBridge::Runtime"), /module/);
-	assert.throws(() => compileNativeGraphProjection(ir, ["cpan", "maven"], model.moduleName), { code: "native-graph-projection-unavailable" });
+	for(const target of ["nuget", "maven", "php-native"])
+	{
+		assert.deepEqual(compileNativeGraphProjection(ir, ["cpan", target], model.moduleName), model);
+		assert.deepEqual(compileNativeGraphProjection(ir, [target, "cpan"], model.moduleName), model);
+		assert.throws(() => compileNativeGraphProjection(ir, ["cpan", target], "LeanBridge::Runtime"), /module/);
+	}
+	for(const target of ["unknown", "wit-wasi"])
+		assert.throws(() => compileNativeGraphProjection(ir, ["cpan", target], model.moduleName), { code: "native-graph-projection-unavailable" });
 });
 
 test("Perl probe lineage permits only the three unchanged instrumentation exports", async () => {

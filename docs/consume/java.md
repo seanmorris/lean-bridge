@@ -203,7 +203,51 @@ each constructor's identity. The existing 32-level type
 limit and managed/native copy budgets apply. Scoped arenas and native output
 guards release partial conversions on failure. See the
 [installed variant checks](../evidence/jvm-variants-20260921.md).
-Recursive, callable and identity-bearing payloads remain separate work.
+Callable and identity-bearing payloads remain separate work.
+
+### Recursive values
+
+Recursive records and constructor families retain their named Java types. A
+recursive field points to its generated family, without numeric tags or JSON.
+The `org.leanbridge:recursive:1.0.0` acceptance archive supplies this example.
+Save `Example.java`:
+
+```java
+import org.leanbridge.recursive.*;
+
+class Example {
+    public static void main(String[] args) {
+        Spine input = new SpineNext(new SpineLeaf(41));
+        Spine copy = Api.spine(input);
+        System.out.println(copy.equals(input)); // true
+        System.out.println(copy == input);      // false
+        Tree[] trees = {Api.empty()};
+        Tree[] copies = Api.forest(trees);
+        System.out.println(copies != trees);       // true
+        System.out.println(copies[0] != trees[0]); // true
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package) with the recursive
+archive. Java and Kotlin use the same JAR and native runtime. Package loading
+and result cleanup remain automatic.
+
+Calls support direct and mutual recursion, nested containers, options, results
+and products. Results own independent copied storage. Arrays remain mutable;
+do not mutate an argument during a call. Cycles and uninhabited values reject.
+Generated equality and hashing traverse nested contents and reject cycles too.
+
+The recursive profile allows 128 value levels and 262,144 visited values, with
+a 16 MiB native-copy budget and a separate 16 MiB scratch/output budget. These
+limits do not measure Lean working memory or all JVM heap overhead. A constructor
+that exceeds the JVM argument-slot limit becomes an immutable final class with
+typed accessors and a typed `builder()`. Set every field before `build()`.
+
+The [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)
+execute this example on both compiler source paths. Final cross-language
+acceptance is still in progress; the conversion table retains the last accepted
+inventory.
 
 ### Callbacks and returned Lean functions
 

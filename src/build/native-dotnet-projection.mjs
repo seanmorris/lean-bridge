@@ -7,6 +7,7 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generateCopiedDotnetPackage } from "../backends/dotnet/copied-values.mjs";
+import { generateCopiedDotnetGraphPackage } from "../backends/dotnet/copied-graph-package.mjs";
 import { auditManagedBindingPackage } from "../backends/managed/package-audit.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { ordinaryDotnetEvidence } from "./native-dotnet-artifacts.mjs";
@@ -30,7 +31,7 @@ import { packageOrdinaryNuget } from "../release/native-nuget.mjs";
 export const projectOrdinaryDotnet = async ({ working, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings, glibcMinimumVersion, environment, signal }) => {
 	const { model, projection, evidence } = await ordinaryDotnetEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const root = join(working, "native/dotnet"), scratch = join(working, "dotnet-compiler");
-	const files = generateCopiedDotnetPackage(model.bindingIr, evidence);
+	const files = (model.copiedGraph ? generateCopiedDotnetGraphPackage : generateCopiedDotnetPackage)(model.bindingIr, evidence);
 	auditManagedBindingPackage(model.bindingIr, files, "dotnet");
 	for(const [path, contents] of Object.entries(files))
 	{ await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), contents, { flag: "wx" }); }

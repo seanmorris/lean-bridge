@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertRubyGraphSourceUpdate } from "./native-ruby-graph-regression.mjs";
+import { beforeNativeTargetVerification } from "./native-shared-verifier-updates.mjs";
 
 const recordPath = "docs/evidence/python-recursive-regressions-20260923.json";
 const shared = ["src/build/native-project.mjs", "src/build/native-c-projection.mjs", "src/build/native-graph-projection.mjs"];
@@ -138,7 +139,7 @@ const restoreVerification = (source, path) => {
  * @param expected - Immutable receipt digest.
  */
 export const assertPythonGraphSourceUpdate = async (path, expected) => {
-	const source = await readFile(path, "utf8");
+	const source = beforeNativeTargetVerification(path, await readFile(path, "utf8"));
 	if(sha256(source) === expected) return;
 	if(["tests/rust-graph-package.test.mjs", "tests/helpers/native-cargo-graph-regression.mjs"].includes(path))
 	{

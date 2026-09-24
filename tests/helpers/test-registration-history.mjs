@@ -8,6 +8,9 @@ import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertSourceRegistrationUpdate } from "./source-registration-history.mjs";
 import { assertPerlGraphSourceTransition } from "./native-perl-graph-regression.mjs";
+import { assertDotnetGraphSourceTransition } from "./native-dotnet-graph-regression.mjs";
+import { assertPhpWasmSharedSourceTransition } from "./php-wasm-shared-regression-receipt.mjs";
+import { assertJvmSharedSourceTransition } from "./jvm-shared-regression-receipt.mjs";
 
 /**
  * Undo only recorded, uniquely occurring manifest entries and verify each hash.
@@ -47,6 +50,9 @@ export const verifyAddedTestRegistrations = (source, expected, updates) => {
 export const assertAdministrativeSourceUpdate = async (path, expected) => {
 	let source = await readFile(path, "utf8");
 	if(sha256(source) === expected) return;
+	if(await assertPhpWasmSharedSourceTransition(path, source, expected)) return;
+	if(await assertJvmSharedSourceTransition(path, source, expected)) return;
+	if(await assertDotnetGraphSourceTransition(path, source, expected)) return;
 	if(await assertSourceRegistrationUpdate(path, source, expected)) return;
 	if(await assertPerlGraphSourceTransition(path, source, expected)) return;
 	if(path === "src/adoption/test-profiles.mjs")

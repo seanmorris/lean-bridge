@@ -32,7 +32,9 @@ export const createPhpWasmCopiedDescriptor = (runtime, component, assets) => {
 	if(assets.php !== undefined && (!assets.php || typeof assets.php !== "object"
 		|| !(assets.php["bootstrap.php"] instanceof URL)
 		|| Object.entries(assets.php).some(([path, url]) => !(url instanceof URL)
-			|| path !== "bootstrap.php" && path !== "lean-bridge/aliases.json" && !/^dependencies\/brick-math\/(?:autoload\.php|LICENSE|composer\.json|src\/[A-Za-z0-9_/]+\.php)$/.test(path))))
+			|| path !== "bootstrap.php" && path !== "lean-bridge/aliases.json"
+				&& !/^src\/Internal\/(?:Values|GraphTypes|Wire)\.php$/.test(path)
+				&& !/^dependencies\/brick-math\/(?:autoload\.php|LICENSE|composer\.json|src\/[A-Za-z0-9_/]+\.php)$/.test(path))))
 		reject("invalid-php-wasm-descriptor", "Invalid bundled PHP dependencies");
 	const autoload = `/vendor/${definition.composer}/${assets.php ? "bootstrap.php" : "src/Api.php"}`;
 	const prepare = (php, mode, getLibs) => {

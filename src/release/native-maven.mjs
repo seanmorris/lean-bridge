@@ -11,6 +11,7 @@ import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifact
 import { ordinaryJvmEvidence } from "../build/native-jvm-artifacts.mjs";
 import { validateKotlinCompilation } from "../build/compile-jvm-sources.mjs";
 import { generateCopiedJvmKotlinPackage } from "../backends/jvm/copied-kotlin.mjs";
+import { generateCopiedJvmGraphPackage } from "../backends/jvm/copied-graph-package.mjs";
 import { validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
@@ -34,14 +35,16 @@ export const packageOrdinaryMaven = async ({ working, jvmRoot, nativeRoot, runti
 	const { model, projection, evidence, receipt } = await ordinaryJvmEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const compiled = JSON.parse(await readFile(join(jvmRoot, "native-jvm.json"), "utf8"));
 	await verifyNativeFiles(jvmRoot, compiled.files);
-	validateKotlinCompilation(compiled.kotlin, projection.namespace);
+	validateKotlinCompilation(compiled.kotlin, projection.namespace, { copiedGraph: !!model.copiedGraph });
 	if(compiled.schemaVersion !== 1 || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.namespace !== projection.namespace || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| !/^javac 22(?:[.+ -]|$)/.test(compiled.compiler)
 		|| (await nativeArtifactPaths(jvmRoot)).some(path => path !== "native-jvm.json" && !Object.hasOwn(compiled.files, path))) throw new Error("Compiled JVM projection differs from native evidence");
-	for(const [path, contents] of Object.entries(generateCopiedJvmKotlinPackage(model.bindingIr, evidence)))
+	const sources = model.copiedGraph ? generateCopiedJvmGraphPackage(model.bindingIr, evidence) : generateCopiedJvmKotlinPackage(model.bindingIr, evidence);
+	for(const [path, contents] of Object.entries(sources))
 		if(await readFile(join(jvmRoot, path), "utf8") !== contents) throw new Error("Generated JVM source differs from the compiled model");
-	const name = settings.name ?? `org.leanbridge:${projection.surface.prefix.replaceAll("_", "-")}`, version = settings.version ?? model.component.version;
+	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
+	const name = settings.name ?? `org.leanbridge:${prefix.replaceAll("_", "-")}`, version = settings.version ?? model.component.version;
 	validateOrdinaryMavenSettings({ name, version });
 	const [group, artifact] = name.split(":"), base = `${artifact}-${version}`;
 	const root = join(working, "packages/maven/jar"), coordinateRoot = join(working, "packages/maven/repository", ...group.split("."), artifact, version);

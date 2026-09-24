@@ -10,6 +10,7 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compilePhpProjection } from "./projection.mjs";
 import { generateCopiedPhpPackage } from "./copied-values.mjs";
+import { generateCopiedPhpGraphPackage } from "./copied-graph-package.mjs";
 
 /**
  * Reports PHP package audit failures with stable machine-readable codes and structured diagnostic context.
@@ -108,6 +109,17 @@ export const auditPhpPackage = (ir, files, options = {}) => {
 	if(files === null || typeof files !== "object" || Array.isArray(files))
 	{
 		fail("invalid-package", "generated PHP package must be a file map");
+	}
+	if(parseJson(files, "binding-manifest.json").generator?.id === "lean-wasm/php-copied-graph")
+	{
+		if(options.integerBits !== undefined && options.integerBits !== 64)
+			fail("unsupported-copied-php-profile", "Native PHP copied graphs require the 64-bit profile");
+		const manifest = parseJson(files, "binding-manifest.json");
+		const expected = generateCopiedPhpGraphPackage(ir, manifest.nativeEvidence);
+		if(JSON.stringify(sorted(Object.keys(files))) !== JSON.stringify(sorted(Object.keys(expected)))
+			|| Object.entries(expected).some(([path, source]) => files[path] !== source))
+			fail("copied-graph-source-drift", "PHP graph package differs from its complete generated source");
+		return true;
 	}
 	if(parseJson(files, "binding-manifest.json").generator?.id === "lean-wasm/php-copied")
 	{

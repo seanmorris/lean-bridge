@@ -171,7 +171,85 @@ matching hashes, patterns and cycle rejection.
 validate every argument before allocation and initialization, copy results into
 managed values, and release native arenas on failure. Ordinary and reviewed Lean
 components exercise malformed-output retirement, allocation failures and cleanup.
-Installed recursive NuGet acceptance remains pending.
+[The recursive NuGet package layer](../evidence/dotnet-recursive-packages-20260923.md)
+connects these converters to public typed
+methods and authenticated automatic loading. Original ordinary-source and
+reviewed archives pass offline installs, relocated SDK-free runs and native
+asset-tampering checks. Independent builds reproduce both installed archives.
+Three-package tests exercise mixed C++/NuGet builds and shared retirement.
+Coordinate-conflict tests reject a different build before loading it and preserve
+the first package; identical builds can share the component. Shared-build
+regressions and source evidence remain before final installed acceptance.
+[Existing C# family regressions](../evidence/dotnet-recursive-family-regressions-20260923.md)
+preserve public behavior and failure checks on both source paths without
+rewriting older package identities.
+
+[Java recursive declarations](../evidence/jvm-recursive-values-20260923.md)
+preserve named records, sealed cases, typed arrays and transparent aliases.
+Iterative equality, hashing and formatting reject cycles and enforce value
+budgets. Typed builders handle constructors exceeding the JVM argument-slot
+limit. [Java native graph converters](../evidence/jvm-recursive-conversions-20260923.md)
+use iterative FFM readers and writers, validate all inputs before native
+allocation or initialization, and release owned output through a pre-bound C
+cleanup helper. Independent C layout probes and fresh ordinary/reviewed Lean
+calls check bounded copying, allocation failures and shared-runtime retirement.
+Java and Kotlin use separate typed value classes over the same finite layouts,
+scalar codecs and iterative conversion engine. Kotlin retains non-null metadata
+and uses type-table references for deeply nested arrays. Recursive Maven builds
+include both APIs, an authenticated lazy loader and the native root-cleanup
+helper. [Package tests](../contributing/testing.md#recursive-java-and-kotlin-packages)
+cover offline installation and runtime-only execution. Shared-package and
+cross-language regression acceptance remain under development.
+
+[PHP recursive value declarations](../evidence/php-recursive-values-20260923.md)
+use final readonly records and variant cases, precise PHPDoc containers, and
+transparent aliases. One iterative validator checks weak and strict callers,
+rejects object and array-reference cycles, and preserves shared acyclic values.
+The same generated source runs in native PHP and the actual 32-bit PHP-Wasm
+interpreter. PHP integer width and Lean word width are separate model inputs.
+The [native PHP converters](../evidence/php-recursive-conversions-20260923.md)
+use the shared C graph declarations and iterative cursors. They validate and
+copy inputs before loading a native target, copy outputs into independent PHP
+values, and release root-owned native output in `finally`. Fresh ordinary and
+reviewed Lean checks cover allocation failures and shared-runtime retirement.
+The [recursive Composer package tests](../evidence/php-recursive-packages-20260923.md)
+check public functions, authenticated lazy loading, offline installation,
+native-asset tampering and independent archive reproduction. The package audit
+regenerates every public and private source file. Shared-loading checks cover
+recursive and ordinary packages, fork rejection, retirement and conflicting
+native identities. Final cross-language acceptance remains open.
+
+The shared C graph transport also accepts an explicit 32-bit word model for
+PHP-Wasm. `USize` and `ISize` use four-byte fields; fixed-width `UInt64` and
+`Int64` stay eight bytes. The adapter checks boxed 32-bit scalars using the
+pinned Lean runtime representation and validates memory bounds before reads.
+The [wasm32 transport gate](../evidence/wasm32-recursive-transport-20260923.md)
+executes fresh Lean carriers through a test-only Zend probe.
+
+The separate recursive PHP/Zend converter uses finite compiler-checked C
+descriptors and iterative cursors. Public PHP objects become private wire lists;
+the Zend adapter validates those lists before entering Lean. It copies results
+into an owned PHP value tree before releasing the native root. Partially built
+children stay attached to that root zval so a Zend bailout can release them.
+Allocation and size-limit failures remain recoverable; malformed native results
+retire the shared runtime. The [conversion gates](../contributing/testing.md#recursive-php-wasm-conversions)
+exercise independent C producers and freshly compiled Lean separately.
+The PHP-Wasm compiler admits these graphs through its own fixed 32-bit model.
+Lean checks the generated total carriers; the C compiler checks their prototypes
+and constructor allocations against the actual target headers. Releases retain
+the graph layout, transport, lifecycle and allocation-guard identities. Artifact
+verification regenerates the PHP and C sources before accepting a package.
+Prepared npm descriptors mount all five PHP files, and companion Composer ZIPs
+contain the same API. The [installed-package gate](../contributing/testing.md#recursive-php-wasm-packages)
+exercises both authoring paths in Node and Chromium. The
+[reproduction and shared-loading gates](../evidence/php-wasm-recursive-loading-20260924.md)
+rebuild the runtime and both source projects, reproduce npm/Composer archives,
+and exercise original graph and acyclic packages in one interpreter. Duplicate
+descriptors reuse libraries; conflicting compiled identities reject before
+startup. Runtime retirement blocks all packages without invalidating copied PHP
+values. A failed lazy link prevents further link attempts through peers.
+Historical-source regression verification and final cross-language acceptance
+remain open.
 
 Native component builds [check emitted constructor allocations](../evidence/native-allocation-guard-20260922.md)
 against the verified runtime's allocator limits. Oversized allocations fail
@@ -181,7 +259,7 @@ its header alongside their compilation evidence.
 Compiled npm variants use private ABI 7, with a closed named-type table and
 constructor-specific copied fields. Generated Lean helpers construct and match
 values through typed one-element Array carriers. Native C adapters never inspect
-Lean constructor tags or field offsets. The host discriminator is `kind`; its
+source-defined Lean constructor tags or field offsets. The host discriminator is `kind`; its
 value is the source constructor name. Runtime tag 37 carries the authenticated
 constructor ordinal and only that constructor's fields. ABI 7 also preserves
 concrete copied aliases and their named targets. Source extraction retains

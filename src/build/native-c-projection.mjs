@@ -12,6 +12,8 @@ import { generateGmpProjection } from "../backends/c/gmp-projection.mjs";
 import { generateCopiedGraphPackage } from "../backends/c/graph-package.mjs";
 import { nativeGraphProjectionSources } from "./native-graph-sources.mjs";
 import { rubyGraphClearSource } from "../backends/ruby/copied-graph-package.mjs";
+import { generateCopiedJvmGraphConversions } from "../backends/jvm/copied-graph-conversions.mjs";
+import { generateCopiedPhpGraphConversions } from "../backends/php/copied-graph-conversions.mjs";
 import { compileNativeGraphProjection } from "./native-graph-projection.mjs";
 import { buildNativeGmp } from "./native-gmp.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
@@ -43,7 +45,7 @@ import { packageOrdinaryPhp } from "../release/native-composer.mjs";
  */
 export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems"].includes(target)) });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native"].includes(target)) });
 	const graph = model.copiedGraph ? compileNativeGraphProjection(model.bindingIr, targets) : null;
 	const surface = graph ? null : compilePrimitiveCSurface(model.bindingIr, { variants: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), lists: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: targets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 	const p = graph ? graph.prefix : surface.prefix;
@@ -55,6 +57,8 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 	{
 		Object.assign(files, nativeGraphProjectionSources(model, receipt));
 		if(targets.includes("rubygems")) files["src/ruby-graph-clear.c"] = rubyGraphClearSource(p);
+		if(targets.includes("maven")) files["src/jvm-graph-clear.c"] = generateCopiedJvmGraphConversions(model.bindingIr).nativeReleaseSource;
+		if(targets.includes("php-native")) files["src/php-graph-clear.c"] = generateCopiedPhpGraphConversions(model.bindingIr).nativeReleaseSource;
 		if(targets.includes("cpp") && graph.bigint) Object.assign(files, boostSources());
 	}
 	if(targets.includes("cpp") && !graph)
@@ -78,6 +82,8 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		, ...includes, ...graph ? [] : [join(root, surface.paths.implementation)]
 		, join(root, "src/native.c")
 		, ...graph && targets.includes("rubygems") ? [join(root, "src/ruby-graph-clear.c")] : []
+		, ...graph && targets.includes("maven") ? [join(root, "src/jvm-graph-clear.c")] : []
+		, ...graph && targets.includes("php-native") ? [join(root, "src/php-graph-clear.c")] : []
 		, "-L", nativeRoot, "-L", join(runtimeRoot, "lib"), "-Wl,--no-as-needed"
 		, `-l:${receipt.library}`, "-llean_bridge_native", "-lleanshared"
 		, "-Wl,-z,defs", "-Wl,--build-id=none", "-Wl,-rpath,$ORIGIN"

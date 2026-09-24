@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
+import { beforeNativeTargetVerification } from "./native-shared-verifier-updates.mjs";
 
 const recordPath = "docs/evidence/ruby-recursive-regressions-20260923.json";
 const shared = ["src/build/native-project.mjs", "src/build/native-c-projection.mjs", "src/build/native-graph-projection.mjs"];
@@ -125,7 +126,7 @@ const restoreVerification = (source, path) => {
  * @param expected - Original SHA-256, never replaced in that receipt.
  */
 export const assertRubyGraphSourceUpdate = async (path, expected) => {
-	const source = await readFile(path, "utf8");
+	const source = beforeNativeTargetVerification(path, await readFile(path, "utf8"));
 	if(sha256(source) === expected) return;
 	if(["tests/python-graph-package.test.mjs", "tests/helpers/native-python-graph-regression.mjs"].includes(path))
 	{

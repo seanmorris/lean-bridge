@@ -10,7 +10,7 @@ import { sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 
 const kotlinModule = namespace => `lean_bridge_${namespace.replaceAll(".", "_")}`;
-const kotlinOptions = module => ["-module-name", module, "-jvm-target", "22", "-no-reflect", "-no-stdlib", "-Werror", "-Xrender-internal-diagnostic-names"];
+const kotlinOptions = (module, copiedGraph) => ["-module-name", module, "-jvm-target", "22", "-no-reflect", "-no-stdlib", "-Werror", "-Xrender-internal-diagnostic-names", ...copiedGraph ? ["-Xuse-type-table"] : []];
 const kotlinJars = ["kotlin-compiler.jar", "kotlin-stdlib.jar", "annotations-13.0.jar"];
 
 /**
@@ -18,12 +18,14 @@ const kotlinJars = ["kotlin-compiler.jar", "kotlin-stdlib.jar", "annotations-13.
  *
  * @param evidence - Recorded Kotlin compilation metadata.
  * @param namespace - Independently derived Java namespace.
+ * @param options - Independently verified native graph profile.
+ * @param options.copiedGraph - Use finite metadata references for deep graph fields.
  */
-export const validateKotlinCompilation = (evidence, namespace) => {
+export const validateKotlinCompilation = (evidence, namespace, { copiedGraph = false } = {}) => {
 	const module = kotlinModule(namespace), hashes = evidence?.compilerFiles;
 	if(evidence?.namespace !== `${namespace}.kotlin` || evidence?.standardLibraryVersion !== "2.2.0"
 		|| !/^info: kotlinc-jvm 2\.2\.0 /m.test(evidence?.version ?? "")
-		|| evidence?.module !== module || JSON.stringify(evidence?.options) !== JSON.stringify(kotlinOptions(module))
+		|| evidence?.module !== module || JSON.stringify(evidence?.options) !== JSON.stringify(kotlinOptions(module, copiedGraph))
 		|| !hashes || Array.isArray(hashes) || typeof hashes !== "object"
 		|| kotlinJars.some(name => !Object.hasOwn(hashes, name))
 		|| Object.entries(hashes).some(([name, hash]) => !/^[A-Za-z0-9_.+-]+\.jar$/.test(name) || !/^[a-f0-9]{64}$/.test(hash)))
@@ -82,11 +84,14 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 		const checked = await run(java, [...launch, "-version"]), version = (checked.stderr || checked.stdout).trim();
 		if(!/^info: kotlinc-jvm 2\.2\.0 /m.test(version)) throw new Error("Ordinary Maven packages require the Kotlin 2.2.0 compiler");
 		const metadata = JSON.parse(files["binding-manifest.json"]), module = kotlinModule(metadata.namespace);
-		const options = kotlinOptions(module);
+		// Inline nested Type/Argument messages exceed Kotlin's metadata decoder
+		// limit at 32 container levels. Type-table references retain every level.
+		const copiedGraph = metadata.generator === "jvm-copied-graph-v1";
+		const options = kotlinOptions(module, copiedGraph);
 		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", `${join(lib, "kotlin-stdlib.jar")}${delimiter}${join(lib, "annotations-13.0.jar")}`, "-d", "classes", ...kotlinSources, ...javaSources]);
 		classpath = `classes${delimiter}${join(lib, "kotlin-stdlib.jar")}`;
 		kotlin = { version, module, options, compilerFiles, namespace: metadata.kotlin.namespace, standardLibraryVersion: "2.2.0" };
-		validateKotlinCompilation(kotlin, metadata.namespace);
+		validateKotlinCompilation(kotlin, metadata.namespace, { copiedGraph });
 	}
 	await run(javac, ["--release", "22", "-g:none", "-proc:none", "-encoding", "UTF-8", "-classpath", classpath, "-sourcepath", "src/main/java", "-d", "classes", ...javaSources]);
 	return { compiler, ...kotlin ? { kotlin } : {} };
