@@ -14,6 +14,7 @@ import { assertJvmSharedSourceTransition } from "./jvm-shared-regression-receipt
 import { beforeNativeSharedAdmission } from "./native-shared-admission.mjs";
 import { beforeNativeSharedTestUpdates } from "./native-shared-test-updates.mjs";
 import { beforeNativeSharedVerification } from "./native-shared-verifier-updates.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const receiptPath = "docs/evidence/native-shared-regressions-20260924.json";
 const shared = ["src/build/native-c-projection.mjs", "src/build/native-graph-projection.mjs", "src/build/native-project.mjs"];
@@ -72,6 +73,7 @@ const verifierChanges = {
  * @param source - Complete current verifier source.
  */
 export const beforeDotnetGraphVerification = (path, source) => {
+	source = beforeWitPackageIntegration(path, source);
 	source = beforePhpWasmSharedVerification(path, source);
 	assert.ok(Object.hasOwn(verifierChanges, path), `Not a NuGet verifier edit: ${path}`);
 	for(const [current, previous] of verifierChanges[path])
@@ -150,11 +152,11 @@ export const assertNativeSharedRegressionEvidence = async record => {
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), nativeSharedSourcePaths(baselines));
 	for(const [path, expected] of Object.entries(record.sourceHashes))
 	{
-		const source = await readFile(path, "utf8");
+		const source = beforeWitPackageIntegration(path, await readFile(path, "utf8"));
 		assert.equal(sha256(targetVerifiers.includes(path) ? beforeNativeSharedVerification(path, source) : source), expected, path);
 	}
 	assert.deepEqual(Object.keys(record.verifierSources).sort(), nativeSharedVerifierPaths);
-	for(const [path, expected] of Object.entries(record.verifierSources)) assert.equal(sha256(await readFile(path)), expected, path);
+	for(const [path, expected] of Object.entries(record.verifierSources)) assert.equal(sha256(beforeWitPackageIntegration(path, await readFile(path, "utf8"), expected)), expected, path);
 	assert.equal(record.verifierBaseline.path, "docs/evidence/php-wasm-shared-regressions-20260924.json");
 	const verifierBytes = await readFile(record.verifierBaseline.path);
 	assert.equal(sha256(verifierBytes), record.verifierBaseline.sha256);
@@ -201,6 +203,7 @@ export const assertDotnetGraphRegressions = async () => assertNativeSharedRegres
  * @param expected - Original recorded source hash, never replaced.
  */
 export const assertDotnetGraphSourceTransition = async (path, source, expected) => {
+	source = beforeWitPackageIntegration(path, source, expected);
 	const { assertPhpWasmSharedSourceTransition } = await import("./php-wasm-shared-regression-receipt.mjs");
 	if(await assertPhpWasmSharedSourceTransition(path, source, expected)) return true;
 	if(await assertJvmSharedSourceTransition(path, source, expected)) return true;

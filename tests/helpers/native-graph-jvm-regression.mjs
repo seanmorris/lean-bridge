@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { nativeAllocationGuardHeader } from "../../src/build/native-allocation-guard.mjs";
 import { assertCargoGraphSourceUpdate } from "./native-cargo-graph-regression.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const digest = value => sha256(canonicalJson(value));
 
@@ -28,7 +29,7 @@ export const assertNativeGraphJvmRegression = async (lineage, original) => {
 	assert.match(regression.log.text, /# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0/);
 	for(const [path, hash] of Object.entries(regression.sourceHashes)) await assertCargoGraphSourceUpdate(path, hash);
 	for(const path of ["src/build/native-project.mjs", "src/build/native-c-projection.mjs"])
-		assert.equal(sha256(await readFile(path)), lineage.sources[path].currentSha256);
+		assert.equal(sha256(beforeWitPackageIntegration(path, await readFile(path, "utf8"), lineage.sources[path].currentSha256)), lineage.sources[path].currentSha256);
 	assert.equal(regression.sourceHashes["tests/jvm-collections.test.mjs"], original.sourceHashes["tests/jvm-collections.test.mjs"]);
 	assert.deepEqual(regression.executions.map(run => `${run.path}/${run.profile}`), ["ordinary-source/java", "ordinary-source/kotlin", "reviewed-ir/java", "reviewed-ir/kotlin"]);
 	for(const run of regression.executions)

@@ -171,9 +171,9 @@ test("recursive NuGet admission validates requested graph targets without requir
 	assert.equal(model.prefix, "recursive");
 	for(const targets of [["c", "nuget"], ["cargo", "nuget"], ["pypi", "rubygems", "nuget"]])
 		assert.equal(compileNativeGraphProjection(ir, targets).layoutSha256, model.layoutSha256);
-	for(const targets of [["nuget", "maven"], ["nuget", "php-native"]])
+	for(const targets of [["nuget", "maven"], ["nuget", "php-native"], ["nuget", "wit-wasi"]])
 		assert.equal(compileNativeGraphProjection(ir, targets).prefix, "recursive");
-	for(const targets of [["nuget", "nuget"], ["nuget", "wit-wasi"]])
+	for(const targets of [["nuget", "nuget"], ["nuget", "unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 });
 

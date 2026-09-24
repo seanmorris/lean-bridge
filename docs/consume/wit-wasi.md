@@ -99,8 +99,8 @@ allocation's size. The 32-level schema limit and 16 MiB conversion budgets apply
 The [collection acceptance record](../evidence/wit-collections-20260922.md)
 covers both installed source paths, 24 nested Array levels, seven record types,
 independent Lean field inspectors, reproducible archives and separate sanitizer
-probes. Recursive copied records and compound callback payloads remain separate
-work.
+probes. Recursive copied records use the typed helpers described below.
+Compound callback payloads remain unsupported.
 
 ### Options, results and products
 
@@ -210,9 +210,9 @@ Lean `USize` and `ISize` use 64-bit values in this native profile. The existing
 32-level type limit and conversion budgets still apply.
 
 The [installed alias checks](../evidence/wit-aliases-20260921.md) cover ordinary
-source and reviewed IR, including aliases used only as return types. Aliases
-inside callback signatures, recursive copied values and
-identity-bearing alias targets remain unsupported.
+source and reviewed IR, including aliases used only as return types. Recursive
+copied aliases use the typed helpers described below. Aliases inside callback
+signatures and identity-bearing alias targets remain unsupported.
 
 ### Named copied variants
 
@@ -271,12 +271,41 @@ Variants compose with aliases, arrays, Lists, records, options, results and
 products, under the existing 32-level type limit and conversion budgets.
 Unknown cases, absent or extra payloads, wrong field order, names and types
 fail without changing the output slot. Caller pointers must still refer to
-valid C storage. Recursive copied values and identity-bearing fields remain
-unsupported, as do variant payloads inside callbacks.
+valid C storage. Recursive copied values use a separate bounded representation
+described below. Identity-bearing fields and variant callback payloads remain
+unsupported.
 
 The [installed variant checks](../evidence/wit-variants-20260921.md) cover both
 source paths, empty and Unit cases, mixed integer/float payloads, a 257-case
 family, malformed inputs, independent copies and recovery after failure.
+
+### Recursive copied values
+
+The builder now produces prepared WIT packages for recursive records and
+variants, including mutually recursive types and their copied containers.
+Both ordinary-source and reviewed-IR archives passed
+[installation and independent rebuild checks](../evidence/wit-recursive-packages-20260924.md).
+Cross-package composition, conflict handling and the documented consumer example
+still need acceptance checks. The audit table below has not promoted this family
+to final installed acceptance.
+
+Use the package's generated `<prefix>_wasmtime.h` header. Its
+`<prefix>_wasmtime_value_<export>` helpers accept named C values and call the
+compiled Component Model binary. The helpers convert recursive values to finite,
+typed WIT tables; callers do not assemble those tables. The manifest preserves
+the original Lean types and records the transport mapping.
+
+Inputs borrow caller-owned storage for one call. Initialize result aggregates
+with their generated `_init` helper, then release successful results with their
+`_clear` helper. Results own independent storage and remain valid after session
+close. Clear a result before reusing its output slot. Use the generated named
+constructor constants, not numeric tags or Lean object layouts.
+
+Conversion rejects cycles and enforces a depth limit of 128, 262,144 expanded
+node visits and a 16 MiB copy budget. A limit error leaves the output unchanged
+and the session usable. A malformed native result retires the shared runtime,
+so later calls from every session fail. Structured callback payloads and
+resource-containing aggregates are not part of this implementation.
 
 ### Callbacks and returned Lean functions
 

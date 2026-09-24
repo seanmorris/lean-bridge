@@ -50,7 +50,8 @@ test("Maven graph admission checks both JVM projections without adding a public 
 	assert.equal(model.namespace, "org.leanbridge.recursive"); assert.equal(model.kotlin.namespace, "org.leanbridge.recursive.kotlin");
 	assert.equal(compileNativeGraphProjection(ir, ["nuget", "maven"]).prefix, "recursive");
 	assert.equal(compileNativeGraphProjection(ir, ["maven", "php-native"]).prefix, "recursive");
-	for(const targets of [["maven", "wit-wasi"]])
+	assert.equal(compileNativeGraphProjection(ir, ["maven", "wit-wasi"]).prefix, "recursive");
+	for(const targets of [["maven", "unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 	const files = generateCopiedJvmGraphPackage(jvmGraphCollisionIr());
 	auditManagedBindingPackage(jvmGraphCollisionIr(), files, "jvm");

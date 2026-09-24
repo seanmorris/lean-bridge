@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const cPath = "src/build/native-c-projection.mjs";
 const graphPath = "src/build/native-graph-projection.mjs";
@@ -35,6 +36,7 @@ const list = values => `[${values.map(value => JSON.stringify(value)).join(", ")
  * @param beforeTarget - Return the source before this target was admitted.
  */
 export const beforeNativeSharedAdmission = (path, source, beforeTarget) => {
+	source = beforeWitPackageIntegration(path, source);
 	assert.ok([cPath, graphPath, projectPath].includes(path), `Not a shared native admission source: ${path}`);
 	const stop = stages.findIndex(stage => stage.target === beforeTarget);
 	assert.ok(stop >= 0, `Unknown native graph admission stage: ${beforeTarget}`);

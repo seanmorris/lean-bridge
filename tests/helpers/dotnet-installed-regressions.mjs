@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { inspectLeanProject } from "../../src/analyze/lean-project.mjs";
@@ -179,9 +180,9 @@ export const assertDotnetFamilyRegressionEvidence = async record => {
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	const previous = JSON.parse(previousBytes);
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), dotnetFamilyExecutionPaths(previous));
-	for(const [path, expected] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), expected, path);
+	for(const [path, expected] of Object.entries(record.sourceHashes)) assert.equal(sha256(beforeWitPackageIntegration(path, await readFile(path, "utf8"), expected)), expected, path);
 	assert.deepEqual(Object.keys(record.verifierSources).sort(), dotnetFamilyVerifierPaths);
-	for(const [path, expected] of Object.entries(record.verifierSources)) assert.equal(sha256(await readFile(path)), expected, path);
+	for(const [path, expected] of Object.entries(record.verifierSources)) assert.equal(sha256(beforeWitPackageIntegration(path, await readFile(path, "utf8"), expected)), expected, path);
 	const baselines = {};
 	assert.deepEqual(record.baselines, previous.baselines);
 	assert.deepEqual(Object.keys(record.baselines).sort(), families);

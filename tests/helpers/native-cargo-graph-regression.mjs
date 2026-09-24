@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
 import { assertPythonGraphSourceUpdate } from "./native-python-graph-regression.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const recordPath = "docs/evidence/rust-recursive-regressions-20260923.json";
 const shared = ["src/build/native-project.mjs", "src/build/native-c-projection.mjs"];
@@ -108,7 +109,7 @@ const restoreVerification = (source, path) => {
  * @param expected - Original receipt's SHA-256, never replaced in that receipt.
  */
 export const assertCargoGraphSourceUpdate = async (path, expected) => {
-	const source = await readFile(path, "utf8");
+	const source = beforeWitPackageIntegration(path, await readFile(path, "utf8"), expected);
 	if(sha256(source) === expected) return;
 	if(["tests/native-graph-package.test.mjs", "tests/helpers/native-graph-jvm-regression.mjs"].includes(path))
 	{

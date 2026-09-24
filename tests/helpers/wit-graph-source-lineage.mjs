@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const recordPath = "docs/evidence/wit-recursive-registration-20260924.json";
 const lineagePath = "docs/evidence/recursive-npm-source-lineage-20260922.json";
@@ -20,6 +21,7 @@ const checkers = new Set(["tests/helpers/recursive-acceptance-updates.mjs", "tes
  * @param update - Reviewed complete before/after digests and reversible changes.
  */
 export const reverseWitGraphRegistration = (source, update) => {
+	source = beforeWitPackageIntegration(update.path, source, update.currentSha256);
 	assert.ok(metadata.has(update.path) || checkers.has(update.path) || update.path === lineagePath, "Not WIT registration metadata");
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	if(update.path === lineagePath)
@@ -72,6 +74,7 @@ export const reverseWitGraphRegistration = (source, update) => {
  * @param expected - Original digest requested by the historical verifier.
  */
 export const beforeWitGraphRegistration = (path, source, expected) => {
+	source = beforeWitPackageIntegration(path, source, expected);
 	if(sha256(source) === expected || !(metadata.has(path) || checkers.has(path) || path === lineagePath)) return source;
 	const record = JSON.parse(readFileSync(recordPath, "utf8"));
 	const updates = record.updates.filter(update => update.path === path && update.previousSha256 === expected);

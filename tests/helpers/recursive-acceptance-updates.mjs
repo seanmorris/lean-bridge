@@ -22,6 +22,7 @@ export const recursiveAcceptanceRecord = () => JSON.parse(readFileSync(filename,
  * @param update - Authenticated predecessor and exact edits.
  */
 export const reverseAcceptanceUpdate = (source, update) => {
+	source = beforeWitGraphRegistration(update.path, source, update.currentSha256);
 	assert.ok(documentation.includes(update.path) || update.path === checker);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(update.edits.length > 0);
@@ -61,6 +62,7 @@ export const beforeRecursiveAcceptance = (path, source, expected) => {
  * @param expected - Complete pre-acceptance documentation hash.
  */
 export const beforeRecursiveAcceptanceDocument = (source, expected) => {
+	source = beforeWitGraphRegistration("tests/documentation.test.mjs", source, expected);
 	if(sha256(source) === expected) return source;
 	const matches = recursiveAcceptanceRecord().updates.filter(update => documentation.includes(update.path) && update.previousSha256 === expected);
 	assert.equal(matches.length, 1, "Unknown acceptance documentation");

@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeNativeSharedTestUpdates, beforeNumericFlagTests } from "./native-shared-test-updates.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const integration = 'import { beforeNativeSharedVerification } from "./native-shared-verifier-updates.mjs";\n';
 const changes = {
@@ -37,6 +38,7 @@ const changes = {
  * @param source - Complete current or predecessor source.
  */
 export const beforeNativeSharedVerification = (path, source) => {
+	source = beforeWitPackageIntegration(path, source);
 	if(path === "tests/source-registration-history.test.mjs") return beforeNumericFlagTests(source);
 	if(path === "tests/helpers/native-dotnet-graph-regression.mjs")
 	{

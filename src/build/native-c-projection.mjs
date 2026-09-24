@@ -45,7 +45,7 @@ import { packageOrdinaryPhp } from "../release/native-composer.mjs";
  */
 export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native"].includes(target)) });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 	const graph = model.copiedGraph ? compileNativeGraphProjection(model.bindingIr, targets) : null;
 	const surface = graph ? null : compilePrimitiveCSurface(model.bindingIr, { variants: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), lists: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: targets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 	const p = graph ? graph.prefix : surface.prefix;

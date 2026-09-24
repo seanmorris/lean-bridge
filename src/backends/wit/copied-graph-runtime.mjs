@@ -67,7 +67,8 @@ ${model.tables.map((node, index) => `  {
     const wasmtime_component_valrecord_entry_t *field = &arena->of.record.data[${index}];
     if (!lb_name(&field->name, "${node.tableField}") || field->val.kind != WASMTIME_COMPONENT_LIST) return NULL;
     const wasmtime_component_vallist_t *table = &field->val.of.list;
-    if (table->size > LB_GRAPH_NODES - context->total || !lb_buffer(table->data, table->size, sizeof(*table->data), _Alignof(wasmtime_component_val_t)) || !lb_charge(&scope->memory, table->size, sizeof(*table->data) + 1)) return NULL;
+    if (table->size > LB_GRAPH_NODES - context->total) { scope->memory.failure = 2; return NULL; }
+    if (!lb_buffer(table->data, table->size, sizeof(*table->data), _Alignof(wasmtime_component_val_t)) || !lb_charge(&scope->memory, table->size, sizeof(*table->data) + 1)) return NULL;
     context->tables[${index}] = table; context->offsets[${index}] = context->total; context->total += table->size;
   }`).join("\n")}
   context->seen = lb_alloc(&scope->memory, context->total, 1);
@@ -76,7 +77,8 @@ ${model.tables.map((node, index) => `  {
 }
 static inline const wasmtime_component_val_t *lb_graph_dereference(lb_graph_input *context, size_t type, const wasmtime_component_val_t *reference) {
   uint32_t index;
-  if (!lb_graph_index(reference, context->scope, &index) || index >= context->tables[type]->size || context->active > LB_GRAPH_DEPTH) return NULL;
+  if (context->active > LB_GRAPH_DEPTH) { context->scope->memory.failure = 2; return NULL; }
+  if (!lb_graph_index(reference, context->scope, &index) || index >= context->tables[type]->size) return NULL;
   for (size_t i = 0; i < context->active; ++i) if (context->path[i].type == type && context->path[i].index == index) return NULL;
   context->path[context->active++] = (lb_graph_path){.type = type, .index = index};
   size_t position = context->offsets[type] + index;

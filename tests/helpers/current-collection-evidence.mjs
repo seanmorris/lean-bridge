@@ -10,6 +10,7 @@ import { verifyAddedTestRegistrations } from "./test-registration-history.mjs";
 import { assertJvmSharedRegressionEvidence } from "./jvm-shared-regression-receipt.mjs";
 import { assertNativeGraphJvmRegression } from "./native-graph-jvm-regression.mjs";
 import { assertPhpWasmSharedSourceTransition } from "./php-wasm-shared-regression-receipt.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const kotlinPath = "tests/kotlin-collection-evidence.test.mjs";
 const phpPath = "tests/php-wasm-collection-evidence.test.mjs";
@@ -73,7 +74,7 @@ export const assertCurrentKotlinCollectionSources = async original => {
 	await assertNativeGraphJvmRegression(currentLineage, original);
 	for(const [path, expected] of Object.entries(original.sourceHashes))
 	{
-		const source = await readFile(path, "utf8"), actual = sha256(source);
+		const source = beforeWitPackageIntegration(path, await readFile(path, "utf8")), actual = sha256(source);
 		if(actual === expected) continue;
 		if(changedJvm.includes(path))
 		{

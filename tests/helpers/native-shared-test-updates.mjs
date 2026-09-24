@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const currentPackageVerifier = [
 	['import { assertCurrentDotnetGraphPackages } from "./helpers/dotnet-current-graph-evidence.mjs";\n', ""]
@@ -17,6 +18,7 @@ const currentPackageVerifier = [
  * @param source - Current or preceding complete NuGet graph test module.
  */
 export const beforeDotnetCurrentPackageVerification = source => {
+	source = beforeWitPackageIntegration("tests/dotnet-graph-package.test.mjs", source);
 	if(currentPackageVerifier.every(([current]) => !source.includes(current))) return source;
 	for(const [current, previous] of currentPackageVerifier)
 	{
@@ -67,6 +69,7 @@ const changes = {
  * @param source - Complete current test source.
  */
 export const beforeNativeSharedTestUpdates = (path, source) => {
+	source = beforeWitPackageIntegration(path, source);
 	assert.ok(Object.hasOwn(changes, path), `Not a shared native target test: ${path}`);
 	if(path === "tests/dotnet-graph-package.test.mjs") source = beforeDotnetCurrentPackageVerification(source);
 	for(const [current, previous] of changes[path])

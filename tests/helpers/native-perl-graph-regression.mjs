@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { inspectLeanProject } from "../../src/analyze/lean-project.mjs";
 import { assertSourceRegistrationUpdate } from "./source-registration-history.mjs";
 import { assertDotnetGraphSourceTransition } from "./native-dotnet-graph-regression.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 import { compoundReviewedIr as expandedCompounds } from "./compound-fixture.mjs";
 import { compoundReviewedIr as namedCompounds } from "./compound-source-fixture.mjs";
 
@@ -154,7 +155,7 @@ export const assertPerlGraphRegressions = async () => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	for(const [path, hash] of Object.entries(record.sourceHashes))
 	{
-		const source = await readFile(path, "utf8");
+		const source = beforeWitPackageIntegration(path, await readFile(path, "utf8"), hash);
 		if(sha256(source) !== hash) assert.equal(await assertDotnetGraphSourceTransition(path, source, hash) || await assertSourceRegistrationUpdate(path, source, hash), true, `Changed regression source: ${path}`);
 	}
 	const baselines = {};

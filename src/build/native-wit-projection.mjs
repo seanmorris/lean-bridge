@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { ordinaryWitEvidence, wasmtimeCapiIdentity } from "./native-wit-artifacts.mjs";
 import { renderWitHostHeader, renderWitHostSource } from "../backends/wit/copied-host.mjs";
+import { renderWitGraphHostSource } from "../backends/wit/copied-graph-host.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOrdinaryWasi } from "../release/native-wasi.mjs";
 
@@ -40,13 +41,14 @@ export const snapshotWasmtimeCapi = async (source, destination) => {
 export const projectOrdinaryWasi = async options => {
 	const { working, adapterRoot, settings, environment = process.env, signal, glibcMinimumVersion } = options;
 	const { model, receipt, projection, adapter, runtimeIdentity } = await ordinaryWitEvidence(options);
-	const p = projection.surface.prefix, root = join(working, "native/wit-adapter");
+	const graph = Boolean(model.copiedGraph), nativeRuntime = graph || projection.resources.length > 0;
+	const p = graph ? projection.prefix : projection.surface.prefix, root = join(working, "native/wit-adapter");
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const wasmtimeFiles = await snapshotWasmtimeCapi(environment.LEAN_BRIDGE_WASMTIME_C_API, join(root, "wasmtime"));
 	const run = (command, args) => processBuildRunner.capture({ command, args, cwd: root, env: environment, signal });
 	await save(`wit/${projection.name}.wit`, projection.wit);
 	await save(`component/${projection.name}.wat`, projection.wat);
-	await save(`include/${p}_wasmtime.h`, renderWitHostHeader(projection));
+	await save(`include/${p}_wasmtime.h`, graph ? projection.hostHeader : renderWitHostHeader(projection));
 	await save("binding-manifest.json", canonicalJson(projection.manifest));
 	const wasmTools = environment.LEAN_BRIDGE_WASM_TOOLS ?? "wasm-tools";
 	const toolsVersion = (await run(wasmTools, ["--version"])).stdout.trim();
@@ -56,7 +58,7 @@ export const projectOrdinaryWasi = async options => {
 	await run(wasmTools, ["parse", join(root, `component/${projection.name}.wat`), "-o", join(root, component)]);
 	await run(wasmTools, ["validate", "--features", "component-model", join(root, component)]);
 	await run(wasmTools, ["component", "wit", join(root, component), "--json"]);
-	await save(`src/${p}_wasmtime.c`, renderWitHostSource(projection, await readFile(join(root, component))));
+	await save(`src/${p}_wasmtime.c`, (graph ? renderWitGraphHostSource : renderWitHostSource)(projection, await readFile(join(root, component))));
 	const library = `lib${p}_wasmtime.so`;
 	await mkdir(join(root, "lib"));
 	await run(environment.CC ?? "cc", ["-std=c11", "-O2", "-g0", "-fPIC", "-shared"
@@ -65,12 +67,13 @@ export const projectOrdinaryWasi = async options => {
 		, "-I", join(root, "include")
 		, "-I", join(root, "wasmtime/include")
 		, "-I", join(adapterRoot, "include")
-		, ...(projection.resources.length ? ["-I", join(options.runtimeRoot, "include"), "-pthread"] : [])
+		, ...(graph ? ["-I", join(adapterRoot, "include/detail"), "-Wl,-z,nodelete"] : [])
+		, ...(nativeRuntime ? ["-I", join(options.runtimeRoot, "include"), "-pthread"] : [])
 		, join(root, `src/${p}_wasmtime.c`)
 		, "-L", join(adapterRoot, "lib")
 		, "-L", join(root, "wasmtime/lib")
 		, `-l${p}`, "-lwasmtime", "-Wl,-z,defs", "-Wl,--build-id=none"
-		, ...(projection.resources.length ? [join(options.runtimeRoot, "lib/liblean_bridge_native.so")] : [])
+		, ...(nativeRuntime ? [join(options.runtimeRoot, "lib/liblean_bridge_native.so")] : [])
 		, "-Wl,-rpath,$ORIGIN", `-Wl,-soname,${library}`
 		, "-o", join(root, "lib", library)]);
 	for(const path of [join(root, "lib", library), join(root, "wasmtime/lib/libwasmtime.so")])

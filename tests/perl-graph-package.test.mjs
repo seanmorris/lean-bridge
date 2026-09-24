@@ -79,13 +79,13 @@ test("CPAN finite admission validates the Perl namespace without adding a C targ
 	assert.deepEqual(compileNativeGraphProjection(ir, ["cpan"], model.moduleName), model);
 	assert.equal(model.layout.roots.length, 18); assert.equal(canonicalJson(ir), original);
 	assert.throws(() => compileNativeGraphProjection(ir, ["c", "cpan"], "LeanBridge::Runtime"), /module/);
-	for(const target of ["nuget", "maven", "php-native"])
+	for(const target of ["nuget", "maven", "php-native", "wit-wasi"])
 	{
 		assert.deepEqual(compileNativeGraphProjection(ir, ["cpan", target], model.moduleName), model);
 		assert.deepEqual(compileNativeGraphProjection(ir, [target, "cpan"], model.moduleName), model);
 		assert.throws(() => compileNativeGraphProjection(ir, ["cpan", target], "LeanBridge::Runtime"), /module/);
 	}
-	for(const target of ["unknown", "wit-wasi"])
+	for(const target of ["unknown", "invalid"])
 		assert.throws(() => compileNativeGraphProjection(ir, ["cpan", target], model.moduleName), { code: "native-graph-projection-unavailable" });
 });
 

@@ -35,7 +35,8 @@ test("recursive PHP packages expose named functions and completely audited priva
 	assert.doesNotMatch(files["src/Api.php"], /FFI|GraphTarget|GraphRuntime/);
 	assert.equal(compileNativeGraphProjection(ir, ["php-native"]).namespace, "LeanRecursive");
 	assert.equal(compileNativeGraphProjection(ir, ["php-native", "maven"]).prefix, "recursive");
-	assert.throws(() => compileNativeGraphProjection(ir, ["php-native", "wit-wasi"]), { code: "native-graph-projection-unavailable" });
+	assert.equal(compileNativeGraphProjection(ir, ["php-native", "wit-wasi"]).prefix, "recursive");
+	assert.throws(() => compileNativeGraphProjection(ir, ["php-native", "unknown"]), { code: "native-graph-projection-unavailable" });
 	assert.throws(() => auditPhpPackage(ir, files, { integerBits: 32 }), { code: "unsupported-copied-php-profile" });
 	for(const path of Object.keys(files).filter(path => path !== "binding-manifest.json"))
 	{

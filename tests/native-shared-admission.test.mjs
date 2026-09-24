@@ -82,16 +82,16 @@ test("all implemented native graph targets validate alone and with CPAN without 
 	const ir = nativeRecursiveReviewedIr(), before = canonicalJson(ir);
 	const moduleName = "LeanBridge::Recursive";
 	const perl = compileCopiedPerlGraphPackageModel(ir, moduleName);
-	const targets = ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native"];
+	const targets = ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"];
 	for(const target of targets) assert.ok(compileNativeGraphProjection(ir, [target], moduleName));
-	for(const target of ["nuget", "maven", "php-native"])
+	for(const target of ["nuget", "maven", "php-native", "wit-wasi"])
 	{
 		assert.deepEqual(compileNativeGraphProjection(ir, ["cpan", target], moduleName), perl);
 		assert.deepEqual(compileNativeGraphProjection(ir, [target, "cpan"], moduleName), perl);
 		assert.throws(() => compileNativeGraphProjection(ir, ["cpan", target], "LeanBridge::Runtime"), /module/);
 	}
 	assert.ok(compileNativeGraphProjection(ir, targets, moduleName));
-	for(const invalid of [undefined, {}, [], ["c", "c"], ["cpan", "unknown"], ["nuget", "wit-wasi"]])
+	for(const invalid of [undefined, {}, [], ["c", "c"], ["cpan", "unknown"], ["nuget", "unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, invalid, moduleName), { code: "native-graph-projection-unavailable" });
 	assert.throws(() => compileNativeGraphProjection(ir, ["cpan", "maven"]), { code: "native-graph-projection-unavailable" });
 	assert.equal(canonicalJson(ir), before);

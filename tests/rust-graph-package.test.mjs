@@ -47,9 +47,9 @@ test("recursive Cargo admission validates every requested target without requiri
 	assert.equal(compileNativeGraphProjection(ir, ["c", "cpp", "cargo"]).layoutSha256, model.layoutSha256);
 	assert.equal(compileNativeGraphProjection(ir, ["cargo", "pypi"]).layoutSha256, model.layoutSha256);
 	assert.equal(generateCopiedGraphPackage(ir, ["c", "cpp"]).layoutSha256, model.layoutSha256);
-	for(const host of ["maven", "php-native"])
+	for(const host of ["maven", "php-native", "wit-wasi"])
 		assert.equal(compileNativeGraphProjection(ir, ["cargo", host]).layoutSha256, model.layoutSha256);
-	for(const targets of [[], ["cargo", "cargo"], ["cargo", "cpan"], ["wit-wasi"]])
+	for(const targets of [[], ["cargo", "cargo"], ["cargo", "cpan"], ["unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 	for(const name of ["dispatch", "assets", "graphRuntime", "graphReady", "call0"])
 	{

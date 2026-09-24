@@ -12,6 +12,8 @@ import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
 import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { ordinaryWitEvidence, wasmtimeCapiIdentity } from "../build/native-wit-artifacts.mjs";
 import { renderWitHostHeader, renderWitHostSource } from "../backends/wit/copied-host.mjs";
+import { renderWitGraphHostSource } from "../backends/wit/copied-graph-host.mjs";
+import { witGraphPackageReadme } from "../backends/wit/copied-graph-package.mjs";
 import { witAliasReadme } from "../backends/wit/copied-aliases.mjs";
 import { witVariantReadme } from "../backends/wit/copied-variants.mjs";
 import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
@@ -24,7 +26,7 @@ import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 export const packageOrdinaryWasi = async options => {
 	const { working, nativeRoot, runtimeRoot, adapterRoot, witRoot, leanPrefix, settings = {}, glibcMinimumVersion } = options;
 	const { model, receipt, projection, adapter, runtime, runtimeIdentity } = await ordinaryWitEvidence(options);
-	const p = projection.surface.prefix;
+	const graph = Boolean(model.copiedGraph), p = graph ? projection.prefix : projection.surface.prefix;
 	const compiled = JSON.parse(await readFile(join(witRoot, "native-wit-adapter.json"), "utf8"));
 	await verifyNativeFiles(witRoot, compiled.files);
 	if(compiled.wasmtime?.version !== wasmtimeCapiIdentity.version || compiled.wasmtime.archiveSha256 !== wasmtimeCapiIdentity.archiveSha256
@@ -38,18 +40,20 @@ export const packageOrdinaryWasi = async options => {
 		|| (await nativeArtifactPaths(witRoot)).some(path => path !== "native-wit-adapter.json" && !Object.hasOwn(compiled.files, path))) throw new Error("WIT host differs from compiled native inputs");
 	const expected = { [`wit/${projection.name}.wit`]: projection.wit
 		, [`component/${projection.name}.wat`]: projection.wat
-		, [`include/${p}_wasmtime.h`]: renderWitHostHeader(projection)
-		, [`src/${p}_wasmtime.c`]: renderWitHostSource(projection, await readFile(join(witRoot, compiled.component)))
+		, [`include/${p}_wasmtime.h`]: graph ? projection.hostHeader : renderWitHostHeader(projection)
+		, [`src/${p}_wasmtime.c`]: (graph ? renderWitGraphHostSource : renderWitHostSource)(projection, await readFile(join(witRoot, compiled.component)))
 		, "binding-manifest.json": canonicalJson(projection.manifest) };
 	for(const [path, contents] of Object.entries(expected)) if(await readFile(join(witRoot, path), "utf8") !== contents) throw new Error(`WIT generated source differs: ${path}`);
 	const { name, version } = projection, archiveRoot = `${name}-${version}-wit-wasi`, root = join(working, "packages/wit-wasi", archiveRoot);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (from, path) => save(path, await readFile(from));
-	const saveReadme = bytes => save("README.md", (projection.resources.length ? callableReadme(projection, glibcMinimumVersion) : bytes) + witAliasReadme(projection) + witVariantReadme(projection));
+	const saveReadme = bytes => save("README.md", graph ? witGraphPackageReadme(projection, glibcMinimumVersion) : (projection.resources.length ? callableReadme(projection, glibcMinimumVersion) : bytes) + witAliasReadme(projection) + witVariantReadme(projection));
 	for(const path of await nativeArtifactPaths(witRoot))
 		await copy(join(witRoot, path), path === "wasmtime/LICENSE" ? "share/lean-bridge/licenses/Wasmtime-LICENSE" : path.startsWith("wasmtime/") ? path.slice(9) : path);
 	await copy(join(adapterRoot, "lib", adapter.library), `lib/${adapter.library}`);
-	await copy(join(adapterRoot, `include/${p}.h`), `include/${p}.h`);
+	if(graph) for(const suffix of ["graph.h", "graph-types.h"])
+		await copy(join(adapterRoot, `include/detail/${p}-${suffix}`), `include/${p}-${suffix}`);
+	else await copy(join(adapterRoot, `include/${p}.h`), `include/${p}.h`);
 	await copy(join(nativeRoot, receipt.library), `lib/${receipt.library}`);
 	for(const path of Object.keys(runtime.files).filter(path => path.startsWith("lib/"))) await copy(join(runtimeRoot, path), path);
 	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json"])
@@ -79,10 +83,10 @@ Cflags: -I\${includedir}
 	const bytes = Buffer.from(canonicalJson(manifest)); await save("lean-bridge-package.json", bytes); files.push({ path: "lean-bridge-package.json", bytes, mode: 0o644 });
 	const archive = `${archiveRoot}.tar.gz`, packed = createDeterministicTarGzFromFiles({ files: files.map(file => ({ ...file, path: `${archiveRoot}/${file.path}` })), sourceDateEpoch: 1 });
 	await mkdir(join(working, "archives"), { recursive: true }); await writeFile(join(working, "archives", archive), packed, { flag: "wx" });
-	return { ecosystem: "wit-wasi", backend: "ordinary-wit-native-v1", runtimeIdentity, glibcMinimumVersion, packages: [{ archive, name, version, bytes: packed.length, sha256: sha256(packed), compilerAccess: false }] };
+	return { ecosystem: "wit-wasi", backend: graph ? "ordinary-wit-native-graph-v1" : "ordinary-wit-native-v1", runtimeIdentity, glibcMinimumVersion, packages: [{ archive, name, version, bytes: packed.length, sha256: sha256(packed), compilerAccess: false }] };
 };
 
-const surfaceList = projection => projection.surface.functions.map(fn => `- ${fn.witName}: ${fn.declaration.id}`).join("\n");
+const surfaceList = projection => (projection.wire ?? projection).surface.functions.map(fn => `- ${fn.witName}: ${fn.declaration.id}`).join("\n");
 
 const callableReadme = (projection, glibc) => {
 	const { name, version, surface: { prefix: p } } = projection;

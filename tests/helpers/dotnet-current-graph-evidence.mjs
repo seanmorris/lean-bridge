@@ -10,6 +10,7 @@ import { assertDotnetGraphPackageReports } from "./dotnet-graph-receipt.mjs";
 import { assertDotnetFamilyRegressions } from "./dotnet-installed-regressions.mjs";
 import { beforeDotnetCurrentPackageVerification } from "./native-shared-test-updates.mjs";
 import { beforeRecursiveAcceptance } from "./recursive-acceptance-updates.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const graphTest = "tests/dotnet-graph-package.test.mjs";
 const normalizeConsumer = (inventory, sized) => {
@@ -86,6 +87,7 @@ export const assertDotnetCurrentGraphEvidence = async record => {
 	for(const [path, expected] of Object.entries(record.sourceHashes))
 	{
 		let source = await readFile(path, "utf8");
+		source = beforeWitPackageIntegration(path, source, expected);
 		if(path === "docs/consume/dotnet.md") source = beforeRecursiveAcceptance(path, source, expected);
 		if(path === graphTest)
 		{

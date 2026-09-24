@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { assertTestManifestRegistration } from "./source-registration-upgrade.mjs";
 import { assertNativeAssetTamperSourceUpdate } from "./native-asset-tamper-history.mjs";
 import { assertInventoryOrderVerification, reverseInventoryFileOrder } from "./source-inventory-order.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const metadata = new Set(["package.json", "config/cli-package.v1.json", "config/checked-javascript.json", "nix/perl-engine-source-boundary.json", ".github/workflows/consumer-matrix.yml", ".github/workflows/perl-consumer.yml"]);
 const sourcePath = /^src\/(?:backends|build|release)\/[a-z0-9/-]+\.mjs$/;
@@ -44,6 +45,7 @@ const allowedLine = (path, line) => {
  * @param updates - Append-only addition records.
  */
 export const verifyAddedSourceRegistrations = (path, source, expected, updates) => {
+	source = beforeWitPackageIntegration(path, source, expected);
 	assert.ok(metadata.has(path), `Not an additive source inventory: ${path}`);
 	const seen = new Set();
 	while(sha256(source) !== expected)
@@ -79,6 +81,7 @@ export const verifyAddedSourceRegistrations = (path, source, expected, updates) 
  * @param expected - Immutable baseline digest.
  */
 export const assertSourceRegistrationUpdate = async (path, source, expected) => {
+	source = beforeWitPackageIntegration(path, source, expected);
 	if(assertInventoryOrderVerification(path, source, expected)) return true;
 	if(await assertNativeAssetTamperSourceUpdate(path, source, expected)) return true;
 	if(await assertTestManifestRegistration(path, source, expected)) return true;

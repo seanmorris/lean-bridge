@@ -160,7 +160,7 @@ static void invalid_inputs(void) {
   size_t count = table->of.list.size; table->of.list.size = SIZE_MAX; BAD_INPUT(); table->of.list.size = count;
   encoded.of.record.data[1].val.of.record.data[TABLE_Spine].name.data[0] = 'z'; BAD_INPUT(); encoded.of.record.data[1].val.of.record.data[TABLE_Spine].name.data[0] = 'n';
   lb_graph_scope input_scope = scope(); input_scope.nodes = 2;
-  assert(!IN_Spine(&encoded, &input_scope, &target)); close_scope(&input_scope); ++malformed_inputs;
+  assert(!IN_Spine(&encoded, &input_scope, &target)); assert(input_scope.memory.failure == 2); close_scope(&input_scope); ++malformed_inputs;
   for (size_t bytes = 0; bytes < 12000; bytes += 17) {
     input_scope = scope(); input_scope.memory.remaining = bytes; target = sentinel;
     if (!IN_Spine(&encoded, &input_scope, &target)) { assert(memcmp(&target, &sentinel, sizeof(target)) == 0); ++input_budget_failures; }
@@ -241,7 +241,9 @@ static void shared_dag(void) {
   check_scalars(&decoded.data[0].cases.leaf.payload); check_scalars(&decoded.data[1].cases.leaf.payload);
   close_scope(&input_scope);
   input_scope = scope(); input_scope.nodes = 42;
-  assert(!IN_Forest(&wire, &input_scope, NULL)); close_scope(&input_scope); ++malformed_inputs;
+  assert(!IN_Forest(&wire, &input_scope, NULL)); assert(input_scope.memory.failure == 2); close_scope(&input_scope); ++malformed_inputs;
+  input_scope = scope(); input_scope.nodes = 2;
+  assert(!IN_Forest(&wire, &input_scope, NULL)); assert(input_scope.memory.failure == 2); close_scope(&input_scope);
   wasmtime_component_val_delete(&wire); assert(!live_allocations);
 }
 

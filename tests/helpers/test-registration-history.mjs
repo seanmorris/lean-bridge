@@ -11,6 +11,7 @@ import { assertPerlGraphSourceTransition } from "./native-perl-graph-regression.
 import { assertDotnetGraphSourceTransition } from "./native-dotnet-graph-regression.mjs";
 import { assertPhpWasmSharedSourceTransition } from "./php-wasm-shared-regression-receipt.mjs";
 import { assertJvmSharedSourceTransition } from "./jvm-shared-regression-receipt.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 /**
  * Undo only recorded, uniquely occurring manifest entries and verify each hash.
@@ -20,6 +21,7 @@ import { assertJvmSharedSourceTransition } from "./jvm-shared-regression-receipt
  * @param updates - Explicit registration steps, newest or oldest first.
  */
 export const verifyAddedTestRegistrations = (source, expected, updates) => {
+	source = beforeWitPackageIntegration("src/adoption/test-profiles.mjs", source, expected);
 	const seen = new Set();
 	while(sha256(source) !== expected)
 	{
@@ -49,6 +51,7 @@ export const verifyAddedTestRegistrations = (source, expected, updates) => {
  */
 export const assertAdministrativeSourceUpdate = async (path, expected) => {
 	let source = await readFile(path, "utf8");
+	source = beforeWitPackageIntegration(path, source, expected);
 	if(sha256(source) === expected) return;
 	if(await assertPhpWasmSharedSourceTransition(path, source, expected)) return;
 	if(await assertJvmSharedSourceTransition(path, source, expected)) return;

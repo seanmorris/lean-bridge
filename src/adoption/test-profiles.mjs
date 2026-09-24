@@ -170,6 +170,8 @@ const profileManifest = Object.freeze({
 		, "wit-copied-graph-model"
 		, "wit-copied-graph-conversions"
 		, "wit-copied-graph-native"
+		, "wit-copied-graph-package"
+		, "wit-graph-package-evidence"
 		, "wit-alias-contract"
 		, "wit-alias-evidence"
 		, "wit-variant-contract"

@@ -12,6 +12,7 @@ import { compoundReviewedIr as expandedCompounds } from "./compound-fixture.mjs"
 import { compoundReviewedIr as namedCompounds } from "./compound-source-fixture.mjs";
 import { phpIsolationFlags } from "./type-corpus-php.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 export const phpFamilyBaselines = {
 	aliases: "docs/evidence/php-native-aliases-20260921.json"
@@ -177,9 +178,9 @@ export const assertPhpFamilyRegressionEvidence = async record => {
 		baselines[family] = JSON.parse(bytes);
 	}
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), phpFamilyExecutionPaths(baselines));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(beforeWitPackageIntegration(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(Object.keys(record.verifierSources), ["tests/helpers/php-installed-regressions.mjs"]);
-	for(const [path, hash] of Object.entries(record.verifierSources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.verifierSources)) assert.equal(sha256(beforeWitPackageIntegration(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.equal(record.predecessor.path, "docs/evidence/php-recursive-packages-20260923.json");
 	const predecessorBytes = await readFile(record.predecessor.path);
 	assert.equal(sha256(predecessorBytes), record.predecessor.sha256);

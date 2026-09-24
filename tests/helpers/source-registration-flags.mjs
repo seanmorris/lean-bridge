@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { beforeInventoryOrderVerification } from "./source-inventory-order.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const integration = 'import { beforeNumericTestFlags } from "./source-registration-flags.mjs";\n';
 const currentLoop = 'for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(beforeNumericTestFlags(path, await readFile(path, "utf8"))), hash, path);';
@@ -19,6 +20,7 @@ const integrationCall = '\tsource = beforeNumericTestFlags(path, source);\n';
  * @param source - Current complete text.
  */
 export const beforeNumericTestFlags = (path, source) => {
+	source = beforeWitPackageIntegration(path, source);
 	source = beforeInventoryOrderVerification(path, source);
 	if(path === "tests/helpers/source-registration-history.mjs")
 	{

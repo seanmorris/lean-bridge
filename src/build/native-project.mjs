@@ -85,7 +85,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, configurationSha256: record.sha256
 			, lakeSnapshot
 			, targets
-			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native"].includes(target))
+			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.copiedGraph)
 				{ compileNativeGraphProjection(model.bindingIr, targets, model.moduleName); return; }

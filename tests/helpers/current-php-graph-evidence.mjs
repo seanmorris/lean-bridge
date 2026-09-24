@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
 import { assertRecursiveDocumentationSource } from "./recursive-documentation-history.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 /**
  * Restore the exact two-line receipt-checker change, not its installed test bodies.
@@ -15,6 +16,7 @@ import { assertRecursiveDocumentationSource } from "./recursive-documentation-hi
  * @param source - Complete current Composer test module.
  */
 export const beforeCurrentPhpGraphVerification = source => {
+	source = beforeWitPackageIntegration("tests/php-graph-package.test.mjs", source);
 	for(const [current, previous] of [
 		['import { assertCurrentPhpGraphSources } from "./helpers/current-php-graph-evidence.mjs";\n', 'import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-history.mjs";\n']
 		, ['await assertCurrentPhpGraphSources(record);', 'for(const [path, hash] of Object.entries(record.sourceHashes)) await assertAdministrativeSourceUpdate(path, hash);']

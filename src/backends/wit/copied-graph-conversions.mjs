@@ -88,7 +88,7 @@ export const renderWitGraphConversions = model => {
 				const child = nodes.get(node.element);
 				input.push("if (value->kind != WASMTIME_COMPONENT_LIST) return false;"
 					, "size_t count = value->of.list.size;"
-					, `if (count > context->scope->nodes || !lb_buffer(value->of.list.data, count, sizeof(wasmtime_component_val_t), _Alignof(wasmtime_component_val_t)) || !lb_charge(&context->scope->memory, count, sizeof(${child.name}) + sizeof(wasmtime_component_val_t))) return false;`
+					, `if (!lb_graph_count(context->scope, count) || !lb_buffer(value->of.list.data, count, sizeof(wasmtime_component_val_t), _Alignof(wasmtime_component_val_t)) || !lb_charge(&context->scope->memory, count, sizeof(${child.name}) + sizeof(wasmtime_component_val_t))) return false;`
 					, `${child.name} *items = out ? lb_alloc(&context->scope->memory, count, sizeof(${child.name})) : NULL;`
 					, "if (out && count && !items) return false;"
 					, "if (out) { out->data = items; out->length = count; }"

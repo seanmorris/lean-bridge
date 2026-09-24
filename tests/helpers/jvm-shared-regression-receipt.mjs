@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { beforeJvmSharedVerification } from "./jvm-shared-verifier-updates.mjs";
 import { beforeNativeSharedVerification } from "./native-shared-verifier-updates.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const receiptPath = "docs/evidence/jvm-shared-regressions-20260924.json";
 export const jvmSharedProductionPaths = [
@@ -64,7 +65,7 @@ export const assertJvmSharedRegressionEvidence = async record => {
 		assert.equal(sha256(previous.text), previous.sha256, path);
 	}
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), jvmSharedExecutionPaths(baseline));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(beforeWitPackageIntegration(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(Object.keys(record.verifierPredecessors).sort(), verifierPaths);
 	for(const [path, hash] of Object.entries(record.verifierPredecessors))
 		assert.equal(sha256(beforeJvmSharedVerification(path, await readFile(path, "utf8"))), hash, path);

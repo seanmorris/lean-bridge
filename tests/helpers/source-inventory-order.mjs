@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
 
 const checkerImport = 'import { assertInventoryOrderVerification, reverseInventoryFileOrder } from "./source-inventory-order.mjs";\n';
 const checkerCall = '\tif(assertInventoryOrderVerification(path, source, expected)) return true;\n';
@@ -29,6 +30,7 @@ const changes = {
  * @param source - Complete current or predecessor source.
  */
 export const beforeInventoryOrderVerification = (path, source) => {
+	source = beforeWitPackageIntegration(path, source);
 	const additions = changes[path];
 	if(!additions || additions.every(line => !source.includes(line))) return source;
 	for(const line of additions)
