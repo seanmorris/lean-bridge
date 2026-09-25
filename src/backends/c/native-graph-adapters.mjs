@@ -133,8 +133,9 @@ static inline uint32_t ng_nat_out(lean_object *value, ng_arena *arena, const uin
  * @param options - Optional shared-runtime lifecycle for compiled components.
  * @param options.initializer - Verified component initializer, absent for isolated transport tests.
  * @param options.wordBits - Lean and C pointer width, either 32 or 64.
+ * @param options.exportCalls - Emit public copied calls, or only reusable payload walkers.
  */
-export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null, wordBits = 64 } = {}) => {
+export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null, wordBits = 64, exportCalls = true } = {}) => {
 	assertComponentRecursiveBindings(abi, ir);
 	if(initializer !== null && (typeof initializer !== "string" || !/^initialize_LeanBridgeNative[0-9a-f]{16}$/.test(initializer))) throw new TypeError("Invalid native graph initializer identity");
 	const { layout, header: typesHeader } = generateCopiedCGraphTypes(ir, { wordBits });
@@ -326,7 +327,7 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null,
 			, `static inline lean_object *${id}_in(const ${name} *value) {`, ...input.map(line => `  ${line}`), "}"
 			, `static inline uint32_t ${id}_out(${name} *out, lean_object *value, size_t depth, ng_arena *arena) {`, ...output.map(line => `  ${line}`), "}");
 	}
-	for(const root of layout.roots)
+	for(const root of exportCalls ? layout.roots : [])
 	{
 		const item = abi.exports.find(item => item.bindingId === root.bindingId), result = table.get(root.result);
 		const parameters = root.parameters.map((id, index) => `const ${table.get(id).name} *a${index}`);

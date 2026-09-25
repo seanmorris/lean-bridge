@@ -64,10 +64,10 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
-test("recursive copied acceptance covers all seventeen profiles and npm callback payloads", () => {
+test("recursive copied acceptance covers all profiles and npm/C-family callback payloads", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "recursive");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(installed.length, 122);
+	assert.equal(installed.length, 130);
 	assert.equal(new Set(installed.map(cell => cell.profile)).size, 17);
 	const promoted = installed.filter(cell => ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile));
 	assert.equal(promoted.length, 30);
@@ -86,6 +86,8 @@ test("recursive copied acceptance covers all seventeen profiles and npm callback
 	{
 		if(["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"].includes(cell.profile))
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-structured-callables-installed"]);
+		else if(["c", "cpp"].includes(cell.profile))
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["native-recursive-callables-installed"]);
 		else assert.notEqual(cell.stages.installedExecution.state, "passed", cell.id);
 	}
 });

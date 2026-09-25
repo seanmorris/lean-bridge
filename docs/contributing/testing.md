@@ -981,6 +981,32 @@ CI requires and uploads `build/structured-callables/wit.json`,
 directory. Recursive callback payloads and resource-containing aggregates remain
 separate work.
 
+### Recursive C-family callbacks
+
+Run the installed packages and executable documentation serially:
+
+```sh
+LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs
+LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs
+LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs
+LEAN_BRIDGE_C_FAMILY_RECURSIVE_DOCUMENTATION_TEST=1 node --test tests/c-family-recursive-documentation.test.mjs
+```
+
+Both source paths exercise all nine copied callback shapes, recursive captured
+closures and nested aliases. C tests inject native and GMP-facade allocation
+failures and require the allocation ledger to return to its baseline after every
+checkpoint. C++ tests inject host allocation failures and reject invalid caller
+types. Mixed C/C++ executables include the headers in both orders and check that
+both APIs share one runtime with no remaining closure identities.
+
+Sanitized consumers run after the producer sources, installed headers and archive
+handoff have been removed. Leak checks compare against the unchanged GMP runtime
+startup baseline. Edge cases include every accepted tree depth, the first rejected
+depth, malformed values, active disposal, post-fork calls and expired creator
+threads whose operating-system IDs have been reused. CI requires and uploads
+`build/native-recursive-callables/transport.json` and
+`build/recursive-callables/{c,cpp,c-family-documentation}.json`.
+
 ### Staged WIT callable projection
 
 The separate component projection probe requires no Lean compiler:

@@ -335,10 +335,71 @@ Returned closures own their captured Lean values. Call them on the creating thre
 Same-thread nested C/Lean calls are supported up to 64 active callable invocations. Each call has a 16 MiB conversion budget covering inputs, callback arguments/results and the final output. Closure leases share the runtime's 4,096-identity capacity. These limits leave the Lean algorithm's own memory use unbounded. The [installed C checks](../evidence/c-callables-20260918.md) cover conversion, failure recovery, expired callbacks and disposal on both source paths.
 
 The [structured callable checks](../evidence/c-structured-callables-20260924.md)
-cover both source paths, relocated packages, nested ownership and allocation
-failures. Copied callback signatures are acyclic and at most 32 types deep.
-Recursive callback payloads, callbacks inside copied containers, asynchronous
-delivery and resource-containing aggregates remain unsupported.
+cover acyclic signatures up to 32 types deep. Packages containing recursive
+callback values use the graph API and limits described below. Callbacks inside
+copied containers, asynchronous delivery and resource-containing aggregates
+remain unsupported.
+
+### Recursive callbacks
+
+Recursive callbacks receive borrowed graph values and fill an initialized owned
+output. Use the generated `TYPE_copy` function to return or modify an independent
+copy. It supports in-place copying and preserves the output on failure. Do not
+shallow-copy the argument or its ownership fields. The adapter releases the
+callback's output after copying it into Lean, including when the callback fails.
+
+For the [publisher example](../publish/c.md#export-recursive-callbacks), save
+`recursive-callables.c`:
+
+```c file=c/recursive-callables.c
+#include "structured.h"
+#include <stdio.h>
+
+static structured_status increment(void *context, const structured_tree_t *value,
+    structured_tree_t *out, structured_error *error) {
+    (void)context;
+    structured_status status = structured_tree_t_copy(value, out, error);
+    if (status == STRUCTURED_STATUS_OK && out->kind == STRUCTURED_TREE_T_KIND_LEAF)
+        mpz_add_ui(out->cases.leaf.value, out->cases.leaf.value, 1);
+    return status;
+}
+
+int main(void) {
+    structured_tree_t input, output;
+    structured_tree_t_init(&input);
+    structured_tree_t_init(&output);
+    if (structured_tree_t_select(&input, STRUCTURED_TREE_T_KIND_LEAF)
+        != STRUCTURED_STATUS_OK) return 1;
+    mpz_set_ui(input.cases.leaf.value, 42);
+
+    /* This signature-specific name comes from structured.h. */
+    structured_callbackf4488fe53adb351ea5ca callback = {increment, NULL};
+    structured_error error = {0};
+    structured_status status = structured_call_recursive(&input, &callback, &output, &error);
+    int failed = status != STRUCTURED_STATUS_OK
+        || output.kind != STRUCTURED_TREE_T_KIND_LEAF
+        || mpz_cmp_ui(output.cases.leaf.value, 43)
+        || mpz_cmp_ui(input.cases.leaf.value, 42);
+    if (!failed) puts("43");
+    structured_tree_t_clear(&output);
+    structured_tree_t_clear(&input);
+    return failed;
+}
+```
+
+Compile using the installed archive's CMake target or pkg-config flags. The
+program prints `43`; the input remains `42`. Returned recursive closures use the
+same typed values and `_call`/`_dispose` ownership rules as other C closures.
+Disposal invalidates the handle immediately; an active invocation keeps its own
+reference until it returns. A new thread cannot invoke a closure whose creator
+has exited, even if the operating system reuses its thread ID.
+
+Recursive calls share the graph's 128-level, 262,144-node and 16 MiB native-copy
+limits across arguments, callback values and results. Every container or
+constructor edge counts toward the depth limit, so a tree level containing an
+array consumes more than one edge. Host conversion has a separate 16 MiB budget.
+The 64-active-call and 4,096-live-identity limits still apply. C and C++ headers
+from the same release can be included in either order and share one runtime.
 
 ### Type conversions
 
@@ -380,7 +441,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named structs, constructor tags, typed borrowed children and GMP integers` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Initialize outputs and select named constructors before filling their fields. Success replaces the initialized output; failure preserves it. Borrow input pointer/span children. Clear only owning result roots, not nested views; do not shallow-copy owners. GMP retains its default fatal allocation policy. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named structs, constructor tags, typed borrowed children and GMP integers` (input, result, field); `Named C structs, constructor tags, borrowed recursive inputs and owned GMP-backed replies` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Initialize outputs and select named constructors before filling their fields. Success replaces the initialized output; failure preserves it. Borrow input pointer/span children. Clear only owning result roots, not nested views; do not shallow-copy owners. GMP retains its default fatal allocation policy. Callback arguments borrow initialized values for the call. Use generated TYPE_copy or initialized fields for owned replies, never shallow-copy GMP values or owners. The adapter releases replies on success and failure. Failed calls preserve outputs. Returned closures retain independent captures and require explicit disposal. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

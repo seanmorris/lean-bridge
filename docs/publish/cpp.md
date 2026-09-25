@@ -80,9 +80,18 @@ For an ordinary export that returns a function, set its outer parameter count in
 
 Arrays, Lists, options, results, products, acyclic records, tagged variants and aliases work in callback and returned-closure signatures on both authoring paths. Declare their Lean types directly. The [structured fixture](../../tests/fixtures/onboarding/structured-callables/Structured.lean) and [C++ consumer example](../consume/cpp.md#structured-callbacks-and-closures) show the generated API.
 
-C++ receives owned values in callbacks and copies the returned value into Lean. Consumers use standard containers and generated value types without C buffers or ownership hooks. Callback and closure results receive the same validation as ordinary arguments, including nonnegative `Nat`, valid UTF-8 and the conversion budget. Copied type nesting is limited to 32 levels. Recursive callable payloads, callback identities inside copied fields, resource aggregates and asynchronous calls remain unsupported.
+C++ receives owned values in callbacks and copies the returned value into Lean. Consumers use standard containers and generated value types without C buffers or ownership hooks. Callback and closure results receive the same validation as ordinary arguments, including nonnegative `Nat`, valid UTF-8 and the conversion budget. Acyclic type nesting is limited to 32 levels. Packages containing recursive callback values use the graph conversion limits instead. Callback identities inside copied fields, resource aggregates and asynchronous calls remain unsupported.
 
-Select `--target cpp`, or combine `--target c --target cpp` for APIs supported by both. Other targets still reject structured callback signatures until their host projection is implemented. The [installed structured acceptance](../evidence/cpp-structured-callables-20260924.md) includes typed compiler rejections, exception recovery, allocation-failure cleanup and runtime-only deployment.
+Select `--target cpp`, or combine `--target c --target cpp`. All seventeen consumer profiles accept acyclic copied callback signatures. The [installed structured acceptance](../evidence/cpp-structured-callables-20260924.md) includes typed compiler rejections, exception recovery, allocation-failure cleanup and runtime-only deployment.
+
+### Export recursive callbacks
+
+The [recursive publisher example](c.md#export-recursive-callbacks) builds C and
+C++ archives from one Lean tree definition. Select only `--target cpp` if no C
+archive is needed. The [C++ consumer](../consume/cpp.md#recursive-callbacks) uses
+named constructors, owned containers and move-only returned closures.
+Recursive callback payloads currently work in C, C++ and npm packages. A combined
+release still requires every selected target to support every export.
 
 ## Build the reviewed Alpha example
 

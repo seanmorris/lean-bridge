@@ -9,7 +9,8 @@ import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { nativeCType, nativeCallbackDefault } from "./native-model.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "./native-graph-model.mjs";
+import { createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "./native-graph-model.mjs";
+import { generateNativeCallableGraphTrampolines } from "./native-callable-graph.mjs";
 import { brokerHeader, brokerSource } from "../backends/native/runtime-broker.mjs";
 import { nativeArtifactPaths, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
@@ -150,6 +151,8 @@ const callbackDefault = nativeCallbackDefault;
  * @param model - Compiler-checked model at its target pointer width.
  */
 export const generateCompiledCallbacks = model => {
+	if(model.copiedGraph?.callbacks)
+		return generateNativeCallableGraphTrampolines(nativeGraphCarrierAbi(model));
 	let callbacks = '#include "component.h"\n#include "lean_bridge_native_runtime.h"\n';
 	for(const type of model.types.filter(t => t.kind === "callback"))
 	{

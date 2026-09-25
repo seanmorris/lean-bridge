@@ -34,7 +34,7 @@ test("recursive public C/C++ packages preserve named values and ordinary error s
 	assert.match(output.files["gmp/include/recursive.h"], /recursive_envelope_outcome_ok_t/);
 	assert.match(output.files["gmp/include/recursive.h"], /recursive_tree_t_select/);
 	assert.match(output.files["include/recursive.hpp"], /throw Error\(status, error\)/);
-	assert.match(output.files["include/recursive.hpp"], /if \(failure.status == 4\) recursive_graph_retire/);
+	assert.match(output.files["include/recursive.hpp"], /if \(failure.status == 4\) detail::recursive_graph_retire/);
 	assert.match(output.files["include/detail/recursive-status.h"], /STATUS_INVALID_ARGUMENT = 1/);
 	assert.match(output.files["include/detail/recursive-status.h"], /STATUS_UNEXPECTED_ERROR = 5/);
 	for(const targets of [[], ["c", "pypi"], ["cpp", "cpp"], ["cpan"]])
@@ -67,14 +67,21 @@ test("public graph headers compile and C++ maps bridge failures without losing r
 	await saveLakeFile(directory, "consumer.c", await readFile("tests/fixtures/structured-types/recursive-installed.c", "utf8"));
 	const compile = (command, args) => processBuildRunner.capture({ command, args, cwd: directory }).catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
 	await compile("cc", ["-std=c11", "-Wall", "-Wextra", "-Werror", "-Igmp/include", "-fsyntax-only", "consumer.c"]);
+	for(const headers of [["recursive.h", "recursive.hpp"], ["recursive.hpp", "recursive.h"]])
+	{
+		await saveLakeFile(directory, "both.cpp", headers.map(header => `#include "${header}"`).join("\n")
+			+ "\nvoid both() { recursive_tree_t tree; recursive_tree_t_init(&tree); recursive_tree_t_clear(&tree); lean_bridge::recursive::Tree cpp = lean_bridge::recursive::TreeBranch{}; (void)cpp; }\n");
+		await compile("c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror", "-fmax-errors=3", "-Iinclude", "-Igmp/include", "-fsyntax-only", "both.cpp"]);
+	}
 	await saveLakeFile(directory, "check.cpp", `#include "recursive.hpp"
 #include <cassert>
+namespace native = lean_bridge::recursive::detail;
 static uint32_t mode;
 static int ready = 1, retired;
 extern "C" int recursive_graph_ready(void) { return ready; }
 extern "C" void recursive_graph_retire(void) { ready = 0; ++retired; }
-extern "C" uint32_t recursive_empty_graph(recursive_tree_t *out) {
-  out->kind = mode == 6 ? UINT32_MAX : static_cast<uint32_t>(RECURSIVE_TREE_T_KIND_BRANCH);
+extern "C" uint32_t recursive_empty_graph(native::recursive_tree_t *out) {
+  out->kind = mode == 6 ? UINT32_MAX : static_cast<uint32_t>(native::RECURSIVE_TREE_T_KIND_BRANCH);
   return mode < 6 ? mode : 0;
 }
 int main() {
@@ -219,7 +226,7 @@ test("prepared recursive C and C++ packages run after removing source, headers a
 	await saveLakeFile(dirname(report), report.split("/").at(-1), canonicalJson({ schemaVersion: 1, reports }));
 });
 
-test("recursive C/C++ evidence records exact installed archives without promoting callable payloads", async () => {
+test("recursive C/C++ evidence retains copied archives alongside separate callable acceptance", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/native-recursive-packages-20260923.json"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.wordBits, 64); assert.equal(record.packageGlibcFloor, "2.36");
@@ -249,7 +256,7 @@ test("recursive C/C++ evidence records exact installed archives without promotin
 	for(const cell of typeSurfaceCells(document, contracts).filter(cell => ["c", "cpp"].includes(cell.profile) && cell.shape === "recursive"))
 	{
 		const copied = ["parameter", "result", "field"].includes(cell.position);
-		assert.equal(cell.stages.installedExecution.state, copied ? "passed" : "unreviewed", cell.id);
-		if(copied) assert.deepEqual(cell.stages.installedExecution.evidence, ["native-recursive-installed"]);
+		assert.equal(cell.stages.installedExecution.state, "passed", cell.id);
+		assert.deepEqual(cell.stages.installedExecution.evidence, [copied ? "native-recursive-installed" : "native-recursive-callables-installed"]);
 	}
 });

@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "baselineRevision": "136e4942ed32bd923cb721eb80aa038cfaa07f74",
+  "predecessors": {
+    "src/backends/c/graph-package.mjs": "4ac39d3b1888b28b84fdae479d42c3c3314e7e8336e45060f6b26bb747391547",
+    "src/backends/c/native-graph-adapters.mjs": "1c1d36a558a121105390ed5986c3864eabf28a43de385a62566877ea6e3610df"
+  },
+  "sourceHashes": {
+    "src/backends/c/graph-package.mjs": "ecc374ad27d7ca70a2286a7abf7350b630eff4797afd9b9674c85035d5f21bb9",
+    "src/backends/c/native-graph-adapters.mjs": "827bb1e9c17b0d6b4c695274db0747de9f9059a50d36439504054e6d7bd82034"
+  },
+  "bindingIrSha256": "4a8ffb84aedf7343141afa6ad07ca7e2e7aa004611e49b205c88d1e35eb63511",
+  "native": [
+    {
+      "wordBits": 32,
+      "files": {
+        "graph.h": {
+          "bytes": 1721,
+          "sha256": "e85779dec7115e34dacb3d1dfa9f03cb775f9e77bd8e56b96bb59001bd5b1cd6"
+        },
+        "types.h": {
+          "bytes": 24616,
+          "sha256": "46cf6c9a15bfae3524cb71cd48f4d6c6fb68051b035e1d4a43c89e81b0c1e356"
+        },
+        "graph.c": {
+          "bytes": 297856,
+          "sha256": "d1d59406e2378d2ca9678bf8955d05bd93bfbc80e9ed2c1aaa12cab96b41cf2e"
+        }
+      },
+      "previousFiles": {
+        "graph.h": {
+          "bytes": 1721,
+          "sha256": "e85779dec7115e34dacb3d1dfa9f03cb775f9e77bd8e56b96bb59001bd5b1cd6"
+        },
+        "types.h": {
+          "bytes": 24616,
+          "sha256": "46cf6c9a15bfae3524cb71cd48f4d6c6fb68051b035e1d4a43c89e81b0c1e356"
+        },
+        "graph.c": {
+          "bytes": 297856,
+          "sha256": "d1d59406e2378d2ca9678bf8955d05bd93bfbc80e9ed2c1aaa12cab96b41cf2e"
+        }
+      }
+    },
+    {
+      "wordBits": 64,
+      "files": {
+        "graph.h": {
+          "bytes": 1721,
+          "sha256": "fb66dd12fc4205411a9b80b78674f5259b81a2153729c2b55af30aae1bd787d7"
+        },
+        "types.h": {
+          "bytes": 24616,
+          "sha256": "7915d820bec427f6fd43e99cf2b65fca72e7352fd3458ecb85d6bc0380d983e8"
+        },
+        "graph.c": {
+          "bytes": 296083,
+          "sha256": "45aa1eb7442c1773ce750c879703029762a54cfe270ff308c62588f82c4ab984"
+        }
+      },
+      "previousFiles": {
+        "graph.h": {
+          "bytes": 1721,
+          "sha256": "fb66dd12fc4205411a9b80b78674f5259b81a2153729c2b55af30aae1bd787d7"
+        },
+        "types.h": {
+          "bytes": 24616,
+          "sha256": "7915d820bec427f6fd43e99cf2b65fca72e7352fd3458ecb85d6bc0380d983e8"
+        },
+        "graph.c": {
+          "bytes": 296083,
+          "sha256": "45aa1eb7442c1773ce750c879703029762a54cfe270ff308c62588f82c4ab984"
+        }
+      }
+    }
+  ],
+  "packages": [
+    {
+      "targets": [
+        "c"
+      ],
+      "layoutSha256": "3ec1155405c4817e860b7bb0d42b4e95f7cbac2a92dd82703eaf601fd46c4920",
+      "files": {
+        "include/detail/recursive-status.h": {
+          "bytes": 1546,
+          "sha256": "85dea4ad6391b1d89577624f25c93288adfd5bfb31d47f57ec036ce5040a8823"
+        },
+        "gmp/include/detail/recursive-status.h": {
+          "bytes": 1546,
+          "sha256": "85dea4ad6391b1d89577624f25c93288adfd5bfb31d47f57ec036ce5040a8823"
+        },
+        "gmp/include/detail/recursive-gmp-graph-values.h": {
+          "bytes": 37603,
+          "sha256": "52b16c12622371fe34653e72003d09a89fa5c98ba0f366aedd02429df3475e9c"
+        },
+        "gmp/include/detail/recursive-gmp-api.h": {
+          "bytes": 2520,
+          "sha256": "1f6a3d51553fc8cd0cf786f6fcce672317b3cfc11c11f963f7228b4e479bf1ef"
+        },
+        "gmp/include/recursive.h": {
+          "bytes": 20288,
+          "sha256": "722eeb026e95a55c7b6694ea2681e0e53e8db6cfa04614e2dc007249d30406c8"
+        },
+        "gmp/internal/recursive-gmp-conversions.h": {
+          "bytes": 212182,
+          "sha256": "f7984743bc91fbbef80653e657503c93aa3d24b5023c685a63c88626d479c269"
+        },
+        "gmp/src/recursive_gmp.c": {
+          "bytes": 4939,
+          "sha256": "d4c869fd7f631c233eecc8f8375811dfde4224fcff008e4d9a5a661987bfff50"
+        }
+      },
+      "previousFiles": {
+        "include/detail/recursive-status.h": {
+          "bytes": 1472,
+          "sha256": "280a619a76df6324cfc9883361df0bf08874b412c47194b936ceb2be0f3f185d"
+        },
+        "gmp/include/detail/recursive-status.h": {
+          "bytes": 1472,
+          "sha256": "280a619a76df6324cfc9883361df0bf08874b412c47194b936ceb2be0f3f185d"
+        },
+        "gmp/include/detail/recursive-gmp-graph-values.h": {
+          "bytes": 37603,
+          "sha256": "52b16c12622371fe34653e72003d09a89fa5c98ba0f366aedd02429df3475e9c"
+        },
+        "gmp/include/detail/recursive-gmp-api.h": {
+          "bytes": 2520,
+          "sha256": "1f6a3d51553fc8cd0cf786f6fcce672317b3cfc11c11f963f7228b4e479bf1ef"
+        },
+        "gmp/include/recursive.h": {
+          "bytes": 20288,
+          "sha256": "722eeb026e95a55c7b6694ea2681e0e53e8db6cfa04614e2dc007249d30406c8"
+        },
+        "gmp/internal/recursive-gmp-conversions.h": {
+          "bytes": 212182,
+          "sha256": "f7984743bc91fbbef80653e657503c93aa3d24b5023c685a63c88626d479c269"
+        },
+        "gmp/src/recursive_gmp.c": {
+          "bytes": 4939,
+          "sha256": "d4c869fd7f631c233eecc8f8375811dfde4224fcff008e4d9a5a661987bfff50"
+        }
+      },
+      "changes": [
+        {
+          "path": "include/detail/recursive-status.h",
+          "previous": "#pragma once\n#include <stddef.h>\n#include <stdint.h>\ntypedef enum recursive_status {\n  RECURSIVE_STATUS_OK = 0, RECURSIVE_STATUS_INVALID_ARGUMENT = 1,\n  RECURSIVE_STATUS_RUNTIME_UNAVAILABLE = 2, RECURSIVE_STATUS_RUNTIME_REJECTED = 3,\n  RECURSIVE_STATUS_DECLARED_ERROR = 4, RECURSIVE_STATUS_UNEXPECTED_ERROR = 5\n} recursive_status;\ntypedef enum recursive_error_code {\n  RECURSIVE_ERROR_NONE = 0, RECURSIVE_ERROR_INVALID_ARGUMENT = 1,\n  RECURSIVE_ERROR_RUNTIME_UNAVAILABLE = 2, RECURSIVE_ERROR_UNEXPECTED = 65535\n} recursive_error_code;\ntypedef struct recursive_error { recursive_error_code code; const char *message; size_t message_length; } recursive_error;\nstatic inline recursive_status recursive_graph_finish(uint32_t status, recursive_error *error) {\n  static const char *const messages[] = {\"\", \"Invalid copied value\", \"Copied value limit exceeded\", \"Copied value allocation failed\", \"Malformed native result\", \"Lean runtime initialization failed or runtime retired\"};\n  const char *message = messages[status <= 5 ? status : 4];\n  size_t length = 0; while (message[length]) ++length;\n  recursive_status result = status == 0 ? RECURSIVE_STATUS_OK\n    : status <= 2 ? RECURSIVE_STATUS_INVALID_ARGUMENT : RECURSIVE_STATUS_UNEXPECTED_ERROR;\n  if (error) { error->code = status == 0 ? RECURSIVE_ERROR_NONE\n    : status <= 2 ? RECURSIVE_ERROR_INVALID_ARGUMENT : RECURSIVE_ERROR_UNEXPECTED;\n    error->message = message; error->message_length = length; }\n  return result;\n}\n"
+        },
+        {
+          "path": "gmp/include/detail/recursive-status.h",
+          "previous": "#pragma once\n#include <stddef.h>\n#include <stdint.h>\ntypedef enum recursive_status {\n  RECURSIVE_STATUS_OK = 0, RECURSIVE_STATUS_INVALID_ARGUMENT = 1,\n  RECURSIVE_STATUS_RUNTIME_UNAVAILABLE = 2, RECURSIVE_STATUS_RUNTIME_REJECTED = 3,\n  RECURSIVE_STATUS_DECLARED_ERROR = 4, RECURSIVE_STATUS_UNEXPECTED_ERROR = 5\n} recursive_status;\ntypedef enum recursive_error_code {\n  RECURSIVE_ERROR_NONE = 0, RECURSIVE_ERROR_INVALID_ARGUMENT = 1,\n  RECURSIVE_ERROR_RUNTIME_UNAVAILABLE = 2, RECURSIVE_ERROR_UNEXPECTED = 65535\n} recursive_error_code;\ntypedef struct recursive_error { recursive_error_code code; const char *message; size_t message_length; } recursive_error;\nstatic inline recursive_status recursive_graph_finish(uint32_t status, recursive_error *error) {\n  static const char *const messages[] = {\"\", \"Invalid copied value\", \"Copied value limit exceeded\", \"Copied value allocation failed\", \"Malformed native result\", \"Lean runtime initialization failed or runtime retired\"};\n  const char *message = messages[status <= 5 ? status : 4];\n  size_t length = 0; while (message[length]) ++length;\n  recursive_status result = status == 0 ? RECURSIVE_STATUS_OK\n    : status <= 2 ? RECURSIVE_STATUS_INVALID_ARGUMENT : RECURSIVE_STATUS_UNEXPECTED_ERROR;\n  if (error) { error->code = status == 0 ? RECURSIVE_ERROR_NONE\n    : status <= 2 ? RECURSIVE_ERROR_INVALID_ARGUMENT : RECURSIVE_ERROR_UNEXPECTED;\n    error->message = message; error->message_length = length; }\n  return result;\n}\n"
+        }
+      ]
+    },
+    {
+      "targets": [
+        "cpp"
+      ],
+      "layoutSha256": "3ec1155405c4817e860b7bb0d42b4e95f7cbac2a92dd82703eaf601fd46c4920",
+      "files": {
+        "include/detail/recursive-status.h": {
+          "bytes": 1546,
+          "sha256": "85dea4ad6391b1d89577624f25c93288adfd5bfb31d47f57ec036ce5040a8823"
+        },
+        "include/detail/recursive-values.hpp": {
+          "bytes": 16503,
+          "sha256": "7a5626c2ab231fa9b6b4d0e5469a03816e67fe67bc6c763501b932a09d6d90e5"
+        },
+        "include/detail/recursive-conversions.hpp": {
+          "bytes": 167325,
+          "sha256": "593bec299c7a46c418285bd53b46b3e95ac5e9eccb0c39f4cc38689f1f0ac767"
+        },
+        "include/recursive.hpp": {
+          "bytes": 10741,
+          "sha256": "e133e7b1b447c7e83813d370aeb002f82617c335666f7044844c200e8b3b5d88"
+        },
+        "src/recursive.cpp": {
+          "bytes": 25,
+          "sha256": "3c2a66159e8834538a686a22c5c920dbe883a73f1c0e8e5e7c305f8ff70cbc5b"
+        }
+      },
+      "previousFiles": {
+        "include/detail/recursive-status.h": {
+          "bytes": 1472,
+          "sha256": "280a619a76df6324cfc9883361df0bf08874b412c47194b936ceb2be0f3f185d"
+        },
+        "include/detail/recursive-values.hpp": {
+          "bytes": 16503,
+          "sha256": "7a5626c2ab231fa9b6b4d0e5469a03816e67fe67bc6c763501b932a09d6d90e5"
+        },
+        "include/detail/recursive-conversions.hpp": {
+          "bytes": 167325,
+          "sha256": "593bec299c7a46c418285bd53b46b3e95ac5e9eccb0c39f4cc38689f1f0ac767"
+        },
+        "include/recursive.hpp": {
+          "bytes": 9391,
+          "sha256": "1a2f16f96f93bbe6b914e030d4b4ed1d3f7f0a5f43866a2b496f4e0b4ec91103"
+        },
+        "src/recursive.cpp": {
+          "bytes": 25,
+          "sha256": "3c2a66159e8834538a686a22c5c920dbe883a73f1c0e8e5e7c305f8ff70cbc5b"
+        }
+      },
+      "changes": [
+        {
+          "path": "include/detail/recursive-status.h",
+          "previous": "#pragma once\n#include <stddef.h>\n#include <stdint.h>\ntypedef enum recursive_status {\n  RECURSIVE_STATUS_OK = 0, RECURSIVE_STATUS_INVALID_ARGUMENT = 1,\n  RECURSIVE_STATUS_RUNTIME_UNAVAILABLE = 2, RECURSIVE_STATUS_RUNTIME_REJECTED = 3,\n  RECURSIVE_STATUS_DECLARED_ERROR = 4, RECURSIVE_STATUS_UNEXPECTED_ERROR = 5\n} recursive_status;\ntypedef enum recursive_error_code {\n  RECURSIVE_ERROR_NONE = 0, RECURSIVE_ERROR_INVALID_ARGUMENT = 1,\n  RECURSIVE_ERROR_RUNTIME_UNAVAILABLE = 2, RECURSIVE_ERROR_UNEXPECTED = 65535\n} recursive_error_code;\ntypedef struct recursive_error { recursive_error_code code; const char *message; size_t message_length; } recursive_error;\nstatic inline recursive_status recursive_graph_finish(uint32_t status, recursive_error *error) {\n  static const char *const messages[] = {\"\", \"Invalid copied value\", \"Copied value limit exceeded\", \"Copied value allocation failed\", \"Malformed native result\", \"Lean runtime initialization failed or runtime retired\"};\n  const char *message = messages[status <= 5 ? status : 4];\n  size_t length = 0; while (message[length]) ++length;\n  recursive_status result = status == 0 ? RECURSIVE_STATUS_OK\n    : status <= 2 ? RECURSIVE_STATUS_INVALID_ARGUMENT : RECURSIVE_STATUS_UNEXPECTED_ERROR;\n  if (error) { error->code = status == 0 ? RECURSIVE_ERROR_NONE\n    : status <= 2 ? RECURSIVE_ERROR_INVALID_ARGUMENT : RECURSIVE_ERROR_UNEXPECTED;\n    error->message = message; error->message_length = length; }\n  return result;\n}\n"
+        },
+        {
+          "path": "include/recursive.hpp",
+          "previous": "#pragma once\n#include \"detail/recursive-status.h\"\n#include \"detail/recursive-graph.h\"\n#include \"detail/recursive-conversions.hpp\"\nnamespace lean_bridge::recursive {\nclass Error final : public std::runtime_error {\npublic:\n  recursive_status status; recursive_error_code code;\n  Error(recursive_status status, const recursive_error& error) : std::runtime_error(error.message ? std::string(error.message, error.message_length) : \"Lean call failed\"), status(status), code(error.code) {}\n};\ninline Tree tree(const Tree& a0) {\n  try {\n    auto result = detail::graph_call_tree(recursive_tree_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Graph9f037b09c87763cfaf0b forest(const Graph9f037b09c87763cfaf0b& a0) {\n  try {\n    auto result = detail::graph_call_forest(recursive_forest_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Envelope envelope(const Envelope& a0) {\n  try {\n    auto result = detail::graph_call_envelope(recursive_envelope_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Scalars scalars(const Scalars& a0) {\n  try {\n    auto result = detail::graph_call_scalars(recursive_scalars_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline LeftTree left(const LeftTree& a0) {\n  try {\n    auto result = detail::graph_call_left(recursive_left_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline RightTree right(const RightTree& a0) {\n  try {\n    auto result = detail::graph_call_right(recursive_right_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Never never(const Never& a0) {\n  try {\n    auto result = detail::graph_call_never(recursive_never_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Spine spine(const Spine& a0) {\n  try {\n    auto result = detail::graph_call_spine(recursive_spine_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Spine grow(const Spine& a0) {\n  try {\n    auto result = detail::graph_call_grow(recursive_grow_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Tree empty() {\n  try {\n    auto result = detail::graph_call_empty(recursive_empty_graph);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Tree join_trees(const Tree& a0, const Tree& a1) {\n  try {\n    auto result = detail::graph_call_join_trees(recursive_join_trees_graph, a0, a1);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline bool inspect(const Scalars& a0) {\n  try {\n    auto result = detail::graph_call_inspect(recursive_inspect_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Wide wide(const Wide& a0) {\n  try {\n    auto result = detail::graph_call_wide(recursive_wide_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Graphb172aabfb934da152171 units(const Graphb172aabfb934da152171& a0) {\n  try {\n    auto result = detail::graph_call_units(recursive_units_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline bool word_max(const uint64_t& a0) {\n  try {\n    auto result = detail::graph_call_word_max(recursive_word_max_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline bool signed_min(const int64_t& a0) {\n  try {\n    auto result = detail::graph_call_signed_min(recursive_signed_min_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Marker marker(const Marker& a0) {\n  try {\n    auto result = detail::graph_call_marker(recursive_marker_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline EmptyRecord empty_record(const EmptyRecord& a0) {\n  try {\n    auto result = detail::graph_call_empty_record(recursive_empty_record_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\n}\n"
+        }
+      ]
+    },
+    {
+      "targets": [
+        "c",
+        "cpp"
+      ],
+      "layoutSha256": "3ec1155405c4817e860b7bb0d42b4e95f7cbac2a92dd82703eaf601fd46c4920",
+      "files": {
+        "include/detail/recursive-status.h": {
+          "bytes": 1546,
+          "sha256": "85dea4ad6391b1d89577624f25c93288adfd5bfb31d47f57ec036ce5040a8823"
+        },
+        "gmp/include/detail/recursive-status.h": {
+          "bytes": 1546,
+          "sha256": "85dea4ad6391b1d89577624f25c93288adfd5bfb31d47f57ec036ce5040a8823"
+        },
+        "gmp/include/detail/recursive-gmp-graph-values.h": {
+          "bytes": 37603,
+          "sha256": "52b16c12622371fe34653e72003d09a89fa5c98ba0f366aedd02429df3475e9c"
+        },
+        "gmp/include/detail/recursive-gmp-api.h": {
+          "bytes": 2520,
+          "sha256": "1f6a3d51553fc8cd0cf786f6fcce672317b3cfc11c11f963f7228b4e479bf1ef"
+        },
+        "gmp/include/recursive.h": {
+          "bytes": 20288,
+          "sha256": "722eeb026e95a55c7b6694ea2681e0e53e8db6cfa04614e2dc007249d30406c8"
+        },
+        "gmp/internal/recursive-gmp-conversions.h": {
+          "bytes": 212182,
+          "sha256": "f7984743bc91fbbef80653e657503c93aa3d24b5023c685a63c88626d479c269"
+        },
+        "gmp/src/recursive_gmp.c": {
+          "bytes": 4939,
+          "sha256": "d4c869fd7f631c233eecc8f8375811dfde4224fcff008e4d9a5a661987bfff50"
+        },
+        "include/detail/recursive-values.hpp": {
+          "bytes": 16503,
+          "sha256": "7a5626c2ab231fa9b6b4d0e5469a03816e67fe67bc6c763501b932a09d6d90e5"
+        },
+        "include/detail/recursive-conversions.hpp": {
+          "bytes": 167325,
+          "sha256": "593bec299c7a46c418285bd53b46b3e95ac5e9eccb0c39f4cc38689f1f0ac767"
+        },
+        "include/recursive.hpp": {
+          "bytes": 10741,
+          "sha256": "e133e7b1b447c7e83813d370aeb002f82617c335666f7044844c200e8b3b5d88"
+        },
+        "src/recursive.cpp": {
+          "bytes": 25,
+          "sha256": "3c2a66159e8834538a686a22c5c920dbe883a73f1c0e8e5e7c305f8ff70cbc5b"
+        }
+      },
+      "previousFiles": {
+        "include/detail/recursive-status.h": {
+          "bytes": 1472,
+          "sha256": "280a619a76df6324cfc9883361df0bf08874b412c47194b936ceb2be0f3f185d"
+        },
+        "gmp/include/detail/recursive-status.h": {
+          "bytes": 1472,
+          "sha256": "280a619a76df6324cfc9883361df0bf08874b412c47194b936ceb2be0f3f185d"
+        },
+        "gmp/include/detail/recursive-gmp-graph-values.h": {
+          "bytes": 37603,
+          "sha256": "52b16c12622371fe34653e72003d09a89fa5c98ba0f366aedd02429df3475e9c"
+        },
+        "gmp/include/detail/recursive-gmp-api.h": {
+          "bytes": 2520,
+          "sha256": "1f6a3d51553fc8cd0cf786f6fcce672317b3cfc11c11f963f7228b4e479bf1ef"
+        },
+        "gmp/include/recursive.h": {
+          "bytes": 20288,
+          "sha256": "722eeb026e95a55c7b6694ea2681e0e53e8db6cfa04614e2dc007249d30406c8"
+        },
+        "gmp/internal/recursive-gmp-conversions.h": {
+          "bytes": 212182,
+          "sha256": "f7984743bc91fbbef80653e657503c93aa3d24b5023c685a63c88626d479c269"
+        },
+        "gmp/src/recursive_gmp.c": {
+          "bytes": 4939,
+          "sha256": "d4c869fd7f631c233eecc8f8375811dfde4224fcff008e4d9a5a661987bfff50"
+        },
+        "include/detail/recursive-values.hpp": {
+          "bytes": 16503,
+          "sha256": "7a5626c2ab231fa9b6b4d0e5469a03816e67fe67bc6c763501b932a09d6d90e5"
+        },
+        "include/detail/recursive-conversions.hpp": {
+          "bytes": 167325,
+          "sha256": "593bec299c7a46c418285bd53b46b3e95ac5e9eccb0c39f4cc38689f1f0ac767"
+        },
+        "include/recursive.hpp": {
+          "bytes": 9391,
+          "sha256": "1a2f16f96f93bbe6b914e030d4b4ed1d3f7f0a5f43866a2b496f4e0b4ec91103"
+        },
+        "src/recursive.cpp": {
+          "bytes": 25,
+          "sha256": "3c2a66159e8834538a686a22c5c920dbe883a73f1c0e8e5e7c305f8ff70cbc5b"
+        }
+      },
+      "changes": [
+        {
+          "path": "include/detail/recursive-status.h",
+          "previous": "#pragma once\n#include <stddef.h>\n#include <stdint.h>\ntypedef enum recursive_status {\n  RECURSIVE_STATUS_OK = 0, RECURSIVE_STATUS_INVALID_ARGUMENT = 1,\n  RECURSIVE_STATUS_RUNTIME_UNAVAILABLE = 2, RECURSIVE_STATUS_RUNTIME_REJECTED = 3,\n  RECURSIVE_STATUS_DECLARED_ERROR = 4, RECURSIVE_STATUS_UNEXPECTED_ERROR = 5\n} recursive_status;\ntypedef enum recursive_error_code {\n  RECURSIVE_ERROR_NONE = 0, RECURSIVE_ERROR_INVALID_ARGUMENT = 1,\n  RECURSIVE_ERROR_RUNTIME_UNAVAILABLE = 2, RECURSIVE_ERROR_UNEXPECTED = 65535\n} recursive_error_code;\ntypedef struct recursive_error { recursive_error_code code; const char *message; size_t message_length; } recursive_error;\nstatic inline recursive_status recursive_graph_finish(uint32_t status, recursive_error *error) {\n  static const char *const messages[] = {\"\", \"Invalid copied value\", \"Copied value limit exceeded\", \"Copied value allocation failed\", \"Malformed native result\", \"Lean runtime initialization failed or runtime retired\"};\n  const char *message = messages[status <= 5 ? status : 4];\n  size_t length = 0; while (message[length]) ++length;\n  recursive_status result = status == 0 ? RECURSIVE_STATUS_OK\n    : status <= 2 ? RECURSIVE_STATUS_INVALID_ARGUMENT : RECURSIVE_STATUS_UNEXPECTED_ERROR;\n  if (error) { error->code = status == 0 ? RECURSIVE_ERROR_NONE\n    : status <= 2 ? RECURSIVE_ERROR_INVALID_ARGUMENT : RECURSIVE_ERROR_UNEXPECTED;\n    error->message = message; error->message_length = length; }\n  return result;\n}\n"
+        },
+        {
+          "path": "gmp/include/detail/recursive-status.h",
+          "previous": "#pragma once\n#include <stddef.h>\n#include <stdint.h>\ntypedef enum recursive_status {\n  RECURSIVE_STATUS_OK = 0, RECURSIVE_STATUS_INVALID_ARGUMENT = 1,\n  RECURSIVE_STATUS_RUNTIME_UNAVAILABLE = 2, RECURSIVE_STATUS_RUNTIME_REJECTED = 3,\n  RECURSIVE_STATUS_DECLARED_ERROR = 4, RECURSIVE_STATUS_UNEXPECTED_ERROR = 5\n} recursive_status;\ntypedef enum recursive_error_code {\n  RECURSIVE_ERROR_NONE = 0, RECURSIVE_ERROR_INVALID_ARGUMENT = 1,\n  RECURSIVE_ERROR_RUNTIME_UNAVAILABLE = 2, RECURSIVE_ERROR_UNEXPECTED = 65535\n} recursive_error_code;\ntypedef struct recursive_error { recursive_error_code code; const char *message; size_t message_length; } recursive_error;\nstatic inline recursive_status recursive_graph_finish(uint32_t status, recursive_error *error) {\n  static const char *const messages[] = {\"\", \"Invalid copied value\", \"Copied value limit exceeded\", \"Copied value allocation failed\", \"Malformed native result\", \"Lean runtime initialization failed or runtime retired\"};\n  const char *message = messages[status <= 5 ? status : 4];\n  size_t length = 0; while (message[length]) ++length;\n  recursive_status result = status == 0 ? RECURSIVE_STATUS_OK\n    : status <= 2 ? RECURSIVE_STATUS_INVALID_ARGUMENT : RECURSIVE_STATUS_UNEXPECTED_ERROR;\n  if (error) { error->code = status == 0 ? RECURSIVE_ERROR_NONE\n    : status <= 2 ? RECURSIVE_ERROR_INVALID_ARGUMENT : RECURSIVE_ERROR_UNEXPECTED;\n    error->message = message; error->message_length = length; }\n  return result;\n}\n"
+        },
+        {
+          "path": "include/recursive.hpp",
+          "previous": "#pragma once\n#include \"detail/recursive-status.h\"\n#include \"detail/recursive-graph.h\"\n#include \"detail/recursive-conversions.hpp\"\nnamespace lean_bridge::recursive {\nclass Error final : public std::runtime_error {\npublic:\n  recursive_status status; recursive_error_code code;\n  Error(recursive_status status, const recursive_error& error) : std::runtime_error(error.message ? std::string(error.message, error.message_length) : \"Lean call failed\"), status(status), code(error.code) {}\n};\ninline Tree tree(const Tree& a0) {\n  try {\n    auto result = detail::graph_call_tree(recursive_tree_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Graph9f037b09c87763cfaf0b forest(const Graph9f037b09c87763cfaf0b& a0) {\n  try {\n    auto result = detail::graph_call_forest(recursive_forest_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Envelope envelope(const Envelope& a0) {\n  try {\n    auto result = detail::graph_call_envelope(recursive_envelope_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Scalars scalars(const Scalars& a0) {\n  try {\n    auto result = detail::graph_call_scalars(recursive_scalars_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline LeftTree left(const LeftTree& a0) {\n  try {\n    auto result = detail::graph_call_left(recursive_left_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline RightTree right(const RightTree& a0) {\n  try {\n    auto result = detail::graph_call_right(recursive_right_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Never never(const Never& a0) {\n  try {\n    auto result = detail::graph_call_never(recursive_never_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Spine spine(const Spine& a0) {\n  try {\n    auto result = detail::graph_call_spine(recursive_spine_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Spine grow(const Spine& a0) {\n  try {\n    auto result = detail::graph_call_grow(recursive_grow_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Tree empty() {\n  try {\n    auto result = detail::graph_call_empty(recursive_empty_graph);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Tree join_trees(const Tree& a0, const Tree& a1) {\n  try {\n    auto result = detail::graph_call_join_trees(recursive_join_trees_graph, a0, a1);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline bool inspect(const Scalars& a0) {\n  try {\n    auto result = detail::graph_call_inspect(recursive_inspect_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Wide wide(const Wide& a0) {\n  try {\n    auto result = detail::graph_call_wide(recursive_wide_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Graphb172aabfb934da152171 units(const Graphb172aabfb934da152171& a0) {\n  try {\n    auto result = detail::graph_call_units(recursive_units_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline bool word_max(const uint64_t& a0) {\n  try {\n    auto result = detail::graph_call_word_max(recursive_word_max_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline bool signed_min(const int64_t& a0) {\n  try {\n    auto result = detail::graph_call_signed_min(recursive_signed_min_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline Marker marker(const Marker& a0) {\n  try {\n    auto result = detail::graph_call_marker(recursive_marker_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\ninline EmptyRecord empty_record(const EmptyRecord& a0) {\n  try {\n    auto result = detail::graph_call_empty_record(recursive_empty_record_graph, a0);\n    if (!recursive_graph_ready()) detail::graph_fail(5, \"Lean runtime retired during output conversion\");\n    return result;\n  } catch (const detail::GraphConversionError& failure) {\n    if (failure.status == 4) recursive_graph_retire();\n    recursive_error error{}; auto status = recursive_graph_finish(failure.status, &error);\n    throw Error(status, error);\n  }\n}\n}\n"
+        }
+      ]
+    }
+  ]
+}

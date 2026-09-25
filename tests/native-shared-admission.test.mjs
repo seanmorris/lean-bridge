@@ -14,6 +14,7 @@ import { beforeNativeSharedTestUpdates, beforeDotnetGraphTargetTests } from "./h
 import { nativeRecursiveReviewedIr } from "./helpers/native-recursive-reviewed.mjs";
 import { assertNativeSharedRegressionEvidence, assertDotnetGraphSourceTransition } from "./helpers/native-dotnet-graph-regression.mjs";
 import { beforeNativeSharedVerification } from "./helpers/native-shared-verifier-updates.mjs";
+import { beforeNativeRecursiveCallables } from "./helpers/native-recursive-callable-source-history.mjs";
 
 test("target test updates preserve exact immediate predecessors and reject unrelated edits", async () => {
 	const perl = JSON.parse(await readFile("docs/evidence/perl-recursive-packages-20260923.json"));
@@ -67,7 +68,7 @@ test("shared graph admission reconstructs the exact pre-NuGet, pre-Maven and pre
 		const original = JSON.parse(await readFile(`docs/evidence/${receipt}-20260923.json`));
 		for(const path of ["src/build/native-c-projection.mjs", "src/build/native-graph-projection.mjs", "src/build/native-project.mjs"])
 		{
-			const source = await readFile(path, "utf8"), expected = original.sourceHashes[path];
+			const source = beforeNativeRecursiveCallables(path, await readFile(path, "utf8")), expected = original.sourceHashes[path];
 			assert.match(expected, /^[a-f0-9]{64}$/);
 			assert.equal(sha256(beforeNativeSharedAdmission(path, source, target)), expected, `${target}: ${path}`);
 			assert.notEqual(sha256(beforeNativeSharedAdmission(path, source + "\n// unrelated edit\n", target)), expected);

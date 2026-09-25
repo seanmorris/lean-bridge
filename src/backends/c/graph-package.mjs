@@ -11,7 +11,8 @@ import { generateCopiedCppGraphValues } from "../cpp/copied-graph-values.mjs";
 import { generateCopiedCppGraphConversions } from "../cpp/copied-graph-conversions.mjs";
 import { rejectPrimitiveSurface } from "./primitive-surface.mjs";
 
-const statusHeader = p => `#pragma once
+const statusHeader = p => `#ifndef ${p.toUpperCase()}_COPIED_GRAPH_STATUS_H
+#define ${p.toUpperCase()}_COPIED_GRAPH_STATUS_H
 #include <stddef.h>
 #include <stdint.h>
 typedef enum ${p}_status {
@@ -35,20 +36,31 @@ static inline ${p}_status ${p}_graph_finish(uint32_t status, ${p}_error *error) 
     error->message = message; error->message_length = length; }
   return result;
 }
+#endif
 `;
 
-const cAliases = values => {
+/**
+ * Expose C names for copied roots and anonymous container fields.
+ *
+ * @param values - Copied GMP values with the public root naming catalog.
+ * @param options - Optional public helpers for callback reply ownership.
+ * @param options.copies - Expose bounded deep-copy operations.
+ * @param options.reservedNames - Additional callable declarations in this C namespace.
+ */
+export const copiedGraphCAliases = (values, { copies = false, reservedNames = [] } = {}) => {
 	const { layout } = values, p = layout.prefix, hosts = new Map(values.types.map(node => [node.id, node]));
 	const table = new Map(layout.nodes.map(node => [node.id, node]));
 	const entries = new Map(), names = new Map();
-	for(const root of layout.roots) names.set(root.name, "function");
-	for(const suffix of ["initialize", "status", "error", "error_code", "graph_finish"]) names.set(`${p}_${suffix}`, "reserved");
 	const claim = (name, id) => {
 		if(names.has(name)) rejectPrimitiveSurface(null, `C graph public name collision: ${name}`);
 		names.set(name, id);
 	};
+	for(const suffix of ["initialize", "status", "error", "error_code", "graph_finish", "graph_ready", "graph_retire", "graph_initialize", "runtime", "runtime_v1"]) claim(`${p}_${suffix}`, "reserved");
+	for(const root of layout.roots) claim(root.name, "function");
+	for(const name of reservedNames) claim(name, "callable");
 	for(const node of values.types.filter(node => node.aggregate))
 		for(const name of [node.name, `${node.name}_init`, `${node.name}_clear`
+			, ...copies ? [`${node.name}_copy`] : []
 			, ...node.integer ? [] : [`${node.name}_dispose`, `${node.name}_destroy_inline`]
 			, ...node.kind === "variant" ? [`${node.name}_select`, `${node.name}_tag`] : []]) claim(name, node.id);
 	claim(`${p}_gmp_initialize`, "initialize");
@@ -57,7 +69,7 @@ const cAliases = values => {
 		const node = hosts.get(id);
 		if(entries.get(name) === id) return;
 		claim(name, id); entries.set(name, id);
-		if(node.aggregate) for(const suffix of ["init", "clear", ...node.kind === "variant" ? ["tag", "select"] : []]) claim(`${name}_${suffix}`, id);
+		if(node.aggregate) for(const suffix of ["init", "clear", ...copies ? ["copy"] : [], ...node.kind === "variant" ? ["tag", "select"] : []]) claim(`${name}_${suffix}`, id);
 	};
 	const expose = (name, id) => {
 		add(name, id);
@@ -84,6 +96,7 @@ const cAliases = values => {
 		const node = hosts.get(id), raw = table.get(id);
 		lines.push(`typedef ${node.name} ${name};`);
 		if(node.aggregate) for(const action of ["init", "clear"]) lines.push(`static inline void ${name}_${action}(${node.integer ? "mpz_ptr" : `${name} *`} value) { ${node.name}_${action}(value); }`);
+		if(copies && node.aggregate) lines.push(`static inline ${p}_status ${name}_copy(${node.integer ? "mpz_srcptr" : `const ${name} *`} value, ${node.integer ? "mpz_ptr" : `${name} *`} out, ${p}_error *error) { return ${node.name}_copy(value, out, error); }`);
 		if(node.kind === "variant")
 		{
 			lines.push(`typedef ${node.name}_tag ${name}_tag;`
@@ -109,7 +122,7 @@ export const compileCopiedGraphPackageModel = (ir, targets) => {
 	const reserved = new Set(["graph_ready", "graph_retire", "graph_initialize", "graph_finish"]);
 	for(const root of layout.roots)
 		if(reserved.has(root.name.slice(p.length + 1))) rejectPrimitiveSurface(ir.declarations.find(item => item.id === root.bindingId), "C/C++ export name collides with graph runtime helpers");
-	if(targets.includes("c")) cAliases(generateCopiedGmpGraphValues(ir));
+	if(targets.includes("c")) copiedGraphCAliases(generateCopiedGmpGraphValues(ir));
 	if(targets.includes("cpp")) generateCopiedCppGraphValues(ir);
 	return { layout, prefix: p, targets
 		, bigint: layout.nodes.some(node => ["nat", "int"].includes(node.ref.name))
@@ -130,7 +143,7 @@ export const generateCopiedGraphPackage = (ir, targets) => {
 	{
 		const values = generateCopiedGmpGraphConversions(ir, { lifecycle: true });
 		const nodes = new Map(values.types.map(node => [node.id, node]));
-		const declarations = [], definitions = [], aliases = cAliases(values);
+		const declarations = [], definitions = [], aliases = copiedGraphCAliases(values);
 		declarations.push(`${p}_status ${p}_gmp_initialize(${p}_error *error);`);
 		definitions.push(`${p}_status ${p}_gmp_initialize(${p}_error *error) { return ${p}_graph_finish(${p}_graph_initialize(), error); }`);
 		aliases.push(`static inline ${p}_status ${p}_initialize(${p}_error *error) { return ${p}_gmp_initialize(error); }`);
@@ -172,16 +185,20 @@ export const generateCopiedGraphPackage = (ir, targets) => {
 			const params = root.parameters.map(id => nodes.get(id)), result = nodes.get(root.result), unit = layout.nodes.find(node => node.id === root.result).ref.name === "unit", field = root.name.slice(p.length + 1);
 			wrappers.push(`inline ${unit ? "void" : result.name} ${field}(${params.map((node, i) => `const ${node.name}& a${i}`).join(", ")}) {`
 				, "  try {"
-				, `    auto result = detail::graph_call_${field}(${root.name}_graph${params.map((_, i) => `, a${i}`).join("")});`
-				, `    if (!${p}_graph_ready()) detail::graph_fail(5, "Lean runtime retired during output conversion");`
+				, `    auto result = detail::graph_call_${field}(detail::${root.name}_graph${params.map((_, i) => `, a${i}`).join("")});`
+				, `    if (!detail::${p}_graph_ready()) detail::graph_fail(5, "Lean runtime retired during output conversion");`
 				, unit ? "    (void)result;" : "    return result;"
 				, "  } catch (const detail::GraphConversionError& failure) {"
-				, `    if (failure.status == 4) ${p}_graph_retire();`
+				, `    if (failure.status == 4) detail::${p}_graph_retire();`
 				, `    ${p}_error error{}; auto status = ${p}_graph_finish(failure.status, &error);`
 				, "    throw Error(status, error);", "  }", "}");
 		}
 		files[`include/${p}.hpp`] = ["#pragma once", `#include "detail/${p}-status.h"`
-			, `#include "detail/${p}-graph.h"`, `#include "detail/${p}-conversions.hpp"`
+			, "#include <stdbool.h>", "#include <string.h>"
+			, `namespace lean_bridge::${p}::detail {`
+			, ...layout.nodes.filter(node => node.aggregate).map(node => `struct ${node.name};`)
+			, `#include "detail/${p}-graph.h"`, "}"
+			, `#include "detail/${p}-conversions.hpp"`
 			, `namespace lean_bridge::${p} {`
 			, "class Error final : public std::runtime_error {", "public:"
 			, `  ${p}_status status; ${p}_error_code code;`

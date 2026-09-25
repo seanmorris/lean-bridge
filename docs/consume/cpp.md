@@ -202,7 +202,46 @@ int main() {
 
 Use the archive's CMake target or pkg-config flags to compile it. Callback results must have the declared value type, not a borrowed reference. C++ exceptions retain their original type when rethrown; partial conversions release their storage before the exception reaches the caller.
 
-The [installed structured checks](../evidence/cpp-structured-callables-20260924.md) cover all eight shapes on both source paths, nested empty and nonempty constructors, allocation failures and compiler-free deployment. These signatures allow acyclic copied types up to 32 levels deep and share the 16 MiB native conversion budget. Recursive callback payloads, resources inside copied values, nested callback identities and asynchronous calls remain unsupported.
+The [installed structured checks](../evidence/cpp-structured-callables-20260924.md) cover all eight acyclic shapes on both source paths, nested empty and nonempty constructors, allocation failures and compiler-free deployment. These signatures allow acyclic copied types up to 32 levels deep and share the 16 MiB native conversion budget. Recursive callback values use the graph API below. Resources inside copied values, nested callback identities and asynchronous calls remain unsupported.
+
+### Recursive callbacks
+
+Recursive callbacks use the same named variants and owned containers as ordinary
+recursive calls. Arguments, returned values and captured values own independent
+copies. For the [publisher example](../publish/c.md#export-recursive-callbacks),
+save `recursive-callables.cpp`:
+
+```cpp file=cpp/recursive-callables.cpp
+#include "structured.hpp"
+#include <cassert>
+#include <iostream>
+
+namespace api = lean_bridge::structured;
+
+int main() {
+    const api::Tree input = api::TreeBranch{{api::TreeLeaf{42}}};
+    const auto output = api::call_recursive(input, [](api::Tree value) {
+        auto &children = std::get<api::TreeBranch>(value.value).children;
+        std::get<api::TreeLeaf>(children.at(0).value).value += 1;
+        return value;
+    });
+    const api::Tree expected = api::TreeBranch{{api::TreeLeaf{43}}};
+    assert(output == expected && input != output);
+    auto choose = api::make_recursive(output);
+    assert(choose.call(true, input) == expected);
+    assert(choose.call(false, input) == input);
+    std::cout << "43\n";
+}
+```
+
+Compile with the installed archive's CMake target or pkg-config flags. The program
+prints `43`. Recursive callbacks keep the same exact return-type checking,
+exception propagation and creator-thread closure rules as other C++ callbacks.
+They share the graph's 128-level, 262,144-node and 16 MiB native-copy limits across
+arguments, callbacks and results. Each constructor or container edge counts
+toward depth; the 64-active-call and 4,096-live-identity limits still apply.
+C and C++ headers from the same release work in either include order and link to
+one runtime.
 
 ### Options, results and products
 
@@ -324,7 +363,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named structs and variants, standard containers and deep-copy Box<T>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Owned standard containers and named alternatives retain recursive identities. Copying `Box<T>` makes an independent copy; missing required boxes reject. Scoped cleanup releases native output on exceptions. Invalid input or limits throw Error; C++ allocation failures throw std::bad_alloc. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named structs and variants, standard containers and deep-copy Box<T>` (input, result, field); `Named C++ variants, owned containers and recursive Box<T> values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Owned standard containers and named alternatives retain recursive identities. Copying `Box<T>` makes an independent copy; missing required boxes reject. Scoped cleanup releases native output on exceptions. Invalid input or limits throw Error; C++ allocation failures throw std::bad_alloc. Callbacks receive owned recursive values and return the exact declared type. Exceptions retain their original type. Returned move-only LeanClosure values retain independent captures and stay bound to the creator thread lifetime. Standard containers and RAII release results and partial conversions. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |
