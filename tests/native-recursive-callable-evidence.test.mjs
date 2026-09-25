@@ -10,6 +10,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { assertNativeRecursiveCallableExecution, assertNativeRecursiveCallableIntegration, nativeRecursiveCallableExecutionPath } from "./helpers/native-recursive-callable-evidence.mjs";
 import { beforeNativeRecursiveCallables, nativeRecursiveCallableHistoryPath, reverseNativeRecursiveCallableUpdate } from "./helpers/native-recursive-callable-source-history.mjs";
 import { assertNativeRecursiveCallableCodegen, nativeRecursiveCallableCodegenPath } from "./helpers/native-recursive-callable-regression.mjs";
+import { beforeClosureThreadLifetime } from "./helpers/closure-thread-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -85,7 +86,7 @@ test("recursive C-family source transitions reject unknown bytes and predecessor
 	const record = await json(nativeRecursiveCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeClosureThreadLifetime(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNativeRecursiveCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeRecursiveCallables(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeRecursiveCallables(update.path, source, update.currentSha256), source);

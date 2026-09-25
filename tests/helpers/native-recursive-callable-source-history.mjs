@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeClosureThreadLifetime } from "./closure-thread-source-history.mjs";
 
 export const nativeRecursiveCallableHistoryPath = "docs/evidence/native-recursive-callable-integration-20260925.json";
 export const nativeRecursiveCallableChangedPaths = [
@@ -66,6 +67,7 @@ export const reverseNativeRecursiveCallableUpdate = (source, update) => {
  * @param expected - Optional predecessor at which normalization stops.
  */
 export const beforeNativeRecursiveCallables = (path, source, expected) => {
+	source = beforeClosureThreadLifetime(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !nativeRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(nativeRecursiveCallableHistoryPath, "utf8"));
