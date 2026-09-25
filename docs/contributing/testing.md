@@ -1083,6 +1083,38 @@ remain unchanged. The relocated executable runs again after removing all
 producer and installed sources and package archives. CI requires and uploads
 `build/recursive-callables/rust.json`.
 
+### Recursive Ruby callbacks and closures
+
+Select the pinned MRI 3.3 interpreter and RubyGems executable:
+
+```sh
+export LEAN_BRIDGE_RUBY=/absolute/path/to/ruby-3.3/bin/ruby
+export LEAN_BRIDGE_GEM=/absolute/path/to/ruby-3.3/bin/gem
+LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/ruby-recursive-callables.test.mjs
+node --test tests/ruby-recursive-callable-contract.test.mjs
+node --test tests/ruby-recursive-callable-evidence.test.mjs
+```
+
+The gate builds 33 Lean exports on ordinary-source and reviewed-IR paths, removes
+each producer and installs the original gem offline. It relocates the installed
+gem, removes the handoff and gem cache, and runs without compiler tools. Each
+producer compiles the published Lean example; each installation runs the exact
+Ruby example.
+
+Public checks cover recursive trees, aliases used only in callbacks, independent
+copies, all accepted tree depths, first rejected depth and the existing acyclic
+shapes. Fault probes inject `NoMemoryError` and another `Exception` subclass at
+every conversion checkpoint across nine shapes and five call paths. Lifetime
+probes check creator-thread exit, native thread ID reuse, closure capacity,
+deferred close and finalization.
+
+Separate processes inspect callback owners before reading native pointers and
+verify cleanup and runtime retirement after corrupting an owned native result.
+In-memory removal of either guard must fail its corresponding probe. Every
+installed file and the package receipt must remain unchanged. CI requires and
+uploads `build/recursive-callables/ruby.json`.
+
 ### Staged WIT callable projection
 
 The separate component projection probe requires no Lean compiler:

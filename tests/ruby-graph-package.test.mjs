@@ -159,5 +159,8 @@ test("recursive Ruby evidence binds original gems, repeat builds and installed f
 		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
 	}
 	for(const cell of cells.filter(cell => cell.profile === "ruby" && cell.shape === "recursive" && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["ruby-recursive-callables-installed"]);
+	}
 });

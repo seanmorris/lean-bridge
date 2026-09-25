@@ -189,16 +189,17 @@ test("Python copied callback rows include recursive payloads and preserve resour
 	assert.match(source, /python-recursive-callables-20260925\.md/u);
 });
 
-test("Ruby copied callback rows retain recursive and resource exclusions", async () => {
+test("Ruby copied callback rows include recursive values but retain resource exclusions", async () => {
 	const source = await readFile("docs/consume/ruby.md", "utf8");
-	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum", "Recursive copied structures"])
 	{
 		const mapping = row(source, shape);
 		assert.match(mapping, /callback input, callback result/u);
 		assert.doesNotMatch(mapping, /Not audited/u);
 	}
-	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.match(row(source, "Identity-bearing value"), /Not audited/u);
 	assert.match(source, /ruby-structured-callables-20260924\.md/u);
+	assert.match(source, /ruby-recursive-callables-20260925\.md/u);
 });
 
 test("C# copied callback rows retain recursive and resource exclusions", async () => {

@@ -258,7 +258,7 @@ this copied profile.
 
 ### Callbacks and returned Lean closures
 
-Ordinary gems accept synchronous callable objects, `Proc` values, method objects and a final Ruby block. Callback arguments and results support all nineteen primitives and [acyclic copied structures](#structured-callback-values), with the same conversions as direct calls.
+Ordinary gems accept synchronous callable objects, `Proc` values, method objects and a final Ruby block. Callback arguments and results support all nineteen primitives, [acyclic copied structures](#structured-callback-values) and [recursive copied values](#recursive-callback-values), with the same conversions as direct calls.
 
 For a prepared package exporting `Callables.callNat` and `Callables.makeString`, save `callbacks.rb`:
 
@@ -315,10 +315,57 @@ strings and arrays remain mutable independent copies. Aliases use their target
 values without extra Ruby constants.
 
 The same lifetime and exception rules apply. Scoped buffers retain nested
-callback results until native copying finishes. Recursive callback payloads,
-resources inside copied values and asynchronous callbacks remain unsupported.
+callback results until native copying finishes. Resources inside copied values
+and asynchronous callbacks remain unsupported.
 The [installed checks](../evidence/ruby-structured-callables-20260924.md) cover
 both source paths, the example above, nested mutation and exception cleanup.
+
+### Recursive callback values
+
+Recursive records and variants also work in callbacks and returned closures.
+Use the same generated classes and exact Ruby arrays as direct calls. For the
+prepared `structured-api` gem, save `recursive-callbacks.rb`:
+
+```ruby
+require "lean_bridge/structured"
+
+API = LeanBridge::Structured
+leaf = API::Tree::Leaf.new(value: 7)
+tree = API::Tree::Branch.new(children: [leaf])
+
+wrapped = API.call_recursive(tree) do |value|
+  API::Tree::Branch.new(children: [value])
+end
+raise "unexpected callback result" unless wrapped == API::Tree::Branch.new(children: [tree])
+
+empty = API::Tree::Branch.new(children: [])
+choose = API.make_recursive(tree)
+choose.with do |closure|
+  raise "lost captured tree" unless closure.call(true, empty) == tree
+  raise "unexpected input result" unless closure.call(false, empty) == empty
+end
+raise "closure was not closed" unless choose.closed?
+```
+
+Run `ruby recursive-callbacks.rb`. The
+[Lean example](../publish/rubygems.md#export-recursive-callbacks-and-closures)
+defines these exports. Installation loads the gem's compiled Lean libraries;
+the application needs no native declarations or Lean compiler.
+
+The [installed checks](../evidence/ruby-recursive-callables-20260925.md) cover
+both source paths, these exact examples, failure cleanup and closure ownership.
+
+Each argument, callback reply and captured result owns an independent copy.
+Closures invoke only on their creating thread's lifetime, even if Ruby later
+reuses the native thread ID. Use `with` or `close` to release captures; garbage
+collection provides fallback cleanup. Callback exceptions return after native
+cleanup. Non-local block exits raise `LocalJumpError`.
+
+The [recursive conversion limits](#recursive-values) apply to callback values.
+Native reentry allows at most 64 active calls, with 4,096 shared closure slots.
+Callbacks cannot be retained after the exporting call, and resources or callable
+identities cannot appear inside copied fields. Asynchronous delivery, post-fork
+reuse, Ractors and M:N threads remain unsupported.
 
 ### Alpha interoperability example
 
@@ -450,7 +497,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named frozen keyword-initialized records and constructors, exact Arrays and Strings, explicit UNIT/Some/Ok/Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass exact generated classes with required keywords. Arrays and Lists use exact Ruby Arrays. Returned mutable payloads own independent storage. All arguments validate before native allocation or runtime initialization; ensure blocks release temporary storage and owned native results on failures and interruptions. Malformed output retires the shared runtime. Native calls hold the GVL; post-fork reuse, Ractors and M:N threads reject. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named frozen keyword-initialized records and constructors, exact Arrays and Strings, explicit UNIT/Some/Ok/Err` (input, result, field); `Named frozen records and constructors, exact Arrays and Strings, synchronous Ruby callables and owned LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass exact generated classes with required keywords. Arrays and Lists use exact Ruby Arrays. Returned mutable payloads own independent storage. All arguments validate before native allocation or runtime initialization; ensure blocks release temporary storage and owned native results on failures and interruptions. Malformed output retires the shared runtime. Native calls hold the GVL; post-fork reuse, Ractors and M:N threads reject. Recursive values and aliases retain their public representations and independent copied storage. Callback frames keep replies alive until native copying finishes. Original callback exceptions return after cleanup; non-local block exits raise LocalJumpError. Malformed native output retires the runtime. Closure identities release on close, scoped with cleanup or finalization, with deferred release during an active invocation. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

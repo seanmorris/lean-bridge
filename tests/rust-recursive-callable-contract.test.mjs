@@ -32,9 +32,9 @@ test("Rust recursive callbacks use authenticated payloads and expose safe typed 
 
 test("Cargo-only recursive callables agree with every selected supported native target", () => {
 	const ir = nativeRecursiveCallableReviewedIr(), expected = compileCallableRustGraphPackageModel(ir).layoutSha256;
-	for(const targets of [["cargo"], ["cargo", "c"], ["cpp", "cargo"], ["pypi", "cargo"], ["cargo", "c", "cpp", "pypi"]])
+	for(const targets of [["cargo"], ["cargo", "c"], ["cpp", "cargo"], ["pypi", "cargo"], ["cargo", "rubygems"], ["cargo", "c", "cpp", "pypi", "rubygems"]])
 		assert.equal(compileNativeGraphProjection(ir, targets).layoutSha256, expected);
-	for(const targets of [[], ["cargo", "cargo"], ["cargo", "cpan"], ["cargo", "rubygems"], ["unknown"]])
+	for(const targets of [[], ["cargo", "cargo"], ["cargo", "cpan"], ["cargo", "nuget"], ["unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 	for(const mutate of [
 		ir => { ir.types.find(type => type.kind === "callback").callable.resultMode = "promise"; }

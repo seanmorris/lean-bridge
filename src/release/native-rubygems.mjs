@@ -15,6 +15,7 @@ import { ordinaryRubyEvidence } from "../build/native-ruby-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCopiedRubyPackage } from "../backends/ruby/copied-values.mjs";
 import { generateCopiedRubyGraphPackage } from "../backends/ruby/copied-graph-package.mjs";
+import { generateCallableRubyGraphPackage } from "../backends/ruby/callable-graph-package.mjs";
 import { rubyLiteral } from "../backends/ruby/copied-assets.mjs";
 import { validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { auditManagedBindingPackage } from "../backends/managed/package-audit.mjs";
@@ -38,7 +39,10 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
 	const { model, projection, prefix, evidence, receipt } = await ordinaryRubyEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version.replace("-", ".pre.");
 	validateOrdinaryRubySettings({ name, version });
-	const root = join(working, "packages/rubygems/package"), files = (model.copiedGraph ? generateCopiedRubyGraphPackage : generateCopiedRubyPackage)(model.bindingIr, evidence);
+	const generate = model.copiedGraph
+		? model.copiedGraph.callbacks ? generateCallableRubyGraphPackage : generateCopiedRubyGraphPackage
+		: generateCopiedRubyPackage;
+	const root = join(working, "packages/rubygems/package"), files = generate(model.bindingIr, evidence);
 	auditManagedBindingPackage(model.bindingIr, files, "ruby");
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (source, path) => save(path, await readFile(source));
@@ -52,6 +56,7 @@ export const packageOrdinaryRuby = async ({ working, nativeRoot, runtimeRoot, ad
 	if(model.copiedGraph) for(const path of [`include/detail/${prefix}-graph-types.h`, `include/detail/${prefix}-graph.h`, "src/ruby-graph-clear.c"])
 		await copy(join(adapterRoot, path), `lean-bridge/${path}`);
 	await copy(join(runtimeRoot, "runtime.json"), "lean-bridge/runtime.json");
+	if(model.copiedGraph?.callbacks) await copy(join(adapterRoot, `include/detail/${prefix}-callable-borrows.h`), `lean-bridge/include/detail/${prefix}-callable-borrows.h`);
 	await copy(join(leanPrefix, "LICENSE"), "lean-bridge/licenses/Lean-LICENSE");
 	await copy(join(leanPrefix, "LICENSES"), "lean-bridge/licenses/Lean-LICENSES");
 	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`lean-bridge/licenses/${path}`, bytes);
