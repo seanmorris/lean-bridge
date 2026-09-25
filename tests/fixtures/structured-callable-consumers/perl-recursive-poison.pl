@@ -1,0 +1,20 @@
+use strict;
+use warnings;
+use JSON::PP;
+use Math::BigInt;
+use LeanBridge::Recursive;
+
+my $calls = 0;
+my $value = LeanBridge::Recursive::Tree::Leaf->new(value => Math::BigInt->new('123456789012345678901234567890'));
+LeanBridge::Recursive::fault_reset(0, 5);
+my $ok = eval { LeanBridge::Recursive::call_recursive($value, sub { ++$calls; $_[0] }); 1 };
+die "Malformed native result accepted\n" if $ok || "$@" !~ /Invalid native copied graph/;
+my @scope = LeanBridge::Recursive::fault_snapshot();
+my ($clears, $retired, $poisoned) = LeanBridge::Recursive::poison_snapshot();
+die "Native owned result was not cleared exactly once\n" unless $clears == 1 && $scope[0] == 0 && $scope[1] == 0 && $scope[5] == 0;
+die "Poisoned result did not retire its runtime\n" unless $retired == 1 && $poisoned == 1;
+LeanBridge::Recursive::fault_reset();
+my $again = eval { LeanBridge::Recursive::call_recursive($value, sub { ++$calls; $_[0] }); 1 };
+die "Retired runtime reentered\n" if $again || $calls != 1;
+die "Wrong retired error: $@\n" unless "$@" =~ /shared runtime unavailable/;
+print encode_json({malformedOutputRejected => JSON::PP::true, clears => $clears, retired => $retired, remainingOwners => 0}), "\n";

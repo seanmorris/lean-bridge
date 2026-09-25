@@ -64,10 +64,10 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
-test("recursive copied acceptance covers all profiles and npm/C-family/Python/Rust/Ruby callback payloads", () => {
+test("recursive copied acceptance covers all profiles and npm/C-family/Python/Rust/Ruby/Perl callback payloads", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "recursive");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(installed.length, 142);
+	assert.equal(installed.length, 146);
 	assert.equal(new Set(installed.map(cell => cell.profile)).size, 17);
 	const promoted = installed.filter(cell => ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile));
 	assert.equal(promoted.length, 30);
@@ -94,6 +94,8 @@ test("recursive copied acceptance covers all profiles and npm/C-family/Python/Ru
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["rust-recursive-callables-installed"]);
 		else if(cell.profile === "ruby")
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["ruby-recursive-callables-installed"]);
+		else if(cell.profile === "perl")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-recursive-callables-installed"]);
 		else assert.notEqual(cell.stages.installedExecution.state, "passed", cell.id);
 	}
 });
@@ -302,7 +304,7 @@ test("Perl installed evidence stays scoped to audited source paths and positions
 		for(const position of ["parameter", "result", "field"])
 			assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
 	for(const path of document.paths)
-		for(const shape of ["array", "record", "list", "option", "result", "tuple", "variant", "alias"])
+		for(const shape of ["array", "record", "list", "option", "result", "tuple", "variant", "alias", "recursive"])
 			for(const position of ["callback-parameter", "callback-result"])
 				assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
 	assert.equal(state("resource", "result"), "passed");

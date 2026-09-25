@@ -1115,6 +1115,39 @@ In-memory removal of either guard must fail its corresponding probe. Every
 installed file and the package receipt must remain unchanged. CI requires and
 uploads `build/recursive-callables/ruby.json`.
 
+### Recursive Perl callbacks and closures
+
+Use the four pinned Perl interpreters, or set `LEAN_BRIDGE_CORPUS_PERL` to one
+absolute interpreter path:
+
+```sh
+LEAN_BRIDGE_PERL_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/perl-recursive-callables.test.mjs
+node --test tests/perl-recursive-callable-contract.test.mjs
+node --test tests/perl-recursive-callable-evidence.test.mjs
+```
+
+The gate builds 33 Lean exports on ordinary-source and reviewed-IR paths. It
+installs the original runtime and component archives using both `prebuilt-only`
+and `build-xs` modes after deleting the producer. Each installation relocates
+and runs without the archive handoff, Lean or compiler tools. The documented
+Lean definitions compile in both producers; the Perl example runs from every
+installation.
+
+Public checks cover recursive trees, aliases used only in callback signatures,
+copied values, depth limits and recovery, and all eight existing acyclic shapes.
+Lifetime checks cover closure capacity, stale handles, deferred close,
+finalization, interpreter threads and fork-child cleanup.
+
+Fault probes compile isolated libraries from the original archived XS and
+installed runtime headers. They inject allocation failures, exceptions and
+signal-handler exceptions, inspect reply owners before dereferencing pointers,
+and verify cleanup and retirement after corrupting a real owned native result.
+Removing either ownership or retirement protection must raise the expected Perl
+exception, not terminate with a fatal signal. All installed files must remain
+unchanged, and the public consumer runs again after the probes. Each ABI job
+requires and uploads `build/recursive-callables/perl.json`.
+
 ### Staged WIT callable projection
 
 The separate component projection probe requires no Lean compiler:

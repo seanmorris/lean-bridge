@@ -301,10 +301,62 @@ after the synchronous call returns. Close returned Lean closures when finished;
 an active call keeps its borrow if the wrapper closes during conversion.
 
 These acyclic payloads retain the 16 MiB conversion-scope budget and 32-level
-schema bound. Recursive callback payloads, resources inside copied aggregates
-and asynchronous delivery remain unsupported. The
+schema bound. [Recursive callback payloads](#recursive-callback-values) use the
+bounded graph adapter. Resources inside copied aggregates and asynchronous
+delivery remain unsupported. The
 [installed callback checks](../evidence/perl-structured-callables-20260925.md)
 cover both source paths, all four pinned Perl ABIs and the exact example above.
+
+### Recursive callback values
+
+Finite recursive values work in synchronous callbacks and returned Lean
+closures. Use the package in the
+[author example](../publish/cpan.md#export-recursive-callbacks-and-closures).
+Save `recursive-callbacks.pl`:
+
+```perl
+use strict;
+use warnings;
+use Math::BigInt;
+use LeanBridge::Recursive;
+
+my $leaf = LeanBridge::Recursive::Tree::Leaf->new(value => Math::BigInt->new(19));
+my $tree = LeanBridge::Recursive::Tree::Branch->new(children => [$leaf]);
+my $copied = LeanBridge::Recursive::call_recursive($tree, sub { $_[0] });
+print $copied->children->[0]->value->bstr, "\n";
+
+my $closure = LeanBridge::Recursive::make_recursive($tree);
+my $ok = eval {
+  my $captured = $closure->call(LeanBridge::Recursive::true(), $leaf);
+  print $captured->children->[0]->value->bstr, "\n";
+  1;
+};
+my $error = $@;
+$closure->close;
+die $error unless $ok;
+```
+
+Run `perl recursive-callbacks.pl`. It prints `19` twice. Trees, arrays and
+`Math::BigInt` payloads returned by callbacks or captured closures are
+independent copies. A matching generated Lean closure can also serve as a
+callback. None, Some, Ok, Err and nested products keep their ordinary mappings.
+
+Callbacks run synchronously on the initiating interpreter thread. Exceptions
+retain their identity after cleanup. Returned closures provide `call`, `close`
+and `closed`; closing twice is safe. Automatic finalization also releases a
+closure, but explicit `close` gives predictable resource use. Closures cannot
+be serialized or invoked from another interpreter, thread or process.
+
+Conversion allows 128 value levels, 262,144 visited nodes and 16 MiB of native
+copied data, with a separate 16 MiB conversion-storage budget. These limits do
+not cover Lean working memory or every Perl allocation. Native reentry permits
+64 active calls, and closures share 4,096 identity slots. Input, callback and
+limit failures leave the runtime usable; malformed native results retire it.
+Resources and callable identities inside copied aggregates, retained host
+callbacks and asynchronous delivery remain unsupported.
+
+The [installed acceptance record](../evidence/perl-recursive-callables-20260925.md)
+covers both source paths, all four Perl ABIs and both installation modes.
 
 ### Recursive values
 
@@ -385,7 +437,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use exact generated classes and named fields. Arrays and Lists use plain dense array references; aliases retain their target representation. Unit uses undef, Option presence uses Some, and Nat/Int use Math::BigInt. Values own independent copied storage. Calls reject cycles, malformed branches and excessive copies before native entry. Registered destructors release scratch storage and native outputs on exceptions and delivered signals. Malformed native output retires the shared runtime; retained copied values remain usable. Process, interpreter and thread ownership remain enforced. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named Perl record/constructor classes, plain array references, explicit Some/Ok/Err` (input, result, field); `Named Perl records and constructors, array references, synchronous CODE callbacks and owned LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use exact generated classes and named fields. Arrays and Lists use plain dense array references; aliases retain their target representation. Unit uses undef, Option presence uses Some, and Nat/Int use Math::BigInt. Values own independent copied storage. Calls reject cycles, malformed branches and excessive copies before native entry. Registered destructors release scratch storage and native outputs on exceptions and delivered signals. Malformed native output retires the shared runtime; retained copied values remain usable. Process, interpreter and thread ownership remain enforced. Recursive records, variants and aliases retain their public representations and independent copied storage. Callback frames retain reply buffers until native copying finishes; callback exceptions propagate after cleanup without losing their identity. Malformed native output retires the runtime. Private closure leases release on close or finalization, with deferred release during active invocation. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

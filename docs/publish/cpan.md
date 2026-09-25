@@ -99,7 +99,7 @@ Specializations can also use named aliases for supported copied arrays, records,
 
 ### Compile a reviewed callable API
 
-CPAN builds also accept a [reviewed Binding IR](../lean/existing-package.md#compile-a-reviewed-contract) containing synchronous primitive or acyclic copied-value callbacks and returned closures. Put export signatures, call-scoped callback borrows and explicit closure leases in that document. A returned closure's outer parameter count supplies the compiler arity. Keep `exports`, `arities` and `contracts` out of `lean-bridge.exports.json` when a review is present. The builder checks the review against fresh Lean metadata before emitting native code.
+CPAN builds also accept a [reviewed Binding IR](../lean/existing-package.md#compile-a-reviewed-contract) containing synchronous primitive, acyclic or finite recursive copied-value callbacks and returned closures. Put export signatures, call-scoped callback borrows and explicit closure leases in that document. A returned closure's outer parameter count supplies the compiler arity. Keep `exports`, `arities` and `contracts` out of `lean-bridge.exports.json` when a review is present. The builder checks the review against fresh Lean metadata before emitting native code.
 
 ### Export structured callbacks
 
@@ -143,10 +143,64 @@ values own independent copies.
 The same adapter supports acyclic arrays, Lists, options, results, binary
 products, records, variants and copied aliases inside callback signatures.
 Callbacks remain synchronous call-scoped borrows; returned Lean closures
-remain explicit leases. Recursive callback payloads, retained host callbacks,
-asynchronous delivery and resources hidden inside copied aggregates remain
+remain explicit leases. [Recursive callback payloads](#export-recursive-callbacks-and-closures)
+use the bounded graph adapter. Retained host callbacks, asynchronous delivery
+and resources hidden inside copied aggregates remain
 unsupported. Both source paths have
 [installed CPAN checks](../evidence/perl-structured-callables-20260925.md).
+
+### Export recursive callbacks and closures
+
+Add `Structured.lean`:
+
+```lean
+namespace Structured
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select both exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": { "cpan": { "module": "LeanBridge::Recursive" } }
+}
+```
+
+Build with the CPAN command above. `call_recursive` accepts a Perl CODE
+reference; `make_recursive` returns a closure whose `call` takes a Boolean
+and a Tree. The [consumer example](../consume/perl.md#recursive-callback-values)
+uses the generated classes and automatic runtime loading.
+
+Callback payloads preserve finite recursive records, variants, aliases and
+nested copied containers. Replies stay alive until native copying finishes.
+Perl exceptions retain their identity and return after native cleanup.
+Malformed native results retire the shared runtime.
+
+Conversion permits 128 value levels, 262,144 visited nodes and 16 MiB of native
+copied data, plus a separate 16 MiB conversion-storage budget. These bounds do
+not cover Lean working memory or every Perl allocation. Reentry permits 64
+active native calls; closures share 4,096 identity slots. Close a closure when
+finished; an active call defers native release until its borrow ends.
+
+Closures belong to their creating process and Perl interpreter thread. They
+cannot be serialized, cloned into another interpreter or used after a fork.
+Resource-containing aggregates, callable identities inside copied fields,
+retained host callbacks and asynchronous delivery remain unsupported.
+
+The [installed CPAN checks](../evidence/perl-recursive-callables-20260925.md)
+compile this example and execute its generated API on all four pinned Perl ABIs.
 
 ### Build with locked Lake dependencies
 
@@ -347,8 +401,8 @@ the same adapter. No runtime constructor numbers enter the public API.
 Each call limits conversion to depth 128, 262,144 nodes and 16 MiB of native
 copied data, with a separate 16 MiB conversion-storage allowance. Cycles,
 malformed values and over-limit copies reject. These limits do not bound the
-whole Perl heap or Lean's working memory. Recursive callback signatures and
-resource-containing aggregates remain unsupported.
+whole Perl heap or Lean's working memory. [Recursive callback signatures](#export-recursive-callbacks-and-closures)
+use the same finite copied graph. Resource-containing aggregates remain unsupported.
 
 The [recursive acceptance record](../evidence/perl-recursive-packages-20260923.md)
 records independent builds, source-free installations, failure cleanup and

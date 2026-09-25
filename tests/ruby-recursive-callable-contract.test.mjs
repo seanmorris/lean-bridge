@@ -30,6 +30,8 @@ test("RubyGems recursive callbacks agree with every selected supported native ta
 	const ir = nativeRecursiveCallableReviewedIr(), expected = compileCallableRubyGraphPackageModel(ir).layoutSha256;
 	for(const targets of [["rubygems"], ["rubygems", "c"], ["cpp", "rubygems"], ["pypi", "rubygems"], ["cargo", "rubygems"], ["rubygems", "c", "cpp", "pypi", "cargo"]])
 		assert.equal(compileNativeGraphProjection(ir, targets).layoutSha256, expected);
+	for(const targets of [["rubygems", "cpan"], ["rubygems", "c", "cpp", "pypi", "cargo", "cpan"]])
+		assert.equal(compileNativeGraphProjection(ir, targets, "LeanBridge::Recursive").layoutSha256, expected);
 	for(const targets of [[], ["rubygems", "rubygems"], ["rubygems", "cpan"], ["rubygems", "nuget"], ["rubygems", "maven"], ["unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 });

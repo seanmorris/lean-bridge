@@ -8,6 +8,8 @@ import { fixedPlatformInteger } from "../../abi/component-scalars.mjs";
 import { perlCopiedAliases, perlAliasApiDocs, perlAliasPod } from "./copied-aliases.mjs";
 import { validatePerlVariants, perlVariantConversions, perlVariantClasses, perlVariantPod } from "./copied-variants.mjs";
 import { compileCopiedPerlGraphPackageModel, generateCopiedPerlGraphPackage } from "./copied-graph-package.mjs";
+import { compileCallablePerlGraphPackageModel } from "./callable-graph-model.mjs";
+import { generateCallablePerlGraphPackage } from "./callable-graph-package.mjs";
 import { perlStringLiteral } from "./naming.mjs";
 
 const q = JSON.stringify;
@@ -272,7 +274,7 @@ export const validatePerlModel = model => {
 	if(model?.profile !== "native-library-v1" || model.pointerBits !== 64) throw new TypeError("Perl requires the checked native-library-v1 model");
 	if(model.copiedGraph)
 	{
-		const { types } = compileCopiedPerlGraphPackageModel(model.bindingIr, model.moduleName);
+		const { types } = (model.copiedGraph.callbacks ? compileCallablePerlGraphPackageModel : compileCopiedPerlGraphPackageModel)(model.bindingIr, model.moduleName);
 		return [...types.some(type => type.kind === "option") ? ["Some"] : []
 			, ...types.some(type => type.kind === "result") ? ["Ok", "Err"] : []];
 	}
@@ -303,7 +305,7 @@ export const validatePerlModel = model => {
  * @param receipt - Native compilation receipt with exact library and runtime identities.
  */
 export const generatePerlBindingPackage = (model, receipt) => {
-	if(model.copiedGraph) return generateCopiedPerlGraphPackage(model, receipt);
+	if(model.copiedGraph) return (model.copiedGraph.callbacks ? generateCallablePerlGraphPackage : generateCopiedPerlGraphPackage)(model, receipt);
 	const branches = validatePerlModel(model);
 	const aliases = perlCopiedAliases(model);
 	const structuredCallables = model.types.some(type => type.kind === "callback"

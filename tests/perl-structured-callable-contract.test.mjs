@@ -14,11 +14,18 @@ import { assertPerlStructuredCodegenRegression, perlStructuredContractModels, pe
 import { assertPerlStructuredFaults } from "./helpers/perl-structured-callable-faults.mjs";
 import { checkPerlStructuredAssertions, perlStructuredDocumentationExample } from "./helpers/perl-structured-callable-fixture.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+import { beforePerlRecursiveCallables } from "./helpers/perl-recursive-callable-source-history.mjs";
 
 test("Perl structured callbacks change predecessor XS only for writable scalar storage", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/perl-structured-codegen-regression-20260925.json"));
 	for(const [path, expected] of Object.entries(record.sourceHashes))
-		assert.equal(sha256(await readFile(path)), expected, path);
+	{
+		const source = await readFile(path, "utf8");
+		assert.equal(sha256(beforePerlRecursiveCallables(path, source, expected)), expected, path);
+		const unrelated = source + "\n/* unrelated source change */\n";
+		assert.equal(beforePerlRecursiveCallables(path, unrelated, expected), unrelated);
+		assert.notEqual(sha256(unrelated), expected, path);
+	}
 	assertPerlStructuredCodegenRegression(record);
 	const changed = structuredClone(record);
 	Object.values(changed.fixtures[0].files)[0].sha256 = "0".repeat(64);

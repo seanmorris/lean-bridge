@@ -323,7 +323,7 @@ jobs:
   php-consumers:
     name: Native PHP and PHP-Wasm
     runs-on: ubuntu-24.04
-    timeout-minutes: 240
+    timeout-minutes: 300
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6

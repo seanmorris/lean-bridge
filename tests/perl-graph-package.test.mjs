@@ -178,7 +178,10 @@ test("recursive CPAN acceptance binds every ABI, original archive, lifecycle pro
 		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
 	}
 	for(const cell of cells.filter(cell => cell.profile === "perl" && cell.shape === "recursive" && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-recursive-callables-installed"]);
+	}
 });
 
 test("ordinary and reviewed CPAN graphs install source-free on selected Perl ABIs", {

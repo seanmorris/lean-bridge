@@ -143,6 +143,7 @@ jobs:
           LEAN_BRIDGE_WORD_PROFILES=perl node --test tests/native-words.test.mjs
           LEAN_BRIDGE_PERL_CALLABLE_TEST=1 node --test tests/perl-callables.test.mjs
           LEAN_BRIDGE_PERL_STRUCTURED_CALLABLE_TEST=1 node --test tests/perl-structured-callables.test.mjs
+          LEAN_BRIDGE_PERL_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/perl-recursive-callables.test.mjs tests/perl-recursive-callable-contract.test.mjs
           LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs
           LEAN_BRIDGE_PERL_LIST_TEST=1 node --test tests/perl-lists.test.mjs tests/perl-list-contract.test.mjs
           LEAN_BRIDGE_PERL_COLLECTION_TEST=1 node --test tests/perl-collections.test.mjs tests/perl-collection-contract.test.mjs
@@ -154,6 +155,7 @@ jobs:
           test -s build/type-corpus/perl.json
           test -s build/type-corpus/reviewed-native-perl.json
           test -s build/structured-callables/perl.json
+          test -s build/recursive-callables/perl.json
           test -s build/compounds/perl.json
           test -s build/lists/perl.json
           test -s build/collections/perl.json
@@ -178,6 +180,7 @@ jobs:
             build/word-native/perl.json
             build/callables/perl.json
             build/structured-callables/perl.json
+            build/recursive-callables/perl.json
             build/compounds/perl.json
             build/lists/perl.json
             build/collections/perl.json

@@ -27,6 +27,9 @@ const row = (source, lean) => section(source).split("\n").find(line => line.star
 
 test("every consumer table is generated and includes all 48 source forms exactly once", async () => {
 	const rendered = await renderTypeDocuments({ root });
+	const reference = await readFile(path.join(root, "docs/reference/types.md"), "utf8");
+	assert.match(reference, /^# Types and values\n/u);
+	assert.equal(reference.split("## Full type surface\n\n")[1]?.split("\n\n## Generated host types\n")[0], rendered.reference);
 	assert.match(rendered.reference, /ordinary-source and compiler-checked reviewed packages.*all seventeen consumer profiles/u);
 	assert.match(rendered.reference, /reviewed-native-20260918\.md.*reviewed-wasm-20260918\.md/u);
 	assert.doesNotMatch(rendered.reference, /currently use fixed Alpha projections|Rust rejects arbitrary-precision integers/u);
@@ -81,15 +84,15 @@ test("PHP keeps checked collection fields and primitive callables separate from 
 	assert.doesNotMatch(row(source, "Task α / asynchronous result"), /Installed checks passed/u);
 });
 
-test("Perl recursive documentation exposes installed values without promoting callback payloads", async () => {
+test("Perl recursive documentation binds copied and callback positions to their separate receipts", async () => {
 	const source = await readFile("docs/consume/perl.md", "utf8");
 	const recursive = row(source, "Recursive copied structures");
 	assert.match(recursive, /Named Perl record\/constructor classes/u);
-	assert.match(recursive, /Ordinary source: Installed checks passed \(input, result, field\)/u);
-	assert.match(recursive, /Reviewed IR: Installed checks passed \(input, result, field\)/u);
+	assert.match(recursive, /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u);
+	assert.match(recursive, /callback input, callback result/u);
 	for(const cell of cells.filter(cell => cell.profile === "perl" && cell.shape === "recursive"))
 	{
-		if(cell.position.startsWith("callback-")) assert.notEqual(cell.stages.installedExecution.state, "passed");
+		if(cell.position.startsWith("callback-")) assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-recursive-callables-installed"]);
 		else assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-recursive-installed"]);
 	}
 	assert.match(source, /\[installed recursive checks\]\(\.\.\/evidence\/perl-recursive-packages-20260923\.md\)/u);
@@ -123,16 +126,17 @@ test("npm copied callback rows include all nine shapes and retain resource exclu
 	assert.match(source, /resource identities cannot be fields or elements/u);
 });
 
-test("Perl copied callback rows retain recursive and owned-resource exclusions", async () => {
+test("Perl copied callback rows include recursive payloads and retain resource exclusions", async () => {
 	const source = await readFile("docs/consume/perl.md", "utf8");
-	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum", "Recursive copied structures"])
 	{
 		const mapping = row(source, shape);
 		assert.match(mapping, /callback input, callback result/u);
 		assert.doesNotMatch(mapping, /Not audited/u);
 	}
-	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.match(row(source, "Identity-bearing value"), /Not audited/u);
 	assert.match(source, /perl-structured-callables-20260925\.md/u);
+	assert.match(source, /perl-recursive-callables-20260925\.md/u);
 	assert.match(source, /Some\(undef\)/u);
 });
 
