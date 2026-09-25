@@ -336,7 +336,8 @@ test("WIT compound docs preserve presence, success/error order and binary produc
 test("PHP compound docs record independent native and PHP-Wasm coverage", async () => {
 	const source = await readFile("docs/php.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
-		assert.match(row(source, lean), /Ordinary source: Installed checks passed \(input, result, field\).*Reviewed IR: Installed checks passed \(input, result, field\)/u);
+		for(const path of ["Ordinary source", "Reviewed IR"])
+			assert.match(row(source, lean), new RegExp(`${path}: Native PHP: Installed checks passed; PHP-Wasm: Installed checks passed \\(input, result, field\\); Compilation rejected \\(callback input, callback result\\)`, "u"));
 	assert.match(row(source, "Option α"), /null.*Some/u);
 	assert.match(row(source, "Except ε α"), /Ok.*Err/u);
 	assert.match(source, /new Some\(new Some\(null\)\)/u);
@@ -345,7 +346,7 @@ test("PHP compound docs record independent native and PHP-Wasm coverage", async 
 		for(const position of ["parameter", "result", "field", "callback-parameter", "callback-result"])
 		{
 			const cell = cells.find(cell => cell.id === `${profile}/${shape}/${path}/${position}`);
-			if(position.startsWith("callback"))
+			if(position.startsWith("callback") && profile === "php-wasm")
 			{
 				assert.equal(cell.stages.compilation.state, "rejected");
 				assert.notEqual(cell.stages.installedExecution.state, "passed");
@@ -353,7 +354,7 @@ test("PHP compound docs record independent native and PHP-Wasm coverage", async 
 			else
 			{
 				assert.equal(cell.stages.installedExecution.state, "passed");
-				assert.deepEqual(cell.stages.installedExecution.evidence, [`${profile}-compounds-installed`]);
+				assert.deepEqual(cell.stages.installedExecution.evidence, [position.startsWith("callback") ? "php-native-structured-callables-installed" : `${profile}-compounds-installed`]);
 			}
 		}
 });

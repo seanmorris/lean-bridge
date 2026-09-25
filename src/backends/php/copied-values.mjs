@@ -111,6 +111,19 @@ export const renderCopiedPhpPackage = (model, evidence = null) => {
 	if(model.surface.copies.some(copy => copy.ref.kind === "apply" && copy.ref.constructor === "list"))
 		files["README.md"] += "\n## Lean Lists\n\nList inputs, results and record fields use consecutive-key PHP arrays with precise list<T> PHPDoc. Empty Lists, order, duplicates and nesting are preserved. Mutable array values and Bytes results are independently copied. List and Array keep distinct IR/native identities. Weak and strict callers get the same element and copy-budget checks. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
 	files["README.md"] += phpAliasReadme(model) + phpVariantReadme(model) + phpValueReadme;
+	const structuredCallbacks = [...model.surface.callbacks.values()].some(({ type }) =>
+		[...type.callable.parameters, type.callable.result].some(site => site.type.kind !== "primitive"));
+	if(structuredCallbacks)
+	{
+		files["README.md"] = files["README.md"]
+			.replace("## Primitive callbacks and returned functions", "## Callbacks and returned functions")
+			.replace("Generated PHPDoc records its primitive signature.", "Generated PHPDoc records its copied-value signature.")
+			.replace("Compound callbacks, identity-bearing copied values and recursive copied schemas remain unsupported.", "Identity-bearing copied values and recursive callback payloads remain unsupported.")
+			.replace("No async or compound callables are admitted.", "Callbacks support primitives and acyclic copied payloads. Async callables are not admitted.")
+			.replace("List callback payloads remain unsupported.", "Lists can also be passed to and returned from synchronous callbacks.")
+			.replace("Recursive copied types, compound callable payloads and identity-bearing alias targets remain unsupported.", "Recursive callback payloads and identity-bearing alias targets remain unsupported.");
+		files["README.md"] += "\n## Structured callback values\n\nArrays, Lists, Option, Except, nested products, records, variants and aliases use the same public PHP values in ordinary calls and callbacks. All callback inputs and replies are independent copies. Each enclosing call retains its reply buffers until Lean finishes reading them, then releases its scratch allocations and callback references. Returned Lean functions own captured copies and keep the existing explicit close and deferred-release rules. Callback identities and resource identities cannot be copied fields or elements.\n";
+	}
 	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1, generator: { id: "lean-wasm/php-copied", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, publicFiles: ["src/Api.php"], ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: ["Bytes", "LeanBridgeError", ...model.branches, ...model.surface.callbacks.size ? ["LeanClosure"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.copies.filter(copy => copy.variant).flatMap(copy => [copy.publicName, ...copy.cases.map(branch => branch.publicName)]), ...model.surface.functions.map(fn => fn.field)].map(name => `${model.namespace}\\${name}`), files: [...Object.keys(files), "binding-manifest.json"], filesSha256: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) });
 	return Object.freeze(files);
 };
@@ -121,4 +134,4 @@ export const renderCopiedPhpPackage = (model, evidence = null) => {
  * @param ir - Compiler-derived Binding IR.
  * @param evidence - Optional compiled native library inventory.
  */
-export const generateCopiedPhpPackage = (ir, evidence = null) => renderCopiedPhpPackage(compileCopiedPhpModel(ir, { lists: true, variants: true }), evidence);
+export const generateCopiedPhpPackage = (ir, evidence = null) => renderCopiedPhpPackage(compileCopiedPhpModel(ir, { structuredCallables: true, lists: true, variants: true }), evidence);

@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "php-structured-codegen-regression",
+  "baselineRevision": "073ccdf8eb399e419bdafd233f40d9c55273ebb0",
+  "predecessors": {
+    "src/backends/php/copied-model.mjs": "5a913ea3084d6da728c109ddc199ccaf9927b91790bce6f31f9ac0b33f2a9628",
+    "src/backends/php/copied-values.mjs": "a1c03aed8449ddd6346c0e88d8f46db9a4eb0452be2d57cc7c4f8bb5d7c18241"
+  },
+  "sourceHashes": {
+    "src/backends/php/copied-model.mjs": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6",
+    "src/backends/php/copied-values.mjs": "03376d7c1985f6faeb8b357f9837b06abe33662d6943255994831795f1b49888"
+  },
+  "fixtures": [
+    {
+      "name": "callables",
+      "bindingIrSha256": "215293131e3c77939222ece257a6fd9bf0973ddf81e4cd35fb3e918050336a52",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/Api.php": {
+          "bytes": 13992,
+          "sha256": "b63ae429073fe0af5232dbf0d3d6e3fe12a6acb9ab8fe1bcefa9043c717c4894"
+        },
+        "src/Internal/Native.php": {
+          "bytes": 301634,
+          "sha256": "d48fc4fbd0a19b3d9d3717198fa75645274427219bd79c1136b45172a61ef159"
+        },
+        "src/Internal/Runtime.php": {
+          "bytes": 4336,
+          "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+        },
+        "README.md": {
+          "bytes": 6948,
+          "sha256": "9ca8ae703a4ab5e5b66d10a275e774b63d8b16daa0e16268e4f0d29603e3f166"
+        },
+        "binding-manifest.json": {
+          "bytes": 3039,
+          "sha256": "41cda2fd13493f1e0c949b8e422563b70a8c964f6ffa30aa7279928c5bf0da6b"
+        }
+      }
+    },
+    {
+      "name": "collections",
+      "bindingIrSha256": "300a41d30f02fef0ee7ca41b456ea816f4e29f10557bdc6ed9973ac9c999d6a9",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/Api.php": {
+          "bytes": 15532,
+          "sha256": "999fe6dc2adc3d583916431cec07d06a8fdde08f8bce0bae72f4db2bc46e5ee0"
+        },
+        "src/Internal/Native.php": {
+          "bytes": 220699,
+          "sha256": "a54a000817c7eea79e8e1cbaaca0ebd8e9ebb152a595a8305d355fd72bf14aae"
+        },
+        "src/Internal/Runtime.php": {
+          "bytes": 4336,
+          "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+        },
+        "README.md": {
+          "bytes": 4846,
+          "sha256": "194dbe741fa549fc8cd7ab41063e368a52f8ddf0c939effc4fe0c3e80bf360aa"
+        },
+        "binding-manifest.json": {
+          "bytes": 2577,
+          "sha256": "60175968f89f62a117ca52f0a4dace5f3c4b85305f0fa3c1a84acca99b47398d"
+        }
+      }
+    },
+    {
+      "name": "compounds",
+      "bindingIrSha256": "d98b9496e222f1dc20cfb17e1adfbc840bf1026cf21c173aaccd2d93dce7c5e7",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/Api.php": {
+          "bytes": 15714,
+          "sha256": "c40cac71463df412e17c3a736d0682543b86b1189f5eb1f289638104aa88d50d"
+        },
+        "src/Internal/Native.php": {
+          "bytes": 269646,
+          "sha256": "d371193a1b063a970a9f98a4a357a25f87e9dca9fdcca10a78cfba137e9adad8"
+        },
+        "src/Internal/Runtime.php": {
+          "bytes": 4336,
+          "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+        },
+        "README.md": {
+          "bytes": 7076,
+          "sha256": "6bb526b2d4b4ee15b7f5e67b221e5140f0b99ca0da91785cd48ffe19b62182c0"
+        },
+        "binding-manifest.json": {
+          "bytes": 3205,
+          "sha256": "f83c8b453cce3d33534090608fde37be047c978a93c5168c7bf13033bf4b68eb"
+        }
+      }
+    },
+    {
+      "name": "lists",
+      "bindingIrSha256": "c96dd2a962a7034e806902705fd0ac23d0f208d2a51f66b2bf0a9b4e18f61ee3",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/Api.php": {
+          "bytes": 8231,
+          "sha256": "201c0221107fbb02bc92689b71cb5cd833082ba99871e3ab00dcec9a49a10223"
+        },
+        "src/Internal/Native.php": {
+          "bytes": 177235,
+          "sha256": "8f6a4c312b2a1697cea8cd76ddf26875c3ef85dd3afc1f766d1e1a7693416a2c"
+        },
+        "src/Internal/Runtime.php": {
+          "bytes": 4336,
+          "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+        },
+        "README.md": {
+          "bytes": 5260,
+          "sha256": "b1c4b9a88764c84eec8cff1459f119a4462fabb9c039e9f8b9780c6690204d6c"
+        },
+        "binding-manifest.json": {
+          "bytes": 1799,
+          "sha256": "c59b35efd5237990d15bfc2bf5a77afad68869ae79803340bc70348e5b8ff740"
+        }
+      }
+    },
+    {
+      "name": "aliases",
+      "bindingIrSha256": "46ba3e04e7c2bad9a455d2c7e7ade04cf05b9bfa3f2bfcde511ca523af297563",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/Api.php": {
+          "bytes": 15333,
+          "sha256": "f46a992014a2a9f6f43833a5788fe02d9f7d87fac5cefed54276899083986822"
+        },
+        "src/Internal/Native.php": {
+          "bytes": 79786,
+          "sha256": "ebfb4b18c6cbfeb4174885695f4dbbdd651c8c833a0ae4815a52d347db90af46"
+        },
+        "src/Internal/Runtime.php": {
+          "bytes": 4336,
+          "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+        },
+        "README.md": {
+          "bytes": 7372,
+          "sha256": "f800e51f13615c5fdeebb3c9b602b57d843c70e139b7ac382e107f9fbab3a955"
+        },
+        "binding-manifest.json": {
+          "bytes": 8078,
+          "sha256": "a9f1acf66ce54aa22e24df47a8f2d87dcc922736b3f70f34ba0ee0280f2a9d75"
+        }
+      }
+    },
+    {
+      "name": "variants",
+      "bindingIrSha256": "bef5ae31ab1a1130bf417973f0ee394c4466ef6e53253a547d878b2b752900a4",
+      "identicalToPredecessor": true,
+      "files": {
+        "src/Api.php": {
+          "bytes": 18424,
+          "sha256": "35a00d8adca9ae2b34824a53f05bde0737b07b9a53da35c4a75cec01b62b56cc"
+        },
+        "src/Internal/Native.php": {
+          "bytes": 75957,
+          "sha256": "4a67d8aa7fbf497e968121736d66fbd6df82560d3862923f3cf4b2549c89a898"
+        },
+        "src/Internal/Runtime.php": {
+          "bytes": 4336,
+          "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+        },
+        "README.md": {
+          "bytes": 5938,
+          "sha256": "664aea4c3249bec1cae6992e62298088d37c6c8f604f3e4ef9d3c540db226a34"
+        },
+        "binding-manifest.json": {
+          "bytes": 2245,
+          "sha256": "366b4bd1d2eade753867b8596fefce3590336b8f3c9c9ae7024a577fd12dbb2a"
+        }
+      }
+    }
+  ]
+}

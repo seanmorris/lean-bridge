@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { wordNativeSignatures, wordScalarSignatures } from "./helpers/word-fixture.mjs";
+import { beforePhpStructuredCallables } from "./helpers/php-structured-callable-source-history.mjs";
 
 test("word evidence retains both source paths and each native caller's compiled-width checks", async () => {
 	const bytes = await readFile("docs/evidence/platform-words-20260918.json");
@@ -63,7 +64,7 @@ test("PHP word regression evidence binds source-named fields to fresh installed 
 	assert.equal(record.schemaVersion, 1);
 	assert.equal(record.historicalReceiptSha256, sha256(await readFile("docs/evidence/platform-words-20260918.json")));
 	for(const [path, digest] of Object.entries(record.sourceHashes))
-		assert.equal(sha256(await readFile(path)), digest, path);
+		assert.equal(sha256(beforePhpStructuredCallables(path, await readFile(path, "utf8"), digest)), digest, path);
 	assert.ok(Object.hasOwn(record.sourceHashes, "tests/fixtures/word-consumers/php-native.php"));
 	assert.deepEqual(record.nativeSignatures, wordNativeSignatures);
 	assert.equal(record.executions.length, 4);

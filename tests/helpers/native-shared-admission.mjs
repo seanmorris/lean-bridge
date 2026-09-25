@@ -46,7 +46,8 @@ export const beforeNativeSharedAdmission = (path, source, beforeTarget) => {
 		const { target, binding, type } = stages[index];
 		const before = list([...base, ...stages.slice(0, index).map(stage => stage.target)]);
 		const after = list([...base, ...stages.slice(0, index + 1).map(stage => stage.target)]);
-		source = replaceOnce(source, `${after}.includes(target)`, `${before}.includes(target)`);
+		const context = path === graphPath ? "targets.some(target => !" : "copiedGraphs: targets.every(target => ";
+		source = replaceOnce(source, `${context}${after}.includes(target)`, `${context}${before}.includes(target)`);
 		if(path === graphPath)
 		{
 			source = replaceOnce(source, `import { compileCopied${type}GraphPackageModel } from "../backends/${binding}/copied-graph-package.mjs";\n`);

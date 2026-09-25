@@ -50,14 +50,15 @@ test("PHP List output validates length and pointer alignment before element read
 	}
 });
 
-test("PHP List admission includes Zend transport but keeps compound callables closed", () => {
+test("PHP Lists admit native callbacks while retaining the Zend callable guard", () => {
 	assert.doesNotThrow(() => generateCopiedPhpZendAdapter(listReviewedIr()));
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
 		const site = position === "parameter" ? callback.callable.parameters[0] : callback.callable.result;
 		site.type = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "uint32" }] };
-		assert.throws(() => generateCopiedPhpPackage(ir), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => generateCopiedPhpPackage(ir));
+		assert.throws(() => generateCopiedPhpZendAdapter(ir), /callbacks currently require copied primitive/);
 	}
 	const ir = listReviewedIr(); ir.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => generateCopiedPhpPackage(ir), /copy ownership/);

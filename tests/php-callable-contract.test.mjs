@@ -31,7 +31,7 @@ test("PHP callable generation keeps exact public PHPDoc and native layouts priva
 for(const [label, change] of Object.entries({
 	"retained callback": ir => { ir.declarations[0].parameters[1].lifetime.scope = "explicit"; }
 	, "async callback": ir => { ir.types[0].callable.resultMode = "promise"; }
-	, "compound callback": ir => { ir.types[0].callable.result.type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint8" }] }; }
+	, "identity callback payload": ir => { ir.types[0].callable.result.type = { kind: "named", id: ir.types[0].id }; }
 	, "zero-argument callback": ir => { ir.types[0].callable.parameters = []; }
 	, "seventeen-argument callback": ir => { ir.types[0].callable.parameters = Array.from({ length: 17 }, (_, i) => ({ ...ir.types[0].callable.parameters[0], name: `arg${i}` })); }
 })) test(`PHP callable admission rejects ${label}`, () => {

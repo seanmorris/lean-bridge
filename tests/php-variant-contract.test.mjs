@@ -12,6 +12,7 @@ import test from "node:test";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
+import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
 import { phpVariantReviewedIr } from "./helpers/php-variant-fixture.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -69,10 +70,12 @@ test("PHP variant naming rejects collisions and keeps unsupported payloads close
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), variants = phpVariantReviewedIr(); ir.types.push(...variants.types);
+		ir.producers.push(...variants.producers);
 		const callback = ir.types.find(type => type.kind === "callback");
 		const site = position === "parameter" ? callback.callable.parameters[0] : callback.callable.result;
 		site.type = { kind: "named", id: "lean:Variants.Signal" };
-		assert.throws(() => generateCopiedPhpPackage(ir), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => generateCopiedPhpPackage(ir));
+		assert.throws(() => generateCopiedPhpZendAdapter(ir), /callbacks currently require copied primitive/);
 	}
 	const recursive = phpVariantReviewedIr(); recursive.types.find(type => type.name === "Signal").cases[2].fields[0].type = { kind: "named", id: "lean:Variants.Signal" };
 	assert.throws(() => generateCopiedPhpPackage(recursive), /acyclic|deep/);

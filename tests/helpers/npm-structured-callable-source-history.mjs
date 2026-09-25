@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpStructuredCallables } from "./php-structured-callable-source-history.mjs";
 
 export const npmStructuredCallableHistoryPath = "docs/evidence/npm-structured-callable-integration-20260925.json";
 export const npmStructuredCallableChangedPaths = [
@@ -86,6 +87,7 @@ export const reverseNpmStructuredCallableUpdate = (source, update) => {
  * @param expected - Optional intermediate digest at which to stop.
  */
 export const beforeNpmStructuredCallables = (path, source, expected) => {
+	source = beforePhpStructuredCallables(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !npmStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(npmStructuredCallableHistoryPath, "utf8"));

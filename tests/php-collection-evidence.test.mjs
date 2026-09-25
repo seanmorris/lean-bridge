@@ -20,6 +20,7 @@ import { nativeAliasReviewedIr } from "./helpers/native-alias-fixture.mjs";
 import { phpVariantReviewedIr } from "./helpers/php-variant-fixture.mjs";
 import { composerProbe, phpIsolationFlags } from "./helpers/type-corpus-php.mjs";
 import { validateBrickMathInstall } from "./helpers/brick-math.mjs";
+import { beforePhpStructuredCallables } from "./helpers/php-structured-callable-source-history.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/php-native-collections-20260922.json"));
 const observations = run => ({
@@ -32,7 +33,7 @@ test("native PHP collections retain original packages, exact public calls and ex
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.profiles, ["php-native"]);
 	assert.equal(record.hostGlibc, "2.36"); assert.equal(record.packageGlibcFloor, "2.36");
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(beforePhpStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	const sort = values => [...values].sort((a, b) => a.name.localeCompare(b.name));
 	assert.deepEqual(sort(record.signatures), sort(collectionSignatures));
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(collectionReviewedIr())));
@@ -155,8 +156,10 @@ test("PHP collections promote reviewed copied positions and require original CI 
 		for(const stage of Object.values(cell.stages))
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["php-native-collections-installed"]); }
 	}
-	for(const cell of cells.filter(cell => cell.profile === "php-native" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	const callbacks = cells.filter(cell => cell.profile === "php-native" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-"));
+	assert.equal(callbacks.length, 8);
+	for(const cell of callbacks)
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["php-native-structured-callables-installed"]);
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	for(const [command, report] of [
 		["LEAN_BRIDGE_PHP_COLLECTION_TEST=1 node --test tests/php-collections.test.mjs tests/php-collection-contract.test.mjs", "collections/php-native"]

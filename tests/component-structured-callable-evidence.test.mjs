@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertNpmStructuredCallableExecution, assertNpmStructuredCallableIntegration, npmStructuredCallableExecutionPath } from "./helpers/npm-structured-callable-evidence.mjs";
 import { beforeNpmStructuredCallables, npmStructuredCallableHistoryPath, reverseNpmStructuredCallableUpdate } from "./helpers/npm-structured-callable-source-history.mjs";
+import { beforePhpStructuredCallables } from "./helpers/php-structured-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -53,7 +54,7 @@ test("npm structured source history rejects unrelated edits and altered predeces
 	const record = await json(npmStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePhpStructuredCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseNpmStructuredCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNpmStructuredCallables(update.path, source)), update.previousSha256);
 		const changed = source + "\n// unrelated\n";

@@ -22,7 +22,7 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
 export const ordinaryPhpEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true });
-	const projection = model.copiedGraph ? compileCopiedPhpGraphPackageModel(model.bindingIr) : compileCopiedPhpModel(model.bindingIr, { lists: true, variants: true });
+	const projection = model.copiedGraph ? compileCopiedPhpGraphPackageModel(model.bindingIr) : compileCopiedPhpModel(model.bindingIr, { structuredCallables: true, lists: true, variants: true });
 	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
 	const copiedGraph = model.copiedGraph ? { schemaVersion: 1, layoutSha256: projection.layoutSha256 } : undefined;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));

@@ -11,6 +11,7 @@ import { assertJvmSharedRegressionEvidence } from "./jvm-shared-regression-recei
 import { assertNativeGraphJvmRegression } from "./native-graph-jvm-regression.mjs";
 import { assertPhpWasmSharedSourceTransition } from "./php-wasm-shared-regression-receipt.mjs";
 import { beforeWitPackageIntegration } from "./wit-package-source-history.mjs";
+import { beforePhpStructuredCallables } from "./php-structured-callable-source-history.mjs";
 
 const kotlinPath = "tests/kotlin-collection-evidence.test.mjs";
 const phpPath = "tests/php-wasm-collection-evidence.test.mjs";
@@ -105,7 +106,7 @@ export const assertCurrentPhpWasmCollectionSources = async record => {
 	for(const sources of [record.sourceHashes, record.generatorSourceHashes])
 		for(const [path, expected] of Object.entries(sources))
 		{
-			const source = await readFile(path, "utf8");
+			const source = beforePhpStructuredCallables(path, await readFile(path, "utf8"), expected);
 			if(sha256(source) === expected) continue;
 			if(path === phpPath)
 				assert.equal(sha256(beforeCurrentCollectionVerification(path, source)), expected, path);

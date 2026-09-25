@@ -11,6 +11,7 @@ import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.
 import { phpVariantReviewedIr, phpVariantSignatures } from "./helpers/php-variant-fixture.mjs";
 import { phpIsolationFlags } from "./helpers/type-corpus-php.mjs";
 import { validateBrickMathInstall } from "./helpers/brick-math.mjs";
+import { beforePhpStructuredCallables } from "./helpers/php-structured-callable-source-history.mjs";
 
 test("native PHP variant evidence binds original archives, both source paths and lexical callers", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/php-native-variants-20260921.json"));
@@ -20,7 +21,7 @@ test("native PHP variant evidence binds original archives, both source paths and
 		assert.equal(contractSha256, sha256(canonicalJson(record.contract))); return { ...run, contract: record.contract };
 	});
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(beforePhpStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(record.signatures, phpVariantSignatures); assert.deepEqual(record.types, phpVariantReviewedIr().types);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(phpVariantReviewedIr())));
 	assert.equal(record.types.filter(type => type.kind === "variant").length, 7); assert.equal(record.types.flatMap(type => type.cases).length, 18);
