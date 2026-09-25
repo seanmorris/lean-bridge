@@ -73,14 +73,14 @@ test("Perl List input checks precede host calls and ownership registration sees 
 	assert.match(xs, /av_fetch\(slots, i, 0\)/);
 });
 
-test("Perl Lists reject callback payloads and identities inside copies, including nested Lists", () => {
+test("Perl List callback payloads retain copied identity and depth checks", () => {
 	const children = [list(unit), { kind: "array", element: list(unit), abi }
 		, { kind: "record", name: "Sample.P", lean: "Sample.P", constructor: "Sample.P.mk", fields: [{ name: "value", projection: "Sample.P.value", type: list(unit) }], abi }];
 	for(const child of children) for(const [parameters, result] of [[[child], unit], [[unit], child]])
 	{
 		const callback = { kind: "callback", parameters, result, abi }, checked = model();
 		checked.types.push({ ...callback, key: nativeTypeKey(callback) });
-		assert.throws(() => validatePerlModel(checked), /compound callbacks are not implemented/);
+		assert.doesNotThrow(() => validatePerlModel(checked));
 	}
 	for(const child of [{ kind: "callback", parameters: [unit], result: unit, abi }
 		, { kind: "resource", name: "Sample.R", lean: "Sample.R", module: "Sample", abi }])

@@ -72,9 +72,11 @@ export const perlAliasApiDocs = (model, item) => {
  *
  * @param model - Compiler-checked native Perl model.
  * @param aliases - Admitted alias catalog.
+ * @param structuredCallables - Whether this package exposes copied callback payloads.
  */
-export const perlAliasPod = (model, aliases) => ["=head1 COPIED ALIASES", ""
-	, "Alias names, original targets and chains remain in the binding manifest and this POD. Call with ordinary Perl target values; aliases do not create separate packages or wrapper classes. Nat requires a nonnegative Math::BigInt; Int accepts negative values. Fixed-width and machine-word integers retain their ranges. Char requires one Unicode scalar. Unit uses undef. Copied payloads own independent storage. Existing copy budgets, schema depth and ownership checks apply. Recursive copies, compound callables and identity-bearing alias targets remain unsupported."
+export const perlAliasPod = (model, aliases, structuredCallables = false) => [
+	"=head1 COPIED ALIASES", ""
+	, "Alias names, original targets and chains remain in the binding manifest and this POD. Call with ordinary Perl target values; aliases do not create separate packages or wrapper classes. Nat requires a nonnegative Math::BigInt; Int accepts negative values. Fixed-width and machine-word integers retain their ranges. Char requires one Unicode scalar. Unit uses undef. Copied payloads own independent storage. Existing copy budgets, schema depth and ownership checks apply. " + (structuredCallables ? "Copied alias targets work in callback and closure payloads. Recursive callback payloads and identity-bearing alias targets remain unsupported." : "Recursive copies, compound callables and identity-bearing alias targets remain unsupported.")
 	, "", "=over 4", ""
 	, ...aliases.flatMap(alias => [`=item ${code(alias.name)}`, "", `Contract: ${code(contractType(model, alias.target))}. Perl value: ${code(alias.perlType)}.`, ""])
 	, "=back", "", "=head1 RECORD FIELD CONTRACTS", ""

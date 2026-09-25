@@ -13,7 +13,7 @@ use Scalar::Util qw(blessed refaddr);
 use LeanBridge::Compounds;
 
 my $checks = 0;
-sub check { die "Compound assertion #$checks failed: $_[1]\n" unless $_[0]; ++$checks; }
+sub check ($;$) { die "Compound assertion #$checks failed: $_[1]\n" unless $_[0]; ++$checks; }
 sub some { LeanBridge::Compounds::Some->new($_[0]) }
 sub ok { LeanBridge::Compounds::Ok->new($_[0]) }
 sub err { LeanBridge::Compounds::Err->new($_[0]) }
@@ -115,10 +115,12 @@ for my $case (@cases) {
     leaf($type, $pair->[0], $b); leaf($type, $pair->[1], $a);
   }
   for my $value (@$invalid) {
-    rejected(sub { $option->(some($value)) }, $message);
-    rejected(sub { $result->(ok($value)) }, $message);
-    rejected(sub { $result->(err($value)) }, $message);
-    rejected(sub { $product->([$values->[0], $value]) }, $message);
+    my $expected = ref($value) && $type ne 'nat' && $type ne 'int'
+      ? qr/\Aexpected a scalar value\b/ : $message;
+    rejected(sub { $option->(some($value)) }, $expected);
+    rejected(sub { $result->(ok($value)) }, $expected);
+    rejected(sub { $result->(err($value)) }, $expected);
+    rejected(sub { $product->([$values->[0], $value]) }, $expected);
   }
   push @primitives, { name => $type, checks => $checks - $before, rejected_cases => 4 * @$invalid };
 }

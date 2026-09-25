@@ -13,7 +13,7 @@ use Scalar::Util qw(blessed refaddr);
 use LeanBridge::Callables;
 
 my $checks = 0;
-sub check { die "Callable assertion failed: $_[1]\n" unless $_[0]; ++$checks; }
+sub check ($;$) { die "Callable assertion failed: $_[1]\n" unless $_[0]; ++$checks; }
 sub rejected {
   my ($call, $message) = @_;
   my $ok = eval { $call->(); 1 }; my $error = $@;
@@ -102,11 +102,13 @@ for my $case (@cases) {
   }
   my $value = $values->[0]; my $closure = $make->($value);
   for my $bad (@$bad_values) {
+    my $expected = ref($bad) && $type ne 'nat' && $type ne 'int'
+      ? qr/\Aexpected a scalar value\b/ : $message;
     my $calls = 0;
-    rejected(sub { $twice->($value, sub { ++$calls; $bad }) }, $message);
+    rejected(sub { $twice->($value, sub { ++$calls; $bad }) }, $expected);
     check($calls == 1, 'failed callback must suppress later invocations');
-    rejected(sub { $closure->call($false, $bad) }, $message);
-    rejected(sub { $make->($bad) }, $message);
+    rejected(sub { $closure->call($false, $bad) }, $expected);
+    rejected(sub { $make->($bad) }, $expected);
     check(encode($type, $call->($value, sub { $_[0] })) eq encode($type, $value), 'recovery');
     quiet(1);
   }

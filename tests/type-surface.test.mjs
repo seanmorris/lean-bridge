@@ -129,10 +129,10 @@ test("platform-word evidence binds all seventeen profiles to compiled widths and
 	}
 });
 
-test("List evidence covers all copied profiles and accepted C/C++/Rust/Python/Ruby/C#/JVM callbacks", () => {
+test("List evidence covers all copied profiles and accepted C/C++/Rust/Python/Ruby/C#/JVM/Perl callbacks", () => {
 	const profiles = ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"];
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "list");
-	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 134);
+	assert.equal(cells.filter(cell => cell.stages.installedExecution.state === "passed").length, 138);
 	assert.equal(document.shapes.find(shape => shape.id === "list").ir, "constructor:list");
 	for(const cell of cells)
 	{
@@ -145,7 +145,7 @@ test("List evidence covers all copied profiles and accepted C/C++/Rust/Python/Ru
 			assert.equal(cell.hostType, wit ? "list<T> (owned Wasmtime component values)" : php ? "list<T> (consecutive-key PHP array)" : perl ? "Plain array reference" : ruby ? "Array" : jvm ? cell.profile === "java" ? "T[] (primitive arrays for primitive elements)" : "primitive arrays or Array<T>" : dotnet ? "T[]" : rust ? cell.position === "parameter" ? "&[T]" : "Vec<T>" : python ? pythonType[cell.position] : npm ? "ReadonlyArray<T> (ordinary dense Array)" : cell.profile === "c" ? "<prefix>_list_<element>_span" : "std::vector<T>");
 			for(const stage of Object.values(cell.stages))
 			{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [wit ? "wit-wasi-lists-installed" : php ? cell.profile === "php-native" ? "php-native-lists-ffi-installed" : "php-wasm-lists-installed" : perl ? "perl-lists-installed" : ruby ? "ruby-lists-installed" : jvm ? "jvm-lists-installed" : dotnet ? "dotnet-lists-installed" : rust ? "rust-lists-installed" : python ? "python-lists-installed" : npm ? "npm-lists-installed" : "native-lists-installed"]); }
-		} else if((native || rust || python || ruby || dotnet || jvm) && cell.position.startsWith("callback-"))
+		} else if((native || rust || python || ruby || dotnet || jvm || perl) && cell.position.startsWith("callback-"))
 		{
 			assert.equal(cell.stages.installedExecution.state, "passed");
 			assert.deepEqual(cell.stages.installedExecution.evidence, [`${jvm ? "jvm" : cell.profile}-structured-callables-installed`]);
@@ -290,8 +290,10 @@ test("Perl installed evidence stays scoped to audited source paths and positions
 	for(const path of document.paths) for(const shape of ["array", "record"])
 		for(const position of ["parameter", "result", "field"])
 			assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
-	assert.equal(state("array", "callback-result"), "limited");
-	assert.equal(state("array", "callback-result", "reviewed-ir"), "unreviewed");
+	for(const path of document.paths)
+		for(const shape of ["array", "record", "list", "option", "result", "tuple", "variant", "alias"])
+			for(const position of ["callback-parameter", "callback-result"])
+				assert.equal(state(shape, position, path), "passed", `${shape}/${path}/${position}`);
 	assert.equal(state("resource", "result"), "passed");
 	assert.equal(state("resource", "field"), "unreviewed");
 	assert.equal(state("callback", "parameter"), "passed");

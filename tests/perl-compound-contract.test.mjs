@@ -11,6 +11,7 @@ import { generatePerlBindingPackage, validatePerlModel } from "../src/backends/p
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { compoundSignatures } from "./helpers/compound-fixture.mjs";
 import { assertCompoundSourceHash } from "./helpers/compound-source-history.mjs";
+import { beforePerlStructuredCallables } from "./helpers/perl-structured-callable-source-history.mjs";
 
 const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const unit = { kind: "primitive", name: "unit", lean: "Unit", abi: { ...abi, heap: false } };
@@ -51,7 +52,7 @@ for(const name of ["Some", "Ok", "Err"]) test(`Perl compound helper ${name} cann
 	assert.throws(() => validatePerlModel(model(option(pair("result", record, unit)))), /class name collision/);
 });
 
-test("Perl compound admission keeps callable payloads, copied identity and deep schemas closed", () => {
+test("Perl compound callbacks admit copied payloads while rejecting copied identities and deep schemas", () => {
 	const children = [option(unit)
 		, pair("tuple", unit, unit), pair("result", unit, unit)
 		, { kind: "array", element: option(unit), abi }
@@ -63,7 +64,7 @@ test("Perl compound admission keeps callable payloads, copied identity and deep 
 			// Exercise early admission directly; binding IR resource declarations are separate.
 			const callback = { kind: "callback", parameters, result, abi }, checked = model();
 			checked.types.push({ ...callback, key: nativeTypeKey(callback) });
-			assert.throws(() => validatePerlModel(checked), /compound callbacks are not implemented/);
+			assert.doesNotThrow(() => validatePerlModel(checked));
 		}
 	}
 	for(const child of [{ kind: "callback", parameters: [unit], result: unit, abi }
@@ -79,7 +80,8 @@ test("Perl compound evidence binds eight executions to unchanged relocated insta
 	assert.doesNotMatch(consumer, /LeanBridge::Runtime|Compounds::_|XSLoader|DynaLoader|lean_ctor_/);
 	assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, compoundSignatures);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assertCompoundSourceHash(path, await readFile(path), hash);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assertCompoundSourceHash(path, beforePerlStructuredCallables(path, await readFile(path, "utf8")), hash);
 	assert.equal(record.executions.length, 8);
 	const expected = ["ordinary-source", "reviewed-ir"].flatMap(path => record.perlAbis.map(abi => `${path}/${abi}`));
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.perl.slice(1)}-${run.threaded ? "threaded" : "unthreaded"}`), expected);

@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
 import { arrayPrimitives } from "./helpers/array-fixture.mjs";
+import { beforePerlStructuredCallables } from "./helpers/perl-structured-callable-source-history.mjs";
 
 test("Perl collection evidence binds all primitives and seven records to both paths on four ABIs", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/perl-collections-20260921.json"));
@@ -23,7 +24,8 @@ test("Perl collection evidence binds all primitives and seven records to both pa
 		assert.equal(signaturesSha256, sha256(canonicalJson(record.signatures))); return { ...run, signatures: record.signatures };
 	});
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(beforePerlStructuredCallables(path, await readFile(path, "utf8"))), hash, path);
 	assert.deepEqual(record.perlAbis, ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"]);
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.perl.slice(1)}-${run.threaded ? "threaded" : "unthreaded"}`), ["ordinary-source", "reviewed-ir"].flatMap(path => record.perlAbis.map(abi => `${path}/${abi}`)));
 	for(const run of record.executions)
@@ -79,7 +81,11 @@ test("Perl collection evidence promotes copied cells and missing fields without 
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["perl-collections-installed"]); }
 	}
 	const callbacks = cells.filter(cell => cell.profile === "perl" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-"));
-	for(const cell of callbacks) assert.equal(cell.stages.installedExecution.state, cell.path === "ordinary-source" ? "limited" : "unreviewed");
+	for(const cell of callbacks)
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-structured-callables-installed"]);
+	}
 	const workflow = await readFile(".github/workflows/perl-consumer.yml", "utf8");
 	assert.match(workflow, /LEAN_BRIDGE_PERL_COLLECTION_TEST=1 node --test tests\/perl-collections\.test\.mjs/);
 	assert.match(workflow, /test -s build\/collections\/perl\.json/);

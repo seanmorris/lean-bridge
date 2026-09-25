@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertJvmStructuredCallableExecution, assertJvmStructuredCallableIntegration, jvmStructuredCallableExecutionPath } from "./helpers/jvm-structured-callable-evidence.mjs";
 import { beforeJvmStructuredCallables, jvmStructuredCallableHistoryPath, reverseJvmStructuredCallableUpdate } from "./helpers/jvm-structured-callable-source-history.mjs";
+import { beforePerlStructuredCallables } from "./helpers/perl-structured-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -63,7 +64,7 @@ test("JVM structured source history preserves unrelated source drift", async () 
 	const record = await json(jvmStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePerlStructuredCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseJvmStructuredCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeJvmStructuredCallables(update.path, source)), update.previousSha256);
 		assert.notEqual(sha256(beforeJvmStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);

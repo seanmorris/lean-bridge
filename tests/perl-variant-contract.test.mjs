@@ -78,11 +78,11 @@ test("Perl aliases retain their named variant family without an extra wrapper", 
 	assert.doesNotMatch(files["lib/LeanBridge/Sample.pm"], /package LeanBridge::Sample::SignalView;/);
 });
 
-test("Perl variants retain recursive, copied-identity and compound-callback gates", () => {
+test("Perl variant callbacks retain recursion and copied identity checks", () => {
 	const recursive = signal(); recursive.cases[1].fields[0].type = recursive;
 	assert.throws(() => model(recursive), /nesting/);
 	const callback = { kind: "callback", parameters: [signal()], result: word, abi };
-	assert.throws(() => validatePerlModel(model(callback)), /compound callbacks/);
+	assert.doesNotThrow(() => validatePerlModel(model(callback)));
 	for(const child of [{ kind: "resource", name: "Sample.R", lean: "Sample.R", module: "Sample", abi }, { kind: "callback", parameters: [word], result: word, abi }])
 	{
 		const shape = signal(); shape.cases[1].fields[0].type = child;

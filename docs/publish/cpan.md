@@ -99,7 +99,54 @@ Specializations can also use named aliases for supported copied arrays, records,
 
 ### Compile a reviewed callable API
 
-CPAN builds also accept a [reviewed Binding IR](../lean/existing-package.md#compile-a-reviewed-contract) containing synchronous primitive callbacks and returned closures. Put export signatures, call-scoped callback borrows and explicit closure leases in that document. A returned closure's outer parameter count supplies the compiler arity. Keep `exports`, `arities` and `contracts` out of `lean-bridge.exports.json` when a review is present. The builder checks the review against fresh Lean metadata before emitting native code.
+CPAN builds also accept a [reviewed Binding IR](../lean/existing-package.md#compile-a-reviewed-contract) containing synchronous primitive or acyclic copied-value callbacks and returned closures. Put export signatures, call-scoped callback borrows and explicit closure leases in that document. A returned closure's outer parameter count supplies the compiler arity. Keep `exports`, `arities` and `contracts` out of `lean-bridge.exports.json` when a review is present. The builder checks the review against fresh Lean metadata before emitting native code.
+
+### Export structured callbacks
+
+Add `Structured.lean`:
+
+```lean
+namespace Structured
+structure Payload where
+  text : String
+  rows : Array (Option String)
+  count : Nat
+  nested : Option (Except String (UInt64 × Unit))
+
+def callArray (value : Array (Option String))
+    (transform : Array (Option String) → Array (Option String)) :=
+  transform value
+
+def makeRecord (value : Payload) (captured : Bool) (next : Payload) :=
+  if captured then value else next
+end Structured
+```
+
+Select the exports and keep `makeRecord` as a returned closure:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callArray", "Structured.makeRecord"],
+  "arities": { "Structured.makeRecord": 1 },
+  "targets": { "cpan": { "module": "LeanBridge::Structured" } }
+}
+```
+
+Build with the ordinary CPAN command above. Install the runtime and component
+archives, then run the [Perl example](../consume/perl.md#structured-callback-values).
+The arity of one means `make_record($payload)` returns a closure whose `call`
+method takes a Boolean and another payload. Captured and returned mutable
+values own independent copies.
+
+The same adapter supports acyclic arrays, Lists, options, results, binary
+products, records, variants and copied aliases inside callback signatures.
+Callbacks remain synchronous call-scoped borrows; returned Lean closures
+remain explicit leases. Recursive callback payloads, retained host callbacks,
+asynchronous delivery and resources hidden inside copied aggregates remain
+unsupported. Both source paths have
+[installed CPAN checks](../evidence/perl-structured-callables-20260925.md).
 
 ### Build with locked Lake dependencies
 
@@ -145,7 +192,7 @@ Select `Compounds` in `modules` and its three functions in `exports`. Set `targe
 
 Perl uses `undef` or `Some` for options, distinct `Ok` and `Err` wrappers for results, and two-element array references for binary products. Constructors appear under the component namespace when needed; record or resource names that collide with them are rejected before linking. All nineteen primitives work inside these copied types, including `Math::BigInt`, Unit, Unicode strings and octet strings. Fields and arrays may contain compounds.
 
-Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32 for acyclic schemas. [Recursive values](#export-recursive-values) use a bounded graph adapter. Compound callback signatures require further adapter work. Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
+Native input/output conversion shares a 16 MiB copied-value budget, with a maximum schema depth of 32 for acyclic schemas. [Recursive values](#export-recursive-values) use a bounded graph adapter. Compounds work in [callback arguments and results](#export-structured-callbacks). Resources and callbacks cannot be nested in copied values. Both ordinary source and compiler-checked reviewed contracts have [installed CPAN evidence](../evidence/perl-compounds-20260920.md).
 
 ## Export copied tagged variants
 
@@ -225,8 +272,9 @@ They retain order, duplicates and nesting with all nineteen primitives, arrays,
 options, results, products and acyclic records. Typed Lean helpers convert Lists
 without inspecting cons-cell layouts. The [installed record](../evidence/perl-lists-20260921.md)
 covers all four pinned Perl ABIs, independent output storage, malformed inputs,
-copy limits, exceptions during conversion and recovery. List callback payloads
-and copied resource identities remain unsupported.
+copy limits, exceptions during conversion and recovery. Lists also work as
+[callback arguments and results](#export-structured-callbacks). Copied resource
+identities remain unsupported.
 
 ## Export named copied aliases
 
@@ -255,8 +303,8 @@ existing limits still apply.
 
 An independently reviewed contract must retain the same aliases and references;
 replacing every alias with its target does not reproduce the source API.
-Generic aliases, compound callable payloads
-and identity-bearing alias targets require further work. The
+Copied alias targets also work in [callback signatures](#export-structured-callbacks).
+Generic aliases and identity-bearing alias targets require further work. The
 [installed acceptance record](../evidence/perl-aliases-20260921.md) covers both
 source paths and all four pinned Perl ABIs.
 
@@ -299,7 +347,7 @@ the same adapter. No runtime constructor numbers enter the public API.
 Each call limits conversion to depth 128, 262,144 nodes and 16 MiB of native
 copied data, with a separate 16 MiB conversion-storage allowance. Cycles,
 malformed values and over-limit copies reject. These limits do not bound the
-whole Perl heap or Lean's working memory. Structured callback signatures and
+whole Perl heap or Lean's working memory. Recursive callback signatures and
 resource-containing aggregates remain unsupported.
 
 The [recursive acceptance record](../evidence/perl-recursive-packages-20260923.md)

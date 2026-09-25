@@ -8,11 +8,13 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { callablePrimitives, callableSignatures } from "./helpers/callable-fixture.mjs";
+import { beforePerlStructuredCallables } from "./helpers/perl-structured-callable-source-history.mjs";
 
 test("Perl callable evidence covers both source paths on each pinned interpreter ABI", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/perl-callables-20260918.json", "utf8"));
 	assert.equal(record.sourceSha256, sha256(await readFile("tests/fixtures/onboarding/callables/Callables.lean")));
-	assert.equal(record.consumerSha256, sha256(await readFile("tests/fixtures/callable-consumers/perl.pl")));
+	const consumerPath = "tests/fixtures/callable-consumers/perl.pl";
+	assert.equal(record.consumerSha256, sha256(beforePerlStructuredCallables(consumerPath, await readFile(consumerPath, "utf8"))));
 	assert.deepEqual(record.signatures, callableSignatures);
 	assert.equal(record.executions.length, 8);
 	assert.equal(new Set(record.executions.map(run => `${run.configuration}/${run.path}`)).size, 8);

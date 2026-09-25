@@ -9,6 +9,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { cVariantReviewedIr, cVariantSignatures } from "./helpers/c-variant-fixture.mjs";
+import { beforePerlStructuredCallables } from "./helpers/perl-structured-callable-source-history.mjs";
 
 test("Perl variant evidence binds all constructors and both source paths across four pinned ABIs", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/perl-variants-20260921.json"));
@@ -18,7 +19,8 @@ test("Perl variant evidence binds all constructors and both source paths across 
 		assert.equal(contractSha256, sha256(canonicalJson(record.contract))); return { ...run, contract: record.contract };
 	});
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(beforePerlStructuredCallables(path, await readFile(path, "utf8"))), hash, path);
 	assert.deepEqual(record.signatures, cVariantSignatures()); assert.deepEqual(record.types, cVariantReviewedIr().types);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(cVariantReviewedIr())));
 	assert.equal(record.types.filter(type => type.kind === "variant").length, 7);

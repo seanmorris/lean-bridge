@@ -77,8 +77,8 @@ const fromPrimitive = type => {
 };
 const toPrimitive = type => {
 	const name = fixedPlatformInteger(type.name, 64);
-	if(name === "unit") return "return &PL_sv_undef;";
-	if(name === "bool") return "return boolSV(value != 0);";
+	if(name === "unit") return "return lbp_mortal(newSV(0));";
+	if(name === "bool") return "return lbp_mortal(newSVsv(boolSV(value != 0)));";
 	if(name === "char") return `
     if (value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff)) croak("Invalid native Unicode scalar");
     U8 bytes[UTF8_MAXBYTES]; U8 *end = uvchr_to_utf8(bytes, value);
@@ -120,7 +120,7 @@ const conversion = (model, type) => {
 		to = `
       lbp_budget(scope, sizeof(void *));
       ${retain(type, "value")} uint8_t present = lb_t${type.key}_has(value);
-      ${optional ? "if (!present) return &PL_sv_undef;" : ""}
+      ${optional ? "if (!present) return lbp_mortal(newSV(0));" : ""}
       ${branches.map(([branch, child], i) => `${optional ? "" : i === 0 ? "if (present)" : "else"} {
         ${retain(type, "value")} ${nativeCType(child)} item = lb_t${type.key}_get${i}(value);
         ${nativeObjectType(child) ? "lbp_keep(scope, item);" : ""}
@@ -276,14 +276,9 @@ export const validatePerlModel = model => {
 		return [...types.some(type => type.kind === "option") ? ["Some"] : []
 			, ...types.some(type => type.kind === "result") ? ["Ok", "Err"] : []];
 	}
-	const containsCompound = type => ["option", "result", "tuple", "list", "variant"].includes(type.kind)
-		|| (type.kind === "array" && containsCompound(type.element))
-		|| (type.kind === "record" && type.fields.some(field => containsCompound(field.type)));
 	model.types.forEach(({ key, ...type }) => {
-    validateNativeType(type);
-    if(type.kind === "callback" && [...type.parameters, type.result].some(containsCompound))
-      throw Object.assign(new TypeError("Perl compound callbacks are not implemented"), { code: "unsupported-perl-signature" });
-    if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
+		validateNativeType(type);
+		if(key !== nativeTypeKey(type)) throw new TypeError("native type identity changed");
 	});
 	const branches = [...(model.types.some(type => type.kind === "option") ? ["Some"] : [])
 		, ...(model.types.some(type => type.kind === "result") ? ["Ok", "Err"] : [])];
@@ -311,6 +306,9 @@ export const generatePerlBindingPackage = (model, receipt) => {
 	if(model.copiedGraph) return generateCopiedPerlGraphPackage(model, receipt);
 	const branches = validatePerlModel(model);
 	const aliases = perlCopiedAliases(model);
+	const structuredCallables = model.types.some(type => type.kind === "callback"
+		&& [...type.parameters, type.result].some(value =>
+			["array", "list", "option", "result", "tuple", "record", "variant"].includes(value.kind)));
 	const lines = ['#include "runtime.h"', '#include "component.h"'
 		, `static void lbp_component_ready(pTHX) {
   if (!lean_bridge_native_component_ready(${q(`${model.component.id}:${receipt.nativeLibrary.sha256}`)})) croak("Lean runtime is not ready or has been retired");
@@ -415,16 +413,20 @@ _callback_${type.key}(...)
 		pm.push(`=head2 ${item.publicName}`, "", `Calls C<${item.name}> in the compiled Lean component.`, "");
 		if(aliases.length) pm.push(perlAliasApiDocs(model, item), "");
 	}
-	if(aliases.length) pm.push(...perlAliasPod(model, aliases));
+	if(aliases.length) pm.push(...perlAliasPod(model, aliases, structuredCallables));
 	pm.push(...perlVariantPod(model));
 	if(branches.length) pm.push("=head1 COPIED VALUES", ""
 		, "Option uses undef for None and Some->new($value) for Some, including Some->new(undef). Unit uses undef. Except uses distinct Ok->new($value) and Err->new($value) objects; ->value returns the payload. Branch classes live under this component's namespace. Prod uses a plain two-element array reference; nested pairs stay nested."
-		, "", "Branches are mutable one-field hashes. Calls check the exact class and field set, reject tied branches and products, and copy their contents. Returned arrays, records and payloads are independent of input values. Perl reference equality is not deep value equality. The shared per-call copied-value limit is 16 MiB; schema nesting is limited to 32 levels. Compound callbacks and resources inside copied values are unsupported.", "");
+		, "", "Branches are mutable one-field hashes. Calls check the exact class and field set, reject tied branches and products, and copy their contents. Returned arrays, records and payloads are independent of input values. Perl reference equality is not deep value equality. The shared per-call copied-value limit is 16 MiB; schema nesting is limited to 32 levels. " + (structuredCallables ? "Callbacks accept and return these copied values. Resources and callbacks inside copied values remain unsupported." : "Compound callbacks and resources inside copied values are unsupported."), "");
 	if(model.types.some(type => type.kind === "list")) pm.push("=head1 LISTS", ""
-		, "Lean List inputs, results and record fields use copied plain array references. Calls reject blessed, tied and sparse arrays. Empty Lists, order, duplicates and nesting are preserved. Slots are pinned before element conversion can invoke Perl code. Returned arrays and mutable payloads own independent storage. List and Array retain distinct IR/native identities. Typed Lean helpers perform List conversion without inspecting cons-cell layouts. The shared per-call copied-value limit is 16 MiB; List callback payloads remain unsupported.", "");
+		, "Lean List inputs, results and record fields use copied plain array references. Calls reject blessed, tied and sparse arrays. Empty Lists, order, duplicates and nesting are preserved. Slots are pinned before element conversion can invoke Perl code. Returned arrays and mutable payloads own independent storage. List and Array retain distinct IR/native identities. Typed Lean helpers perform List conversion without inspecting cons-cell layouts. The shared per-call copied-value limit is 16 MiB; " + (structuredCallables ? "List callback arguments and results use independent plain array references." : "List callback payloads remain unsupported."), "");
 	if(model.types.some(type => type.kind === "array" || type.kind === "record")) pm.push("=head1 ARRAYS AND RECORDS", ""
 		, "Lean Array values use plain dense array references. Calls reject blessed, tied and sparse arrays. Copied records use generated classes with named fields and accessors. Record keyword arguments keep Perl's last-value-wins hash semantics, including new(%old_fields, field => $replacement). Constructors reject missing, extra or unnamed fields; calls require the exact generated class and reject tied hashes and subclasses. Empty records and one-field records retain their named types."
 		, "", "Array slots and record fields are pinned before conversion can invoke Perl code. Returned arrays, records, octet strings and Math::BigInt payloads own independent copied storage. Reference equality is not deep value equality. Nested copied values share a 16 MiB conversion budget and a 32-level schema limit; these are not limits on all Perl allocations or Lean working memory. Recursive copied types remain unsupported.", "");
+	if(structuredCallables) pm.push("=head1 STRUCTURED CALLBACKS", ""
+		, "Synchronous callbacks accept and return acyclic copied arrays, Lists, options, results, products, records, variants and aliases. Use the same generated classes and plain containers as ordinary arguments and results. Callback arguments, results and returned Lean closure captures own independent copied storage."
+		, "", "Pass host callbacks as CODE references. Lean may not retain them after the exported call returns. Returned Lean closures provide call, close and closed; close each closure when finished. Original Perl exception objects are rethrown after native cleanup. Closing a closure during argument conversion does not invalidate the borrow held by its active call."
+		, "", "Copied-value conversion uses the existing 16 MiB scope budget and 32-level schema bound. Recursive callback payloads, resource-containing aggregates and asynchronous callbacks remain unsupported.", "");
 	pm.push("=head1 OWNERSHIP", "", "Close resource and closure objects when finished. Host callbacks are synchronous and may not be retained by Lean.", "", "=cut", "");
 	const publicModule = `lib/${model.moduleName.replaceAll("::", "/")}.pm`;
 	return {

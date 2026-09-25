@@ -111,6 +111,19 @@ test("WIT recursive tables record installed copied values and retain callback ga
 	assert.doesNotMatch(reference, /Recursive values in the remaining profiles/u);
 });
 
+test("Perl copied callback rows retain recursive and owned-resource exclusions", async () => {
+	const source = await readFile("docs/consume/perl.md", "utf8");
+	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+	{
+		const mapping = row(source, shape);
+		assert.match(mapping, /callback input, callback result/u);
+		assert.doesNotMatch(mapping, /Not audited/u);
+	}
+	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.match(source, /perl-structured-callables-20260925\.md/u);
+	assert.match(source, /Some\(undef\)/u);
+});
+
 test("C copied callback rows reflect installed acceptance without promoting recursive payloads", async () => {
 	const source = await readFile("docs/consume/c.md", "utf8");
 	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
@@ -336,7 +349,7 @@ test("PHP compound docs record independent native and PHP-Wasm coverage", async 
 test("Perl compound docs preserve presence, branch identity and nested products", async () => {
 	const source = await readFile("docs/consume/perl.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
-		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u);
 	assert.match(row(source, "Option α"), /undef.*Some/u);
 	assert.match(row(source, "Except ε α"), /Ok.*Err/u);
 	assert.match(row(source, "Prod α β / tuples"), /two-element array reference/u);
@@ -347,8 +360,11 @@ test("Perl compound docs preserve presence, branch identity and nested products"
 		for(const position of ["callback-parameter", "callback-result"])
 		{
 			const cell = cells.find(cell => cell.id === `perl/${shape}/${path}/${position}`);
-			assert.equal(cell.stages.compilation.state, "rejected");
-			assert.notEqual(cell.stages.installedExecution.state, "passed");
+			for(const stage of Object.values(cell.stages))
+			{
+				assert.equal(stage.state, "passed");
+				assert.deepEqual(stage.evidence, ["perl-structured-callables-installed"]);
+			}
 		}
 });
 
