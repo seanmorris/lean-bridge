@@ -62,6 +62,7 @@ export const beforeRecursiveAcceptance = (path, source, expected) => {
  * @param expected - Complete pre-acceptance documentation hash.
  */
 export const beforeRecursiveAcceptanceDocument = (source, expected) => {
+	source = beforeWitGraphRegistration("docs/contributing/testing.md", source, expected);
 	source = beforeWitGraphRegistration("tests/documentation.test.mjs", source, expected);
 	if(sha256(source) === expected) return source;
 	const matches = recursiveAcceptanceRecord().updates.filter(update => documentation.includes(update.path) && update.previousSha256 === expected);

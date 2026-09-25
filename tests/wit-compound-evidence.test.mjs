@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeWitStructuredCallables } from "./helpers/wit-structured-callable-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
@@ -23,7 +24,8 @@ test("WIT compound evidence binds both source paths to installed packages and pa
 	assert.deepEqual(record.profiles, ["wit-wasi"]); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.signatures, compoundSignatures);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assertCompoundSourceHash(path, await readFile(path), hash);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assertCompoundSourceHash(path, beforeWitStructuredCallables(path, await readFile(path, "utf8"), hash), hash);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
 	const source = await witCompoundConsumer(), sort = values => [...values].sort((a, b) => a.name.localeCompare(b.name));
 	const fixture = { source

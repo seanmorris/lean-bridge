@@ -50,13 +50,13 @@ test("parsed WIT and compiled components preserve all independent List signature
 	}
 });
 
-test("WIT copied Lists keep List callback payloads and excessive type nesting closed", () => {
+test("WIT copied Lists admit callback payloads while rejecting excessive type nesting", () => {
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types[0].callable;
 		const type = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "unit" }] };
 		if(position === "parameter") callback.parameters[0].type = type; else callback.result.type = type;
-		assert.throws(() => compileCopiedWitModel(ir, {}, { callables: true }), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => compileCopiedWitModel(ir, {}, { callables: true }));
 	}
 	let type = "uint32";
 	for(let depth = 0; depth < 34; depth++) type = { list: type };

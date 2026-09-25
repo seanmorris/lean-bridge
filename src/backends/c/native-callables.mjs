@@ -91,10 +91,20 @@ export const generateNativeCallables = (model, surface) => {
 	const p = surface.prefix, m = p.toUpperCase();
 	const copy = type => surface.copy(nativeCReference(type));
 	const id = type => `lb_copy_${copy(type).index}`;
-	const callback = type => surface.callbacks.get(nativeCReference(type).id);
+	const types = model.types.filter(type => type.kind === "callback"), bindings = new Map();
+	for(const type of types)
+	{
+		const matches = [...surface.callbacks.values()].filter(({ type: { callable } }) =>
+			callable.parameters.length === type.parameters.length
+			&& callable.parameters.every((site, index) => surface.copy(site.type) === copy(type.parameters[index]))
+			&& surface.copy(callable.result.type) === copy(type.result));
+		if(!matches.length) throw new TypeError(`Missing public C callback for native signature ${nativeCReference(type).id}`);
+		const direct = surface.callbacks.get(nativeCReference(type).id);
+		bindings.set(nativeTypeKey(type), direct ? [direct, ...matches.filter(value => value !== direct)] : matches);
+	}
+	const callback = type => bindings.get(nativeTypeKey(type))[0];
 	const unit = type => type.kind === "primitive" && type.name === "unit";
 	const cleanup = (type, name) => copy(type).aggregate ? `${copy(type).name}_clear(&${name});` : "";
-	const types = model.types.filter(type => type.kind === "callback");
 	const structured = types.some(type => [...type.parameters, type.result].some(value => value.kind !== "primitive"));
 	const wasm = model.pointerBits === 32;
 	const source = [`
@@ -252,10 +262,12 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 				: `${copy(type).aggregate ? `!${name} || ` : ""}!${id(type)}_check(${copy(type).aggregate ? name : `&${name}`}, &_lb_frame->budget)`;
 			lines.push(`  if (${invalid}) { lb_record(_lb_frame, ${m}_STATUS_INVALID_ARGUMENT, NULL, "Invalid C argument or 16 MiB call limit exceeded"); goto done; }`);
 		}
-		for(const { name, type } of hostArgs)
+		for(const { name, type, callbackId } of hostArgs)
 		{
 			const key = nativeTypeKey(type);
-			lines.push(`  _lb_host_${name} = (lb_host_${key}){*${name}, _lb_frame};`
+			const host = callbackId && callbackId !== callback(type).type.id
+				? `(${callback(type).name}){.call = ${name}->call, .context = ${name}->context}` : `*${name}`;
+			lines.push(`  _lb_host_${name} = (lb_host_${key}){${host}, _lb_frame};`
 				, `  _lb_token_${name} = lb_native_callback_register((void (*)(void))lb_invoke_${key}, &_lb_host_${name});`
 				, `  if (!_lb_token_${name}) { lb_record(_lb_frame, ${m}_STATUS_UNEXPECTED_ERROR, NULL, "Native callback registry full"); goto done; }`);
 		}
@@ -294,17 +306,18 @@ static void lb_lease_drop(uintptr_t token, const char *kind) {
 	{
 		const native = model.exports.find(item => `lean:${item.name}` === fn.declaration.id);
 		if(!native.parameters.some(parameter => parameter.type.kind === "callback") && native.result.kind !== "callback") continue;
-		source.push(render(`static ${p}_status lb_call_${fn.field}(${fn.signature}) {`, fn.parameters.map((parameter, i) => ({ name: parameter.name, type: native.parameters[i].type })), native.result, native.symbol));
+		source.push(render(`static ${p}_status lb_call_${fn.field}(${fn.signature}) {`, fn.parameters.map((parameter, i) => ({ name: parameter.name, type: native.parameters[i].type, callbackId: fn.declaration.parameters[i].type.id })), native.result, native.symbol));
 	}
 	const vtable = [];
 	for(const type of types)
 	{
-		const cb = callback(type), key = nativeTypeKey(type);
+		const key = nativeTypeKey(type);
 		const parameters = type.parameters.map((type, i) => ({ name: `value${i}`, type }));
 		const args = parameters.map(({ name, type }) => `${copy(type).aggregate ? "const " : ""}${copy(type).name}${copy(type).aggregate ? " *" : " "}${name}`);
 		source.push(render(`static ${p}_status lb_owned_${key}(void *context, uintptr_t self, ${[...args, ...(!unit(type.result) ? [`${copy(type.result).name} *out`] : []), `${p}_error *error`].join(", ")}) {`, parameters, type.result, `lb_t${key}_call`, type));
 		source.push(`static void lb_dispose_${key}(void *context, uintptr_t value) { (void)context; lb_lease_drop(value, ${JSON.stringify(`${model.component.id}:callback:${key}`)}); }`);
-		vtable.push(`  .${cb.field}_call = lb_owned_${key}, .${cb.field}_dispose = lb_dispose_${key},`);
+		for(const cb of bindings.get(key))
+			vtable.push(`  .${cb.field}_call = lb_owned_${key}, .${cb.field}_dispose = lb_dispose_${key},`);
 	}
 	return { source: source.join("\n\n"), vtable: vtable.join("\n") };
 };

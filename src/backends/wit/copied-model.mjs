@@ -30,10 +30,10 @@ export const validateOrdinaryWasiSettings = (settings = {}) => {
  * @param ir - Authoritative compiler-derived Binding IR.
  * @param settings - Optional archive name and exact semantic version.
  * @param options - Explicit projection capabilities.
- * @param options.callables - Admit the primitive callable resource contract.
+ * @param options.callables - Admit synchronous copied-value callable resources.
  */
 export const compileCopiedWitModel = (ir, settings = {}, { callables = false } = {}) => {
-	const surface = compilePrimitiveCSurface(ir, { callables, compounds: true, lists: true, variants: true });
+	const surface = compilePrimitiveCSurface(ir, { callables, structuredCallables: callables, compounds: true, lists: true, variants: true });
 	const name = settings.name ?? kebab(surface.prefix), version = settings.version ?? ir.component.version;
 	validateOrdinaryWasiSettings({ name, version });
 	const fail = (declaration, message) => {
@@ -79,7 +79,7 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 		, aliasModel?.nextIndex ?? surface.copies.length, value => admit(value, ir.declarations[0]));
 	const resources = [...surface.callbacks.values()].map((callback, index) => {
 		const signature = callback.type.callable;
-		const label = type => kebab(type.name);
+		const label = type => type.kind === "primitive" ? kebab(type.name) : copied(type).witName;
 		const witName = admit(`function-${signature.parameters.map(site => label(site.type)).join("-")}-to-${label(signature.result.type)}`, ir.declarations[0]);
 		const resource = { ...callback, index: nextIndex + index, witName };
 		resource.borrow = { resource: true, resourceIndex: resource.index, borrowed: true, wit: `borrow<${witName}>`, wat: `$borrow${resource.index}` };
@@ -99,8 +99,8 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 		, ...resources.map(resource => ({
 			witName: admit(`invoke-${resource.witName}`, ir.declarations[0])
 			, resource
-			, parameters: [{ witName: "self", copy: resource.borrow }, ...resource.type.callable.parameters.map((site, index) => ({ witName: `arg${index}`, copy: surface.copy(site.type) }))]
-			, resultCopy: surface.copy(resource.type.callable.result.type)}))
+			, parameters: [{ witName: "self", copy: resource.borrow }, ...resource.type.callable.parameters.map((site, index) => ({ witName: `arg${index}`, copy: copied(site.type) }))]
+			, resultCopy: copied(resource.type.callable.result.type)}))
 	];
 	const witType = copy => {
 		if(copy.aliasTarget) return `type ${copy.witName} = ${copy.aliasTarget.wit};`;

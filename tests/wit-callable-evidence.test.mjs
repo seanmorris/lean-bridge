@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeWitStructuredCallables } from "./helpers/wit-structured-callable-source-history.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { witCallableSignatures } from "./helpers/wit-callable-fixture.mjs";
 import { witCallableConsumer } from "./helpers/wit-callable-consumer.mjs";
@@ -14,7 +15,8 @@ test("WIT callable evidence binds both source paths to compiler-free installed e
 	const record = JSON.parse(await readFile("docs/evidence/wit-callables-20260919.json"));
 	assert.equal(record.wordBits, 64); assert.equal(record.wasmtime, "42.0.1");
 	assert.equal(record.lean, "4.32.2");
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(beforeWitStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	const unary = { callback: { parameters: ["uint32"], result: "uint32" } };
 	const expected = [...witCallableSignatures

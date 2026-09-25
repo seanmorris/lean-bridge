@@ -98,7 +98,8 @@ The host checks the loaded native adapter, Lean component, both runtime librarie
 
 const callableReadme = (projection, glibc) => {
 	const { name, version, surface: { prefix: p } } = projection;
-	return `# ${name} ${version}
+	const structured = projection.resources.some(({ type }) => [...type.callable.parameters, type.callable.result].some(site => site.type.kind !== "primitive"));
+	const readme = `# ${name} ${version}
 
 Compiled Lean WIT API for Linux x86-64, glibc ${glibc} or newer. The archive includes Wasmtime 42.0.1 and the native Lean runtime. Consumers do not install Lean. Keep lib/ and include/ together. Compile the consuming application with pkg-config ${name}-wit and include ${p}_wasmtime.h.
 
@@ -128,4 +129,8 @@ The first callback failure is returned as an owned Wasmtime error (message limit
 
 ${surfaceList(projection)}
 `;
+	return structured ? readme
+		.replace("Copied arrays, Lists, acyclic records, options, results and binary products remain available outside callable signatures.", "Callback arguments, replies and captured values also accept arrays, Lists, acyclic records, options, results, binary products, variants and concrete copied aliases.")
+		.replace("Callbacks with arrays, Lists, records, options, results, products, nested callbacks, retained host borrows or asynchronous results remain unsupported.", "Recursive callback payloads, resource-containing aggregates, nested callbacks, retained host borrows and asynchronous results remain unsupported.")
+		+ "\nStructured callback replies retain their complete converted storage until Lean finishes copying it. Inline records and active branches share owners across their buffer fields. Empty and scalar-only branches release temporary storage immediately. Copied schema nesting is limited to 32.\n" : readme;
 };

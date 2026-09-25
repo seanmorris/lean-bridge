@@ -953,6 +953,34 @@ LEAN_BRIDGE_WIT_CALLABLE_TEST=1 node --test tests/wit-callables.test.mjs
 
 This compiles a 63-export Lean library and its Component Model host on both ordinary-source and independently reviewed paths. The test removes the producer workspace before installing each original archive and compiling a consumer against its public headers. Execution has no compiler or Lean on `PATH`. The consumer checks nineteen primitive mappings, sixteen-argument functions, borrowed and returned ownership, nested calls, deferred close, wrong-thread/session/signature rejection, expired borrows, registry reuse and exhaustion. It also checks that a surviving Lean function remains callable after a callback traps and the helper replaces its component store. CI retains `build/callables/wit.json`.
 
+### Structured WIT callbacks
+
+With the same author toolchain, run the installed structured-value, alias,
+documentation and allocation-failure checks:
+
+```sh
+LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 \
+  tests/native-callback-alias-contract.test.mjs \
+  tests/wit-structured-callable-contract.test.mjs \
+  tests/wit-structured-callable-faults.test.mjs \
+  tests/wit-structured-callables.test.mjs \
+  tests/wit-structured-aliases.test.mjs \
+  tests/wit-structured-documentation.test.mjs
+```
+
+Both source paths build callbacks and captured closures with arrays, Lists,
+options, results, products, records, variants and copied aliases. Consumers run
+from relocated archives after the author sources are removed, then repeat after
+the package handoff is deleted. The documentation check compiles the publisher's
+Lean example and executes the consumer's C file. A separate synthetic host probe
+checks allocation failures and shared reply ownership under ASan/UBSan; removing
+either ownership reference must fail. It does not replace installed Lean execution.
+
+CI requires and uploads `build/structured-callables/wit.json`,
+`wit-aliases.json`, `wit-faults.json` and `wit-documentation.json` from the same
+directory. Recursive callback payloads and resource-containing aggregates remain
+separate work.
+
 ### Staged WIT callable projection
 
 The separate component projection probe requires no Lean compiler:

@@ -27,6 +27,24 @@ import {
 	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
+test("WIT structured CI requires installed consumers, ownership probes and executable examples", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const step = workflow.split("- name: Execute installed WIT structured callbacks and documentation\n")[1]?.split("      - name:")[0];
+	assert.ok(step); assert.match(step, /LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST: "1"/u);
+	assert.match(step, /node --test --test-concurrency=1/u);
+	for(const name of ["native-callback-alias-contract", "wit-structured-callable-contract", "wit-structured-callable-faults", "wit-structured-callables", "wit-structured-aliases", "wit-structured-documentation"])
+		assert.ok(step.includes(`tests/${name}.test.mjs`));
+	const upload = workflow.split("- name: Upload WIT structured callback evidence\n")[1]?.split("      - name:")[0];
+	assert.ok(upload); assert.match(upload, /if-no-files-found: error/u);
+	for(const name of ["wit", "wit-aliases", "wit-faults", "wit-documentation"])
+	{
+		assert.ok(step.includes(`test -s build/structured-callables/${name}.json`));
+		assert.ok(upload.includes(`build/structured-callables/${name}.json`));
+	}
+	assert.equal(workflow.split("steps.structured_wit.outcome == 'success'").length, 3);
+	assert.match(workflow, /steps\.structured_wit\.outcome != 'success'/u);
+});
+
 const directoryDocuments = Object.freeze([
 	"src/README.md"
 	, "src/abi/README.md"
@@ -634,7 +652,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /GITHUB_STEP_SUMMARY|consumer-ci\.mjs summary/);
   assert.match(workflow, /pattern: consumer-results-\*-\$\{\{ github\.sha \}\}/);
   assert.doesNotMatch(workflow, /consumer-(?:results|support-report)[^\n]*github\.run_attempt/);
-  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 16);
+  assert.equal((workflow.match(/^\s*overwrite: true$/gm) ?? []).length, 17);
   assert.match(workflow, /uses: \.\/\.github\/workflows\/perl-consumer\.yml/);
   assert.match(workflow, /needs:[\s\S]*- perl-consumer/);
   assert.match(perlWorkflow, /node-version: "22"/);

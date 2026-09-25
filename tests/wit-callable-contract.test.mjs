@@ -136,7 +136,7 @@ test("Wasmtime executes primitive callable ownership through the generated compo
 for(const [name, change] of Object.entries({
 	retained: ir => { ir.declarations[0].parameters[1].lifetime.scope = "explicit"; }
 	, async: ir => { ir.types[0].callable.resultMode = "promise"; }
-	, compound: ir => { ir.types[0].callable.result.type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint8" }] }; }
+	, identity: ir => { ir.types[0].callable.result.type = { kind: "named", id: ir.types[0].id }; }
 	, zero: ir => { ir.types[0].callable.parameters = []; }
 	, seventeen: ir => { ir.types[0].callable.parameters = Array.from({ length: 17 }, (_, i) => ({ ...ir.types[0].callable.parameters[0], name: `arg${i}` })); }
 	, collision: ir => { ir.declarations[0].name = "functionBoolToBool"; }

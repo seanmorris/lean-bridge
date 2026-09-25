@@ -318,7 +318,10 @@ test("npm compound mappings preserve independently evidenced value and callback 
 test("WIT compound docs preserve presence, success/error order and binary products", async () => {
 	const source = await readFile("docs/consume/wit-wasi.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
-		assert.match(row(source, lean), /Ordinary source: Installed checks passed \(input, result, field\).*Reviewed IR: Installed checks passed \(input, result, field\)/u);
+	{
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u);
+		assert.match(row(source, lean), /callback input, callback result/u);
+	}
 	assert.match(source, /result<Success, Error>/u);
 	assert.match(source, /wasmtime_component_val_new\(&absent\)/u);
 	assert.match(source, /singleton enum `unit`/u);
@@ -326,8 +329,11 @@ test("WIT compound docs preserve presence, success/error order and binary produc
 	{
 		if(cell.position.startsWith("callback"))
 		{
-			assert.equal(cell.stages.compilation.state, "rejected");
-			assert.notEqual(cell.stages.installedExecution.state, "passed");
+			for(const stage of Object.values(cell.stages))
+			{
+				assert.equal(stage.state, "passed");
+				assert.deepEqual(stage.evidence, ["wit-wasi-structured-callables-installed"]);
+			}
 		}
 		else assert.deepEqual(cell.stages.installedExecution.evidence, ["wit-wasi-compounds-installed"]);
 	}

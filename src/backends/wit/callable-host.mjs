@@ -5,6 +5,7 @@
  */
 import { renderWitConversions, witConversionPrelude } from "./copied-conversions.mjs";
 import { renderCallableHostRuntime } from "./callable-host-runtime.mjs";
+import { inlineCallableResult, renderCallableResultOwners } from "./callable-result-owners.mjs";
 
 /**
  * Render the checked callable session API.
@@ -69,6 +70,7 @@ const callableBodies = model => {
 	return resources.map((resource, index) => {
 		const signature = resource.type.callable;
 		const copies = signature.parameters.map(site => surface.copy(site.type)), result = surface.copy(signature.result.type);
+		const inline = inlineCallableResult(result), arena = inline ? "owner->result" : "(*owner)";
 		const unit = result.scalarName === "unit", owned = `${p}_owned_${resource.field}`;
 		const parameters = copies.map((copy, i) => `${copy.aggregate ? "const " : ""}${copy.name}${copy.aggregate ? " *" : " "}arg${i}`);
 		return `static ${p}_status lb_callback_${index}(void *data, ${parameters.concat(unit ? [] : [`${result.name} *out`]).concat(`${p}_error *error`).join(", ")}) {
@@ -84,14 +86,14 @@ const callableBodies = model => {
 ${copies.map((copy, i) => `  if (!lb_out_${copy.index}(${copy.aggregate ? "" : "&"}arg${i}, &scope, &args[${i}])) { failure = wasmtime_error_new("WIT callback input conversion limit"); goto done; }`).join("\n")}
   failure = entry->callback(entry->data, args, ${copies.length}, &value);
   if (failure || session->poisoned || session->closing) goto done;
-${result.aggregate ? `  lb_result *owner = calloc(1, sizeof(*owner));
+${result.aggregate ? `${inline ? `  if (!lb_charge(&scope, 1, sizeof(lb_shared_result))) { failure = wasmtime_error_new("WIT callback result ownership limit"); goto done; }\n` : ""}  ${inline ? "lb_shared_result" : "lb_result"} *owner = calloc(1, sizeof(*owner));
   if (!owner) { failure = wasmtime_error_new("Cannot allocate WIT callback result"); goto done; }
-  owner->scope.remaining = scope.remaining;
-  if (!lb_in_${result.index}(&value, &owner->scope, &converted)) {
-    lb_result_release(owner); failure = wasmtime_error_new("Invalid WIT callback result or conversion limit"); goto done;
+  ${inline ? "owner->references = 1;\n  " : ""}${inline ? `${arena}.scope` : "owner->scope"}.remaining = scope.remaining;
+  if (!lb_in_${result.index}(&value, &${inline ? `${arena}.scope` : "owner->scope"}, &converted)) {
+    lb_result_release(${inline ? `&${arena}` : "owner"}); failure = wasmtime_error_new("Invalid WIT callback result or conversion limit"); goto done;
   }
-  owner->value = value; value = (wasmtime_component_val_t){0};
-  converted.owner = owner; converted.release = lb_result_release;
+  ${inline ? `${arena}.value` : "owner->value"} = value; value = (wasmtime_component_val_t){0};
+  ${inline ? `lb_result_attach_${result.index}(&converted, owner); lb_shared_result_release(owner);` : "converted.owner = owner; converted.release = lb_result_release;"}
   *out = converted;` : `  if (!lb_in_${result.index}(&value, &scope, &converted)) { failure = wasmtime_error_new("Invalid WIT callback result or conversion limit"); goto done; }
   ${unit ? "(void)converted;" : "*out = converted;"}`}
 done:
@@ -163,6 +165,8 @@ done:
 export const renderCallableHostSource = (model, componentBytes) => {
 	const { surface: { prefix: p } } = model;
 	const { prelude, api } = renderCallableHostRuntime(model, componentBytes);
+	const owners = model.resources.some(resource => inlineCallableResult(model.surface.copy(resource.type.callable.result.type)))
+		? renderCallableResultOwners(model.surface) : "";
 	return `#include "${p}_wasmtime.h"
 #include "${p}.h"
 #include "lean_bridge_native_runtime.h"
@@ -172,7 +176,7 @@ export const renderCallableHostSource = (model, componentBytes) => {
 #include <string.h>
 ${witConversionPrelude}
 ${renderWitConversions(model)}
-${prelude}
+${prelude}${owners ? "\n" + owners : ""}
 ${callableBodies(model)}
 ${importBodies(model)}
 ${api}`;

@@ -41,13 +41,13 @@ test("parsed WIT and compiled components preserve every independent compound sig
 		validateWitCompoundSignatures(JSON.parse((await runCopied("wasm-tools", ["component", "wit", name, "--json"], root, process.env)).stdout));
 });
 
-test("WIT compounds still reject compound callback payloads", () => {
+test("WIT compounds admit copied compound callback payloads", () => {
 	for(const constructor of ["option", "result", "tuple"]) for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types[0].callable;
 		const type = { kind: "apply", constructor, arguments: Array.from({ length: constructor === "option" ? 1 : 2 }, () => ({ kind: "primitive", name: "unit" })) };
 		if(position === "parameter") callback.parameters[0].type = type; else callback.result.type = type;
-		assert.throws(() => compileCopiedWitModel(ir, {}, { callables: true }), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => compileCopiedWitModel(ir, {}, { callables: true }));
 	}
 });
 

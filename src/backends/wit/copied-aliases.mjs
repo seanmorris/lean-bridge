@@ -63,6 +63,8 @@ export const compileCopiedWitAliases = ({ ir, surface, admit, admitAlias, fail }
 	const declared = aliases.map(alias => ({ ...alias, projection: visit({ kind: "named", id: alias.id }) }));
 	for(const declaration of ir.declarations) for(const site of [...declaration.parameters, declaration.result])
 		if(!surface.callbacks.has(site.type.id)) visit(site.type);
+	for(const { type } of surface.callbacks.values())
+		for(const site of [...type.callable.parameters, type.callable.result]) visit(site.type);
 	return { types, copy: visit, nextIndex: next
 		, aliases: declared.map(({ id, name, target, projection }) => ({ id, name, target, witName: projection.witName, witTarget: projection.aliasTarget.wit })) };
 };
@@ -77,10 +79,11 @@ export const witAliasReadme = model => {
 	const contract = ref => ref.kind === "primitive" ? ref.name
 		: ref.kind === "named" ? model.ir.types.find(type => type.id === ref.id).name
 			: `${ref.constructor}<${ref.arguments.map(contract).join(", ")}>`;
+	const structured = model.resources.some(({ type }) => [...type.callable.parameters, type.callable.result].some(site => site.type.kind !== "primitive"));
 	return `
 ## Copied Lean aliases
 
-The WIT source and compiled component retain named aliases, their chains and original parameter, result, record-field and variant-field references. binding-manifest.json records each Lean name and original target. Callers pass ordinary target values; aliases introduce no wrapper objects or resources. Conversion rules, independent result ownership and existing copy limits apply unchanged. USize and ISize use this native profile's 64-bit widths. Alias payloads inside callback signatures, recursive copied values and identity-bearing alias targets remain unsupported.
+The WIT source and compiled component retain named aliases, their chains and original parameter, result, record-field and variant-field references. binding-manifest.json records each Lean name and original target. Callers pass ordinary target values; aliases introduce no wrapper objects or resources. Conversion rules, independent result ownership and existing copy limits apply unchanged. USize and ISize use this native profile's 64-bit widths. ${structured ? "Acyclic copied aliases also preserve their target values in callbacks and captured closures. Recursive callback payloads and identity-bearing alias targets remain unsupported." : "Alias payloads inside callback signatures, recursive copied values and identity-bearing alias targets remain unsupported."}
 
 | Lean alias | Original target | WIT name |
 | --- | --- | --- |
