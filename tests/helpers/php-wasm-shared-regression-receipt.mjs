@@ -99,7 +99,10 @@ export const assertPhpWasmSharedRegressionEvidence = async record => {
 			assert.equal(sha256(canonicalJson(generateNativeCopiedGraphAdapters(ir, abi, output.options))), output.sha256);
 	}
 	assert.deepEqual(report.packages.map(run => run.name), ["Willow", "Aspen"]);
-	for(const run of report.packages) await assertPhpWasmLegacyPackageComparison(run, sources);
+	const packagePath = "src/release/php-wasm-copied-package.mjs";
+	const packagingSource = beforeCStructuredCallables(packagePath, await readFile(packagePath, "utf8"), report.sourceHashes[packagePath]);
+	assert.equal(sha256(packagingSource), report.sourceHashes[packagePath]);
+	for(const run of report.packages) await assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource });
 	assert.equal(sha256(record.executionLog.text), record.executionLog.sha256);
 	assert.match(record.executionLog.text, /ok \d+ - ordinary Lean copied APIs execute after relocation in one 32-bit PHP-Wasm host\n/);
 	assert.match(record.executionLog.text, /# tests 5\n# suites 0\n# pass 5\n# fail 0\n# cancelled 0\n# skipped 0/);

@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertClosureThreadCodegen, assertClosureThreadExecution, assertClosureThreadIntegration, closureThreadCodegenPath, closureThreadExecutionPath } from "./helpers/closure-thread-evidence.mjs";
 import { beforeClosureThreadLifetime, closureThreadHistoryPath, reverseClosureThreadUpdate } from "./helpers/closure-thread-source-history.mjs";
+import { beforePhpCiRegression } from "./helpers/php-ci-regression-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -55,7 +56,7 @@ test("closure lifetime source history rejects unknown edits and predecessor iden
 	const record = await json(closureThreadHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePhpCiRegression(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseClosureThreadUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeClosureThreadLifetime(update.path, source)), update.previousSha256);
 		assert.equal(beforeClosureThreadLifetime(update.path, source, update.currentSha256), source);

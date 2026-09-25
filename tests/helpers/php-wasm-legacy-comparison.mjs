@@ -16,7 +16,6 @@ import { recursiveReviewedIr } from "./recursive-fixture.mjs";
 import { nativeRecursiveReviewedIr } from "./native-recursive-reviewed.mjs";
 import { phpLinkedGraphIr } from "./php-graph-values-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
-import { beforePhpWasmStructuredCallables } from "./php-wasm-structured-callable-source-history.mjs";
 
 export const phpWasmPreGraphRecords = {
 	"docs/evidence/wasm32-recursive-transport-20260923.json": "06ad97d62407230fda2a8cf259dde11cf3cb6644a4ad7b80850328539822c3a0"
@@ -75,8 +74,12 @@ export const phpWasmPreGraphSources = async () => {
  *
  * @param run - Complete previous/current file inventories and changed texts.
  * @param sources - The six original implementation sources.
+ * @param options - Explicit source context for a retained historical execution.
+ * @param options.packagingSource - Authenticated historical packager, or current source by default.
  */
-export const assertPhpWasmLegacyPackageComparison = async (run, sources) => {
+export const assertPhpWasmLegacyPackageComparison = async (run, sources, { packagingSource } = {}) => {
+	packagingSource ??= await readFile(packagePath, "utf8");
+	assert.equal(typeof packagingSource, "string");
 	const { previous, current } = run;
 	for(const key of ["schemaVersion", "kind", "profile", "component", "componentIdentity", "runtimeIdentity", "npmSettings", "composerSettings", "packing"])
 		assert.deepEqual(current[key], previous[key], key);
@@ -102,7 +105,7 @@ export const assertPhpWasmLegacyPackageComparison = async (run, sources) => {
 			assert.deepEqual(before.host, identity(sources[hostPath].source));
 			assert.deepEqual(before.packaging, identity(sources[packagePath].source));
 			assert.deepEqual(after.host, identity(await readFile(hostPath)));
-			assert.deepEqual(after.packaging, identity(beforePhpWasmStructuredCallables(packagePath, await readFile(packagePath, "utf8"))));
+			assert.deepEqual(after.packaging, identity(packagingSource));
 			assert.deepEqual({ ...before, host: after.host, packaging: after.packaging }, after);
 		}
 		else

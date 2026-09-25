@@ -25,10 +25,10 @@ final class StructuredFaults {
     public static function close(object $scope): void {
         if (self::$active) { ensure($scope->owners === []); ++self::$closes; }
     }
-    public static function clear(\FFI\CData $out): void {
+    public static function clear(\FFI $ffi, \FFI\CData $out): void {
         if (!self::$active) return;
         ++self::$clears;
-        ensure(\FFI::string(\FFI::cast('char *', \FFI::addr($out)), \FFI::sizeof($out)) === str_repeat("\0", \FFI::sizeof($out)));
+        ensure(\FFI::string($ffi->cast('char *', \FFI::addr($out)), \FFI::sizeof($out)) === str_repeat("\0", \FFI::sizeof($out)));
     }
     public static function step(): void {
         if (self::$deferred !== null) { $action = self::$deferred; self::$deferred = null; $action(); }
@@ -52,7 +52,7 @@ $native = str_replace('$this->remaining -= $count * $width;', '$this->remaining 
 $native = str_replace('$this->owners[] = $memory;', '$this->owners[] = $memory; StructuredFaults::owner($memory);', $native, $count); ensure($count === 1);
 $native = str_replace('$this->budget = new StructuredProbeBudget();', '$this->budget = new StructuredProbeBudget(); StructuredFaults::scope($this);', $native, $count); ensure($count === 1);
 $native = str_replace('$this->owners = [];', '$this->owners = []; StructuredFaults::close($this);', $native, $count); ensure($count === 1);
-$native = preg_replace('~(\$ffi->[a-zA-Z0-9_]+_(?:clear|dispose)\(\\\\FFI::addr\(\$out\)\);)~', '{ $1 StructuredFaults::clear($out); }', $native, -1, $count); ensure($count === 40);
+$native = preg_replace('~(\$ffi->[a-zA-Z0-9_]+_(?:clear|dispose)\(\\\\FFI::addr\(\$out\)\);)~', '{ $1 StructuredFaults::clear($ffi, $out); }', $native, -1, $count); ensure($count === 40);
 $native = preg_replace('~(private static function (?:to|from|own)\d+\([^\n]*\): [^\n]+ \{)~', '$1 StructuredFaults::tick();', $native, -1, $conversions); ensure($conversions === 64);
 $native = str_replace('return $out;', 'StructuredFaults::tick(); return $out;', $native, $count); ensure($count >= 25);
 $native = str_replace('return (self::$wrap)($lease);', 'StructuredFaults::tick(); $wrapped = (self::$wrap)($lease); StructuredFaults::tick(); return $wrapped;', $native, $count); ensure($count === 14);

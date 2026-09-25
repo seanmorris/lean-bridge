@@ -104,15 +104,18 @@ const installed = (run, installation, name) => {
  * Require both source paths and lexical modes, complete fault paths and documentation.
  *
  * @param record - Unchanged execution observations and terminal test logs.
+ * @param options - Explicit source context for a newly executed fault probe.
+ * @param options.probeSource - Current measured probe, or historical source by default.
  */
-export const assertPhpStructuredCallableExecution = async record => {
+export const assertPhpStructuredCallableExecution = async (record, { probeSource } = {}) => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "php-structured-callable-execution"); assert.deepEqual(record.scope, phpStructuredCallableScope);
 	passing(record.installed, "php-structured-callables", "LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST");
 	assert.equal(record.report.schemaVersion, 1);
 	assert.deepEqual(record.report.reports.map(run => run.path), phpStructuredCallableScope.paths);
 	const source = await readFile("tests/fixtures/structured-callable-consumers/php.php", "utf8");
-	const probe = await readFile("tests/fixtures/structured-callable-consumers/php-faults.php", "utf8");
+	const probe = probeSource ?? await priorSource("tests/fixtures/structured-callable-consumers/php-faults.php");
+	assert.equal(typeof probe, "string");
 	const documented = (await readFile("docs/php.md", "utf8")).match(/### Structured callback values\n[\s\S]*?```php\n([\s\S]*?)\n```/u)?.[1];
 	const publisher = (await readFile("docs/publish/php.md", "utf8")).match(/### Export structured callbacks\n[\s\S]*?```lean\n([\s\S]*?)\n```/u)?.[1];
 	assert.ok(documented && publisher);

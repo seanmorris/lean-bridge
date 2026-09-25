@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpCiRegression } from "./php-ci-regression-source-history.mjs";
 
 export const closureThreadHistoryPath = "docs/evidence/closure-thread-lifetime-integration-20260925.json";
 export const closureThreadChangedPaths = [
@@ -55,6 +56,7 @@ export const reverseClosureThreadUpdate = (source, update) => {
  * @param expected - Optional exact digest at which normalization stops.
  */
 export const beforeClosureThreadLifetime = (path, source, expected) => {
+	source = beforePhpCiRegression(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !closureThreadChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(closureThreadHistoryPath, "utf8"));
