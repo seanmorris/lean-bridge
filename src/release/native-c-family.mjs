@@ -13,6 +13,7 @@ import { createDeterministicTarGzFromFiles } from "./deterministic-archive.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { compileCopiedGraphPackageModel } from "../backends/c/graph-package.mjs";
+import { compileCallableGraphPackageModel } from "../backends/c/callable-graph-model.mjs";
 
 const graphGuide = target => "\n\nRecursive copied records and named variants use a finite type graph. Values must be finite and acyclic, with at most 128 levels and 262,144 visited nodes per call. All inputs and the result share a 16 MiB native-copy budget; host conversion storage has a separate 16 MiB budget. Limits include container slots and ownership bookkeeping, not the Lean algorithm's working memory. Invalid arguments and limit failures report INVALID_ARGUMENT. Bridge allocation failures report UNEXPECTED_ERROR; malformed native results retire the shared runtime and later calls reject. Already owned results can still be released."
 
@@ -48,7 +49,9 @@ export const packageNativeCFamily = async ({ working, adapterRoot, nativeRoot, r
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { copiedGraphs: true });
-	const graph = model.copiedGraph ? compileCopiedGraphPackageModel(model.bindingIr, [target]) : null;
+	const graph = model.copiedGraph ? model.copiedGraph.callbacks
+		? compileCallableGraphPackageModel(model.bindingIr, [target])
+		: compileCopiedGraphPackageModel(model.bindingIr, [target]) : null;
 	const surface = graph ? null : compilePrimitiveCSurface(model.bindingIr, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true }), p = graph ? graph.prefix : surface.prefix;
 	const bigint = target === "cpp" && (graph ? graph.bigint : surface.copies.some(copy => ["nat", "int"].includes(copy.scalarName)));
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
@@ -108,12 +111,15 @@ Version: ${version}
 Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p}${gmp ? "_gmp -l:libgmp.so.10" : ""}
 Cflags: -I\${includedir}${bigint ? " -DBOOST_MP_STANDALONE" : ""}
 `);
-	const callableGuide = surface?.callbacks.size
+	const callableGuide = (surface?.callbacks.size || model.copiedGraph?.callbacks?.length)
 		? (target === "cpp" ? "\n\nPass typed C++ lambdas or functions for synchronous callbacks. Arguments are owned values and results must match the declared type exactly; Unit results return void. Move-only callbacks are supported. Exceptions are contained before C and rethrown after the native call returns. The first failure suppresses later host invocations. Returned LeanClosure<Result(Args...)> values are move-only: call(...) or operator() invokes them, close() releases explicitly, and destruction releases automatically. Invoke and close on the creating thread. Moving a closure does not change its creating thread. Calls after close and inherited calls after fork reject. Active invocation defers self-close until return."
 			: "\n\nSynchronous callbacks use the signature-specific function/context structs in the public header. Keep them valid until the Lean call returns. Dynamic callback arguments are borrowed views with null ownership fields. Return a borrowed view or an owned buffer with its release hook; the adapter copies and then releases callback results, including failed results. Return normally with a status; do not unwind across Lean frames. The first callback failure suppresses later host invocations in that call. Error text is thread-local, limited to 1023 bytes, and valid until the next failing call on that thread. Returned closures use generated _call and pointer-to-pointer _dispose functions. Invoke them on the creating thread, dispose once per owning pointer, and never use an alias after disposal.")
 			+ " Call-scoped host callbacks cannot be retained by Lean. Nested callable calls are limited to 64; the 16 MiB budget includes callback conversions. Closure leases share the runtime's 4096-identity capacity."
 		: "";
-	const copiedGuide = graph ? graphGuide(target) : (surface.copies.some(copy => copy.record || copy.element)
+	const graphCallableGuide = callableGuide
+		.replace("Active invocation defers self-close until return.", "Closing invalidates the handle immediately; an active invocation keeps its own reference until return.")
+		.replace("Return a borrowed view or an owned buffer with its release hook; the adapter copies and then releases callback results, including failed results.", "Fill the initialized callback reply with owned values using the generated TYPE_copy function or mpz_set for integers. TYPE_copy performs a bounded deep copy, accepts an initialized output, supports in-place copying and leaves the output unchanged on failure. Do not shallow-copy callback arguments or set private ownership fields. The adapter releases callback replies on both success and failure.");
+	const copiedGuide = graph ? graphGuide(target) + graphCallableGuide : (surface.copies.some(copy => copy.record || copy.element)
 		? "\n\nArrays and acyclic records can nest up to 32 types deep. C spans own their nested elements through their release callback; record clear functions clear their fields. Do not shallow-copy an owned result and clear both copies. C++ uses owned vectors and structs, with scoped input views. The 16 MiB conversion budget includes input and output payloads, array slots (at least pointer-sized), output ownership headers and record storage; it does not bound the Lean algorithm's working memory."
 		: "") + (surface.copies.some(copy => copy.variant)
 		? (target === "cpp"
@@ -148,7 +154,8 @@ endif()
 		? "Nat and Int are Boost.Multiprecision cpp_int values. Negative Nat inputs reject. Packages using these types include Boost 1.90.0 standalone headers, license and source hashes; CMake and pkg-config configure them automatically."
 		: gmp ? "Nat and Int are GMP mpz_t values. Negative Nat inputs reject. GMP 6.3.0 headers and a replaceable shared library ship in the archive and link automatically through CMake or pkg-config. Its complete corresponding source, build settings and LGPL/GPL notices are under share/lean-bridge/. GMP allocation failures abort by default; the bridge does not replace GMP allocation hooks."
 			: "This package has no arbitrary-integer values and does not require GMP.";
-	const exports = graph ? graph.layout.roots.map(fn => `- ${fn.name}: ${fn.bindingId}`) : surface.functions.map(fn => `- ${fn.name}: ${fn.declaration.id}`);
+	const exports = graph ? graph.callableGraph ? graph.functions.map(fn => `- ${fn.field}: ${fn.declaration.id}`)
+		: graph.layout.roots.map(fn => `- ${fn.name}: ${fn.bindingId}`) : surface.functions.map(fn => `- ${fn.name}: ${fn.declaration.id}`);
 	const initialization = graph ? (target === "cpp" ? "C++ results own their memory and release native buffers automatically, including when a C++ allocation throws."
 		: `Initialize Nat/Int with mpz_init and aggregate structs with ${p}_TYPE_init before first use. C inputs borrow caller buffers for one call. The recursive C value API includes GMP in every package; CMake and pkg-config link it automatically.`)
 		: `C inputs borrow caller buffers for one call. ${cInitialization} C++ results own their memory and release C buffers automatically, including when a C++ allocation throws.`;

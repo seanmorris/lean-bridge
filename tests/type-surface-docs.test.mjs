@@ -136,7 +136,7 @@ test("Perl copied callback rows retain recursive and owned-resource exclusions",
 	assert.match(source, /Some\(undef\)/u);
 });
 
-test("C copied callback rows reflect installed acceptance without promoting recursive payloads", async () => {
+test("C copied callback rows include recursive payloads and preserve resource exclusions", async () => {
 	const source = await readFile("docs/consume/c.md", "utf8");
 	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
 	{
@@ -144,11 +144,13 @@ test("C copied callback rows reflect installed acceptance without promoting recu
 		assert.match(mapping, /callback input, callback result/u);
 		assert.doesNotMatch(mapping, /Not audited/u);
 	}
-	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.doesNotMatch(row(source, "Recursive copied structures"), /Not audited/u);
+	assert.match(row(source, "Recursive copied structures"), /callback input, callback result/u);
+	assert.match(source, /TYPE_copy/u);
 	assert.match(source, /c-structured-callables-20260924\.md/u);
 });
 
-test("C++ copied callback rows retain their recursive and resource exclusions", async () => {
+test("C++ copied callback rows include recursive payloads and preserve resource exclusions", async () => {
 	const source = await readFile("docs/consume/cpp.md", "utf8");
 	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
 	{
@@ -156,7 +158,8 @@ test("C++ copied callback rows retain their recursive and resource exclusions", 
 		assert.match(mapping, /callback input, callback result/u);
 		assert.doesNotMatch(mapping, /Not audited/u);
 	}
-	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.doesNotMatch(row(source, "Recursive copied structures"), /Not audited/u);
+	assert.match(row(source, "Recursive copied structures"), /callback input, callback result/u);
 	assert.match(source, /cpp-structured-callables-20260924\.md/u);
 });
 

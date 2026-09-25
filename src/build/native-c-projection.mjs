@@ -9,7 +9,9 @@ import { generateCBindingPackage } from "../backends/c/generate.mjs";
 import { generateCppBindingPackage } from "../backends/cpp/generate.mjs";
 import { boostSources } from "../backends/cpp/boost.mjs";
 import { generateGmpProjection } from "../backends/c/gmp-projection.mjs";
+import { generateCallableCGraphPackage } from "../backends/c/callable-graph-package.mjs";
 import { generateCopiedGraphPackage } from "../backends/c/graph-package.mjs";
+import { generateCallableCppGraphPackage } from "../backends/cpp/callable-graph-package.mjs";
 import { nativeGraphProjectionSources } from "./native-graph-sources.mjs";
 import { rubyGraphClearSource } from "../backends/ruby/copied-graph-package.mjs";
 import { generateCopiedJvmGraphConversions } from "../backends/jvm/copied-graph-conversions.mjs";
@@ -51,7 +53,12 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 	const p = graph ? graph.prefix : surface.prefix;
 	const root = join(working, "native/c-binding");
 	const cGraphTargets = targets.filter(target => ["c", "cpp"].includes(target));
-	const files = graph ? { ...cGraphTargets.length ? generateCopiedGraphPackage(model.bindingIr, cGraphTargets).files : {} }
+	const callableFiles = graph?.callableGraph ? {
+		...targets.includes("c") ? generateCallableCGraphPackage(model.bindingIr).files : {}
+		, ...targets.includes("cpp") ? generateCallableCppGraphPackage(model.bindingIr).files : {}
+	} : null;
+	const files = graph ? { ...graph.callableGraph ? callableFiles
+		: cGraphTargets.length ? generateCopiedGraphPackage(model.bindingIr, cGraphTargets).files : {} }
 		: { ...generateCBindingPackage(model.bindingIr), "src/native.c": generateNativePrimitiveC(model, receipt) };
 	if(graph)
 	{

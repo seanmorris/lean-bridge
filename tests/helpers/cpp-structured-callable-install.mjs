@@ -38,8 +38,9 @@ export const parseStructuredCppResult = text => {
  * @param options.handoff - Relocated archives to remove before final execution.
  * @param options.packages - Verified package receipt entries.
  * @param options.observed - Successful public-consumer observations to reproduce.
+ * @param options.parseResult - Acceptance predicate for the exact selected shapes.
  */
-export const checkStructuredCppInstallation = async ({ consumer, handoff, packages, observed }) => {
+export const checkStructuredCppInstallation = async ({ consumer, handoff, packages, observed, parseResult = parseStructuredCppResult }) => {
 	const root = join(consumer, "cpp"), pkg = packages.find(item => item.role === "component");
 	const installed = join(root, `${pkg.name}-${pkg.version}-cpp`);
 	const deployment = join(consumer, "runtime-only"), deployed = join(deployment, "consumer");
@@ -100,7 +101,7 @@ export const checkStructuredCppInstallation = async ({ consumer, handoff, packag
 		.replaceAll(`${deployment}/lib/`, "<libraries>/");
 	assert.equal(normalize(executed.stderr), normalize(startup.stderr), "C++ structured conversions changed the startup leak report");
 	assert.doesNotMatch(executed.stderr, /ERROR: AddressSanitizer|runtime error:/u);
-	assert.deepEqual(parseStructuredCppResult(executed.stdout), observed);
+	assert.deepEqual(parseResult(executed.stdout), observed);
 	const leak = /SUMMARY: AddressSanitizer: (\d+) byte\(s\) leaked in (\d+) allocation\(s\)/u.exec(startup.stderr);
 	if(startup.stderr)
 	{
@@ -112,7 +113,7 @@ export const checkStructuredCppInstallation = async ({ consumer, handoff, packag
 	await rm(root, { recursive: true, force: true });
 	await rm(handoff, { recursive: true, force: true });
 	const rerun = await runCopied(deployed, [], deployment, { ...sanitizedEnvironment, PATH: "/unavailable" });
-	assert.deepEqual(parseStructuredCppResult(rerun.stdout), observed);
+	assert.deepEqual(parseResult(rerun.stdout), observed);
 	assert.equal(normalize(rerun.stderr), normalize(startup.stderr));
 	return {
 		rejected

@@ -5,6 +5,7 @@
  */
 import { generateNativeCopiedGraphAdapters } from "../backends/c/native-graph-adapters.mjs";
 import { nativeGraphCarrierAbi } from "./native-graph-model.mjs";
+import { generateNativeCallableGraphCalls } from "../backends/c/native-callable-graph-calls.mjs";
 
 /**
  * Return exact private headers and implementation for a checked graph component.
@@ -13,10 +14,14 @@ import { nativeGraphCarrierAbi } from "./native-graph-model.mjs";
  * @param receipt - Verified component compilation receipt.
  */
 export const nativeGraphProjectionSources = (model, receipt) => {
-	const native = generateNativeCopiedGraphAdapters(model.bindingIr, nativeGraphCarrierAbi(model), { initializer: receipt.initializer });
+	const abi = nativeGraphCarrierAbi(model);
+	const native = abi.callbacks
+		? generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, { initializer: receipt.initializer })
+		: generateNativeCopiedGraphAdapters(model.bindingIr, abi, { initializer: receipt.initializer });
 	const p = native.layout.prefix;
 	return {
 		[`include/detail/${p}-graph-types.h`]: native.typesHeader
+		, ...abi.callbacks ? { [`include/detail/${p}-callable-borrows.h`]: native.borrowsHeader } : {}
 		, [`include/detail/${p}-graph.h`]: `${native.header}\n#ifdef __cplusplus\nextern "C" {\n#endif\nuint32_t ${p}_graph_initialize(void);\nint ${p}_graph_ready(void);\nvoid ${p}_graph_retire(void);\n#ifdef __cplusplus\n}\n#endif\n`
 		, "src/native.c": `#include "component.h"\n${native.source}
 uint32_t ${p}_graph_initialize(void) { return lean_bridge_native_component_initialize(${JSON.stringify(model.component.id)}, ng_initialize) ? 0 : 5; }

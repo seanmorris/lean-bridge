@@ -643,6 +643,14 @@ jobs:
           test -s build/callables/cpp.json
           LEAN_BRIDGE_CPP_STRUCTURED_CALLABLE_TEST=1 node --test tests/cpp-structured-callables.test.mjs
           test -s build/structured-callables/cpp.json
+          LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs
+          test -s build/native-recursive-callables/transport.json
+          LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs
+          test -s build/recursive-callables/c.json
+          LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs
+          test -s build/recursive-callables/cpp.json
+          LEAN_BRIDGE_C_FAMILY_RECURSIVE_DOCUMENTATION_TEST=1 node --test tests/c-family-recursive-documentation.test.mjs
+          test -s build/recursive-callables/c-family-documentation.json
           LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs
           test -s build/recursive/c-family.json
           test -s build/type-corpus/c-cpp.json
@@ -661,6 +669,10 @@ jobs:
             build/structured-callables/c.json
             build/callables/cpp.json
             build/structured-callables/cpp.json
+            build/native-recursive-callables/transport.json
+            build/recursive-callables/c.json
+            build/recursive-callables/cpp.json
+            build/recursive-callables/c-family-documentation.json
             build/compounds/native.json
             build/lists/native.json
             build/collections/native.json
@@ -841,6 +853,10 @@ jobs:
             if [ "$consumer" = c ] || [ "$consumer" = cpp ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs && npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_C_FAMILY_RECURSIVE_DOCUMENTATION_TEST=1 node --test tests/c-family-recursive-documentation.test.mjs"
               if [ "${{ steps.ordinary_c.outcome }}" != success ] || [ "${{ steps.type_corpus_c_family.outcome }}" != success ]; then
                 result=failed
                 installed=false

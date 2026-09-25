@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertWitStructuredCallableExecution, assertWitStructuredCallableIntegration, witStructuredCallableExecutionPath } from "./helpers/wit-structured-callable-evidence.mjs";
 import { beforeWitStructuredCallables, witStructuredCallableHistoryPath, reverseWitStructuredCallableUpdate } from "./helpers/wit-structured-callable-source-history.mjs";
+import { beforeNativeRecursiveCallables } from "./helpers/native-recursive-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -59,7 +60,7 @@ test("WIT structured source history rejects unrelated edits and changed predeces
 	const record = await json(witStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNativeRecursiveCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseWitStructuredCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeWitStructuredCallables(update.path, source)), update.previousSha256);
 		const altered = source + "\n// unrelated\n";

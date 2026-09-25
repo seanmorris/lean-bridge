@@ -12,6 +12,7 @@ import { compileCopiedDotnetGraphPackageModel } from "../backends/dotnet/copied-
 import { compileCopiedJvmGraphPackageModel } from "../backends/jvm/copied-graph-package.mjs";
 import { compileCopiedPhpGraphPackageModel } from "../backends/php/copied-graph-package.mjs";
 import { compileCopiedWitGraphPackageModel } from "../backends/wit/copied-graph-package.mjs";
+import { compileCallableGraphPackageModel } from "../backends/c/callable-graph-model.mjs";
 
 /**
  * Validate all requested graph hosts without inventing an extra public C target.
@@ -21,6 +22,7 @@ import { compileCopiedWitGraphPackageModel } from "../backends/wit/copied-graph-
  * @param moduleName - Explicit namespace when selecting CPAN.
  */
 export const compileNativeGraphProjection = (ir, targets, moduleName) => {
+	if(ir.types.some(type => type.kind === "callback")) return compileCallableGraphPackageModel(ir, targets);
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target)))
 		throw Object.assign(new TypeError("Native copied graphs currently require C, C++, Cargo, PyPI, RubyGems, CPAN, NuGet, Maven, native PHP or WIT/WASI target adapters"), { code: "native-graph-projection-unavailable" });
 	if(targets.includes("cpan") && moduleName === undefined)

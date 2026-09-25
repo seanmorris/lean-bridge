@@ -141,10 +141,58 @@ def editRow (row : Array (Option String))
 ```
 
 The [structured C checks](../evidence/c-structured-callables-20260924.md) exercise
-mixed payloads and owned returned closures through installed archives. This
-support is specific to target `c`; other targets still require primitive callable
-payloads. Recursive callback payloads, nested callbacks, resources, asynchronous
-delivery and retained host functions remain unsupported.
+mixed payloads and owned returned closures through installed archives. All
+seventeen consumer profiles accept acyclic copied callback payloads. Recursive
+callback values currently work in C, C++ and npm packages. Nested callback
+identities, resources, asynchronous delivery and retained host functions remain
+unsupported by the C-family adapters.
+
+## Export recursive callbacks
+
+Add `Structured.lean` to a Lake project named `structured` at version `1.0.0`:
+
+```lean
+namespace Structured
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select the exports and the returned closure's outer arity:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": {
+    "c": { "name": "structured", "version": "1.0.0" },
+    "cpp": { "name": "structured", "version": "1.0.0" }
+  }
+}
+```
+
+```sh
+lean-bridge build --project /path/to/structured \
+  --target c --target cpp --output /path/to/new-structured-release
+```
+
+For a reviewed contract, use its outer parameter counts instead of `exports` and
+`arities`. Lean compiles once for both archives. Consumers use
+[C structs and bounded copy helpers](../consume/c.md#recursive-callbacks) or
+[C++ variants and owned containers](../consume/cpp.md#recursive-callbacks).
+GMP and Boost dependencies are packaged and linked automatically.
+
+Host callbacks borrow the synchronous call; they must not escape. Returned Lean
+closures can retain copied trees. The runtime rejects malformed values, cycles,
+expired callbacks and foreign-thread closure calls. Resource identities and
+callback identities inside copied aggregates still need an ownership contract.
 
 ## GMP dependency and redistribution
 
