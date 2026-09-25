@@ -50,7 +50,7 @@ test("PHP List output validates length and pointer alignment before element read
 	}
 });
 
-test("PHP Lists admit native callbacks while retaining the Zend callable guard", () => {
+test("PHP Lists admit copied callback payloads in native and Zend adapters", () => {
 	assert.doesNotThrow(() => generateCopiedPhpZendAdapter(listReviewedIr()));
 	for(const position of ["parameter", "result"])
 	{
@@ -58,7 +58,7 @@ test("PHP Lists admit native callbacks while retaining the Zend callable guard",
 		const site = position === "parameter" ? callback.callable.parameters[0] : callback.callable.result;
 		site.type = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "uint32" }] };
 		assert.doesNotThrow(() => generateCopiedPhpPackage(ir));
-		assert.throws(() => generateCopiedPhpZendAdapter(ir), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => generateCopiedPhpZendAdapter(ir));
 	}
 	const ir = listReviewedIr(); ir.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => generateCopiedPhpPackage(ir), /copy ownership/);

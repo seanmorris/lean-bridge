@@ -11,11 +11,11 @@ import { phpCopiedAliases } from "./copied-aliases.mjs";
 import { copiedPhpPublicSource } from "./copied-values.mjs";
 import { phpValueSemantics } from "./copied-equality.mjs";
 import { copiedPhpChecks } from "./copied-conversions.mjs";
-import { copiedZendSupport } from "./copied-zend-support.mjs";
+import { copiedZendSupport, structuredCopiedZendSupport } from "./copied-zend-support.mjs";
 import { copiedZendConversions } from "./copied-zend-conversions.mjs";
 import { phpZendVariantWire } from "./copied-zend-variants.mjs";
 import { copiedPhpWasmLoader } from "./php-wasm-copied-loader.mjs";
-import { phpZendLease, phpZendCall, phpZendCallableMethods, zendCallableOwners, zendCallableTrampolines, zendCallableCalls } from "./zend-callables.mjs";
+import { hasStructuredZendCallables, phpZendLease, phpZendCall, phpZendCallableMethods, zendCallableOwners, zendCallableTrampolines, zendCallableCalls } from "./zend-callables.mjs";
 
 const phpWire = model => model.surface.copies.map(copy => {
 	if(copy.variant) return phpZendVariantWire(model, copy);
@@ -160,7 +160,7 @@ static ZEND_FUNCTION(lb_call${index}) {
  * @param options.integerBits - Signed PHP integer width, either 32 or 64.
  */
 export const generateCopiedPhpZendAdapter = (ir, { integerBits = 32 } = {}) => {
-	const model = compileCopiedPhpModel(ir, { integerBits, lists: true, variants: true }), identity = hashBindingIr(ir);
+	const model = compileCopiedPhpModel(ir, { integerBits, structuredCallables: true, lists: true, variants: true }), identity = hashBindingIr(ir);
 	const stem = `lb_${model.surface.prefix}_${identity.slice(0, 16)}`;
 	const transport = `${model.namespace}\\Internal\\Zend${identity.slice(0, 16)}`;
 	const c = generateCBindingPackage(ir);
@@ -180,8 +180,8 @@ _Static_assert(sizeof(bool) == sizeof(unsigned char), "Bool wire markers require
 #ifdef ZTS
 #error This adapter requires a non-thread-safe PHP runtime
 #endif
-${copiedZendSupport}
-${copiedZendConversions(model)}
+${hasStructuredZendCallables(model) ? structuredCopiedZendSupport : copiedZendSupport}
+${copiedZendConversions(model, { copyCallbackBuffers: hasStructuredZendCallables(model) })}
 ${model.surface.callbacks.size ? zendCallableOwners(model) + zendCallableTrampolines(model) + zendCallableCalls(model) : zendCalls(model)}
 
 ${model.surface.callbacks.size ? `static PHP_MINIT_FUNCTION(lb_callables) {

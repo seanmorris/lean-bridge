@@ -129,6 +129,6 @@ export const assertPhpWasmSharedSourceTransition = async (path, source, expected
 	if(sources[path].sha256 !== expected) return false;
 	const record = JSON.parse(await readFile(evidencePath));
 	await assertPhpWasmSharedRegressionEvidence(record);
-	assert.equal(sha256(source), record.report.sourceHashes[path], path);
+	assert.equal(sha256(beforeCStructuredCallables(path, source, record.report.sourceHashes[path])), record.report.sourceHashes[path], path);
 	return true;
 };

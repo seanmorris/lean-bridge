@@ -8,13 +8,15 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { phpCallableSignatures } from "./helpers/php-callable-fixture.mjs";
+import { beforePhpWasmStructuredCallables } from "./helpers/php-wasm-structured-callable-source-history.mjs";
 
 test("PHP-Wasm callable evidence binds exact signatures to all installed arrangements", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/php-wasm-callables-20260919.json"));
 	assert.equal(record.wordBits, 32); assert.equal(record.php, "8.4.1");
 	assert.equal(record.phpWasm, "0.1.0"); assert.equal(record.emscripten, "3.1.68");
 	assert.deepEqual(record.signatures, phpCallableSignatures);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(beforePhpWasmStructuredCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	const arrangements = new Set(["node/embedded", "node/composer", "chromium/bundled"].flatMap(host =>
 		["startup", "lazy"].flatMap(loading => ["weak", "strict"].map(mode => `${host}/${loading}/${mode}`))));

@@ -131,7 +131,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 		, createAdapters: generateCompiledPhpWasmLeanAdapters
 		, validateModel: model => {
 			if(model.copiedGraph) compileCopiedPhpGraphZendModel(model.bindingIr);
-			else compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true, variants: true });
+			else compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 			options.validateModel?.(model);
 		}
 		, compileComponent: async ({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace }) => {
@@ -149,7 +149,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 			if(graph) adapterSources = graph.sources;
 			else
 			{
-				const c = generateCBindingPackage(model.bindingIr), { surface } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true, variants: true });
+				const c = generateCBindingPackage(model.bindingIr), { surface } = compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 				if(surface.callbacks.size && !runtimeHeader.includes(nativeCallbackHeader)) throw new Error("PHP-Wasm callables require compiler inputs rebuilt with callback registry support");
 				for(const path of [surface.paths.publicHeader, surface.paths.internalHeader, surface.paths.implementation]) await save(staging, `c/binding/${path}`, c[path]);
 				await save(staging, "c/provider.c", generateNativePrimitiveC(model, { initializer }));

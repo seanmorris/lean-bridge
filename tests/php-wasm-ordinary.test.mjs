@@ -64,6 +64,8 @@ test("PHP-Wasm uses a fixed wasm32 model without changing native compilation", (
 	declaration.projection.result = { kind: "callback", parameters: [scalar], result: scalar, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } };
 	assert.equal(createPhpWasmCopiedModel({ ...callback, component: options.component }).exports[0].result.kind, "callback");
 	declaration.projection.result.parameters = [{ kind: "array", element: scalar, abi: scalar.abi }];
+	assert.equal(createPhpWasmCopiedModel({ ...callback, component: options.component }).exports[0].result.kind, "callback");
+	declaration.projection.result.parameters = [structuredClone(declaration.projection.result)];
 	assert.throws(() => createPhpWasmCopiedModel({ ...callback, component: options.component }), error => error.code === "unsupported-php-wasm-signature" && error.details.source.path === "Sample.lean" && error.details.source.startLine === 2);
 });
 

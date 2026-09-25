@@ -47,9 +47,9 @@ test("native PHP copied callbacks retain lease, effect, field-identity and recur
 	assert.throws(() => compilePhpPackageModel(structuredCallableReviewedIr(), { integerBits: 32 }), /PHP-Wasm/u);
 });
 
-test("native PHP admission does not enable structured replies in either Zend width", () => {
+test("native and Zend adapters admit the same acyclic copied callback shapes", () => {
 	for(const integerBits of [32, 64])
-		assert.throws(() => generateCopiedPhpZendAdapter(structuredCallableReviewedIr(), { integerBits }), /copied primitive/u);
+		assert.doesNotThrow(() => generateCopiedPhpZendAdapter(structuredCallableReviewedIr(), { integerBits }));
 });
 
 const php = process.env.LEAN_BRIDGE_PHP ?? "/usr/bin/php";

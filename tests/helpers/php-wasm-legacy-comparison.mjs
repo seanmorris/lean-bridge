@@ -16,6 +16,7 @@ import { recursiveReviewedIr } from "./recursive-fixture.mjs";
 import { nativeRecursiveReviewedIr } from "./native-recursive-reviewed.mjs";
 import { phpLinkedGraphIr } from "./php-graph-values-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { beforePhpWasmStructuredCallables } from "./php-wasm-structured-callable-source-history.mjs";
 
 export const phpWasmPreGraphRecords = {
 	"docs/evidence/wasm32-recursive-transport-20260923.json": "06ad97d62407230fda2a8cf259dde11cf3cb6644a4ad7b80850328539822c3a0"
@@ -101,7 +102,7 @@ export const assertPhpWasmLegacyPackageComparison = async (run, sources) => {
 			assert.deepEqual(before.host, identity(sources[hostPath].source));
 			assert.deepEqual(before.packaging, identity(sources[packagePath].source));
 			assert.deepEqual(after.host, identity(await readFile(hostPath)));
-			assert.deepEqual(after.packaging, identity(await readFile(packagePath)));
+			assert.deepEqual(after.packaging, identity(beforePhpWasmStructuredCallables(packagePath, await readFile(packagePath, "utf8"))));
 			assert.deepEqual({ ...before, host: after.host, packaging: after.packaging }, after);
 		}
 		else

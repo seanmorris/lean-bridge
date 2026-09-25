@@ -4,16 +4,28 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdir, readFile, realpath, rename, symlink } from "node:fs/promises";
+import { cp, mkdir, readFile, realpath, rename, rm, symlink } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { build as buildVite } from "vite";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { startSiteServer } from "../../site/serve.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { brickMathRepository } from "./brick-math.mjs";
 import { createDeterministicTarGz } from "../../src/release/deterministic-archive.mjs";
 import { copiedCleanEnvironment as clean, runCopied as run } from "./copied-fixture-install.mjs";
+
+const deploymentInventory = async (root, paths) => {
+	const files = await Promise.all(paths.map(async prefix => {
+		const entries = await nativeArtifactPaths(join(root, prefix));
+		return Promise.all(entries.map(async path => {
+			const bytes = await readFile(join(root, prefix, path));
+			return [`${prefix}/${path}`, { bytes: bytes.length, sha256: sha256(bytes) }];
+		}));
+	}));
+	return Object.fromEntries(files.flat().sort(([left], [right]) => left.localeCompare(right)));
+};
 
 /**
  * Install complete npm and Composer handoffs before executing PHP callers.
@@ -65,7 +77,8 @@ export const installCopiedPhpWasm = async ({ consumer, handoff, packages, enviro
 		, build: { outDir: "bundled", assetsInlineLimit: 0, modulePreload: false, rollupOptions: { input: join(root, "entry.mjs"), preserveEntrySignatures: "strict", output: { entryFileNames: "consumer.mjs" } } } });
 	const driver = `export async function checkPhp(Host, api, mode, loading, source, mount) {
   let stdout = '', stderr = ''; const libraries = [];
-  const selected = loading === 'lazy' ? api.lazy : api;
+  const descriptor = loading === 'lazy' ? api.lazy : api;
+  const selected = mount ? descriptor.extensions : descriptor;
   const php = new Host({version: '8.4', sharedLibs: loading === 'startup' ? [selected] : [], dynamicLibs: loading === 'lazy' ? [selected] : [], ini: 'memory_limit=512M', locateFile: name => {if (name.endsWith('.so') && name !== 'libxml2.so') libraries.push(name);}});
   php.addEventListener('output', event => {for (const part of event.detail) stdout += part;});
   php.addEventListener('error', event => {for (const part of event.detail) stderr += part;});
@@ -78,10 +91,20 @@ export const installCopiedPhpWasm = async ({ consumer, handoff, packages, enviro
   if (libraries.length !== before || (loading === 'lazy' && before !== 0)) throw new Error('Invalid input loaded lazy code');
   await php.writeFile('/consumer.php', source);
   if (await php.run("<?php require '/consumer.php';") !== 0 || stderr || !/^${fixture.success}:[0-9]+\\n$/.test(stdout)) throw new Error(JSON.stringify({stdout,stderr}));
+  ${fixture.phpDocumentation ? `const beforeDocumentation = stdout; stdout = '';
+  await php.writeFile('/documentation.php', ${JSON.stringify(fixture.phpDocumentation)}.replace("__DIR__ . '/vendor/autoload.php'", "'" + autoload + "'"));
+  if (await php.run("<?php require '/documentation.php';") !== 0 || stderr || stdout !== ${JSON.stringify(fixture.phpDocumentationOutput)}) throw new Error(JSON.stringify({stdout,stderr}));
+  stdout = beforeDocumentation;` : ""}
   ${fixture.phpBailout ? `if (await php.run(${JSON.stringify("<?php " + fixture.phpBailout)}) !== 0 || stderr) throw new Error(JSON.stringify({stdout,stderr}));
-  if (await php.run(${JSON.stringify("<?php " + fixture.phpRecovery)}) !== 0 || stderr) throw new Error(JSON.stringify({stdout,stderr}));` : ""}
+  // PHP-Wasm leaves an exited request inert until its host starts a new one.
+  // A zero status alone does not prove that a recovery program executed.
+  await php.refresh(); stdout = ''; stderr = '';
+  if (await php.run("<?php require '" + autoload + "'; require '/consumer.php';") !== 0 || stderr || !/^${fixture.success}:[0-9]+\\n$/.test(stdout)) throw new Error(JSON.stringify({stdout,stderr}));
+  const repeated = stdout; stdout = '';
+  if (await php.run(${JSON.stringify("<?php " + fixture.phpRecovery + " echo 'php-recovery-executed';")}) !== 0 || stderr || stdout !== 'php-recovery-executed') throw new Error(JSON.stringify({stdout,stderr}));
+  stdout = repeated;` : ""}
   if (libraries.length !== 2 || new Set(libraries).size !== 2) throw new Error('Expected one component and one runtime');
-  return {checks: Number(stdout.trim().split(':')[1]), libraries: libraries.length, mode, loading${fixture.phpBailout ? ", bailoutRecovery: true" : ""}};
+  return {checks: Number(stdout.trim().split(':')[1]), libraries: libraries.length, mode, loading${fixture.phpBailout ? ", bailoutRecovery: true" : ""}${fixture.attestDeployment ? ", libraryNames: libraries" : ""}${fixture.phpDocumentation ? ", documentationExecuted: true" : ""}};
 }\n`;
 	await saveLakeFile(root, "driver.mjs", driver);
 	await saveLakeFile(root, "node.mjs", `import {readFile,readdir} from 'node:fs/promises';
@@ -98,6 +121,14 @@ async function mount(php) {
 }
 console.log(JSON.stringify(await checkPhp(PhpNode,api,mode,loading,await readFile(mode+'.php','utf8'),arrangement==='composer'?mount:undefined)));
 `);
+	if(fixture.removeHandoff)
+	{
+		await rm(handoff, { recursive: true, force: true });
+		for(const path of ["feed", "inspection", "cache", "composer-cache", "composer-home"])
+			await rm(join(root, path), { recursive: true, force: true });
+	}
+	const deployed = ["vendor", "bundled", ...npmPackages.map(pkg => `node_modules/${pkg.name}`)];
+	const deployment = fixture.attestDeployment ? await deploymentInventory(root, deployed) : null;
 	const executions = [];
 	for(const arrangement of ["embedded", "composer"])
 	for(const loading of ["startup", "lazy"])
@@ -139,5 +170,17 @@ try {globalThis.copiedResult=await checkPhp(PhpWeb,api,mode,loading,await(await 
 	finally
 	{ await browser?.close(); await server.close(); }
 	assert.ok(executions.every(item => item.checks === executions[0].checks && item.checks >= 1000));
-	return { checks: executions[0].checks, executions, consumerSha256: sha256(source), driverSha256: sha256(driver), offlineInstall: true, compilerFreePath: true, browserVersion: browser.version() };
+	if(deployment)
+	{
+		assert.deepEqual(await deploymentInventory(root, deployed), deployment);
+		for(const execution of executions)
+			for(const name of execution.libraryNames)
+				assert.ok(Object.keys(deployment).some(path => path.endsWith("/" + name)), name);
+	}
+	return { checks: executions[0].checks, executions
+		, consumerSha256: sha256(source), driverSha256: sha256(driver)
+		, offlineInstall: true, compilerFreePath: true
+		, browserVersion: browser.version()
+		, ...deployment ? { deployment, unchangedDeployment: true, handoffRemovedBeforeExecution: fixture.removeHandoff === true } : {}
+		, ...fixture.phpDocumentation ? { documentationSha256: sha256(fixture.phpDocumentation), documentationExecutions: executions.length } : {} };
 };

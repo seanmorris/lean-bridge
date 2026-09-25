@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpWasmStructuredCallables } from "./php-wasm-structured-callable-source-history.mjs";
 
 export const phpStructuredCallableHistoryPath = "docs/evidence/php-structured-callable-integration-20260925.json";
 export const phpStructuredCallableChangedPaths = [
@@ -74,6 +75,7 @@ export const reversePhpStructuredCallableUpdate = (source, update) => {
  * @param expected - Optional intermediate hash at which to stop.
  */
 export const beforePhpStructuredCallables = (path, source, expected) => {
+	source = beforePhpWasmStructuredCallables(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !phpStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(phpStructuredCallableHistoryPath, "utf8"));

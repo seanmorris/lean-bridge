@@ -36,11 +36,16 @@ test("Zend callable sources bind exact wasm32 values without exposing native lay
 for(const [name, change] of Object.entries({
 	retained: ir => { ir.declarations[0].parameters[1].lifetime.scope = "explicit"; }
 	, async: ir => { ir.types[0].callable.resultMode = "promise"; }
-	, compound: ir => { ir.types[0].callable.result.type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint8" }] }; }
 	, zero: ir => { ir.types[0].callable.parameters = []; }
 	, seventeen: ir => { ir.types[0].callable.parameters = Array.from({ length: 17 }, (_, i) => ({ ...ir.types[0].callable.parameters[0], name: `arg${i}` })); }
 })) test(`Zend callable admission rejects ${name}`, () => {
 	const ir = callableReviewedIr(); change(ir); assert.throws(() => generateCopiedPhpZendAdapter(ir));
+});
+
+test("Zend callable admission includes copied aggregate replies", () => {
+	const ir = callableReviewedIr();
+	ir.types[0].callable.result.type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint8" }] };
+	assert.doesNotThrow(() => generateCopiedPhpZendAdapter(ir));
 });
 
 test("wasm32 callback generations retire without token truncation or reuse", { skip: !existsSync("/usr/bin/cc") }, async t => {

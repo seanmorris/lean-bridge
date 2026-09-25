@@ -10,6 +10,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths } from "../build/native-artifacts.mjs";
 import { readVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime, verifyPhpWasmCopiedFiles } from "../build/php-wasm-copied-artifacts.mjs";
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
+import { hasStructuredZendCallables } from "../backends/php/zend-callables.mjs";
 import { compileCopiedPhpGraphZendModel } from "../backends/php/copied-graph-zend.mjs";
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
@@ -57,7 +58,7 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 	const loaderIdentity = sha256(json(identityBasis));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
 	const projection = model.copiedGraph ? compileCopiedPhpGraphZendModel(model.bindingIr)
-		: compileCopiedPhpModel(model.bindingIr, { integerBits: 32, lists: true, variants: true });
+		: compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 	const { namespace } = projection, aliases = model.copiedGraph ? projection.aliases : phpCopiedAliases(projection);
 	const aliasFiles = aliases.length ? { "lean-bridge/aliases.json": json({ schemaVersion: 1, aliases }) } : {};
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
@@ -114,6 +115,12 @@ Generated records, variants, Some/Ok/Err and Bytes provide equals($other) and ha
 Lean List inputs, results and record fields use consecutive-key PHP arrays with \`list<T>\` PHPDoc. Empty Lists, order, duplicates and nesting are preserved. List and Array retain distinct IR and native identities. Returned mutable values are independent copies. Weak and strict callers receive the same validation and copy-budget checks. List callback payloads remain unsupported.`}
 ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks accept PHP callables with one to sixteen primitive arguments and a primitive result. Generated checks enforce exact values even in weak callers. UInt32, UInt64, Int64, Nat, Int and 32-bit USize use Brick\\Math\\BigInteger. Unit is null; Char is one Unicode scalar. Callback arguments are copied. The callable itself borrows one synchronous call; retained calls reject. Throwable failures preserve the original object after Lean cleanup. Reference parameters/returns, generators, compound callables and async reject.\n\nReturned LeanClosure objects are invokable with exactly the declared positional arguments. Call close() in finally; it is idempotent and defers disposal during an active call. isClosed() reports explicit closure, and destruction is a fallback. Saved callable aliases share the same lease. Cloning and serialization reject. Keep closures within their originating PHP instance. The pinned host cannot start Fibers. Each adapter allows 64 nested calls, the runtime allows 4096 closure identities, and existing 16 MiB conversion budgets apply.\n" : ""}
 `;
+	const callableReadme = !model.copiedGraph && hasStructuredZendCallables(projection) ? readme
+		.replace("Compound callables, generic or indexed variants and recursive copied types remain unsupported.", "Recursive callback payloads, generic or indexed variants and recursive copied types remain unsupported.")
+		.replace("List callback payloads remain unsupported.", "Lists also retain these values in callbacks and captured closures.")
+		.replace("Primitive callbacks accept PHP callables with one to sixteen primitive arguments and a primitive result.", "Callbacks accept PHP callables with one to sixteen arguments and a result using primitives, arrays, Lists, options, results, products, acyclic records, variants and concrete copied aliases.")
+		.replace("Reference parameters/returns, generators, compound callables and async reject.", "Reference parameters/returns, generators, recursive or resource-containing payloads and async reject.")
+		+ "\nCallback replies own every nested string and byte buffer until Lean has copied them. Exit ends the PHP request. Before another request, await php.refresh(), require the package autoloader again and recreate PHP values and closures.\n" : readme;
 	return {
 		npm, composer, definition, loaderIdentity, runtimeVersion
 		, files: {
@@ -123,13 +130,13 @@ ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks ac
 			, "runtime/package/package.json": json(runtimePackage)
 			, "component/package/index.mjs": componentIndex
 			, "component/package/package.json": json(componentPackage)
-			, "component/package/README.md": readme + (model.copiedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
+			, "component/package/README.md": callableReadme + (model.copiedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
 			, "component/package/lazy-library.txt": definition.library
 			, ...Object.fromEntries(Object.entries(phpDependencies).map(([path, bytes]) => [`component/package/php/${path}`, bytes]))
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity, ...(aliases.length ? { aliases } : {}) })
 			, ...Object.fromEntries(Object.entries(aliasFiles).map(([path, bytes]) => [`composer/${path}`, bytes]))
-			, "composer/README.md": readme + (model.copiedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
+			, "composer/README.md": callableReadme + (model.copiedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}

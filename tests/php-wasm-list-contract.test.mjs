@@ -31,7 +31,7 @@ test("PHP-Wasm admits typed List conversions with a wasm32 traversal bound", () 
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback").callable;
 		const site = position === "parameter" ? callback.parameters[0] : callback.result;
 		site.type = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "unit" }] };
-		assert.throws(() => generateCopiedPhpZendAdapter(ir), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => generateCopiedPhpZendAdapter(ir));
 	}
 });
 

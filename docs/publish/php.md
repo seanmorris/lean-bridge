@@ -158,11 +158,11 @@ Add `Clover.call_word` and `Clover.make_word` to `exports`. Set `"arities": { "C
 
 The native FFI adapter supports one to sixteen arguments and a result using primitive or acyclic copied types. Its PHP API accepts callables and returns invokable `LeanClosure` objects with `close()` and `isClosed()`. Composer installs the same pinned Brick Math dependency used by copied values. The existing private C callable ABI handles borrowing and owned closures. See the [consumer example](../php.md#native-callbacks-and-returned-functions) for lifetime, exception and execution-context rules.
 
-The PHP-Wasm Zend adapter accepts the same primitive signatures and `arities` settings. It uses the 32-bit mappings in the [PHP conversion table](../php.md#type-conversions), including `BigInteger` for UInt32 and Int64. Both targets preserve the original callback `Throwable` after Lean cleanup. A combined build rejects signatures that any selected target cannot implement.
+The PHP-Wasm Zend adapter accepts the same primitive and acyclic copied signatures and `arities` settings. It uses the 32-bit mappings in the [PHP conversion table](../php.md#type-conversions), including `BigInteger` for UInt32 and Int64. Both targets preserve the original callback `Throwable` after Lean cleanup. A combined build rejects signatures that any selected target cannot implement.
 
 ### Export structured callbacks
 
-For native PHP, use concrete copied types directly in the callback signature:
+For native PHP and PHP-Wasm, use concrete copied types directly in the callback signature:
 
 ```lean
 namespace Structured
@@ -177,7 +177,8 @@ end Structured
 ```
 
 Select `Structured.callArray` and `Structured.makeOption`, and set
-`"arities": { "Structured.makeOption": 1 }`. Build with `--target php-native`.
+`"arities": { "Structured.makeOption": 1 }`. Build with `--target php-native`
+or `--target php-wasm` after configuring that target's package coordinates.
 Consumers call `call_array` and `make_option` through the generated public API;
 the [PHP example](../php.md#structured-callback-values) preserves `Some None`
 separately from `None`.
@@ -187,11 +188,12 @@ compose in these signatures. Callbacks borrow their PHP callable for one
 synchronous call and copy its values. Returned functions own a lease and captured
 copies. Consumers need no C declarations, manual marshalling or JSON transport.
 Recursive payloads, identity-bearing fields, async callbacks and retained host
-callbacks remain unsupported. PHP-Wasm still admits primitive callables only.
+callbacks remain unsupported. PHP-Wasm copies every nested callback reply buffer
+before PHP releases the reply and Lean finishes copying it.
 
 ## Build an ordinary PHP-Wasm package
 
-PHP-Wasm compiles concrete copied variants, Lists, options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings. Compound callables remain unsupported.
+PHP-Wasm compiles concrete copied variants, Lists, options, results and nested binary products on ordinary-source and reviewed-IR paths. These compose with primitives, arrays and acyclic records, including in synchronous callbacks and captured closures. Generated `Some`, `Ok` and `Err` classes preserve branch identity; products use two-element arrays. The [PHP consumer guide](../php.md#options-results-and-products) documents payload validation and 32-bit integer mappings.
 
 Install a [prepared CLI](../lean/setup.md#install-a-prepared-cli) whose inventory has `phpWasmInputsIncluded: true`. It contains the prebuilt PHP-Wasm runtime and configured PHP 8.4.1 headers. Leave `LEAN_BRIDGE_PHP_INPUTS` unset to use those bundled inputs.
 

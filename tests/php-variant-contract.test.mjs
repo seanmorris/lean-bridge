@@ -75,7 +75,7 @@ test("PHP variant naming rejects collisions and keeps unsupported payloads close
 		const site = position === "parameter" ? callback.callable.parameters[0] : callback.callable.result;
 		site.type = { kind: "named", id: "lean:Variants.Signal" };
 		assert.doesNotThrow(() => generateCopiedPhpPackage(ir));
-		assert.throws(() => generateCopiedPhpZendAdapter(ir), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => generateCopiedPhpZendAdapter(ir));
 	}
 	const recursive = phpVariantReviewedIr(); recursive.types.find(type => type.name === "Signal").cases[2].fields[0].type = { kind: "named", id: "lean:Variants.Signal" };
 	assert.throws(() => generateCopiedPhpPackage(recursive), /acyclic|deep/);

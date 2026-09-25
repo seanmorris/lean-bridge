@@ -160,3 +160,8 @@ static int lb_big_out(const uint32_t *words, size_t length, bool negative, zval 
   ZVAL_STRINGL(out, text, used); return 1;
 }
 `;
+
+/** Callback replies own every nested byte buffer until Lean finishes copying. */
+export const structuredCopiedZendSupport = copiedZendSupport.replace(
+	"  int type_error;", "  int type_error;\n  int copy_buffers;"
+);

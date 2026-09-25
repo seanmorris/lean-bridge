@@ -18,7 +18,7 @@ import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
-test("PHP-Wasm admits nested copied compounds but rejects compound callables", () => {
+test("PHP-Wasm admits nested copied compounds in ordinary calls and callbacks", () => {
 	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
 	const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 	const option = { kind: "option", element: projection.result, abi };
@@ -32,7 +32,7 @@ test("PHP-Wasm admits nested copied compounds but rejects compound callables", (
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback").callable;
 		const site = position === "parameter" ? callback.parameters[0] : callback.result;
 		site.type = { kind: "apply", constructor, arguments: Array.from({ length: constructor === "option" ? 1 : 2 }, () => ({ kind: "primitive", name: "unit" })) };
-		assert.throws(() => generateCopiedPhpZendAdapter(ir), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => generateCopiedPhpZendAdapter(ir));
 	}
 });
 

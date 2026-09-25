@@ -9,8 +9,10 @@ import { zendVariantConversions } from "./copied-zend-variants.mjs";
  * Render C conversions in dependency order; aggregate owners stay with the caller.
  *
  * @param model - Copied PHP model with an explicit integer width.
+ * @param options - Optional callback ownership support for acyclic callers.
+ * @param options.copyCallbackBuffers - Emit owned copies of callback reply buffers.
  */
-export const copiedZendConversions = model => model.surface.copies.map(copy => {
+export const copiedZendConversions = (model, { copyCallbackBuffers = false } = {}) => model.surface.copies.map(copy => {
 	const input = [], output = [], name = copy.scalarName;
 	if(name === "unit")
 	{ input.push('if (Z_TYPE_P(value) != IS_NULL) return lb_fail(s, "Unit requires null", 1);', "*out = 0;"); output.push('if (*value != 0) return lb_fail(s, "Invalid native Unit marker", 0);', "ZVAL_NULL(out);"); }
@@ -46,6 +48,10 @@ export const copiedZendConversions = model => model.surface.copies.map(copy => {
 		input.push('if (Z_TYPE_P(value) != IS_STRING) return lb_fail(s, "Expected string bytes", 1);', "if (!lb_charge(s, Z_STRLEN_P(value), 1)) return 0;");
 		if(name === "string") input.push('if (!lb_utf8((const unsigned char *)Z_STRVAL_P(value), Z_STRLEN_P(value))) return lb_fail(s, "String requires valid UTF-8", 0);');
 		input.push(`out->data = (const ${name === "string" ? "char" : "uint8_t"} *)Z_STRVAL_P(value); out->length = Z_STRLEN_P(value);`);
+		if(copyCallbackBuffers) input.push("if (s->copy_buffers) {"
+			, "  void *data = lb_allocate(s, out->length, 1); if (!data) return 0;"
+			, "  if (out->length) memcpy(data, out->data, out->length);"
+			, "  out->data = data;", "}");
 		output.push('if (!lb_charge(s, value->length, 1) || (value->length && !value->data)) return lb_fail(s, "Invalid string buffer", 0);');
 		output.push("if (!lb_readable(s, value->data, value->length, 1, 1)) return 0;");
 		if(name === "string") output.push('if (!lb_utf8((const unsigned char *)value->data, value->length)) return lb_fail(s, "Native string is not valid UTF-8", 0);');

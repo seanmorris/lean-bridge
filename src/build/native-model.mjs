@@ -196,13 +196,13 @@ export const createPhpWasmCopiedModel = options => {
 	const copied = type => type.kind === "primitive" || (["array", "list", "option"].includes(type.kind) && copied(type.element))
 		|| (["result", "tuple"].includes(type.kind) && type.arguments.every(copied)) || (type.kind === "record" && type.fields.every(field => copied(field.type)))
 		|| (type.kind === "variant" && type.cases.every(branch => branch.fields.every(field => copied(field.type))));
-	const admitted = type => copied(type) || (type.kind === "callback" && type.parameters.every(parameter => parameter.kind === "primitive") && type.result.kind === "primitive");
+	const admitted = type => copied(type) || (type.kind === "callback" && type.parameters.every(copied) && copied(type.result));
 	const unsupported = model.exports.find(item => !item.parameters.every(parameter => admitted(parameter.type)) || !admitted(item.result));
 	if(unsupported)
 	{
 		const declaration = model.bindingIr.declarations.find(item => item.source.declaration === unsupported.name);
 		const source = declaration.source.extensions?.["lean-lang.org/source-position"];
-		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${unsupported.name}: PHP-Wasm compilation admits copied primitives, arrays, Lists, records, concrete variants, options, results, binary products and synchronous primitive callables`), { code: "unsupported-php-wasm-signature", details: { declaration: declaration.id, source: source ?? null } });
+		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${unsupported.name}: PHP-Wasm compilation admits copied primitives, arrays, Lists, records, concrete variants, options, results, binary products and synchronous copied-value callables`), { code: "unsupported-php-wasm-signature", details: { declaration: declaration.id, source: source ?? null } });
 	}
 	return model;
 };

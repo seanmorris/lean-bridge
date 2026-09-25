@@ -56,7 +56,7 @@ test("the PHP overview records exact UInt32 values in native and Wasm profiles",
 	assert.match(row(source, "UInt32"), /Reviewed IR: Installed checks passed/u);
 	assert.match(source.split("### Alpha example API")[1], /Full `0\.\.4294967295` range in both profiles/u);
 	assert.match(row(source, "Nat"), /BigInteger.*Installed checks passed/u);
-	assert.match(row(source, "Except ε α"), /Installed checks passed \(input, result, field\)/u);
+	assert.match(row(source, "Except ε α"), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed \|/u);
 	const wasm = source;
 	assert.match(row(wasm, "Int64"), /full -9223372036854775808\.\.9223372036854775807 range on the 32-bit host/u);
 	assert.match(row(wasm, "Int64"), /compiled copied API uses Brick\\Math\\BigInteger for the full/u);
@@ -333,11 +333,11 @@ test("WIT compound docs preserve presence, success/error order and binary produc
 	}
 });
 
-test("PHP compound docs record independent native and PHP-Wasm coverage", async () => {
+test("PHP compound docs include native and PHP-Wasm copied callback coverage", async () => {
 	const source = await readFile("docs/php.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
 		for(const path of ["Ordinary source", "Reviewed IR"])
-			assert.match(row(source, lean), new RegExp(`${path}: Native PHP: Installed checks passed; PHP-Wasm: Installed checks passed \\(input, result, field\\); Compilation rejected \\(callback input, callback result\\)`, "u"));
+			assert.match(row(source, lean), new RegExp(`${path}: Installed checks passed`, "u"));
 	assert.match(row(source, "Option α"), /null.*Some/u);
 	assert.match(row(source, "Except ε α"), /Ok.*Err/u);
 	assert.match(source, /new Some\(new Some\(null\)\)/u);
@@ -346,16 +346,8 @@ test("PHP compound docs record independent native and PHP-Wasm coverage", async 
 		for(const position of ["parameter", "result", "field", "callback-parameter", "callback-result"])
 		{
 			const cell = cells.find(cell => cell.id === `${profile}/${shape}/${path}/${position}`);
-			if(position.startsWith("callback") && profile === "php-wasm")
-			{
-				assert.equal(cell.stages.compilation.state, "rejected");
-				assert.notEqual(cell.stages.installedExecution.state, "passed");
-			}
-			else
-			{
-				assert.equal(cell.stages.installedExecution.state, "passed");
-				assert.deepEqual(cell.stages.installedExecution.evidence, [position.startsWith("callback") ? "php-native-structured-callables-installed" : `${profile}-compounds-installed`]);
-			}
+			assert.equal(cell.stages.installedExecution.state, "passed");
+			assert.deepEqual(cell.stages.installedExecution.evidence, [position.startsWith("callback") ? `${profile}-structured-callables-installed` : `${profile}-compounds-installed`]);
 		}
 });
 

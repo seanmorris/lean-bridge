@@ -6,6 +6,14 @@
 import { phpValue } from "./callables.mjs";
 const callable = value => Boolean(value.type?.callable);
 
+/**
+ * Keep the established primitive-only transport unchanged for older packages.
+ *
+ * @param model - Checked PHP projection with resolved callback payloads.
+ */
+export const hasStructuredZendCallables = model => [...model.surface.callbacks.values()].some(({ type }) =>
+	[...type.callable.parameters, type.callable.result].some(site => !phpValue(model, site.type).scalarName));
+
 /** Public wrappers share one lease, including saved first-class callables. */
 export const phpZendLease = String.raw`
 final class Lease
@@ -119,26 +127,36 @@ typedef struct { zval *callback; lb_scope *scope; int *bailout; } lb_borrow;
 export const zendCallableTrampolines = model => [...model.surface.callbacks.values()].map(value => {
 	const { parameters, result } = value.type.callable, inputs = parameters.map(site => phpValue(model, site.type));
 	const out = phpValue(model, result.type), unit = out.scalarName === "unit";
+	const structured = hasStructuredZendCallables(model);
 	return `static ${model.surface.prefix}_status lb_callback${value.index}(${["void *context", ...inputs.map((input, i) => `${input.ctype}${input.aggregate ? " const *" : ""} arg${i}`), ...unit ? [] : [`${out.ctype} *out`], `${model.surface.prefix}_error *error`].join(", ")}) {
   (void)error; lb_borrow *borrow = context; lb_scope *s = borrow->scope;
   if (EG(exception) || *borrow->bailout || s->error) return 4;
   typedef struct { zval args[${inputs.length}]; zval result; int success; } callback_frame;
   callback_frame *frame = lb_allocate(s, 1, sizeof(*frame));
   if (!frame) return 4;
-  zend_try {
+${structured ? "  const int saved_copy_buffers = s->copy_buffers;\n" : ""}  zend_try {
     do {
 ${inputs.map((input, i) => `      if (!lb_from${input.index}(${input.aggregate ? "" : "&"}arg${i}, &frame->args[${i}], s)) break;`).join("\n")}
       if (call_user_function(EG(function_table), NULL, borrow->callback, &frame->result, ${inputs.length}, frame->args) != SUCCESS || EG(exception)) break;
       ${unit ? "uint8_t unit;" : ""}
-      if (!lb_to${out.index}(&frame->result, ${unit ? "&unit" : "out"}, s)) break;
-      ${["string", "bytes"].includes(out.scalarName) ? `void *copy = lb_allocate(s, out->length, 1); if (!copy) break;
+      ${structured ? "s->copy_buffers = 1;\n      " : ""}if (!lb_to${out.index}(&frame->result, ${unit ? "&unit" : "out"}, s)) break;
+      ${!structured && ["string", "bytes"].includes(out.scalarName) ? `void *copy = lb_allocate(s, out->length, 1); if (!copy) break;
       if (out->length) memcpy(copy, out->data, out->length); out->data = copy;` : ""}
       frame->success = 1;
     } while (0);
   } zend_catch { *borrow->bailout = 1; } zend_end_try();
-  for (unsigned i = 0; i < ${inputs.length}; i++) zval_ptr_dtor(&frame->args[i]);
+${structured ? `  s->copy_buffers = saved_copy_buffers;
+  for (unsigned i = 0; i < ${inputs.length}; i++) {
+    zend_try { zval_ptr_dtor(&frame->args[i]); }
+    zend_catch { *borrow->bailout = 1; } zend_end_try();
+    ZVAL_UNDEF(&frame->args[i]);
+  }
+  zend_try { zval_ptr_dtor(&frame->result); }
+  zend_catch { *borrow->bailout = 1; } zend_end_try();
+  ZVAL_UNDEF(&frame->result);
+  return frame->success && !EG(exception) && !*borrow->bailout ? 0 : 4;` : `  for (unsigned i = 0; i < ${inputs.length}; i++) zval_ptr_dtor(&frame->args[i]);
   zval_ptr_dtor(&frame->result);
-  return frame->success ? 0 : 4;
+  return frame->success ? 0 : 4;`}
 }
 ZEND_BEGIN_ARG_INFO_EX(lb_close_args${value.index}, 0, 0, 1)
   ZEND_ARG_INFO(0, token)
@@ -198,7 +216,7 @@ static ZEND_FUNCTION(lb_${entry}) {
   if (ZEND_NUM_ARGS() != ${args.length + offset}) { zend_argument_count_error("Expected exactly ${args.length + offset} arguments"); RETURN_THROWS(); }
   zval args[${Math.max(1, args.length + offset)}];
   ${args.length + offset ? `if (zend_get_parameters_array_ex(${args.length + offset}, args) != SUCCESS) RETURN_THROWS();` : ""}
-  lb_context_${entry} *ctx = LB_ZEND_CALLOC(1, sizeof(*ctx));
+${hasStructuredZendCallables(model) ? `  if (sizeof(lb_context_${entry}) > 16 * 1024 * 1024) { zend_value_error("Zend call context exceeds the conversion limit"); RETURN_THROWS(); }\n` : ""}  lb_context_${entry} *ctx = LB_ZEND_CALLOC(1, sizeof(*ctx));
   if (!ctx) { zend_throw_error(NULL, "Zend call allocation failed"); RETURN_THROWS(); }
   ctx->scope.remaining = 16 * 1024 * 1024 - sizeof(*ctx); ZVAL_NULL(return_value);
   zend_try { lb_execute_${entry}(ctx, args, return_value); }

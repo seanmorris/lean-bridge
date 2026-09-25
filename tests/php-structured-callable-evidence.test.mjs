@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertPhpStructuredCallableExecution, assertPhpStructuredCallableIntegration, phpStructuredCallableExecutionPath } from "./helpers/php-structured-callable-evidence.mjs";
 import { beforePhpStructuredCallables, phpStructuredCallableHistoryPath, reversePhpStructuredCallableUpdate } from "./helpers/php-structured-callable-source-history.mjs";
+import { beforePhpWasmStructuredCallables } from "./helpers/php-wasm-structured-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -51,7 +52,7 @@ test("native PHP structured source history rejects unrelated edits and changed p
 	const record = await json(phpStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePhpWasmStructuredCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePhpStructuredCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePhpStructuredCallables(update.path, source)), update.previousSha256);
 		const altered = source + "\n// unrelated\n";
