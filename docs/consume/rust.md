@@ -282,7 +282,7 @@ A returned `LeanClosure<fn(...) -> T>` provides typed `.call(...)`, idempotent `
 
 A callback can call another Lean export or an owned closure on the same thread. Its first `Err` stops further callback execution and returns the original error. With unwinding enabled, a panic is caught inside the callback, then resumed on the Rust side after the native call returns. `panic=abort`, out-of-memory aborts and a panic hook that terminates the process cannot be recovered. Rust's normal panic-hook and destructor behavior still applies. Conversion limits cover all callbacks in one call, including retained result buffers. A callback that Lean stores beyond the call becomes invalid; later invocation returns an error instead of accessing expired Rust state.
 
-The [Rust callable acceptance record](../evidence/rust-callables-20260919.md) covers both package paths, compile-time rejections, error and panic cleanup, exhausted closure registries, nested calls and source-free execution. Recursive callback payloads, resource-containing aggregates and asynchronous callbacks remain separate work.
+The [Rust callable acceptance record](../evidence/rust-callables-20260919.md) covers both package paths, compile-time rejections, error and panic cleanup, exhausted closure registries, nested calls and source-free execution. Recursive callback values use the graph adapter described below. Resource-containing aggregates and asynchronous callbacks remain separate work.
 
 ### Structured callback values
 
@@ -322,11 +322,59 @@ Run `cargo run --release`. Nested text and byte buffers stay owned until Lean
 finishes copying a callback result. The 32-level type bound and separate 16 MiB
 Rust/native conversion budgets still apply. A callback failure or unwinding
 panic releases temporary storage before returning to Rust. Copied fields cannot
-hide callbacks or resources; recursive callable payloads require separate support.
+hide callbacks or resources. Recursive callable values use the graph limits below.
 
 The [installed structured callable checks](../evidence/rust-structured-callables-20260924.md)
 cover both package paths, nested ownership, errors and panics, compiler
 rejections and execution after removing all source trees.
+
+### Recursive callback values
+
+Callbacks can receive and return finite recursive values. They own each argument
+and return `Result<T, Error>`; an owned Lean closure borrows its call inputs and
+returns an independent copy. Use the generated enums and structs directly.
+
+For the recursive `structured-api` acceptance package, add its prepared crate
+as your Cargo dependency and save this as `src/main.rs`:
+
+```rust
+use structured_api::{call_recursive, make_recursive, BigUint, Error, Tree};
+
+fn main() -> Result<(), Error> {
+    let leaf = Tree::Leaf { value: BigUint::from(7u8) };
+    let tree = Tree::Branch { children: vec![leaf] };
+    let wrapped = call_recursive(&tree, |value| {
+        Ok(Tree::Branch { children: vec![value] })
+    })?;
+    assert_eq!(wrapped, Tree::Branch { children: vec![tree.clone()] });
+
+    let empty = Tree::Branch { children: vec![] };
+    let choose = make_recursive(&tree)?;
+    assert_eq!(choose.call(true, &empty)?, tree);
+    assert_eq!(choose.call(false, &empty)?, empty);
+    choose.close()?;
+    assert!(matches!(choose.call(true, &empty), Err(Error::Closed)));
+    Ok(())
+}
+```
+
+Run `cargo run --release`. Recursive callbacks and closures share the value
+limits of 128 levels and 262,144 visited nodes. Each native call has a 16 MiB
+copy budget across its inputs, callbacks and result, plus a separate 16 MiB
+Rust conversion-storage budget. Same-thread reentry permits at most 64 active
+native calls. Owned closures share the runtime's 4,096-identity capacity.
+
+Returned closures are neither `Send`, `Sync` nor `Clone`. Use `close()` or `Drop`
+to release captures. Closing during a reentrant invocation defers disposal until
+the active call finishes. A host callback expires when its exporting call returns.
+Errors and unwinding panics reach the original Rust caller after native cleanup;
+recoverable failures leave the runtime usable. Malformed native output retires
+the runtime. Copied fields cannot contain resources or callable identities.
+
+The [recursive callable acceptance record](../evidence/rust-recursive-callables-20260925.md)
+covers both authoring paths, offline installation, recursive equality, closure
+capacity, compile-time misuse, allocation failures, panic cleanup and execution
+after deleting the author and installed source trees.
 
 ### Alpha resource and callback example
 
@@ -450,7 +498,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Owned named structs and enums, Box children, Vec/Option/Result/tuples and transparent aliases` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Borrow aggregates, text and slices; pass fixed-width scalars by value. Results own independent Rust values. Box breaks recursive or oversized fields; Vec supplies sequence indirection. RAII clears native outputs and temporaries on errors or unwinding. Malformed native output retires the shared runtime; earlier owned Rust results remain usable. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Owned named structs and enums, Box children, Vec/Option/Result/tuples and transparent aliases` (input, result, field); `Owned generated enums, structs, Vec and Box fields with named aliases; FnMut callbacks returning Result and thread-confined LeanClosure results` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Borrow aggregates, text and slices; pass fixed-width scalars by value. Results own independent Rust values. Box breaks recursive or oversized fields; Vec supplies sequence indirection. RAII clears native outputs and temporaries on errors or unwinding. Malformed native output retires the shared runtime; earlier owned Rust results remain usable. Recursive values and aliases retain their public types and independent owned storage. Conversion scopes keep callback replies alive until native copying finishes. Original callback errors and panic payloads return after cleanup; malformed native output retires the runtime. Closure identities release on close or Drop, with deferred release during an active invocation. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

@@ -31,7 +31,7 @@ The build compiles Lean and its C adapter, checks the generated Rust with a pinn
 
 The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). Set [shared license terms](../publishing.md#declare-license-terms) in `package.license` to populate Cargo's `license` field. Without a declaration, the field remains unset; it never borrows Lean Bridge's MIT license.
 
-This path supports pure copied primitives, nested arrays and Lists, copied records, tagged variants, options, results, binary products and finite recursive values. Components without recursive values can also export synchronous primitive or acyclic structured callbacks and returned closures. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. Recursive callable payloads, resource-containing aggregates and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
+This path supports pure copied primitives, nested arrays and Lists, copied records, tagged variants, options, results, binary products and finite recursive values. Synchronous callbacks and returned closures accept those copied values, including recursive trees. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. Resource-containing aggregates and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
@@ -117,10 +117,10 @@ for recursive or oversized fields and native `Vec`, `Option`, `Result` and tuple
 for their containers. Transparent aliases keep their public names.
 
 Cargo-only graph builds need the native C compiler but do not require a public
-C package, GMP or Boost. You can combine `cargo`, `c` and `cpp` when all selected
-targets accept the API. Other recursive native targets remain in progress.
-Callables, resources, asynchronous operations, open generics, dependent types
-and proof-bearing payloads are not part of this graph profile.
+C package, GMP or Boost. Other copied-value targets can join when every selected
+target accepts the complete API. Synchronous recursive callbacks use the
+callable graph adapter below. Resources, asynchronous operations, open generics,
+dependent types and proof-bearing payloads are not part of this copied profile.
 
 The graph limit is depth 128, 262,144 visited nodes, 16 MiB of accounted native
 copy storage and a separate 16 MiB Rust conversion-storage budget per call.
@@ -171,8 +171,48 @@ The [installed checks](../evidence/rust-structured-callables-20260924.md) compil
 that example from both prepared package paths without author sources or Lean.
 
 Structured callable builds can combine `cargo`, `c` and `cpp`. Every selected
-target must admit the API. Recursive callable payloads, identity-bearing copied
-fields, higher-order callbacks and asynchronous delivery remain unsupported.
+target must admit the API. Identity-bearing copied fields, higher-order callbacks
+and asynchronous delivery remain unsupported.
+
+## Export recursive callbacks and closures
+
+Use concrete recursive types in callback signatures and captured values:
+
+```lean
+namespace Structured
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select `Structured.callRecursive` and `Structured.makeRecursive` in
+`lean-bridge.exports.json`, set `"arities": { "Structured.makeRecursive": 1 }`,
+and build with `--target cargo`. A reviewed contract records the outer arity
+instead, so omit `arities` from that build's configuration. The compiler checks
+the full recursive and callable signatures before generating Rust or C.
+
+Cargo-only builds produce one crate with embedded native libraries. No public
+C package, GMP or Boost dependency is needed. Recursive callable APIs can also
+target `c`, `cpp` and `pypi`; each selected target must accept the complete API.
+Consumer Cargo builds compile Rust and link the prepared libraries without Lean
+or C source compilation. Runtime loading is automatic.
+
+Rust borrows exported copied inputs and gives callbacks owned copies. Returned
+`LeanClosure` values own their captures, invoke on their creating thread and
+release with `close()` or `Drop`. The graph uses depth 128, 262,144 visited nodes,
+16 MiB native-copy and separate Rust conversion-storage budgets per call.
+Same-thread native reentry is bounded to 64 calls; closures share 4,096 identity
+slots. Resource or callable identities inside copied fields and asynchronous
+callbacks remain unsupported.
+
+See the [consumer example](../consume/rust.md#recursive-callback-values) and
+[installed acceptance](../evidence/rust-recursive-callables-20260925.md).
 
 ## Package identity and publisher prerequisites
 

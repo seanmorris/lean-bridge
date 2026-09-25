@@ -17,9 +17,9 @@ test("recursive Python callable packages share the C-family layout without requi
 	const python = compileCallablePythonGraphPackageModel(ir);
 	assert.equal(python.functions.length, 33); assert.equal(python.callbacks.size, 18);
 	assert.equal(python.callableGraph, true); assert.equal(python.requiresTypeAliases, true);
-	for(const targets of [["pypi"], ["c"], ["cpp"], ["pypi", "c", "cpp"], ["cpp", "pypi"]])
+	for(const targets of [["pypi"], ["c"], ["cpp"], ["pypi", "c", "cpp"], ["cpp", "pypi"], ["pypi", "cargo"]])
 		assert.equal(compileNativeGraphProjection(ir, targets).layoutSha256, python.layoutSha256);
-	for(const targets of [undefined, {}, [], ["pypi", "pypi"], ["pypi", "cargo"], ["pypi", "cpan"], ["pypi", "unknown"]])
+	for(const targets of [undefined, {}, [], ["pypi", "pypi"], ["pypi", "cargo", "cargo"], ["pypi", "cpan"], ["pypi", "unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 	assert.equal(canonicalJson(ir), before);
 });

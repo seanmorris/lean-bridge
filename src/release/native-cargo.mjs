@@ -10,6 +10,7 @@ import { nativeArtifactPaths, verifyNativeFiles } from "../build/native-artifact
 import { ordinaryRustEvidence } from "../build/native-rust-artifacts.mjs";
 import { generateCopiedRustPackage, copiedRustLock } from "../backends/rust/copied-values.mjs";
 import { generateCopiedRustGraphPackage } from "../backends/rust/copied-graph-package.mjs";
+import { generateCallableRustGraphPackage } from "../backends/rust/callable-graph-package.mjs";
 import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
@@ -39,7 +40,9 @@ export const packageOrdinaryCargo = async ({ working, rustRoot, nativeRoot, runt
 		|| compiled.name !== name || compiled.version !== version || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| !/^rustc 1\.(?:9\d|[1-9]\d{2,})\.\d+ /.test(compiled.rustc)
 		|| (await nativeArtifactPaths(rustRoot)).some(path => path !== "native-rust.json" && !Object.hasOwn(compiled.files, path))) throw new Error("Compiled Rust projection differs from source or native evidence");
-	const generate = model.copiedGraph ? generateCopiedRustGraphPackage : generateCopiedRustPackage;
+	const generate = model.copiedGraph
+		? model.copiedGraph.callbacks ? generateCallableRustGraphPackage : generateCopiedRustGraphPackage
+		: generateCopiedRustPackage;
 	for(const [path, contents] of Object.entries(generate(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) })))
 		if(await readFile(join(rustRoot, path), "utf8") !== contents) throw new Error("Generated Rust source differs from compiled package model");
 	if(await readFile(join(rustRoot, "Cargo.lock"), "utf8") !== await copiedRustLock(name, version)) throw new Error("Cargo dependency lock differs from checked projection");

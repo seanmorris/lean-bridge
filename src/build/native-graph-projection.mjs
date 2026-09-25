@@ -14,6 +14,7 @@ import { compileCopiedPhpGraphPackageModel } from "../backends/php/copied-graph-
 import { compileCopiedWitGraphPackageModel } from "../backends/wit/copied-graph-package.mjs";
 import { compileCallableGraphPackageModel } from "../backends/c/callable-graph-model.mjs";
 import { compileCallablePythonGraphPackageModel } from "../backends/python/callable-graph-model.mjs";
+import { compileCallableRustGraphPackageModel } from "../backends/rust/callable-graph-model.mjs";
 
 /**
  * Validate all requested graph hosts without inventing an extra public C target.
@@ -25,14 +26,17 @@ import { compileCallablePythonGraphPackageModel } from "../backends/python/calla
 export const compileNativeGraphProjection = (ir, targets, moduleName) => {
 	if(ir.types.some(type => type.kind === "callback"))
 	{
-		if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "pypi"].includes(target)))
-			throw Object.assign(new TypeError("Recursive callable packages currently require C, C++ or PyPI projections"), { code: "native-graph-projection-unavailable" });
+		if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "pypi", "cargo"].includes(target)))
+			throw Object.assign(new TypeError("Recursive callable packages currently require C, C++, PyPI or Cargo projections"), { code: "native-graph-projection-unavailable" });
 		const cTargets = targets.filter(target => ["c", "cpp"].includes(target));
 		const c = cTargets.length ? compileCallableGraphPackageModel(ir, cTargets) : null;
 		const python = targets.includes("pypi") ? compileCallablePythonGraphPackageModel(ir) : null;
-		if(c && python && c.layoutSha256 !== python.layoutSha256)
-			throw new TypeError("Python and C-family callable graph layouts differ");
-		return c ?? python;
+		const rust = targets.includes("cargo") ? compileCallableRustGraphPackageModel(ir) : null;
+		const selected = c ?? python ?? rust;
+		for(const projection of [c, python, rust].filter(Boolean))
+			if(projection.layoutSha256 !== selected.layoutSha256)
+				throw new TypeError("Native callable graph layouts differ across selected targets");
+		return selected;
 	}
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target)))
 		throw Object.assign(new TypeError("Native copied graphs currently require C, C++, Cargo, PyPI, RubyGems, CPAN, NuGet, Maven, native PHP or WIT/WASI target adapters"), { code: "native-graph-projection-unavailable" });

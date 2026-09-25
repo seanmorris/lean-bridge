@@ -29,9 +29,10 @@ checks in Node, TypeScript, browser pages, React and workers.
 [Recursive copied packages](../lean/export-decisions.md#start-with-the-runnable-npm-shapes)
 now pass installed checks on both source paths across all seventeen profiles.
 Synchronous callbacks and returned closures accept acyclic copied payloads in
-every profile. npm, [C/C++](../evidence/native-recursive-callables-20260925.md) and
-[Python](../evidence/python-recursive-callables-20260925.md) also accept recursive
-callback payloads. Nine profiles still need recursive callable acceptance.
+every profile. npm, [C/C++](../evidence/native-recursive-callables-20260925.md),
+[Python](../evidence/python-recursive-callables-20260925.md) and
+[Rust](../evidence/rust-recursive-callables-20260925.md) also accept recursive
+callback payloads. Eight profiles still need recursive callable acceptance.
 Aggregates with explicit resource ownership remain part of the same task.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),

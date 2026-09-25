@@ -1052,6 +1052,37 @@ closure disposal, and reject malformed output. Probes run in separate processes
 and do not modify installed files. CI requires and uploads
 `build/recursive-callables/python.json`.
 
+### Recursive Rust callbacks and closures
+
+Use the pinned Rust tools and prepared Cargo dependency cache from the Rust
+collection checks, then run:
+
+```sh
+LEAN_BRIDGE_RUST_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/rust-recursive-callables.test.mjs
+node --test tests/rust-recursive-callable-contract.test.mjs
+node --test tests/rust-recursive-callable-evidence.test.mjs
+```
+
+The gate builds 33 Lean exports on both source paths and installs the original
+Cargo archives offline with an empty Cargo home. It verifies the vendored
+dependency files and allows host linking while rejecting C compilation. The
+producer is removed before installation. The published Lean example compiles
+in each producer, and the exact Rust example compiles and runs from each crate.
+
+Each installation checks all nine copied callback shapes, finite recursive trees,
+captured closures, aliases used only in callback signatures, closure capacity,
+depth limits and recovery after caller errors. Twelve invalid consumers must
+fail with the expected Rust compiler errors.
+
+Safety probes use a copy of the installed crate. They inject allocation and panic
+failures, check callback result ownership before reading returned pointers, and
+check runtime retirement after malformed output. Removing the retention or
+retirement guard must fail its corresponding probe. Original installed files
+remain unchanged. The relocated executable runs again after removing all
+producer and installed sources and package archives. CI requires and uploads
+`build/recursive-callables/rust.json`.
+
 ### Staged WIT callable projection
 
 The separate component projection probe requires no Lean compiler:

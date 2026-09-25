@@ -158,7 +158,10 @@ test("recursive Cargo evidence binds installed archives, typed callers and uncha
 		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
 	}
 	for(const cell of cells.filter(cell => cell.profile === "rust" && cell.shape === "recursive" && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["rust-recursive-callables-installed"]);
+	}
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	assert.ok(workflow.includes("LEAN_BRIDGE_RUST_GRAPH_PACKAGE_TEST=1 node --test tests/rust-graph-package.test.mjs"));
 	assert.ok(workflow.includes("test -s build/recursive/rust-packages.json"));

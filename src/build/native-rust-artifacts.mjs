@@ -8,6 +8,8 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { compileCopiedRustModel } from "../backends/rust/copied-model.mjs";
 import { compileCopiedRustGraphPackageModel } from "../backends/rust/copied-graph-package.mjs";
+import { compileCallableRustGraphPackageModel } from "../backends/rust/callable-graph-model.mjs";
+import { nativeGraphProjectionSources } from "./native-graph-sources.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from "./native-artifacts.mjs";
 
 /**
@@ -21,7 +23,9 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
 export const ordinaryRustEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true });
-	const projection = model.copiedGraph ? compileCopiedRustGraphPackageModel(model.bindingIr) : compileCopiedRustModel(model.bindingIr);
+	const projection = model.copiedGraph
+		? (model.copiedGraph.callbacks ? compileCallableRustGraphPackageModel : compileCopiedRustGraphPackageModel)(model.bindingIr)
+		: compileCopiedRustModel(model.bindingIr);
 	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
 	const copiedGraph = model.copiedGraph ? { schemaVersion: 1, layoutSha256: projection.layoutSha256 } : undefined;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
@@ -31,6 +35,8 @@ export const ordinaryRustEvidence = async ({ nativeRoot, runtimeRoot, adapterRoo
 		|| adapter.library !== `lib${prefix}.so`
 		|| (copiedGraph ? canonicalJson(adapter.copiedGraph ?? null) !== canonicalJson(copiedGraph) : adapter.copiedGraph !== undefined)
 		|| (await nativeArtifactPaths(adapterRoot)).some(path => path !== "native-c-adapter.json" && !Object.hasOwn(adapter.files, path))) throw new Error("Rust C adapter differs from compiled component");
+	if(copiedGraph) for(const [path, source] of Object.entries(nativeGraphProjectionSources(model, receipt)))
+		if((await readFile(join(adapterRoot, path), "utf8")) !== source) throw new Error(`Generated Rust graph adapter source differs: ${path}`);
 	const evidence = { runtimeIdentity: identity, componentId: model.component.id
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, ...copiedGraph ? { copiedGraph } : {}

@@ -8,6 +8,7 @@ import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generateCopiedRustPackage, copiedRustLock } from "../backends/rust/copied-values.mjs";
 import { generateCopiedRustGraphPackage } from "../backends/rust/copied-graph-package.mjs";
+import { generateCallableRustGraphPackage } from "../backends/rust/callable-graph-package.mjs";
 import { auditRustPackage } from "../backends/rust/package-audit.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { ordinaryRustEvidence } from "./native-rust-artifacts.mjs";
@@ -33,7 +34,9 @@ export const projectOrdinaryRust = async ({ working, nativeRoot, runtimeRoot, ad
 	const { model, prefix, evidence, receipt } = await ordinaryRustEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version;
 	const root = join(working, "native/rust"), scratch = join(working, "rust-compiler");
-	const generate = model.copiedGraph ? generateCopiedRustGraphPackage : generateCopiedRustPackage;
+	const generate = model.copiedGraph
+		? model.copiedGraph.callbacks ? generateCallableRustGraphPackage : generateCopiedRustGraphPackage
+		: generateCopiedRustPackage;
 	const files = generate(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) });
 	auditRustPackage(model.bindingIr, files);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
