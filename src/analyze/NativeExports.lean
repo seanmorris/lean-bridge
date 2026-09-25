@@ -425,16 +425,10 @@ partial def componentCopiedType (value : Json) : MetaM Json := do
 def componentType (value : Json) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption != some "callback" then
     return ← componentCopiedType value
-  unless (value.getObjValAs? String "kind").toOption == some "callback" do
-    throwError "components require primitives or synchronous primitive callables"
   let parameters ← ofExcept <| value.getObjValAs? (Array Json) "parameters"
   let result ← ofExcept <| value.getObjVal? "result"
-  let scalar (type : Json) : MetaM Json := do
-    unless (type.getObjValAs? String "kind").toOption == some "primitive" do
-      throwError "component callable arguments and results must be primitive"
-    return obj [("kind", str "primitive"), ("name", ← ofExcept <| type.getObjVal? "name")]
-  return obj [("kind", str "callback"), ("parameters", toJson (← parameters.mapM scalar)),
-    ("result", ← scalar result)]
+  return obj [("kind", str "callback"), ("parameters", toJson (← parameters.mapM componentCopiedType)),
+    ("result", ← componentCopiedType result)]
 
 def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Json × String × Json) :=
   forallTelescopeReducing type fun arguments result => do

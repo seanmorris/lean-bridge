@@ -16,6 +16,8 @@ import { assertComponentRecordAbi, componentRecordAbi, componentCompoundAbi, com
 import { componentRecordLeanSource } from "./component-record-adapters.mjs";
 import { assertComponentRecursiveAbi, componentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
+import { assertComponentStructuredCallableAbi, componentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
+import { componentStructuredCallableLeanSource } from "./component-structured-callable-lean.mjs";
 
 const primitiveLeanTypes = new Map([
 	["unit", "Unit"], ["bool", "Bool"], ["uint8", "UInt8"], ["uint16", "UInt16"]
@@ -128,8 +130,9 @@ export const validateCompilerAdapterPlan = plan => {
 		if(item.leanEffect !== null && !new Set(["IO", "Task"]).has(item.leanEffect)) fail("invalid-compiler-adapter-plan", "compiler adapter effect is unsupported");
 		if((item.resultMode === "promise") !== (item.leanEffect !== null)) fail("invalid-compiler-adapter-plan", "promise adapters require IO or Task");
 	}
-	const callable = plan.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(plan.privateAbi.version);
-	if(callable) assertComponentCallableAbi(plan.privateAbi);
+	const callable = [3, componentStructuredCallableAbi].includes(plan.privateAbi.version), copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(plan.privateAbi.version);
+	if(plan.privateAbi.version === componentStructuredCallableAbi) assertComponentStructuredCallableAbi(plan.privateAbi);
+	else if(callable) assertComponentCallableAbi(plan.privateAbi);
 	else if(plan.privateAbi.version === componentRecursiveAbi) assertComponentRecursiveAbi(plan.privateAbi);
 	else if([componentRecordAbi, componentCompoundAbi, componentNominalAbi].includes(plan.privateAbi.version)) assertComponentRecordAbi(plan.privateAbi);
 	else if(copied) assertComponentCopiedAbi(plan.privateAbi);
@@ -159,6 +162,11 @@ const renderLeanSource = ({ imports, exports, module, privateAbi }) => {
 		, `namespace ${module}`
 		, ""
 	];
+	if(privateAbi.version === componentStructuredCallableAbi)
+	{
+		lines.push(...componentStructuredCallableLeanSource(privateAbi, exports), `end ${module}`, "");
+		return lines.join("\n");
+	}
 	if([componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(privateAbi.version))
 	{
 		const generate = privateAbi.version === componentRecursiveAbi ? componentRecursiveLeanSource : componentRecordLeanSource;

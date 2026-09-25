@@ -10,9 +10,10 @@ import { assertComponentCopiedBindings, componentCopiedAbi, componentCopiedDispa
 import { sha256 } from "../capsule/node.mjs";
 import { componentRecordAbi, componentRecordDispatch, componentCompoundAbi, componentCompoundDispatch, componentNominalAbi, componentNominalDispatch, componentRecordDefinitions, assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
+import { componentStructuredCallableAbi, componentStructuredCallableDispatch, componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from "../abi/component-structured-callables.mjs";
 
 /**
- * Admit scalar or primitive callable declarations and derive their private ABI.
+ * Derive private scalar, copied-value or copied-payload callable protocols.
  *
  * @param document - Validated compiler-owned Binding IR.
  */
@@ -23,14 +24,20 @@ export const createComponentPrivateAbi = document => {
 	const compounds = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(compound))
 		|| document.types.some(type => type.fields.some(field => compound(field.type)));
 	const copied = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(type => type.kind === "apply"));
-	const callbacks = document.types.filter(type => type.kind === "callback").map(type => {
+	const callbackTypes = document.types.filter(type => type.kind === "callback");
+	const structured = callbackTypes.length > 0 && (records || nominal || copied
+		|| callbackTypes.some(type => [...type.callable.parameters.map(item => item.type), type.callable.result.type].some(type => type.kind !== "primitive")));
+	const definitions = structured ? componentRecordDefinitions({ types: document.types.filter(type => type.kind !== "callback") }, true) : null;
+	const callbacks = callbackTypes.map(type => {
 		const signature = { parameters: type.callable.parameters.map(parameter => parameter.type), result: type.callable.result.type };
-		return { id: type.id, key: sha256(componentCallableSignatureText(signature)).slice(0, 40), ...signature };
+		const key = structured ? componentStructuredCallableSignatureText(signature, definitions) : componentCallableSignatureText(signature);
+		return { id: type.id, key: sha256(key).slice(0, 40), ...signature };
 	});
 	const abi = {
-		version: callbacks.length ? 3 : nominal ? componentNominalAbi : compounds ? componentCompoundAbi : records ? componentRecordAbi : copied ? componentCopiedAbi : 2
-		, dispatch: callbacks.length ? "scalar-callable-frame-v1" : nominal ? componentNominalDispatch : compounds ? componentCompoundDispatch : records ? componentRecordDispatch : copied ? componentCopiedDispatch : "scalar-frame-v2"
+		version: structured ? componentStructuredCallableAbi : callbacks.length ? 3 : nominal ? componentNominalAbi : compounds ? componentCompoundAbi : records ? componentRecordAbi : copied ? componentCopiedAbi : 2
+		, dispatch: structured ? componentStructuredCallableDispatch : callbacks.length ? "scalar-callable-frame-v1" : nominal ? componentNominalDispatch : compounds ? componentCompoundDispatch : records ? componentRecordDispatch : copied ? componentCopiedDispatch : "scalar-frame-v2"
 		, ...(callbacks.length ? { callbacks } : {})
+		, ...(structured ? { types: definitions } : {})
 		, ...(!callbacks.length && nominal ? { types: componentRecordDefinitions(document, true) } : (records || compounds) && !callbacks.length ? { records: componentRecordDefinitions(document) } : {})
 		, exports: document.declarations.map(declaration => ({
 			bindingId: declaration.id
@@ -39,7 +46,8 @@ export const createComponentPrivateAbi = document => {
 			, result: declaration.result.type
 			, resultMode: declaration.resultMode }))
 	};
-	if(callbacks.length) assertComponentCallableBindings(abi, document);
+	if(structured) assertComponentStructuredCallableBindings(abi, document);
+	else if(callbacks.length) assertComponentCallableBindings(abi, document);
 	else if(nominal || records || compounds)
 	{
 		try

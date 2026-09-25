@@ -111,6 +111,18 @@ test("WIT recursive tables record installed copied values and retain callback ga
 	assert.doesNotMatch(reference, /Recursive values in the remaining profiles/u);
 });
 
+test("npm copied callback rows include all nine shapes and retain resource exclusions", async () => {
+	const source = await readFile("docs/javascript-typescript.md", "utf8");
+	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum", "Recursive copied structures"])
+	{
+		const mapping = row(source, shape);
+		assert.match(mapping, /callback input, callback result/u);
+		assert.doesNotMatch(mapping, /Not audited|rejected/u);
+	}
+	assert.match(source, /npm-structured-callables-20260925\.md/u);
+	assert.match(source, /resource identities cannot be fields or elements/u);
+});
+
 test("Perl copied callback rows retain recursive and owned-resource exclusions", async () => {
 	const source = await readFile("docs/consume/perl.md", "utf8");
 	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
@@ -284,22 +296,22 @@ test("regeneration cannot rewrite installation commands or swallow the next sect
 	assert.doesNotMatch(result, /old table/u);
 });
 
-test("npm compound mappings have installed value coverage without promoting native or callable positions", async () => {
+test("npm compound mappings preserve independently evidenced value and callback coverage", async () => {
 	const source = await readFile("docs/javascript-typescript.md", "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
-		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+	{
+		assert.match(row(source, lean), /\(input, result, field, callback input, callback result\)/u);
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u);
+	}
 	for(const profile of ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"])
 		for(const path of ["ordinary-source", "reviewed-ir"])
 			for(const shape of ["option", "result", "tuple"])
 				for(const position of ["parameter", "result", "field", "callback-parameter", "callback-result"])
 				{
 					const cell = cells.find(cell => cell.id === `${profile}/${shape}/${path}/${position}`);
-					if(position.startsWith("callback")) assert.notEqual(cell.stages.installedExecution.state, "passed");
-					else
-					{
-						assert.equal(cell.stages.installedExecution.state, "passed");
-						assert.deepEqual(cell.stages.installedExecution.evidence, ["npm-compounds-installed"]);
-					}
+					assert.equal(cell.stages.installedExecution.state, "passed");
+					assert.deepEqual(cell.stages.installedExecution.evidence,
+						[position.startsWith("callback") ? "npm-structured-callables-installed" : "npm-compounds-installed"]);
 				}
 });
 

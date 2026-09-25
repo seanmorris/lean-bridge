@@ -116,6 +116,21 @@ jobs:
           sudo apt-get update && sudo apt-get install -y libgmp-dev
           source scripts/env.sh
           node --test --test-concurrency=1 tests/native-recursive-transport.test.mjs tests/native-allocation-guard.test.mjs tests/native-graph-model.test.mjs
+      - name: Check structured callback allocation recovery and shared-runtime lifetime
+        env:
+          LEAN_BRIDGE_STRUCTURED_CALLABLE_WASM_TEST: "1"
+        run: |
+          source scripts/env.sh
+          node --test tests/component-structured-callable-wasm.test.mjs
+          test -s build/structured-callables/npm-wasm/report.json
+      - name: Preserve structured callback transport observations
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: structured-callable-wasm-${{ github.sha }}-${{ github.run_attempt }}
+          path: build/structured-callables/npm-wasm/report.json
+          if-no-files-found: error
+          retention-days: ${{ env.PART_RETENTION_DAYS }}
 
   spatial:
     name: Startup and composition profiles

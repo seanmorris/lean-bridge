@@ -14,6 +14,7 @@ import { assertComponentCopiedBindings, componentCopiedAbi } from "../abi/compon
 import { compileComponentCopiedCall } from "./component-copied-runtime.mjs";
 import { componentRecordAbi, componentCompoundAbi, componentNominalAbi, assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { componentRecursiveAbi, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
+import { componentStructuredCallableAbi, assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../abi/component-structured-callables.mjs";
 
 const encoder = new TextEncoder();
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
@@ -99,13 +100,19 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 		const record = { fingerprint, promise: null, linking: false };
 		loaded.set(descriptor.id, record);
 		record.promise = (async () => {
-			const callable = descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(descriptor.privateAbi.version);
+			const structured = descriptor.privateAbi.version === componentStructuredCallableAbi;
+			const callable = structured || descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(descriptor.privateAbi.version);
 			if(callable)
 			{
 				if(!callables) throw new Error("Shared runtime lacks the component callable ABI; rebuild it");
-				assertComponentCallableBindings(descriptor.privateAbi, descriptor.bindingIr);
+				(structured ? assertComponentStructuredCallableBindings : assertComponentCallableBindings)(descriptor.privateAbi, descriptor.bindingIr);
+				if(structured && (!module._bridge_recursive_abi || module._bridge_recursive_abi() !== 1
+					|| ["frame_validate", "frame_clear", "receipt_count", "receipt_data"].some(name => typeof module[`_bridge_recursive_${name}`] !== "function"))) throw new Error("Shared runtime lacks the component recursive callable ABI; rebuild it");
 				for(const signature of descriptor.privateAbi.callbacks)
-					if((await digest(encoder.encode(componentCallableSignatureText(signature)))).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
+				{
+					const signatureText = structured ? componentStructuredCallableSignatureText(signature, descriptor.privateAbi.types) : componentCallableSignatureText(signature);
+					if((await digest(encoder.encode(signatureText))).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
+				}
 			}
 			else if(copied)
 			{
@@ -171,7 +178,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 						const name = module._malloc(symbol.length);
 						if(!name)
 						{
-							if(copied)
+							if(copied || callable)
 							{ new DataView(module.HEAP8.buffer).setUint32(frame + 8, 5, true); return 5; }
 							throw new Error("Component call allocation failed");
 						}
@@ -181,7 +188,16 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 						catch(error)
 { trapped = true; poisoned = true; callables?.poison(); throw error; }
 						finally
-{ if(!trapped) module._free(name); }
+						{
+							// A host dispatch can retire the heap without a Wasm trap.
+							// Do not reenter its allocator while unwinding that call.
+							let available = !trapped;
+							try
+							{ assertOpen(); }
+							catch
+							{ available = false; }
+							if(available) module._free(name);
+						}
 					}];
 				}));
 				if(callable) return callables.bind(descriptor.privateAbi, operations);

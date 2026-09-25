@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeNpmStructuredCallables } from "./npm-structured-callable-source-history.mjs";
 
 export const perlStructuredCallableHistoryPath = "docs/evidence/perl-structured-callable-integration-20260925.json";
 export const perlStructuredCallableChangedPaths = [
@@ -70,6 +71,7 @@ export const reversePerlStructuredCallableUpdate = (source, update) => {
  * @param expected - Optional intermediate identity at which to stop.
  */
 export const beforePerlStructuredCallables = (path, source, expected) => {
+	source = beforeNpmStructuredCallables(path, source, expected);
 	if(sha256(source) === expected || !perlStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(perlStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);

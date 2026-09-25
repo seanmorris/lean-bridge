@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertPerlStructuredCallableExecution, assertPerlStructuredCallableIntegration, perlStructuredCallableExecutionPath } from "./helpers/perl-structured-callable-evidence.mjs";
 import { beforePerlStructuredCallables, perlStructuredCallableHistoryPath, reversePerlStructuredCallableUpdate } from "./helpers/perl-structured-callable-source-history.mjs";
+import { beforeNpmStructuredCallables } from "./helpers/npm-structured-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -70,7 +71,7 @@ test("Perl structured source history preserves unrelated source drift", async ()
 	const record = await json(perlStructuredCallableHistoryPath);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeNpmStructuredCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePerlStructuredCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePerlStructuredCallables(update.path, source)), update.previousSha256);
 		assert.notEqual(sha256(beforePerlStructuredCallables(update.path, source + "\n// unrelated\n")), update.previousSha256);

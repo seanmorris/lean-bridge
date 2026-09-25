@@ -158,6 +158,30 @@ export const checkInstalledScalars = async (t, fixture) => {
 	await assert.rejects(() => compile(fixture, source, join(scratch, "mismatch"), true), { code: "reviewed-ir-source-mismatch" });
 	await assert.rejects(lstat(join(scratch, "mismatch/output")), { code: "ENOENT" });
 	await rename(source, join(scratch, "source-hidden"));
+	if(fixture.removeProducer)
+	{
+		for(const build of builds)
+		{
+			const { release, path } = build, incoming = join(scratch, `incoming-${path}`), handoff = join(scratch, `handoff-${path}`);
+			await mkdir(incoming);
+			for(const file of [release.report.runtime.archive, release.report.package.archive, "component-package-receipt.json", "verify-component-package-receipt.mjs"])
+				await cp(join(release.output, file), join(incoming, file));
+			await verifyComponentPackageReceipt({ receiptPath: join(incoming, "component-package-receipt.json") });
+			await rename(incoming, handoff);
+			await verifyComponentPackageReceipt({ receiptPath: join(handoff, "component-package-receipt.json") });
+			build.release = { ...release, output: handoff
+				, runtimeArchive: join(handoff, release.report.runtime.archive)
+				, componentArchive: join(handoff, release.report.package.archive) };
+		}
+		// These are test-created, validated paths. Original verified archives have
+		// moved outside each producer directory before its source and builds go.
+		for(const name of ["source-hidden", "ordinary-source", "reviewed-ir", "mismatch"])
+		{
+			await rm(join(scratch, name), { recursive: true, force: true });
+			await assert.rejects(lstat(join(scratch, name)), { code: "ENOENT" });
+		}
+		await assert.rejects(lstat(source), { code: "ENOENT" });
+	}
 	const runs = [];
 	for(const { path, release } of builds)
 	{
@@ -165,7 +189,8 @@ export const checkInstalledScalars = async (t, fixture) => {
 		await mkdir(bin, { recursive: true });
 		await symlink(process.execPath, join(bin, "node"));
 		await writeFile(join(root, "package.json"), '{"private":true,"type":"module"}');
-		await cp(join(repository, `tests/fixtures/${fixture.consumer}`), join(root, "checks.mjs"));
+		const consumerSources = [...(fixture.consumerPrelude ?? []), fixture.consumer];
+		await writeFile(join(root, "checks.mjs"), (await Promise.all(consumerSources.map(path => readFile(join(repository, "tests/fixtures", path), "utf8")))).join("\n"));
 		await writeFile(join(root, "run.mjs"), `import * as api from ${JSON.stringify(fixture.name)};\nimport { ${fixture.check} } from "./checks.mjs";\nconsole.log(JSON.stringify(${fixture.check}(api)));\n`);
 		const framework = browserNames.length ? await browserFrameworkArchives(root) : [];
 		const npm = await realpath(join(process.execPath, "../../bin/npm"));
@@ -175,6 +200,20 @@ export const checkInstalledScalars = async (t, fixture) => {
 		await writeFile(join(root, "index.ts"), fixture.typescript);
 		await run(process.execPath, [join(repository, "node_modules/typescript/lib/tsc.js"), "--strict", "--skipLibCheck", "false", "--target", "ES2022", "--module", "NodeNext", "--lib", "ES2022,DOM,ESNext.Disposable", "index.ts"], root, clean);
 		await run(process.execPath, ["index.js"], root, clean);
+		let documentation;
+		if(fixture.documentation)
+		{
+			const example = await fixture.documentation();
+			await writeFile(join(root, "documentation.mjs"), example.source);
+			for(let repetition = 0; repetition < 2; repetition++)
+			{
+				const output = await run(process.execPath, ["documentation.mjs"], root, clean);
+				assert.equal(output.stdout, example.stdout); assert.equal(output.stderr, "");
+			}
+			documentation = { path: example.path, sourceSha256: sha256(example.source)
+				, stdout: example.stdout, stderr: "", executions: 2
+				, installedPublicApi: true };
+		}
 		const browsers = await browserChecks(fixture, root, result);
 		const out = join(repository, `build/${fixture.reportDir}`, path);
 		await mkdir(out, { recursive: true });
@@ -185,7 +224,9 @@ export const checkInstalledScalars = async (t, fixture) => {
 			, consumerSha256: sha256(await readFile(join(root, "checks.mjs")))
 			, offlineInstall: true, compilerFreePath: true
 			, sourceRelocatedBeforeInstallation: true
+			, ...(fixture.removeProducer ? { sourceRemovedBeforeInstallation: true, producerBuildsRemovedBeforeInstallation: true, packagesRelocatedBeforeInstallation: true } : {})
 			, typescript: { strict: true, executed: true }
+			, ...(documentation ? { documentation } : {})
 			, result
 			, browsers
 			, receipt: release.report

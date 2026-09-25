@@ -34,7 +34,7 @@ test("callable compiler plans and schemas agree on carriers and closed signature
 	assert.match(c, /if \(status\) \{ lean_dec\(closure\); return status; \}/);
 });
 
-test("callable admission rejects changed lifetime, ownership, effects and compound signatures", () => {
+test("callable admission rejects changed semantics and preserves the scalar-only ABI contract", () => {
 	const ir = source(), abi = createComponentPrivateAbi(ir);
 	assertComponentCallableBindings(abi, ir);
 	for(const mutate of [
@@ -53,7 +53,8 @@ test("callable admission rejects changed lifetime, ownership, effects and compou
 	}
 	const compound = source();
 	compound.types[0].callable.result.type = { kind: "apply", constructor: "array", arguments: [{ kind: "primitive", name: "uint32" }] };
-	assert.throws(() => createComponentPrivateAbi(compound), { code: "invalid-component-callable-abi" });
+	assert.throws(() => assertComponentCallableBindings(abi, compound), { code: "invalid-component-callable-abi" });
+	assert.equal(createComponentPrivateAbi(compound).version, 9);
 });
 
 const fixture = async (callable = true) => {

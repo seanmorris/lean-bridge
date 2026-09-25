@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertComponentStructuredCallableBindings } from "../src/abi/component-structured-callables.mjs";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
@@ -69,7 +70,7 @@ test("typed List adapters never inspect cons tags and bound intermediate output"
 	}
 });
 
-test("native and PHP-Wasm models preserve Lists; host projections opt in and callable admission stays closed", () => {
+test("native and PHP-Wasm models preserve Lists; npm callbacks use structured admission", () => {
 	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
 	const type = { kind: "list", element: projection.result, abi: { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true } };
 	validateNativeType(type);
@@ -87,7 +88,9 @@ test("native and PHP-Wasm models preserve Lists; host projections opt in and cal
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
 		if(position === "parameter") callback.callable.parameters[0].type = list(primitive("uint32"));
 		else callback.callable.result.type = list(primitive("uint32"));
-		assert.throws(() => createComponentPrivateAbi(ir));
+		const admitted = createComponentPrivateAbi(ir);
+		assert.equal(admitted.version, 9);
+		assertComponentStructuredCallableBindings(admitted, ir);
 	}
 });
 

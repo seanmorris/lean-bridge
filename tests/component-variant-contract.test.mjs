@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertComponentStructuredCallableBindings } from "../src/abi/component-structured-callables.mjs";
 import { assertRecursiveSourceHistory } from "./helpers/recursive-source-history.mjs";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
@@ -138,7 +139,7 @@ test("missing nominal runtime rejects before component code is fetched", async t
 	assert.equal(reads, 0);
 });
 
-test("variant payloads do not bypass primitive-only callable admission", () => {
+test("variant callbacks use structured admission without widening the primitive ABI", () => {
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
@@ -146,7 +147,9 @@ test("variant payloads do not bypass primitive-only callable admission", () => {
 		ir.types.push(variantReviewedIr().types.find(type => type.id === ref.id));
 		if(position === "parameter") callback.callable.parameters[0].type = ref;
 		else callback.callable.result.type = ref;
-		assert.throws(() => createComponentPrivateAbi(ir));
+		const admitted = createComponentPrivateAbi(ir);
+		assert.equal(admitted.version, 9);
+		assertComponentStructuredCallableBindings(admitted, ir);
 	}
 });
 

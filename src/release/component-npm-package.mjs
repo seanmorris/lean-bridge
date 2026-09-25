@@ -23,6 +23,7 @@ import { assertComponentCallableBindings, componentCallableSignatureText } from 
 import { assertComponentCopiedBindings } from "../abi/component-copied.mjs";
 import { assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
+import { assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../abi/component-structured-callables.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { componentNpmIdentity, validateComponentPackageReceipt } from "./component-package-receipt.mjs";
 import { writeNpmPackageSet } from "./package-set-assembly.mjs";
@@ -127,10 +128,14 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, readFile(join(runtime, "main.wasm"))
 	]);
 	const artifact = bundle.manifest.files.find(item => item.role === "component");
-	if(abi.version === 3)
+	if([3, 9].includes(abi.version))
 	{
-		assertComponentCallableBindings(abi, ir);
-		for(const signature of abi.callbacks) if(sha256(componentCallableSignatureText(signature)).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
+		(abi.version === 9 ? assertComponentStructuredCallableBindings : assertComponentCallableBindings)(abi, ir);
+		for(const signature of abi.callbacks)
+		{
+			const signatureText = abi.version === 9 ? componentStructuredCallableSignatureText(signature, abi.types) : componentCallableSignatureText(signature);
+			if(sha256(signatureText).slice(0, 40) !== signature.key) throw new Error("Component callback signature key mismatch");
+		}
 	}
 	else if(abi.version === 4) assertComponentCopiedBindings(abi, ir);
 	else if([5, 6, 7].includes(abi.version)) assertComponentRecordBindings(abi, ir);
@@ -141,19 +146,19 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		for(const declaration of ir.declarations) assertComponentSignature(declaration);
 		for(const declaration of abi.exports) assertComponentSignature(declaration);
 	}
-	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs").replaceAll("../abi/component-recursive.mjs", "./component-recursive.mjs").replaceAll("../abi/component-recursive-abi.mjs", "./component-recursive-abi.mjs");
+	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs").replaceAll("../abi/component-recursive.mjs", "./component-recursive.mjs").replaceAll("../abi/component-recursive-abi.mjs", "./component-recursive-abi.mjs").replaceAll("../abi/component-structured-callables.mjs", "./component-structured-callables.mjs");
 	const runtimeSource = relocate(await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8"));
 	const scalarSource = await readFile(new URL("../abi/component-scalars.mjs", import.meta.url), "utf8");
 	const codecSource = (await readFile(new URL("./component-scalar-codec.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
 	if(!mainModule.includes(Buffer.from("bridge_scalar_call")) || !mainModule.includes(Buffer.from("bridge_scalar_frame_clear"))) throw new Error("Prepared runtime lacks scalar ABI 2; rebuild the shared runtime");
 	const runtimeExports = new Set(WebAssembly.Module.exports(new WebAssembly.Module(mainWasm)).map(item => `${item.kind}:${item.name}`));
-	if(abi.version === 3 && ["bridge_callable_abi", "bridge_callable_invoke", "bridge_callable_release", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component callable ABI; rebuild the shared runtime");
+	if([3, 9].includes(abi.version) && ["bridge_callable_abi", "bridge_callable_invoke", "bridge_callable_release", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component callable ABI; rebuild the shared runtime");
 	if([4, 5, 6, 7].includes(abi.version) && ["bridge_copied_abi", "bridge_copied_frame_validate", "bridge_copied_validate", "bridge_copied_decode", "bridge_copied_encode", "bridge_copied_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component copied ABI; rebuild the shared runtime");
 	if([5, 6, 7].includes(abi.version) && ["bridge_record_abi", "bridge_record_frame_validate", "bridge_record_children_validate", "bridge_record_children_allocate", "bridge_record_encode_leaf", "bridge_record_slot_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component record ABI; rebuild the shared runtime");
 	const side = new WebAssembly.Module(await readFile(join(bundle.root, artifact.path)));
 	if([6, 7].includes(abi.version) && ["bridge_compound_abi", "bridge_compound_frame_validate", "bridge_compound_children_validate", "bridge_compound_children_allocate"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component compound ABI; rebuild the shared runtime");
 	if(abi.version === 7 && ["bridge_nominal_abi", "bridge_nominal_frame_validate", "bridge_nominal_children_validate", "bridge_nominal_children_allocate"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component nominal ABI; rebuild the shared runtime");
-	if(abi.version === 8 && ["abi", "frame_validate", "arena_open", "children_allocate", "encode_leaf", "receipt_count", "receipt_data", "frame_clear"].some(name => !runtimeExports.has(`function:bridge_recursive_${name}`) || !mainModule.includes(Buffer.from(`bridge_recursive_${name}`)))) throw new Error("Prepared runtime lacks the component recursive ABI; rebuild the shared runtime");
+	if([8, 9].includes(abi.version) && ["abi", "frame_validate", "arena_open", "children_allocate", "encode_leaf", "receipt_count", "receipt_data", "frame_clear"].some(name => !runtimeExports.has(`function:bridge_recursive_${name}`) || !mainModule.includes(Buffer.from(`bridge_recursive_${name}`)))) throw new Error("Prepared runtime lacks the component recursive ABI; rebuild the shared runtime");
 	const sideExports = new Set(WebAssembly.Module.exports(side).map(item => `${item.kind}:${item.name}`));
 	for(const item of WebAssembly.Module.imports(side))
 	{
@@ -174,6 +179,8 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, ["internal/component-scalar-codec.mjs", codecSource]
 		, ["internal/component-callables.mjs", await readFile(new URL("../abi/component-callables.mjs", import.meta.url))]
 		, ["internal/component-callable-runtime.mjs", relocate(await readFile(new URL("./component-callable-runtime.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-structured-callables.mjs", await readFile(new URL("../abi/component-structured-callables.mjs", import.meta.url))]
+		, ["internal/component-structured-callable-runtime.mjs", relocate(await readFile(new URL("./component-structured-callable-runtime.mjs", import.meta.url), "utf8"))]
 		, ["internal/component-copied.mjs", await readFile(new URL("../abi/component-copied.mjs", import.meta.url))]
 		, ["internal/component-records.mjs", await readFile(new URL("../abi/component-records.mjs", import.meta.url))]
 		, ["internal/component-copied-codec.mjs", relocate(await readFile(new URL("./component-copied-codec.mjs", import.meta.url), "utf8"))]

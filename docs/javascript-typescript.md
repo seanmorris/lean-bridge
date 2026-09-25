@@ -163,7 +163,7 @@ Run `npx tsc --project tsconfig.json` again, but do not execute `dist/typecheck.
 
 ## Values and cleanup
 
-Packages can accept synchronous JavaScript functions and return callable Lean functions. TypeScript declarations describe their arguments and results using the same primitive mappings as ordinary calls. Callbacks must return a value immediately; returning a Promise is an error.
+Packages can accept synchronous JavaScript functions and return callable Lean functions. Arguments and results use the same primitive and copied-value mappings as ordinary calls, including recursive records and variants. Callbacks must return a value immediately; returning a Promise is an error.
 
 A callback is borrowed for its enclosing call. Lean cannot invoke it after that call ends. A returned Lean function owns a runtime lease: call `dispose()` when finished, or use TypeScript's `using` syntax. `disposed` reports its state; aliases share the same lease, and repeated disposal is harmless. The runtime also supplies `Symbol.dispose` and queued finalizer cleanup.
 
@@ -183,6 +183,59 @@ try {
 The runtime preserves callback exceptions after Lean releases its call frame. Calls allow up to 64 nested frames, 1,024 live borrowed callbacks, 1,024 owned Lean functions, and 16 MiB of copied payloads per call. A Wasm trap prevents further calls in that runtime. Each worker has its own runtime; functions and leases cannot be transferred with `postMessage`.
 
 For a Lean `Char` parameter, pass a string containing one Unicode scalar, such as `"a"`, `"🌱"`, or `"\0"`. A `Char` result uses the same representation. Empty strings, unpaired UTF-16 surrogates, and strings containing multiple scalars throw `TypeError`. TypeScript declares these values as `string`; the generated API checks the scalar constraint at runtime. See [characters and text](reference/types.md#floating-point-text-and-bytes).
+
+### Structured callbacks
+
+Callbacks and returned functions can accept arrays, Lists, options, results,
+tuples, records, variants, aliases and finite recursive values. Use plain objects
+and arrays with the generated TypeScript types. Each crossing makes an independent
+copy, including values captured by a returned Lean function.
+
+For the `structured` package in the [publisher example](publish/npm.md#export-structured-callbacks),
+save `structured-callbacks.mjs`:
+
+```js
+import { callRecord, makeRecord, callRecursive } from "structured";
+
+const input = {
+  text: "copied",
+  rows: [{ tag: "none" }],
+  count: 1n,
+  nested: { tag: "some", value: { ok: [3n, undefined] } },
+};
+const changed = callRecord(input, value => ({ ...value, count: value.count + 1n }));
+const captured = makeRecord(changed);
+try {
+  changed.text = "changed after capture";
+  const result = captured(true, input);
+  console.log(result.text);
+  console.log(result.count.toString());
+} finally {
+  captured.dispose();
+}
+const leaf = callRecursive({ kind: "leaf", value: 19n }, tree => tree);
+console.log(leaf.kind);
+```
+
+Run `node structured-callbacks.mjs`. It prints `copied`, `2` and `leaf` on separate
+lines. Browser, React and worker imports use the same generated functions.
+
+Structured calls allow 128 value edges, 262,144 copied value slots and 16 MiB of
+copied slots and payloads per enclosing call. Callback inputs, replies and the
+final result all count toward that call's budget. Cycles, malformed properties,
+invalid tags and over-budget copies reject; a valid call can follow rejection.
+Native corruption or a Wasm trap retires the shared runtime. A callback's original
+thrown value survives cleanup, including `throw undefined`.
+
+Primitive and structured exports can share a package and runtime. Callables and
+resource identities cannot be fields or elements of copied values. A callback
+borrow expires when its enclosing call returns; Promise results and retained
+host callbacks remain unsupported.
+
+[Installed structured-callback checks](evidence/npm-structured-callables-20260925.md)
+cover both source paths in Node, strict TypeScript and three browser engines,
+including React and workers. The test executes the example above from the
+original installed archives after deleting the producer's source and build.
 
 ### Type conversions
 
@@ -208,23 +261,23 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Float` | `number` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | IEEE binary64 projected as number; preserves NaN classification, infinities and signed zero. Required: Preserve binary64 values, NaN classification, infinities and signed zero. |
 | `String` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Copied UTF-8 text, including BOM, NUL and supplementary characters. Required: Preserve Unicode scalar values and embedded NUL. Reject invalid encodings; declare byte and allocation limits. |
 | `ByteArray` | `Uint8Array` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Copied Uint8Array; no view into Lean memory. Required: Each byte is 0..255. Preserve zero bytes and owned result storage; declare copy limits. |
-| `Array α` | `ReadonlyArray<T> (supported copied elements)` (input, result, field); `readonly T[]; UInt32 arrays use readonly number[]` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Dense data arrays, recursively; holes, accessors, extra properties and cycles reject. Record elements and nested byte buffers are independent copies. No Wasm views or disposal. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
-| `Option α` | `{ readonly tag: "none" } \| { readonly tag: "some"; readonly value: T }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exact own tags preserve none, some Unit and every nested option. Null and omitted payloads reject. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
-| `Except ε α` | `{ readonly ok: T } \| { readonly error: E }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exactly one own data property selects ok or error, including Unit payloads. IR arguments are [success, error]; a domain error returns a value. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
-| `Prod α β / tuples` | `readonly [A, B] (nested binary products)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Exact dense ordinary arrays preserve two-element arity and source product nesting. Typed arrays, holes and flattened products reject. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
-| `Copied structure` | `Named readonly interface; copied plain object` (input, result, field); `Generated readonly record (Alpha: Payload)` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
-| `Type alias` | `Named TypeScript alias with the target’s ordinary JavaScript value representation` (input, result, field); `Resolved target type` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Compiler-authenticated names, targets and chains. Runtime validation and copied ownership follow the target; no wrapper, coercion or loss of exact primitive semantics. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
-| `Inductive sum` | `Named readonly discriminated union: { kind: "caseName", ...fields }` (input, result, field); `Generated tagged readonly union` (callback input, callback result) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Generator inspected (callback input, callback result) | Exact own data fields and a kind discriminator. Empty constructors remain distinct; Unit fields remain present. Return values are independent copies. Getters, inherited/extra/symbol fields, unknown constructors and malformed payloads reject. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
+| `Array α` | `ReadonlyArray<T> (supported copied elements)` (input, result, field); `ReadonlyArray<T> (ordinary dense Array)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Dense data arrays, recursively; holes, accessors, extra properties and cycles reject. Record elements and nested byte buffers are independent copies. No Wasm views or disposal. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Validate every element recursively, length and allocation limits. Array UInt32 alone does not cover Array α. |
+| `Option α` | `{ readonly tag: "none" } \| { readonly tag: "some"; readonly value: T }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact own tags preserve none, some Unit and every nested option. Null and omitted payloads reject. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Keep none, some unit and nested options distinct; do not flatten them all to null. |
+| `Except ε α` | `{ readonly ok: T } \| { readonly error: E }` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one own data property selects ok or error, including Unit payloads. IR arguments are [success, error]; a domain error returns a value. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve the success/error branch and both payload types. Lower Except ε α to IR result arguments [α, ε], in success/error order. |
+| `Prod α β / tuples` | `readonly [A, B] (nested binary products)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact dense ordinary arrays preserve two-element arity and source product nesting. Typed arrays, holes and flattened products reject. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve arity, nesting and per-position types; do not infer tuples from arbitrary arrays. |
+| `Copied structure` | `Named readonly interface; copied plain object` (input, result, field); `Named readonly interface (plain JavaScript object)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Encoding copies exactly the declared own data fields. Results own independent records, arrays and byte buffers. No disposal or Wasm memory access. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve every field and mutability rule. A Payload example is not evidence for arbitrary records. |
+| `Type alias` | `Named TypeScript alias with the target’s ordinary JavaScript value representation` (input, result, field); `Resolved target type with a named TypeScript alias` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Compiler-authenticated names, targets and chains. Runtime validation and copied ownership follow the target; no wrapper, coercion or loss of exact primitive semantics. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Resolve aliases without losing constraints, identity or ownership; reject alias cycles. |
+| `Inductive sum` | `Named readonly discriminated union: { kind: "caseName", ...fields }` (input, result, field); `Named tagged readonly union (plain JavaScript object)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exact own data fields and a kind discriminator. Empty constructors remain distinct; Unit fields remain present. Return values are independent copies. Getters, inherited/extra/symbol fields, unknown constructors and malformed payloads reject. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve constructor identity and payloads without exposing Lean constructor numbers. |
 | `Identity-bearing value` | No host mapping recorded | Ordinary source: Compilation rejected. Reviewed IR: Not audited | Required: Preserve cross-component identity and explicit disposal; reject stale or foreign resources. |
 | `Host function passed to Lean` | `Synchronous JavaScript function` (input) | Ordinary source: Installed checks passed (input); Compilation rejected (result, field, callback input, callback result). Reviewed IR: Installed checks passed (input); Not audited (result, field, callback input, callback result) | Borrowed until the outer call returns. A Promise result is rejected; the first thrown value is preserved. Required: Preserve argument/result types, re-entry, invocation count, self-disposal and errors. |
-| `List α` | `ReadonlyArray<T> (ordinary dense Array)` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Compilation rejected (callback input, callback result) | Preserve order, duplicates and every nesting level. Lists and Arrays remain distinct in the IR. Returned arrays and mutable payloads are independent copies. Dense own data elements only; holes, accessors, extra fields, typed arrays and cycles reject. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
+| `List α` | `ReadonlyArray<T> (ordinary dense Array)` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Preserve order, duplicates and every nesting level. Lists and Arrays remain distinct in the IR. Returned arrays and mutable payloads are independent copies. Dense own data elements only; holes, accessors, extra fields, typed arrays and cycles reject. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Preserve order, duplicates and nesting with a distinct list constructor. Validate all elements and copying limits; never expose Lean cons cells. |
 | `Char` | `string` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Exactly one Unicode scalar, not one UTF-16 code unit or one grapheme cluster. NUL and supplementary characters are preserved; empty strings, multiple scalars, unpaired surrogates and non-strings are rejected without coercion or normalization. TypeScript uses string with runtime validation. Exactly one Unicode scalar in a string; surrogates and multiple scalars reject. Required: 0..0x10FFFF excluding 0xD800..0xDFFF; not one UTF-16 code unit or an arbitrary string. |
 | `USize` | `number` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 32-bit compiled Lean target, 0..4294967295. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Unsigned number in the range of the 32-bit compiled Lean target. Required: Bind width to the compiled Lean target, not the consumer process; reject out-of-range values. |
 | `ISize` | `number` (input, result, field, callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | 32-bit compiled Lean target, -2147483648..2147483647. The range follows the compiled core, not the consuming process. Reject wrong types and out-of-range inputs before narrowing. Lean arithmetic retains word-width wraparound. Signed number in the range of the 32-bit compiled Lean target. Required: Bind signed width to the compiled Lean target and record architecture explicitly. |
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named recursive readonly types; ordinary objects and arrays` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Preserves constructor/field order, aliases and all copied containers. Shared subtrees copy independently; ancestor cycles reject. Output receipts require exact, disjoint, owned buffers. Invalid results or traps retire the shared runtime; bounded conversion failures recover. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named recursive readonly types; ordinary objects and arrays` (input, result, field); `Named recursive TypeScript types (finite plain objects and arrays)` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Preserves constructor/field order, aliases and all copied containers. Shared subtrees copy independently; ancestor cycles reject. Output receipts require exact, disjoint, owned buffers. Invalid results or traps retire the shared runtime; bounded conversion failures recover. Callback and captured values preserve constructor identity, Option presence and independent mutable storage. Original exceptions survive cleanup. Borrowed host callbacks expire when the enclosing call returns; returned Lean functions own disposable leases. Cycles, invalid fields and over-budget values reject; native corruption retires the shared runtime. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |
@@ -269,7 +322,7 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
 
-The ordinary component build path accepts primitives, concrete copied aliases, nested arrays and Lists, copied records, concrete tagged variants (including bounded recursive values), `Option`, `Except`, nested products, and synchronous functions with primitive arguments and results. Resources, `IO`, and `Task` remain unsupported. Copied containers and callables cannot yet share one component. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+The ordinary component build path accepts primitives, concrete copied aliases, nested arrays and Lists, copied records, concrete tagged variants (including bounded recursive values), `Option`, `Except`, nested products, and synchronous functions with primitive or copied arguments and results. Copied values, callbacks, and returned functions can share one component. Resources, `IO`, and `Task` remain unsupported. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
 
 ### Nested arrays
 
@@ -322,8 +375,8 @@ as do [Python](evidence/python-lists-20260920.md) and
 [native PHP](evidence/php-native-lists-20260921.md) and
 [PHP-Wasm](evidence/php-wasm-lists-20260921.md) and
 [WIT/WASI](evidence/wit-lists-20260921.md).
-Lists cannot contain callbacks
-or resources, or share a component with callable exports yet.
+Lists cannot contain callbacks or resources. A component can export both copied
+Lists and synchronous callbacks, including callbacks that take or return Lists.
 
 ### Copied records
 
@@ -346,8 +399,8 @@ Both source paths have [installed record checks](evidence/npm-records-20260920.m
 in Node, strict TypeScript and three browser engines, including React and workers.
 Generic, inherited and dependent records are not supported by this
 profile. Recursive copies use the graph transport described below.
-Records cannot contain callbacks or resources, or share a component
-with callable exports yet.
+Records cannot contain callbacks or resources. A component can export both copied
+records and synchronous callbacks with copied record arguments and results.
 
 ### Tagged variants
 
@@ -440,7 +493,9 @@ without following returned pointers.
 
 Both author paths have [installed recursive checks](evidence/npm-recursive-20260922.md)
 in Node, strict TypeScript, Chromium, Firefox and WebKit, including React and
-workers. Recursive support in the other consumer targets remains in progress.
+workers. All seventeen consumer profiles support recursive copied values in
+ordinary inputs, results and fields. npm also supports recursive values in
+[callbacks and returned functions](#structured-callbacks).
 
 ### Options, results and products
 

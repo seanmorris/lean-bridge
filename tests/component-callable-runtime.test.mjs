@@ -313,13 +313,61 @@ test("Wasm traps poison the shared callable runtime and stale leases cannot reen
 	assert.throws(() => closure(1), /poisoned/); assert.equal(closure.disposed, true);
 	assert.throws(() => f.runtime.assertOpen(), /poisoned/);
 	assert.equal(closure.dispose(), true); assert.equal(closure.dispose(), false);
-	assert.equal(f.counts().allocations, 0);
+	// A trapped heap is retired without following result pointers or reentering
+	// its allocator. The earlier successful lease creation was the only clear.
+	assert.ok(f.counts().allocations > 0); assert.equal(f.counts().clearCount, 1);
 });
 
 test("callable initialization rejects old runtimes and duplicate dispatchers", () => {
 	assert.throws(() => createComponentCallableRuntime({}), /lacks/);
 	const f = fixture(); assert.throws(() => createComponentCallableRuntime(f.module), /already initialized/);
 	assert.throws(() => createComponentCallableRuntime({ ...f.module, _bridge_callable_abi: () => 9 }), /version/);
+});
+
+test("cleanup failures preserve the first callback exception, including thrown undefined, and retire the heap", () => {
+	for(const original of [new Error("first callback error"), undefined, null])
+	{
+		let cleared = 0, freed = 0;
+		const cleanupError = new Error("frame cleanup failed");
+		const f = single((f, frame, signature) => {
+			f.invokeHost(f.read(frame, 1, "uint32"), signature, [1]);
+			f.module._bridge_scalar_frame_clear = () => { cleared++; throw cleanupError; };
+			f.module._free = () => { freed++; assert.fail("allocator called after failed cleanup"); };
+			return f.result(frame, "uint32", 0);
+		});
+		assert.throws(() => f.api.call("binding:0", [1, () => { throw original; }]), actual => actual === original);
+		assert.equal(cleared, 1); assert.equal(freed, 0);
+		assert.throws(() => f.runtime.assertOpen(), /poisoned/);
+	}
+});
+
+test("a cleanup failure after success is reported and does not reenter the allocator", () => {
+	const failure = new WebAssembly.RuntimeError("cleanup trap");
+	const f = single((f, frame) => f.result(frame, "uint32", 42));
+	f.module._bridge_scalar_frame_clear = () => { throw failure; };
+	f.module._free = () => assert.fail("free after cleanup trap");
+	assert.throws(() => f.api.call("binding:0", [1, value => value]), actual => actual === failure);
+	assert.throws(() => f.runtime.assertOpen(), /poisoned/);
+});
+
+test("invalid native scalar output poisons the shared heap before cleanup", () => {
+	const f = single((f, frame) => {
+		f.result(frame, "uint32", 42);
+		new DataView(f.module.HEAP8.buffer).setUint32(frame + 16, 999, true);
+		return 0;
+	});
+	f.module._bridge_scalar_frame_clear = () => assert.fail("clear of malformed native output");
+	f.module._free = () => assert.fail("free after malformed native output");
+	assert.throws(() => f.api.call("binding:0", [1, value => value]), /type mismatch/);
+	assert.throws(() => f.runtime.assertOpen(), /poisoned/);
+});
+
+test("closure argument errors survive failed cleanup of their pinned lease", () => {
+	const f = single(() => 1), closure = f.api.call("binding:1", []);
+	f.module._free = () => { throw new Error("free failed"); };
+	assert.throws(() => closure(-1), /uint32/);
+	assert.throws(() => f.runtime.assertOpen(), /poisoned/);
+	assert.equal(closure.dispose(), true);
 });
 
 test("sixteen-argument callbacks keep order across differently sized copied payloads", () => {

@@ -10,13 +10,28 @@ import { compileComponentCopiedGraph, componentRecursiveLimits } from "../abi/co
 import { componentRecursiveHelper, componentRecursiveTypes } from "./component-recursive-lean.mjs";
 
 /**
+ * Identify a shared copied-value walker after resolving transparent aliases.
+ *
+ * @param abi - Authenticated copied-value descriptor.
+ * @param type - Concrete payload root from this descriptor.
+ */
+export const componentRecursiveWalker = (abi, type) => {
+	const { resolve } = compileComponentCopiedGraph({ schemaVersion: 1, root: abi.exports[0].result, types: abi.types });
+	const value = resolve(type);
+	const reference = value.kind === "record" || value.kind === "variant" ? { kind: "named", id: value.id } : value;
+	return `recursive_${sha256(canonicalJson(reference)).slice(0, 20)}`;
+};
+
+/**
  * Validate every argument before allocating Lean objects. Transparent alias
  * chains resolve during generation and consume no runtime recursion depth.
  * Encoders consume each carrier and clean only their own initialized output.
  *
  * @param abi - Validated recursive private ABI, authenticated against public IR.
+ * @param options - Select shared codecs without ordinary exported call frames.
+ * @param options.exportFrames - Keep existing public frame generation by default.
  */
-export const generateComponentRecursiveAdapters = abi => {
+export const generateComponentRecursiveAdapters = (abi, { exportFrames = true } = {}) => {
 	const refs = componentRecursiveTypes(abi);
 	const { resolve } = compileComponentCopiedGraph({ schemaVersion: 1, root: abi.exports[0].result, types: abi.types });
 	const reference = type => {
@@ -176,7 +191,7 @@ export const generateComponentRecursiveAdapters = abi => {
 		}
 		lines.push("  lean_dec(value);", "  return status;", "}");
 	}
-	for(const item of abi.exports)
+	for(const item of exportFrames ? abi.exports : [])
 	{
 		lines.push(`extern lean_object *${item.symbol}_lean(${Array(Math.max(1, item.parameters.length)).fill("lean_object *").join(", ")});`
 			, `LEAN_EXPORT uint32_t ${item.symbol}(bridge_scalar_frame *frame) {`

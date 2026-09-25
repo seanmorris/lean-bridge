@@ -360,6 +360,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /test -s build\/compounds\/perl\.json/);
   assert.match(perlWorkflow, /test -s build\/lists\/perl\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs"));
+  assert.ok(workflow.includes("node --test tests/component-structured-callables.test.mjs"));
+  assert.ok(workflow.includes("test -s build/structured-callables/npm/report.json"));
+  const performanceWorkflow = await readFile(".github/workflows/performance.yml", "utf8");
+  assert.ok(performanceWorkflow.includes('LEAN_BRIDGE_STRUCTURED_CALLABLE_WASM_TEST: "1"'));
+  assert.ok(performanceWorkflow.includes("node --test tests/component-structured-callable-wasm.test.mjs"));
+  assert.ok(performanceWorkflow.includes("test -s build/structured-callables/npm-wasm/report.json"));
   assert.ok(workflow.includes("LEAN_BRIDGE_C_STRUCTURED_CALLABLE_TEST=1 node --test tests/c-structured-callables.test.mjs"));
   assert.match(workflow, /test -s build\/structured-callables\/c\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs"));
@@ -584,7 +590,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /node --test tests\/component-compounds\.test\.mjs/);
   assert.match(workflow, /test -s build\/compounds\/npm\/report\.json/);
   assert.match(workflow, /test -s build\/compounds\/recordless\/report\.json/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*build\/word-npm\/\n\s*build\/callables\/npm\/\n\s*build\/arrays\/npm\/\n\s*build\/records\/npm\/\n\s*build\/compounds\/\n\s*build\/lists\/npm\/\n\s*build\/variants\/npm\/\n\s*build\/aliases\/npm\/\n\s*build\/recursive\/npm\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/type-corpus\/reviewed-wasm-browser-javascript-browser-react-browser-worker-node-javascript-node-typescript\.json\n\s*build\/char-npm\/\n\s*build\/word-npm\/\n\s*build\/callables\/npm\/\n\s*build\/structured-callables\/npm\/\n\s*build\/arrays\/npm\/\n\s*build\/records\/npm\/\n\s*build\/compounds\/\n\s*build\/lists\/npm\/\n\s*build\/variants\/npm\/\n\s*build\/aliases\/npm\/\n\s*build\/recursive\/npm\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /node --test tests\/component-lists\.test\.mjs/);
   assert.match(workflow, /test -s build\/lists\/npm\/report\.json/);
   assert.match(workflow, /node --test tests\/component-variant-runtime\.test\.mjs tests\/component-variants\.test\.mjs/);

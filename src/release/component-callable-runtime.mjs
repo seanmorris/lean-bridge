@@ -7,6 +7,9 @@
 import { assertComponentCallableAbi, componentCallableCapacity, componentCallableDepth } from "../abi/component-callables.mjs";
 import { componentScalarAbi, scalarCopyLimit, scalarFrameHeaderBytes, scalarSlotBytes } from "../abi/component-scalars.mjs";
 import { readComponentScalarSlot, writeComponentScalarSlot } from "./component-scalar-codec.mjs";
+import { componentStructuredCallableAbi, assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
+import { createComponentRecursiveBudget } from "../abi/component-recursive.mjs";
+import { createComponentStructuredCallableProtocol } from "./component-structured-callable-runtime.mjs";
 
 const encoder = new TextEncoder();
 const required = ["_bridge_callable_abi", "_bridge_callable_invoke", "_bridge_callable_release", "_bridge_scalar_frame_validate", "_bridge_scalar_frame_clear", "_malloc", "_free"];
@@ -30,27 +33,48 @@ export const createComponentCallableRuntime = module => {
 		if(frame && !frame.failed)
 		{ frame.failed = true; frame.error = error; }
 	};
+	const cleanup = (operation, failing = false) => {
+		if(poisoned) return;
+		try
+		{ operation(); }
+		catch(error)
+		{ poisoned = true; if(!failing) throw error; }
+	};
+	const readNative = operation => {
+		try
+		{ return operation(); }
+		catch(error)
+		{
+			if(!(error instanceof RangeError && error.message === "Component copy budget exceeded")) poisoned = true;
+			throw error;
+		}
+	};
 	const allocate = bytes => {
 		if(!Number.isSafeInteger(bytes) || bytes < 0 || bytes > scalarCopyLimit) throw new RangeError("Component copy budget exceeded");
-		const pointer = module._malloc(Math.max(1, bytes));
+		let pointer;
+		try
+		{ pointer = module._malloc(Math.max(1, bytes)); }
+		catch(error)
+		{ poisoned = true; throw error; }
 		if(!pointer) throw new Error("Component allocation failed");
+		if(!Number.isInteger(pointer) || pointer < 0 || pointer % 8 || pointer + Math.max(1, bytes) > module.HEAP8.length)
+		{ poisoned = true; throw new Error("Invalid component allocation"); }
 		return pointer;
 	};
-	const charge = (frame, bytes) => {
-		if(bytes > frame.remaining) throw new RangeError("Component callable copy budget exceeded");
-		frame.remaining -= bytes;
-	};
+	const charge = (frame, bytes) => frame.budget.charge(bytes);
 	const withKind = (key, operation) => {
 		const bytes = encoder.encode(`${key}\0`), pointer = allocate(bytes.length);
+		let failing = false;
 		try
 		{ module.HEAP8.set(bytes, pointer); return operation(pointer); }
+		catch(error)
+		{ failing = true; throw error; }
 		finally
-		{ module._free(pointer); }
+		{ cleanup(() => module._free(pointer), failing); }
 	};
-	const release = state => {
-		if(state.disposed) return false;
-		state.disposed = true; leases.delete(state.token);
-		finalizer?.unregister(state);
+	const releaseNative = state => {
+		if(state.active || state.released) return;
+		state.released = true; leases.delete(state.token);
 		if(!poisoned)
 		{
 			try
@@ -58,6 +82,12 @@ export const createComponentCallableRuntime = module => {
 			catch(error)
 			{ poisoned = true; throw error; }
 		}
+	};
+	const release = state => {
+		if(state.disposed) return false;
+		state.disposed = true;
+		finalizer?.unregister(state);
+		releaseNative(state);
 		return true;
 	};
 	// Finalizers only enqueue work. Explicit dispose remains the deterministic API.
@@ -68,9 +98,10 @@ export const createComponentCallableRuntime = module => {
 			catch { /* The runtime is poisoned by release. */ }
 		});
 	}) : null;
-	const owned = (token, signature) => {
-		if(!tokenValid(token) || leases.has(token)) throw new TypeError("Invalid or duplicate Lean closure token");
-		const state = { token, signature, disposed: false };
+	const owned = (token, signature, protocol = null) => {
+		if(!tokenValid(token) || leases.has(token))
+		{ poisoned = true; throw new TypeError("Invalid or duplicate Lean closure token"); }
+		const state = { token, signature, disposed: false, active: 0, released: false };
 		if(leases.size >= componentCallableCapacity)
 		{
 			withKind(signature.key, key => module._bridge_callable_release(token, key));
@@ -82,7 +113,19 @@ export const createComponentCallableRuntime = module => {
 			const callable = (...args) => {
 				requireOpen();
 				if(state.disposed) throw new Error("Lean closure is disposed");
-				return withKind(signature.key, key => call(frame => module._bridge_callable_invoke(token, key, frame), signature, args, new Map()));
+				state.active++;
+				let failing = false;
+				try
+				{
+					return withKind(signature.key, key => {
+						const operation = frame => module._bridge_callable_invoke(token, key, frame);
+						return protocol ? protocol.call(operation, signature, args) : call(operation, signature, args, new Map());
+					});
+				}
+				catch(error)
+				{ failing = true; throw error; }
+				finally
+				{ state.active--; if(state.disposed) cleanup(() => releaseNative(state), failing); }
 			};
 			Object.defineProperties(callable, {
 				disposed: { get: () => state.disposed || poisoned }
@@ -93,15 +136,25 @@ export const createComponentCallableRuntime = module => {
 			return Object.freeze(callable);
 		}
 		catch(error)
-		{ release(state); throw error; }
+		{ cleanup(() => release(state), true); throw error; }
+	};
+	const register = (value, signature, scope, protocol = null) => {
+		if(typeof value !== "function") throw new TypeError("Expected a synchronous callback");
+		if(callbacks.size >= componentCallableCapacity || nextToken === 0xffffffff) throw new RangeError("Host callback registry is full or exhausted");
+		const token = ++nextToken;
+		callbacks.set(token, { value, signature, scope, protocol }); scope.callbacks.push(token);
+		return token;
 	};
 	const call = (operation, signature, args, types) => {
 		requireOpen();
 		if(!Array.isArray(args) || args.length !== signature.parameters.length) throw new TypeError(`Expected ${signature.parameters.length} arguments`);
 		if(frames.length >= componentCallableDepth) throw new RangeError("Component callable reentry limit (64) exceeded");
-		const scope = { failed: false, error: undefined, remaining: scalarCopyLimit, callbacks: [], allocations: [] };
-		let frame = 0, pendingLease = 0;
-		const arena = bytes => { const pointer = allocate(bytes); scope.allocations.push(pointer); return pointer; };
+		const scope = { failed: false, error: undefined, budget: createComponentRecursiveBudget(), callbacks: [], allocations: [], spans: [] };
+		let frame = 0, pendingLease = 0, failing = false;
+		const arena = bytes => {
+			const pointer = allocate(bytes); scope.allocations.push(pointer); scope.spans.push({ pointer, bytes: Math.max(1, bytes) }); return pointer;
+		};
+		scope.allocate = arena;
 		frames.push(scope);
 		try
 		{
@@ -114,10 +167,7 @@ export const createComponentCallableRuntime = module => {
 				let value = args[index];
 				if(type.kind === "named")
 				{
-					if(typeof value !== "function") throw new TypeError("Expected a synchronous callback");
-					if(callbacks.size >= componentCallableCapacity || nextToken === 0xffffffff) throw new RangeError("Host callback registry is full or exhausted");
-					const token = ++nextToken;
-					callbacks.set(token, { value, signature: types.get(type.id), scope }); scope.callbacks.push(token); value = token;
+					value = register(value, types.get(type.id), scope);
 				}
 				writeComponentScalarSlot(module, frame + scalarFrameHeaderBytes + index * scalarSlotBytes, type.kind === "named" ? "uint32" : type.name, value, bytes => { charge(scope, bytes); return arena(bytes); });
 			}
@@ -126,6 +176,7 @@ export const createComponentCallableRuntime = module => {
 			{ status = operation(frame); }
 			catch(error)
 			{ poisoned = true; throw error; }
+			requireOpen();
 			data = new DataView(module.HEAP8.buffer);
 			if(signature.result.kind === "named")
 			{
@@ -135,7 +186,7 @@ export const createComponentCallableRuntime = module => {
 				catch { /* The ordinary result check below reports malformed slots. */ }
 			}
 			if(status !== 0 || data.getUint32(frame + 8, true) !== 0) throw new Error(`Component callable call failed (${status})`);
-			const result = readComponentScalarSlot(module, frame + 16, signature.result.kind === "named" ? "uint32" : signature.result.name, bytes => charge(scope, bytes));
+			const result = readNative(() => readComponentScalarSlot(module, frame + 16, signature.result.kind === "named" ? "uint32" : signature.result.name, bytes => charge(scope, bytes)));
 			if(scope.failed) throw scope.error;
 			if(signature.result.kind === "named")
 			{
@@ -145,23 +196,17 @@ export const createComponentCallableRuntime = module => {
 			return result;
 		}
 		catch(error)
-		{ if(scope.failed) throw scope.error; throw error; }
+		{ failing = true; if(scope.failed) throw scope.error; throw error; }
 		finally
 		{
 			for(const token of scope.callbacks) callbacks.delete(token);
 			frames.pop();
-			try
-			{
+			cleanup(() => {
 				if(tokenValid(pendingLease) && !leases.has(pendingLease) && !poisoned)
 					withKind(types.get(signature.result.id).key, key => module._bridge_callable_release(pendingLease, key));
-			}
-			finally
-			{
-				try
-				{ if(frame) module._bridge_scalar_frame_clear(frame); }
-				finally
-				{ for(const pointer of scope.allocations.reverse()) module._free(pointer); }
-			}
+				if(frame) module._bridge_scalar_frame_clear(frame);
+				for(const pointer of scope.allocations.reverse()) module._free(pointer);
+			}, failing);
 		}
 	};
 	const dispatch = (token, key, frame) => {
@@ -171,9 +216,13 @@ export const createComponentCallableRuntime = module => {
 			requireOpen();
 			if(!current || !callback || !frames.includes(callback.scope) || callback.signature.key !== key) throw new TypeError("Expired or wrong-signature host callback");
 			if(callback.scope.failed || current.failed) return 8;
-			if(module._bridge_scalar_frame_validate(frame, callback.signature.parameters.length) !== 0 || new DataView(module.HEAP8.buffer).getUint32(frame + 8, true) !== 0) throw new TypeError("Invalid callback frame");
-			const args = callback.signature.parameters.map((type, index) => readComponentScalarSlot(module, frame + scalarFrameHeaderBytes + index * scalarSlotBytes, type.name, bytes => charge(current, bytes)));
+			if(callback.protocol) return callback.protocol.dispatch(callback, current, frame);
+			const args = readNative(() => {
+				if(module._bridge_scalar_frame_validate(frame, callback.signature.parameters.length) !== 0 || new DataView(module.HEAP8.buffer).getUint32(frame + 8, true) !== 0) throw new TypeError("Invalid callback frame");
+				return callback.signature.parameters.map((type, index) => readComponentScalarSlot(module, frame + scalarFrameHeaderBytes + index * scalarSlotBytes, type.name, bytes => charge(current, bytes)));
+			});
 			const result = Reflect.apply(callback.value, undefined, args);
+			requireOpen();
 			if(callback.scope.failed || current.failed) return 8;
 			writeComponentScalarSlot(module, frame + 16, callback.signature.result.name, result, bytes => {
 				charge(current, bytes); const pointer = allocate(bytes); allocations.push(pointer); return pointer;
@@ -189,7 +238,12 @@ export const createComponentCallableRuntime = module => {
 		catch(error)
 		{ record(current, error); record(callback?.scope, error); return 8; }
 		finally
-		{ for(const pointer of allocations) module._free(pointer); }
+		{
+			try
+			{ cleanup(() => { for(const pointer of allocations) module._free(pointer); }); }
+			catch(error)
+			{ record(current, error); record(callback?.scope, error); }
+		}
 	};
 	Object.defineProperty(module, "bridgeCallableDispatch", { value: dispatch });
 	runtimes.add(module);
@@ -198,12 +252,22 @@ export const createComponentCallableRuntime = module => {
 		, poison: () => { poisoned = true; }
 		, bind: (descriptor, operations) => {
 			requireOpen();
-			const abi = structuredClone(descriptor); assertComponentCallableAbi(abi);
+			const structured = descriptor.version === componentStructuredCallableAbi;
+			(structured ? assertComponentStructuredCallableAbi : assertComponentCallableAbi)(descriptor);
+			const abi = structuredClone(descriptor);
+			const protocol = structured ? createComponentStructuredCallableProtocol(module, {
+				frames, callbacks, requireOpen, register, owned
+				, poison: () => { poisoned = true; }, isPoisoned: () => poisoned
+				, releaseUnreturned: (token, signature) => {
+					if(!tokenValid(token) || leases.has(token)) throw new TypeError("Invalid or duplicate Lean closure token");
+					withKind(signature.key, key => module._bridge_callable_release(token, key));
+				}
+			}, abi) : null;
 			const types = new Map(abi.callbacks.map(signature => [signature.id, signature]));
 			const exports = new Map(abi.exports.map(signature => {
 				const operation = operations.get(signature.bindingId);
 				if(typeof operation !== "function") throw new TypeError("Missing compiled callable operation");
-				return [signature.bindingId, args => call(operation, signature, args, types)];
+				return [signature.bindingId, args => protocol ? protocol.call(operation, signature, args) : call(operation, signature, args, types)];
 			}));
 			return Object.freeze({ call: (id, args) => {
 				const operation = exports.get(id);

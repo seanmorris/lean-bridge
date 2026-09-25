@@ -24,9 +24,9 @@ This path supports Lean dependency imports, including transitive packages and cu
 
 Locked builds also accept [declared `lean-text-v1` generators](../lean/existing-package.md#generate-lean-and-c-sources). The engine runs selected pure tools and compiles their Lean/C/header outputs. `bundle/generated/lake-generated-sources.json` retains their bytes and receipts; the target-C and link manifests bind its digest. The publication dry run reproduces generation in both isolated builds. Installed npm users do not need Lean or generator tooling.
 
-A generator can also produce a [selected public entry module](../lean/existing-package.md#generate-the-public-entry-module). Captured and generated public modules use the same source-only request and compiler-owned signature discovery. `bundle/metadata/lake-entry-exports.json` binds those types to the capture, any generated outputs, compiler and interfaces; target compilation checks the record again. The same build and publication commands apply. npm accepts copied primitives, concrete copied aliases, nested arrays and Lists, copied records and tagged variants, Option, Except, nested binary products, [bounded recursive copied values](../javascript-typescript.md#recursive-values) and synchronous primitive callables. Copied containers and callables currently require separate components. Preparation and loading check the shared runtime's capabilities for the selected ABI, including recursive output ownership. Consumers get the matching runtime through the generated package dependency.
+A generator can also produce a [selected public entry module](../lean/existing-package.md#generate-the-public-entry-module). Captured and generated public modules use the same source-only request and compiler-owned signature discovery. `bundle/metadata/lake-entry-exports.json` binds those types to the capture, any generated outputs, compiler and interfaces; target compilation checks the record again. The same build and publication commands apply. npm accepts copied primitives, concrete copied aliases, nested arrays and Lists, copied records and tagged variants, Option, Except, nested binary products, [bounded recursive copied values](../javascript-typescript.md#recursive-values) and synchronous callbacks with primitive or copied payloads. Copied values and callables can share one component. Preparation and loading check the shared runtime's capabilities for the selected ABI, including recursive output ownership. Consumers get the matching runtime through the generated package dependency.
 
-To compile an [explicit reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), keep one `.binding-ir.json` file and set `modules` in `lean-bridge.exports.json`. Put declaration selection in the review, not `exports` in the configuration. The engine checks reviewed copied-value and primitive-callable signatures against fresh Lean metadata, retains documentation and argument names, and binds the review into its compiler request and package evidence. `analyze` alone validates the document without checking source correspondence. Prepared npm packages use the same installation and automatic runtime loading as ordinary-source packages.
+To compile an [explicit reviewed contract](../lean/existing-package.md#compile-a-reviewed-contract), keep one `.binding-ir.json` file and set `modules` in `lean-bridge.exports.json`. Put declaration selection in the review, not `exports` in the configuration. The engine checks reviewed copied-value and callable signatures against fresh Lean metadata, retains documentation and argument names, and binds the review into its compiler request and package evidence. `analyze` alone validates the document without checking source correspondence. Prepared npm packages use the same installation and automatic runtime loading as ordinary-source packages.
 
 To publish concrete versions of generic Lean functions, configure [finite specializations](../lean/existing-package.md#export-concrete-specializations). Lean checks the selected types and instance dictionaries; each configured name becomes a concrete JavaScript/TypeScript function. The source configuration and compiler applications travel with the build bundle and publication receipts.
 
@@ -63,7 +63,62 @@ Lean function types are curried. Set the outer arity of `makeAdder` to one so th
 
 Build and publish with the same commands as a scalar component. The package declares its exact shared-runtime dependency; consumers do not register callback dispatchers or configure Wasm imports. Older prepared runtimes are rejected during packaging with a rebuild diagnostic.
 
-Callbacks are borrowed until the enclosing call returns. Returned functions own an explicit lease and expose `dispose()`, `disposed` and `Symbol.dispose`. Read [values and cleanup](../javascript-typescript.md#values-and-cleanup) for consumer usage. Promise-returning callbacks, retained host callbacks, and compound callable arguments or results are unsupported. A reviewed contract supplies the same arity through its parameter list and returned callable type; do not repeat export decisions in its configuration.
+Callbacks are borrowed until the enclosing call returns. Returned functions own an explicit lease and expose `dispose()`, `disposed` and `Symbol.dispose`. Read [values and cleanup](../javascript-typescript.md#values-and-cleanup) for consumer usage. Promise-returning callbacks and retained host callbacks are unsupported. A reviewed contract supplies the same arity through its parameter list and returned callable type; do not repeat export decisions in its configuration.
+
+### Export structured callbacks
+
+Callback arguments and results can also use copied arrays, Lists, options,
+results, products, records, variants, aliases and finite recursive values.
+Primitive and structured functions can share one npm component.
+
+For the [consumer example](../javascript-typescript.md#structured-callbacks),
+name the package `structured` and save `Structured.lean`:
+
+```lean
+namespace Structured
+
+structure Payload where
+  text : String
+  rows : Array (Option String)
+  count : Nat
+  nested : Option (Except String (UInt64 × Unit))
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecord (value : Payload) (callback : Payload → Payload) :=
+  callback value
+
+def makeRecord (captured : Payload) : Bool → Payload → Payload :=
+  fun selected value => if selected then captured else value
+
+def callRecursive (value : Tree) (callback : Tree → Tree) :=
+  callback value
+
+end Structured
+```
+
+Select the exports and the returned function's outer arity in
+`lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecord", "Structured.makeRecord", "Structured.callRecursive"],
+  "arities": { "Structured.makeRecord": 1 },
+  "targets": { "npm": { "name": "structured", "version": "1.0.0" } }
+}
+```
+
+Build with the usual `--target npm` command. Lean-generated typed constructors
+and accessors implement the copied boundary; consumers use plain JavaScript
+values and generated TypeScript types. Callbacks keep one to sixteen arguments,
+and copied values use the [structured-call limits](../javascript-typescript.md#structured-callbacks).
+Callback and resource identities cannot appear inside copied containers.
+Recursive callback payloads currently target npm; combined target builds must
+use types supported by every selected target.
 
 ## Build npm and CPAN together
 
@@ -89,7 +144,7 @@ Verify the npm handoff with `lean-bridge verify --receipt /path/to/new-release/p
 
 Add `--target c` or `--target cpp` to include [prepared native C/C++ archives](c.md#build-an-ordinary-lean-project). Those targets share the same native compilation with CPAN. You can also omit CPAN and build npm with either C-family target; no Perl installation is needed in that case.
 
-The selected exports must fit both profiles: copied primitives, nested arrays, acyclic records or synchronous primitive callables, including supported concrete specializations. Copied containers and callables cannot share one npm component yet. Source-configured closure arities still require separate target builds. Resources also use a separate native build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
+The selected exports must fit both profiles: copied primitives, arrays, Lists, options, results, products, acyclic records, variants, aliases and synchronous callbacks with those payloads, including supported concrete specializations. Source-configured closure arities still require separate target builds. Resources also use a separate native build. Unsupported targets or incompatible APIs fail explicitly. This command prepares archives; publish them using the npm instructions below and the [CPAN publication steps](cpan.md).
 
 ## Publish an ordinary component
 

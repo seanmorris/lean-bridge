@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { assertComponentStructuredCallableBindings } from "../src/abi/component-structured-callables.mjs";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { assertComponentRecordAbi, assertComponentRecordBindings, resolveComponentRecordType } from "../src/abi/component-records.mjs";
@@ -46,7 +47,7 @@ const plan = ir => generateCompilerAdapters({ analysis: {
 }
 , componentPlan: { sha256: "2".repeat(64), document: { bindingIr: { semanticSha256: "1".repeat(64) } } } });
 
-test("compound callback syntax does not promote compiled callable admission", () => {
+test("compound callback payloads use authenticated structured admission", () => {
 	for(const constructor of ["option", "result", "tuple"])
 		for(const position of ["parameter", "result"])
 		{
@@ -55,7 +56,9 @@ test("compound callback syntax does not promote compiled callable admission", ()
 			if(position === "parameter") callback.callable.parameters[0].type = type;
 			else callback.callable.result.type = type;
 			assert.doesNotThrow(() => generateJavaScriptPackage(ir));
-			assert.throws(() => createComponentPrivateAbi(ir));
+			const admitted = createComponentPrivateAbi(ir);
+			assert.equal(admitted.version, 9);
+			assertComponentStructuredCallableBindings(admitted, ir);
 		}
 });
 

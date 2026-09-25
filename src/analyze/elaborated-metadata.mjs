@@ -216,8 +216,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind !== "callback") return copied(type);
 					closed(type, ["kind", "parameters", "result"]);
 					if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("Invalid component callback arity");
-					for(const parameter of type.parameters) scalar(parameter);
-					scalar(type.result);
+					for(const parameter of type.parameters) copied(parameter);
+					copied(type.result);
 				};
 				const nativeType = type => {
 					validateNativeType(type);
