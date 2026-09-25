@@ -432,6 +432,9 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_STRUCTURED_CALLABLE_TEST=1 node --test tests/python-structured-callables.test.mjs"));
   assert.match(workflow, /test -s build\/structured-callables\/python\.json/);
+  assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_RECURSIVE_CALLABLE_TEST=1 node --test tests/python-recursive-callables.test.mjs"));
+  assert.match(workflow, /test -s build\/recursive-callables\/python\.json/);
+  assert.match(workflow, /build\/recursive-callables\/python\.json\n/);
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs"));
   assert.match(workflow, /test -s build\/compounds\/python\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs"));
@@ -446,7 +449,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   for(const version of ["3.11", "3.12"]) assert.ok(workflow.includes(`python-version: "${version}"`));
   assert.match(workflow, /LEAN_BRIDGE_COLLECTION_PYTHONS:.*steps\.collection_python311\.outputs\.python-path.*steps\.collection_python312\.outputs\.python-path/);
   assert.match(workflow, /python-collection-typecheck\/bin\/python -m pip install --no-cache-dir mypy==2\.3\.1/);
-  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs"));
   assert.match(workflow, /test -s build\/structured-callables\/ruby\.json/);
@@ -624,7 +627,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-python-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests\/python-variants\.test\.mjs/);
   assert.match(workflow, /test -s build\/variants\/python\.json/);
   assert.match(workflow, /id: type_corpus_ruby/);

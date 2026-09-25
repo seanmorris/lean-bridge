@@ -26,12 +26,13 @@ aliases and variants across all seventeen consumer profiles. The
 ordinary-source and independently reviewed package checks.
 [Recursive npm values](../evidence/npm-recursive-20260922.md) also pass installed
 checks in Node, TypeScript, browser pages, React and workers.
-[Recursive C/C++ packages](../evidence/native-recursive-packages-20260923.md)
-also pass both source paths. The remaining ten profiles still need recursive
-installed acceptance. [Rust values and native conversions](../evidence/rust-recursive-conversions-20260923.md)
-are implemented; prepared Cargo package acceptance remains open. Compound callback
-and closure payloads, and aggregates with explicit identity ownership, remain
-part of the same task.
+[Recursive copied packages](../lean/export-decisions.md#start-with-the-runnable-npm-shapes)
+now pass installed checks on both source paths across all seventeen profiles.
+Synchronous callbacks and returned closures accept acyclic copied payloads in
+every profile. npm, [C/C++](../evidence/native-recursive-callables-20260925.md) and
+[Python](../evidence/python-recursive-callables-20260925.md) also accept recursive
+callback payloads. Nine profiles still need recursive callable acceptance.
+Aggregates with explicit resource ownership remain part of the same task.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),
 [Python wheels](../evidence/python-compounds-20260920.md),

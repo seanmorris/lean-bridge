@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePythonRecursiveCallables } from "./python-recursive-callable-source-history.mjs";
 
 export const phpCiHistoryPath = "docs/evidence/php-ci-regression-integration-20260925.json";
 export const phpCiChangedPaths = [
@@ -55,6 +56,7 @@ export const reversePhpCiUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforePhpCiRegression = (path, source, expected) => {
+	source = beforePythonRecursiveCallables(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !phpCiChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(phpCiHistoryPath, "utf8"));

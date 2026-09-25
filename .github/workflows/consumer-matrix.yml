@@ -725,6 +725,8 @@ jobs:
           test -s build/callables/python.json
           LEAN_BRIDGE_PYTHON_STRUCTURED_CALLABLE_TEST=1 node --test tests/python-structured-callables.test.mjs
           test -s build/structured-callables/python.json
+          LEAN_BRIDGE_PYTHON_RECURSIVE_CALLABLE_TEST=1 node --test tests/python-recursive-callables.test.mjs
+          test -s build/recursive-callables/python.json
           LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs
           test -s build/compounds/python.json
           LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs
@@ -759,6 +761,7 @@ jobs:
             build/word-native/python.json
             build/callables/python.json
             build/structured-callables/python.json
+            build/recursive-callables/python.json
             build/compounds/python.json
             build/lists/python.json
             build/aliases/python.json
@@ -876,6 +879,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_PYTHON_TEST=1 node --test tests/native-python.test.mjs && npm run test:type-corpus:python && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=python node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_STRUCTURED_CALLABLE_TEST=1 node --test tests/python-structured-callables.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_RECURSIVE_CALLABLE_TEST=1 node --test tests/python-recursive-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_COMPOUND_TEST=1 node --test tests/python-compounds.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_LIST_TEST=1 node --test tests/python-lists.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_ALIAS_TEST=1 node --test tests/python-aliases.test.mjs"

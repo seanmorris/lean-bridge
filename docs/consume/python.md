@@ -254,8 +254,9 @@ Stubs retain recursive unions and container types for strict type checking.
 Runtime annotations use finite `TypeAliasType` references; `__value__` exposes
 their targets. On Python 3.11, pip installs `typing_extensions` automatically
 when container aliases need it.
-Python 3.12 and newer use the standard library. Recursive callback, closure and
-resource payloads remain unsupported.
+Python 3.12 and newer use the standard library. Recursive values also work as
+[callback and closure payloads](#recursive-callback-values). Copied fields cannot
+contain resource or callback identities.
 
 The [recursive wheel checks](../evidence/python-recursive-packages-20260923.md)
 exercise both source paths on CPython 3.11 and 3.12, strict typing, three-package
@@ -263,7 +264,7 @@ runtime sharing, failed conversions and fork rejection with a held runtime lock.
 
 ### Callbacks and returned Lean closures
 
-Ordinary-source and compiler-checked reviewed wheels accept synchronous Python callables with primitive and acyclic structured arguments and results. The same nineteen primitive conversions apply inside callbacks and returned closures, including exact integers and Unicode scalars.
+Ordinary-source and compiler-checked reviewed wheels accept synchronous Python callables with primitive, structured and bounded recursive arguments and results. The same nineteen primitive conversions apply inside callbacks and returned closures, including exact integers and Unicode scalars.
 
 For the Callables acceptance package, save this as `callbacks.py`:
 
@@ -321,17 +322,59 @@ values without wrappers.
 Callback result buffers stay alive until Lean finishes copying them. Each
 Python call and its callbacks share a 16 MiB conversion allowance. Native
 conversions have a separate 16 MiB allowance; neither limit bounds the Lean
-algorithm's working memory or all Python allocator overhead. Recursive callback
-payloads, resource-containing aggregates, asynchronous delivery and callbacks
-inside copied containers remain unsupported.
+algorithm's working memory or all Python allocator overhead. Resource-containing
+aggregates, asynchronous delivery and callbacks inside copied containers remain
+unsupported.
 
 The [installed structured callback checks](../evidence/python-structured-callables-20260924.md)
 cover both source paths on CPython 3.11 and 3.12, strict typing, relocated wheels,
 nested allocation failures and unchanged installed files.
 
+### Recursive callback values
+
+The Structured acceptance package also exports a recursive `Tree`. Its generated
+`TreeLeaf` and `TreeBranch` classes work in ordinary calls, callback arguments,
+callback results and returned closures. Save this as `recursive-callbacks.py`:
+
+```python
+import lean_structured as api
+
+
+def increment(value: api.Tree) -> api.Tree:
+    if isinstance(value, api.TreeLeaf):
+        return api.TreeLeaf(value.value + 1)
+    return api.TreeBranch(tuple(increment(child) for child in value.children))
+
+
+original = api.TreeBranch((api.TreeLeaf(2**256), api.TreeBranch(())))
+changed = api.call_recursive(original, increment)
+expected = api.TreeBranch((api.TreeLeaf(2**256 + 1), api.TreeBranch(())))
+assert changed == expected
+
+with api.make_recursive(changed) as choose:
+    assert choose(True, api.TreeLeaf(0)) == expected
+    assert choose(False, original) == original
+```
+
+Callbacks receive independent values. Captured values survive changes to the
+original Python containers. `close()` releases the closure's native identity;
+later invocation raises `RuntimeError`. A closure stays bound to its creating
+thread even after that thread exits and the OS reuses its thread ID.
+
+The graph adapter rejects cyclic Python values. Each call shares a 16 MiB native
+copy budget across its inputs, callbacks and result, plus a separate 16 MiB
+accounted Python conversion budget. Values can visit at most 262,144 nodes and
+128 levels, counting each record, constructor, container and scalar edge.
+Callback exceptions and conversion failures release temporary owners before
+propagating to the Python caller. Malformed native output retires the runtime.
+
+The [installed recursive callback checks](../evidence/python-recursive-callables-20260925.md)
+cover both source paths, Python 3.11/3.12, strict typing, allocation failures,
+creator-thread exit and closure-capacity recovery.
+
 ### Alpha resource example
 
-The remaining example uses the separate Alpha fixture for resource identity and its fixed callback API. Resources still require that separate projection; primitive and acyclic structured callbacks and returned closures work in ordinary wheels as shown above.
+The remaining example uses the separate Alpha fixture for resource identity and its fixed callback API. Resources still require that separate projection; primitive, structured and recursive callbacks and returned closures work in ordinary wheels as shown above.
 
 ### Requirements and package
 
@@ -441,7 +484,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named frozen dataclasses, constructor unions, transparent aliases and owned tuple/Some/Ok/Err values` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Use exact generated constructor classes and scalar types. Arrays and Lists accept exact lists or tuples and return independent tuples. TypeAliasType bounds runtime hints; precise stubs preserve static recursive unions. Input validation precedes native allocation or initialization. Finally blocks release native results and temporary owners; malformed output retires the shared runtime. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named frozen dataclasses, constructor unions, transparent aliases and owned tuple/Some/Ok/Err values` (input, result, field); `Generated recursive constructor dataclasses and TypeAliasType aliases; typed Callable parameters and owned LeanClosure results` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Use exact generated constructor classes and scalar types. Arrays and Lists accept exact lists or tuples and return independent tuples. TypeAliasType bounds runtime hints; precise stubs preserve static recursive unions. Input validation precedes native allocation or initialization. Finally blocks release native results and temporary owners; malformed output retires the shared runtime. Constructor identity and recursive aliases survive independent copied values. Arrays and Lists accept lists/tuples and return tuples. Conversion scopes retain callback replies until native copying completes. Original callback errors return after cleanup; malformed native output retires the runtime. Captured values release on close or fallback finalization. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

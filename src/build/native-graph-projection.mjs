@@ -13,6 +13,7 @@ import { compileCopiedJvmGraphPackageModel } from "../backends/jvm/copied-graph-
 import { compileCopiedPhpGraphPackageModel } from "../backends/php/copied-graph-package.mjs";
 import { compileCopiedWitGraphPackageModel } from "../backends/wit/copied-graph-package.mjs";
 import { compileCallableGraphPackageModel } from "../backends/c/callable-graph-model.mjs";
+import { compileCallablePythonGraphPackageModel } from "../backends/python/callable-graph-model.mjs";
 
 /**
  * Validate all requested graph hosts without inventing an extra public C target.
@@ -22,7 +23,17 @@ import { compileCallableGraphPackageModel } from "../backends/c/callable-graph-m
  * @param moduleName - Explicit namespace when selecting CPAN.
  */
 export const compileNativeGraphProjection = (ir, targets, moduleName) => {
-	if(ir.types.some(type => type.kind === "callback")) return compileCallableGraphPackageModel(ir, targets);
+	if(ir.types.some(type => type.kind === "callback"))
+	{
+		if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "pypi"].includes(target)))
+			throw Object.assign(new TypeError("Recursive callable packages currently require C, C++ or PyPI projections"), { code: "native-graph-projection-unavailable" });
+		const cTargets = targets.filter(target => ["c", "cpp"].includes(target));
+		const c = cTargets.length ? compileCallableGraphPackageModel(ir, cTargets) : null;
+		const python = targets.includes("pypi") ? compileCallablePythonGraphPackageModel(ir) : null;
+		if(c && python && c.layoutSha256 !== python.layoutSha256)
+			throw new TypeError("Python and C-family callable graph layouts differ");
+		return c ?? python;
+	}
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target)))
 		throw Object.assign(new TypeError("Native copied graphs currently require C, C++, Cargo, PyPI, RubyGems, CPAN, NuGet, Maven, native PHP or WIT/WASI target adapters"), { code: "native-graph-projection-unavailable" });
 	if(targets.includes("cpan") && moduleName === undefined)

@@ -8,6 +8,7 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { compileCopiedPythonModel } from "../backends/python/copied-model.mjs";
 import { compileCopiedPythonGraphPackageModel } from "../backends/python/copied-graph-package.mjs";
+import { compileCallablePythonGraphPackageModel } from "../backends/python/callable-graph-model.mjs";
 import { nativeGraphProjectionSources } from "./native-graph-sources.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from "./native-artifacts.mjs";
 
@@ -22,7 +23,9 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
 export const ordinaryPythonEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true });
-	const projection = model.copiedGraph ? compileCopiedPythonGraphPackageModel(model.bindingIr) : compileCopiedPythonModel(model.bindingIr);
+	const projection = model.copiedGraph
+		? (model.copiedGraph.callbacks ? compileCallablePythonGraphPackageModel : compileCopiedPythonGraphPackageModel)(model.bindingIr)
+		: compileCopiedPythonModel(model.bindingIr);
 	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
 	const copiedGraph = model.copiedGraph ? { schemaVersion: 1, layoutSha256: projection.layoutSha256 } : undefined;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));

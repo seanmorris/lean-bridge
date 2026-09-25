@@ -122,9 +122,8 @@ An alias of `Nat` still rejects negative values. Python's numeric annotations do
 not encode fixed-width ranges, so runtime validation remains necessary.
 See the [consumer example](../consume/python.md#named-aliases) and
 [installed wheel and stub checks](../evidence/python-aliases-20260921.md).
-Concrete aliases can also name supported recursive values. Acyclic copied aliases
-work in callbacks and returned closures. Generic aliases, alias cycles and
-recursive callable payloads still need adapter support.
+Concrete aliases can also name supported recursive values and appear in callback
+and closure signatures. Generic aliases and alias cycles are not admitted.
 
 ## Export tagged variants
 
@@ -190,7 +189,7 @@ checks graph metadata and regenerated native adapter sources before packaging.
 
 ## Export callbacks and closures
 
-Callback arguments and results can use any of the nineteen primitives and the acyclic copied structures below. The generated Python API accepts typed callables and returns callable `LeanClosure` objects with `close()` and context-manager support. Consumers do not write native declarations.
+Callback arguments and results can use any of the nineteen primitives and the copied structures below, including bounded recursive values. The generated Python API accepts typed callables and returns callable `LeanClosure` objects with `close()` and context-manager support. Consumers do not write native declarations.
 
 For example, add these definitions to your Lean module:
 
@@ -241,10 +240,48 @@ containers from callback arguments and closure results. Run the
 [structured consumer example](../consume/python.md#structured-callback-values)
 against the prepared wheel before publishing.
 
-Host callbacks remain call-scoped borrows. Recursive callable payloads,
-resource-containing aggregates, higher-order callbacks and asynchronous
-delivery still need adapter support. Combined builds require every selected
-target to accept the same structured signature.
+Host callbacks remain call-scoped borrows. Resource-containing aggregates,
+higher-order callbacks and asynchronous delivery still need adapter support.
+Combined builds require every selected target to accept the same structured
+signature.
+
+## Export recursive callbacks and closures
+
+The graph adapter accepts finite recursive values inside synchronous callback
+arguments and results. Returned closures can capture and receive the same values:
+
+```lean
+namespace Structured
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) : Tree :=
+  callback value
+
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+
+end Structured
+```
+
+Select both functions, build with `--target pypi`, and set
+`"arities": { "Structured.makeRecursive": 1 }` for ordinary source. A reviewed
+contract supplies the outer arity itself. No extra public C package is required.
+Combined recursive-callable builds currently support C, C++ and PyPI targets.
+
+Python receives `TreeLeaf` and `TreeBranch` constructors and precise recursive
+stubs. The wheel includes its compatible runtime; Python 3.11 resolves the
+required `typing_extensions` dependency through pip. Python 3.12 uses the
+standard library. Run the [recursive callback example](../consume/python.md#recursive-callback-values)
+against the original wheel before publishing.
+
+Host callbacks remain borrowed for the outer call. Returned Lean closures own
+their capture and require `close()` or a `with` block. Cyclic Python inputs,
+invalid constructors and values beyond the 128-level, 262,144-node or 16 MiB
+copy limits are rejected. Callback exceptions propagate after native cleanup.
+Copied fields cannot contain resources or callable identities.
 
 ## Choose the package name and platform
 

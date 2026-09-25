@@ -1021,6 +1021,37 @@ threads whose operating-system IDs have been reused. CI requires and uploads
 `build/native-recursive-callables/transport.json` and
 `build/recursive-callables/{c,cpp,c-family-documentation}.json`.
 
+### Recursive Python callbacks and closures
+
+Use the Python 3.11/3.12 interpreters, pinned mypy environment and offline
+`typing_extensions` wheels from the Python collection checks, then run:
+
+```sh
+LEAN_BRIDGE_PYTHON_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/python-recursive-callables.test.mjs
+node --test tests/python-recursive-callable-contract.test.mjs
+node --test tests/python-recursive-callable-evidence.test.mjs
+```
+
+The gate builds 33 Lean exports on both source paths and installs each original
+wheel offline on Python 3.11 with minimum/current typing dependencies and Python
+3.12 with standard-library aliases. It removes the producer before installation,
+relocates the consumers, and removes the handoff before execution. Calls use the
+installed package with no Lean compiler or native build tools on the consumer
+path. Strict mypy checks positive callers and rejects nine invalid call sites.
+
+Lifetime checks retain closures after their creator exits, reject replacement
+threads, exhaust and recover the 4,096 identity slots, and verify finalization.
+The published Lean example compiles in the producer and the Python example is
+typechecked and executed from each installed wheel.
+
+Nine copied shapes include recursive trees, with nested aliases used only in
+callback signatures. Failure probes inject `MemoryError` and `BaseException`
+through each conversion checkpoint, check native identity cleanup and deferred
+closure disposal, and reject malformed output. Probes run in separate processes
+and do not modify installed files. CI requires and uploads
+`build/recursive-callables/python.json`.
+
 ### Staged WIT callable projection
 
 The separate component projection probe requires no Lean compiler:

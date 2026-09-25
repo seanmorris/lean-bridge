@@ -12,6 +12,9 @@ import { closureThreadHistoryPath } from "./closure-thread-source-history.mjs";
 import { assertPhpStructuredCallableExecution, phpStructuredCallableExecutionPath } from "./php-structured-callable-evidence.mjs";
 import { assertPhpWasmLegacyPackageComparison, phpWasmPreGraphSources } from "./php-wasm-legacy-comparison.mjs";
 import { phpCiChangedPaths, reversePhpCiUpdate } from "./php-ci-regression-source-history.mjs";
+import { beforePythonRecursiveCallables } from "./python-recursive-callable-source-history.mjs";
+
+const priorSource = async path => beforePythonRecursiveCallables(path, await readFile(path, "utf8"));
 
 export const phpCiBaseline = "f61063252acf464ba4306885ddbf141b29bbdf73";
 export const phpCiExecutionPath = "docs/evidence/php-ci-regressions-20260925.json";
@@ -108,16 +111,17 @@ export const assertPhpCiIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), phpCiAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpCiChangedPaths, ...phpCiAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await readFile(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reversePhpCiUpdate(await readFile(update.path, "utf8"), update);
+		restored[update.path] = reversePhpCiUpdate(await priorSource(update.path), update);
 	}
 	for(const [path, hash] of Object.entries(record.additions)) assert.equal(hash, record.sourceHashes[path]);
-	const { document, ...contracts } = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json")), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(old.contractVersion, "0.98.1"); assert.equal(document.contractVersion, "0.98.2");
 	const cells = typeSurfaceCells(document, contracts);
 	assert.deepEqual(cells, typeSurfaceCells(old, contracts)); assert.equal(cells.length, 6562);

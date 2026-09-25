@@ -14,6 +14,7 @@ import { ordinaryPythonEvidence } from "../build/native-python-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCopiedPythonPackage } from "../backends/python/copied-values.mjs";
 import { generateCopiedPythonGraphPackage } from "../backends/python/copied-graph-package.mjs";
+import { generateCallablePythonGraphPackage } from "../backends/python/callable-graph-package.mjs";
 import { validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
 import { auditPythonPackage } from "../backends/python/package-audit.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -31,7 +32,10 @@ export const packageOrdinaryPython = async options => {
 	const name = settings.name ?? `lean-${prefix.replaceAll("_", "-")}`;
 	const version = settings.version ?? (model.component.version === "0.0.0-local" ? "0.0.0+local" : model.component.version);
 	validateOrdinaryPythonSettings({ name, version });
-	const root = join(working, "packages/pypi/wheel"), files = (model.copiedGraph ? generateCopiedPythonGraphPackage : generateCopiedPythonPackage)(model.bindingIr, evidence);
+	const generate = model.copiedGraph
+		? model.copiedGraph.callbacks ? generateCallablePythonGraphPackage : generateCopiedPythonGraphPackage
+		: generateCopiedPythonPackage;
+	const root = join(working, "packages/pypi/wheel"), files = generate(model.bindingIr, evidence);
 	auditPythonPackage(model.bindingIr, files);
 	const moduleName = projection.packageDir, metadataRoot = `${moduleName}/lean_bridge`;
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
@@ -45,6 +49,8 @@ export const packageOrdinaryPython = async options => {
 	await copy(join(adapterRoot, "native-c-adapter.json"), `${metadataRoot}/native-c-adapter.json`);
 	for(const path of model.copiedGraph ? [`include/detail/${prefix}-graph-types.h`, `include/detail/${prefix}-graph.h`] : [`include/${prefix}.h`])
 		await copy(join(adapterRoot, path), `${metadataRoot}/${path}`);
+	if(model.copiedGraph?.callbacks)
+		await copy(join(adapterRoot, `include/detail/${prefix}-callable-borrows.h`), `${metadataRoot}/include/detail/${prefix}-callable-borrows.h`);
 	await copy(join(runtimeRoot, "runtime.json"), `${metadataRoot}/runtime.json`);
 	const distribution = name.replaceAll("-", "_"), distInfo = `${distribution}-${version}.dist-info`;
 	const tag = `py3-none-manylinux_${glibcMinimumVersion.replace(".", "_")}_x86_64`;

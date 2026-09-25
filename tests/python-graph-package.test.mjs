@@ -153,7 +153,7 @@ test("recursive Python receipts bind installed wheels, public calls, typing and 
 		for(const stage of Object.values(cell.stages)) assert.equal(stage.state, "passed");
 	}
 	for(const cell of cells.filter(cell => cell.profile === "python" && cell.shape === "recursive" && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["python-recursive-callables-installed"]);
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs"));
 	assert.ok(workflow.includes("test -s build/recursive/python-packages.json"));

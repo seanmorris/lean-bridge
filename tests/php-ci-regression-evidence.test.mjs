@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertPhpCiExecution, assertPhpCiIntegration, phpCiExecutionPath } from "./helpers/php-ci-regression-evidence.mjs";
 import { beforePhpCiRegression, phpCiHistoryPath, reversePhpCiUpdate } from "./helpers/php-ci-regression-source-history.mjs";
+import { beforePythonRecursiveCallables } from "./helpers/python-recursive-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -39,7 +40,7 @@ test("PHP CI repair evidence rejects missing failures, callbacks, cleanup and br
 test("PHP CI source transitions reject unknown bytes and predecessor substitutions", async () => {
 	for(const update of (await json(phpCiHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforePythonRecursiveCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePhpCiUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePhpCiRegression(update.path, source)), update.previousSha256);
 		assert.equal(beforePhpCiRegression(update.path, source, update.currentSha256), source);
