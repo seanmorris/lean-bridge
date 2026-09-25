@@ -24,7 +24,7 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param ir - Compiler-authorized Binding IR.
  */
 export const compileCopiedJvmModel = ir => {
-	const surface = compilePrimitiveCSurface(ir, { callables: true, compounds: true, lists: true, variants: true });
+	const surface = compilePrimitiveCSurface(ir, { callables: true, structuredCallables: true, compounds: true, lists: true, variants: true });
 	const fail = (declaration, message) => {
 		const source = declaration?.source?.extensions?.["lean-lang.org/source-position"];
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-jvm-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
@@ -101,7 +101,9 @@ export const compileCopiedJvmModel = ir => {
 	{
 		callback.index = index;
 		const signature = callback.type.callable;
-		callback.publicName = `Fn${signature.parameters.map(site => primitiveName(site.type.name)).join("")}To${primitiveName(signature.result.type.name)}`;
+		const structured = [...signature.parameters, signature.result].some(site => site.type.kind !== "primitive");
+		if(structured) callback.structured = true;
+		callback.publicName = structured ? `Fn${pascal(callback.field)}` : `Fn${signature.parameters.map(site => primitiveName(site.type.name)).join("")}To${primitiveName(signature.result.type.name)}`;
 		if(names.has(callback.publicName)) fail(ir.declarations[0], `Java callable name collides: ${callback.publicName}`);
 		names.add(callback.publicName);
 		Object.assign(callback, { nativeType: "MemorySegment", layout: "ADDRESS", size: 8, alignment: 8 });

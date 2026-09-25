@@ -14,6 +14,9 @@ import { assertDotnetStructuredFaults } from "./dotnet-structured-callable-fault
 import { rubyStructuredCallableHistoryPath } from "./ruby-structured-callable-source-history.mjs";
 import { assertRubyStructuredCallableIntegration } from "./ruby-structured-callable-evidence.mjs";
 import { dotnetStructuredCallableChangedPaths, reverseDotnetStructuredCallableUpdate } from "./dotnet-structured-callable-source-history.mjs";
+import { beforeJvmStructuredCallables } from "./jvm-structured-callable-source-history.mjs";
+
+const priorSource = async path => beforeJvmStructuredCallables(path, await readFile(path, "utf8"));
 
 export const dotnetStructuredCallableExecutionPath = "docs/evidence/dotnet-structured-callables-20260924.json";
 export const dotnetStructuredCodegenPath = "docs/evidence/dotnet-structured-codegen-regression-20260924.json";
@@ -154,12 +157,12 @@ export const assertDotnetStructuredCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), dotnetStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...dotnetStructuredCallableChangedPaths, ...dotnetStructuredCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await readFile(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
-		restored[update.path] = reverseDotnetStructuredCallableUpdate(await readFile(update.path, "utf8"), update);
+		restored[update.path] = reverseDotnetStructuredCallableUpdate(await priorSource(update.path), update);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
 	}
 	for(const [path, expected] of Object.entries(record.additions)) assert.equal(expected, record.sourceHashes[path]);
@@ -168,7 +171,8 @@ export const assertDotnetStructuredCallableIntegration = async record => {
 		assert.equal(expected, sha256(restored[path]));
 		assert.equal(codegen.sourceHashes[path], record.sourceHashes[path]);
 	}
-	const { document, ...contracts } = await readTypeSurface();
+	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
 	const oldDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, record.inventory.version); assert.equal(oldDocument.contractVersion, record.inventory.previousVersion);
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(oldDocument, contracts);

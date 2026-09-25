@@ -19,7 +19,11 @@ import java.math.BigInteger;
 import java.nio.CharBuffer;
 import java.nio.charset.*;
 import java.util.Objects;
-
+${model.callableStateRuntime ? `import ${model.namespace}.${model.callableStateRuntime}.ProcessGuard;
+import ${model.namespace}.${model.callableStateRuntime}.CallbackFrame;
+import ${model.namespace}.${model.callableStateRuntime}.ClosureLease;
+import static ${model.namespace}.${model.callableStateRuntime}.rethrow;
+` : ""}
 final class ${model.runtimeName ?? "Runtime"} {
     private ${model.runtimeName ?? "Runtime"}() { }
     private static final SymbolLookup LOOKUP = NativeAssets.lookup();
@@ -30,7 +34,7 @@ ${model.surface.functions.map((fn, index) => `    private static final MethodHan
 ${model.surface.copies.filter(copy => copy.aggregate).map(copy => `    private static final MethodHandle CLEAR${copy.index} = downcall("${copy.name}_clear", FunctionDescriptor.ofVoid(ADDRESS));`).join("\n")}
 ${copiedJvmHelpers}
 ${copiedJvmConversions(model)}
-${model.surface.callbacks.size && !model.callableRuntime ? jvmCallableState : ""}
+${model.surface.callbacks.size && !model.callableRuntime && !model.callableStateRuntime ? jvmCallableState : ""}
 ${model.callableRuntime ? "" : jvmCallableRuntime(model)}
 ${model.surface.functions.map((fn, index) => jvmNativeCall(model, { name: `call${index}`, native: `CALL${index}`, parameters: fn.declaration.parameters, result: fn.declaration.result })).join("\n")}
 }

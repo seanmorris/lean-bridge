@@ -221,12 +221,30 @@ test("ordinary C/C++ packages reproduce after relocation and run without Lean or
 	}
 });
 
-test("unsupported ordinary C exports fail atomically with source locations", { skip: !enabled, timeout: 180_000 }, async t => {
+test("ordinary C callback exports build while reserved names fail atomically with source locations", { skip: !enabled, timeout: 180_000 }, async t => {
 	const working = await mkdtemp(join(tmpdir(), "lean-bridge-native-c-reject-"));
 	t.after(() => rm(working, { recursive: true, force: true }));
 	const source = join(working, "source"), outputRoot = join(working, "release"); await project(source, "Unsupported");
-	await saveLakeFile(source, "Unsupported.lean", "namespace Unsupported\ndef values (a : Array UInt32 → Array UInt32) := a #[42]\nend Unsupported\n");
+	await saveLakeFile(source, "Unsupported.lean", "namespace Unsupported\ndef values (a : Array UInt32 → Array UInt32) := a #[42]\ndef «initialize» (a : Array UInt32 → Array UInt32) := a #[42]\nend Unsupported\n");
 	await saveLakeFile(source, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Unsupported"], exports: ["Unsupported.values"] }));
+	const supportedInputs = await lakeInputState(source);
+	const built = await buildCanonicalProject({ projectRoot: source, outputRoot, targets: ["c", "cpp"], environment })
+		.catch(error => { error.message += `: ${JSON.stringify(error.details)}`; throw error; });
+	assert.deepEqual(await lakeInputState(source), supportedInputs);
+	assert.deepEqual(built.targets, ["c", "cpp"]); assert.equal(built.packages.length, 2);
+	const { model } = await readVerifiedNativeComponent(join(outputRoot, "native/component"), built.nativeRuntimeIdentity);
+	assert.equal(model.exports.length, 1); assert.equal(model.exports[0].name, "Unsupported.values");
+	const callback = model.exports[0].parameters[0].type;
+	assert.equal(callback.kind, "callback"); assert.equal(callback.parameters.length, 1);
+	for(const type of [callback.parameters[0], callback.result, model.exports[0].result])
+	{
+		assert.equal(type.kind, "array"); assert.equal(type.element.kind, "primitive");
+		assert.equal(type.element.name, "uint32");
+	}
+	await rm(outputRoot, { recursive: true, force: true });
+	await saveLakeFile(source, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Unsupported"], exports: ["Unsupported.initialize"] }));
+	const rejectedInputs = await lakeInputState(source);
 	await assert.rejects(() => buildCanonicalProject({ projectRoot: source, outputRoot, targets: ["c", "cpp"], environment }), error => error.code === "unsupported-native-c-signature" && error.details.source.path === "Unsupported.lean");
+	assert.deepEqual(await lakeInputState(source), rejectedInputs);
 	assert.deepEqual(await readdir(working), ["source"]);
 });

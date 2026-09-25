@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeJvmStructuredCallables } from "./jvm-structured-callable-source-history.mjs";
 
 export const jvmHistoricalReceipts = Object.freeze({
 	"java-collections-20260922": "632f5d31a780571d0aabce1b71e879439d0ba68782b12cbd7bbe2c5f3911f191"
@@ -37,7 +38,7 @@ export const readJvmHistoricalEvidence = async name => {
  * @param expected - Historical SHA-256, never rewritten to the current value.
  */
 export const assertJvmHistoricalSource = async (name, path, expected) => {
-	const current = sha256(await readFile(path));
+	const current = sha256(beforeJvmStructuredCallables(path, await readFile(path, "utf8"), expected));
 	if(current === expected) return;
 	const historical = await readJvmHistoricalEvidence(name);
 	const original = historical.sourceHashes[path] ?? historical.regressions?.find(run => run.test === path)?.sourceSha256;

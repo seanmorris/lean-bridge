@@ -51,10 +51,10 @@ for(const name of ["Option", "Result", "Pair"]) test(`JVM compound ${name} canno
 	assert.throws(() => compileCopiedJvmModel(ir), /record name collides/);
 });
 
-test("JVM compounds do not admit compound callables or borrowed copied identity", () => {
+test("JVM compounds admit copied callables but reject borrowed copied identity", () => {
 	const ir = callableReviewedIr();
 	ir.types[0].callable.result.type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "unit" }] };
-	assert.throws(() => compileCopiedJvmModel(ir), /callbacks currently require copied primitive/);
+	assert.doesNotThrow(() => compileCopiedJvmModel(ir));
 	const borrowed = compoundReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedJvmModel(borrowed), /copy ownership/);
 });

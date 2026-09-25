@@ -20,6 +20,7 @@ import { cVariantReviewedIr } from "./helpers/c-variant-fixture.mjs";
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { jvmCallableSignatures } from "./helpers/jvm-callable-fixture.mjs";
 import { assertCurrentKotlinCollectionSources } from "./helpers/current-collection-evidence.mjs";
+import { beforeJvmStructuredCallables } from "./helpers/jvm-structured-callable-source-history.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/kotlin-collections-20260922.json"));
 const digest = value => sha256(canonicalJson(value));
@@ -192,7 +193,7 @@ test("Kotlin source lineage preserves all prior JVM receipt bytes and requires c
 		const oldHashes = { ...previous.sourceHashes, ...Object.fromEntries((previous.regressions ?? []).map(run => [run.test, run.sourceSha256])) };
 		for(const [path, previousSha256] of Object.entries(oldHashes))
 		{
-			const currentSha256 = sha256(await readFile(path));
+			const currentSha256 = sha256(beforeJvmStructuredCallables(path, await readFile(path, "utf8"), previousSha256));
 			if(currentSha256 === previousSha256) continue;
 			assert.equal(record.sourceHashes[path], currentSha256, path);
 			sources[path] = { previousSha256, currentSha256 };
@@ -213,7 +214,11 @@ test("Kotlin collections promote exactly 22 reviewed cells and run both language
 		for(const stage of Object.values(cell.stages))
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["kotlin-collections-installed"]); }
 	}
-	for(const cell of cells.filter(cell => cell.profile === "kotlin" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-"))) assert.notEqual(cell.stages.installedExecution.state, "passed");
+	for(const cell of cells.filter(cell => cell.profile === "kotlin" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-")))
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["jvm-structured-callables-installed"]);
+	}
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	assert.ok(workflow.includes("LEAN_BRIDGE_JVM_COLLECTION_TEST=1 LEAN_BRIDGE_JVM_COLLECTION_PROFILES=java,kotlin node --test tests/jvm-collections.test.mjs"));
 	assert.ok(workflow.includes("test -s build/collections/jvm.json"));

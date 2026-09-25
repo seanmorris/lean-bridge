@@ -194,6 +194,16 @@ test("Java and Kotlin distinguish callable, collection-field and asynchronous ev
 	assert.deepEqual(cells.find(cell => cell.id === "kotlin/nat/reviewed-ir/field").stages.installedExecution.evidence, ["kotlin-collections-installed"]);
 	for(const source of [java, kotlin])
 	{
+		for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+		{
+			const mapping = row(source, shape);
+			assert.match(mapping, /callback input, callback result/u);
+			assert.doesNotMatch(mapping, /Not audited/u);
+		}
+		assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+		assert.match(source, /jvm-structured-callables-20260925\.md/u);
+		assert.match(row(source, "Except ε α"), /Result\.err\(error\)/u);
+		assert.doesNotMatch(row(source, "Except ε α"), /Result(?:<T, E>)?\.error\(/u);
 		assert.match(row(source, "Nat"), /`BigInteger` \(input, result, field, callback input, callback result\).*Ordinary source: Installed checks passed\./u);
 		assert.match(row(source, "Host function passed to Lean"), /Typed Fn\.\.\.To\.\.\. functional interface/u);
 		assert.match(row(source, "Lean function returned to the host"), /Signature-specific LeanClosure \(AutoCloseable\)/u);
@@ -416,7 +426,7 @@ test("C# compound docs preserve nested options and separate domain errors from b
 for(const profile of ["java", "kotlin"]) test(`${profile} compound docs show installed boxed payloads and generated products`, async () => {
 	const source = await readFile(`docs/consume/${profile}.md`, "utf8");
 	for(const lean of ["Option α", "Except ε α", "Prod α β / tuples"])
-		assert.match(row(source, lean), /Installed checks passed \(input, result, field\)/u);
+		assert.match(row(source, lean), /Ordinary source: Installed checks passed\. Reviewed IR: Installed checks passed/u);
 	assert.match(row(source, "Option α"), /`Option<T>`/u);
 	assert.match(row(source, "Except ε α"), /`Result<T, E>`/u);
 	assert.match(row(source, "Prod α β / tuples"), /Pair<A, B>/u);

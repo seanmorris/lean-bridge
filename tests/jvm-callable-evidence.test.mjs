@@ -4,18 +4,17 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { jvmCallableConsumer, jvmCallableSignatures, jvmCallableRejections } from "./helpers/jvm-callable-fixture.mjs";
-import { readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
+import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
 
 test("JVM callable evidence binds both languages and source paths to runtime-only installations", async () => {
 	const record = await readJvmHistoricalEvidence("jvm-callables-20260919");
 	assert.equal(record.wordBits, 64); assert.equal(record.jdk, "22.0.2"); assert.equal(record.kotlin, "2.2.0");
 	assert.deepEqual(record.signatures, jvmCallableSignatures);
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.profile}`), ["ordinary-source/java", "ordinary-source/kotlin", "reviewed-ir/java", "reviewed-ir/kotlin"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) await assertJvmHistoricalSource("jvm-callables-20260919", path, hash);
 	for(const run of record.executions)
 	{
 		assert.equal(run.checks, run.profile === "java" ? 66683 : 66655);

@@ -85,6 +85,13 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	const payload = await inventory(extracted); delete payload[receiptPath];
 	assert.deepEqual(payload, receipt.files);
 	assert.equal(await jvmDigest(join(extracted, `META-INF/maven/${group}/${name}/pom.xml`)), pom.sha256);
+	const inspection = fixture?.inspectInstalled ? await fixture.inspectInstalled({ project, extracted, installedJar, receipt, classpath: resolvedClasspath, tools, environment }) : null;
+	if(inspection)
+	{
+		assert.equal(await jvmDigest(installedJar), jar.sha256);
+		const after = await inventory(extracted); delete after[receiptPath];
+		assert.deepEqual(after, receipt.files, "Separate inspection must preserve original installed files");
+	}
 	const javacVersion = (await jvmRun(tools.javac, ["-version"], project, clean)).stdout.trim();
 	assert.match(javacVersion, /^javac 22(?:\.|$)/);
 	const javaVersion = (await jvmRun(tools.java, ["-version"], project, clean)).stderr.trim();
@@ -99,9 +106,16 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 		await saveLakeFile(project, "src/Metadata.kt", metadataSource);
 	}
 	await saveLakeFile(project, file, source);
+	const examples = fixture?.examples ? fixture.examples(profile) : [];
+	for(const example of examples)
+	{
+		assert.match(example.file, javaProfile ? /^[A-Za-z][A-Za-z0-9]*\.java$/u : /^[A-Za-z][A-Za-z0-9]*\.kt$/u);
+		assert.match(example.main, /^[A-Za-z][A-Za-z0-9]*$/u);
+		await saveLakeFile(project, `src/${example.file}`, example.source);
+	}
 	await saveLakeFile(project, "src/Wire.java", await readFile(join(repository, "tests/fixtures/type-corpus/consumers/Wire.java")));
 	const javacArgs = [...javaCompilerOptions, "-sourcepath", "empty-source", "-classpath", resolvedClasspath, "-d", "classes"];
-	await jvmRun(tools.javac, [...javacArgs, "src/Wire.java", ...javaProfile ? [file] : []], project, clean);
+	await jvmRun(tools.javac, [...javacArgs, "src/Wire.java", ...javaProfile ? [file, ...examples.map(example => `src/${example.file}`)] : []], project, clean);
 	let kotlin, kotlinArgs;
 	if(!javaProfile)
 	{
@@ -111,7 +125,7 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 		const version = (await jvmRun(tools.java, [...launch, "-version"], project, clean)).stderr.trim();
 		assert.match(version, /kotlinc-jvm 2\.2\.0 /);
 		kotlinArgs = [...launch, ...kotlinCompilerOptions, "-jdk-home", tools.jdk, "-classpath", `${resolvedClasspath}${delimiter}${join(project, "classes")}`, "-d", "classes"];
-		await jvmRun(tools.java, [...kotlinArgs, file, ...metadataSource ? ["src/Metadata.kt"] : []], project, clean);
+		await jvmRun(tools.java, [...kotlinArgs, file, ...metadataSource ? ["src/Metadata.kt"] : [], ...examples.map(example => `src/${example.file}`)], project, clean);
 		kotlin = { version, compilerFiles, stdlib: standardLibrary.path };
 	}
 	const rejected = [];
@@ -153,6 +167,7 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 		, emptyUserHome: true, offline: true, resolvedClasspathOnly: true
 		, publicApiOnly: true, runtimeOverridesDisabled: true };
 	if(metadataSource) jvm.kotlinMetadataSourceSha256 = sha256(metadataSource);
+	if(inspection) jvm.inspection = inspection;
 	const deployment = join(root, "relocated");
 	await mkdir(deployment); await rename(join(project, "classes"), join(deployment, "classes"));
 	await cp(installedJar, join(deployment, "package.jar"));
@@ -185,6 +200,21 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	assert.equal(jvm.runtimeModules.length, 1); assert.match(jvm.runtimeModules[0], /^java\.base@22(?:\.|$)/);
 	const temp = join(deployment, "native-temp"), observations = [];
 	await mkdir(temp);
+	if(examples.length)
+	{
+		jvm.documentation = [];
+		for(const example of examples)
+		{
+			assert.deepEqual(await readdir(temp), []);
+			const result = await jvmRun(runtimeJava, ["--enable-native-access=ALL-UNNAMED", `-Djava.io.tmpdir=${temp}`, "-classpath", runtimeClasspath.join(delimiter), example.main], deployment, runtimeEnv);
+			assert.equal(result.stdout, example.stdout); assert.equal(result.stderr, "");
+			assert.deepEqual(await readdir(temp), []);
+			jvm.documentation.push({ id: example.id, sourceSha256: sha256(example.source)
+				, stdout: result.stdout, archiveSha256: jar.sha256
+				, sourceFreeExecution: true, runtimeOnlyExecution: true
+				, normalExitCleanup: true });
+		}
+	}
 	for(let i = 0; i < 2; ++i)
 	{
 		assert.deepEqual(await readdir(temp), []);

@@ -92,21 +92,23 @@ export const jvmCallableState = `
  */
 export const jvmCallablePublic = (model, callback) => {
 	const { parameters, result } = callback.type.callable;
+	const name = callback.publicName.split(".").at(-1);
+	const runtime = model.runtimeName ?? "Runtime", state = model.callableStateRuntime ?? runtime;
 	const output = jvmValue(model, result.type), type = jvmResult(model, output);
 	const args = parameters.map((_, i) => `arg${i}`).join(", ");
 	const signature = parameters.map((site, i) => `${model.publicType(jvmValue(model, site.type))} arg${i}`).join(", ");
 	return `package ${model.namespace};
-/** A synchronous primitive function. Arguments and results are copied. */
+/** A synchronous ${callback.structured ? "copied-value" : "primitive"} function. Arguments and results are copied. */
 @FunctionalInterface
-public interface ${callback.publicName} {
+public interface ${name} {
     ${type} invoke(${signature});
     /** An owned Lean function. Invoke on its creating platform thread; close after use. */
-    final class LeanClosure implements ${callback.publicName}, AutoCloseable {
-        private final Runtime.ClosureLease lease;
+    final class LeanClosure implements ${name}, AutoCloseable {
+        private final ${state}.ClosureLease lease;
         private final java.lang.ref.Cleaner.Cleanable cleanable;
-        LeanClosure(Runtime.ClosureLease lease) { this.lease = lease; cleanable = Runtime.register(this, lease); }
+        LeanClosure(${state}.ClosureLease lease) { this.lease = lease; cleanable = ${state}.register(this, lease); }
         @Override public ${type} invoke(${signature}) {
-            try { ${unit(output) ? "" : "return "}Runtime.invoke${callback.index}(lease, ${args}); }
+            try { ${unit(output) ? "" : "return "}${runtime}.invoke${callback.index}(lease, ${args}); }
             finally { java.lang.ref.Reference.reachabilityFence(this); }
         }
         public boolean isClosed() { return lease.isClosed(); }
@@ -169,7 +171,7 @@ export const jvmCallableRuntime = model => [...model.surface.callbacks.values()]
     static final MethodHandle DROP${i} = downcall("${model.surface.prefix}_owned_${callback.field}_dispose", FunctionDescriptor.ofVoid(ADDRESS));
     private static final MethodHandle UPCALL${i} = upcall${i}();
     private static MethodHandle upcall${i}() {
-        try { return java.lang.invoke.MethodHandles.lookup().findStatic(Runtime.class, "callback${i}", DESC${i}.toMethodType().insertParameterTypes(0, Host${i}.class)); }
+        try { return java.lang.invoke.MethodHandles.lookup().findStatic(${model.runtimeName ?? "Runtime"}.class, "callback${i}", DESC${i}.toMethodType().insertParameterTypes(0, Host${i}.class)); }
         catch (ReflectiveOperationException error) { throw new ExceptionInInitializerError(error); }
     }
     private record Host${i}(${callback.publicName} callback, Scope scope, CallbackFrame frame) { }

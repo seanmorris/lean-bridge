@@ -85,14 +85,14 @@ test("JVM Lists use primitive and reference arrays while retaining separate List
 	assert.match(files["README.md"], /Lean Lists use copied Java arrays/);
 });
 
-test("JVM Lists reject borrowed identities, compound callbacks and record name collisions", () => {
+test("JVM Lists admit copied callbacks but reject borrowed identities and record collisions", () => {
 	for(const position of ["parameter", "result"])
 	{
 		const ir = callableReviewedIr(), callback = ir.types.find(type => type.kind === "callback");
 		const list = { kind: "apply", constructor: "list", arguments: [{ kind: "primitive", name: "uint32" }] };
 		if(position === "parameter") callback.callable.parameters[0].type = list;
 		else callback.callable.result.type = list;
-		assert.throws(() => compileCopiedJvmModel(ir), /callbacks currently require copied primitive/);
+		assert.doesNotThrow(() => compileCopiedJvmModel(ir));
 	}
 	const borrowed = listReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedJvmModel(borrowed), /copy ownership/);

@@ -1,6 +1,6 @@
 # Build and publish Java and Kotlin packages
 
-Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays and Lists, acyclic copied records, tagged variants, options, results, binary products and synchronous primitive callables. Consumers install the artifacts without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays and Lists, copied records, tagged variants, options, results, binary products, bounded recursive copied values and synchronous callables with primitive or acyclic copied payloads. Consumers install the artifacts without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/maple --target maven \
 
 The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes Java 22 classes, the companion `.kotlin` API with Kotlin type metadata, native libraries, generated sources, compiler evidence and dependency license notices. Its POM declares `kotlin-stdlib:2.2.0`; downstream Maven and Gradle projects resolve it automatically. Its README names both generated APIs. Changing the Maven coordinate does not rename their Lean-derived packages.
 
-Calls accept concrete copied values, synchronous primitive callbacks and returned closures. Nesting is limited to 32 types, and native input/output conversions share a 16 MiB budget. Recursive values, resources, compound callables and asynchronous effects remain outside this ordinary Maven profile. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
+Calls accept concrete copied values, synchronous callbacks and returned closures. Acyclic conversions allow 32 type levels with 16 MiB copy budgets. [Recursive copied values](../consume/java.md#recursive-values) allow 128 value levels and 262,144 visited values, with separate 16 MiB native-copy and scratch/output budgets. These limits do not measure Lean working memory or all JVM heap allocation. Recursive callable payloads, resource-containing aggregates and asynchronous effects remain unsupported. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
@@ -46,7 +46,7 @@ Select concrete exports in `lean-bridge.exports.json`, or supply a [reviewed con
 
 Ordinary-source and reviewed-IR builds support `List T` in inputs, results and copied record fields. Elements can use all nineteen primitives, nested arrays and Lists, records, `Option`, `Except` and binary products. Select concrete exports in the ordinary configuration or reviewed contract; no List-specific setting is required.
 
-Java callers use typed arrays; Kotlin uses the corresponding primitive or reference arrays. `List UInt32`, for example, uses Java `long[]` and Kotlin `LongArray`. The generated conversions preserve order, duplicates, nesting and independent result storage. The existing copy budgets and 32-level type limit apply. List callback payloads remain unsupported. See the [Java](../consume/java.md#lists) and [Kotlin](../consume/kotlin.md#lists) examples and the [installed Maven evidence](../evidence/jvm-lists-20260920.md).
+Java callers use typed arrays; Kotlin uses the corresponding primitive or reference arrays. `List UInt32`, for example, uses Java `long[]` and Kotlin `LongArray`. The generated conversions preserve order, duplicates, nesting and independent result storage. The existing copy budgets and 32-level type limit apply. Acyclic Lists also work in [callbacks and returned closures](#structured-callback-values). See the [Java](../consume/java.md#lists) and [Kotlin](../consume/kotlin.md#lists) examples and the [installed Maven evidence](../evidence/jvm-lists-20260920.md).
 
 ## Export named copied aliases
 
@@ -83,8 +83,10 @@ checks the companion APIs alongside the original Java API in installed packages.
 
 Payloads may contain all nineteen primitives and supported copied containers,
 records and other non-recursive variants. Null cases and active null payloads
-reject. Generic, indexed, recursive, proof-bearing, callable and identity-bearing
-payloads are not admitted. Combined native variant builds currently accept C,
+reject. Generic, indexed, proof-bearing, callable and identity-bearing
+payloads are not admitted. For recursive constructor families, use the
+[recursive copied-value profile](../consume/java.md#recursive-values).
+Combined native variant builds currently accept C,
 C++, Python, Rust, .NET, JVM, Ruby and Perl when every selected target accepts the entire API.
 
 Review the [Java](../consume/java.md#tagged-variants) and
@@ -106,9 +108,62 @@ end Maple
 
 Include both exports and set `"arities": { "Maple.make_word": 1 }` to return a function after accepting the captured value. For reviewed Binding IR, the outer parameter count makes that decision; do not also configure `arities`.
 
-Callbacks accept one to sixteen primitive arguments and a primitive result. Java and Kotlin use generated functional interfaces such as `FnUInt32ToUInt32`; returned functions implement that interface and `AutoCloseable`. Exact integers retain `BigInteger`. Calls borrow host callbacks synchronously and contain thrown exceptions until native cleanup. See the [Java](../consume/java.md#callbacks-and-returned-lean-functions) and [Kotlin](../consume/kotlin.md#callbacks-and-returned-lean-functions) examples for thread ownership and cleanup.
+Callbacks accept one to sixteen primitive or acyclic copied arguments and a copied result. Java and Kotlin use generated functional interfaces such as `FnUInt32ToUInt32`; returned functions implement their matching interface and `AutoCloseable`. Exact integers retain `BigInteger`. Calls borrow host callbacks synchronously and contain thrown exceptions until native cleanup. See the [Java](../consume/java.md#callbacks-and-returned-lean-functions) and [Kotlin](../consume/kotlin.md#callbacks-and-returned-lean-functions) examples for thread ownership and cleanup.
 
 Both source paths use the existing private C callable ABI. A combined build rejects the complete request if a selected target does not support its callable signatures.
+
+## Structured callback values
+
+Arrays, Lists, options, results, nested binary products, copied records, variants
+and aliases can appear in callback arguments/results and returned closures.
+For the consumer examples, add this API to `Structured.lean`:
+
+```lean
+namespace Structured
+structure Payload where
+  text : String
+  rows : Array (Option String)
+  count : Nat
+  nested : Option (Except String (UInt64 × Unit))
+
+def callRecord (value : Payload) (callback : Payload → Payload) := callback value
+def callArray (value : Array (Option String))
+    (callback : Array (Option String) → Array (Option String)) := callback value
+def makeRecord (captured : Payload) : Bool → Payload → Payload :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select the functions and the capture arity in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecord", "Structured.callArray", "Structured.makeRecord"],
+  "arities": { "Structured.makeRecord": 1 },
+  "targets": {
+    "maven": { "name": "org.leanbridge:structured", "version": "1.0.0" }
+  }
+}
+```
+
+These coordinates identify the local acceptance example. Choose your own
+coordinates when publishing. Build with `--target maven` using the command
+above. Reviewed contracts specify the outer parameter count in their function
+declarations instead of the `arities` configuration.
+
+The JAR supplies Java records and a separate Kotlin API with Kotlin value types.
+Each callback has a typed functional interface; consumers pass lambdas.
+Returned closures copy captures and implement `AutoCloseable`. Their arguments
+and results retain independent nested storage. Both adapters share process
+guards, native loading and closure leases. The [Java](../consume/java.md#structured-callback-values)
+and [Kotlin](../consume/kotlin.md#structured-callback-values) examples use the same JAR.
+
+Callback payloads must be acyclic copied values. Host callbacks borrow the
+enclosing synchronous call, and returned closures own explicit leases.
+Recursive callable payloads, callback identities or resources inside copied
+aggregates, retained host callbacks and asynchronous delivery remain unsupported.
 
 ## Build the repository layout
 

@@ -61,6 +61,15 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
 		files["README.md"] += "\nLean Lists use copied Java arrays and the corresponding Kotlin array types in inputs, results and record fields. Primitive arrays retain their primitive element type. Empty Lists, order, duplicates and nesting are preserved; returned arrays own independent storage. List and Array retain distinct IR/native identities. Native sequence lengths, missing buffers and alignment are checked before allocation or reads. List callback payloads remain unsupported.\n";
 	if(model.surface.aliases.length)
 		files["binding-manifest.json"] = `${JSON.stringify({ ...JSON.parse(files["binding-manifest.json"]), aliases: jvmCopiedAliases(model) }, null, 2)}\n`;
+	if([...model.surface.callbacks.values()].some(callback => callback.structured))
+	{
+		files["README.md"] = files["README.md"]
+			.replace("List callback payloads remain unsupported.", "List callback arguments and results use independent typed arrays.")
+			.replace("Recursive values, identity-bearing targets and compound callable payloads remain unsupported.", "Copied alias targets work in callback and closure payloads. Recursive callable payloads and identity-bearing alias targets remain unsupported.")
+			.replace("Recursive, callable and identity-bearing payloads remain unsupported.", "Recursive callable payloads remain unsupported. Callback identities and resources cannot be copied fields.");
+		files["README.md"] += "\nSynchronous callbacks accept and return acyclic copied arrays, Lists, Option, Result, binary products, records, variants and aliases. Returned LeanClosure values use the same typed payloads and independent copied captures; invoke them on their creating platform thread and close them after use. A close from another thread defers release during an active invocation. Callback exceptions retain their original identity after native cleanup. Nested mutable storage is copied independently. Java and Kotlin have separate typed adapters and share the native loader, process guards and owned closure leases. Recursive callable payloads, resource-containing aggregates and asynchronous delivery remain unsupported.\n";
+		files["binding-manifest.json"] = files["binding-manifest.json"].replace("Ordinary Maven admits copied values and synchronous primitive callables, not resources, compound callables or async delivery.", "Ordinary Maven admits copied values and synchronous primitive or acyclic structured callables; recursive callable payloads, resource-containing aggregates and asynchronous delivery remain unsupported.");
+	}
 	return Object.freeze(files);
 };
 

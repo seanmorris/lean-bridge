@@ -5,7 +5,7 @@
  */
 import { compileCopiedJvmModel } from "./copied-model.mjs";
 import { renderCopiedJvmRuntime } from "./copied-runtime.mjs";
-import { jvmValue, jvmResult } from "./callables.mjs";
+import { jvmValue, jvmResult, jvmCallablePublic } from "./callables.mjs";
 import { generateCopiedJvmPackage } from "./copied-values.mjs";
 
 const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
@@ -43,7 +43,15 @@ export const compileCopiedKotlinModel = ir => {
 		if(copy.record || copy.variant) copy.publicName = `${namespace}.${copy.publicName}`;
 		for(const branch of copy.cases ?? []) branch.publicName = `${namespace}.${branch.publicName}`;
 	}
-	for(const callback of model.surface.callbacks.values()) callback.publicName = `${model.namespace}.${callback.publicName}`;
+	const structuredCallables = [...model.surface.callbacks.values()].some(callback => callback.structured);
+	for(const callback of model.surface.callbacks.values())
+	{
+		if(callback.structured)
+		{
+			callback.aliasName = callback.publicName;
+			callback.publicName = `${model.namespace}.${fresh(`Kotlin${callback.publicName}`)}`;
+		} else callback.publicName = `${model.namespace}.${callback.publicName}`;
+	}
 	const compoundNames = Object.fromEntries(Object.entries({ option: "Option", result: "Result", tuple: "Pair" }).map(([key, name]) => [key, `${namespace}.${name}`]));
 	const publicType = copy => copy.type?.callable || copy.record || copy.variant ? copy.publicName
 		: copy.compound ? `${compoundNames[copy.compound]}<${copy.fields.map(field => boxed(publicType(field.type))).join(", ")}>`
@@ -66,7 +74,7 @@ export const compileCopiedKotlinModel = ir => {
 		, compoundNames
 		, helpers
 		, runtimeName: helpers.runtime
-		, callableRuntime: "Runtime" };
+		, ...structuredCallables ? { callableStateRuntime: "Runtime" } : { callableRuntime: "Runtime" } };
 };
 
 const equality = (name, fields, parameters = "") => `    override fun equals(other: kotlin.Any?): kotlin.Boolean {
@@ -124,7 +132,15 @@ ${model.surface.functions.map((fn, index) => {
 	if(model.surface.copies.some(copy => copy.compound))
 		for(const [name, source] of Object.entries(compounds)) add(name, source);
 	for(const callback of model.surface.callbacks.values())
-		add(callback.publicName.split(".").at(-1), `typealias ${quoted(callback.publicName.split(".").at(-1))} = ${quoted(callback.publicName)}\n`);
+	{
+		const name = callback.publicName.split(".").at(-1), alias = callback.aliasName ?? name;
+		add(alias, `typealias ${quoted(alias)} = ${quoted(callback.publicName)}\n`);
+		if(callback.structured)
+		{
+			const path = `${java}/${name}.java`;
+			files[path] = jvmCallablePublic(model, callback); publicFiles.push(path);
+		}
+	}
 	const bridgePath = `${java}/${model.helpers.bridge}.java`, callsPath = `src/main/kotlin/${base}/${model.helpers.calls}.kt`;
 	files[bridgePath] = `package ${model.namespace};
 @SuppressWarnings("unchecked")

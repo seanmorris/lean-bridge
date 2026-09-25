@@ -15,6 +15,7 @@ import { assertDotnetFamilyRegressionEvidence } from "./helpers/dotnet-installed
 import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-history.mjs";
 import { beforeRecursiveAcceptance, recursiveAcceptanceRecord, reverseAcceptanceUpdate } from "./helpers/recursive-acceptance-updates.mjs";
 import { assertRecursiveManagedAcceptance, assertRecursiveManagedAcceptanceIndex } from "./helpers/recursive-managed-acceptance.mjs";
+import { beforeJvmStructuredCallables } from "./helpers/jvm-structured-callable-source-history.mjs";
 
 const documentPath = "docs/evidence/recursive-documentation-updates-20260924.json";
 const receipt = async () => JSON.parse(await readFile(documentPath));
@@ -97,9 +98,10 @@ test("collection and Composer checker upgrades retain their complete previous te
 		, ["tests/php-graph-package.test.mjs", JSON.parse(await readFile("docs/evidence/php-recursive-packages-20260923.json")).sourceHashes["tests/php-graph-package.test.mjs"], beforeCurrentPhpGraphVerification]
 	]) {
 		const source = await readFile(path, "utf8");
-		assert.equal(sha256(restore(source)), expected, path);
-		assert.notEqual(sha256(restore(source + "\n// unrelated\n")), expected, path);
-		assert.throws(() => restore(source + source), /Exactly one/);
+		const restored = source => restore(beforeJvmStructuredCallables(path, source));
+		assert.equal(sha256(restored(source)), expected, path);
+		assert.notEqual(sha256(restored(source + "\n// unrelated\n")), expected, path);
+		assert.throws(() => restored(source + source), /Exactly one/);
 	}
 });
 

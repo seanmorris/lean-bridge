@@ -154,7 +154,10 @@ test("Java collections promote only reviewed copied positions and require origin
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["java-collections-installed"]); }
 	}
 	for(const cell of cells.filter(cell => cell.profile === "java" && ["array", "record"].includes(cell.shape) && cell.position.startsWith("callback-")))
-		assert.notEqual(cell.stages.installedExecution.state, "passed");
+	{
+		assert.equal(cell.stages.installedExecution.state, "passed");
+		assert.deepEqual(cell.stages.installedExecution.evidence, ["jvm-structured-callables-installed"]);
+	}
 	assert.ok(!observed.some(cell => cell.profile === "kotlin"));
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	for(const [command, report] of [
