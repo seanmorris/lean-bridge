@@ -9,6 +9,7 @@ import { compileOwnedAggregateModel } from "../abi/owned-aggregate-model.mjs";
 import { projectNativeMetadata } from "../analyze/native-metadata.mjs";
 import { createOwnedElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedOwnedSource } from "../analyze/reviewed-owned-source.mjs";
+import { generateOwnedCallbackCarriers } from "./owned-callback-carriers.mjs";
 
 const primitives = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int", uint8: "UInt8", uint16: "UInt16"
@@ -20,14 +21,16 @@ const fail = message => { throw new TypeError(`Owned aggregate carriers: ${messa
 /**
  * Generate all constructors, projections, exported calls and closure invocations.
  * Resource leaves cross in typed Arrays and retain their original Lean identity.
- * Host callback construction and public handle conversion are separate layers.
+ * Optional host wrappers capture typed recovery and a call-scoped broker token.
+ * Public handle conversion remains a separate layer.
  *
  * @param options - Fresh native metadata and independently retained compiler evidence.
  * @param options.metadata - Compiler-emitted native signatures.
  * @param options.sourceIdentity - Authorized request, sources, interfaces and tool identities.
  * @param options.component - Source package coordinates.
+ * @param options.hostCallbacks - Explicit admission of borrowed host wrappers.
  */
-export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, component }) => {
+export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, component, hostCallbacks = false }) => {
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, ownedGraphs: true });
 	const semantic = createOwnedElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
@@ -35,7 +38,8 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
 	const document = sourceIdentity.reviewedBindingIr === undefined ? semantic.document
 		: reconcileReviewedOwnedSource(sourceIdentity.reviewedBindingIr, semantic.document, sourceIdentity);
 	return generateOwnedBindingCarriers({ document, sourceIdentity
-		, declarations: elaborated.declarations, metadataSha256: elaborated.sha256 });
+		, declarations: elaborated.declarations
+		, metadataSha256: elaborated.sha256, hostCallbacks });
 };
 
 /**
@@ -47,14 +51,15 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
  * @param options.sourceIdentity - Captured source and compiler identities.
  * @param options.declarations - Compiler-selected declarations with source modules.
  * @param options.metadataSha256 - Digest of authenticated compiler metadata.
+ * @param options.hostCallbacks - Explicit admission of borrowed host wrappers.
  */
-export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declarations: selected, metadataSha256 }) => {
+export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declarations: selected, metadataSha256, hostCallbacks = false }) => {
 	const component = document.component;
 	const model = compileOwnedAggregateModel(document);
 	const nodes = new Map(model.types.map(type => [type.id, type]));
 	const definitions = new Map(document.types.map(type => [type.id, type]));
 	const declarations = new Map(document.declarations.map(item => [item.id, item]));
-	const prefix = `lean_bridge_owned_${sha256(`${component.id}\0${model.bindingIrSha256}`).slice(0, 24)}`;
+	const prefix = `lean_bridge_owned_${sha256(`${component.id}\0${model.bindingIrSha256}${hostCallbacks ? "\0host-callbacks-v1" : ""}`).slice(0, 24)}`;
 	const module = `LeanBridgeOwned${sha256(prefix).slice(0, 16)}`;
 	const symbols = { types: Object.fromEntries(model.types.map(type => [type.id, `${prefix}_t${sha256(type.id).slice(0, 20)}`]))
 		, exports: Object.fromEntries(model.declarations.map(item => [item.id, `${prefix}_f${sha256(item.id).slice(0, 20)}`])) };
@@ -192,8 +197,12 @@ export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declara
 		emit(symbols.exports[declaration.id], parameters || "(_bridgeUnit : _root_.Unit)", carrier(declaration.result.type)
 			, checked(names, [`pure (${call})`]), names.length);
 	}
+	const callbacks = hostCallbacks ? generateOwnedCallbackCarriers({ model, symbols, sourceType, carrier }) : null;
+	if(callbacks)
+	{ lines.push(...callbacks.lines); header.push(...callbacks.header); }
 	lines.push(`end ${module}`, "");
 	return Object.freeze({ model, module, symbols
+		, ...(callbacks ? { hostCallbacks: callbacks.callbacks, callbackSource: callbacks.source } : {})
 		, leanSource: lines.join("\n")
 		, header: header.join("\n") + "\n"
 		, metadataSha256

@@ -26,6 +26,18 @@ export const generateOwnedNativeValueAdapters = options => {
 	const helper = node => carriers.symbols.types[node.id];
 	const lines = ['#include "owned-values.h"', '#include "carriers.h"'
 		, ownedNativeValueRuntime(layout.model.limits)];
+	if(options.hostCallbacks) lines.push(`
+enum { OV_CALLBACK = 10 };
+typedef struct ov_callback_frame {
+  struct ov_callback_frame *parent;
+  ov_transaction *transaction;
+  int status;
+} ov_callback_frame;
+static _Thread_local ov_callback_frame *ov_active_callback_frame;
+static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
+  if (frame && !frame->status) frame->status = status;
+}
+`);
 	for(const node of layout.nodes) lines.push(
 		`static inline int ${node.walker}_in(const ${node.cName} *, size_t, int, ov_transaction *, lean_object **);`
 		, `static inline int ${node.walker}_out(${node.cName} *, lean_object *, size_t, ov_transaction *);`
@@ -228,8 +240,17 @@ export const generateOwnedNativeValueAdapters = options => {
 				, "    arguments = lean_array_push(arguments, child);", "  }"])
 			, ...declaration.parameters.map((_, i) => `  lean_object *v${i} = lean_array_get_core(arguments, ${i}); lean_inc(v${i});`)
 			, "  lean_dec(arguments);"
+			, ...options.hostCallbacks ? [
+				"  ov_callback_frame frame = { .parent = ov_active_callback_frame, .transaction = &transaction };"
+				, "  if (!frame.parent) (void)lb_native_callback_take_error();"
+				, "  ov_active_callback_frame = &frame;"
+			] : []
 			, `  lean_object *returned = ${symbol}(${declaration.parameters.length ? declaration.parameters.map((_, i) => `v${i}`).join(", ") : "lean_box(0)"});`
-			, "  status = lb_owned_scope_ready(&transaction.scope);"
+			, ...options.hostCallbacks ? [
+				"  ov_active_callback_frame = frame.parent; status = frame.status;"
+				, "  if (lb_native_callback_take_error() && !status) status = OV_CALLBACK;"
+				, "  if (!status) status = lb_owned_scope_ready(&transaction.scope);"
+			] : ["  status = lb_owned_scope_ready(&transaction.scope);"]
 			, "  if (status) { lean_dec(returned); return ov_abort(&transaction, status); }"
 			, `  ${result.cName} converted = {0};`
 			, `  status = ${result.walker}_out(&converted, returned, 0, &transaction);`

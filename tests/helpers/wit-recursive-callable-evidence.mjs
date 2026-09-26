@@ -17,10 +17,11 @@ import { beforeOwnedAggregates, ownedAggregateChangedPaths } from "./owned-aggre
 import { ownedCChangedPaths } from "./owned-c-source-history.mjs";
 import { ownedReviewedChangedPaths } from "./owned-reviewed-source-history.mjs";
 import { ownedPackageChangedPaths } from "./owned-package-source-history.mjs";
+import { ownedHostChangedPaths } from "./owned-host-source-history.mjs";
 
 const historicalSource = async (path, text = false) => {
 	const bytes = await readFile(path);
-	const value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path)
+	const value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path)
 		? beforeOwnedAggregates(path, bytes.toString("utf8")) : bytes;
 	return text ? value.toString("utf8") : value;
 };

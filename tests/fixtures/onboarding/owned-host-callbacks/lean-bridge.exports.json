@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease", "disposal": "required",
+    "fallback": "queued-finalizer", "cycles": "reject"
+  },
+  "exports": [
+    "Owned.newTicket", "Owned.serial", "Owned.echoRecord",
+    "Owned.callbackRecord", "Owned.callbackRecursive", "Owned.twice",
+    "Owned.repeatedly", "Owned.retainCallback", "Owned.identityClosure",
+    "Owned.factory", "Owned.construct"
+  ],
+  "arities": { "Owned.retainCallback": 1, "Owned.identityClosure": 1 }
+}

@@ -16,6 +16,7 @@ import { ownedAggregateExecutionSources, assertOwnedAggregateIntegration } from 
 import { ownedCBaseline, ownedCChangedPaths, ownedCAddedPaths, ownedCExecutionPath, reverseOwnedCUpdate } from "./owned-c-source-history.mjs";
 import { beforeOwnedReviewed, ownedReviewedChangedPaths } from "./owned-reviewed-source-history.mjs";
 import { ownedPackageChangedPaths } from "./owned-package-source-history.mjs";
+import { ownedHostChangedPaths } from "./owned-host-source-history.mjs";
 
 export const ownedCCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-contract.test.mjs tests/owned-aggregate-model.test.mjs tests/owned-aggregate-metadata.test.mjs tests/owned-aggregate-native.test.mjs tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs tests/owned-c-values.test.mjs tests/native-runtime-retirement.test.mjs";
 export const ownedCScope = { compiledLean: true, nativeTransport: true
@@ -31,7 +32,7 @@ export const ownedCExecutionSources = [...new Set([
 const source = async path => beforeOwnedReviewed(path, await readFile(path, "utf8"));
 const historicalBytes = async path => {
 	const bytes = await readFile(path);
-	return ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path)
+	return ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path)
 		? beforeOwnedReviewed(path, bytes.toString("utf8")) : bytes;
 };
 const checkLeak = report => {

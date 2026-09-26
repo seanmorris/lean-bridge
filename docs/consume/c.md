@@ -286,7 +286,7 @@ but previously owned values remain clearable. See the
 
 ## Resource-containing values
 
-Packages with `ownedValues` in their version-2 `lean-bridge-package.json` use a
+Packages with `ownedValues` in their `lean-bridge-package.json` use a
 session/result API. Their records have named fields, variants have named case
 enums and payloads, and containers have typed spans, `has_value`, `is_ok`, or
 `fst`/`snd`. Resources and returned Lean closures are opaque handles. This API
@@ -301,7 +301,8 @@ reusing its slot. Copying a result struct does not create another owner.
 Nested resources belong to the result lease. Use the generated resource `_retain`
 function to obtain a new result owner when a handle must outlive its original
 aggregate. Returned closures also provide `_retain` and typed `_call` functions.
-The transport does not yet construct host callbacks for owned payloads.
+Signature-specific `_host` descriptors accept synchronous C callbacks or existing
+Lean closures. The package includes the callback adapter and shared runtime.
 
 `Nat` and `Int` views use GMP `mpz_srcptr`. Initialize caller-owned integers with
 `mpz_init`, populate them with `mpz_set`, and release them with `mpz_clear`.
@@ -327,6 +328,39 @@ shows records, all variant constructors, nested containers, bounded recursive tr
 retained children, captured closures and cleanup. The
 [author recipe](../publish/c.md#resource-containing-c-values) explains the explicit
 resource and aggregate policy.
+
+### Callbacks containing resources
+
+Set the generated `_host` descriptor's `call` and `context` fields for a C
+callback, or set `closure` for an existing Lean closure. Do not set both.
+Descriptors and host contexts live for the enclosing call only. A returned Lean
+closure that captured a host callback cannot invoke it after that call ends.
+
+Callback arguments are immutable views that expire when the callback returns.
+A reply can borrow those arguments or storage kept in the context. Use the
+generated `<type>_copy` function for callback-local records, containers or integers;
+return its typed value and transfer its result owner through the callback's
+`owner` output. The bridge releases that owner on success or failure. Use a
+resource's `_retain` operation when returning a separately owned resource handle.
+The enclosing call pins returned resources before releasing callback storage.
+
+Each descriptor has a `REQUIRES_RECOVERY` macro. When it is `1`, supply a real
+typed value through `recovery` before calling Lean. For example, a `Unit → Ticket`
+callback needs an existing ticket because the bridge cannot invent a resource
+if the callback fails. Other signatures can recover using real arguments or
+constructors. Lean uses recovery only to finish cleanup; a failed call never
+publishes that value as successful output.
+
+Return the package's `OK` status on success. A nonzero callback status suppresses
+later host invocations in that call and preserves the caller's output slots.
+Malformed replies also fail without publishing partial ownership. Later independent
+calls can succeed. Callback reentry is supported, and repeated invocations share
+the enclosing call's conversion limits. Return normally; do not let C++ exceptions
+or `longjmp` cross the callback boundary.
+
+The [installed callback caller](../../tests/fixtures/structured-types/owned-installed-host-callbacks.c)
+shows borrowed replies, owning copies, new resources, recursive values, reentry,
+failure recovery and session closure during callbacks.
 
 ## Exact integers
 

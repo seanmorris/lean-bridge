@@ -92,17 +92,21 @@ export async function readVerifiedNativeRuntime(root)
  * @param options - Transport capabilities of the reader.
  * @param options.copiedGraphs - The caller implements the finite graph carrier model.
  * @param options.ownedGraphs - The caller implements explicit aggregate ownership.
+ * @param options.ownedHostCallbacks - The caller implements owned host callback lifetimes.
  */
-export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false } = {})
+export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false } = {})
 {
 	const read = async path => JSON.parse(await readFile(join(root, path), "utf8"));
 	const inventory = await read("artifacts.json"), receipt = await read("native-component.json"), model = await read("model.json");
 	await verifyNativeFiles(root, inventory.files);
 	if((await nativeArtifactPaths(root)).some(path => path !== "artifacts.json" && !Object.hasOwn(inventory.files, path))) throw new Error("unrecorded native component artifact");
 	const metadata = await read("metadata.json");
-	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs });
+	const hostCallbacks = model.schemaVersion === 7;
+	if(hostCallbacks && (!ownedGraphs || !ownedHostCallbacks))
+		throw Object.assign(new TypeError("This native component requires an owned host-callback consumer adapter"), { code: "native-owned-callbacks-unavailable" });
+	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks });
 	const adapters = generateCompiledNativeLeanAdapters(reconstructed);
-	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== 2
+	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== (hostCallbacks ? 3 : 2)
 		|| receipt.runtimeIdentity !== runtimeIdentity
 		|| canonicalJson(model) !== canonicalJson(reconstructed)
 		|| receipt.modelSha256 !== sha256(canonicalJson(model))
@@ -117,6 +121,9 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity, { copie
 		|| nativeAllocationGuardHeader !== await readFile(join(root, "allocation-guard.h"), "utf8")
 		|| receipt.initializer !== `initialize_${adapters.module}`
 		|| !/^libcomponent_[0-9a-f]{20}\.so$/.test(receipt.library)) throw new Error("native component differs from compiler metadata or runtime");
+	if(hostCallbacks && (receipt.callbackSourceSha256 !== sha256(adapters.callbackSource)
+		|| adapters.callbackSource !== await readFile(join(root, "callbacks.c"), "utf8")))
+		throw new Error("native host callbacks differ from compiler-authenticated recovery or trampolines");
 	const bytes = await readFile(join(root, receipt.library));
 	validateNativeElf(bytes);
 	if(receipt.nativeLibrary.sha256 !== sha256(bytes) || receipt.nativeLibrary.bytes !== bytes.length) throw new Error("native component binary drift");

@@ -74,15 +74,27 @@ ownership decisions against fresh compiler output before generating the package.
 The archive includes a public C11 header, the component, shared Lean runtime, GMP,
 license notices, corresponding GMP source, and relocatable CMake/pkg-config files.
 Consumers need neither Lean nor the author project. The package manifest uses
-`schemaVersion: 2` and records `ownedValues`; its README describes the generated
+`schemaVersion: 3` and records `ownedValues` plus the call-scoped callback
+capability; its README describes the generated
 session/result API. Package names do not change the source-derived API prefix.
 
 Each call borrows inputs and returns a typed view with an explicit result owner.
 Consumers release that owner, rather than walking fields or clearing nested GMP
 views. Returned Lean closures can capture these values and have typed call and
-retain operations. Host callback construction for owned payloads, transferred
-inputs, anchored borrowed results, other host projections and Wasm lowering are
-still unfinished. See [C ownership and cleanup](../consume/c.md#resource-containing-values).
+retain operations. Synchronous host callbacks can receive and return these values;
+the same build includes their signature-specific descriptors and runtime adapters.
+The [callback fixture](../../tests/fixtures/onboarding/owned-host-callbacks/Owned.lean)
+includes `Bundle → Bundle`, recursive `Tree → Tree`, `Unit → Ticket` and
+`Ticket → Bundle` callbacks. Export the desired declarations normally. No separate
+callback build flag is required.
+
+Host callbacks borrow the enclosing call's lifetime. The generated header identifies
+signatures that require a typed recovery value if the host fails. The compiler
+derives other recovery values from arguments and constructors; it never fabricates
+a resource. Transferred inputs, anchored borrowed results, other host projections
+and Wasm lowering remain unfinished. See
+[C ownership and cleanup](../consume/c.md#resource-containing-values) and
+[callback lifetimes](../consume/c.md#callbacks-containing-resources).
 
 ## Copied arrays and records
 

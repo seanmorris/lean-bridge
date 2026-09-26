@@ -7,6 +7,7 @@
 import { compileOwnedNativeValueLayout } from "../native/owned-value-layout.mjs";
 import { cIdentifier, cRecordIdentifier, cVariantIdentifier, cVariantTag, cKeywords } from "./generate.mjs";
 import { sha256 } from "../../capsule/node.mjs";
+import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
 
 const fail = message => { throw new TypeError(`Owned C values: ${message}`); };
 const safe = name => /^[a-z][a-z0-9_]*$/.test(name) && !name.includes("__") && !cKeywords.has(name);
@@ -21,8 +22,10 @@ const nominal = name => {
  * result owner, so copying or modifying a view cannot corrupt its cleanup ledger.
  *
  * @param ir - Explicit v4 ownership contract.
+ * @param options - Explicit transport capabilities.
+ * @param options.hostCallbacks - Admit call-scoped host descriptors and copies.
  */
-export const generateOwnedCValues = ir => {
+export const generateOwnedCValues = (ir, { hostCallbacks = false } = {}) => {
 	const native = compileOwnedNativeValueLayout(ir);
 	const p = cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");
@@ -47,6 +50,12 @@ export const generateOwnedCValues = ir => {
 				: `${p}_value_${sha256(node.id).slice(0, 20)}_t`;
 		if(!integer && !scalar) claim(name, node.id);
 		if(identity) for(const suffix of ["handle", "retain", ...node.kind === "callback" ? ["call"] : []]) claim(`${name}_${suffix}`, node.id);
+		if(hostCallbacks && node.kind === "callback")
+		{
+			claim(`${name}_host`, node.id);
+			claim(`${name.toUpperCase()}_REQUIRES_RECOVERY`, node.id);
+		}
+		if(hostCallbacks && !identity) claim(node.kind === "primitive" ? `${p}_scalar_${node.name}_copy` : `${name}_copy`, node.id);
 		const fields = items => {
 			const members = new Set();
 			return items.map(field => {
@@ -104,6 +113,7 @@ export const generateOwnedCValues = ir => {
 	});
 	const callbacks = native.callbacks.map(item => ({ ...item, cName: `${table.get(item.id).cName}_call` }));
 	const statuses = ["OK", "INVALID_ARGUMENT", "LIMIT", "ALLOCATION_FAILED", "CLOSED", "WRONG_THREAD", "WRONG_PROCESS", "RUNTIME_UNAVAILABLE", "CALL_ORDER", "MALFORMED_RESULT"];
+	if(hostCallbacks) statuses.push("CALLBACK_FAILED");
 	const header = ["#pragma once", "#include <stdbool.h>", "#include <stddef.h>"
 		, "#include <stdint.h>", "#include <gmp.h>"
 		, "#ifdef __cplusplus", 'extern "C" {', "#endif"
@@ -151,8 +161,35 @@ export const generateOwnedCValues = ir => {
 	}
 	for(const [name, id] of aliases) header.push(`typedef ${table.get(id).cName} ${name};`);
 	const input = id => { const node = table.get(id); return `${node.cName}${node.leaf ? "" : " const *"}`; };
+	if(hostCallbacks)
+	{
+		header.push("/* Host callbacks borrow their context for the enclosing call only."
+			, "   Set exactly one of call or closure. recovery is an optional typed value;"
+			, "   it is required if the signature has no finite recovery from its inputs."
+			, "   Failure never publishes recovery as a successful result."
+			, "   Callback arguments expire on return. Replies may borrow those arguments"
+			, "   or context storage, or transfer an owning result (also released on error)."
+			, "   Use a generated copy function to snapshot callback-local storage."
+			, "   Do not let C++ exceptions or longjmp cross a callback boundary. */");
+		for(const node of nodes.filter(node => node.kind === "callback"))
+		{
+			const callback = callbacks.find(item => item.id === node.id), result = table.get(callback.result);
+			const automatic = ownedCallbackRecovery(native.model, node, id => id) !== null;
+			header.push(`#define ${node.cName.toUpperCase()}_REQUIRES_RECOVERY ${automatic ? 0 : 1}`
+				, `typedef struct ${node.cName}_host {`
+				, `  ${p}_status (*call)(void *context, ${p}_session *session, ${[
+					...callback.parameters.slice(1).map((id, i) => `${input(id)} a${i}`)
+					, `${result.cName} *out`, `${p}_result **owner`
+				].join(", ")});`
+				, "  void *context;", `  ${node.cName} closure;`, `  ${result.cName} const *recovery;`
+				, `} ${node.cName}_host;`);
+		}
+	}
+	const hostArgument = (item, index) => hostCallbacks && !item.retain && !item.copy
+		&& table.get(item.parameters[index]).kind === "callback"
+		&& !(callbacks.some(callback => callback.id === item.id) && index === 0);
 	const signature = item => `${p}_status ${item.cName}(${p}_session *session, ${[
-		...item.parameters.map((id, i) => `${input(id)} a${i}`)
+		...item.parameters.map((id, i) => `${hostArgument(item, i) ? `${table.get(id).cName}_host const *` : input(id)} a${i}`)
 		, `${table.get(item.result).cName} *out`, `${p}_result **owner`
 	].join(", ")})`;
 	for(const item of [...functions, ...callbacks]) header.push(signature(item) + ";");
@@ -161,8 +198,15 @@ export const generateOwnedCValues = ir => {
 		, parameters: [node.id], result: node.id, retain: true
 	}));
 	for(const item of retains) header.push(signature(item) + ";");
+	const copies = hostCallbacks ? nodes.filter(node => !node.identity).map(node => ({
+		id: node.id
+		, cName: node.kind === "primitive" ? `${p}_scalar_${node.name}_copy` : `${node.cName}_copy`
+		, parameters: [node.id], result: node.id, copy: true
+	})) : [];
+	for(const item of copies) header.push(signature(item) + ";");
 	header.push("#ifdef __cplusplus", "}", "#endif", "");
 	return { native, prefix: p, nodes, functions, callbacks, retains
+		, ...(hostCallbacks ? { copies, hostArgument } : {})
 		, aliases: [...aliases].map(([name, id]) => ({ name, id }))
 		, signature, header: header.join("\n") };
 };

@@ -8,18 +8,20 @@ import { generateOwnedNativeValueAdapters } from "../native/owned-value-adapters
 import { ownedAggregateLeaseSource } from "../native/owned-aggregate-leases.mjs";
 import { generateOwnedCValues } from "./owned-values.mjs";
 import { ownedCRuntime } from "./owned-runtime.mjs";
+import { ownedCCallbacks } from "./owned-callbacks.mjs";
 
 /**
  * Project checked native values into semantic C records, constructors, spans,
  * GMP integers and opaque identities. All returned storage belongs to one result
  * owner; every failure leaves both output slots unchanged and releases partial
- * conversion storage and resource leases. This does not construct host callbacks.
+ * conversion storage and resource leases. Host callback construction requires
+ * the explicit capability recorded in the authenticated native component model.
  *
  * @param options - Authenticated fresh compiler metadata and component identity.
  */
 export const generateOwnedCPackage = options => {
 	const generated = generateOwnedNativeValueAdapters(options);
-	const values = generateOwnedCValues(generated.layout.model.bindingIr), p = values.prefix;
+	const values = generateOwnedCValues(generated.layout.model.bindingIr, { hostCallbacks: options.hostCallbacks }), p = values.prefix;
 	const nodes = new Map(values.nodes.map(node => [node.id, node]));
 	const walker = node => `oc_v${node.index}`;
 	const source = [`#include "${p}.h"`, generated.source, ownedCRuntime(values, generated.carriers)];
@@ -113,7 +115,8 @@ export const generateOwnedCPackage = options => {
 			, `static inline int ${walker(node)}_from(const ${node.nativeName} *value, ${node.cName} *out, size_t depth, oc_arena *arena) {`
 			, ...body(false).map(line => `  ${line}`), "}");
 	}
-	for(const item of values.retains)
+	if(options.hostCallbacks) source.push(ownedCCallbacks(values, generated.carriers));
+	for(const item of [...values.retains, ...values.copies ?? []])
 	{
 		const node = nodes.get(item.id);
 		source.push(`static inline int ${node.walker}_retain(lb_owned_context *context, const ${node.nativeName} *input, ${node.nativeName} *out, ov_result_owner *owner) {`
@@ -127,10 +130,11 @@ export const generateOwnedCPackage = options => {
 			, "  if (status) return ov_abort(&transaction, status);"
 			, "  return ov_commit(&transaction, owner);", "}");
 	}
-	for(const item of [...values.functions, ...values.callbacks, ...values.retains])
+	for(const item of [...values.functions, ...values.callbacks, ...values.retains, ...values.copies ?? []])
 	{
 		const result = nodes.get(item.result), params = item.parameters.map(id => nodes.get(id));
-		const symbol = item.retain ? `${nodes.get(item.id).walker}_retain` : item.symbol;
+		const symbol = item.retain || item.copy ? `${nodes.get(item.id).walker}_retain` : item.symbol;
+		const borrows = options.hostCallbacks ? params.flatMap((node, i) => values.hostArgument(item, i) ? [{ node, index: i }] : []) : [];
 		source.push(values.signature(item) + " {"
 			, `  if (!oc_outputs(out, sizeof(*out), _Alignof(${result.cName}), owner) || *owner) return (${p}_status)LB_OWNED_INVALID;`
 			, "  oc_session *active = NULL; int status = oc_session_get(session, &active);"
@@ -139,10 +143,14 @@ export const generateOwnedCPackage = options => {
 			, "  oc_result *result_owner = NULL; status = oc_result_begin(active, &budget, &result_owner);"
 			, `  if (status) return (${p}_status)status;`
 			, ...params.map((node, i) => `  ${node.nativeName} raw${i} = {0};`)
+			, ...borrows.map(({ node, index }) => `  oc_host_v${node.index} borrow${index} = {0};`)
 			, `  ${result.nativeName} returned = {0};`, `  ${result.cName} converted = {0};`
 			, "  status = ov_charge(&budget, 1, sizeof(converted));"
-			, ...params.map((node, i) => `  if (!status) status = ${walker(node)}_to(${node.leaf ? "&" : ""}a${i}, &raw${i}, 0, &input);`)
+			, ...params.map((node, i) => borrows.some(borrow => borrow.index === i)
+				? `  if (!status) status = oc_host_v${node.index}_begin(&borrow${i}, a${i}, active, &budget, &raw${i});`
+				: `  if (!status) status = ${walker(node)}_to(${node.leaf ? "&" : ""}a${i}, &raw${i}, 0, &input);`)
 			, `  if (!status) status = ${symbol}(&active->native, ${[...params.map((_, i) => `&raw${i}`), "&returned", "&result_owner->native"].join(", ")});`
+			, ...borrows.map(({ node, index }) => `  { int cleanup = oc_host_v${node.index}_end(&borrow${index}); if (!status) status = cleanup; }`)
 			, "  if (!status) {"
 			, `    status = ${walker(result)}_from(&returned, &converted, 0, &output);`
 			, "    if (status == LB_OWNED_INVALID) status = OV_RESULT;", "  }"

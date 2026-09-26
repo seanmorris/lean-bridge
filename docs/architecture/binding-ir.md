@@ -54,9 +54,19 @@ consumer also executes an independently authored v4 contract after fresh Lean
 reconciliation. The review selects resources and ownership policies; it cannot
 supply layouts or proof evidence. C-only package builds now ship that transport
 with the shared runtime, GMP and relocatable build metadata. Installed ordinary
-and reviewed consumers execute without producer source or Lean. Host-callback
-construction, other host projections and Wasm remain unfinished. Existing
+and reviewed consumers execute without producer source or Lean. Other host
+projections, transfer and anchored-result lowering, and Wasm remain unfinished. Existing
 version-3 backends reject this contract.
+
+The [owned host callback projection](../evidence/owned-host-callbacks-20260926.md)
+executes typed recovery and call-scoped C borrows for resource-containing
+values. Temporary callback replies preserve resource identity through the parent
+transaction. Ordinary and reviewed compiler paths pass lifetime, reentry and
+allocation-failure checks. C-only builds include the callback adapter in prepared
+packages. Native model version 7 authenticates signature-specific recovery and
+callback source; native, public-adapter and package receipts record that capability.
+Readers reconstruct it from compiler metadata and reject changed lifetime rules
+or callback implementations even when their claimed file hashes are updated.
 
 ## Rich values cross as rich values
 

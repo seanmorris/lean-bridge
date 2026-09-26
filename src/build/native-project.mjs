@@ -88,10 +88,11 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, lakeSnapshot
 			, targets
 			, ownedGraphs
+			, ownedHostCallbacks: ownedGraphs
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)
-				{ generateOwnedCValues(model.bindingIr); return; }
+				{ generateOwnedCValues(model.bindingIr, { hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) }); return; }
 				if(model.copiedGraph)
 				{ compileNativeGraphProjection(model.bindingIr, targets, model.moduleName); return; }
 				if(targets.includes("cpan")) validatePerlModel(model);

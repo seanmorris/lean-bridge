@@ -155,6 +155,7 @@ const callbackDefault = nativeCallbackDefault;
  * @param model - Compiler-checked model at its target pointer width.
  */
 export const generateCompiledCallbacks = model => {
+	if(model.ownedGraph?.hostCallbacks) return generateCompiledNativeLeanAdapters(model).callbackSource;
 	if(model.copiedGraph?.callbacks)
 		return generateNativeCallableGraphTrampolines(nativeGraphCarrierAbi(model));
 	let callbacks = '#include "component.h"\n#include "lean_bridge_native_runtime.h"\n';
@@ -172,12 +173,12 @@ export const generateCompiledCallbacks = model => {
  * @param options - Source selection, pinned compiler and native runtime paths.
  */
 export const buildNativeComponent = async options => {
-	const { runtimeRoot, leanPrefix, cc = "cc", signal, copiedGraphs = false, ownedGraphs = false } = options;
+	const { runtimeRoot, leanPrefix, cc = "cc", signal, copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false } = options;
 	const runtime = resolve(runtimeRoot);
 	const { manifest: runtimeManifest } = await readVerifiedNativeRuntime(runtime);
 	if(runtimeManifest.leanCommit !== pinnedNativeLean) throw new Error("incompatible native runtime");
 	const createModel = input => {
-		const model = createCompiledNativeModel(input, { ownedGraphs });
+		const model = createCompiledNativeModel(input, { ownedGraphs, ownedHostCallbacks });
 		if(model.copiedGraph && !copiedGraphs) throw Object.assign(new TypeError("Native graph components require a graph-capable host adapter"), { code: "native-graph-projection-unavailable" });
 		return model;
 	};
@@ -185,7 +186,11 @@ export const buildNativeComponent = async options => {
 		, receiptName: "native-component.json", createModel
 		, createAdapters: generateCompiledNativeLeanAdapters
 		, compileComponent: async ({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace, lakeSnapshot, run, verifyElaborationInputs }) => {
-			await save(join(staging, "c/callbacks.c"), generateCompiledCallbacks(model));
+			const callbacks = generateCompiledCallbacks(model);
+			await save(join(staging, "c/callbacks.c"), callbacks);
+			// The c/ directory contains disposable compiler intermediates. Keep the
+			// authenticated callback source beside the other retained adapter inputs.
+			if(model.ownedGraph?.hostCallbacks) await save(join(staging, "callbacks.c"), callbacks);
 			const allocationGuard = join(staging, "allocation-guard.h");
 			await save(allocationGuard, nativeAllocationGuardHeader);
 			const objects = [];
@@ -226,7 +231,8 @@ export const buildNativeComponent = async options => {
 				, `-Wl,-soname,${library}`
 				, "-o"
 				, join(staging, library)], { signal });
-			const receipt = { schemaVersion: 2
+			const receipt = { schemaVersion: model.ownedGraph?.hostCallbacks ? 3 : 2
+				, ...(model.ownedGraph?.hostCallbacks ? { callbackSourceSha256: sha256(callbacks) } : {})
 				, profile: "native-library-v1"
 				, runtimeIdentity: sha256(canonicalJson(runtimeManifest))
 				, bindingIrSha256: model.bindingIrSha256

@@ -577,3 +577,22 @@ test("the pinned Perl engine exposes libxcrypt headers outside a Nix build shell
 	assert.ok(engine.indexOf("export C_INCLUDE_PATH=") < engine.indexOf("/scripts/run-perl-engine.mjs"));
 	assert.doesNotMatch(engine, /export NIX_CFLAGS_COMPILE=/);
 });
+
+test("the filtered Perl engine loads without undeclared checkout modules", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-perl-filtered-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const { includedFiles } = JSON.parse(await readFile("nix/perl-engine-source-boundary.json"));
+	for(const path of includedFiles)
+	{
+		await mkdir(dirname(join(directory, path)), { recursive: true });
+		await copyFile(path, join(directory, path));
+	}
+	const script = 'await import("./src/build/native-project.mjs"); console.log("filtered-engine-ready");';
+	const run = () => execFileSync(process.execPath, ["--input-type=module", "-e", script], {
+		cwd: directory, encoding: "utf8", env: { PATH: "/unavailable" }, stdio: "pipe"
+	});
+	assert.equal(run(), "filtered-engine-ready\n");
+	await rm(join(directory, "src/analyze/reviewed-owned-source.mjs"));
+	assert.throws(run, error => error.stderr.includes("ERR_MODULE_NOT_FOUND")
+		&& error.stderr.includes("reviewed-owned-source.mjs"));
+});

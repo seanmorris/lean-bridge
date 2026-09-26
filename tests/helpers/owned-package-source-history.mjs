@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedHost } from "./owned-host-source-history.mjs";
 
 export const ownedPackageBaseline = "b1f4d2d8eaa626e1e6084d9ae777a98feecf5c0e";
 export const ownedPackageHistoryPath = "docs/evidence/owned-package-integration-20260926.json";
@@ -73,6 +74,7 @@ export const reverseOwnedPackageUpdate = (source, update) => {
  * @param expected - Optional exact digest at which normalization must stop.
  */
 export const beforeOwnedPackage = (path, source, expected) => {
+	source = beforeOwnedHost(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedPackageChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedPackageHistoryPath, "utf8"));

@@ -79,8 +79,8 @@ export const compileOwnedAggregateFixture = async (t, options = {}) => {
 		, modules: [{ module: "Owned"
 			, source: { path: "Owned.lean", sha256: sha256(source) }
 			, interface: { sha256: identity.oleanSha256, interfaceSha256: identity.interfaceSha256 } }] };
-	const generated = generateOwnedAggregateCarriers({ metadata, sourceIdentity, component: ownedAggregateReviewedIr().component });
-	await saveLakeFile(resolve("build/owned-aggregate-native"), `${options.fixture ?? "owned-aggregates"}${reviewedBindingIr ? "-reviewed" : ""}-inputs.json`
+	const generated = generateOwnedAggregateCarriers({ metadata, sourceIdentity, component: ownedAggregateReviewedIr().component, hostCallbacks: options.hostCallbacks });
+	await saveLakeFile(resolve("build/owned-aggregate-native"), `${options.fixture ?? "owned-aggregates"}${reviewedBindingIr ? "-reviewed" : ""}${options.hostCallbacks ? "-callbacks" : ""}-inputs.json`
 		, canonicalJson({ metadata, sourceIdentity, component: generated.model.component }));
 	await saveLakeFile(directory, generated.module + ".lean", generated.leanSource);
 	await saveLakeFile(directory, "carriers.h", generated.header);
@@ -93,17 +93,25 @@ def treeIdentity (_ : Unit) : Array (Owned.Tree → Owned.Tree) := #[fun value =
 `);
 	await capture(["-o", "Witness.olean", "-c", "Witness.c", "Witness.lean"]);
 	const runtime = await buildNativeSharedRuntime({ outputRoot: join(directory, "runtime"), leanPrefix: prefix });
+	// Match production components. Non-PIC references can create executable COPY
+	// relocations that miss initialization of Lean's shared-library globals.
 	for(const name of ["Owned", "Carriers", "Witness"])
-		await run("cc", ["-O2", "-g", "-I", join(runtime.root, "include")
+		await run("cc", ["-O2", "-g", "-fPIC", "-I", join(runtime.root, "include")
 			, ...name === "Carriers" ? ["-include", "carriers.h"] : []
 			, "-c", name + ".c", "-o", name + ".o"]);
+	if(generated.callbackSource)
+	{
+		await saveLakeFile(directory, "Callbacks.c", generated.callbackSource);
+		await run("cc", ["-O2", "-g", "-I", join(runtime.root, "include"), "-c", "Callbacks.c", "-o", "Callbacks.o"]);
+	}
 	const compile = async (name, source, sanitized = false, extraInputs = []) => {
 		await saveLakeFile(directory, name + ".c", source);
 		await run(sanitized ? process.env.LEAN_BRIDGE_SANITIZER_CC ?? "cc" : "cc", [
 			"-std=c11", "-O1", "-g", "-Wall", "-Wextra", "-Werror", "-pthread"
 			, "-I", join(runtime.root, "include")
 			, ...sanitized ? ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", "-no-pie"] : []
-			, name + ".c", "Owned.o", "Carriers.o", "Witness.o", ...extraInputs
+			, name + ".c", "Owned.o", "Carriers.o", "Witness.o"
+			, ...generated.callbackSource ? ["Callbacks.o"] : [], ...extraInputs
 			, "-L", join(runtime.root, "lib"), "-llean_bridge_native", "-lleanshared"
 			, "-Wl,-rpath," + join(runtime.root, "lib"), "-o", name]);
 		return (args = [], env = {}) => run("sh", ["-c", 'ulimit -c 0\nexec "$@"', "owned-native", join(directory, name), ...args]

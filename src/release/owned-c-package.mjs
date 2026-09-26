@@ -29,15 +29,17 @@ import { validateNativeCSettings } from "./native-c-family.mjs";
 export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, runtimeRoot, leanPrefix, settings = {}, glibcMinimumVersion }) => {
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true });
 	if(!model.ownedGraph) throw new TypeError("Owned C packaging requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
-	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component });
+	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
+	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks });
 	const p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
-	if(adapter.schemaVersion !== 2 || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
+	if(adapter.schemaVersion !== (hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
 		|| adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt)) || adapter.bindingIrSha256 !== model.bindingIrSha256
-		|| adapter.library !== `lib${p}.so` || adapter.ownedValues?.schemaVersion !== 1 || adapter.gmp?.version !== "6.3.0"
+		|| adapter.library !== `lib${p}.so` || adapter.ownedValues?.schemaVersion !== (hostCallbacks ? 2 : 1) || adapter.gmp?.version !== "6.3.0"
+		|| canonicalJson(adapter.ownedValues.hostCallbacks ?? null) !== canonicalJson(model.ownedGraph.hostCallbacks ?? null)
 		|| adapter.ownedValues.headerSha256 !== sha256(generated.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(generated.source)
 		|| (await nativeArtifactPaths(adapterRoot)).some(path => path !== "native-c-adapter.json" && !Object.hasOwn(adapter.files, path)))
 		throw new Error("Owned C adapter differs from compiler-authenticated types or runtime");
@@ -57,6 +59,7 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	const evidence = "share/lean-bridge";
 	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json"])
 		await copy(join(nativeRoot, path), `${evidence}/component/${path}`);
+	if(hostCallbacks) await copy(join(nativeRoot, "callbacks.c"), `${evidence}/component/callbacks.c`);
 	const generatedDigest = receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256;
 	if(generatedDigest !== undefined)
 	{
@@ -134,14 +137,28 @@ Each C conversion and native conversion has its own cumulative 16 MiB storage an
 transactions retain at most 4,096 references. Limits do not cap Lean algorithm
 working memory or every GMP allocator overhead. Invalid input or bridge allocation
 failure preserves outputs and releases partial ownership. Malformed native replies
-retire the runtime. Returned Lean closures have typed _call operations. Construction
-of host callbacks for owned payloads is not implemented in this transport yet.
+retire the runtime. Returned Lean closures have typed _call operations. ${hostCallbacks ? `Host
+callbacks use generated _host descriptors with call/context or an existing closure.
+The descriptor borrows the enclosing call's lifetime. Lean cannot invoke a host
+callback after that borrow ends. Callback arguments expire on return. Reply views
+may borrow those arguments or context storage; use a generated _copy function for
+callback-local storage. Transfer its result owner with the reply, including on
+error. The bridge releases that owner and retains returned resources for the caller.
+
+REQUIRES_RECOVERY macros identify signatures that need a real typed recovery value
+in the descriptor before the call starts. Other signatures recover from real
+arguments or productive constructors. The bridge never fabricates a resource or
+publishes a recovery value as successful output. Callback failure suppresses later
+host invocations in the same call; subsequent independent calls can recover.
+No C++ exception or longjmp may cross a callback boundary.` : `Construction
+of host callbacks for owned payloads is not implemented in this transport yet.`}
 
 ${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n")}
 `);
 	const files = [];
 	for(const path of await nativeArtifactPaths(root)) files.push({ path, bytes: await readFile(join(root, path)), mode: 0o644 });
-	const manifest = { schemaVersion: 2, kind: "lean-bridge-native-c-package"
+	const manifest = { schemaVersion: hostCallbacks ? 3 : 2
+		, kind: "lean-bridge-native-c-package"
 		, ecosystem: "c", name, version, component: model.component
 		, profile: "native-library-v1"
 		, runtimeIdentity, bindingIrSha256: model.bindingIrSha256, glibcMinimumVersion
@@ -157,7 +174,9 @@ ${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n"
 	const bytes = createDeterministicTarGzFromFiles({ files: files.map(file => ({ ...file, path: `${archiveRoot}/${file.path}` })), sourceDateEpoch: 1 });
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
-	return { ecosystem: "c", backend: "native-c-owned-v1", runtimeIdentity
+	return { ecosystem: "c"
+		, backend: hostCallbacks ? "native-c-owned-v2" : "native-c-owned-v1"
+		, runtimeIdentity
 		, glibcMinimumVersion
 		, packages: [{ archive, sha256: sha256(bytes), bytes: bytes.length, name, version, compilerAccess: false }]
 		, cmakePackage, cmakeTarget, pkgConfig: name };

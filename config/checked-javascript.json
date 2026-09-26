@@ -6,6 +6,7 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/c/owned-callbacks.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/owned-package.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/owned-runtime.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/owned-values.mjs", "classification": "strict-migration-backlog" },
@@ -15,6 +16,7 @@
 		{ "path": "src/backends/native/owned-value-runtime.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/owned-aggregate-carriers.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/owned-c-projection.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/owned-callback-carriers.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/owned-native-model.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/owned-c-package.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/wit/callable-graph-host.mjs", "classification": "strict-migration-backlog" },

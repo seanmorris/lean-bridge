@@ -26,10 +26,11 @@ import { packageOwnedNativeC } from "../release/owned-c-package.mjs";
  */
 export const projectOwnedNativeC = async ({ working, nativeRoot, runtimeRoot, leanPrefix, settings, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true });
 	if(!model.ownedGraph) throw new TypeError("Owned C projection requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
-	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component });
+	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
+	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks });
 	const p = generated.values.prefix, root = join(working, "native/owned-c-binding");
 	for(const [path, source] of Object.entries(generated.files))
 	{
@@ -73,11 +74,13 @@ export const projectOwnedNativeC = async ({ working, nativeRoot, runtimeRoot, le
 		const bytes = await readFile(join(root, path));
 		files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
 	}
-	const adapter = { schemaVersion: 2, profile: "native-library-v1"
+	const adapter = { schemaVersion: hostCallbacks ? 3 : 2
+		, profile: "native-library-v1"
 		, bindingIrSha256: model.bindingIrSha256
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity: identity, library
-		, ownedValues: { schemaVersion: 1
+		, ownedValues: { schemaVersion: hostCallbacks ? 2 : 1
+			, ...(hostCallbacks ? { hostCallbacks: model.ownedGraph.hostCallbacks } : {})
 			, headerSha256: sha256(generated.publicHeader)
 			, sourceSha256: sha256(generated.source) }
 		, gmp: { version: "6.3.0" }, files };

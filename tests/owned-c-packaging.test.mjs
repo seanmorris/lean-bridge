@@ -87,11 +87,12 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed owned C package from
 	} catch(error)
 	{ throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); }
 	assert.deepEqual(await lakeInputState(project), before);
-	assert.equal(built.backend, "native-c-owned-v1");
+	assert.equal(built.backend, "native-c-owned-v2");
 	const runtimeRoot = join(output, "native/runtime"), nativeRoot = join(output, "native/component");
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	await assert.rejects(readVerifiedNativeComponent(nativeRoot, identity));
-	const { model, receipt: componentReceipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true });
+	await assert.rejects(readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true }), { code: "native-owned-callbacks-unavailable" });
+	const { model, receipt: componentReceipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true });
 	assert.equal(model.bindingIr.schemaVersion, 4); assert.equal(model.exports.length, 22);
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), mode === "reviewed");
 	const adapterRoot = join(output, "native/owned-c-binding");
@@ -131,7 +132,7 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed owned C package from
 	assert.ok(observed.checks >= 300);
 	const cRoot = join(consumer, "c"), installed = join(cRoot, "owned-archive-1.2.3-c");
 	const manifest = await json(join(installed, "lean-bridge-package.json"));
-	assert.equal(manifest.schemaVersion, 2); assert.equal(manifest.ownedValues.schemaVersion, 1);
+	assert.equal(manifest.schemaVersion, 3); assert.equal(manifest.ownedValues.schemaVersion, 2);
 	for(const path of ["include/gmp.h", "lib/libgmp.so.10"
 		, "share/lean-bridge/sources/gmp-6.3.0.tar.xz"
 		, "share/lean-bridge/licenses/GMP-COPYING.LESSERv3"
