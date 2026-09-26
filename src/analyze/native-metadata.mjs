@@ -10,8 +10,8 @@ const fail = message => { throw Object.assign(new Error(message), { code: "inval
 const digest = value => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
 const name = value => typeof value === "string" && /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value);
 const names = value => Array.isArray(value) && value.every(name) && new Set(value).size === value.length;
-const containsGraph = value => value !== null && typeof value === "object"
-	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
+const containsGraph = (value, kind = "graph") => value !== null && typeof value === "object"
+	&& (value.kind === kind || Object.values(value).some(child => containsGraph(child, kind)));
 
 /**
  * Reconstruct invocation context from separately retained compiler/source evidence.
@@ -20,13 +20,14 @@ const containsGraph = value => value !== null && typeof value === "object"
  * @param sourceIdentity - Native build's compiler, selection and interface evidence.
  * @param options - Internal compiled-transport admission.
  * @param options.copiedGraphs - Allow finite graphs only for the typed carrier compiler.
+ * @param options.ownedGraphs - Allow retained resource graphs only for ownership-aware lowering.
  */
-export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs = false } = {}) => {
+export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs = false, ownedGraphs = false } = {}) => {
 	if(!sourceIdentity || !digest(sourceIdentity.leanCompilerSha256) || !digest(sourceIdentity.extractorSha256)
 		|| !digest(sourceIdentity.sourceTreeSha256) || !/^[a-f0-9]{40}$/.test(sourceIdentity.leanCommit)
 		|| !Array.isArray(sourceIdentity.modules) || !sourceIdentity.modules.length) fail("Native metadata requires measured compiler and source identities");
 	const { metadata: context, ...selection } = sourceIdentity.request ?? {};
-	if(canonicalJson(Object.keys(selection).sort()) !== canonicalJson(["arities", "exportModules", "exports", "modules", "profile", "resources", ...(selection.specializations === undefined ? [] : ["specializations"]), ...(selection.contracts === undefined ? [] : ["contracts"])].sort())
+	if(canonicalJson(Object.keys(selection).sort()) !== canonicalJson(["arities", "exportModules", "exports", "modules", "profile", "resources", ...(selection.specializations === undefined ? [] : ["specializations"]), ...(selection.contracts === undefined ? [] : ["contracts"]), ...(selection.ownedAggregates === undefined ? [] : ["ownedAggregates"])].sort())
 		|| selection.profile !== "native-library-v1" || !names(selection.modules) || !selection.modules.length || !names(selection.exportModules) || !selection.exportModules.length
 		|| selection.exportModules.some(module => !selection.modules.includes(module)) || !names(selection.exports) || !names(selection.resources)
 		|| !Array.isArray(selection.arities) || selection.arities.some(item => !Array.isArray(item) || item.length !== 2 || !name(item[0]) || !Number.isSafeInteger(item[1]) || item[1] < 0 || item[1] > 32)
@@ -44,6 +45,9 @@ export const projectNativeMetadata = (metadata, sourceIdentity, { copiedGraphs =
 		, extractorSha256: sourceIdentity.extractorSha256 });
 	if(canonicalJson(expected.metadata) !== canonicalJson(context)) fail("Native invocation differs from retained compiler/source evidence");
 	validateElaboratedMetadata(metadata, expected);
+	if(selection.ownedAggregates !== undefined && !ownedGraphs) throw Object.assign(new Error("Explicit aggregate ownership requires the ownership-aware transport"), {
+		code: "native-elaboration-unsupported"
+	});
 	const diagnostics = metadata.diagnostics.filter(item => item.severity === "error");
 	if(diagnostics.length) throw Object.assign(new Error(`Native export metadata rejected: ${diagnostics.map(item => item.message).join("; ")}`), {
 		code: "native-elaboration-unsupported"

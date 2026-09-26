@@ -13,6 +13,13 @@ import { assertWitStructuredCallableExecution, witStructuredCallableExecutionPat
 import { assertPhpWasmRecursiveCallableIntegration } from "./php-wasm-recursive-callable-evidence.mjs";
 import { phpWasmRecursiveCallableHistoryPath } from "./php-wasm-recursive-callable-source-history.mjs";
 import { witRecursiveCallableChangedPaths, reverseWitRecursiveCallableUpdate } from "./wit-recursive-callable-source-history.mjs";
+import { beforeOwnedAggregates, ownedAggregateChangedPaths } from "./owned-aggregate-source-history.mjs";
+
+const historicalSource = async (path, text = false) => {
+	const bytes = await readFile(path);
+	const value = ownedAggregateChangedPaths.includes(path) ? beforeOwnedAggregates(path, bytes.toString("utf8")) : bytes;
+	return text ? value.toString("utf8") : value;
+};
 
 export const witRecursiveCallableBaseline = "7daacb859a45f3c90ba8739bd9396fa5d970813d";
 export const witRecursiveCallableExecutionPath = "docs/evidence/wit-recursive-callables-20260926.json";
@@ -85,7 +92,7 @@ export const assertWitRecursiveCallableExecution = async record => {
 	passing(record.installed, "npm run test:wit-recursive-packages", 3);
 	passing(record.regressions, witRecursiveCallableRegressionCommand, 4);
 	assert.deepEqual(Object.keys(record.projectionSources).sort(), witRecursiveCallableProjectionPaths);
-	for(const [path, digest] of Object.entries(record.projectionSources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.projectionSources)) assert.equal(sha256(await historicalSource(path)), digest, path);
 	assert.deepEqual(Object.keys(record.generated.reports).sort(), ["faults", "native"]);
 	assertWitRecursiveFaultProbes(record.generated.reports.faults);
 	await assertWitRecursiveNativeProbes(record.generated.reports.native);
@@ -116,13 +123,13 @@ export const assertWitRecursiveCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), witRecursiveCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...witRecursiveCallableChangedPaths, ...witRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await readFile(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await historicalSource(path)), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reverseWitRecursiveCallableUpdate(await readFile(update.path, "utf8"), update);
+		restored[update.path] = reverseWitRecursiveCallableUpdate(await historicalSource(update.path, true), update);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
 	const { document, ...contracts } = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);

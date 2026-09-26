@@ -6,7 +6,7 @@
 import { lstat, readFile, realpath } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentScalarTypes } from "../abi/component-scalars.mjs";
-import { validateNativeType } from "./native-types.mjs";
+import { validateNativeType, validateOwnedNativeType } from "./native-types.mjs";
 import { validateCopiedMetadataGraph } from "./copied-metadata-graph.mjs";
 import { exportContractFor, exportContractProblem, validateExportConfiguration } from "./export-configuration.mjs";
 
@@ -69,9 +69,11 @@ export const validateElaboratedMetadata = (report, request) => {
 	const profile = request.profile ?? "component-scalars-v1", native = profile === "native-library-v1";
 	const specializations = request.specializations ?? [];
 	try
-	{ validateExportConfiguration({ schemaVersion: 1, specializations, ...(request.contracts === undefined ? {} : { contracts: request.contracts }), ...(request.exports.length ? { exports: request.exports } : {}) }); }
+	{ validateExportConfiguration({ schemaVersion: 1, specializations
+		, ...(request.ownedAggregates === undefined ? {} : { ownedAggregates: request.ownedAggregates })
+		, ...(request.contracts === undefined ? {} : { contracts: request.contracts }), ...(request.exports.length ? { exports: request.exports } : {}) }); }
 	catch
-	{ fail("Invalid specialization or export contract selection"); }
+	{ fail("Invalid specialization, aggregate ownership or export contract selection"); }
 	const selections = new Map(specializations.map(item => [item.name, item]));
 	if(report.schemaVersion !== 2 || report.kind !== "lean-bridge-elaborated-exports" || report.profile !== profile
 		|| !["component-scalars-v1", "native-library-v1"].includes(profile)) fail("Unsupported elaborated metadata profile");
@@ -220,8 +222,11 @@ export const validateElaboratedMetadata = (report, request) => {
 					copied(type.result);
 				};
 				const nativeType = type => {
-					validateNativeType(type);
+					if(request.ownedAggregates === undefined) validateNativeType(type);
+					else validateOwnedNativeType(type, request.ownedAggregates);
 					const check = value => {
+						if(["graph", "owned-graph"].includes(value.kind))
+						{ value.types.forEach(check); check(value.root); }
 						if(value.kind === "alias") check(value.target);
 						if(value.kind === "resource" && (!request.resources.includes(value.name) || !request.modules.includes(value.module))) fail("Native resource lacks its configured source identity");
 						if(["array", "list", "option"].includes(value.kind)) check(value.element);
@@ -240,7 +245,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					validateType(parameter.type);
 				});
 				validateType(projection.result);
-				if(declaration.selected && exportContractProblem(exportContractFor(request.contracts, declaration.identity), projection))
+				if(declaration.selected && exportContractProblem(exportContractFor(request.contracts, declaration.identity), projection, request.ownedAggregates !== undefined))
 					fail("Supported projection violates its configured export contract");
 			}
 		}

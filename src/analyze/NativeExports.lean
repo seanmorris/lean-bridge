@@ -24,12 +24,20 @@ structure Specialization where
   types : Array String
   deriving FromJson
 
+structure OwnedAggregatePolicy where
+  ownership : String
+  disposal : String
+  fallback : String
+  cycles : String
+  deriving FromJson, ToJson
+
 structure Request where
   profile : Option String := none
   modules : Array String
   exportModules : Option (Array String) := none
   exports : Array String := #[]
   resources : Array String := #[]
+  ownedAggregates : Option OwnedAggregatePolicy := none
   arities : Array (String × Nat) := #[]
   specializations : Option (Array Specialization) := none
   contracts : Option Json := none
@@ -147,7 +155,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     if let some (_, primitive) := primitives.find? (·.1 == name) then
       return obj [("kind", str "primitive"), ("name", str primitive), ("lean", str name.toString), ("abi", ← abi e)]
     if request.resources.contains name.toString then
-      if copied then reject e "identity resources inside copied values require an ownership policy"
+      if copied && request.ownedAggregates.isNone then
+        reject e "identity resources inside copied values require an ownership policy"
       if !nativeIdentifier name.toString then reject e "unsupported native resource identifier"
       if !(← getEnv).contains name then reject e "unknown resource"
       let lowered ← abi e
@@ -294,16 +303,27 @@ partial def copiedReferenceNames (value : Json) : List String :=
   | .arr values => values.toList.flatMap copiedReferenceNames
   | _ => []
 
-partial def finiteCopiedGraph (types : Array Json) (value : Json) : MetaM Json := do
+partial def hasResource (value : Json) : Bool :=
+  match value with
+  | .obj fields =>
+    (value.getObjValAs? String "kind").toOption == some "resource" ||
+      fields.toArray.any (fun (_, child) => hasResource child)
+  | .arr values => values.any hasResource
+  | _ => false
+
+partial def finiteCopiedGraph (types : Array Json) (value : Json)
+    (policy : Option OwnedAggregatePolicy := none) : MetaM Json := do
   if (value.getObjValAs? String "kind").toOption == some "callback" then
     let parameters ← ofExcept <| value.getObjValAs? (Array Json) "parameters"
     let result ← ofExcept <| value.getObjVal? "result"
     let parameters ← parameters.mapM fun parameter => do
-      callableTarget (← finiteCopiedGraph types parameter)
+      callableTarget (← finiteCopiedGraph types parameter policy)
     return value.setObjVal! "parameters" (toJson parameters)
-      |>.setObjVal! "result" (← callableTarget (← finiteCopiedGraph types result))
-  let (expanded, _) ← (inlineCopiedType types value).run.run 0
-  if let some inline := expanded then return inline
+      |>.setObjVal! "result" (← callableTarget (← finiteCopiedGraph types result policy))
+  -- Preserve the existing inline fast path when no ownership policy was chosen.
+  if policy.isNone then
+    let (expanded, _) ← (inlineCopiedType types value).run.run 0
+    if let some inline := expanded then return inline
   let mut pending := copiedReferenceNames value
   let mut names : List String := []
   let mut selected := #[]
@@ -316,14 +336,29 @@ partial def finiteCopiedGraph (types : Array Json) (value : Json) : MetaM Json :
         | throwError "missing copied type definition: {name}"
       selected := selected.push type
       pending := copiedReferenceNames type ++ pending
+  let kind := (value.getObjValAs? String "kind").toOption.getD ""
+  let owned := kind != "resource" && (hasResource value || selected.any hasResource)
+  if owned then
+    let some ownership := policy | throwError "resource aggregates require an explicit ownership policy"
+    return obj [("kind", str "owned-graph"), ("root", value),
+      ("types", toJson (selected.qsort fun a b =>
+        (a.getObjValAs? String "name").toOption.getD "" < (b.getObjValAs? String "name").toOption.getD "")),
+      ("policy", toJson ownership), ("abi", ← ofExcept <| value.getObjVal? "abi")]
+  if policy.isSome then
+    let (expanded, _) ← (inlineCopiedType types value).run.run 0
+    if let some inline := expanded then return inline
   return obj [("kind", str "graph"), ("root", value),
     ("types", toJson (selected.qsort fun a b =>
       (a.getObjValAs? String "name").toOption.getD "" < (b.getObjValAs? String "name").toOption.getD "")),
     ("abi", ← ofExcept <| value.getObjVal? "abi")]
 
 def shape (request : Request) (e : Expr) : MetaM Json := do
+  if let some policy := request.ownedAggregates then
+    unless policy.ownership == "lease" && policy.disposal == "required" &&
+        ["none", "queued-finalizer"].contains policy.fallback && policy.cycles == "reject" do
+      reject e "invalid resource aggregate ownership policy"
   let (value, state) ← (shapeTree request e).run {}
-  finiteCopiedGraph state.types value
+  finiteCopiedGraph state.types value request.ownedAggregates
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
     (index : Nat := 0) : MetaM (Array Json × Json) := do
@@ -467,7 +502,7 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String) : Op
   if let .ok refinement := site.getObjVal? "refinement" then
     if refinement != str "reject" then
       return some s!"{label}: checked refinement constructors are not implemented by this profile"
-  let identity := ["resource", "callback"].contains ((type.getObjValAs? String "kind").toOption.getD "")
+  let identity := ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")
   let ownership := if identity then (if result then "lease" else "borrow") else "copy"
   if (site.getObjValAs? String "ownership").toOption != some ownership then
     return some s!"{label}: ownership or lifetime differs from the implemented adapter"
@@ -480,13 +515,20 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String) : Op
     return some s!"{label}: ownership or lifetime differs from the implemented adapter"
   return none
 
-def contractProblem (contract projection : Json) : Option String := Id.run do
+def contractProblem (contract projection : Json) (owned : Bool := false) : Option String := Id.run do
   let parameters := (projection.getObjValAs? (Array Json) "parameters").toOption.getD #[]
   if let .ok effects := contract.getObjValAs? (Array String) "effects" then
     let hasCallback := parameters.any fun parameter =>
       ((parameter.getObjVal? "type" >>= fun type => type.getObjValAs? String "kind").toOption == some "callback")
-    let expected := if hasCallback then #["fails", "host-call"] else #[]
-    if effects.qsort (· < ·) != expected then
+    let retained := fun (type : Json) =>
+      ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")
+    let mut expected := if hasCallback then #["fails", "host-call"] else #[]
+    if owned then
+      if parameters.any (fun p => retained ((p.getObjVal? "type").toOption.getD Json.null)) then
+        expected := expected.push "reads-resource"
+      if retained ((projection.getObjVal? "result").toOption.getD Json.null) then
+        expected := expected.push "allocates"
+    if effects.qsort (· < ·) != expected.qsort (· < ·) then
       return some "effects differ from the implemented boundary effects"
   if let .ok sites := contract.getObjValAs? (Array Json) "parameters" then
     if sites.size != parameters.size then
@@ -504,7 +546,7 @@ def constrainProjection (request : Request) (name : String) (projection : Json) 
   if (projection.getObjValAs? String "status").toOption != some "supported" then return projection
   if let some contracts := request.contracts then
     if let .ok contract := contracts.getObjVal? name then
-      if let some problem := contractProblem contract projection then
+      if let some problem := contractProblem contract projection request.ownedAggregates.isSome then
         return unsupported "export-contract-mismatch" problem
   return projection
 

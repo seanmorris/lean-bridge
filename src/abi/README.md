@@ -25,6 +25,7 @@ Each compiler returns data that can be validated, hashed, tested, and rendered b
 |---|---|
 | [`value-frame.mjs`](value-frame.mjs) | Compiles copied values into a bounded frame plan and emits the matching C header. |
 | [`resource-lifecycle.mjs`](resource-lifecycle.mjs) | Defines identity-bearing resources, ownership, borrows, retention, disposal, and stale-use behavior. |
+| [`owned-aggregate-model.mjs`](owned-aggregate-model.mjs) | Describes v4 resource-bearing containers, recursive values and owned fields. Existing v3 backends reject this contract until an executable adapter admits it. |
 | [`callback-signature.mjs`](callback-signature.mjs) | Compiles fixed callback signatures, nesting bounds, and callback lifetime. |
 | [`pending-operation.mjs`](pending-operation.mjs) | Defines asynchronous operation creation, settlement, cancellation, and release. |
 | [`error-envelope.mjs`](error-envelope.mjs) | Defines declared failures, supported payload values, unexpected errors, and containment. |

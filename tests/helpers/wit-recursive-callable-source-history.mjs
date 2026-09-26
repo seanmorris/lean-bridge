@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedAggregates } from "./owned-aggregate-source-history.mjs";
 
 export const witRecursiveCallableHistoryPath = "docs/evidence/wit-recursive-callable-integration-20260926.json";
 export const witRecursiveCallableChangedPaths = [
@@ -72,6 +73,7 @@ export const reverseWitRecursiveCallableUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforeWitRecursiveCallables = (path, source, expected) => {
+	source = beforeOwnedAggregates(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !witRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(witRecursiveCallableHistoryPath, "utf8"));

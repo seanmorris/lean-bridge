@@ -660,6 +660,11 @@ jobs:
           test -s build/structured-callables/cpp.json
           LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs
           test -s build/native-recursive-callables/transport.json
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs
+          test -s build/owned-aggregate-native/transport.json
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs
+          test -s build/owned-aggregate-native/values.json
+          test -s build/owned-aggregate-native/scalars.json
           LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs
           test -s build/recursive-callables/c.json
           LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs
@@ -686,6 +691,9 @@ jobs:
             build/callables/cpp.json
             build/structured-callables/cpp.json
             build/native-recursive-callables/transport.json
+            build/owned-aggregate-native/transport.json
+            build/owned-aggregate-native/values.json
+            build/owned-aggregate-native/scalars.json
             build/recursive-callables/c.json
             build/recursive-callables/cpp.json
             build/recursive-callables/c-family-documentation.json
@@ -877,6 +885,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-contract.test.mjs tests/closure-thread-installed.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_FAMILY_RECURSIVE_DOCUMENTATION_TEST=1 node --test tests/c-family-recursive-documentation.test.mjs"

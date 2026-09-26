@@ -5,12 +5,15 @@
  */
 import { componentScalarTypes } from "../abi/component-scalars.mjs";
 import { validateCopiedMetadataGraph } from "./copied-metadata-graph.mjs";
+import { validateOwnedMetadataGraph } from "./owned-metadata-graph.mjs";
+import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
 
 const identifier = /^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/;
 const fail = message => { throw new TypeError(`native-library-v1: ${message}`); };
 const closed = (value, fields, label) => {
-	if(!value || typeof value !== "object" || Array.isArray(value)
-	  || Object.keys(value).sort().join(",") !== [...fields].sort().join(",")) fail(`invalid ${label} fields`);
+	if(!value || ![Object.prototype, null].includes(Object.getPrototypeOf(value))
+		|| Reflect.ownKeys(value).length !== fields.length || Reflect.ownKeys(value).some(key => !fields.includes(key))
+		|| fields.some(key => !Object.hasOwn(Object.getOwnPropertyDescriptor(value, key) ?? {}, "value"))) fail(`invalid ${label} fields`);
 };
 
 /**
@@ -22,8 +25,25 @@ const closed = (value, fields, label) => {
  */
 export const validateNativeType = (type, depth = 0, copied = false) => validate(type, depth, copied);
 
-const validate = (type, depth, copied, references) => {
+/**
+ * Admit ownership-aware metadata only with an independently authorized policy.
+ *
+ * @param type - Compiler-owned native type.
+ * @param policy - Explicit aggregate author decision.
+ */
+export const validateOwnedNativeType = (type, policy) => {
+	validateOwnedAggregatePolicy(policy);
+	return validate(type, 0, false, undefined, policy);
+};
+
+const validate = (type, depth, copied, references, policy, owned = false) => {
 	if(!type || depth > 32) fail("type nesting exceeds 32");
+	if(!Object.hasOwn(Object.getOwnPropertyDescriptor(type, "kind") ?? {}, "value")) fail("type kind must be a data field");
+	if(type.kind === "owned-graph")
+	{
+		if(!policy || references || copied) fail("owned aggregates require a separately authorized graph boundary");
+		return validateOwnedMetadataGraph(type, policy, (value, table) => validate(value, 0, true, table, policy, true));
+	}
 	const fields = { primitive: ["kind", "name", "lean", "abi"]
 		, graph: ["kind", "root", "types", "abi"]
 		, reference: ["kind", "name", "lean", "abi"]
@@ -47,7 +67,7 @@ const validate = (type, depth, copied, references) => {
 	const suffix = { uint32_t: "_uint32", uint64_t: "_uint64", size_t: "_usize", float: "_float32", double: "_float" }[type.abi.cType] ?? "";
 	if(type.abi.box !== `lean_box${suffix}` || type.abi.unbox !== `lean_unbox${suffix}`
 	  || (type.abi.heap && type.abi.cType !== "lean_object*")) fail("inconsistent native representation");
-	const recurse = (child, copy = copied) => validate(child, depth + 1, copy, references);
+	const recurse = (child, copy = copied) => validate(child, depth + 1, copy, references, policy, owned);
 	if(type.kind === "graph")
 	{
 		if(references) fail("nested copied graph");
@@ -106,7 +126,7 @@ const validate = (type, depth, copied, references) => {
 		}
 	} else if(type.kind === "resource")
 	{
-		if(copied) fail("identity resources inside copied values require an ownership policy");
+		if(copied && !owned) fail("identity resources inside copied values require an ownership policy");
 		if(!identifier.test(type.name) || type.name !== type.lean || !identifier.test(type.module) || !type.abi.heap) fail("invalid resource identity");
 	} else if(type.kind === "callback")
 	{

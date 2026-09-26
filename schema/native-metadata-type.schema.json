@@ -5,6 +5,19 @@
   "oneOf": [
     {
       "type": "object", "additionalProperties": false,
+      "required": ["kind", "root", "types", "policy", "abi"],
+      "properties": {
+        "kind": { "const": "owned-graph" },
+        "root": { "$ref": "#" },
+        "types": { "type": "array", "maxItems": 1024, "items": {
+          "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "enum": ["alias", "record", "variant"] } } }]
+        } },
+        "policy": { "$ref": "lean-export-configuration.schema.json#/$defs/ownedAggregates" },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
       "required": ["kind", "root", "types", "abi"],
       "properties": {
         "kind": { "const": "graph" },

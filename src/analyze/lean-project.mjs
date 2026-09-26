@@ -570,6 +570,8 @@ export const analyzeLeanProject = async (projectRoot, { signal = undefined } = {
 	const inspected = await inspectLeanProject(root, { signal });
 	const { inputs, sourceTreeSha256: treeSha256, project: facts, configurationRecord } = inspected;
 	const configuration = configurationRecord.configuration;
+	if(configuration.ownedAggregates !== undefined)
+		fail("ownership-requires-elaboration", "Owned aggregates require compiler-backed analysis; source discovery cannot authorize retained resource fields");
 	if(Object.keys(configuration.arities ?? {}).length)
 		fail("arity-requires-elaboration", "Explicit function arities require compiler-backed analysis; source discovery cannot distinguish returned functions");
 	if(configuration.specializations?.length)

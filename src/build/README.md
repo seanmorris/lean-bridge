@@ -33,6 +33,7 @@ The build layer owns compilation, linking, and structural validation. It does no
 |---|---|
 | [`component-compilation-plan.mjs`](component-compilation-plan.mjs), [`component-plan.mjs`](component-plan.mjs) | Validate project inputs and prepare the files, targets, flags, runtime requirements, and output paths needed for a build. |
 | [`compiler-adapters.mjs`](compiler-adapters.mjs) | Generate and validate the adapter plan that connects analyzed declarations to the component boundary. |
+| [`owned-aggregate-carriers.mjs`](owned-aggregate-carriers.mjs) | Generate private typed Lean/C constructors, budgeted collection projections and calls from explicit resource-aggregate metadata. Native value transactions consume these helpers; installed host projections remain under development. |
 | [`engine-execution-request.mjs`](engine-execution-request.mjs) | Close over engine identity and build inputs, serialize the request, and verify it when read back. |
 | [`canonical-build.mjs`](canonical-build.mjs), [`component-engine.mjs`](component-engine.mjs) | Select an authorized native or Docker path and coordinate request execution. |
 | [`lean-component-compiler.mjs`](lean-component-compiler.mjs), [`component-side-linker.mjs`](component-side-linker.mjs) | Compile reviewed Lean sources and link the component side module. |

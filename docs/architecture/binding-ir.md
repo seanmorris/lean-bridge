@@ -43,6 +43,14 @@ A borrow does not create ownership. Its lifetime ends with the call or remains a
 
 Copied records cannot contain identity-bearing fields. Identity values cannot declare copy ownership. Non-copy ownership requires a lifetime. The semantic validator rejects each violation before generation.
 
+The separate [owned aggregate contract](../evidence/owned-aggregate-metadata-20260926.md)
+stages version 4 for immutable resource-bearing collections, records and variants.
+It retains resource identity and requires explicit lease/disposal policies,
+including a policy for anonymous containers. Compiler checks, private typed Lean/C
+carriers, budgeted native value conversion and ownership cleanup execute in
+dedicated tests. Public host projections, Wasm transport and installed host
+support remain unfinished. Existing version-3 backends reject this contract.
+
 ## Rich values cross as rich values
 
 The `result` constructor stores its arguments as `[success, error]`. Lean `Except ε α` therefore lowers to `result<α, ε>`. For example, `Except String UInt32` becomes `result<uint32, string>`, with a numeric success payload and a text error payload. This argument order is part of the IR contract, independent of the order used by a source language. Recognizing the type during analysis does not enable compound signatures in ordinary compiled packages; those still require their transport adapters.

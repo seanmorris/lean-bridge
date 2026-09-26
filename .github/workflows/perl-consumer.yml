@@ -88,7 +88,7 @@ jobs:
         run: |
           node --test --test-name-pattern='captured entry metadata|captured APIs' tests/lake-wasm.test.mjs
           node --test --test-name-pattern='unlocked builds reject (new dependencies|target metadata|export contract)' tests/unlocked-component.test.mjs
-          node --test tests/elaborated-metadata.test.mjs tests/compiler-variant-metadata.test.mjs tests/compiler-alias-metadata.test.mjs tests/compiler-callable-aliases.test.mjs tests/reviewed-telemetry-aliases.test.mjs
+          node --test tests/elaborated-metadata.test.mjs tests/compiler-variant-metadata.test.mjs tests/compiler-alias-metadata.test.mjs tests/compiler-callable-aliases.test.mjs tests/reviewed-telemetry-aliases.test.mjs tests/owned-aggregate-metadata.test.mjs
           node --test tests/compiler-analysis.test.mjs
       - name: Check captured Lean text generators and generated Lean/C consumers
         env:

@@ -4,8 +4,8 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { validateBindingIr } from "../binding-ir/contract.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import { validateBindingIr, validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
+import { hashBindingIr, canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 import { validateElaboratedMetadata } from "./elaborated-metadata.mjs";
 import { exportContractFor, exportContractOwnership, exportContractEffects } from "./export-configuration.mjs";
 
@@ -53,8 +53,19 @@ export const sourceApiIdentity = document => {
  * @param options.elaborationSha256 - Digest of the enclosing compiler evidence.
  * @param options.include - Optional subset of supported selections for partial analysis.
  */
-export const createElaboratedSemanticModel = ({ metadata, request, component, elaborationSha256, include }) => {
+export const createElaboratedSemanticModel = options => lowerSemanticModel(options, false);
+
+/**
+ * Lower explicit ownership metadata without admitting it to copied-value backends.
+ *
+ * @param options - Fresh compiler report, authorized request and measured evidence.
+ */
+export const createOwnedElaboratedSemanticModel = options => lowerSemanticModel(options, true);
+
+const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, include }, ownedAggregates) => {
 	validateElaboratedMetadata(metadata, request);
+	if(ownedAggregates !== (request.ownedAggregates !== undefined))
+		throw new TypeError("Explicit aggregate ownership requires the ownership-aware semantic model");
 	if(!/^[a-f0-9]{64}$/.test(elaborationSha256)) throw new TypeError("Semantic lowering requires its compiler evidence identity");
 	const selected = metadata.modules.flatMap(module => module.declarations).filter(item => item.selected && item.projection.status === "supported");
 	if(include && (new Set(include).size !== include.length || include.some(name => !selected.some(item => item.identity === name))))
@@ -66,7 +77,7 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 	// Visit every inline definition, including duplicates, so conflicting nested
 	// facts cannot hide behind a previously encountered parent type.
 	const remember = type => {
-		if(type.kind === "graph")
+		if(["graph", "owned-graph"].includes(type.kind))
 		{
 			type.types.forEach(remember);
 			return remember(type.root);
@@ -94,7 +105,7 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 	const site = (type, result = false) => ({ type: reference(type), ...exportContractOwnership(type, result) });
 	const parameter = (type, index) => ({ name: `arg${index}`, ...site(type), mutability: "immutable", optional: false, default: null });
 	const reference = type => {
-		if(type.kind === "graph") return reference(type.root);
+		if(["graph", "owned-graph"].includes(type.kind)) return reference(type.root);
 		if(type.kind === "reference")
 		{
 			const target = namedTypes.get(type.name);
@@ -115,6 +126,7 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 				, mutability: type.kind === "resource" ? "read" : "immutable"
 				, typeParameters: [], fields: [], target: null, resource: null
 				, callable: null, cases: [], host: null
+				, ...(ownedAggregates ? { aggregate: null } : {})
 				, documentation: doc(callbackName ? "Checked Lean callback." : `Checked Lean ${type.name}.`)
 				, source: source(type.name ?? callbackName), assurance: [] };
 			definitions.set(id, definition);
@@ -140,7 +152,7 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 			, typeParameters: [], receiver: null
 			, parameters: projection.parameters.map((p, i) => parameter(p.type, i))
 			, result: site(projection.result, true), mutability: "immutable"
-			, effects: exportContractEffects(projection)
+			, effects: exportContractEffects(projection, ownedAggregates)
 			, failure: hasCallback ? callbackFailure : { mode: "none", errors: [], unexpected: "poison-runtime" }
 			, resultMode: "value", capabilities: [], assurance: []
 			, documentation: doc(item.documentation ?? `Call ${item.identity}.`)
@@ -156,7 +168,42 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 		, category: "boundary", payload: null
 		, documentation: doc("A synchronous host callback failed; the adapter preserves the exception after cleanup.")
 	}] : [];
-	const document = { schemaVersion: 3, component
+	if(ownedAggregates)
+	{
+		// Propagate retained identities over finite nominal edges. Recursive values
+		// do not require recursive expansion, and copied siblings stay copied.
+		const parents = new Map(), pending = [];
+		for(const definition of definitions.values())
+		{
+			if(definition.representation === "identity") pending.push(definition.id);
+			const fields = definition.kind === "variant" ? definition.cases.flatMap(branch => branch.fields) : definition.fields;
+			const edges = definition.kind === "alias" ? [definition.target] : fields.map(field => field.type);
+			while(edges.length)
+			{
+				const edge = edges.pop();
+				if(edge.kind === "apply") edges.push(...edge.arguments);
+				else if(edge.kind === "named")
+				{
+					if(!parents.has(edge.id)) parents.set(edge.id, new Set());
+					parents.get(edge.id).add(definition.id);
+				}
+			}
+		}
+		for(let cursor = 0; cursor < pending.length; ++cursor)
+			for(const id of parents.get(pending[cursor]) ?? [])
+			{
+				const definition = definitions.get(id);
+				const representation = definition.kind === "alias" && definition.target.kind === "named"
+					? definitions.get(definition.target.id).representation : "owned";
+				if(definition.representation === representation) continue;
+				definition.representation = representation; pending.push(id);
+			}
+		for(const definition of definitions.values())
+			if(definition.representation === "owned" && ["record", "variant"].includes(definition.kind))
+				definition.aggregate = structuredClone(request.ownedAggregates);
+	}
+	const document = { schemaVersion: ownedAggregates ? 4 : 3, component
+		, ...(ownedAggregates ? { aggregatePolicy: structuredClone(request.ownedAggregates) } : {})
 		, producers: [{ id: "lean", adapter: metadata.producer.adapter
 			, adapterVersion: metadata.producer.adapterVersion, tool: "Lean"
 			, toolVersion: metadata.producer.toolVersion
@@ -164,6 +211,8 @@ export const createElaboratedSemanticModel = ({ metadata, request, component, el
 		, types: [...definitions.values()].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0)
 		, declarations, errors, capabilities: [], assurance: []
 		, documentation: doc(`Compiler-checked exports for ${component.name}.`) };
-	if(declarations.length) validateBindingIr(document);
-	return Object.freeze({ document, semanticSha256: declarations.length ? hashBindingIr(document) : null });
+	if(declarations.length) (ownedAggregates ? validateOwnedAggregateBindingIr : validateBindingIr)(document);
+	const semanticSha256 = !declarations.length ? null
+		: ownedAggregates ? sha256(canonicalizeJsonValue(document)) : hashBindingIr(document);
+	return Object.freeze({ document, semanticSha256 });
 };

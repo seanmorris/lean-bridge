@@ -11,6 +11,7 @@ import { assertWitRecursiveCallableExecution, assertWitRecursiveCallableIntegrat
 import { assertWitRecursiveCallablePackages } from "./helpers/wit-recursive-callable-receipt.mjs";
 import { assertWitRecursiveNativeProbes, assertWitRecursiveFaultProbes } from "./helpers/wit-recursive-callable-probes.mjs";
 import { beforeWitRecursiveCallables, reverseWitRecursiveCallableUpdate, witRecursiveCallableHistoryPath } from "./helpers/wit-recursive-callable-source-history.mjs";
+import { beforeOwnedAggregates } from "./helpers/owned-aggregate-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -89,7 +90,9 @@ test("WIT recursive probes retain unsuppressed startup controls and specific own
 test("WIT recursive source history rejects unknown text and overlapping edits", async () => {
 	for(const update of (await json(witRecursiveCallableHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const current = await readFile(update.path, "utf8");
+		const source = beforeOwnedAggregates(update.path, current);
+		assert.equal(sha256(beforeWitRecursiveCallables(update.path, current)), update.previousSha256);
 		assert.equal(sha256(reverseWitRecursiveCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeWitRecursiveCallables(update.path, source)), update.previousSha256);
 		assert.equal(beforeWitRecursiveCallables(update.path, source, update.currentSha256), source);

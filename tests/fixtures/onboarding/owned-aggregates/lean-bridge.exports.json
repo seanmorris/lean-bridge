@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease", "disposal": "required",
+    "fallback": "queued-finalizer", "cycles": "reject"
+  },
+  "exports": [
+    "Owned.newTicket", "Owned.serial", "Owned.label", "Owned.retainTicket",
+    "Owned.bundle", "Owned.primary", "Owned.payload", "Owned.echoArray",
+    "Owned.echoList", "Owned.echoOption", "Owned.echoResult", "Owned.echoTuple",
+    "Owned.echoRecord", "Owned.echoVariant", "Owned.echoAlias", "Owned.echoRow",
+    "Owned.echoRecursive", "Owned.echoNested", "Owned.callbackRecord",
+    "Owned.callbackRecursive", "Owned.makeRecord", "Owned.makeRecursive"
+  ],
+  "arities": { "Owned.makeRecord": 1, "Owned.makeRecursive": 1 }
+}

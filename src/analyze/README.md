@@ -12,6 +12,12 @@ Both profiles accept [configured finite specializations](../../docs/lean/existin
 
 Optional [export contracts](../../docs/lean/existing-package.md#declare-export-contracts) constrain the selected adapter's ownership, lifetime, refinement policy and boundary effects. Lean checks them against structural signatures after specialization and arity selection. Metadata validation repeats those checks. `compilerExportSelection` carries canonical contracts into the invocation identity; Binding IR retains them under `lean-lang.org/export-contract`. Unsupported choices fail before linking. Contracts supply neither types nor assurance claims, and the internal source scanner cannot authorize them.
 
+The development-stage `ownedAggregates` policy has a separate compiler and
+version-4 semantic path for resource-bearing values. It preserves copied-value
+rejection and does not enable installed packages. The [ownership metadata
+record](../../docs/evidence/owned-aggregate-metadata-20260926.md) describes the
+explicit policy, independent fixture checks and remaining transport work.
+
 ## Output
 
 An analysis result contains:
@@ -36,6 +42,8 @@ Analysis leaves the author checkout unchanged. Compilation and configured genera
 | [`NativeExports.lean`](NativeExports.lean) | Reads fresh Lean interfaces, checks selected implementations, and emits the shared report with scalar or native projections. |
 | [`elaborated-metadata.mjs`](elaborated-metadata.mjs) | Hashes complete interfaces and validates the shared report against engine-owned invocation identities. |
 | [`native-types.mjs`](native-types.mjs) | Validates native structural types, compiler representations and copied-value restrictions. |
+| [`owned-aggregate-policy.mjs`](owned-aggregate-policy.mjs) | Checks the explicit resource aggregate lease/disposal policy without authorizing callback retention. |
+| [`owned-metadata-graph.mjs`](owned-metadata-graph.mjs) | Validates finite resource-bearing tables and binds each policy to the compiler request. |
 | [`native-metadata.mjs`](native-metadata.mjs) | Binds the shared native report to retained compiler/source evidence and projects the selected API for CPAN. |
 | [`export-configuration.mjs`](export-configuration.mjs) | Validates shared source configuration, canonicalizes compiler selections, and checks declared contracts against implemented adapter rules. |
 | [`package-metadata.mjs`](package-metadata.mjs) | Validates shared publisher metadata, binds retained declarations to captured source bytes, and projects registry fields. |

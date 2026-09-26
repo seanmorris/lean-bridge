@@ -446,7 +446,7 @@ const assertKnownTypeRef = (typeRef, path, typeMap) => {
 	}
 };
 
-const representationOf = (typeRef, typeMap, typeParameters) => {
+const representationOf = (typeRef, typeMap, typeParameters, schemaVersion = 3) => {
 	if(typeRef.kind === "primitive") return "copied";
 	if(typeRef.kind === "named") return typeMap.get(typeRef.id)?.representation;
 	if(typeRef.kind === "parameter")
@@ -456,8 +456,9 @@ const representationOf = (typeRef, typeMap, typeParameters) => {
 	if(typeRef.kind === "apply")
 	{
 		const representations = typeRef.arguments.map(argument =>
-			representationOf(argument, typeMap, typeParameters),
+			representationOf(argument, typeMap, typeParameters, schemaVersion),
 		);
+		if(schemaVersion >= 4 && representations.some(value => value === "identity" || value === "owned")) return "owned";
 		return representations.includes("identity") ? "identity"
 			: representations.includes("any") ? "any" : "copied";
 	}
@@ -504,9 +505,9 @@ const validateAliasGraph = typeMap => {
 	}
 };
 
-const checkOwnershipRepresentation = (site, path, typeMap, typeParameters) => {
+const checkOwnershipRepresentation = (site, path, typeMap, typeParameters, schemaVersion = 3) => {
 	assertKnownTypeRef(site.type, `${path}.type`, typeMap);
-	const representation = representationOf(site.type, typeMap, typeParameters);
+	const representation = representationOf(site.type, typeMap, typeParameters, schemaVersion);
 	if(!representation)
 	{
 		fail("unknown-type", `${path}.type references an unknown type`, { path: `${path}.type` });
@@ -518,6 +519,10 @@ const checkOwnershipRepresentation = (site, path, typeMap, typeParameters) => {
 	if(representation === "identity" && site.ownership === "copy")
 	{
 		fail("identity-ownership", `${path} identity types cannot use copy ownership`, { path });
+	}
+	if(representation === "owned" && site.ownership === "copy")
+	{
+		fail("aggregate-ownership", `${path} owned aggregates cannot use copy ownership`, { path });
 	}
 };
 
@@ -536,13 +541,38 @@ const validateReferenceList = (value, known, path, code) => {
 	});
 };
 
+const checkOwnedResultLifetime = (signature, path, typeMap, typeParameters) => {
+	const result = signature.result;
+	if(result.ownership !== "borrow") return;
+	const owner = result.lifetime.scope === "receiver" ? signature.receiver
+		: result.lifetime.scope === "parameter"
+			? signature.parameters.find(parameter => parameter.name === result.lifetime.anchor) : null;
+	if(!owner || !["identity", "owned"].includes(representationOf(owner.type, typeMap, typeParameters, 4)))
+	{
+		fail("borrow-result-owner", `${path}.result requires a retained identity or aggregate anchor`, { path: `${path}.result` });
+	}
+	if(owner.ownership === "transfer")
+	{
+		fail("borrow-result-transfer", `${path}.result cannot borrow from a transferred input`, { path: `${path}.result` });
+	}
+};
+
+const validateAggregatePolicy = (policy, path) => {
+	exactKeys(policy, ["ownership", "disposal", "fallback", "cycles"], [], path);
+	enumeration(policy.ownership, new Set(["lease"]), `${path}.ownership`);
+	enumeration(policy.disposal, new Set(["required"]), `${path}.disposal`);
+	enumeration(policy.fallback, new Set(["none", "queued-finalizer"]), `${path}.fallback`);
+	enumeration(policy.cycles, new Set(["reject"]), `${path}.cycles`);
+};
+
 /**
- * Validates binding IR for migration against its closed contract before it enters the closed Binding IR semantic contract.
+ * Validate shared structure and semantics for an explicitly selected version.
  *
  * @param ir - Binding IR document that defines the source types and operations.
  * @param path - Logical or filesystem path used to locate the input and anchor precise validation diagnostics.
+ * @param schemaVersions - Versions admitted by the calling validation entry point.
  */
-export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
+const validateBindingIrContract = (ir, path, schemaVersions = SCHEMA_VERSIONS) => {
 	exactKeys(
 		ir,
 		[
@@ -555,18 +585,20 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 			, "capabilities"
 			, "assurance"
 			, "documentation"
+			, ...(ir?.schemaVersion >= 4 || schemaVersions.has(4) ? ["aggregatePolicy"] : [])
 		],
 		[],
 		path,
 	);
-	if(!SCHEMA_VERSIONS.has(ir.schemaVersion))
+	if(!schemaVersions.has(ir.schemaVersion))
 	{
-		fail("unsupported-schema", `${path}.schemaVersion must be 1, 2, or 3`, {
+		fail("unsupported-schema", `${path}.schemaVersion must be ${schemaVersions === SCHEMA_VERSIONS ? "1, 2, or 3" : "4"}`, {
 			path: `${path}.schemaVersion`
-			, expected: [...SCHEMA_VERSIONS]
+			, expected: [...schemaVersions]
 			, actual: ir.schemaVersion
 		});
 	}
+	if(ir.schemaVersion >= 4) validateAggregatePolicy(ir.aggregatePolicy, `${path}.aggregatePolicy`);
 
 	exactKeys(ir.component, ["id", "name", "version"], [], `${path}.component`);
 	string(ir.component.id, `${path}.component.id`, PACKAGE_ID);
@@ -632,6 +664,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
     ];
     if(ir.schemaVersion >= 2) typeKeys.splice(9, 0, "callable");
     if(ir.schemaVersion >= 3) typeKeys.splice(10, 0, "cases", "host");
+    if(ir.schemaVersion >= 4) typeKeys.push("aggregate");
     exactKeys(
       type,
       typeKeys,
@@ -651,10 +684,21 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
     );
     enumeration(
       type.representation,
-      new Set(["copied", "identity"]),
+      new Set(ir.schemaVersion >= 4 ? ["copied", "identity", "owned"] : ["copied", "identity"]),
       `${typePath}.representation`,
     );
     enumeration(type.mutability, MUTABILITY, `${typePath}.mutability`);
+    if(ir.schemaVersion >= 4)
+    {
+      const ownsFields = type.representation === "owned" && ["record", "variant"].includes(type.kind);
+      if(ownsFields)
+      {
+        validateAggregatePolicy(type.aggregate, `${typePath}.aggregate`);
+      }
+      else if(type.aggregate !== null) fail("aggregate-shape", `${typePath} has no owned aggregate fields`, { path: typePath });
+      if(type.representation === "owned" && type.mutability !== "immutable")
+        fail("aggregate-mutability", `${typePath} owned aggregate structure must be immutable`, { path: typePath });
+    }
     array(type.typeParameters, `${typePath}.typeParameters`);
     unique(type.typeParameters, parameter => parameter.id, `${typePath}.typeParameters`);
     const parameterIds = new Set();
@@ -664,7 +708,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
       string(parameter.id, `${parameterPath}.id`, NAME);
       enumeration(
         parameter.representation,
-        new Set(["copied", "identity", "any"]),
+        new Set(ir.schemaVersion >= 4 ? ["copied", "identity", "owned", "any"] : ["copied", "identity", "any"]),
         `${parameterPath}.representation`,
       );
       array(parameter.constraints, `${parameterPath}.constraints`).forEach(
@@ -677,7 +721,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
     if(type.kind === "record")
 {
       if(
-        type.representation !== "copied"
+        !(type.representation === "copied" || (ir.schemaVersion >= 4 && type.representation === "owned"))
         || type.resource !== null
         || type.target !== null
         || (ir.schemaVersion >= 2 && type.callable !== null)
@@ -770,7 +814,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 } else
 {
       if(
-        type.representation !== "copied"
+        !(type.representation === "copied" || (ir.schemaVersion >= 4 && type.representation === "owned"))
         || type.mutability !== "immutable"
         || type.fields.length !== 0
         || type.target !== null
@@ -808,8 +852,10 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 				);
 			fields.forEach(([field, fieldPath]) => {
         assertKnownTypeRef(field.type, fieldPath, typeMap);
-        const representation = representationOf(field.type, typeMap, typeParameters);
-        if(representation !== "copied")
+        const representation = representationOf(field.type, typeMap, typeParameters, ir.schemaVersion);
+        if(type.representation === "owned" && field.mutability !== "immutable")
+          fail("aggregate-mutability", `${fieldPath} owned aggregate fields must be immutable`, { path: fieldPath });
+        if(type.representation !== "owned" && representation !== "copied")
 {
           fail(
             "record-field-representation",
@@ -822,7 +868,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 		{
 			const targetPath = `${type.id}.target`;
 			assertKnownTypeRef(type.target, targetPath, typeMap);
-			const representation = representationOf(type.target, typeMap, typeParameters);
+			const representation = representationOf(type.target, typeMap, typeParameters, ir.schemaVersion);
 			if(representation !== type.representation)
 			{
 				fail(
@@ -836,7 +882,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 			const callablePath = `${type.id}.callable`;
 			type.callable.parameters.forEach((parameter, index) => {
         const parameterPath = `${callablePath}.parameters[${index}]`;
-        checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters);
+        checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters, ir.schemaVersion);
         if(parameter.lifetime?.scope === "receiver")
 {
           fail("borrow-anchor", `${parameterPath} callback parameter has no receiver anchor`, {
@@ -862,6 +908,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 				`${callablePath}.result`,
 				typeMap,
 				typeParameters,
+				ir.schemaVersion,
 			);
 			if(type.callable.result.lifetime?.scope === "receiver")
 			{
@@ -882,6 +929,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
 					},
 				);
 			}
+			if(ir.schemaVersion >= 4) checkOwnedResultLifetime(type.callable, callablePath, typeMap, typeParameters);
 		}
 	}
 
@@ -1006,18 +1054,18 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
       new Set(["function", "constructor", "method", "static-method", "property"]),
       `${declarationPath}.kind`,
     );
-    if(ir.schemaVersion >= 3)
-{
-      if(declaration.owner !== null) string(declaration.owner, `${declarationPath}.owner`, ID);
-      const owner = declaration.owner === null ? null : typeMap.get(declaration.owner);
-      if(declaration.owner !== null && owner?.kind !== "resource")
-{
-        fail("invalid-owner", `${declarationPath}.owner must name a resource`, {
-          path: `${declarationPath}.owner`
-          , owner: declaration.owner
-        });
-}
-}
+	if(ir.schemaVersion >= 3)
+	{
+		if(declaration.owner !== null) string(declaration.owner, `${declarationPath}.owner`, ID);
+		const owner = declaration.owner === null ? null : typeMap.get(declaration.owner);
+		const ownedOwner = ir.schemaVersion >= 4 && owner?.representation === "owned" && ["record", "variant"].includes(owner.kind);
+		if(declaration.owner !== null && owner?.kind !== "resource" && !ownedOwner)
+		{
+			fail("invalid-owner", `${declarationPath}.owner must name ${ir.schemaVersion >= 4 ? "a resource or owned aggregate" : "a resource"}`, {
+				path: `${declarationPath}.owner`, owner: declaration.owner
+			});
+		}
+	}
     string(declaration.overloadKey, `${declarationPath}.overloadKey`);
     array(declaration.typeParameters, `${declarationPath}.typeParameters`);
     unique(
@@ -1032,7 +1080,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
       string(parameter.id, `${parameterPath}.id`, NAME);
       enumeration(
         parameter.representation,
-        new Set(["copied", "identity", "any"]),
+        new Set(ir.schemaVersion >= 4 ? ["copied", "identity", "owned", "any"] : ["copied", "identity", "any"]),
         `${parameterPath}.representation`,
       );
       array(parameter.constraints, `${parameterPath}.constraints`).forEach(
@@ -1066,6 +1114,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
         `${declarationPath}.receiver`,
         typeMap,
         typeParameters,
+        ir.schemaVersion,
       );
 }
     if(
@@ -1119,7 +1168,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
       (parameter, parameterIndex) => {
         const parameterPath = `${declarationPath}.parameters[${parameterIndex}]`;
         validateParameterShape(parameter, parameterPath, parameterIds);
-        checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters);
+        checkOwnershipRepresentation(parameter, parameterPath, typeMap, typeParameters, ir.schemaVersion);
       },
     );
     unique(declaration.parameters, parameter => parameter.name, `${declarationPath}.parameters`);
@@ -1130,6 +1179,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
       `${declarationPath}.result`,
       typeMap,
       typeParameters,
+      ir.schemaVersion,
     );
     const ownershipSites = [
       ...(declaration.receiver === null
@@ -1159,6 +1209,7 @@ export const validateBindingIrForMigration = (ir, path = "bindingIr") => {
         });
       }
 }
+    if(ir.schemaVersion >= 4) checkOwnedResultLifetime(declaration, declarationPath, typeMap, typeParameters);
     if(
       declaration.kind === "constructor"
       && !new Set(["lease", "transfer"]).has(declaration.result.ownership)
@@ -1247,4 +1298,28 @@ export const validateBindingIr = (ir, path = "bindingIr") => {
 		});
 	}
 	return validateBindingIrForMigration(ir, path);
+};
+
+/**
+ * Validate existing migration inputs without admitting ownership-aware artifacts.
+ *
+ * @param ir - Existing version 1, 2 or 3 semantic document.
+ * @param path - Diagnostic root for the complete document.
+ */
+export const validateBindingIrForMigration = (ir, path = "bindingIr") => validateBindingIrContract(ir, path);
+
+/**
+ * Validate the ownership-aware contract without enabling existing v3 backends.
+ *
+ * @param ir - Version 4 document with explicit aggregate ownership.
+ * @param path - Diagnostic root for the complete semantic document.
+ */
+export const validateOwnedAggregateBindingIr = (ir, path = "bindingIr") => {
+	if(ir?.schemaVersion !== 4)
+	{
+		fail("unsupported-schema", `${path}.schemaVersion must be 4`, {
+			path: `${path}.schemaVersion`, expected: 4, actual: ir?.schemaVersion
+		});
+	}
+	return validateBindingIrContract(ir, path, new Set([4]));
 };

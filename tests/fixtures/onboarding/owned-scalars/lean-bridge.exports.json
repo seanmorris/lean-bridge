@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease", "disposal": "required",
+    "fallback": "none", "cycles": "reject"
+  },
+  "exports": [
+    "Owned.newTicket", "Owned.echo", "Owned.makePacket", "Owned.inspect",
+    "Owned.optionCase", "Owned.bits32", "Owned.bits64", "Owned.units"
+  ],
+  "arities": {}
+}

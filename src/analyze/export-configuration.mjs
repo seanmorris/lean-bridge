@@ -10,6 +10,7 @@ import { componentNpmIdentity } from "../release/component-package-receipt.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { validateGeneratorConfiguration } from "./generator-configuration.mjs";
 import { validatePackageMetadata } from "./package-metadata.mjs";
+import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
 
 export const exportConfigurationFile = "lean-bridge.exports.json";
 const legacyFile = "lean-bridge.native.json";
@@ -59,8 +60,15 @@ const frozen = value => {
  * @param configuration - Parsed author configuration.
  */
 export const validateExportConfiguration = configuration => {
-	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", "targets"], exportConfigurationFile);
+	closed(configuration, ["schemaVersion", "package", "modules", "exports", "resources", "ownedAggregates", "arities", "specializations", "contracts", "generators", "targets"], exportConfigurationFile);
 	if(configuration.schemaVersion !== 1) fail("invalid-export-configuration", `${exportConfigurationFile} requires schemaVersion 1`);
+	if(configuration.ownedAggregates !== undefined)
+	{
+		try
+		{ validateOwnedAggregatePolicy(configuration.ownedAggregates); }
+		catch(error)
+		{ fail("invalid-export-configuration", error.message); }
+	}
 	if(configuration.package !== undefined)
 	{
 		try
@@ -216,6 +224,7 @@ export const validateExportConfiguration = configuration => {
  */
 export const compilerExportSelection = configuration => {
 	const selection = {};
+	if(configuration.ownedAggregates !== undefined) selection.ownedAggregates = { ...configuration.ownedAggregates };
 	if(configuration.specializations?.length)
 		selection.specializations = configuration.specializations.toSorted((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0);
 	if(Object.keys(configuration.contracts ?? {}).length)
@@ -245,7 +254,7 @@ export const exportContractFor = (contracts, name) => contracts && Object.hasOwn
  * @param type - Compiler-owned structural runtime type.
  * @param result - Whether this is a returned value instead of a call argument.
  */
-export const exportContractOwnership = (type, result = false) => ["resource", "callback"].includes(type.kind)
+export const exportContractOwnership = (type, result = false) => ["resource", "callback", "owned-graph"].includes(type.kind)
 	? { ownership: result ? "lease" : "borrow", lifetime: { scope: result ? "explicit" : "call", anchor: null } }
 	: { ownership: "copy", lifetime: null };
 
@@ -253,18 +262,28 @@ export const exportContractOwnership = (type, result = false) => ["resource", "c
  * Describe the boundary effects implemented for a compiled runtime signature.
  *
  * @param projection - Compiler-owned parameters and result, without source-text parsing.
+ * @param ownedAggregates - Include ownership-aware boundary acquisition and handle reads.
  */
-export const exportContractEffects = projection => projection.parameters.some(parameter => parameter.type.kind === "callback") ? ["fails", "host-call"] : [];
+export const exportContractEffects = (projection, ownedAggregates = false) => {
+	const effects = projection.parameters.some(parameter => parameter.type.kind === "callback") ? ["fails", "host-call"] : [];
+	if(ownedAggregates)
+	{
+		if(projection.parameters.some(parameter => exportContractOwnership(parameter.type).ownership !== "copy")) effects.push("reads-resource");
+		if(exportContractOwnership(projection.result, true).ownership !== "copy") effects.push("allocates");
+	}
+	return effects.sort();
+};
 
 /**
  * Reject author decisions the current runtime signature cannot honor.
  *
  * @param contract - Structurally validated decisions for one selected export.
  * @param projection - Supported compiler-owned runtime projection.
+ * @param ownedAggregates - Whether the explicit aggregate contract is selected.
  */
-export const exportContractProblem = (contract, projection) => {
+export const exportContractProblem = (contract, projection, ownedAggregates = false) => {
 	if(!contract || projection.status !== "supported") return null;
-	if(contract.effects && canonicalJson(contract.effects.toSorted()) !== canonicalJson(exportContractEffects(projection)))
+	if(contract.effects && canonicalJson(contract.effects.toSorted()) !== canonicalJson(exportContractEffects(projection, ownedAggregates)))
 		return "effects differ from the implemented boundary effects";
 	if(contract.parameters && contract.parameters.length !== projection.parameters.length)
 		return "parameter decisions must cover the exact runtime argument count";

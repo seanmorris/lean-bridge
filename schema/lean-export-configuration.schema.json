@@ -10,6 +10,7 @@
     "modules": {"$ref": "#/$defs/selection"},
     "exports": {"$ref": "#/$defs/selection"},
     "resources": {"$ref": "#/$defs/names"},
+    "ownedAggregates": {"$ref": "#/$defs/ownedAggregates"},
     "arities": {"type": "object", "propertyNames": {"$ref": "#/$defs/name"}, "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 32}},
     "specializations": {"$ref": "#/$defs/specializations"},
     "contracts": {"$ref": "#/$defs/contracts"},
@@ -77,6 +78,16 @@
     }
   },
   "$defs": {
+    "ownedAggregates": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ownership", "disposal", "fallback", "cycles"],
+      "properties": {
+        "ownership": {"const": "lease"},
+        "disposal": {"const": "required"},
+        "fallback": {"enum": ["none", "queued-finalizer"]},
+        "cycles": {"const": "reject"}
+      }
+    },
     "metadata": {
       "type": "object", "additionalProperties": false,
       "description": "Author-owned package metadata. Limits are UTF-8 byte counts; URLs must be HTTPS without credentials, queries or fragments. License expressions use listed SPDX 3.28 identifiers.",

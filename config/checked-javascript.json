@@ -6,6 +6,11 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/native/owned-aggregate-leases.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/native/owned-value-adapters.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/native/owned-value-layout.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/native/owned-value-runtime.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/owned-aggregate-carriers.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/wit/callable-graph-host.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/wit/callable-graph-model.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/wit/callable-graph-package.mjs", "classification": "strict-migration-backlog" },
@@ -49,6 +54,8 @@
 		{ "path": "src/abi/component-recursive-abi.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/component-recursive-lean.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/analyze/copied-metadata-graph.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/analyze/owned-aggregate-policy.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/analyze/owned-metadata-graph.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/abi/component-recursive.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/component-recursive-types.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/component-recursive-codec.mjs", "classification": "strict-migration-backlog" },
@@ -266,6 +273,10 @@
 		},
 		{
 			"path": "src/abi/overload.mjs",
+			"classification": "strict-migration-backlog"
+		},
+		{
+			"path": "src/abi/owned-aggregate-model.mjs",
 			"classification": "strict-migration-backlog"
 		},
 		{
