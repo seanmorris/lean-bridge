@@ -368,8 +368,9 @@ libraries installed alongside the application.
 Conversion rejects cycles and enforces a depth limit of 128, 262,144 expanded
 node visits and a 16 MiB copy budget. A limit error leaves the output unchanged
 and the session usable. A malformed native result retires the shared runtime,
-so later calls from every session fail. Recursive callback payloads and
-resource-containing aggregates are not part of this implementation.
+so later calls from every session fail. [Recursive callbacks](#recursive-callback-values)
+use these same typed values. Resource-containing aggregates require separate
+ownership support.
 
 ### Callbacks and returned Lean functions
 
@@ -400,7 +401,7 @@ The callback borrows its arguments and transfers an independently owned result o
 
 Tokens belong to their creating session, thread and process. Closing a token zeroes that variable and invalidates its aliases. Calls already in progress retain their inputs until return. Closing the session during a callback waits for the outer call to return an error. Do not use a session after close. A failed component call replaces its store after nested calls unwind; surviving Lean functions and host callbacks remain usable.
 
-Callable signatures support all nineteen primitives and acyclic arrays, Lists, records, options, results, products, variants and copied aliases, with one through sixteen arguments. Nested calls are limited to 64; each session holds at most 1,024 tokens and also uses the shared native identity registry. Schema depth is limited to 32 and conversion work to 16 MiB. Recursive callback payloads, nested functions, retained host borrows and asynchronous callbacks are rejected. If Lean captures a call-borrowed callback and invokes it later, that invocation fails.
+Callable signatures support all nineteen primitives and copied arrays, Lists, records, options, results, products, variants and aliases, with one through sixteen arguments. Nested calls are limited to 64; each session holds at most 1,024 tokens and also uses the shared native identity registry. The acyclic adapter limits schema depth to 32 and conversion work to 16 MiB. [Recursive packages](#recursive-callback-values) supply typed C helpers and bounded node-table conversions. Nested functions, retained host borrows and asynchronous callbacks are rejected. If Lean captures a call-borrowed callback and invokes it later, that invocation fails.
 
 Callable packages require the owning session API. Their `<prefix>_wasmtime_link` returns an error without changing a custom linker. Copied-only packages retain the custom-linker API shown above. The [installed callable checks](../contributing/testing.md#native-wit-callables) exercise both ordinary-source and independently reviewed packages.
 
@@ -488,6 +489,108 @@ cc main.c $(pkg-config --cflags --libs structured-wit) -o structured-example
 The program prints `echo` after releasing the input, callback and session. Its empty `rows` list, zero `Nat` and absent `nested` option remain distinct fields. For other packages, use the resource and export names in their WIT declarations and generated header.
 
 Malformed nested replies and copy-limit errors leave the output unchanged. The session can accept a valid call afterward. The adapter owns both a callback's result and its error, including when the callback sets both before failing.
+
+### Recursive callback values
+
+Prepared recursive packages expose typed callbacks and returned functions in
+`<prefix>_wasmtime.h`. Register a callback with the export's
+`<prefix>_wasmtime_<export>_callbackN_create` helper. `N` is its zero-based
+parameter position. Invoke a returned Lean function with the returning export's
+`<prefix>_wasmtime_<export>_call` helper. The manifest lists these names under
+`cHost.values`; callers do not need signature hashes or WIT node tables.
+
+For a prepared release of the publisher's [recursive example](../publish/wit-wasi.md#export-recursive-callbacks),
+save this as `main.c`:
+
+```c file=wit-wasi/recursive-callables.c
+#include "structured_wasmtime.h"
+#include <stdio.h>
+
+static int report(wasmtime_error_t *error)
+{
+    if (!error) return 0;
+    wasm_name_t message;
+    wasmtime_error_message(error, &message);
+    fprintf(stderr, "%.*s\n", (int)message.size, message.data);
+    wasm_name_delete(&message);
+    wasmtime_error_delete(error);
+    return 1;
+}
+
+static wasmtime_error_t *wrap(void *data,
+    const structured_tree_t *value, structured_tree_t *out)
+{
+    (void)data;
+    structured_tree_t branch = {.kind = STRUCTURED_TREE_T_KIND_BRANCH};
+    branch.cases.branch.children.data = value;
+    branch.cases.branch.children.length = 1;
+    return structured_tree_t_wasmtime_copy(&branch, out);
+}
+
+int main(void)
+{
+    structured_wasmtime *session = NULL;
+    if (report(structured_wasmtime_open(&session))) return 1;
+    structured_wasmtime_function callback = 0, closure = 0;
+    structured_tree_t wrapped = {0}, chosen = {0};
+    uint32_t forty_two = 42;
+    structured_tree_t leaf = {.kind = STRUCTURED_TREE_T_KIND_LEAF};
+    leaf.cases.leaf.value.data = &forty_two;
+    leaf.cases.leaf.value.length = 1;
+    int failed = report(structured_wasmtime_call_recursive_callback1_create(
+        session, wrap, NULL, NULL, &callback));
+    if (!failed) failed = report(structured_wasmtime_value_call_recursive(
+        session, &leaf, callback, &wrapped));
+    if (!failed) failed = report(structured_wasmtime_value_make_recursive(
+        session, &wrapped, &closure));
+    structured_tree_t_clear(&wrapped);
+    bool selected = true;
+    if (!failed) failed = report(structured_wasmtime_make_recursive_call(
+        session, closure, &selected, &leaf, &chosen));
+    failed |= report(structured_wasmtime_function_close(session, &closure));
+    failed |= report(structured_wasmtime_function_close(session, &callback));
+    structured_wasmtime_close(session);
+
+    if (!failed) {
+        const structured_tree_t *child = chosen.cases.branch.children.data;
+        failed = chosen.kind != STRUCTURED_TREE_T_KIND_BRANCH
+            || chosen.cases.branch.children.length != 1 || !child
+            || child->kind != STRUCTURED_TREE_T_KIND_LEAF
+            || child->cases.leaf.value.length != 1
+            || child->cases.leaf.value.data[0] != 42;
+        if (!failed) puts("branch(leaf(42))");
+    }
+    structured_tree_t_clear(&chosen);
+    return failed;
+}
+```
+
+Compile against the extracted package, without a Lean toolchain:
+
+```sh
+export STRUCTURED_WIT_PACKAGE=/absolute/path/to/structured-1.0.0-wit-wasi
+export PKG_CONFIG_PATH="$STRUCTURED_WIT_PACKAGE/lib/pkgconfig"
+cc main.c $(pkg-config --cflags --libs structured-wit) -o recursive-callables
+./recursive-callables
+```
+
+The program prints `branch(leaf(42))` after closing both functions and the session.
+The closure captured an independent copy before `wrapped` was cleared. Its
+result owns its storage independently of the closure.
+
+Callbacks borrow immutable input values for their call. The generated
+`<type>_wasmtime_copy` helper makes an owned reply; the adapter releases that
+reply on success or failure. Never return pointers to local stack objects.
+Callback data transfers only when registration succeeds, and its optional
+finalizer runs once after active calls finish. Use fresh, zero-initialized
+aggregate results. Release copied results with their `_clear` helper and tokens
+with `<prefix>_wasmtime_function_close`.
+
+Sessions and tokens belong to their creating thread and process. Stale,
+wrong-session and wrong-signature tokens fail before execution. Closing a token
+invalidates its aliases and defers active cleanup. The [recursive limits](#recursive-copied-values)
+also apply to callback arguments, replies and captured values. Limits leave the
+session usable; malformed native outputs retire the shared runtime.
 
 ## Alpha prepared package
 
@@ -594,7 +697,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named C records and tagged unions through generated Wasmtime helpers; finite typed WIT tables` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Inputs borrow named C storage for one call; results own independent copies. Initialize and clear result slots with generated helpers. Limit errors preserve outputs and session usability. Malformed native results retire the shared runtime; earlier results remain readable and clearable after all sessions close. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named C records and tagged unions through generated Wasmtime helpers; finite typed WIT tables` (input, result, field); `Named C records and tagged unions, typed borrowed callbacks and session-owned function tokens` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Inputs borrow named C storage for one call; results own independent copies. Initialize and clear result slots with generated helpers. Limit errors preserve outputs and session usability. Malformed native results retire the shared runtime; earlier results remain readable and clearable after all sessions close. Generated typed C helpers copy recursive constructors, records and aliases through finite WIT node tables. The manifest keeps original Lean signatures and proof metadata separate from transport. Fresh output slots remain unchanged on error. Callback reply owners live through the Lean copy and are released on success or failure. Returned functions capture independent values; copied results survive function and session closure. Malformed native results retire the shared runtime; depth and size limits remain recoverable. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | The Alpha executable adapter does not expose this type. Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

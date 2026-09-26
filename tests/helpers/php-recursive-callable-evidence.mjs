@@ -145,7 +145,7 @@ export const assertPhpRecursiveCallableExecution = async record => {
 	assert.equal(regressions.structured.installed.command, 'LEAN_BRIDGE_PHP_STRUCTURED_CALLABLE_TEST=1 node --test tests/php-structured-callables.test.mjs');
 	assert.equal(regressions.copied.installed.command, "LEAN_BRIDGE_PHP_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PHP_GRAPH_INSTALLED_TEST=1 LEAN_BRIDGE_PHP_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_PHP_GRAPH_LOADING_TEST=1 node --test --test-skip-pattern='recursive Composer evidence' tests/php-graph-package.test.mjs");
 	assert.deepEqual(Object.keys(regressions.projectionSources).sort(), phpRecursiveCallableProjectionPaths);
-	for(const [path, digest] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path)), digest, path);
 	const previous = await authenticated(record.previousPhpExecution, phpStructuredCallableExecutionPath);
 	await assertPhpStructuredCallableExecution({
 		...previous

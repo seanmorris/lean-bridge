@@ -140,14 +140,16 @@ test("PHP recursive tables retain distinct native and Wasm callback receipts", a
 	}
 });
 
-test("WIT recursive tables record installed copied values and retain callback gaps", async () => {
+test("WIT recursive tables include installed callback payloads and owned closures", async () => {
 	const source = await readFile("docs/consume/wit-wasi.md", "utf8");
 	const recursive = row(source, "Recursive copied structures");
 	assert.match(recursive, /Named C records and tagged unions/u);
-	assert.match(recursive, /Ordinary source: Installed checks passed \(input, result, field\)/u);
-	assert.match(recursive, /Reviewed IR: Installed checks passed \(input, result, field\)/u);
-	assert.match(recursive, /Not audited \(callback input, callback result\)/u);
+	assert.match(recursive, /Ordinary source: Installed checks passed\./u);
+	assert.match(recursive, /Reviewed IR: Installed checks passed/u);
+	assert.doesNotMatch(recursive, /Not audited/u);
+	assert.match(recursive, /callback input, callback result/u);
 	assert.match(source, /wit-recursive-acceptance-20260924\.md/u);
+	assert.match(source, /### Recursive callback values/u);
 	const reference = await readFile("docs/reference/types.md", "utf8");
 	assert.match(reference, /Recursive copied values have installed checks across all seventeen profiles/u);
 	assert.doesNotMatch(reference, /Recursive values in the remaining profiles/u);

@@ -36,9 +36,10 @@ every profile. npm, [C/C++](../evidence/native-recursive-callables-20260925.md),
 [Perl](../evidence/perl-recursive-callables-20260925.md),
 [C#](../evidence/dotnet-recursive-callables-20260926.md),
 [Java/Kotlin](../evidence/jvm-recursive-callables-20260926.md),
-[native PHP](../evidence/php-recursive-callables-20260926.md) and
-[PHP-Wasm](../evidence/php-wasm-recursive-callables-20260926.md) also accept
-recursive callback payloads. WIT/WASI still needs recursive callable acceptance.
+[native PHP](../evidence/php-recursive-callables-20260926.md),
+[PHP-Wasm](../evidence/php-wasm-recursive-callables-20260926.md) and
+[WIT/WASI](../evidence/wit-recursive-callables-20260926.md) also accept
+recursive callback payloads, completing all seventeen consumer profiles.
 Aggregates with explicit resource ownership remain part of the same task.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),

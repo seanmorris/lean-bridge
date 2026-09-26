@@ -10,6 +10,7 @@ import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { ordinaryWitEvidence, wasmtimeCapiIdentity } from "./native-wit-artifacts.mjs";
 import { renderWitHostHeader, renderWitHostSource } from "../backends/wit/copied-host.mjs";
 import { renderWitGraphHostSource } from "../backends/wit/copied-graph-host.mjs";
+import { renderWitGraphCallableHostSource } from "../backends/wit/callable-graph-host.mjs";
 import { guardWitHostSource, witHostDependencies } from "../backends/wit/host-evidence.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOrdinaryWasi } from "../release/native-wasi.mjs";
@@ -60,7 +61,8 @@ export const projectOrdinaryWasi = async options => {
 	await run(wasmTools, ["parse", join(root, `component/${projection.name}.wat`), "-o", join(root, component)]);
 	await run(wasmTools, ["validate", "--features", "component-model", join(root, component)]);
 	await run(wasmTools, ["component", "wit", join(root, component), "--json"]);
-	await save(`src/${p}_wasmtime.c`, guardWitHostSource((graph ? renderWitGraphHostSource : renderWitHostSource)(projection, await readFile(join(root, component))), p, witHostDependencies(evidence, wasmtimeFiles)));
+	const renderHost = model.copiedGraph?.callbacks ? renderWitGraphCallableHostSource : graph ? renderWitGraphHostSource : renderWitHostSource;
+	await save(`src/${p}_wasmtime.c`, guardWitHostSource(renderHost(projection, await readFile(join(root, component))), p, witHostDependencies(evidence, wasmtimeFiles)));
 	const library = `lib${p}_wasmtime.so`;
 	await mkdir(join(root, "lib"));
 	await run(environment.CC ?? "cc", ["-std=c11", "-O2", "-g0", "-fPIC", "-shared"

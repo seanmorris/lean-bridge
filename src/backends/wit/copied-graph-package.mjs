@@ -6,13 +6,21 @@
 import { compileCopiedWitGraphModel } from "./copied-graph-model.mjs";
 import { renderWitGraphHostHeader } from "./copied-graph-host.mjs";
 
-const publicAliases = model => {
+/**
+ * Name copied containers in public fields, arguments and results.
+ *
+ * @param model - Checked graph layout and its public call roots.
+ * @param options - Additional callable helper names that aliases cannot replace.
+ * @param options.reservedNames - Reserved C identifiers.
+ */
+export const copiedWitGraphAliases = (model, { reservedNames = [] } = {}) => {
 	const nodes = new Map(model.nodes.map(node => [node.id, node]));
 	const occupied = new Map(), aliases = new Map();
 	const claim = (name, id) => {
 		if(occupied.has(name) && occupied.get(name) !== id) throw new TypeError(`WIT graph C name collision: ${name}`);
 		occupied.set(name, id);
 	};
+	for(const name of reservedNames) claim(name, "function");
 	for(const node of model.nodes.filter(node => node.aggregate))
 		for(const name of [node.name, `${node.name}_init`, `${node.name}_clear`, ...node.kind === "variant" ? [`${node.name}_tag`, ...node.cases.map(branch => branch.tag)] : []]) claim(name, node.id);
 	for(const alias of model.layout.aliases)
@@ -48,7 +56,7 @@ const publicAliases = model => {
  */
 export const compileCopiedWitGraphPackageModel = (ir, settings) => {
 	const model = compileCopiedWitGraphModel(ir, settings);
-	const aliases = publicAliases(model);
+	const aliases = copiedWitGraphAliases(model);
 	const guard = `${model.layout.prefix.toUpperCase()}_WASMTIME_GRAPH_PACKAGE_H`;
 	const hostHeader = `#ifndef ${guard}\n#define ${guard}\n` + renderWitGraphHostHeader(model) + `
 /* Stable names for containers in public arguments, results and fields. */

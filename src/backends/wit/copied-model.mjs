@@ -31,8 +31,9 @@ export const validateOrdinaryWasiSettings = (settings = {}) => {
  * @param settings - Optional archive name and exact semantic version.
  * @param options - Explicit projection capabilities.
  * @param options.callables - Admit synchronous copied-value callable resources.
+ * @param options.callableResourceNames - Optional exact resource names keyed by callback identity.
  */
-export const compileCopiedWitModel = (ir, settings = {}, { callables = false } = {}) => {
+export const compileCopiedWitModel = (ir, settings = {}, { callables = false, callableResourceNames } = {}) => {
 	const surface = compilePrimitiveCSurface(ir, { callables, structuredCallables: callables, compounds: true, lists: true, variants: true });
 	const name = settings.name ?? kebab(surface.prefix), version = settings.version ?? ir.component.version;
 	validateOrdinaryWasiSettings({ name, version });
@@ -41,6 +42,10 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 		throw Object.assign(new TypeError(`${source ? `${source.path}:${source.startLine}:${source.startColumn}: ` : ""}${declaration?.id ?? ir.component.id}: ${message}`), { code: "unsupported-wit-signature", details: { declaration: declaration?.id ?? null, source: source ?? null } });
 	};
 	const names = new Set();
+	if(callableResourceNames !== undefined && (!(callableResourceNames instanceof Map)
+		|| callableResourceNames.size !== surface.callbacks.size
+		|| [...surface.callbacks.keys()].some(id => typeof callableResourceNames.get(id) !== "string")))
+		fail(ir.declarations[0], "Explicit callable resource names must cover exactly the callback identities");
 	const admit = (value, declaration, scope = names) => {
 		const label = kebab(value);
 		if(!/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(label) || reserved.has(label) || scope.has(label)) fail(declaration, `WIT name is reserved or duplicated: ${label}`);
@@ -80,7 +85,8 @@ export const compileCopiedWitModel = (ir, settings = {}, { callables = false } =
 	const resources = [...surface.callbacks.values()].map((callback, index) => {
 		const signature = callback.type.callable;
 		const label = type => type.kind === "primitive" ? kebab(type.name) : copied(type).witName;
-		const witName = admit(`function-${signature.parameters.map(site => label(site.type)).join("-")}-to-${label(signature.result.type)}`, ir.declarations[0]);
+		const witName = admit(callableResourceNames?.get(callback.type.id)
+			?? `function-${signature.parameters.map(site => label(site.type)).join("-")}-to-${label(signature.result.type)}`, ir.declarations[0]);
 		const resource = { ...callback, index: nextIndex + index, witName };
 		resource.borrow = { resource: true, resourceIndex: resource.index, borrowed: true, wit: `borrow<${witName}>`, wat: `$borrow${resource.index}` };
 		resource.own = { resource: true, resourceIndex: resource.index, borrowed: false, wit: `own<${witName}>`, wat: `$own${resource.index}` };

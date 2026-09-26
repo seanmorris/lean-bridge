@@ -6,6 +6,11 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/wit/callable-graph-host.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/wit/callable-graph-model.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/wit/callable-graph-package.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/wit/callable-graph-session.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/wit/callable-graph-typed.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/callable-graph-model.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/callable-graph-package.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/native-callable-graph-borrows.mjs", "classification": "strict-migration-backlog" },

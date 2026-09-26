@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitRecursiveCallables } from "./wit-recursive-callable-source-history.mjs";
 
 export const phpWasmRecursiveCallableHistoryPath = "docs/evidence/php-wasm-recursive-callable-integration-20260926.json";
 export const phpWasmRecursiveCallableChangedPaths = [
@@ -68,6 +69,7 @@ export const reversePhpWasmRecursiveCallableUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforePhpWasmRecursiveCallables = (path, source, expected) => {
+	source = beforeWitRecursiveCallables(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !phpWasmRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(phpWasmRecursiveCallableHistoryPath, "utf8"));

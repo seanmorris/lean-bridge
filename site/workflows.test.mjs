@@ -43,6 +43,7 @@ test("source intake describes new and existing libraries without widening target
 	assert.match(exports, /Open generics, dependent signatures, asynchronous operations and retained host callbacks require further work/);
 	assert.match(exports, /Ordinary \[PHP-Wasm builds\][^\n]+\[recursive callables\]\(\.\.\/publish\/php\.md#export-recursive-callbacks\)/);
 	assert.match(exports, /installed recursive copied-value coverage across all seventeen profiles/);
+	assert.match(exports, /\[recursive callbacks\]\(\.\.\/publish\/wit-wasi\.md#export-recursive-callbacks\)/);
 	assert.match(exports, /\[structured\]\(\.\.\/publish\/cargo\.md#structured-callback-values\) and \[recursive callbacks\]\(\.\.\/publish\/cargo\.md#export-recursive-callbacks-and-closures\)/);
 	assert.match(exports, /npm-recursive-20260922\.md/);
 	assert.match(exports, /native-recursive-packages-20260923\.md/);

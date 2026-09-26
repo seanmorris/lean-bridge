@@ -2140,6 +2140,44 @@ CI retains `build/recursive/dotnet-conflicts.json`.
 Final recursive NuGet acceptance also requires regressions of the existing
 native profiles and current source evidence.
 
+## Recursive WIT callbacks and closures
+
+Use the pinned Lean, Wasmtime and wasm-tools dependencies from the
+[WIT publishing guide](../publish/wit-wasi.md#build-an-ordinary-lean-project):
+
+```sh
+npm run test:wit-recursive-generated
+npm run test:wit-recursive-packages
+```
+
+The generated checks compile the declared and binary Component Model interfaces,
+then execute recursive callbacks and owned functions against compiled Lean on
+ordinary-source and reviewed-IR paths. Public headers compile twice in C and C++.
+ASan and UBSan cover the raw and typed callers and all nine copied shapes. LSan
+compares each exercised process with a separate cold-session startup process;
+Lean's numeric initialization retains 128 bytes in twelve GMP allocations in
+the measured toolchain. Any additional allocation or diagnostic fails the check.
+
+A separate synthetic native provider tests every host allocation checkpoint and
+requires zero live allocations. Premature reply release must fail with ASan's
+use-after-free diagnostic; removing the reply owner must fail the allocation
+accounting assertion. This probe does not count as installed Lean execution.
+
+The package checks build WIT-only archives containing 33 exports and a mixed
+99-export companion. Both source paths require deterministic, compiler-free
+reassembly and reject re-signed generated source changes. Consumers compile
+against installed public headers, then execute twice after the author, headers
+and archive handoff have been removed. The tests compile the published Lean and
+C examples verbatim. Installed boundary probes check that malformed native
+results retire the shared runtime, while depth and node limits leave both
+sessions usable. They leave the original shared libraries unchanged.
+
+The downstream WIT job requires both commands and uploads
+`build/recursive-callables/wit-native.json`, `wit-faults.json`,
+`wit-packages.json` and `wit-mixed-packages.json`. Frozen acceptance also reruns
+the existing copied-only packages, acyclic callback packages, callback-only
+aliases and their documentation examples.
+
 ## Release tooling checks
 
 From the checkout with its Node dependencies installed, run the focused release tests:

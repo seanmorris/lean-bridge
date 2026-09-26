@@ -30,9 +30,9 @@ import { phpStructuredRegressionFixtures } from './helpers/php-structured-callab
 test('Composer-only and combined native callback targets share the exact graph layout', () => {
 	const ir = nativeRecursiveCallableReviewedIr(), compiled = compileNativeGraphProjection(ir, ['php-native']);
 	assert.equal(compiled.namespace, 'LeanStructured'); assert.equal(compiled.functions.length, 33); assert.equal(compiled.callbacks.size, 18);
-	for(const target of ['c', 'cpp', 'pypi', 'cargo', 'rubygems', 'cpan', 'nuget', 'maven'])
+	for(const target of ['c', 'cpp', 'pypi', 'cargo', 'rubygems', 'cpan', 'nuget', 'maven', 'wit-wasi'])
 		assert.equal(compileNativeGraphProjection(ir, [target, 'php-native'], 'LeanBridge::Structured').layoutSha256, compiled.layoutSha256);
-	for(const targets of [[], ['php-native', 'php-native'], ['php-native', 'wit-wasi'], ['php-wasm'], ['unknown']])
+	for(const targets of [[], ['php-native', 'php-native'], ['php-wasm'], ['unknown']])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: 'native-graph-projection-unavailable' });
 });
 test('both recursive corpora produce deterministic complete audited packages', async () => {

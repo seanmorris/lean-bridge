@@ -45,6 +45,23 @@ test("WIT structured CI requires installed consumers, ownership probes and execu
 	assert.match(workflow, /steps\.structured_wit\.outcome != 'success'/u);
 });
 
+test("WIT recursive CI requires both source paths, sanitizer probes and immutable packages", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const step = workflow.split("- name: Execute recursive WIT callbacks and owned closures\n")[1]?.split("      - name:")[0];
+	assert.ok(step);
+	for(const command of ["test:wit-recursive-generated", "test:wit-recursive-packages"])
+		assert.ok(step.includes(`npm run ${command}`));
+	const upload = workflow.split("- name: Upload WIT structured callback evidence\n")[1]?.split("      - name:")[0];
+	assert.ok(upload); assert.match(upload, /if-no-files-found: error/u);
+	for(const name of ["wit-native", "wit-faults", "wit-packages", "wit-mixed-packages"])
+	{
+		assert.ok(step.includes(`test -s build/recursive-callables/${name}.json`));
+		assert.ok(upload.includes(`build/recursive-callables/${name}.json`));
+	}
+	assert.equal(workflow.split("steps.recursive_wit.outcome == 'success'").length, 3);
+	assert.match(workflow, /steps\.recursive_wit\.outcome != 'success'/u);
+});
+
 const directoryDocuments = Object.freeze([
 	"src/README.md"
 	, "src/abi/README.md"

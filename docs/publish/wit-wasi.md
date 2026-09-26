@@ -6,9 +6,9 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 ## Build an ordinary Lean project
 
-The `wit-wasi` target accepts copied primitives, arrays, Lists, acyclic records, options, results, binary products, aliases and concrete tagged variants, plus synchronous callbacks and returned Lean functions carrying those copied values. Consumers receive the compiled component, a generated Wasmtime embedding library, headers, shared native runtime, compiler evidence and dependency licenses. The target builds for Linux x86-64 with glibc 2.38 or newer.
+The `wit-wasi` target accepts copied primitives, arrays, Lists, records, options, results, binary products, aliases and concrete tagged variants, including finite recursive values and synchronous callbacks and returned Lean functions carrying them. Consumers receive the compiled component, a generated Wasmtime embedding library, headers, shared native runtime, compiler evidence and dependency licenses. The target builds for Linux x86-64 with glibc 2.38 or newer.
 
-Callable signatures support all nineteen primitives, acyclic copied containers and one through sixteen arguments. Use an [arity decision](../lean/export-decisions.md) when an export returns a partially applied function. Host callbacks are call-borrowed; returned Lean functions have explicit leases. Recursive callback payloads, nested functions, identity-bearing copied fields, retained host borrows and asynchronous results remain unsupported. The [consumer guide](../consume/wit-wasi.md#callbacks-and-returned-lean-functions) describes the owning session API and cleanup.
+Callable signatures support all nineteen primitives, copied containers and one through sixteen arguments. Use an [arity decision](../lean/export-decisions.md) when an export returns a partially applied function. Host callbacks are call-borrowed; returned Lean functions have explicit leases. Nested functions, identity-bearing copied fields, retained host borrows and asynchronous results remain unsupported. The [consumer guide](../consume/wit-wasi.md#callbacks-and-returned-lean-functions) describes the owning session API and cleanup.
 
 List parameters, results and record fields use canonical WIT `list<T>` values.
 Typed Lean helpers preserve the List semantics without inspecting cons-cell
@@ -81,6 +81,56 @@ For a Lake package named `structured`, use:
 The arity keeps `makeRecord`'s returned function as an owned closure. Its caller closes the token explicitly; each invocation returns an independent copied value. `callRecord` borrows the host callback only for that call. A review must preserve callback ownership and the original copied type references, including aliases.
 
 Build and distribute the archive as above. The [consumer example](../consume/wit-wasi.md#structured-callback-values) registers a record callback and executes the installed package without Lean tooling.
+
+## Export recursive callbacks
+
+Save this as `Structured.lean` in a Lake library named `structured`:
+
+```lean
+namespace Structured
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+
+end Structured
+```
+
+Select these exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": {
+    "wit-wasi": { "name": "structured", "version": "1.0.0" }
+  }
+}
+```
+
+Build with `--target wit-wasi` and distribute the archive and receipt as above.
+The arity keeps `makeRecursive`'s result as an owned function. `callRecursive`
+borrows its callback for one call. Its callback receives a typed tree and returns
+an independently copied tree. The [C example](../consume/wit-wasi.md#recursive-callback-values)
+registers that callback and invokes the returned Lean function.
+
+WIT cannot declare recursive types directly. The generated C helpers convert
+typed values to finite WIT node tables, cross the compiled component and copy
+the result back. Original declarations, aliases and proof metadata remain in
+the manifest beside this transport description. Consumers use named types and
+export-specific helpers from the generated header.
+
+Recursive conversions reject cycles and enforce 128 nested levels, 262,144
+expanded node visits and separate 16 MiB input/output copy budgets. An invalid
+input or limit error leaves the result unchanged and the session usable.
+Malformed native outputs retire the shared runtime. Resource-containing
+aggregates and nested callable fields require separate ownership support.
 
 ## Export named copied aliases
 

@@ -46,8 +46,10 @@ static inline bool lb_out_${node.index}(const ${node.name} *value, lb_scope *sco
  * Decode with a null output performs the same traversal before Wasmtime copying.
  *
  * @param model - A compiled copied WIT graph model with native layout descriptors.
+ * @param options - Optional standalone value-copy helpers.
+ * @param options.allRoots - Render bounded root conversions for nested public types too.
  */
-export const renderWitGraphConversions = model => {
+export const renderWitGraphConversions = (model, { allRoots = false } = {}) => {
 	const nodes = new Map(model.nodes.map(node => [node.id, node]));
 	const tableIndex = new Map(model.tables.map((node, index) => [node.id, index]));
 	const leaf = node => node.kind === "primitive";
@@ -199,7 +201,7 @@ ${output.map(line => `  ${line}`).join("\n")}
 }`;
 	});
 	const roots = new Set(model.layout.roots.flatMap(root => [...root.parameters, root.result]));
-	const wrappers = model.nodes.filter(node => roots.has(node.id)).map(node => `
+	const wrappers = model.nodes.filter(node => allRoots || roots.has(node.id)).map(node => `
 static inline bool lb_graph_decode_${node.index}(const wasmtime_component_val_t *value, lb_graph_scope *scope, ${node.name} *out) {
   if (out && !lb_buffer(out, 1, sizeof(*out), _Alignof(${node.name}))) return false;
   ${node.name} converted = {0};

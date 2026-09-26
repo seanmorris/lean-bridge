@@ -64,10 +64,10 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
-test("recursive copied acceptance covers all profiles and npm/C-family/Python/Rust/Ruby/Perl/C#/JVM/PHP callback payloads", () => {
+test("recursive copied values and callback payloads have installed checks in all seventeen profiles", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "recursive");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(installed.length, 166);
+	assert.equal(installed.length, 170);
 	assert.equal(new Set(installed.map(cell => cell.profile)).size, 17);
 	const promoted = installed.filter(cell => ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile) && !cell.position.startsWith("callback-"));
 	assert.equal(promoted.length, 30);
@@ -79,9 +79,9 @@ test("recursive copied acceptance covers all profiles and npm/C-family/Python/Ru
 		{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["managed-recursive-installed"]); }
 	}
 	const wit = installed.filter(cell => cell.profile === "wit-wasi");
-	assert.equal(wit.length, 6);
+	assert.equal(wit.length, 10);
 	for(const cell of wit) for(const stage of Object.values(cell.stages))
-	{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, ["wit-wasi-recursive-installed"]); }
+	{ assert.equal(stage.state, "passed"); assert.deepEqual(stage.evidence, [cell.position.startsWith("callback-") ? "wit-wasi-recursive-callables-installed" : "wit-wasi-recursive-installed"]); }
 	for(const cell of cells.filter(cell => cell.position.startsWith("callback-")))
 	{
 		if(["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"].includes(cell.profile))
@@ -104,6 +104,8 @@ test("recursive copied acceptance covers all profiles and npm/C-family/Python/Ru
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-native-recursive-callables-installed"]);
 		else if(cell.profile === "php-wasm")
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["php-wasm-recursive-callables-installed"]);
+		else if(cell.profile === "wit-wasi")
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["wit-wasi-recursive-callables-installed"]);
 		else assert.notEqual(cell.stages.installedExecution.state, "passed", cell.id);
 	}
 });
@@ -366,7 +368,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile
 		&& cell.path === "ordinary-source" && !observed.includes(cell)
-		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "jvm-recursive-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-native-recursive-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "php-wasm-recursive-callables-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed"].includes(id))))
+		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "jvm-recursive-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-native-recursive-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "php-wasm-recursive-callables-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed", "wit-wasi-recursive-callables-installed"].includes(id))))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 
@@ -498,7 +500,7 @@ test("rejections and partial ranges remain required work, and exclusions need re
 });
 
 test("the inventory command keeps unknown filters closed and emits unreviewed cells as JSON", async () => {
-	const result = await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "wit-wasi", "--shape", "recursive"], { cwd: root });
+	const result = await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "wit-wasi", "--shape", "resource"], { cwd: root });
 	const report = JSON.parse(result.stdout);
 	assert.equal(report.complete, false);
 	assert.equal(report.selectedCells.length, 10);
@@ -506,8 +508,10 @@ test("the inventory command keeps unknown filters closed and emits unreviewed ce
 	assert.equal(report.profiles, 1);
 	assert.equal(report.shapes, 1);
 	assert.equal(report.requiredGaps, report.gaps.length);
-	assert.ok(report.selectedCells.every(cell => cell.profile === "wit-wasi" && cell.shape === "recursive"));
-	assert.ok(report.gaps.every(gap => gap.cell.startsWith("wit-wasi/recursive/")));
+	assert.ok(report.selectedCells.every(cell => cell.profile === "wit-wasi" && cell.shape === "resource"));
+	assert.ok(report.gaps.every(gap => gap.cell.startsWith("wit-wasi/resource/") && gap.state === "unreviewed"));
+	const recursive = JSON.parse((await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "wit-wasi", "--shape", "recursive"], { cwd: root })).stdout);
+	assert.equal(recursive.complete, true); assert.equal(recursive.requiredGaps, 0); assert.equal(recursive.selectedCells.length, 10);
 	const complete = JSON.parse((await execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "php-wasm", "--shape", "char"], { cwd: root })).stdout);
 	assert.equal(complete.complete, true); assert.equal(complete.requiredGaps, 0);
 	await assert.rejects(execute(process.execPath, ["scripts/type-surface.mjs", "--json", "--profile", "unknown"], { cwd: root }), /Unknown profile/);
