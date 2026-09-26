@@ -8,7 +8,7 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 Install Node 22, Lean 4.32.2, a C11 compiler, Make, m4, tar, xz, and `readelf` from binutils on Linux x86-64. Add a C++20 compiler if you also select `cpp`. Consumers need no Lean installation.
 
-Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Both C and C++ accept synchronous primitive callbacks and returned closures. Resources and asynchronous signatures remain unsupported in these adapters; the build reports the rejected Lean declaration and location.
+Use the [shared export configuration](../lean/existing-package.md#configure-exports) to select functions. The C/C++ adapters accept all 19 primitive types, arrays and acyclic records, including nested combinations. `Char` maps to a checked `uint32_t` code point in C and `char32_t` in C++. Concrete specializations use the same configuration. Both C and C++ accept synchronous primitive callbacks and returned closures. Resource-containing C values require the [explicit ownership policy](#resource-containing-c-values) below. Asynchronous signatures remain unsupported; the build reports the rejected Lean declaration and location.
 
 `Option`, `Except`, binary products and `List` also compile through both ordinary-source and reviewed-IR builds. They may contain supported primitives, arrays, records and each other, but not callbacks or resources. All seventeen consumer profiles have installed acceptance for these copied constructors. Check each target's guide for its host representation and toolchain requirements before selecting a combined release.
 
@@ -40,6 +40,49 @@ Package names do not rename the API. The source component determines `sample.h`,
 Each archive includes its component library, C adapter and matching Lean runtime. Loading the C library initializes Lean automatically; pkg-config and CMake locate the libraries. The tested public profile is Linux x86-64 with glibc 2.38 or newer. The builder rejects binaries requiring a newer glibc version than the declared floor. Lean and Lean Bridge license notices accompany the binaries; supply your library's license with the release as well.
 
 Add `--target cpan` to produce Perl archives from that same native compilation. Add `--target npm` to also compile one Wasm component from the same captured source tree when the API fits [npm's supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records. Selecting npm for unsupported signatures rejects the combined build without partial output. Combined builds check source API agreement across profiles and put the native archives under `profiles/native/archives/`. Install the [npm](npm.md#build-npm-and-cpan-together) and [CPAN](cpan.md#build-an-ordinary-lean-project) tools only when selecting those targets. C-only builds do not invoke Perl.
+
+## Resource-containing C values
+
+For target `c`, the ownership-aware transport accepts resources inside arrays,
+Lists, options, results, products, records, variants, aliases and bounded recursive
+values. Select the resource types and their aggregate ownership policy explicitly:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.echoRecord"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": { "c": { "name": "owned-archive", "version": "1.2.3" } }
+}
+```
+
+These names come from the repository's
+[owned aggregate fixture](../../tests/fixtures/onboarding/owned-aggregates/Owned.lean).
+Build the project with `--target c`. Do not add other targets until they implement
+this transport. A reviewed version-4 contract supplies the exports, resource
+selection and policy instead; its configuration retains only module authorization,
+package metadata and target coordinates. Lean checks the reviewed types and
+ownership decisions against fresh compiler output before generating the package.
+
+The archive includes a public C11 header, the component, shared Lean runtime, GMP,
+license notices, corresponding GMP source, and relocatable CMake/pkg-config files.
+Consumers need neither Lean nor the author project. The package manifest uses
+`schemaVersion: 2` and records `ownedValues`; its README describes the generated
+session/result API. Package names do not change the source-derived API prefix.
+
+Each call borrows inputs and returns a typed view with an explicit result owner.
+Consumers release that owner, rather than walking fields or clearing nested GMP
+views. Returned Lean closures can capture these values and have typed call and
+retain operations. Host callback construction for owned payloads, transferred
+inputs, anchored borrowed results, other host projections and Wasm lowering are
+still unfinished. See [C ownership and cleanup](../consume/c.md#resource-containing-values).
 
 ## Copied arrays and records
 

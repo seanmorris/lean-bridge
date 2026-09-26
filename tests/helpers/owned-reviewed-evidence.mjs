@@ -13,6 +13,7 @@ import { validateReviewedOwnedSource } from "../../src/analyze/reviewed-owned-so
 import { ownedCExecutionSources, assertOwnedCIntegration } from "./owned-c-evidence.mjs";
 import { ownedCHistoryPath } from "./owned-c-source-history.mjs";
 import { ownedReviewedBaseline, ownedReviewedChangedPaths, ownedReviewedAddedPaths, ownedReviewedExecutionPath, reverseOwnedReviewedUpdate } from "./owned-reviewed-source-history.mjs";
+import { beforeOwnedPackage, ownedPackageChangedPaths } from "./owned-package-source-history.mjs";
 
 export const ownedReviewedCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/reviewed-owned-source.test.mjs tests/reviewed-source.test.mjs tests/reviewed-callables.test.mjs tests/owned-c-values.test.mjs";
 export const ownedReviewedScope = { compiledLean: true, publicCValues: true
@@ -24,7 +25,11 @@ export const ownedReviewedExecutionSources = [...new Set([
 	, "tests/reviewed-owned-source.test.mjs"
 	, "tests/reviewed-source.test.mjs", "tests/reviewed-callables.test.mjs"
 ])].sort();
-const source = path => readFile(path, "utf8");
+const source = async path => beforeOwnedPackage(path, await readFile(path, "utf8"));
+const historicalBytes = async path => {
+	const bytes = await readFile(path);
+	return ownedPackageChangedPaths.includes(path) ? beforeOwnedPackage(path, bytes.toString("utf8")) : bytes;
+};
 
 /**
  * Regenerate the real reviewed adapters and require native execution controls.
@@ -40,7 +45,7 @@ export const assertOwnedReviewedExecution = async record => {
 	assert.match(record.run.text, /^# tests 52$/mu); assert.match(record.run.text, /^# pass 52$/mu);
 	for(const status of ["fail", "cancelled", "skipped"]) assert.match(record.run.text, new RegExp(`^# ${status} 0$`, "mu"));
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedReviewedExecutionSources);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await historicalBytes(path)), digest, path);
 	assert.deepEqual(Object.keys(record.inputs).sort(), ["reviewed", "shapeNegative"]);
 	const input = record.inputs.reviewed, generated = generateOwnedCPackage(input), report = record.report;
 	const review = validateReviewedOwnedSource(input.sourceIdentity.reviewedBindingIr);
@@ -110,7 +115,7 @@ export const assertOwnedReviewedIntegration = async record => {
 	const updates = new Map(record.updates.map(item => [item.path, item])), restored = {};
 	for(const path of paths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = await historicalBytes(path); assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -120,7 +125,9 @@ export const assertOwnedReviewedIntegration = async record => {
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document, ...contracts } = await readTypeSurface();
+	const { document: currentDocument, ...contracts } = await readTypeSurface();
+	assert.ok(currentDocument);
+	const document = JSON.parse(await source("docs/type-surface.v1.json"));
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]), expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

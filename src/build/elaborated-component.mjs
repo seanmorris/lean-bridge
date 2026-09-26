@@ -8,7 +8,8 @@ import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from "node:f
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
-import { readReviewedSource, reviewedSourceSelection } from "../analyze/reviewed-source.mjs";
+import { reviewedSourceSelection } from "../analyze/reviewed-source.mjs";
+import { readNativeReviewedSource, reviewedOwnedSourceSelection } from "../analyze/reviewed-owned-source.mjs";
 import { assertExportConfigurationCapabilities, assertExportConfigurationSnapshot, readExportConfiguration, selectSourceModules, compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -50,6 +51,7 @@ const fileIdentity = async path => { const bytes = await readFile(path); return 
  * @param options.configurationSha256 - Expected shared configuration digest.
  * @param options.lakeSnapshot - Shared immutable Lake source capture.
  * @param options.targets - Projections whose configuration must be admitted.
+ * @param options.ownedGraphs - Whether the selected native transport implements v4 ownership.
  * @param options.validateModel - Target admission before compiling adapters.
  * @param options.profile - Fixed compiled target profile.
  * @param options.receiptName - Target-specific receipt filename.
@@ -70,6 +72,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 	, configurationSha256
 	, lakeSnapshot
 	, targets = ["cpan"]
+	, ownedGraphs = false
 	, validateModel
 	, profile
 	, receiptName
@@ -91,7 +94,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 		if(configurationSha256 !== undefined && configurationSha256 !== record.sha256) throw new Error("export configuration changed before native compilation");
 		const config = record.configuration;
 		for(const target of targets)
-			assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : target === "php-wasm" ? ["npm", "composer"] : ["name", "version"] });
+			assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])], targetFields: target === "cpan" ? ["module", "version"] : target === "php-wasm" ? ["npm", "composer"] : ["name", "version"] });
 		for(const [field, value] of Object.entries({ modules, exports, resources, arities }))
 			if(value !== undefined && config[field] !== undefined && canonicalJson(value) !== canonicalJson(config[field]))
 				throw new Error(`Native ${field} override conflicts with lean-bridge.exports.json`);
@@ -103,13 +106,17 @@ export const buildElaboratedComponent = async ({ projectRoot
 		arities ??= config.arities ?? {};
 		if(targets.includes("cpan")) moduleName ??= config.targets?.cpan?.module;
 		const inventory = await inspectLeanProject(project, { signal });
-		const reviewedBindingIr = await readReviewedSource(project, inventory, signal);
+		const reviewedBindingIr = await readNativeReviewedSource(project, inventory, signal, ownedGraphs);
+		let reviewedSelection;
 		if(reviewedBindingIr)
 		{
 			if(exports.length || resources.length || Object.keys(arities).length || canonicalJson(modules) !== canonicalJson(config.modules))
 				throw Object.assign(new Error("Reviewed builds cannot override the authorized modules or export decisions"), { code: "export-configuration-reviewed-ir" });
-			const selection = reviewedSourceSelection(reviewedBindingIr);
+			const selection = JSON.parse(reviewedBindingIr.source).schemaVersion === 4
+				? reviewedOwnedSourceSelection(reviewedBindingIr) : reviewedSourceSelection(reviewedBindingIr);
+			reviewedSelection = selection;
 			exports = selection.exports;
+			resources = selection.resources ?? [];
 			arities = Object.fromEntries(selection.arities);
 		}
 		const entries = selectLakeEntryModules({ ...config, modules }, inventory.inputs);
@@ -192,6 +199,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 			, exports, resources
 			, arities: Object.entries(arities)
 			, ...compilerExportSelection(config)
+			, ...(reviewedSelection?.ownedAggregates ? { ownedAggregates: reviewedSelection.ownedAggregates } : {})
 			, exportModules: selectedModules };
 		const request = createMetadataRequest(selection, { toolchain: analysis.project.toolchain
 			, leanCompilerSha256, extractorSha256

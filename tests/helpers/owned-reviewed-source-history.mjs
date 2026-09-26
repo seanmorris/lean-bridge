@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPackage } from "./owned-package-source-history.mjs";
 
 export const ownedReviewedBaseline = "ca016c0a04d9329a861d6a40cd34d95926cbcce4";
 export const ownedReviewedHistoryPath = "docs/evidence/owned-reviewed-integration-20260926.json";
@@ -66,6 +67,7 @@ export const reverseOwnedReviewedUpdate = (source, update) => {
  * @param expected - Optional exact digest at which normalization must stop.
  */
 export const beforeOwnedReviewed = (path, source, expected) => {
+	source = beforeOwnedPackage(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedReviewedChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedReviewedHistoryPath, "utf8"));

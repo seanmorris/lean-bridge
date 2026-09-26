@@ -52,8 +52,10 @@ dedicated tests. A separately compiled C consumer now exercises semantic value
 types, opaque identities and explicit session/result lifetimes. The same C
 consumer also executes an independently authored v4 contract after fresh Lean
 reconciliation. The review selects resources and ownership policies; it cannot
-supply layouts or proof evidence. Host-callback construction, other host
-projections, Wasm and installed package support remain unfinished. Existing
+supply layouts or proof evidence. C-only package builds now ship that transport
+with the shared runtime, GMP and relocatable build metadata. Installed ordinary
+and reviewed consumers execute without producer source or Lean. Host-callback
+construction, other host projections and Wasm remain unfinished. Existing
 version-3 backends reject this contract.
 
 ## Rich values cross as rich values

@@ -7,6 +7,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "./native-graph-model.mjs";
+import { verifyReviewedOwnedSourceInputs } from "../analyze/reviewed-owned-source.mjs";
 import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
 import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 import { verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
@@ -90,15 +91,16 @@ export async function readVerifiedNativeRuntime(root)
  * @param runtimeIdentity - Expected shared runtime manifest identity.
  * @param options - Transport capabilities of the reader.
  * @param options.copiedGraphs - The caller implements the finite graph carrier model.
+ * @param options.ownedGraphs - The caller implements explicit aggregate ownership.
  */
-export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false } = {})
+export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false } = {})
 {
 	const read = async path => JSON.parse(await readFile(join(root, path), "utf8"));
 	const inventory = await read("artifacts.json"), receipt = await read("native-component.json"), model = await read("model.json");
 	await verifyNativeFiles(root, inventory.files);
 	if((await nativeArtifactPaths(root)).some(path => path !== "artifacts.json" && !Object.hasOwn(inventory.files, path))) throw new Error("unrecorded native component artifact");
 	const metadata = await read("metadata.json");
-	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity });
+	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs });
 	const adapters = generateCompiledNativeLeanAdapters(reconstructed);
 	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== 2
 		|| receipt.runtimeIdentity !== runtimeIdentity
@@ -120,7 +122,7 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity, { copie
 	if(receipt.nativeLibrary.sha256 !== sha256(bytes) || receipt.nativeLibrary.bytes !== bytes.length) throw new Error("native component binary drift");
 	const notices = await readVerifiedSourceNotices(root, receipt.sourceIdentity);
 	verifyPackageMetadataSource(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
-	verifyReviewedSourceInputs(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
+	(model.ownedGraph ? verifyReviewedOwnedSourceInputs : verifyReviewedSourceInputs)(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
 	if(model.copiedGraph && !copiedGraphs) throw Object.assign(new TypeError("This native component requires a graph-capable consumer adapter"), { code: "native-graph-projection-unavailable" });
 	return { model, receipt };
 }

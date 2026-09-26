@@ -15,6 +15,7 @@ import { createNativeModel, generateNativeLeanAdapters } from "./native-model.mj
 import { projectPerlNames } from "../backends/perl/naming.mjs";
 import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi, nativeCallableGraphHeader } from "./native-callable-graph.mjs";
 import { componentStructuredCopiedView, componentStructuredCallableLeanSource } from "./component-structured-callable-lean.mjs";
+import { createOwnedCompiledNativeModel, generateOwnedNativeLeanAdapters } from "./owned-native-model.mjs";
 
 const primitives = {
 	unit: "Unit", bool: "Bool", uint8: "UInt8", uint16: "UInt16"
@@ -67,9 +68,12 @@ export const nativeGraphCarrierAbi = model => {
  * Host-specific package admission is separate from component compilation.
  *
  * @param options - Measured metadata, source identity and component coordinates.
+ * @param root0 - Explicit transport capabilities selected by the caller.
+ * @param root0.ownedGraphs - Admit compiler-checked resource-containing aggregates.
  */
-export const createCompiledNativeModel = options => {
+export const createCompiledNativeModel = (options, { ownedGraphs = false } = {}) => {
 	const { metadata, component, moduleName, sourceIdentity } = options;
+	if(ownedGraphs && sourceIdentity.request.ownedAggregates !== undefined) return createOwnedCompiledNativeModel(options);
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true });
 	if(!elaborated.declarations.some(containsGraph)) return createNativeModel(options);
 	const semantic = createElaboratedSemanticModel({ metadata
@@ -133,6 +137,7 @@ const carrierHeader = (abi, exportCarriers = true) => {
  * @param model - Compiler-authenticated native model.
  */
 export const generateCompiledNativeLeanAdapters = model => {
+	if(model.ownedGraph) return generateOwnedNativeLeanAdapters(model);
 	if(!model.copiedGraph) return generateNativeLeanAdapters(model);
 	const abi = nativeGraphCarrierAbi(model), module = `LeanBridgeNative${sha256(model.component.id).slice(0, 16)}`;
 	const exports = model.exports.map((item, index) => ({ bindingId: item.bindingId

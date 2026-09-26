@@ -34,6 +34,22 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
 		, component, elaborationSha256: elaborated.sha256 });
 	const document = sourceIdentity.reviewedBindingIr === undefined ? semantic.document
 		: reconcileReviewedOwnedSource(sourceIdentity.reviewedBindingIr, semantic.document, sourceIdentity);
+	return generateOwnedBindingCarriers({ document, sourceIdentity
+		, declarations: elaborated.declarations, metadataSha256: elaborated.sha256 });
+};
+
+/**
+ * Regenerate typed helpers from a reconstructed ownership-aware component model.
+ * Artifact readers must independently reconstruct that model from fresh metadata.
+ *
+ * @param options - Validated semantic contract and compiler-selected declarations.
+ * @param options.document - Reconciled ownership-aware binding IR.
+ * @param options.sourceIdentity - Captured source and compiler identities.
+ * @param options.declarations - Compiler-selected declarations with source modules.
+ * @param options.metadataSha256 - Digest of authenticated compiler metadata.
+ */
+export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declarations: selected, metadataSha256 }) => {
+	const component = document.component;
 	const model = compileOwnedAggregateModel(document);
 	const nodes = new Map(model.types.map(type => [type.id, type]));
 	const definitions = new Map(document.types.map(type => [type.id, type]));
@@ -58,7 +74,7 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
 		return `(_root_.${{ array: "Array", list: "List", option: "Option", tuple: "Prod" }[node.kind]} ${children.join(" ")})`;
 	};
 	const carrier = id => `(_root_.Array ${sourceType(id)})`;
-	const lines = [...new Set(elaborated.declarations.map(item => `import ${item.module}`))
+	const lines = [...new Set(selected.map(item => `import ${item.module}`))
 		, "set_option maxRecDepth 10000"
 		, `namespace ${module}`
 		, "def carrierValue {α : Type} (value : _root_.Array α) : _root_.Option α :="
@@ -168,7 +184,7 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
 	{
 		const original = declarations.get(declaration.id);
 		const selectedName = original.source.extensions?.["lean-lang.org/specialization"]?.name ?? original.source.declaration;
-		const source = elaborated.declarations.find(item => item.name === selectedName);
+		const source = selected.find(item => item.name === selectedName);
 		if(!source || declaration.kind !== "function" || declaration.receiver) fail("export lacks a selected pure function");
 		const names = declaration.parameters.map((_, index) => `a${index}`);
 		const parameters = declaration.parameters.map((site, index) => `(${names[index]} : ${carrier(site.type)})`).join(" ");
@@ -180,6 +196,6 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
 	return Object.freeze({ model, module, symbols
 		, leanSource: lines.join("\n")
 		, header: header.join("\n") + "\n"
-		, metadataSha256: elaborated.sha256
+		, metadataSha256
 		, sourceIdentitySha256: sha256(canonicalJson(sourceIdentity)) });
 };

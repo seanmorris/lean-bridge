@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedReviewedExecution, assertOwnedReviewedIntegration } from "./helpers/owned-reviewed-evidence.mjs";
 import { beforeOwnedReviewed, reverseOwnedReviewedUpdate, ownedReviewedHistoryPath, ownedReviewedExecutionPath } from "./helpers/owned-reviewed-source-history.mjs";
+import { beforeOwnedPackage } from "./helpers/owned-package-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -44,7 +45,7 @@ test("reviewed owned evidence rejects weakened execution and unsupported scope c
 test("reviewed owned source history rejects unknown text and overlapping edits", async () => {
 	for(const update of (await json(ownedReviewedHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeOwnedPackage(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseOwnedReviewedUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeOwnedReviewed(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedReviewed(update.path, source, update.currentSha256), source);

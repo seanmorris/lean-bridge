@@ -284,6 +284,50 @@ fatal allocation policy. Malformed native results retire the shared runtime,
 but previously owned values remain clearable. See the
 [C/GMP ownership rules](../evidence/gmp-recursive-conversions-20260923.md).
 
+## Resource-containing values
+
+Packages with `ownedValues` in their version-2 `lean-bridge-package.json` use a
+session/result API. Their records have named fields, variants have named case
+enums and payloads, and containers have typed spans, `has_value`, `is_ok`, or
+`fst`/`snd`. Resources and returned Lean closures are opaque handles. This API
+has different cleanup rules from the copied-value API above.
+
+Open a `<prefix>_session`, then pass it to the generated functions. Each successful
+call fills a typed output and a separate `<prefix>_result *` owner. Initialize
+owner slots to `NULL`. Call `<prefix>_result_release(&owner)` when finished with
+that output; failures preserve both output slots. Release any earlier owner before
+reusing its slot. Copying a result struct does not create another owner.
+
+Nested resources belong to the result lease. Use the generated resource `_retain`
+function to obtain a new result owner when a handle must outlive its original
+aggregate. Returned closures also provide `_retain` and typed `_call` functions.
+The transport does not yet construct host callbacks for owned payloads.
+
+`Nat` and `Int` views use GMP `mpz_srcptr`. Initialize caller-owned integers with
+`mpz_init`, populate them with `mpz_set`, and release them with `mpz_clear`.
+Do not mutate or clear an integer borrowed from a result. CMake and pkg-config
+link the bundled GMP library automatically. No Lean installation or producer
+source is required.
+
+Close the session with `<prefix>_session_close(&session)`. Resource calls then
+reject, while copied result storage remains readable until its result owner is
+released. Sessions, resources and results stay on their creating thread and
+process; inherited handles reject after `fork`. Cleanup remains available after
+runtime retirement.
+
+Each public C conversion and native conversion has a separate cumulative 16 MiB
+storage budget and 262,144-visit limit. Value depth is limited to 128 and native
+transactions retain at most 4,096 references. Cycles, invalid fields, excessive
+nesting and stale handles reject without publishing partial output. These limits
+do not cap the Lean algorithm's working memory or every GMP allocation. GMP retains
+its default fatal out-of-memory policy.
+
+The [installed C caller](../../tests/fixtures/structured-types/owned-installed-values.c)
+shows records, all variant constructors, nested containers, bounded recursive trees,
+retained children, captured closures and cleanup. The
+[author recipe](../publish/c.md#resource-containing-c-values) explains the explicit
+resource and aggregate policy.
+
 ## Exact integers
 
 Prepared C packages expose Lean `Nat` and `Int` as GMP `mpz_t`, including array elements and record fields. The archive supplies GMP 6.3.0 and configures it through CMake and pkg-config. You do not install a separate dependency or construct limb buffers.

@@ -4,9 +4,10 @@ This work adds compiler metadata and a semantic model for resource handles insid
 collections, records, variants and recursive values. Private typed Lean/C
 carriers, a native ownership ledger and typed native value conversion now
 execute against the shared Lean runtime. An independently compiled public C
-consumer executes both ordinary and reviewed-v4 projections. Other host
-projections and installed consumer packages remain unfinished. No installed
-coverage cells are promoted by these checks.
+consumer executes both ordinary and reviewed-v4 projections. The C package builder
+also assembles those projections with the runtime, GMP and installation metadata.
+Other host projections and host callback construction remain unfinished. No
+installed coverage cells are promoted by the earlier projection receipts.
 
 ## Author decision and compiler evidence
 
@@ -25,9 +26,9 @@ The shared configuration accepts an explicit development-stage ownership policy:
 
 `fallback` also accepts `none`. The compiler request includes this decision in its
 invocation identity. The author still selects each resource through `resources`.
-The policy supplies no Lean types, object layouts or proof claims. Existing
-package builders reject the policy until their ownership-aware transport is
-connected. The internal source scanner cannot authorize it.
+The policy supplies no Lean types, object layouts or proof claims. C-only package
+builds implement the ownership-aware transport. Other package targets still reject
+the policy. The internal source scanner cannot authorize it.
 
 Lean emits a distinct `owned-graph` wrapper containing a finite nominal table,
 the policy and checked native representations. Resource leaves keep their names
@@ -272,8 +273,8 @@ keeps author annotations, including constructor/field documentation and callback
 parameter names, while retaining compiler-produced source positions, producers
 and theorem references. Claimed proof or layout extensions in the review reject.
 
-The existing v3 reader still rejects v4. Ordinary package builders do not yet
-select the ownership-aware path. The internal reviewed C gate runs with:
+The existing v3 reader still rejects v4. C-only builds explicitly select the
+ownership-aware path. The internal reviewed C gate runs with:
 
 ```sh
 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs
@@ -286,6 +287,35 @@ allocation-failure cleanup and sanitizers. A changed review runs through the
 extractor again and must reject reordered constructors against the new metadata.
 The report is `build/owned-aggregate-native/reviewed-public-c.json`. These are
 compiled projection checks, not source-free installed-package acceptance.
+
+## Installed C packages
+
+The ordinary and reviewed fixtures build through the public project builder with
+target `c`. Each archive includes the public header, native component, shared
+runtime, GMP, corresponding source, license notices and CMake/pkg-config metadata.
+Reassembly produces byte-identical archives. Changing a public header and updating
+its local digest still rejects against regenerated compiler-authenticated output.
+
+The installed consumer passes 500 public API checks using pkg-config and another
+500 after relocating the package and rebuilding with CMake. Both source paths
+remove the author project and producer output before installation. Runtime checks
+run with Lean and compiler paths unavailable. Relocated CMake execution also
+removes the original archive handoff. The checks cover all variant constructors,
+empty containers, nested values, recursive limits, cycles, retained resource
+identity, captured Lean closures, invalid input recovery, thread/process rejection
+and result storage after session close.
+
+```sh
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-c-packaging.test.mjs
+```
+
+Fresh reports appear in `build/owned-c-packaging/ordinary.json` and `reviewed.json`.
+The [execution record](owned-package-execution-20260926.json) retains compiler
+inputs, original archive identities and enabled test logs. The
+[integration record](owned-package-integration-20260926.json) preserves older
+observations and the installed matrix. This stage does not claim host callback
+construction, transfer, anchored results or other host profiles.
 
 ## Remaining VO 1219 work
 

@@ -33,6 +33,7 @@ import { projectOrdinaryWasi } from "./native-wit-projection.mjs";
 import { packageOrdinaryPython } from "../release/native-pypi.mjs";
 import { projectOrdinaryRust } from "./native-rust-projection.mjs";
 import { packageOrdinaryPhp } from "../release/native-composer.mjs";
+import { projectOwnedNativeC } from "./owned-c-projection.mjs";
 
 /**
  * Reuse compiled source and runtime artifacts across C and C++ projections.
@@ -49,7 +50,8 @@ import { packageOrdinaryPhp } from "../release/native-composer.mjs";
  */
 export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target)), ownedGraphs: targets.every(target => target === "c") });
+	if(model.ownedGraph) return [await projectOwnedNativeC({ working, nativeRoot, runtimeRoot, leanPrefix, settings: settings.c, environment, signal })];
 	const graph = model.copiedGraph ? compileNativeGraphProjection(model.bindingIr, targets) : null;
 	const surface = graph ? null : compilePrimitiveCSurface(model.bindingIr, { structuredCallables: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target)), variants: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), lists: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), compounds: targets.every(target => ["c", "cpp", "pypi", "cargo", "nuget", "maven", "rubygems", "php-native", "wit-wasi"].includes(target)), callables: targets.every(target => ["c", "cpp", "pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"].includes(target)) });
 	const p = graph ? graph.prefix : surface.prefix;

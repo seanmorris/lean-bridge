@@ -11,7 +11,7 @@ import { canonicalizeJsonValue, BindingIrCanonicalError } from "../binding-ir/ca
 import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { compileOwnedAggregateModel } from "../abi/owned-aggregate-model.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
-import { assertReviewedSourceConfiguration, validateReviewedSourceIdentity, reviewedContractDifference } from "./reviewed-source.mjs";
+import { assertReviewedSourceConfiguration, validateReviewedSourceIdentity, reviewedContractDifference, readReviewedSource } from "./reviewed-source.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const hash = document => sha256(canonicalizeJsonValue(document));
@@ -165,6 +165,25 @@ export const readReviewedOwnedSource = async (projectRoot, inventory, signal) =>
 	const review = { schemaVersion: 1, path: inputs[0].path, source, sourceSha256: sha256(bytes), semanticSha256: hash(document) };
 	validateReviewedOwnedSource(review);
 	return review;
+};
+
+/**
+ * Read a review with the explicitly selected native transport's capabilities.
+ * Default and unsupported targets keep the existing v3 rejection behavior.
+ *
+ * @param projectRoot - Original Lean project.
+ * @param inventory - Captured source inputs.
+ * @param signal - Optional cancellation signal.
+ * @param ownedGraphs - Whether this caller implements the owned transport.
+ */
+export const readNativeReviewedSource = async (projectRoot, inventory, signal, ownedGraphs = false) => {
+	try
+	{ return await readReviewedSource(projectRoot, inventory, signal); }
+	catch(error)
+	{
+		if(!ownedGraphs || error.code !== "consumer-upgrade-required") throw error;
+		return readReviewedOwnedSource(projectRoot, inventory, signal);
+	}
 };
 
 /**

@@ -670,6 +670,9 @@ jobs:
           test -s build/owned-aggregate-native/public-c-scalars.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs
           test -s build/owned-aggregate-native/reviewed-public-c.json
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs
+          test -s build/owned-c-packaging/ordinary.json
+          test -s build/owned-c-packaging/reviewed.json
           LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs
           test -s build/recursive-callables/c.json
           LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs
@@ -702,6 +705,7 @@ jobs:
             build/owned-aggregate-native/public-c.json
             build/owned-aggregate-native/public-c-scalars.json
             build/owned-aggregate-native/reviewed-public-c.json
+            build/owned-c-packaging/
             build/recursive-callables/c.json
             build/recursive-callables/cpp.json
             build/recursive-callables/c-family-documentation.json
@@ -897,6 +901,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_FAMILY_RECURSIVE_DOCUMENTATION_TEST=1 node --test tests/c-family-recursive-documentation.test.mjs"

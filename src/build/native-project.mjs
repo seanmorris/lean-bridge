@@ -12,7 +12,8 @@ import { assertExportConfigurationCapabilities, readExportConfiguration } from "
 import { processBuildRunner } from "./process-runner.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
-import { readReviewedSource } from "../analyze/reviewed-source.mjs";
+import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
+import { generateOwnedCValues } from "../backends/c/owned-values.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { compilePrimitiveCppModel } from "../backends/cpp/primitives.mjs";
 import { validateGmpSurface } from "../backends/c/gmp-projection.mjs";
@@ -45,15 +46,16 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 {
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target)))
 		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and cpan targets");
+	const ownedGraphs = targets.every(target => target === "c");
 	try
-	{ await readReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal); }
+	{ await readNativeReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal, ownedGraphs); }
 	catch(error)
 	{ throw new CanonicalBuildError(error.code ?? "native-project-build-failed", error.message, { details: error.details }); }
 	const record = await readExportConfiguration(projectRoot, { signal });
 	const config = record.configuration;
 	for(const target of targets)
 	{
-		assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
+		assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
 		if(target === "nuget") validateOrdinaryNugetSettings(config.targets?.[target]);
 		else if(target === "maven") validateOrdinaryMavenSettings(config.targets?.[target]);
 		else if(target === "rubygems") validateOrdinaryRubySettings(config.targets?.[target]);
@@ -85,8 +87,11 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, configurationSha256: record.sha256
 			, lakeSnapshot
 			, targets
+			, ownedGraphs
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
+				if(model.ownedGraph)
+				{ generateOwnedCValues(model.bindingIr); return; }
 				if(model.copiedGraph)
 				{ compileNativeGraphProjection(model.bindingIr, targets, model.moduleName); return; }
 				if(targets.includes("cpan")) validatePerlModel(model);
