@@ -4,6 +4,7 @@
  * @file
  */
 import { compileCallableJvmGraphPackageModel } from "../backends/jvm/callable-graph-model.mjs";
+import { compileCallablePhpGraphPackageModel } from "../backends/php/callable-graph-model.mjs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
@@ -66,7 +67,7 @@ export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, l
 		Object.assign(files, nativeGraphProjectionSources(model, receipt));
 		if(targets.includes("rubygems")) files["src/ruby-graph-clear.c"] = rubyGraphClearSource(p);
 		if(targets.includes("maven")) files["src/jvm-graph-clear.c"] = (model.copiedGraph.callbacks ? compileCallableJvmGraphPackageModel(model.bindingIr) : generateCopiedJvmGraphConversions(model.bindingIr)).nativeReleaseSource;
-		if(targets.includes("php-native")) files["src/php-graph-clear.c"] = generateCopiedPhpGraphConversions(model.bindingIr).nativeReleaseSource;
+		if(targets.includes("php-native")) files["src/php-graph-clear.c"] = (model.copiedGraph.callbacks ? compileCallablePhpGraphPackageModel(model.bindingIr) : generateCopiedPhpGraphConversions(model.bindingIr)).nativeReleaseSource;
 		if(targets.includes("cpp") && graph.bigint) Object.assign(files, boostSources());
 	}
 	if(targets.includes("cpp") && !graph)

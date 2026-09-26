@@ -2025,6 +2025,37 @@ sixteen-argument Unit functions beside recursive values. CI retains both
 results to package and source hashes. Use `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`
 only for local testing on older glibc, not production archives.
 
+### Recursive native PHP callbacks
+
+Run the Composer acceptance with 64-bit PHP 8.2 or newer, FFI, Composer, the
+pinned Lean toolchain and a native C compiler:
+
+```sh
+export LEAN_BRIDGE_PHP=/absolute/path/to/php
+export LEAN_BRIDGE_COMPOSER=/absolute/path/to/composer
+npm run test:php-recursive-callables
+```
+
+The suite builds fresh Composer-only packages on ordinary-source and reviewed-IR
+paths. It removes authors before offline installation, relocates the installed
+package, removes the handoff and runs weak and strict callers without compilers
+or runtime overrides. The recursive corpus checks nine shapes and six seeds;
+the mixed corpus adds all nineteen primitive families and sixteen-argument Unit
+callbacks. The published Lean and PHP examples run against these builds.
+
+Separate probes inject PHP exceptions and errors at every conversion checkpoint,
+fail each native allocation and supply five malformed native results. They check
+reply storage before decoding, reject expired callback contexts, detect deliberate
+ownership and retirement defects, and exercise real post-fork rejection, Fiber
+rules, stale identity generations, GC cleanup and capacity recovery. Each native
+asset has its own tamper case. The original installed package stays unchanged and
+runs its public consumers again after the probes.
+
+CI retains `build/recursive-callables/php-recursive.json` and
+`build/recursive-callables/php-mixed.json`. The
+[acceptance record](../evidence/php-recursive-callables-20260926.md) binds these
+checks to the installed archives and tested source files.
+
 ### Recursive C# packages
 
 ```sh

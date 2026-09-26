@@ -18,6 +18,9 @@ import { jvmRecursiveCallableRejections } from './jvm-recursive-callable-types.m
 import { jvmRecursiveCallableDocumentation } from './jvm-recursive-callable-docs.mjs';
 import { assertJvmRecursiveProbes } from './jvm-recursive-callable-faults.mjs';
 import { jvmRecursiveCallableChangedPaths, reverseJvmRecursiveCallableUpdate } from './jvm-recursive-callable-source-history.mjs';
+import { beforePhpRecursiveCallables } from './php-recursive-callable-source-history.mjs';
+
+const priorSource = async path => beforePhpRecursiveCallables(path, await readFile(path, 'utf8'));
 
 export const jvmRecursiveCallableBaseline = 'e3ebe7870a10e98d0215b3b09fc3910d719ddc0b';
 export const jvmRecursiveCallableExecutionPath = 'docs/evidence/jvm-recursive-callables-20260926.json';
@@ -95,7 +98,7 @@ export const assertJvmRecursiveCallableExecution = async record => {
 	for(const flag of ['PACKAGE', 'INSTALLED', 'REPRO', 'LOADING'])
 		assert.ok(regressions.copied.installed.command.includes('LEAN_BRIDGE_JVM_GRAPH_' + flag + '_TEST=1'));
 	assert.deepEqual(Object.keys(regressions.projectionSources).sort(), jvmRecursiveCallableProjectionPaths);
-	for(const [path, digest] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(regressions.projectionSources)) assert.equal(sha256(await priorSource(path)), digest, path);
 	assert.deepEqual(regressions.generatedEquivalence, {
 		base: 'a689161035d23ec813faa8000ba60360fb2dc710840cddc3d96c291b36aee5cb'
 		, mixed: 'd4001f41f718561b632d82252d1d7e5c76dfce167efa86e334c82b75fb948303'
@@ -215,16 +218,17 @@ export const assertJvmRecursiveCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), jvmRecursiveCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...jvmRecursiveCallableChangedPaths, ...jvmRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await readFile(path, 'utf8')), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reverseJvmRecursiveCallableUpdate(await readFile(update.path, 'utf8'), update);
+		restored[update.path] = reverseJvmRecursiveCallableUpdate(await priorSource(update.path), update);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
-	const { document, ...contracts } = await readTypeSurface(), old = JSON.parse(restored['docs/type-surface.v1.json']);
+	const { document, ...contracts } = { ...await readTypeSurface(), document: JSON.parse(await priorSource('docs/type-surface.v1.json')) };
+	const old = JSON.parse(restored['docs/type-surface.v1.json']);
 	assert.equal(document.contractVersion, '0.104.0'); assert.equal(old.contractVersion, '0.103.0');
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
 	const count = values => values.filter(cell => cell.stages.installedExecution.state === 'passed').length;

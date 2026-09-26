@@ -27,9 +27,9 @@ test('Maven-only recursive callables share layouts with every admitted native ba
 	const ir = nativeRecursiveCallableReviewedIr(), compiled = compileNativeGraphProjection(ir, ['maven']);
 	assert.equal(compiled.namespace, 'org.leanbridge.structured');
 	assert.equal(compiled.functions.length, 33); assert.equal(compiled.callbacks.size, 18);
-	for(const target of ['c', 'cpp', 'pypi', 'cargo', 'rubygems', 'cpan', 'nuget'])
+	for(const target of ['c', 'cpp', 'pypi', 'cargo', 'rubygems', 'cpan', 'nuget', 'php-native'])
 		assert.equal(compileNativeGraphProjection(ir, [target, 'maven'], 'LeanBridge::Structured').layoutSha256, compiled.layoutSha256);
-	for(const targets of [[], ['maven', 'maven'], ['maven', 'php-native'], ['maven', 'wit-wasi'], ['unknown']])
+	for(const targets of [[], ['maven', 'maven'], ['maven', 'php-wasm'], ['maven', 'wit-wasi'], ['unknown']])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: 'native-graph-projection-unavailable' });
 });
 

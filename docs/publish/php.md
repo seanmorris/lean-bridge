@@ -40,7 +40,7 @@ lean-bridge build --project ./clover --target php-native --output ./release-php
 
 The build compiles Lean and the shared C adapter, generates and syntax-checks PHP, verifies the native artifacts, then produces `release-php/archives/example-clover-api-2.0.0-RC.1-linux-x86_64.zip`. The ZIP includes `composer.json`, PHP sources, compiled libraries, license notices, source identities and `lean-bridge/package-receipt.json`. Repeat another supported `--target` to share compilation. Every requested target must succeed before the release directory appears.
 
-Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, acyclic records, concrete copied variants, options, results, nested binary products and synchronous callables with those payloads. FPM, ZTS, resources, asynchronous delivery and recursive callables remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [structured callback record](../evidence/php-structured-callables-20260925.md) record installed checks and archive identities.
+Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, records, concrete copied variants, options, results, nested binary products and synchronous callables with those payloads, including [finite recursive values](#export-recursive-callbacks). FPM, ZTS, resources and asynchronous delivery remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [structured callback record](../evidence/php-structured-callables-20260925.md) record installed checks and archive identities.
 
 Native PHP maps `Option` to `null` or a generated `Some`, `Except` to `Ok` or
 `Err`, and each `Prod` to exactly two consecutive array elements. Branch classes
@@ -58,8 +58,8 @@ on cons-cell layouts. [Installed List checks](../evidence/php-native-lists-20260
 cover ordinary source and reviewed contracts. The [PHP-Wasm List checks](../evidence/php-wasm-lists-20260921.md)
 cover the same shapes in Node and Chromium, including startup/lazy loading and
 embedded/Composer PHP files. A List API can target both PHP transports; each
-uses its own integer mappings. Native callbacks also accept Lists; PHP-Wasm
-List callbacks remain unsupported.
+uses its own integer mappings. Both transports also accept Lists in callbacks
+and returned functions.
 
 Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Supply the release-root `package-set-receipt.json`, its `.json.sha256` sidecar, and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
 
@@ -96,9 +96,10 @@ No extra publisher settings or consumer wrappers are needed.
 A reviewed Binding IR contract must preserve alias definitions and references,
 not replace them with flattened primitives. The builder compares them with
 fresh Lean metadata before packaging. Targets must remain concrete, immutable
-copied values within the existing 32-level depth bound. Native callbacks also
-accept concrete copied aliases. Recursive callbacks, PHP-Wasm structured
-callbacks and identity-bearing alias targets need separate support.
+copied values. Acyclic packages use a 32-level depth bound; native recursive
+packages use the [graph conversion bounds](../php.md#recursive-callback-values).
+Both PHP transports accept concrete copied aliases in structured callbacks.
+PHP-Wasm recursive callbacks and identity-bearing alias targets need separate support.
 
 ### Export copied variants
 
@@ -156,7 +157,7 @@ end Clover
 
 Add `Clover.call_word` and `Clover.make_word` to `exports`. Set `"arities": { "Clover.make_word": 1 }` so `make_word` accepts the captured value and returns the remaining function. A reviewed Binding IR contract records that choice through its outer parameter count; do not also configure `arities` for that path.
 
-The native FFI adapter supports one to sixteen arguments and a result using primitive or acyclic copied types. Its PHP API accepts callables and returns invokable `LeanClosure` objects with `close()` and `isClosed()`. Composer installs the same pinned Brick Math dependency used by copied values. The existing private C callable ABI handles borrowing and owned closures. See the [consumer example](../php.md#native-callbacks-and-returned-functions) for lifetime, exception and execution-context rules.
+The native FFI adapter supports one to sixteen arguments and a result using primitive or finite copied types, including recursive records and variants. Its PHP API accepts callables and returns invokable `LeanClosure` objects with `close()` and `isClosed()`. Composer installs the same pinned Brick Math dependency used by copied values. The private C callable ABI handles borrowing and owned closures. See the [consumer example](../php.md#native-callbacks-and-returned-functions) for lifetime, exception and execution-context rules.
 
 The PHP-Wasm Zend adapter accepts the same primitive and acyclic copied signatures and `arities` settings. It uses the 32-bit mappings in the [PHP conversion table](../php.md#type-conversions), including `BigInteger` for UInt32 and Int64. Both targets preserve the original callback `Throwable` after Lean cleanup. A combined build rejects signatures that any selected target cannot implement.
 
@@ -187,9 +188,54 @@ Arrays, Lists, options, results, products, acyclic records, variants and aliases
 compose in these signatures. Callbacks borrow their PHP callable for one
 synchronous call and copy its values. Returned functions own a lease and captured
 copies. Consumers need no C declarations, manual marshalling or JSON transport.
-Recursive payloads, identity-bearing fields, async callbacks and retained host
-callbacks remain unsupported. PHP-Wasm copies every nested callback reply buffer
+Identity-bearing fields, async callbacks and retained host callbacks remain
+unsupported. Native recursive payloads use the graph adapter below. PHP-Wasm
+recursive callbacks remain unsupported. PHP-Wasm copies every nested reply buffer
 before PHP releases the reply and Lean finishes copying it.
+
+### Export recursive callbacks
+
+Native Composer builds accept finite recursive callback values from ordinary
+source and compiler-checked reviewed contracts. Save this as `Structured.lean`:
+
+```lean
+namespace Structured
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+end Structured
+```
+
+Select the two exports and the capture arity in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": { "php-native": { "name": "lean-bridge/structured", "version": "1.0.0" } }
+}
+```
+
+Use your own Composer coordinate for publication. Build with
+`lean-bridge build --project ./structured --target php-native --output ./release-php`.
+Consumers install the resulting ZIP with Composer and use
+[`call_recursive` and `make_recursive`](../php.md#recursive-callback-values).
+The package includes native libraries; consumers need no Lean compiler, C
+headers, FFI declarations or manual runtime setup.
+
+Recursive records, variants and copied aliases compose with the existing
+primitive and acyclic callback types. Returned functions own their captured
+values. Validation rejects cycles and preserves nominal classes and Option
+presence. Conversion uses the [documented graph bounds](../php.md#recursive-callback-values).
+PHP-Wasm recursive callbacks and identity-bearing aggregate fields remain
+separate work. The Composer distribution and package-manager instructions below
+apply unchanged.
 
 ## Build an ordinary PHP-Wasm package
 

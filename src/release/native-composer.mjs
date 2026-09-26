@@ -14,6 +14,7 @@ import { ordinaryPhpEvidence } from "../build/native-php-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCopiedPhpPackage } from "../backends/php/copied-values.mjs";
 import { generateCopiedPhpGraphPackage } from "../backends/php/copied-graph-package.mjs";
+import { generateCallablePhpGraphPackage } from "../backends/php/callable-graph-package.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { auditPhpPackage } from "../backends/php/package-audit.mjs";
 import { createDeterministicZip } from "./deterministic-zip.mjs";
@@ -34,7 +35,7 @@ export const packageOrdinaryPhp = async options => {
 	const version = settings.version ?? (model.component.version === "0.0.0-local" ? "0.0.0" : model.component.version);
 	validateOrdinaryPhpSettings({ name, version });
 	const root = join(working, "packages/php-native/composer"), files = model.copiedGraph
-		? generateCopiedPhpGraphPackage(model.bindingIr, evidence) : generateCopiedPhpPackage(model.bindingIr, evidence);
+		? (model.copiedGraph.callbacks ? generateCallablePhpGraphPackage : generateCopiedPhpGraphPackage)(model.bindingIr, evidence) : generateCopiedPhpPackage(model.bindingIr, evidence);
 	auditPhpPackage(model.bindingIr, files);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (source, path) => save(path, await readFile(source));
@@ -46,7 +47,7 @@ export const packageOrdinaryPhp = async options => {
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined) await copy(join(nativeRoot, "lake-generated-sources.json"), "lean-bridge/component/lake-generated-sources.json");
 	await copy(join(adapterRoot, "native-c-adapter.json"), "lean-bridge/native-c-adapter.json");
 	if(model.copiedGraph)
-		for(const path of [`include/detail/${prefix}-graph-types.h`, `include/detail/${prefix}-graph.h`, "src/native.c", "src/php-graph-clear.c"])
+		for(const path of [`include/detail/${prefix}-graph-types.h`, `include/detail/${prefix}-graph.h`, ...model.copiedGraph.callbacks ? [`include/detail/${prefix}-callable-borrows.h`] : [], "src/native.c", "src/php-graph-clear.c"])
 			await copy(join(adapterRoot, path), `lean-bridge/adapter/${path}`);
 	else await copy(join(adapterRoot, `include/${prefix}.h`), `lean-bridge/include/${prefix}.h`);
 	await copy(join(runtimeRoot, "runtime.json"), "lean-bridge/runtime.json");

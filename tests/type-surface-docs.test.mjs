@@ -126,6 +126,19 @@ test("JVM recursive tables preserve distinct Java and Kotlin APIs and retain res
 	}
 });
 
+test("PHP recursive tables distinguish native callback acceptance from the Wasm gap", async () => {
+	const source = await readFile("docs/php.md", "utf8");
+	const recursive = row(source, "Recursive copied structures");
+	assert.match(recursive, /callback input, callback result/u);
+	assert.match(source, /php-recursive-callables-20260926\.md/u);
+	for(const cell of cells.filter(cell => cell.shape === "recursive" && ["php-native", "php-wasm"].includes(cell.profile)))
+	{
+		if(!cell.position.startsWith("callback-")) assert.deepEqual(cell.stages.installedExecution.evidence, ["managed-recursive-installed"]);
+		else if(cell.profile === "php-native") assert.deepEqual(cell.stages.installedExecution.evidence, ["php-native-recursive-callables-installed"]);
+		else assert.notEqual(cell.stages.installedExecution.state, "passed");
+	}
+});
+
 test("WIT recursive tables record installed copied values and retain callback gaps", async () => {
 	const source = await readFile("docs/consume/wit-wasi.md", "utf8");
 	const recursive = row(source, "Recursive copied structures");

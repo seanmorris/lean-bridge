@@ -28,7 +28,7 @@ test("Ruby recursive callbacks preserve the checked graph and hide native storag
 
 test("RubyGems recursive callbacks agree with every selected supported native target", () => {
 	const ir = nativeRecursiveCallableReviewedIr(), expected = compileCallableRubyGraphPackageModel(ir).layoutSha256;
-	for(const targets of [["rubygems"], ["rubygems", "c"], ["cpp", "rubygems"], ["pypi", "rubygems"], ["cargo", "rubygems"], ["nuget", "rubygems"], ["rubygems", "maven"], ["rubygems", "c", "cpp", "pypi", "cargo", "nuget", "maven"]])
+	for(const targets of [["rubygems"], ["rubygems", "c"], ["cpp", "rubygems"], ["pypi", "rubygems"], ["cargo", "rubygems"], ["nuget", "rubygems"], ["rubygems", "maven"], ["rubygems", "php-native"], ["rubygems", "c", "cpp", "pypi", "cargo", "nuget", "maven", "php-native"]])
 		assert.equal(compileNativeGraphProjection(ir, targets).layoutSha256, expected);
 	for(const targets of [["rubygems", "cpan"], ["rubygems", "c", "cpp", "pypi", "cargo", "cpan"]])
 		assert.equal(compileNativeGraphProjection(ir, targets, "LeanBridge::Recursive").layoutSha256, expected);

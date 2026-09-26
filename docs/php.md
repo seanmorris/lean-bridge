@@ -313,8 +313,8 @@ do not pass PHP integers in their place.
 [Native List checks](evidence/php-native-lists-20260921.md) and
 [PHP-Wasm List checks](evidence/php-wasm-lists-20260921.md) cover ordinary source
 and reviewed contracts. PHP-Wasm runs in Node and Chromium with startup or
-first-call loading. Native packages also accept Lists in callbacks and returned
-functions; PHP-Wasm List callbacks remain unsupported.
+first-call loading. Native and PHP-Wasm packages also accept Lists in callbacks
+and returned functions.
 The [native FFI follow-up](evidence/php-native-lists-ffi-20260921.md) records
 the PHP 8.5 deprecation fix and repeated installed checks.
 
@@ -369,8 +369,8 @@ Weak and strict callers receive the same checks: Nat requires a nonnegative
 one Unicode scalar. Copied containers retain their target's ownership and
 conversion limits. The [native PHP](evidence/php-native-aliases-20260921.md) and
 [PHP-Wasm alias checks](evidence/php-wasm-aliases-20260921.md) cover both source
-paths and caller modes. Native callbacks accept concrete copied aliases through
-their resolved target type; PHP-Wasm alias callbacks need separate support.
+paths and caller modes. Native and PHP-Wasm callbacks accept concrete copied
+aliases through their resolved target type.
 
 ### Native callbacks and returned functions
 
@@ -389,9 +389,9 @@ try {
 
 The returned `LeanClosure` is invokable with exactly its declared positional arguments. `close()` is idempotent; `isClosed()` reports closure. Saved callable aliases share its lifetime and reject calls after closing. Destruction releases abandoned closures, but `finally` gives deterministic cleanup. You cannot construct, clone or serialize a Lean closure.
 
-Callbacks accept one to sixteen arguments with primitive or acyclic copied payloads. Their PHPDoc states the signature, and the bridge validates inputs and results in weak and strict callers. `Nat`, `Int`, `UInt64` and native `USize` remain `Brick\Math\BigInteger`. Unit uses `null`, including a callback with a `void` return. Callback arguments are independent copies. The callback itself is borrowed for one synchronous call; Lean cannot invoke it afterward. Exceptions return as the same `Throwable`, preserving its trace and previous exception. Later callbacks in a failed call do not run.
+Callbacks accept one to sixteen arguments with primitive, acyclic copied or [finite recursive payloads](#recursive-callback-values). Their PHPDoc states the signature, and the bridge validates inputs and results in weak and strict callers. `Nat`, `Int`, `UInt64` and native `USize` remain `Brick\Math\BigInteger`. Unit uses `null`, including a callback with a `void` return. Callback arguments are independent copies. The callback itself is borrowed for one synchronous call; Lean cannot invoke it afterward. Exceptions return as the same `Throwable`, preserving its trace and previous exception. Later callbacks in a failed call do not run.
 
-Reference parameters, reference returns and generators reject. Callable operations require the main NTS CLI execution context; calls from a Fiber reject. Close may defer native release until an active call returns. Start a fresh process after fork. Each native adapter permits 64 nested calls per thread, and the shared runtime permits 4,096 closure identities. Existing conversion limits still apply. Recursive callback payloads, resources and asynchronous functions need further support. See the [installed native PHP callable checks](evidence/php-callables-20260919.md).
+Reference parameters, reference returns and generators reject. Creation and invocation require the main NTS CLI execution context; calls from a Fiber reject. A Fiber can close a closure. Close defers native release until an active call returns. Start a fresh process after fork. Each native adapter permits 64 nested calls per thread, and the shared runtime permits 4,096 closure identities. Existing conversion limits still apply. Resources and asynchronous functions need further support. See the [installed native PHP callable checks](evidence/php-callables-20260919.md).
 
 ### Structured callback values
 
@@ -437,8 +437,58 @@ enclosing call. These are conversion limits, not total process-memory limits.
 The [native checks](evidence/php-structured-callables-20260925.md) and
 [PHP-Wasm checks](evidence/php-wasm-structured-callables-20260925.md) exercise
 weak and strict callers on both source paths. PHP-Wasm uses the same example
-inside its host after loading the package's autoloader. Recursive callback
-payloads and resource-containing payloads remain separate work.
+inside its host after loading the package's autoloader. Native packages also
+support the recursive callback values below. PHP-Wasm recursive callback payloads
+and resource-containing payloads remain separate work.
+
+### Recursive callback values
+
+Native Composer packages accept finite recursive records and variants in
+callbacks and returned functions. Use the same generated classes as ordinary
+copied arguments. For the [publisher example](publish/php.md#export-recursive-callbacks),
+save this as `recursive-callbacks.php` beside `vendor`:
+
+```php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+use Brick\Math\BigInteger;
+use LeanStructured\{Tree, TreeLeaf, TreeBranch};
+use function LeanStructured\{call_recursive, make_recursive};
+
+function raiseLeaves(Tree $tree): Tree {
+    if ($tree instanceof TreeLeaf) {
+        return new TreeLeaf($tree->value->plus(22));
+    }
+    return new TreeBranch(array_map(raiseLeaves(...), $tree->children));
+}
+
+$original = new TreeBranch([new TreeLeaf(BigInteger::of(20))]);
+$updated = call_recursive($original, raiseLeaves(...));
+echo $updated->children[0]->value, PHP_EOL;
+
+$choose = make_recursive($original);
+try {
+    echo $choose(true, $updated)->children[0]->value, PHP_EOL;
+    echo $choose(false, $updated)->children[0]->value, PHP_EOL;
+} finally {
+    $choose->close();
+}
+```
+
+Run `php recursive-callbacks.php`. It prints `42`, `20` and `42` on separate
+lines. The callback receives an independent tree. The returned function owns
+its captured copy until you close it or PHP destroys it.
+
+Recursive conversion allows at most 128 levels and 262,144 visited values, with
+separate 16 MiB host and native accounting budgets. Replies share the enclosing
+call's PHP storage budget and stay alive until Lean finishes copying them.
+Cyclic PHP objects and arrays reject before native loading. A malformed native
+result retires the shared runtime; existing closures can still close, and already
+copied PHP values remain usable. The [closure lifetime rules](#native-callbacks-and-returned-functions)
+apply here too. The [installed recursive callback checks](evidence/php-recursive-callables-20260926.md)
+cover both source paths and weak and strict callers. PHP-Wasm recursive callbacks
+remain unsupported.
 
 ### Ordinary PHP-Wasm packages
 
@@ -993,7 +1043,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Readonly named classes preserve recursive constructors and aliases. Calls validate every scalar and array element under weak and strict callers, reject cycles, and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets. Native output owners and partial conversions are released on failure.; PHP-Wasm: The same named PHP classes preserve recursive constructors on wasm32. UInt32, UInt64, Int64, Nat, Int and USize use Brick Math integers; ISize uses a 32-bit PHP integer. Weak and strict calls reject cycles and invalid payloads and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets; Zend failures release owned outputs. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | Native PHP: `Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases` (input, result, field); `Named PHP value classes and constructors, consecutive-key arrays, PHP callables and invokable LeanClosure owners` (callback input, callback result); PHP-Wasm: `Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases` (input, result, field) | Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Native PHP: Installed checks passed; PHP-Wasm: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Readonly named classes preserve recursive constructors and aliases. Calls validate every scalar and array element under weak and strict callers, reject cycles, and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets. Native output owners and partial conversions are released on failure. Recursive records, variants and aliases use generated named PHP classes and independent copied storage. Weak and strict callers share explicit value validation. Reply scopes retain buffers until Lean finishes copying. Throwable identity survives cleanup. Malformed native output retires the shared runtime; owned closures can still close and copied values remain usable.; PHP-Wasm: The same named PHP classes preserve recursive constructors on wasm32. UInt32, UInt64, Int64, Nat, Int and USize use Brick Math integers; ISize uses a 32-bit PHP integer. Weak and strict calls reject cycles and invalid payloads and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets; Zend failures release owned outputs. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

@@ -417,6 +417,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*build\/collections\/dotnet-conversions\.json\n\s*build\/collections\/dotnet\.json\n\s*build\/equality\/dotnet\.json\n\s*build\/recursive\/dotnet-values\.json\n\s*build\/recursive\/dotnet-conversions\.json\n\s*build\/recursive\/dotnet-native\.json\n\s*build\/recursive\/dotnet-packages\.json\n\s*build\/recursive\/dotnet-composition\.json\n\s*build\/recursive\/dotnet-reproducibility\.json\n\s*build\/recursive\/dotnet-conflicts\.json\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs"));
+  assert.ok(workflow.includes("          npm run test:php-recursive-callables\n"));
+  for(const variant of ["recursive", "mixed"])
+  {
+    assert.ok(workflow.includes(`test -s build/recursive-callables/php-${variant}.json`));
+    assert.ok(workflow.includes(`            build/recursive-callables/php-${variant}.json\n`));
+  }
   assert.ok(workflow.includes("test -s build/structured-callables/jvm.json"));
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"));
   assert.match(workflow, /test -s build\/compounds\/jvm\.json/);
@@ -518,7 +524,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-php-native-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/recursive\/php-values\.json\n\s*build\/recursive\/php-conversions\.json\n\s*build\/recursive\/php-native\.json\n\s*build\/recursive\/php-package-cold\.json\n\s*build\/recursive\/php-packages\.json\n\s*build\/recursive\/php-reproducibility\.json\n\s*build\/recursive\/php-composition\.json\n\s*build\/recursive\/php-conflicts\.json\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*build\/structured-callables\/php-native\.json\n\s*build\/compounds\/php-native\.json\n\s*build\/lists\/php-native\.json\n\s*build\/aliases\/php-native\.json\n\s*build\/variants\/php-native\.json\n\s*build\/collections\/php-native-conversions\.json\n\s*build\/equality\/php\.json\n\s*build\/collections\/php-native\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/recursive\/php-values\.json\n\s*build\/recursive\/php-conversions\.json\n\s*build\/recursive\/php-native\.json\n\s*build\/recursive\/php-package-cold\.json\n\s*build\/recursive\/php-packages\.json\n\s*build\/recursive\/php-reproducibility\.json\n\s*build\/recursive\/php-composition\.json\n\s*build\/recursive\/php-conflicts\.json\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*build\/structured-callables\/php-native\.json\n\s*build\/recursive-callables\/php-recursive\.json\n\s*build\/recursive-callables\/php-mixed\.json\n\s*build\/compounds\/php-native\.json\n\s*build\/lists\/php-native\.json\n\s*build\/aliases\/php-native\.json\n\s*build\/variants\/php-native\.json\n\s*build\/collections\/php-native-conversions\.json\n\s*build\/equality\/php\.json\n\s*build\/collections\/php-native\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests\/php-callables\.test\.mjs tests\/php-callable-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests\/php-compounds\.test\.mjs tests\/php-compound-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests\/php-lists\.test\.mjs tests\/php-list-contract\.test\.mjs/);
