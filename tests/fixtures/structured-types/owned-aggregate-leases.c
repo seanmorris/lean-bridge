@@ -237,6 +237,8 @@ static void test_affinity_and_close(void) {
   CHECK(pthread_join(thread, NULL) == 0 && probe.status == LB_OWNED_THREAD);
   pid_t child = fork(); CHECK(child >= 0);
   if (child == 0) {
+    lb_owned_context fresh = {0};
+    if (lb_owned_context_init(&fresh, COMPONENT_ID) != LB_OWNED_PROCESS) _exit(2);
     int status = lb_owned_scope_begin(&context, &scope);
     _exit(status == LB_OWNED_PROCESS && lb_owned_batch_release(&context, &batch) == LB_OWNED_PROCESS ? 0 : 1);
   }

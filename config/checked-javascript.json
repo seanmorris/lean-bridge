@@ -6,6 +6,9 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/c/owned-package.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/c/owned-runtime.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/c/owned-values.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/native/owned-aggregate-leases.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/native/owned-value-adapters.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/native/owned-value-layout.mjs", "classification": "strict-migration-backlog" },

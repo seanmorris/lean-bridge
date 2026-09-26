@@ -8,9 +8,9 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
-import { ownedAggregateLeaseSource } from "../../src/backends/native/owned-aggregate-leases.mjs";
 import { ownedAggregateAddedPaths, ownedAggregateChangedPaths, ownedAggregateBaseline, ownedAggregateExecutionPath, reverseOwnedAggregateUpdate } from "./owned-aggregate-source-history.mjs";
 import { witRecursiveCallableHistoryPath } from "./wit-recursive-callable-source-history.mjs";
+import { beforeOwnedC, ownedCChangedPaths } from "./owned-c-source-history.mjs";
 
 export const ownedAggregateNativeCommand = "LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-contract.test.mjs tests/owned-aggregate-model.test.mjs tests/owned-aggregate-metadata.test.mjs tests/owned-aggregate-native.test.mjs tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs";
 export const ownedAggregateRegressionCommand = "LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1 tests/binding-ir-contract.test.mjs tests/binding-ir-structured.test.mjs tests/export-configuration.test.mjs tests/elaborated-metadata.test.mjs";
@@ -29,7 +29,7 @@ export const ownedAggregateExecutionSources = [...new Set([
 	, "tests/owned-native-values.test.mjs", "tests/owned-native-scalars.test.mjs"
 	, ...["binding-ir-contract", "binding-ir-structured", "export-configuration", "elaborated-metadata"].map(name => `tests/${name}.test.mjs`)
 ])].sort();
-const source = async path => readFile(path, "utf8");
+const source = async path => beforeOwnedC(path, await readFile(path, "utf8"));
 const passing = (run, command, expected) => {
 	assert.equal(run.command, command); assert.equal(run.exitCode, 0);
 	assert.equal(sha256(run.text), run.sha256);
@@ -103,7 +103,11 @@ export const assertOwnedAggregateExecution = async record => {
 	const transport = record.reports.transport;
 	assert.deepEqual(transport.result, { allocationFailures: 96, checks: 111963, depth: 128, exports: 22, liveAllocations: 0, liveIdentities: 0 });
 	assert.equal(transport.sanitizer, "address,undefined");
-	assert.equal(transport.leaseSourceSha256, sha256(ownedAggregateLeaseSource));
+	// Import only the exact authenticated predecessor module checked above.
+	// Its source is a standalone constant, not the current fork-safe runtime.
+	const leaseModule = await source("src/backends/native/owned-aggregate-leases.mjs");
+	const lease = await import("data:text/javascript;base64," + Buffer.from(leaseModule).toString("base64"));
+	assert.equal(transport.leaseSourceSha256, sha256(lease.ownedAggregateLeaseSource));
 	assert.equal(transport.probeSha256, sha256(await source("tests/fixtures/structured-types/owned-aggregate-carriers.c") + "\n"
 		+ await source("tests/fixtures/structured-types/owned-aggregate-leases.c")));
 	assert.deepEqual(transport.rejectedMutations, ["missing-retain", "missing-release", "missing-rollback", "reused-thread"]);
@@ -135,7 +139,9 @@ export const assertOwnedAggregateIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const bytes = await readFile(path);
+		const current = ownedCChangedPaths.includes(path) ? beforeOwnedC(path, bytes.toString("utf8")) : bytes;
+		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -145,7 +151,9 @@ export const assertOwnedAggregateIntegration = async record => {
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document, ...contracts } = await readTypeSurface();
+	const { document: currentDocument, ...contracts } = await readTypeSurface();
+	assert.equal(currentDocument.contractVersion, record.inventory.version);
+	const document = JSON.parse(await source("docs/type-surface.v1.json"));
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]), expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

@@ -193,14 +193,73 @@ canonical NaN bit patterns. Signed zero and infinities remain distinct.
 The private transport currently targets 64-bit native Lean. It accepts
 call-scoped input borrows and explicit result leases. It does not construct host
 callbacks or admit reviewed version-4 source contracts. Public session creation
-also needs a fresh-context fork check before touching inherited broker locks.
+now checks the shared runtime's process before touching inherited broker locks.
+The same lock-free guard protects initialization, readiness, retirement, identity
+operations, snapshots, callbacks and shutdown. Tests fork while the broker mutex
+is locked, reject fresh and inherited contexts in the child, and verify that the
+parent remains usable. Deliberately removing either the readiness guard or the
+callback lookup guard makes the corresponding deadlock test fail.
+
+## Public C projection
+
+`src/backends/c/owned-package.mjs` generates a C API over the authenticated native
+transactions. Its header has source-named fields and constructor enums, typed
+spans for Array/List, `has_value` for Option, `is_ok` for Except, and `fst`/`snd`
+for tuples. Nat and Int use read-only `mpz_srcptr` views. Resource and closure
+handles are opaque types, with no public token fields or Lean constructor tags.
+Anonymous containers have aliases named for their fields and call sites; shared
+alias graphs expand once instead of duplicating every path.
+
+Each successful call returns a value view and an opaque result owner. The owner
+retains native resource leases, copied storage and GMP integers. Releasing it
+does not traverse caller-visible fields. A caller may copy a view, but that copy
+does not extend its lifetime. Generated `retain` operations give resources and
+returned Lean closures independent owners. Releasing a stale owner or using a
+resource in a different session fails without dereferencing a caller-supplied
+handle. Sessions and results use generation-checked registry identities.
+
+Sessions belong to one thread and process. Closing a session invalidates its
+resources and prevents further calls. Its copied result data remains readable
+until the caller releases each result. Cleanup remains available after runtime
+retirement. A malformed native reply retires the runtime and leaves the public
+output slots unchanged. Input spans must refer to readable C storage, and GMP
+inputs must be initialized values. GMP keeps its default fatal allocation policy.
+
+The C view conversion has a cumulative input/output budget of 262,144 visits and
+16 MiB of conversion storage. The underlying native transaction independently
+enforces its 262,144-visit, 16-MiB storage and 4,096-retention limits. Both layers
+reject value depth above 128 and cycles. These storage budgets do not cap Lean
+algorithm allocations or all GMP allocator overhead. A List of 131,071 Unit
+elements passes; 131,072 fails without publishing a result.
+
+```sh
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-values.test.mjs
+```
+
+The consumer and generated implementation compile in separate translation units.
+The consumer includes only the public header. It exercises named records, every
+Choice constructor, aliases, nested containers, recursive trees, independently
+retained children and captured Lean closures. A second consumer checks all 19
+primitives against independent Lean constructors and predicates, all three nested
+Option Unit cases, empty records, exact large integers, binary strings, floating
+point payload bits and list limits. Tests inject failures at every allocation in
+selected record, closure and scalar construction calls. They reject four compiled
+cleanup/cycle mutants, and run address/undefined-behavior sanitizers with
+unsuppressed leak reports. The scalar leak report is compared with direct Lean
+calls after both one and 100 repetitions, not just a cold process.
+
+Reports are `build/owned-aggregate-native/public-c.json` and
+`public-c-scalars.json`. This is executable projection evidence, not installed
+package evidence. The ordinary package builders still reject owned aggregates.
+The C API can invoke returned Lean closures; host callback construction and its
+failure recovery are not implemented by this layer.
 
 ## Remaining VO 1219 work
 
-Connect the checked carriers and ledger to ownership-aware host projections.
-Implement public handle validation, authorized transfer commit points and
-host-callback failure recovery. Connect the native transaction limits to each
-public projection and implement the Wasm transport. Then verify both ordinary
+Complete the ownership-aware host projections and their package-builder paths.
+Implement authorized transfer commit points and host-callback failure recovery.
+Connect the native transaction limits to each public projection and implement
+the Wasm transport. Then verify both ordinary
 and reviewed source paths
 through source-free installed consumer packages across all required profiles,
 including callback and captured-closure positions. Malformed values and injected

@@ -1,5 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/wait.h>
 
 static lean_object ok = {0}, failure = {1};
 static unsigned starts, finishes, marks, tasks, component_calls, core_error;
@@ -57,9 +59,44 @@ static void *worker(void *unused) {
   assert(lean_bridge_native_identity_release(identity, "thread", &object) == 1);
   return NULL;
 }
+static void inherited_runtime(unsigned cold) {
+  uint64_t identity = cold ? 0 : lean_bridge_native_identity_acquire("fork", &ok);
+  uint64_t token = cold ? 0 : lb_native_callback_register(callback, &ok);
+  lean_bridge_native_snapshot before = snapshot();
+  assert(lean_bridge_native_process_valid());
+  assert(!pthread_mutex_lock(&runtime_mutex));
+  pid_t child = fork(); assert(child >= 0);
+  if (!child) {
+    /* Every operation must reject before the inherited, permanently locked mutex. */
+    alarm(3);
+    assert(!lean_bridge_native_process_valid()); rejected();
+    lean_bridge_native_runtime_retire(); lean_bridge_native_component_detach("first");
+    assert(lean_bridge_native_identity_release(identity, "fork", &ok) == -1);
+    assert(lean_bridge_native_identity_release_pointer("fork", &ok) == -1);
+    lean_bridge_native_snapshot foreign = snapshot();
+    assert(foreign.runtime_state == 3 && !foreign.runtime_instance_id && !foreign.identity_domain_id);
+    assert(!foreign.live_identities && !foreign.attached_components);
+    assert(!lb_native_callback_lookup(token).invoke && lb_native_callback_take_error());
+    assert(lb_native_callback_wrong_thread(token)); lb_native_callback_release(token);
+    lean_bridge_native_process_shutdown(); assert(!finishes);
+    exit(0); /* Also run the registered library destructor in the child. */
+  }
+  int status = 0; assert(waitpid(child, &status, 0) == child);
+  assert(!pthread_mutex_unlock(&runtime_mutex));
+  assert(WIFEXITED(status) && WEXITSTATUS(status) == 0);
+  lean_bridge_native_snapshot after = snapshot();
+  assert(after.runtime_state == before.runtime_state && after.live_identities == before.live_identities);
+  assert(after.runtime_instance_id == before.runtime_instance_id && lean_bridge_native_process_valid());
+  if (!cold) {
+    assert(lb_native_callback_lookup(token).invoke == callback); lb_native_callback_release(token);
+    assert(lean_bridge_native_identity_release(identity, "fork", &ok) == 1);
+  }
+}
 int main(int argc, char **argv) {
   assert(argc == 2);
-  if (!strcmp(argv[1], "cold")) {
+  if (!strcmp(argv[1], "fork-cold")) {
+    inherited_runtime(1); initialized();
+  } else if (!strcmp(argv[1], "cold")) {
     lean_bridge_native_runtime_retire(); lean_bridge_native_runtime_retire(); rejected();
     assert(starts == 0 && component_calls == 0 && snapshot().runtime_state == 3);
   } else if (!strcmp(argv[1], "core-failure")) {
@@ -71,7 +108,9 @@ int main(int argc, char **argv) {
     assert(starts == 1 && component_calls == 1 && tasks == 0 && snapshot().runtime_state == 3);
   } else {
     initialized();
-    if (!strcmp(argv[1], "component-failure")) {
+    if (!strcmp(argv[1], "fork")) {
+      inherited_runtime(0); assert(lean_bridge_native_component_ready("first"));
+    } else if (!strcmp(argv[1], "component-failure")) {
       assert(!lean_bridge_native_component_initialize("bad", initialize_bad));
       assert(!lean_bridge_native_component_initialize("bad", initialize_ok));
       assert(!lean_bridge_native_component_ready("bad") && component_calls == 3);

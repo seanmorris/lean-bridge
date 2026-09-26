@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedC } from "./owned-c-source-history.mjs";
 
 export const ownedAggregateBaseline = "262240dd6bc01aefcb6eae587cc7425aa2218b8c";
 export const ownedAggregateHistoryPath = "docs/evidence/owned-aggregate-integration-20260926.json";
@@ -80,6 +81,7 @@ export const reverseOwnedAggregateUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforeOwnedAggregates = (path, source, expected) => {
+	source = beforeOwnedC(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedAggregateChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedAggregateHistoryPath, "utf8"));

@@ -1,0 +1,160 @@
+/**
+ * Generate public C views and executable ownership-aware calls. Package-builder
+ * admission and installed receipts remain separate from this projection stage.
+ *
+ * @file
+ */
+import { generateOwnedNativeValueAdapters } from "../native/owned-value-adapters.mjs";
+import { ownedAggregateLeaseSource } from "../native/owned-aggregate-leases.mjs";
+import { generateOwnedCValues } from "./owned-values.mjs";
+import { ownedCRuntime } from "./owned-runtime.mjs";
+
+/**
+ * Project checked native values into semantic C records, constructors, spans,
+ * GMP integers and opaque identities. All returned storage belongs to one result
+ * owner; every failure leaves both output slots unchanged and releases partial
+ * conversion storage and resource leases. This does not construct host callbacks.
+ *
+ * @param options - Authenticated fresh compiler metadata and component identity.
+ */
+export const generateOwnedCPackage = options => {
+	const generated = generateOwnedNativeValueAdapters(options);
+	const values = generateOwnedCValues(generated.layout.model.bindingIr), p = values.prefix;
+	const nodes = new Map(values.nodes.map(node => [node.id, node]));
+	const walker = node => `oc_v${node.index}`;
+	const source = [`#include "${p}.h"`, generated.source, ownedCRuntime(values, generated.carriers)];
+	for(const node of nodes.values()) source.push(
+		`static inline int ${walker(node)}_to(${node.cName} const *, ${node.nativeName} *, size_t, oc_arena *);`
+		, `static inline int ${walker(node)}_from(const ${node.nativeName} *, ${node.cName} *, size_t, oc_arena *);`
+	);
+	for(const node of nodes.values())
+	{
+		const body = into => {
+			const direction = into ? "to" : "from", invalid = into ? "LB_OWNED_INVALID" : "OV_RESULT";
+			const name = into ? node.cName : node.nativeName;
+			const lines = [`if (!ov_pointer(value, sizeof(*value), _Alignof(${name}))) return ${invalid};`
+				, `int status = ov_enter(arena->budget, value, ${node.index}, depth);`
+				, "if (status) return status;", "(void)out;"];
+			const field = (item, hostParent = "", rawParent = "") => {
+				const child = nodes.get(item.type), hostSlot = hostParent + item.name, rawSlot = rawParent + item.nativeName;
+				const input = into ? hostSlot : rawSlot, output = into ? rawSlot : hostSlot;
+				return ["{"
+					, ...item.pointer ? ["  void *data = NULL;"
+						, `  status = oc_allocate(arena, 1, sizeof(${into ? child.nativeName : child.cName}), &data);`
+						, "  if (status) return status;", `  out->${output} = data;`] : []
+					, `  status = ${walker(child)}_${direction}(${item.pointer ? "" : "&"}value->${input}, ${item.pointer ? "data" : `&out->${output}`}, depth + 1, arena);`
+					, "  if (status) return status;", "}"];
+			};
+			if(node.identity)
+			{
+				lines.push(`if (!${into ? "*value" : "value->token"}) return ${invalid};`
+					, into ? "out->token = (uint64_t)(uintptr_t)*value;" : `*out = (${node.cName})(uintptr_t)value->token;`);
+			}
+			else if(node.integer)
+			{
+				if(into) lines.push("if (!ov_pointer(*value, sizeof(**value), _Alignof(__mpz_struct))) return LB_OWNED_INVALID;"
+					, ...node.name === "nat" ? ["if (mpz_sgn(*value) < 0) return LB_OWNED_INVALID;"] : []
+					, "if (mpz_size(*value) > arena->budget->bytes / sizeof(mp_limb_t) + 1) return LB_OWNED_LIMIT;"
+					, "size_t length = mpz_sgn(*value) ? (mpz_sizeinbase(*value, 2) - 1) / 32 + 1 : 0;"
+					, "void *data = NULL; status = oc_allocate(arena, length, sizeof(uint32_t), &data);"
+					, "if (status) return status;"
+					, "if (length) mpz_export(data, &length, -1, sizeof(uint32_t), 0, 0, *value);"
+					, "out->data = data; out->length = length;"
+					, ...node.name === "int" ? ["out->negative = mpz_sgn(*value) < 0;"] : []);
+				else lines.push(...node.name === "int" ? ["if (value->negative > 1) return OV_RESULT;"] : []
+					, `return oc_integer(arena, value->data, value->length, ${node.name === "int" ? "value->negative" : "0"}, out);`);
+			}
+			else if(node.kind === "primitive")
+			{
+				if(["string", "bytes"].includes(node.name)) lines.push(
+					"status = ov_span(arena->budget, value->data, value->length, 1, 1);", "if (status) return status;"
+					, ...node.name === "string" ? [`if (!ov_utf8((const uint8_t *)value->data, value->length)) return ${invalid};`] : []
+					, "out->data = value->data; out->length = value->length;");
+				else if(node.name === "bool") lines.push("uint8_t bits; memcpy(&bits, value, 1);"
+					, `if (bits > 1) return ${invalid};`, into ? "*out = bits;" : "*out = bits != 0;");
+				else lines.push(...node.name === "unit" ? [`if (*value) return ${invalid};`] : []
+					, ...node.name === "char" ? [`if (*value > 0x10ffff || (*value >= 0xd800 && *value <= 0xdfff)) return ${invalid};`] : []
+					, "memcpy(out, value, sizeof(*out));");
+			}
+			else if(node.element)
+			{
+				const child = nodes.get(node.element), input = into ? child.cName : child.nativeName, output = into ? child.nativeName : child.cName;
+				lines.push("if (value->length > arena->budget->visits) return LB_OWNED_LIMIT;"
+					, `status = ov_span(arena->budget, value->data, value->length, sizeof(${input}), _Alignof(${input}));`
+					, "if (status) return status;", "void *data = NULL;"
+					, `status = oc_allocate(arena, value->length, sizeof(${output}), &data);`, "if (status) return status;"
+					, `${output} *items = data; out->data = data; out->length = value->length;`
+					, "for (size_t i = 0; i < value->length; ++i) {"
+					, `  status = ${walker(child)}_${direction}(value->data + i, items + i, depth + 1, arena);`
+					, "  if (status) return status;", "}");
+			}
+			else if(node.kind === "variant")
+			{
+				lines.push(`switch (value->${into ? "kind" : "tag"}) {`);
+				node.cases.forEach((branch, index) => lines.push(`case ${into ? branch.tag : index}:`
+					, `  out->${into ? "tag" : "kind"} = ${into ? index : branch.tag};`
+					, ...branch.fields.flatMap(item => field(item, `cases.${branch.name}.`, `cases.${branch.nativeName}.`))
+					, "  break;"));
+				lines.push(`default: return ${invalid};`, "}");
+			}
+			else if(["option", "result"].includes(node.kind))
+			{
+				const option = node.kind === "option", tag = option ? "has_value" : "is_ok";
+				if(into) lines.push(`uint8_t selected; memcpy(&selected, &value->${tag}, 1);`
+					, "if (selected > 1) return LB_OWNED_INVALID;", `out->tag = ${option ? "selected" : "selected ? 0 : 1"};`);
+				else lines.push("if (value->tag > 1) return OV_RESULT;", `out->${tag} = ${option ? "value->tag != 0" : "value->tag == 0"};`);
+				node.fields.forEach((item, i) => lines.push(`if (${into ? "out" : "value"}->tag == ${option ? 1 : i}) {`, ...field(item), "}"));
+			}
+			else lines.push(...node.fields.flatMap(item => field(item)));
+			lines.push("return LB_OWNED_OK;"); return lines;
+		};
+		source.push(`static inline int ${walker(node)}_to(${node.cName} const *value, ${node.nativeName} *out, size_t depth, oc_arena *arena) {`
+			, ...body(true).map(line => `  ${line}`), "}"
+			, `static inline int ${walker(node)}_from(const ${node.nativeName} *value, ${node.cName} *out, size_t depth, oc_arena *arena) {`
+			, ...body(false).map(line => `  ${line}`), "}");
+	}
+	for(const item of values.retains)
+	{
+		const node = nodes.get(item.id);
+		source.push(`static inline int ${node.walker}_retain(lb_owned_context *context, const ${node.nativeName} *input, ${node.nativeName} *out, ov_result_owner *owner) {`
+			, "  ov_transaction transaction = {0};"
+			, `  int status = ov_begin(&transaction, context, owner, ${JSON.stringify(values.native.model.component.id)});`
+			, "  if (status) return status;"
+			, "  lean_object *value = NULL;"
+			, `  status = ${node.walker}_in(input, 0, 1, &transaction, &value);`
+			, "  if (status) return ov_abort(&transaction, status);"
+			, `  status = ${node.walker}_out(out, value, 0, &transaction);`
+			, "  if (status) return ov_abort(&transaction, status);"
+			, "  return ov_commit(&transaction, owner);", "}");
+	}
+	for(const item of [...values.functions, ...values.callbacks, ...values.retains])
+	{
+		const result = nodes.get(item.result), params = item.parameters.map(id => nodes.get(id));
+		const symbol = item.retain ? `${nodes.get(item.id).walker}_retain` : item.symbol;
+		source.push(values.signature(item) + " {"
+			, `  if (!oc_outputs(out, sizeof(*out), _Alignof(${result.cName}), owner) || *owner) return (${p}_status)LB_OWNED_INVALID;`
+			, "  oc_session *active = NULL; int status = oc_session_get(session, &active);"
+			, `  if (status) return (${p}_status)status;`
+			, "  ov_budget budget = oc_budget(); oc_arena input = { .budget = &budget }, output = { .budget = &budget };"
+			, "  oc_result *result_owner = NULL; status = oc_result_begin(active, &budget, &result_owner);"
+			, `  if (status) return (${p}_status)status;`
+			, ...params.map((node, i) => `  ${node.nativeName} raw${i} = {0};`)
+			, `  ${result.nativeName} returned = {0};`, `  ${result.cName} converted = {0};`
+			, "  status = ov_charge(&budget, 1, sizeof(converted));"
+			, ...params.map((node, i) => `  if (!status) status = ${walker(node)}_to(${node.leaf ? "&" : ""}a${i}, &raw${i}, 0, &input);`)
+			, `  if (!status) status = ${symbol}(&active->native, ${[...params.map((_, i) => `&raw${i}`), "&returned", "&result_owner->native"].join(", ")});`
+			, "  if (!status) {"
+			, `    status = ${walker(result)}_from(&returned, &converted, 0, &output);`
+			, "    if (status == LB_OWNED_INVALID) status = OV_RESULT;", "  }"
+			, "  oc_release(input.head);"
+			, "  status = oc_result_finish(result_owner, &output, status, owner);"
+			, "  if (!status) *out = converted;", `  return (${p}_status)status;`, "}");
+	}
+	const code = source.join("\n") + "\n";
+	return { ...generated, values, publicHeader: values.header, source: code
+		, files: { [`include/${p}.h`]: values.header
+			, "internal/owned-values.h": generated.typesHeader
+			, "internal/owned-leases.h": ownedAggregateLeaseSource
+			, "internal/carriers.h": generated.carriers.header
+			, [`src/${p}.c`]: code } };
+};

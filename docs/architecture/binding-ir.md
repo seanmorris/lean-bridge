@@ -48,8 +48,11 @@ stages version 4 for immutable resource-bearing collections, records and variant
 It retains resource identity and requires explicit lease/disposal policies,
 including a policy for anonymous containers. Compiler checks, private typed Lean/C
 carriers, budgeted native value conversion and ownership cleanup execute in
-dedicated tests. Public host projections, Wasm transport and installed host
-support remain unfinished. Existing version-3 backends reject this contract.
+dedicated tests. A separately compiled C consumer now exercises semantic value
+types, opaque identities and explicit session/result lifetimes. Host-callback
+construction, reviewed-v4 reconciliation, other host projections, Wasm and
+installed package support remain unfinished. Existing version-3 backends reject
+this contract.
 
 ## Rich values cross as rich values
 

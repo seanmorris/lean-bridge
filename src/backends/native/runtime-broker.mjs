@@ -15,6 +15,7 @@ extern "C" {
 
 #define LEAN_BRIDGE_NATIVE_RUNTIME_ABI_VERSION 1u
 #define LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION 1u
+#define LEAN_BRIDGE_NATIVE_RUNTIME_PROCESS_GUARD_VERSION 1u
 
 #if defined(_WIN32)
 #define LEAN_BRIDGE_NATIVE_API __declspec(dllexport)
@@ -40,6 +41,8 @@ LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_initialize(
     lean_bridge_native_initializer initializer
 );
 LEAN_BRIDGE_NATIVE_API void lean_bridge_native_component_detach(const char *component_id);
+/* Lock-free: reject an inherited runtime before entering a post-fork mutex. */
+LEAN_BRIDGE_NATIVE_API int lean_bridge_native_process_valid(void);
 /* Retirement is permanent. Existing owners may still release their values. */
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_ready(const char *component_id);
 LEAN_BRIDGE_NATIVE_API void lean_bridge_native_runtime_retire(void);
@@ -103,10 +106,23 @@ static uint32_t attached_components = 0;
 static uint32_t live_identities = 0;
 static lean_bridge_component_slot components[LEAN_BRIDGE_COMPONENT_CAPACITY];
 static lean_bridge_identity_slot identities[LEAN_BRIDGE_IDENTITY_CAPACITY];
+static pid_t runtime_process;
+
+__attribute__((constructor))
+static void lean_bridge_native_capture_process(void)
+{
+  runtime_process = getpid();
+}
+
+LEAN_BRIDGE_NATIVE_API int lean_bridge_native_process_valid(void)
+{
+  return runtime_process == getpid();
+}
 
 __attribute__((destructor))
 static void lean_bridge_native_process_shutdown(void)
 {
+  if (!lean_bridge_native_process_valid()) return;
   pthread_mutex_lock(&runtime_mutex);
   if (runtime_state == LEAN_BRIDGE_RUNTIME_READY && live_identities == 0) {
     lean_finalize_task_manager();
@@ -163,7 +179,7 @@ LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_initialize(
     lean_bridge_native_initializer initializer
 )
 {
-  if (component_id == NULL || initializer == NULL) return 0;
+  if (!lean_bridge_native_process_valid() || component_id == NULL || initializer == NULL) return 0;
   pthread_mutex_lock(&runtime_mutex);
   if (runtime_state != LEAN_BRIDGE_RUNTIME_COLD && runtime_state != LEAN_BRIDGE_RUNTIME_READY) {
     pthread_mutex_unlock(&runtime_mutex);
@@ -229,7 +245,7 @@ LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_initialize(
 
 LEAN_BRIDGE_NATIVE_API void lean_bridge_native_component_detach(const char *component_id)
 {
-  if (component_id == NULL) return;
+  if (!lean_bridge_native_process_valid() || component_id == NULL) return;
   pthread_mutex_lock(&runtime_mutex);
   lean_bridge_component_slot *component = component_find(component_id);
   if (component != NULL && component->attached) {
@@ -241,7 +257,7 @@ LEAN_BRIDGE_NATIVE_API void lean_bridge_native_component_detach(const char *comp
 
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_ready(const char *component_id)
 {
-  if (component_id == NULL) return 0;
+  if (!lean_bridge_native_process_valid() || component_id == NULL) return 0;
   pthread_mutex_lock(&runtime_mutex);
   lean_bridge_component_slot *component = component_find(component_id);
   int ready = runtime_state == LEAN_BRIDGE_RUNTIME_READY && component != NULL
@@ -252,6 +268,7 @@ LEAN_BRIDGE_NATIVE_API int lean_bridge_native_component_ready(const char *compon
 
 LEAN_BRIDGE_NATIVE_API void lean_bridge_native_runtime_retire(void)
 {
+  if (!lean_bridge_native_process_valid()) return;
   pthread_mutex_lock(&runtime_mutex);
   if (runtime_state != LEAN_BRIDGE_RUNTIME_SHUT_DOWN) runtime_state = LEAN_BRIDGE_RUNTIME_FAILED;
   pthread_mutex_unlock(&runtime_mutex);
@@ -259,7 +276,7 @@ LEAN_BRIDGE_NATIVE_API void lean_bridge_native_runtime_retire(void)
 
 LEAN_BRIDGE_NATIVE_API uint64_t lean_bridge_native_identity_acquire(const char *kind, const void *pointer)
 {
-  if (kind == NULL || pointer == NULL) return 0;
+  if (!lean_bridge_native_process_valid() || kind == NULL || pointer == NULL) return 0;
   uint64_t kind_hash = hash_text(kind);
   pthread_mutex_lock(&runtime_mutex);
   if (runtime_state != LEAN_BRIDGE_RUNTIME_READY) {
@@ -297,7 +314,7 @@ LEAN_BRIDGE_NATIVE_API uint64_t lean_bridge_native_identity_acquire(const char *
 
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release(uint64_t token, const char *kind, const void *pointer)
 {
-  if (token == 0 || kind == NULL || pointer == NULL) return -1;
+  if (!lean_bridge_native_process_valid() || token == 0 || kind == NULL || pointer == NULL) return -1;
   uint32_t encoded_index = (uint32_t)token;
   uint32_t generation = (uint32_t)(token >> 32);
   if (encoded_index == 0 || encoded_index > LEAN_BRIDGE_IDENTITY_CAPACITY || generation == 0) return -1;
@@ -326,7 +343,7 @@ LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release(uint64_t token, c
 
 LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release_pointer(const char *kind, const void *pointer)
 {
-  if (kind == NULL || pointer == NULL) return -1;
+  if (!lean_bridge_native_process_valid() || kind == NULL || pointer == NULL) return -1;
   uint64_t kind_hash = hash_text(kind);
   pthread_mutex_lock(&runtime_mutex);
   for (size_t index = 0; index < LEAN_BRIDGE_IDENTITY_CAPACITY; index++) {
@@ -350,6 +367,11 @@ LEAN_BRIDGE_NATIVE_API int lean_bridge_native_identity_release_pointer(const cha
 LEAN_BRIDGE_NATIVE_API void lean_bridge_native_snapshot_read(lean_bridge_native_snapshot *out)
 {
   if (out == NULL) return;
+  if (!lean_bridge_native_process_valid()) {
+    *out = (lean_bridge_native_snapshot){ .abi_version = LEAN_BRIDGE_NATIVE_RUNTIME_ABI_VERSION,
+      .runtime_state = LEAN_BRIDGE_RUNTIME_FAILED };
+    return;
+  }
   pthread_mutex_lock(&runtime_mutex);
   *out = (lean_bridge_native_snapshot){
     .abi_version = LEAN_BRIDGE_NATIVE_RUNTIME_ABI_VERSION,

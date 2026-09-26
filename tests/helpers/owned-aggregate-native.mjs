@@ -77,13 +77,13 @@ def treeIdentity (_ : Unit) : Array (Owned.Tree → Owned.Tree) := #[fun value =
 		await run("cc", ["-O2", "-g", "-I", join(runtime.root, "include")
 			, ...name === "Carriers" ? ["-include", "carriers.h"] : []
 			, "-c", name + ".c", "-o", name + ".o"]);
-	const compile = async (name, source, sanitized = false) => {
+	const compile = async (name, source, sanitized = false, extraInputs = []) => {
 		await saveLakeFile(directory, name + ".c", source);
 		await run(sanitized ? process.env.LEAN_BRIDGE_SANITIZER_CC ?? "cc" : "cc", [
 			"-std=c11", "-O1", "-g", "-Wall", "-Wextra", "-Werror", "-pthread"
 			, "-I", join(runtime.root, "include")
 			, ...sanitized ? ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", "-no-pie"] : []
-			, name + ".c", "Owned.o", "Carriers.o", "Witness.o"
+			, name + ".c", "Owned.o", "Carriers.o", "Witness.o", ...extraInputs
 			, "-L", join(runtime.root, "lib"), "-llean_bridge_native", "-lleanshared"
 			, "-Wl,-rpath," + join(runtime.root, "lib"), "-o", name]);
 		return (args = [], env = {}) => run("sh", ["-c", 'ulimit -c 0\nexec "$@"', "owned-native", join(directory, name), ...args]

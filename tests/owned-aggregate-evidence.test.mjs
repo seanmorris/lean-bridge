@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedAggregateExecution, assertOwnedAggregateIntegration } from "./helpers/owned-aggregate-evidence.mjs";
 import { beforeOwnedAggregates, reverseOwnedAggregateUpdate, ownedAggregateHistoryPath, ownedAggregateExecutionPath } from "./helpers/owned-aggregate-source-history.mjs";
+import { beforeOwnedC } from "./helpers/owned-c-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -42,7 +43,7 @@ test("owned execution rejects unexecuted support, source drift and missing clean
 test("owned source history rejects unknown text, wrong predecessors and overlapping edits", async () => {
 	for(const update of (await json(ownedAggregateHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeOwnedC(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseOwnedAggregateUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeOwnedAggregates(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedAggregates(update.path, source, update.currentSha256), source);

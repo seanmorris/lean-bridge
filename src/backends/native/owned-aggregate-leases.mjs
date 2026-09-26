@@ -111,6 +111,7 @@ static int lb_owned_ready(const lb_owned_context *context) {
 }
 static int lb_owned_context_init(lb_owned_context *context, const char *component) {
   if (!context || !component || !*component) return LB_OWNED_INVALID;
+  if (!lean_bridge_native_process_valid()) return LB_OWNED_PROCESS;
   /* The caller supplies fresh, zero-initialized storage, never a live context. */
   if (context->self || context->initialized || context->owners || context->batches || context->top)
     return LB_OWNED_INVALID;

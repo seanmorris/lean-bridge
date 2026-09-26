@@ -28,9 +28,19 @@ void lean_init_task_manager(void);
 	const fixture = await readFile("tests/fixtures/structured-types/native-runtime-retirement.c", "utf8");
 	await saveLakeFile(root, "check.c", `#define _POSIX_C_SOURCE 200809L\n${brokerSource}\n${nativeCallbackBroker}\n${fixture}`);
 	await runCopied("/usr/bin/cc", ["-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pthread", "-I", root, "check.c", "-o", "check"], root, { PATH: "/usr/bin:/bin" });
-	for(const mode of ["cold", "core-failure", "first-failure", "component-failure", "retire", "shutdown", "threads"])
+	for(const mode of ["cold", "core-failure", "first-failure", "component-failure", "retire", "shutdown", "threads", "fork", "fork-cold"])
 	{
 		const result = await runCopied(join(root, "check"), [mode], root);
 		assert.equal(result.stdout, `native-runtime-ok ${mode}\n`); assert.equal(result.stderr, "");
+	}
+	for(const [name, before, after] of [
+		["unguarded-ready", "if (!lean_bridge_native_process_valid() || component_id == NULL) return 0;", "if (component_id == NULL) return 0;"]
+		, ["unguarded-callback", "if (!lean_bridge_native_process_valid()) { callback_error = 1; return (lb_native_callback){0}; }", ""]
+	]) {
+		const implementation = brokerSource + "\n" + nativeCallbackBroker;
+		assert.ok(implementation.includes(before));
+		await saveLakeFile(root, name + ".c", `#define _POSIX_C_SOURCE 200809L\n${implementation.replace(before, after)}\n${fixture}`);
+		await runCopied("/usr/bin/cc", ["-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pthread", "-I", root, name + ".c", "-o", name], root, { PATH: "/usr/bin:/bin" });
+		await assert.rejects(() => runCopied("/bin/sh", ["-c", "ulimit -c 0\nexec \"$@\"", "owned-fork-mutant", join(root, name), "fork"], root), /WIFEXITED/u);
 	}
 });
