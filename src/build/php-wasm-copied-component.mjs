@@ -11,6 +11,7 @@ import { phpWasmUnsupportedLibuvC } from "../backends/php/php-wasm-libuv.mjs";
 import { generateCopiedPhpZendAdapter } from "../backends/php/copied-zend.mjs";
 import { compileCopiedPhpModel } from "../backends/php/copied-model.mjs";
 import { compileCopiedPhpGraphZendModel } from "../backends/php/copied-graph-zend.mjs";
+import { compileCallablePhpGraphZendModel } from "../backends/php/callable-graph-zend-model.mjs";
 import { generateCBindingPackage } from "../backends/c/generate.mjs";
 import { generateNativePrimitiveC } from "../backends/c/native-primitives.mjs";
 import { buildElaboratedComponent } from "./elaborated-component.mjs";
@@ -130,7 +131,8 @@ export const buildPhpWasmCopiedComponent = async options => {
 		, createModel: createCompiledPhpWasmModel
 		, createAdapters: generateCompiledPhpWasmLeanAdapters
 		, validateModel: model => {
-			if(model.copiedGraph) compileCopiedPhpGraphZendModel(model.bindingIr);
+			if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr);
+			else if(model.copiedGraph) compileCopiedPhpGraphZendModel(model.bindingIr);
 			else compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 			options.validateModel?.(model);
 		}
@@ -143,6 +145,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 			const manifest = JSON.parse(zend[manifestPath]);
 			const runtimeHeader = await readFile(join(runtime, "include/lean_bridge_native_runtime.h"), "utf8");
 			if(graph && !runtimeHeader.includes("#define LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION 1")) throw new Error("PHP-Wasm recursive packages require compiler inputs rebuilt with runtime retirement support");
+			if(model.copiedGraph?.callbacks && !runtimeHeader.includes(nativeCallbackHeader)) throw new Error("PHP-Wasm recursive callables require compiler inputs rebuilt with callback registry support");
 			for(const [path, source] of Object.entries(zend)) await save(staging, path, source);
 			const initializer = `initialize_${adapters.module}`;
 			let adapterSources;

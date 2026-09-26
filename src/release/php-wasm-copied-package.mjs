@@ -12,6 +12,7 @@ import { readVerifiedPhpWasmCopiedComponent, readVerifiedPhpWasmCopiedRuntime, v
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { hasStructuredZendCallables } from "../backends/php/zend-callables.mjs";
 import { compileCopiedPhpGraphZendModel } from "../backends/php/copied-graph-zend.mjs";
+import { compileCallablePhpGraphZendModel } from "../backends/php/callable-graph-zend-model.mjs";
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
 import { phpValueReadme } from "../backends/php/copied-equality.mjs";
@@ -57,8 +58,9 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 		, notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) };
 	const loaderIdentity = sha256(json(identityBasis));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
-	const projection = model.copiedGraph ? compileCopiedPhpGraphZendModel(model.bindingIr)
-		: compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
+	const projection = model.copiedGraph?.callbacks ? compileCallablePhpGraphZendModel(model.bindingIr)
+		: model.copiedGraph ? compileCopiedPhpGraphZendModel(model.bindingIr)
+			: compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 	const { namespace } = projection, aliases = model.copiedGraph ? projection.aliases : phpCopiedAliases(projection);
 	const aliasFiles = aliases.length ? { "lean-bridge/aliases.json": json({ schemaVersion: 1, aliases }) } : {};
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
@@ -109,7 +111,7 @@ On this 32-bit host, UInt32, UInt64, Int64, Nat, Int and USize use Brick\\Math\\
 
 Recursive values may share acyclic subvalues; returned values own independent copies. Cycles, malformed branches, unknown subclasses and uninitialized values reject. Each call permits 128 value levels and 262144 visits, with separate 16 MiB PHP, Zend and native-copy accounting limits. These do not measure all PHP overhead or Lean working memory. All arguments validate and convert before first-call extension loading. Output owners are released before PHP reconstruction, including on Zend bailout. Allocation and limit failures recover; malformed native results retire the shared runtime. Previously copied PHP values remain usable.
 
-Generated records, variants, Some/Ok/Err and Bytes provide equals($other) and hashCode(). Comparisons preserve nominal and branch identity, compare NaNs as equal and distinguish signed zero. Readonly properties do not recursively freeze arbitrary payloads. Do not mutate values during a call or while using their hashes as lookup keys. Structured callbacks, closures, resource-containing aggregates and asynchronous values are not admitted by this copied graph profile.
+Generated records, variants, Some/Ok/Err and Bytes provide equals($other) and hashCode(). Comparisons preserve nominal and branch identity, compare NaNs as equal and distinguish signed zero. Readonly properties do not recursively freeze arbitrary payloads. Do not mutate values during a call or while using their hashes as lookup keys. ${model.copiedGraph.callbacks ? "Synchronous callbacks accept finite copied payloads, including recursive records and variants. Returned LeanClosure objects are invokable; close them in a finally block. Callback exceptions preserve their Throwable identity, and callback replies stay alive until native copying finishes. Closure identities remain private Zend resources, never PHP integers. Calls require the main PHP execution context; the pinned PHP-Wasm host cannot start Fibers. Resource-containing aggregates and asynchronous values remain unsupported." : "Structured callbacks, closures, resource-containing aggregates and asynchronous values are not admitted by this copied graph profile."}
 ` : `Compound exports use null or Some for Option, Ok or Err for Except, and exact two-element lists for Prod. Some(null) retains a present Unit or an outer Some containing None, according to the declared type. Generated branch classes are final readonly and expose one value property. Calls validate payload types without weak-mode coercion and return independent copies, including nested arrays and records. PHP object identity is not Lean value equality. On wasm32, UInt32, UInt64, Int64, Nat, Int and USize use Brick\\Math\\BigInteger; ISize uses a 32-bit PHP int. These mappings apply inside compound payloads. Type nesting stops at 32. Validation, Zend conversion and native copying each have a 16 MiB accounting limit, not a bound on Lean working memory. Compound callables, generic or indexed variants and recursive copied types remain unsupported.
 
 Lean List inputs, results and record fields use consecutive-key PHP arrays with \`list<T>\` PHPDoc. Empty Lists, order, duplicates and nesting are preserved. List and Array retain distinct IR and native identities. Returned mutable values are independent copies. Weak and strict callers receive the same validation and copy-budget checks. List callback payloads remain unsupported.`}

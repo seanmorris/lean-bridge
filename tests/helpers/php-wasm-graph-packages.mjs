@@ -87,7 +87,16 @@ const rejectArtifactDrift = async (root, runtimeIdentity) => {
 	return rejected;
 };
 
-const install = async ({ root, release, host, diagnostic }) => {
+/**
+ * Install the original graph package archives offline and relocate the consumer.
+ *
+ * @param options - Release coordinates and a test-owned consumer workspace.
+ * @param options.root - Test-owned installation parent.
+ * @param options.release - Original package report and handoff directory.
+ * @param options.host - Pinned PHP-Wasm host package directory.
+ * @param options.diagnostic - Progress reporter.
+ */
+export const installPhpWasmGraphPackages = async ({ root, release, host, diagnostic }) => {
 	const project = join(root, "install"), deployment = join(root, "deployed"), feed = join(root, "feed");
 	await saveLakeFile(project, "package.json", canonicalJson({ private: true, type: "module" })); await mkdir(feed);
 	const npm = [], archives = [];
@@ -236,7 +245,7 @@ export const checkPhpWasmGraphPackages = async (directory, diagnostic = () => {}
 			, composerSettings: verified.report.composerSettings });
 		assert.deepEqual(repeated.report, verified.report);
 		const generated = JSON.parse(await readFile(join(componentRoot, "graph-zend-manifest.json"))), metadata = JSON.parse(await readFile(join(componentRoot, "metadata.json")));
-		const installed = await install({ root, release: { output: packageRoot, report: verified.report }, host, diagnostic });
+		const installed = await installPhpWasmGraphPackages({ root, release: { output: packageRoot, report: verified.report }, host, diagnostic });
 		await bundlePhpWasmGraph(installed.deployment, verified.report.npmSettings.name);
 		await rm(author, { recursive: true }); await assert.rejects(() => readdir(author), { code: "ENOENT" });
 		const request = { path: reviewed ? "reviewed-ir" : "ordinary-source", extension: generated.extension };

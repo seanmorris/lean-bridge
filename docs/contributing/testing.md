@@ -2056,6 +2056,37 @@ CI retains `build/recursive-callables/php-recursive.json` and
 [acceptance record](../evidence/php-recursive-callables-20260926.md) binds these
 checks to the installed archives and tested source files.
 
+### Recursive PHP-Wasm callbacks
+
+Use the pinned PHP 8.4 Wasm host, configured headers, Lean runtime and Emscripten
+inputs from the [author toolchain](author-toolchain.md#php-wasm):
+
+```sh
+npm run test:php-wasm-recursive-generated
+npm run test:php-wasm-recursive-packages
+```
+
+The generated suite compiles fresh Lean and C for actual wasm32 execution. It
+checks callback and closure allocation failures, malformed native results,
+expired and forged callback contexts, 64-bit closure generations, identity
+exhaustion, active close and GC. Separate PHP requests test recovery after
+`exit()`, Zend bailouts and aborts during partial string and array construction.
+Weak and strict callers run in separate interpreters. Lifetime and retirement
+mutants must fail at their named invariant before an unsafe read.
+
+The package suite builds ordinary-source and reviewed-IR npm archives and
+Composer ZIPs, installs offline, removes authors and runs relocated consumers
+without compiler paths. Base and mixed APIs cover nine copied shapes, all
+nineteen primitive families and sixteen-argument Unit callables. Node and
+Chromium cover startup and lazy loading, bundled PHP and Composer consumers.
+The exact Lean and PHP documentation examples run too.
+
+CI retains `build/recursive-callables/php-wasm-generated.json`,
+`php-wasm-packages.json` and `php-wasm-mixed-packages.json` in that directory.
+The generated probes are instrumented test builds; the installed-package suite
+checks original, unmodified archives separately. The pinned host cannot start
+Fibers, so it does not provide Fiber-execution evidence.
+
 ### Recursive C# packages
 
 ```sh

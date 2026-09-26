@@ -9,6 +9,7 @@ import test from 'node:test';
 import { sha256 } from '../src/capsule/node.mjs';
 import { assertPhpRecursiveCallableExecution, assertPhpRecursiveCallableIntegration, assertPhpRecursiveInspection, phpRecursiveCallableExecutionPath } from './helpers/php-recursive-callable-evidence.mjs';
 import { beforePhpRecursiveCallables, phpRecursiveCallableHistoryPath, reversePhpRecursiveCallableUpdate } from './helpers/php-recursive-callable-source-history.mjs';
+import { beforePhpWasmRecursiveCallables } from './helpers/php-wasm-recursive-callable-source-history.mjs';
 
 const json = async path => JSON.parse(await readFile(path, 'utf8'));
 
@@ -85,7 +86,7 @@ test('recursive PHP probes require complete failures, named mutants and real lif
 test('recursive PHP source transitions reject unrelated bytes and substituted predecessors', async () => {
 	for(const update of(await json(phpRecursiveCallableHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, 'utf8');
+		const source = beforePhpWasmRecursiveCallables(update.path, await readFile(update.path, 'utf8'));
 		assert.equal(sha256(reversePhpRecursiveCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePhpRecursiveCallables(update.path, source)), update.previousSha256);
 		assert.equal(beforePhpRecursiveCallables(update.path, source, update.currentSha256), source);

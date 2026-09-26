@@ -438,12 +438,12 @@ The [native checks](evidence/php-structured-callables-20260925.md) and
 [PHP-Wasm checks](evidence/php-wasm-structured-callables-20260925.md) exercise
 weak and strict callers on both source paths. PHP-Wasm uses the same example
 inside its host after loading the package's autoloader. Native packages also
-support the recursive callback values below. PHP-Wasm recursive callback payloads
-and resource-containing payloads remain separate work.
+support the recursive callback values below, as do PHP-Wasm packages.
+Resource-containing payloads remain separate work.
 
 ### Recursive callback values
 
-Native Composer packages accept finite recursive records and variants in
+Native Composer and PHP-Wasm packages accept finite recursive records and variants in
 callbacks and returned functions. Use the same generated classes as ordinary
 copied arguments. For the [publisher example](publish/php.md#export-recursive-callbacks),
 save this as `recursive-callbacks.php` beside `vendor`:
@@ -480,15 +480,26 @@ Run `php recursive-callbacks.php`. It prints `42`, `20` and `42` on separate
 lines. The callback receives an independent tree. The returned function owns
 its captured copy until you close it or PHP destroys it.
 
+For PHP-Wasm, run the same file inside the [Node or browser host](#ordinary-php-wasm-packages)
+with the companion Composer package installed. The npm-only descriptor also
+loads the same public API; omit the Composer `require` when using that descriptor.
+Use the [32-bit PHP mappings](#type-conversions) throughout the tree, including
+`BigInteger` for `UInt32`, `UInt64`, `Int64`, `Nat`, `Int` and `USize`.
+
 Recursive conversion allows at most 128 levels and 262,144 visited values, with
 separate 16 MiB host and native accounting budgets. Replies share the enclosing
 call's PHP storage budget and stay alive until Lean finishes copying them.
 Cyclic PHP objects and arrays reject before native loading. A malformed native
 result retires the shared runtime; existing closures can still close, and already
 copied PHP values remain usable. The [closure lifetime rules](#native-callbacks-and-returned-functions)
-apply here too. The [installed recursive callback checks](evidence/php-recursive-callables-20260926.md)
-cover both source paths and weak and strict callers. PHP-Wasm recursive callbacks
-remain unsupported.
+apply here too. The [installed native callback checks](evidence/php-recursive-callables-20260926.md)
+cover both source paths and weak and strict callers. The
+[installed PHP-Wasm checks](evidence/php-wasm-recursive-callables-20260926.md)
+cover Node, Composer autoloading and Chromium with startup and lazy loading.
+PHP-Wasm uses a private
+Zend resource for each owned function, so its 64-bit identity never passes
+through a 32-bit PHP integer. Its borrowed callback identities expire with the
+call and cannot be reused after exhaustion.
 
 ### Ordinary PHP-Wasm packages
 
@@ -498,9 +509,9 @@ The npm descriptor includes Brick Math 1.0.0 and loads its classes automatically
 
 Options, results and nested products use the [same public PHP types](#options-results-and-products) as native packages. They compose with all nineteen primitives, arrays and copied records. The 32-bit integer mappings still apply inside every payload: for example, `Option UInt32` accepts `new Some(BigInteger::of('4294967295'))`. Weak-mode callers do not coerce integers, strings or branch values. Validation, Zend conversion and native copying each have a 16 MiB accounting limit; PHP array elements count at least 32 bytes. The adapter releases native output owners on conversion errors and PHP bailouts.
 
-PHP-Wasm also accepts synchronous primitive and [structured callbacks](#structured-callback-values) and returns invokable `LeanClosure` objects with `close()` and `isClosed()`. Use the same lifetime rules as native PHP. On this 32-bit target, `UInt32`, `UInt64`, `Int64`, `Nat`, `Int` and `USize` use `Brick\Math\BigInteger`; `ISize` uses PHP `int` in -2147483648..2147483647. Callback arguments and results use those same types, including inside copied payloads. For example, a `UInt32 → UInt32` callback can be `fn(BigInteger $value) => $value->plus(1)`.
+PHP-Wasm also accepts synchronous primitive, [structured](#structured-callback-values) and [recursive callbacks](#recursive-callback-values), and returns invokable `LeanClosure` objects with `close()` and `isClosed()`. Use the same lifetime rules as native PHP. On this 32-bit target, `UInt32`, `UInt64`, `Int64`, `Nat`, `Int` and `USize` use `Brick\Math\BigInteger`; `ISize` uses PHP `int` in -2147483648..2147483647. Callback arguments and results use those same types, including inside copied payloads. For example, a `UInt32 → UInt32` callback can be `fn(BigInteger $value) => $value->plus(1)`.
 
-The private Zend adapter preserves callback `Throwable` identity after Lean cleanup and owns returned functions through PHP resources. It copies nested reply buffers before PHP releases the callback result. Closing a function releases its native state; destruction provides a fallback. Keep functions within their originating PHP instance and close them before disposing that instance. The pinned PHP-Wasm host cannot start Fibers; use the main execution context. Asynchronous delivery, recursive callback payloads and resource-containing payloads are not supported. [Primitive callable checks](evidence/php-wasm-callables-20260919.md) and [structured callable checks](evidence/php-wasm-structured-callables-20260925.md) cover both source paths and loading modes.
+The private Zend adapter preserves callback `Throwable` identity after Lean cleanup and owns returned functions through PHP resources. It keeps nested reply storage alive until Lean finishes copying it. Closing a function releases its native state; destruction provides a fallback. Keep functions within their originating PHP instance and close them before disposing that instance. The pinned PHP-Wasm host cannot start Fibers; use the main execution context. Asynchronous delivery and resource-containing payloads are not supported. [Primitive callable checks](evidence/php-wasm-callables-20260919.md) and [structured callable checks](evidence/php-wasm-structured-callables-20260925.md) cover both source paths and loading modes.
 
 `exit` ends the current PHP request. Before running PHP again, call `await php.refresh()`, require the package's autoloader again and recreate PHP values and closures. A zero return code from `php.run()` after `exit` does not by itself show that another program executed.
 
@@ -1043,7 +1054,7 @@ The [conversion rules](reference/types.md#full-type-surface) cover ranges, copyi
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | Native PHP: `Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases` (input, result, field); `Named PHP value classes and constructors, consecutive-key arrays, PHP callables and invokable LeanClosure owners` (callback input, callback result); PHP-Wasm: `Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases` (input, result, field) | Ordinary source: Native PHP: Installed checks passed; PHP-Wasm: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Native PHP: Installed checks passed; PHP-Wasm: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Readonly named classes preserve recursive constructors and aliases. Calls validate every scalar and array element under weak and strict callers, reject cycles, and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets. Native output owners and partial conversions are released on failure. Recursive records, variants and aliases use generated named PHP classes and independent copied storage. Weak and strict callers share explicit value validation. Reply scopes retain buffers until Lean finishes copying. Throwable identity survives cleanup. Malformed native output retires the shared runtime; owned closures can still close and copied values remain usable.; PHP-Wasm: The same named PHP classes preserve recursive constructors on wasm32. UInt32, UInt64, Int64, Nat, Int and USize use Brick Math integers; ISize uses a 32-bit PHP integer. Weak and strict calls reject cycles and invalid payloads and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets; Zend failures release owned outputs. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named readonly PHP classes and constructor cases; consecutive-key arrays and explicit option/result cases` (input, result, field); `Named PHP value classes and constructors, consecutive-key arrays, PHP callables and invokable LeanClosure owners` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Native PHP: Readonly named classes preserve recursive constructors and aliases. Calls validate every scalar and array element under weak and strict callers, reject cycles, and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets. Native output owners and partial conversions are released on failure. Recursive records, variants and aliases use generated named PHP classes and independent copied storage. Weak and strict callers share explicit value validation. Reply scopes retain buffers until Lean finishes copying. Throwable identity survives cleanup. Malformed native output retires the shared runtime; owned closures can still close and copied values remain usable.; PHP-Wasm: The same named PHP classes preserve recursive constructors on wasm32. UInt32, UInt64, Int64, Nat, Int and USize use Brick Math integers; ISize uses a 32-bit PHP integer. Weak and strict calls reject cycles and invalid payloads and return independent copies. Conversion limits are 128 value levels, 262,144 visited values and separate 16 MiB budgets; Zend failures release owned outputs. The same named PHP classes preserve recursive constructors, records and aliases on wasm32. UInt32, UInt64, Nat and Int use Brick Math integers as documented. Borrowed replies stay alive until Lean finishes copying; callback contexts cannot be reused after exhaustion. Owned functions retain native uint64 identities in Zend resources. Exit, Zend bailouts and partial output construction clean up before request recovery. Malformed native output retires the shared runtime; existing owners can still close and copied values remain usable. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | `Named finite specializations` (signature) | Ordinary source: Not audited. Reviewed IR: Generator inspected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

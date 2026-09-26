@@ -10,7 +10,7 @@ import { generateCopiedCGraphTypes } from "../c/copied-graph-layout.mjs";
 import { generateCopiedPhpGraphValues } from "./copied-graph-values.mjs";
 import { phpGraphWire } from "./copied-graph-wire.mjs";
 import { copiedZendConversions } from "./copied-zend-conversions.mjs";
-import { graphZendSupport, graphZendDescriptors, graphZendWalk } from "./copied-graph-zend-runtime.mjs";
+import { graphZendSupport, graphZendDescriptors, graphZendWalk, graphZendCheckedWalk } from "./copied-graph-zend-runtime.mjs";
 import { copiedPhpWasmLoader } from "./php-wasm-copied-loader.mjs";
 
 /**
@@ -53,7 +53,13 @@ export const compileCopiedPhpGraphZendModel = ir => {
 		, transport: `${values.namespace}\\Internal\\GraphZend${identity.slice(0, 16)}` };
 };
 
-const descriptorSource = model => {
+/**
+ * Reuse the exact copied-value walkers for both plain and callable transports.
+ *
+ * @param model - Finite wasm32 copied payload descriptors.
+ * @param nativeOutputPreflight - Classify invalid output spans before limit checks.
+ */
+export const graphZendDescriptorSource = (model, nativeOutputPreflight = false) => {
 	const primitive = model.types.filter(node => node.kind === "primitive");
 	const scalars = copiedZendConversions({ surface: { copies: primitive.map(node => ({ index: node.index
 		, scalarName: { usize: "uint32", isize: "int32" }[node.ref.name] ?? node.ref.name
@@ -73,7 +79,7 @@ ${branch.map(field => `  { ${field.type}, offsetof(${node.name}, ${field.path}),
 	});
 	return [graphZendDescriptors, scalars, ...thunks, ...fields
 		, `static const lg_node lg_nodes[] = {\n${nodes.join("\n")}\n};`
-		, graphZendWalk].join("\n\n");
+		, nativeOutputPreflight ? graphZendCheckedWalk : graphZendWalk].join("\n\n");
 };
 
 const zendCalls = model => {
@@ -208,7 +214,7 @@ _Static_assert(sizeof(bool) == 1, "Bool markers require one byte");
 #error This adapter requires a non-thread-safe PHP runtime
 #endif
 ${graphZendSupport}
-${descriptorSource(model)}
+${graphZendDescriptorSource(model)}
 ${zendCalls(model)}
 ZEND_BEGIN_ARG_INFO_EX(lg_retire_args, 0, 0, 0)
 ZEND_END_ARG_INFO()

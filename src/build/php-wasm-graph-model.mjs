@@ -12,6 +12,8 @@ import { componentRecordDefinitions } from "../abi/component-records.mjs";
 import { assertComponentRecursiveBindings, componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveHelper, componentRecursiveLeanSource, componentRecursiveTypes } from "./component-recursive-lean.mjs";
 import { createPhpWasmCopiedModel, generateNativeLeanAdapters } from "./native-model.mjs";
+import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi, nativeCallableGraphHeader } from "./native-callable-graph.mjs";
+import { componentStructuredCopiedView, componentStructuredCallableLeanSource } from "./component-structured-callable-lean.mjs";
 
 const primitives = {
 	unit: "Unit", bool: "Bool", uint8: "UInt8", uint16: "UInt16"
@@ -30,12 +32,13 @@ const leanType = type => {
 const containsGraph = value => value && typeof value === "object"
 	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
 
-const descriptor = ir => ({ schemaVersion: 1
-	, types: componentRecordDefinitions(ir, true)
-	, exports: ir.declarations.map(item => ({ bindingId: item.id
-		, symbol: `lean_bridge_${sha256(`${ir.component.id}\0${item.id}`).slice(0, 24)}`
-		, parameters: item.parameters.map(site => site.type)
-		, result: item.result.type, resultMode: item.resultMode })) });
+const descriptor = ir => ir.types.some(type => type.kind === "callback")
+	? createNativeCallableGraphDescriptor(ir) : ({ schemaVersion: 1
+		, types: componentRecordDefinitions(ir, true)
+		, exports: ir.declarations.map(item => ({ bindingId: item.id
+			, symbol: `lean_bridge_${sha256(`${ir.component.id}\0${item.id}`).slice(0, 24)}`
+			, parameters: item.parameters.map(site => site.type)
+			, result: item.result.type, resultMode: item.resultMode })) });
 
 /**
  * Adapt the semantic descriptor for the shared total-carrier generators only.
@@ -47,6 +50,8 @@ export const phpWasmGraphCarrierAbi = model => {
 	if(model.profile !== "php-wasm-copied-v1" || model.pointerBits !== 32 || model.byteOrder !== "little"
 		|| ![4, 5].includes(model.schemaVersion) || canonicalJson(model.copiedGraph) !== canonicalJson(descriptor(model.bindingIr)))
 		throw new TypeError("PHP-Wasm graph carriers differ from the compiled profile or public types");
+	if(model.copiedGraph.callbacks)
+		return nativeCallableGraphCarrierAbi(model.copiedGraph, model.bindingIr);
 	const abi = { version: componentRecursiveAbi
 		, dispatch: componentRecursiveDispatch
 		, types: model.copiedGraph.types
@@ -88,7 +93,7 @@ export const createCompiledPhpWasmModel = options => {
 	return Object.freeze(model);
 };
 
-const carrierHeader = abi => {
+const carrierHeader = (abi, exportCarriers = true) => {
 	const definitions = new Map(abi.types.map(type => [type.id, type]));
 	const lines = ["#include <lean/lean.h>", "#include <stdint.h>", "LEAN_CASSERT(sizeof(size_t) * 8 == 32);"];
 	const declare = (symbol, count = 1, result = "lean_object *") => lines.push(`${result} ${symbol}(${Array(Math.max(1, count)).fill("lean_object *").join(", ")});`);
@@ -116,7 +121,7 @@ const carrierHeader = abi => {
 			type.arguments.forEach((_, index) => { declare(`${symbol}_make${index}`); declare(`${symbol}_field${index}`); });
 		}
 	}
-	for(const item of abi.exports) declare(`${item.symbol}_lean`, item.parameters.length);
+	if(exportCarriers) for(const item of abi.exports) declare(`${item.symbol}_lean`, item.parameters.length);
 	return `${lines.join("\n")}\n`;
 };
 
@@ -135,8 +140,11 @@ export const generateCompiledPhpWasmLeanAdapters = model => {
 		, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) }));
 	const lines = [...new Set(model.exports.map(item => `import ${item.module}`))
 		, "set_option maxRecDepth 10000", `namespace ${module}`
-		, ...componentRecursiveLeanSource(abi, exports, leanType)
+		, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports)
+			: componentRecursiveLeanSource(abi, exports, leanType))
 		, `end ${module}`, ""];
-	return { module, leanSource: lines.join("\n"), header: carrierHeader(abi) };
+	const header = abi.callbacks
+		? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi)
+		: carrierHeader(abi);
+	return { module, leanSource: lines.join("\n"), header };
 };
-

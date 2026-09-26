@@ -90,10 +90,11 @@ export const assertPhpCiExecution = async record => {
 	assert.equal(record.wasm.reportSha256, sha256(canonicalJson(report)));
 	assert.deepEqual(report.packages.map(run => run.name), ["Willow", "Aspen"]);
 	const { sources } = await phpWasmPreGraphSources();
-	for(const run of report.packages) await assertPhpWasmLegacyPackageComparison(run, sources);
 	const packagePath = "src/release/php-wasm-copied-package.mjs";
-	assert.equal(report.sourceHashes[packagePath], sha256(await readFile(packagePath)));
-	assert.equal(report.sourceHashes["tests/helpers/php-wasm-legacy-comparison.mjs"], sha256(await readFile("tests/helpers/php-wasm-legacy-comparison.mjs")));
+	const packagingSource = await priorSource(packagePath);
+	for(const run of report.packages) await assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource });
+	assert.equal(report.sourceHashes[packagePath], sha256(packagingSource));
+	assert.equal(report.sourceHashes["tests/helpers/php-wasm-legacy-comparison.mjs"], sha256(await priorSource("tests/helpers/php-wasm-legacy-comparison.mjs")));
 };
 
 /**

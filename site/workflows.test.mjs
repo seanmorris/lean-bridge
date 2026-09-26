@@ -40,9 +40,10 @@ test("source intake describes new and existing libraries without widening target
 	assert.match(exports, /produce unsupported diagnostics in this profile/);
 	assert.match(exports, /## Native Perl exports/);
 	assert.match(exports, /\[locked Lake dependencies\]\(\.\.\/publish\/cpan\.md#build-with-locked-lake-dependencies\)/);
-	assert.match(exports, /Open generics, dependent signatures, recursive callable payloads, asynchronous operations and retained host callbacks require further work/);
+	assert.match(exports, /Open generics, dependent signatures, asynchronous operations and retained host callbacks require further work/);
+	assert.match(exports, /Ordinary \[PHP-Wasm builds\][^\n]+\[recursive callables\]\(\.\.\/publish\/php\.md#export-recursive-callbacks\)/);
 	assert.match(exports, /installed recursive copied-value coverage across all seventeen profiles/);
-	assert.match(exports, /\[acyclic structured callbacks\]\(\.\.\/publish\/cargo\.md#structured-callback-values\)/);
+	assert.match(exports, /\[structured\]\(\.\.\/publish\/cargo\.md#structured-callback-values\) and \[recursive callbacks\]\(\.\.\/publish\/cargo\.md#export-recursive-callbacks-and-closures\)/);
 	assert.match(exports, /npm-recursive-20260922\.md/);
 	assert.match(exports, /native-recursive-packages-20260923\.md/);
 	assert.match(exports, /rust-recursive-packages-20260923\.md/);

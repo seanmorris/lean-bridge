@@ -21,6 +21,9 @@ import { phpRecursiveTamperSource } from './php-recursive-callable-tamper.mjs';
 import { assertJvmRecursiveCallableIntegration } from './jvm-recursive-callable-evidence.mjs';
 import { jvmRecursiveCallableHistoryPath } from './jvm-recursive-callable-source-history.mjs';
 import { phpRecursiveCallableChangedPaths, reversePhpRecursiveCallableUpdate } from './php-recursive-callable-source-history.mjs';
+import { beforePhpWasmRecursiveCallables } from './php-wasm-recursive-callable-source-history.mjs';
+
+const priorSource = async path => beforePhpWasmRecursiveCallables(path, await readFile(path, 'utf8'));
 
 export const phpRecursiveCallableBaseline = 'e17c1fe6e137d1a3bbdb65d9a9ec1e49dbc751be';
 export const phpRecursiveCallableExecutionPath = 'docs/evidence/php-recursive-callables-20260926.json';
@@ -245,16 +248,17 @@ export const assertPhpRecursiveCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), phpRecursiveCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpRecursiveCallableChangedPaths, ...phpRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await readFile(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reversePhpRecursiveCallableUpdate(await readFile(update.path, 'utf8'), update);
+		restored[update.path] = reversePhpRecursiveCallableUpdate(await priorSource(update.path), update);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
-	const { document, ...contracts } = await readTypeSurface(), old = JSON.parse(restored['docs/type-surface.v1.json']);
+	const { document: current, ...contracts } = await readTypeSurface(), old = JSON.parse(restored['docs/type-surface.v1.json']);
+	const document = JSON.parse(beforePhpWasmRecursiveCallables('docs/type-surface.v1.json', JSON.stringify(current, null, 2) + '\n'));
 	assert.equal(document.contractVersion, '0.105.0'); assert.equal(old.contractVersion, '0.104.0');
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
 	const count = values => values.filter(cell => cell.stages.installedExecution.state === 'passed').length;
