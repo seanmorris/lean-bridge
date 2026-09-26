@@ -27,7 +27,7 @@ const pureFailure = { mode: "none", errors: [], unexpected: "poison-runtime" };
  * @param configuration - Validated shared export configuration.
  */
 export const assertReviewedSourceConfiguration = configuration => {
-	if(["exports", "resources", "arities", "specializations", "contracts"].some(key => configuration[key] !== undefined))
+	if(["exports", "resources", "ownedAggregates", "arities", "specializations", "contracts"].some(key => configuration[key] !== undefined))
 		fail("export-configuration-reviewed-ir", "Keep export decisions in the reviewed Binding IR; modules may select its Lean source roots");
 };
 
@@ -128,12 +128,21 @@ const checkReview = document => {
  *
  * @param review - Versioned reviewed-source input retained in the receipt.
  */
-export const validateReviewedSource = review => {
+export const validateReviewedSourceIdentity = review => {
 	if(!review || !same(Object.keys(review).sort(), ["path", "schemaVersion", "semanticSha256", "source", "sourceSha256"])
 		|| review.schemaVersion !== 1 || typeof review.source !== "string" || typeof review.path !== "string"
 		|| !review.path.endsWith(".binding-ir.json") || review.path.includes("\\")
 		|| review.path.split("/").some(part => ["", ".", ".."].includes(part)) || sha256(review.source) !== review.sourceSha256)
 		mismatch("Invalid reviewed-source input identity");
+};
+
+/**
+ * Validate the copied-value review without admitting ownership-aware schemas.
+ *
+ * @param review - Versioned reviewed-source input retained in the receipt.
+ */
+export const validateReviewedSource = review => {
+	validateReviewedSourceIdentity(review);
 	const document = parseBindingIr(review.source);
 	if(hashBindingIr(document) !== review.semanticSha256) mismatch("Reviewed contract digest differs from its retained source");
 	return checkReview(document);
@@ -206,6 +215,15 @@ const difference = (left, right, path = "bindingIr") => {
 };
 
 /**
+ * Compare semantic decisions, excluding annotations and compiler provenance.
+ * Callers must first validate both documents against their explicit schema.
+ *
+ * @param reviewed - Validated authored contract.
+ * @param compiled - Independently validated compiler projection.
+ */
+export const reviewedContractDifference = (reviewed, compiled) => difference(contract(reviewed), contract(compiled));
+
+/**
  * Reconcile exact source identities and contracts; retain only author annotations.
  * Compiler producers, layouts and theorem references stay compiler-owned.
  *
@@ -225,7 +243,7 @@ export const reconcileReviewedSource = (review, compiled, sourceIdentity) => {
 		|| !same(ordered(request.exports), ordered(document.declarations.map(item => item.source.declaration)))
 		|| request.resources.length || !same(request.arities, selection.arities) || request.specializations !== undefined || request.contracts !== undefined)
 		mismatch("Reviewed contract differs from the authorized compiler selection");
-	const field = difference(contract(document), contract(compiled));
+	const field = reviewedContractDifference(document, compiled);
 	if(field)
 		mismatch("Reviewed contract does not match the freshly compiled Lean API", { path: review.path
 			, field

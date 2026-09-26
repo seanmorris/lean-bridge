@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedCExecution, assertOwnedCIntegration } from "./helpers/owned-c-evidence.mjs";
 import { beforeOwnedC, reverseOwnedCUpdate, ownedCHistoryPath, ownedCExecutionPath } from "./helpers/owned-c-source-history.mjs";
+import { beforeOwnedReviewed } from "./helpers/owned-reviewed-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -46,7 +47,7 @@ test("public C evidence rejects source drift, missing controls and broader suppo
 test("public C source history rejects unknown text and ambiguous reverse edits", async () => {
 	for(const update of (await json(ownedCHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeOwnedReviewed(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseOwnedCUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeOwnedC(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedC(update.path, source, update.currentSha256), source);

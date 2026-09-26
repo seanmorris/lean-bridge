@@ -8,6 +8,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { compileOwnedAggregateModel } from "../abi/owned-aggregate-model.mjs";
 import { projectNativeMetadata } from "../analyze/native-metadata.mjs";
 import { createOwnedElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
+import { reconcileReviewedOwnedSource } from "../analyze/reviewed-owned-source.mjs";
 
 const primitives = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int", uint8: "UInt8", uint16: "UInt16"
@@ -28,10 +29,11 @@ const fail = message => { throw new TypeError(`Owned aggregate carriers: ${messa
  */
 export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, component }) => {
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, ownedGraphs: true });
-	if(sourceIdentity.reviewedBindingIr !== undefined) fail("reviewed v4 source reconciliation is not yet connected");
-	const { document } = createOwnedElaboratedSemanticModel({ metadata
+	const semantic = createOwnedElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });
+	const document = sourceIdentity.reviewedBindingIr === undefined ? semantic.document
+		: reconcileReviewedOwnedSource(sourceIdentity.reviewedBindingIr, semantic.document, sourceIdentity);
 	const model = compileOwnedAggregateModel(document);
 	const nodes = new Map(model.types.map(type => [type.id, type]));
 	const definitions = new Map(document.types.map(type => [type.id, type]));

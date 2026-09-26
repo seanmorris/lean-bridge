@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedReviewed } from "./owned-reviewed-source-history.mjs";
 
 export const ownedCBaseline = "a2dc55fd307491e20d54731e5ad8da59e4cfc501";
 export const ownedCHistoryPath = "docs/evidence/owned-c-integration-20260926.json";
@@ -73,6 +74,7 @@ export const reverseOwnedCUpdate = (source, update) => {
  * @param expected - Optional identity at which normalization must stop.
  */
 export const beforeOwnedC = (path, source, expected) => {
+	source = beforeOwnedReviewed(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedCChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedCHistoryPath, "utf8"));

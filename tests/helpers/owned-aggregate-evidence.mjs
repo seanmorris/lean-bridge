@@ -11,6 +11,7 @@ import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owne
 import { ownedAggregateAddedPaths, ownedAggregateChangedPaths, ownedAggregateBaseline, ownedAggregateExecutionPath, reverseOwnedAggregateUpdate } from "./owned-aggregate-source-history.mjs";
 import { witRecursiveCallableHistoryPath } from "./wit-recursive-callable-source-history.mjs";
 import { beforeOwnedC, ownedCChangedPaths } from "./owned-c-source-history.mjs";
+import { ownedReviewedChangedPaths } from "./owned-reviewed-source-history.mjs";
 
 export const ownedAggregateNativeCommand = "LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-contract.test.mjs tests/owned-aggregate-model.test.mjs tests/owned-aggregate-metadata.test.mjs tests/owned-aggregate-native.test.mjs tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs";
 export const ownedAggregateRegressionCommand = "LEAN_BRIDGE_ELABORATED_METADATA_TEST=1 node --test --test-concurrency=1 tests/binding-ir-contract.test.mjs tests/binding-ir-structured.test.mjs tests/export-configuration.test.mjs tests/elaborated-metadata.test.mjs";
@@ -140,7 +141,8 @@ export const assertOwnedAggregateIntegration = async record => {
 	for(const path of paths)
 	{
 		const bytes = await readFile(path);
-		const current = ownedCChangedPaths.includes(path) ? beforeOwnedC(path, bytes.toString("utf8")) : bytes;
+		const current = ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path)
+			? beforeOwnedC(path, bytes.toString("utf8")) : bytes;
 		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)

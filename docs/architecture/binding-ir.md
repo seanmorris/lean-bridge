@@ -49,10 +49,12 @@ It retains resource identity and requires explicit lease/disposal policies,
 including a policy for anonymous containers. Compiler checks, private typed Lean/C
 carriers, budgeted native value conversion and ownership cleanup execute in
 dedicated tests. A separately compiled C consumer now exercises semantic value
-types, opaque identities and explicit session/result lifetimes. Host-callback
-construction, reviewed-v4 reconciliation, other host projections, Wasm and
-installed package support remain unfinished. Existing version-3 backends reject
-this contract.
+types, opaque identities and explicit session/result lifetimes. The same C
+consumer also executes an independently authored v4 contract after fresh Lean
+reconciliation. The review selects resources and ownership policies; it cannot
+supply layouts or proof evidence. Host-callback construction, other host
+projections, Wasm and installed package support remain unfinished. Existing
+version-3 backends reject this contract.
 
 ## Rich values cross as rich values
 

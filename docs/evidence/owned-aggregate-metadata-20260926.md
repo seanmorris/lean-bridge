@@ -3,9 +3,10 @@
 This work adds compiler metadata and a semantic model for resource handles inside
 collections, records, variants and recursive values. Private typed Lean/C
 carriers, a native ownership ledger and typed native value conversion now
-execute against the shared Lean runtime. Public host projections and installed
-consumer packages remain unfinished. No installed coverage cells are promoted
-by these checks.
+execute against the shared Lean runtime. An independently compiled public C
+consumer executes both ordinary and reviewed-v4 projections. Other host
+projections and installed consumer packages remain unfinished. No installed
+coverage cells are promoted by these checks.
 
 ## Author decision and compiler evidence
 
@@ -129,8 +130,8 @@ generation checks must fail the independent caller.
 The callback-valued parameter checks use actual Lean closures. They do not yet
 construct host callbacks or implement host-exception recovery for resource-valued
 callbacks. The carrier and ledger are internal native components, not an installed
-C package. Reviewed version-4 source reconciliation and Wasm execution remain
-unfinished.
+C package. The reviewed version-4 C gate below checks source reconciliation;
+Wasm execution remains unfinished.
 
 ## Native value transactions
 
@@ -192,7 +193,8 @@ canonical NaN bit patterns. Signed zero and infinities remain distinct.
 
 The private transport currently targets 64-bit native Lean. It accepts
 call-scoped input borrows and explicit result leases. It does not construct host
-callbacks or admit reviewed version-4 source contracts. Public session creation
+callbacks. Its reviewed version-4 path reconciles the contract before generating
+typed carriers. Public session creation
 now checks the shared runtime's process before touching inherited broker locks.
 The same lock-free guard protects initialization, readiness, retirement, identity
 operations, snapshots, callbacks and shutdown. Tests fork while the broker mutex
@@ -253,6 +255,37 @@ Reports are `build/owned-aggregate-native/public-c.json` and
 package evidence. The ordinary package builders still reject owned aggregates.
 The C API can invoke returned Lean closures; host callback construction and its
 failure recovery are not implemented by this layer.
+
+## Independently reviewed owned contracts
+
+`readReviewedOwnedSource` captures one version-4 `.binding-ir.json` before
+compilation. The shared configuration supplies only the authorized source modules
+and packaging settings. The review selects exports, named resource types,
+returned-closure arities and aggregate ownership policy. The compiler invocation
+includes the exact review identity, including both its raw and semantic digests.
+
+`reconcileReviewedOwnedSource` compares the review with fresh Lean metadata.
+Record fields and variant branches must match in order, name and type. Resource
+kind, aggregate policy, aliases, effects, failure behavior and lifetimes must
+also match. Parameter names and documentation may differ. The resulting contract
+keeps author annotations, including constructor/field documentation and callback
+parameter names, while retaining compiler-produced source positions, producers
+and theorem references. Claimed proof or layout extensions in the review reject.
+
+The existing v3 reader still rejects v4. Ordinary package builders do not yet
+select the ownership-aware path. The internal reviewed C gate runs with:
+
+```sh
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs
+```
+
+The gate uses the independently authored contract and real Lean extraction, then
+compiles the same public C consumer in a separate translation unit. It checks
+resource lifetimes, nested values, all variants, recursive trees, Lean closures,
+allocation-failure cleanup and sanitizers. A changed review runs through the
+extractor again and must reject reordered constructors against the new metadata.
+The report is `build/owned-aggregate-native/reviewed-public-c.json`. These are
+compiled projection checks, not source-free installed-package acceptance.
 
 ## Remaining VO 1219 work
 

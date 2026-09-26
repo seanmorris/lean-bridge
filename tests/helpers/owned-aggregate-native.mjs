@@ -15,6 +15,7 @@ import { generateOwnedAggregateCarriers } from "../../src/build/owned-aggregate-
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { ownedAggregateReviewedIr } from "./owned-aggregate-fixture.mjs";
+import { readReviewedOwnedSource, reviewedOwnedSourceSelection, verifyReviewedOwnedSourceInputs } from "../../src/analyze/reviewed-owned-source.mjs";
 
 /**
  * Build private carriers, not an installed downstream package.
@@ -36,22 +37,41 @@ export const compileOwnedAggregateFixture = async (t, options = {}) => {
 	const fixture = join(root, "tests/fixtures/onboarding", options.fixture ?? "owned-aggregates");
 	const source = await readFile(join(fixture, "Owned.lean"), "utf8");
 	const config = JSON.parse(await readFile(join(fixture, "lean-bridge.exports.json"), "utf8"));
+	let reviewedBindingIr;
+	const reviewedConfiguration = { schemaVersion: 1, modules: ["Owned"] };
+	const captureReview = async document => {
+		const source = canonicalJson(document), path = "api.binding-ir.json";
+		await saveLakeFile(directory, path, source);
+		await saveLakeFile(directory, "lean-bridge.exports.json", canonicalJson(reviewedConfiguration));
+		const inputs = [{ path, bytes: Buffer.byteLength(source), sha256: sha256(source) }];
+		const reviewedBindingIr = await readReviewedOwnedSource(directory, {
+			inputs, configurationRecord: { configuration: reviewedConfiguration }
+		});
+		verifyReviewedOwnedSourceInputs({ reviewedBindingIr }, inputs);
+		return reviewedBindingIr;
+	};
+	if(options.reviewedIr !== undefined) reviewedBindingIr = await captureReview(options.reviewedIr);
 	await saveLakeFile(directory, "Owned.lean", source);
 	await capture(["-o", "Owned.olean", "-c", "Owned.c", "Owned.lean"]);
 	const identity = await identifyLeanInterface(join(directory, "Owned.olean"));
 	const context = { toolchain: "leanprover/lean4:v4.32.2"
+		, ...(reviewedBindingIr ? { reviewedBindingIrSha256: sha256(canonicalJson(reviewedBindingIr)) } : {})
 		, extractorSha256: sha256(await readFile(extractor))
 		, leanCompilerSha256: sha256(await readFile(lean))
 		, modules: [{ name: "Owned", sourcePath: "Owned.lean", sourceSha256: sha256(source), interfaceSha256: identity.interfaceSha256 }] };
-	const request = createMetadataRequest({ profile: "native-library-v1"
-		, modules: ["Owned"], exportModules: ["Owned"]
-		, exports: config.exports, resources: config.resources
+	const selection = reviewedBindingIr ? reviewedOwnedSourceSelection(reviewedBindingIr) : {
+		exports: config.exports, resources: config.resources
 		, arities: Object.entries(config.arities)
-		, ...compilerExportSelection(config) }, context);
+		, ...compilerExportSelection(config) };
+	const request = createMetadataRequest({ profile: "native-library-v1"
+		, modules: ["Owned"], exportModules: ["Owned"], ...selection }, context);
 	await saveLakeFile(directory, "request.json", canonicalJson(request));
 	const metadata = JSON.parse((await capture(["--run", extractor, "--metadata", "request.json"])).stdout);
 	assert.deepEqual(metadata.diagnostics, []);
 	const sourceIdentity = { request, leanVersion: "4.32.2"
+		, ...(reviewedBindingIr ? { reviewedBindingIr
+			, exportConfigurationSource: canonicalJson(reviewedConfiguration)
+			, exportConfigurationSha256: sha256(canonicalJson(reviewedConfiguration)) } : {})
 		, leanCommit: (await capture(["--githash"])).stdout.trim()
 		, leanCompilerSha256: context.leanCompilerSha256
 		, extractorSha256: context.extractorSha256
@@ -60,7 +80,7 @@ export const compileOwnedAggregateFixture = async (t, options = {}) => {
 			, source: { path: "Owned.lean", sha256: sha256(source) }
 			, interface: { sha256: identity.oleanSha256, interfaceSha256: identity.interfaceSha256 } }] };
 	const generated = generateOwnedAggregateCarriers({ metadata, sourceIdentity, component: ownedAggregateReviewedIr().component });
-	await saveLakeFile(resolve("build/owned-aggregate-native"), `${options.fixture ?? "owned-aggregates"}-inputs.json`
+	await saveLakeFile(resolve("build/owned-aggregate-native"), `${options.fixture ?? "owned-aggregates"}${reviewedBindingIr ? "-reviewed" : ""}-inputs.json`
 		, canonicalJson({ metadata, sourceIdentity, component: generated.model.component }));
 	await saveLakeFile(directory, generated.module + ".lean", generated.leanSource);
 	await saveLakeFile(directory, "carriers.h", generated.header);
@@ -90,5 +110,20 @@ def treeIdentity (_ : Unit) : Array (Owned.Tree → Owned.Tree) := #[fun value =
 			, { ASAN_OPTIONS: "detect_leaks=1:halt_on_error=1"
 				, UBSAN_OPTIONS: "halt_on_error=1:print_stacktrace=1", ...env });
 	};
-	return { ...generated, directory, metadata, sourceIdentity, compile };
+	const extractReviewed = async document => {
+		const review = await captureReview(document);
+		const request = createMetadataRequest({ profile: "native-library-v1"
+			, modules: ["Owned"], exportModules: ["Owned"]
+			, ...reviewedOwnedSourceSelection(review) }
+		, { ...context, reviewedBindingIrSha256: sha256(canonicalJson(review)) });
+		await saveLakeFile(directory, "reviewed-request.json", canonicalJson(request));
+		const metadata = JSON.parse((await capture(["--run", extractor, "--metadata", "reviewed-request.json"])).stdout);
+		assert.deepEqual(metadata.diagnostics, []);
+		const reviewedIdentity = { ...sourceIdentity, request
+			, reviewedBindingIr: review
+			, exportConfigurationSource: canonicalJson(reviewedConfiguration)
+			, exportConfigurationSha256: sha256(canonicalJson(reviewedConfiguration)) };
+		return { metadata, component: generated.model.component, sourceIdentity: reviewedIdentity };
+	};
+	return { ...generated, directory, metadata, sourceIdentity, compile, extractReviewed };
 };

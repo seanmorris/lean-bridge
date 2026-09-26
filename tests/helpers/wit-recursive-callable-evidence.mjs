@@ -15,10 +15,11 @@ import { phpWasmRecursiveCallableHistoryPath } from "./php-wasm-recursive-callab
 import { witRecursiveCallableChangedPaths, reverseWitRecursiveCallableUpdate } from "./wit-recursive-callable-source-history.mjs";
 import { beforeOwnedAggregates, ownedAggregateChangedPaths } from "./owned-aggregate-source-history.mjs";
 import { ownedCChangedPaths } from "./owned-c-source-history.mjs";
+import { ownedReviewedChangedPaths } from "./owned-reviewed-source-history.mjs";
 
 const historicalSource = async (path, text = false) => {
 	const bytes = await readFile(path);
-	const value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path)
+	const value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path)
 		? beforeOwnedAggregates(path, bytes.toString("utf8")) : bytes;
 	return text ? value.toString("utf8") : value;
 };
