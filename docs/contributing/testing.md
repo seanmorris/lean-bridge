@@ -1968,6 +1968,31 @@ and `build/recursive/dotnet-native.json`. The
 [conversion record](../evidence/dotnet-recursive-conversions-20260923.md) describes
 the exact scope.
 
+### Recursive C# callbacks and closures
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/dotnet-recursive-callables.test.mjs
+node --test tests/dotnet-recursive-callable-contract.test.mjs \
+  tests/dotnet-recursive-callable-evidence.test.mjs
+```
+
+The installed suite builds original NuGet packages from both source paths,
+removes the author directories, and installs offline into empty caches. It
+checks recursive callbacks and owned closures against unchanged installed
+assemblies, then repeats execution after relocation with only the .NET runtime.
+Separate instrumented copies check allocation failures, reply lifetimes,
+malformed-output retirement, and deferred disposal. A mixed package checks every
+primitive callback type and sixteen-argument delegates alongside recursive APIs.
+The exact Lean publisher and C# consumer examples compile and run too.
+
+CI requires the suite and retains `build/recursive-callables/dotnet.json`.
+The [acceptance record](../evidence/dotnet-recursive-callables-20260926.md) lists
+the checks, source hashes, and ownership limits. Set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` only for local tests on older glibc;
+those development archives are not the production release profile.
+
 ### Recursive C# packages
 
 ```sh

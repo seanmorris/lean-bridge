@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeDotnetRecursiveCallables } from "./dotnet-recursive-callable-source-history.mjs";
 
 export const perlRecursiveCallableHistoryPath = "docs/evidence/perl-recursive-callable-integration-20260925.json";
 export const perlRecursiveCallableChangedPaths = [
@@ -64,6 +65,7 @@ export const reversePerlRecursiveCallableUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforePerlRecursiveCallables = (path, source, expected) => {
+	source = beforeDotnetRecursiveCallables(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !perlRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(perlRecursiveCallableHistoryPath, "utf8"));

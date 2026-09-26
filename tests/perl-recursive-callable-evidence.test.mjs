@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertPerlRecursiveCallableExecution, assertPerlRecursiveCallableIntegration, perlRecursiveCallableExecutionPath } from "./helpers/perl-recursive-callable-evidence.mjs";
 import { beforePerlRecursiveCallables, perlRecursiveCallableHistoryPath, reversePerlRecursiveCallableUpdate } from "./helpers/perl-recursive-callable-source-history.mjs";
+import { beforeDotnetRecursiveCallables } from "./helpers/dotnet-recursive-callable-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -57,7 +58,7 @@ test("recursive Perl receipts reject missing ABIs, modes, faults, ownership and 
 test("recursive Perl source transitions reject unknown bytes and substituted predecessors", async () => {
 	for(const update of (await json(perlRecursiveCallableHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeDotnetRecursiveCallables(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reversePerlRecursiveCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePerlRecursiveCallables(update.path, source)), update.previousSha256);
 		assert.equal(beforePerlRecursiveCallables(update.path, source, update.currentSha256), source);

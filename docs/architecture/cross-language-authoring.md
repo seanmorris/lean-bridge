@@ -32,9 +32,10 @@ Synchronous callbacks and returned closures accept acyclic copied payloads in
 every profile. npm, [C/C++](../evidence/native-recursive-callables-20260925.md),
 [Python](../evidence/python-recursive-callables-20260925.md),
 [Rust](../evidence/rust-recursive-callables-20260925.md),
-[Ruby](../evidence/ruby-recursive-callables-20260925.md) and
-[Perl](../evidence/perl-recursive-callables-20260925.md) also accept recursive
-callback payloads. Six profiles still need recursive callable acceptance.
+[Ruby](../evidence/ruby-recursive-callables-20260925.md),
+[Perl](../evidence/perl-recursive-callables-20260925.md) and
+[C#](../evidence/dotnet-recursive-callables-20260926.md) also accept recursive
+callback payloads. Five profiles still need recursive callable acceptance.
 Aggregates with explicit resource ownership remain part of the same task.
 
 Prepared [C/C++ packages](../evidence/native-compounds-20260920.md),

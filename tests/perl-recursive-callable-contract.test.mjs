@@ -18,9 +18,9 @@ const moduleName = "LeanBridge::Recursive";
 test("CPAN recursive callbacks validate their namespace and agree with every supported native target", () => {
 	const ir = nativeRecursiveCallableReviewedIr();
 	const expected = compileCallablePerlGraphPackageModel(ir, moduleName).layoutSha256;
-	for(const targets of [["cpan"], ["c", "cpan"], ["cpan", "cpp"], ["pypi", "cpan"], ["cargo", "cpan"], ["rubygems", "cpan"], ["c", "cpp", "pypi", "cargo", "rubygems", "cpan"]])
+	for(const targets of [["cpan"], ["c", "cpan"], ["cpan", "cpp"], ["pypi", "cpan"], ["cargo", "cpan"], ["rubygems", "cpan"], ["nuget", "cpan"], ["c", "cpp", "pypi", "cargo", "rubygems", "cpan", "nuget"]])
 		assert.equal(compileNativeGraphProjection(ir, targets, moduleName).layoutSha256, expected);
-	for(const targets of [[], ["cpan", "cpan"], ["cpan", "nuget"], ["cpan", "maven"], ["cpan", "php-native"], ["cpan", "wit-wasi"], ["unknown"]])
+	for(const targets of [[], ["cpan", "cpan"], ["cpan", "maven"], ["cpan", "php-native"], ["cpan", "wit-wasi"], ["unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets, moduleName), { code: "native-graph-projection-unavailable" });
 	for(const targets of [["cpan"], ["c", "cpan"], ["rubygems", "cpan"]])
 	{

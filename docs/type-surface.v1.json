@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": "0.102.0",
+  "contractVersion": "0.103.0",
   "bindingIrVersion": 3,
   "consumerContractVersion": "1.4.0",
   "planNode": 1208,
@@ -797,7 +797,7 @@
       "files": [
         {
           "path": "docs/consume/dotnet.md",
-          "sha256": "c1fdd8555d5589f3da5377ee0341a0025ced1dc8c7869cfc849503607fef057a"
+          "sha256": "d531392d0bd1c7c314b4fb609b23cb565274ffc9a4093235743e6a7f52190c18"
         },
         {
           "path": "docs/consume/java.md",
@@ -881,7 +881,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/wit-copied-graph-model.test.mjs",
@@ -956,15 +956,15 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/evidence/perl-recursive-conversions-20260923.json",
@@ -984,11 +984,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -1000,7 +1000,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1248,7 +1248,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -1471,15 +1471,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/evidence/ruby-recursive-conversions-20260923.json",
@@ -1499,11 +1499,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -1515,7 +1515,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -1723,7 +1723,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -1870,15 +1870,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/evidence/python-recursive-conversions-20260923.json",
@@ -1898,11 +1898,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -1914,7 +1914,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2090,7 +2090,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -2245,15 +2245,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/evidence/rust-recursive-conversions-20260923.json",
@@ -2273,11 +2273,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -2289,7 +2289,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -2449,7 +2449,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-jvm-artifacts.mjs",
@@ -2588,7 +2588,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/native-recursive-packages-20260923.json",
@@ -2752,7 +2752,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/backends/rust/copied-graph-package.mjs",
@@ -2795,11 +2795,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/evidence/npm-recursive-20260922.json",
@@ -2994,7 +2994,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/consume/kotlin.md",
@@ -3014,7 +3014,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -3478,7 +3478,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/backends/rust/copied-graph-package.mjs",
@@ -3521,7 +3521,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/consume/wit-wasi.md",
@@ -3537,7 +3537,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -3804,7 +3804,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-wasm-collections-20260922.json",
@@ -3820,7 +3820,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4123,7 +4123,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-native-collections-20260922.json",
@@ -4139,7 +4139,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4402,7 +4402,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/consume/java.md",
@@ -4422,7 +4422,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4697,7 +4697,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/consume/rust.md",
@@ -4717,7 +4717,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -4880,7 +4880,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/consume/python.md",
@@ -4900,7 +4900,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5059,11 +5059,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/consume/dotnet.md",
-          "sha256": "c1fdd8555d5589f3da5377ee0341a0025ced1dc8c7869cfc849503607fef057a"
+          "sha256": "d531392d0bd1c7c314b4fb609b23cb565274ffc9a4093235743e6a7f52190c18"
         },
         {
           "path": "docs/evidence/dotnet-collections-20260922.json",
@@ -5075,11 +5075,11 @@
         },
         {
           "path": "docs/publish/nuget.md",
-          "sha256": "0b741d826e7ea37e3f0631a2e0c2610050aca07c77e5d893be5ba01bf276efa1"
+          "sha256": "3cf75ed0dcfec973127de74bf946b479e0651dd287dfe1b1f3b6926a413dd06a"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5119,7 +5119,7 @@
         },
         {
           "path": "src/release/native-nuget.mjs",
-          "sha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae"
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
         },
         {
           "path": "tests/dotnet-collection-contract.test.mjs",
@@ -5254,7 +5254,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/consume/ruby.md",
@@ -5274,7 +5274,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5433,7 +5433,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/consume/c.md",
@@ -5461,7 +5461,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5652,7 +5652,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/consume/perl.md",
@@ -5672,7 +5672,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -5851,7 +5851,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/wit-variants-20260921.json",
@@ -5863,7 +5863,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6062,7 +6062,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-wasm-variants-20260921.json",
@@ -6074,7 +6074,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6321,7 +6321,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-native-variants-20260921.json",
@@ -6333,7 +6333,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6536,7 +6536,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/perl-variants-20260921.json",
@@ -6548,11 +6548,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6723,7 +6723,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/ruby-variants-20260921.json",
@@ -6735,7 +6735,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -6922,7 +6922,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/jvm-variants-20260921.json",
@@ -6934,7 +6934,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7205,7 +7205,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/dotnet-variants-20260921.json",
@@ -7217,7 +7217,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7273,11 +7273,11 @@
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
-          "sha256": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9"
+          "sha256": "84823a0cec2e37e6ca0704bf4e1ffc320c7fbcd797b37fae72cea78a8eca631c"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
-          "sha256": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0"
+          "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -7289,7 +7289,7 @@
         },
         {
           "path": "src/release/native-nuget.mjs",
-          "sha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae"
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
         },
         {
           "path": "tests/dotnet-variant-contract.test.mjs",
@@ -7408,7 +7408,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/rust-variants-20260921.json",
@@ -7420,7 +7420,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7611,7 +7611,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/python-variants-20260921.json",
@@ -7623,7 +7623,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -7810,7 +7810,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/c-variants-20260921.json",
@@ -7822,7 +7822,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8005,7 +8005,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/cpp-variants-20260921.json",
@@ -8017,7 +8017,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8164,7 +8164,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/wit-aliases-20260921.json",
@@ -8176,7 +8176,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8335,7 +8335,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-wasm-aliases-20260921.json",
@@ -8347,7 +8347,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8562,7 +8562,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-native-aliases-20260921.json",
@@ -8574,7 +8574,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8713,7 +8713,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/perl-aliases-20260921.json",
@@ -8725,7 +8725,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8868,7 +8868,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/ruby-aliases-20260921.json",
@@ -8880,7 +8880,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -8904,7 +8904,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/backends/ruby/copied-aliases.mjs",
@@ -9019,7 +9019,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/jvm-aliases-20260921.json",
@@ -9031,7 +9031,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9250,15 +9250,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/evidence/dotnet-aliases-20260921.json",
@@ -9270,15 +9270,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9322,11 +9322,11 @@
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
-          "sha256": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9"
+          "sha256": "84823a0cec2e37e6ca0704bf4e1ffc320c7fbcd797b37fae72cea78a8eca631c"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
-          "sha256": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0"
+          "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -9334,7 +9334,7 @@
         },
         {
           "path": "src/release/native-nuget.mjs",
-          "sha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae"
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
         },
         {
           "path": "tests/cli-npm-package.test.mjs",
@@ -9425,7 +9425,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/rust-aliases-20260921.json",
@@ -9437,7 +9437,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9568,7 +9568,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/python-aliases-20260921.json",
@@ -9580,7 +9580,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9703,7 +9703,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/native-aliases-20260921.json",
@@ -9715,7 +9715,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9838,11 +9838,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/npm-aliases-20260921.json",
@@ -9866,7 +9866,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -9981,7 +9981,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/npm-variants-20260921.json",
@@ -10017,7 +10017,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10140,7 +10140,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/wit-lists-20260921.json",
@@ -10156,7 +10156,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10343,7 +10343,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-wasm-lists-20260921.json",
@@ -10359,7 +10359,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10582,7 +10582,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-native-lists-ffi-20260921.json",
@@ -10598,7 +10598,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -10797,7 +10797,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-native-lists-20260921.json",
@@ -10813,7 +10813,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11012,7 +11012,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/perl-lists-20260921.json",
@@ -11028,7 +11028,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11247,7 +11247,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/ruby-lists-20260921.json",
@@ -11263,7 +11263,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11307,7 +11307,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/backends/ruby/callables.mjs",
@@ -11434,7 +11434,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/jvm-lists-20260920.json",
@@ -11450,7 +11450,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11518,7 +11518,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -11685,7 +11685,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/dotnet-lists-20260920.json",
@@ -11701,7 +11701,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -11765,7 +11765,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -11777,11 +11777,11 @@
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
-          "sha256": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9"
+          "sha256": "84823a0cec2e37e6ca0704bf4e1ffc320c7fbcd797b37fae72cea78a8eca631c"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
-          "sha256": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0"
+          "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -11793,7 +11793,7 @@
         },
         {
           "path": "src/release/native-nuget.mjs",
-          "sha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae"
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
         },
         {
           "path": "tests/dotnet-list-contract.test.mjs",
@@ -12409,7 +12409,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/npm-lists-20260920.json",
@@ -12441,7 +12441,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/elaborated-metadata.mjs",
@@ -12548,7 +12548,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-wasm-compounds-20260920.json",
@@ -12564,7 +12564,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -12767,7 +12767,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-native-compounds-20260920.json",
@@ -12783,7 +12783,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -12974,7 +12974,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/perl-compounds-20260920.json",
@@ -12990,7 +12990,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -13209,7 +13209,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/ruby-compounds-20260920.json",
@@ -13225,7 +13225,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -13269,7 +13269,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/backends/ruby/callables.mjs",
@@ -13396,7 +13396,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/jvm-compounds-20260920.json",
@@ -13412,7 +13412,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -13480,7 +13480,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -13647,7 +13647,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/dotnet-compounds-20260920.json",
@@ -13663,7 +13663,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -13727,7 +13727,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/build/native-c-projection.mjs",
@@ -13739,11 +13739,11 @@
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
-          "sha256": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9"
+          "sha256": "84823a0cec2e37e6ca0704bf4e1ffc320c7fbcd797b37fae72cea78a8eca631c"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
-          "sha256": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0"
+          "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
         },
         {
           "path": "src/build/native-model.mjs",
@@ -13755,7 +13755,7 @@
         },
         {
           "path": "src/release/native-nuget.mjs",
-          "sha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae"
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
         },
         {
           "path": "tests/dotnet-compound-contract.test.mjs",
@@ -14363,7 +14363,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/npm-compounds-20260920.json",
@@ -14566,7 +14566,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/npm-records-20260920.json",
@@ -14729,7 +14729,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/npm-arrays-20260920.json",
@@ -14769,7 +14769,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/abi/component-copied.mjs",
@@ -14777,7 +14777,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -15000,11 +15000,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/npm-callables-20260919.md",
@@ -15139,11 +15139,11 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/wit-callables-20260919.md",
@@ -15266,15 +15266,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "tests/fixtures/callable-consumers/php-wasm.php",
@@ -15302,7 +15302,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-wasm-callables-20260919.md",
@@ -15505,15 +15505,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "tests/fixtures/callable-consumers/php.php",
@@ -15541,7 +15541,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-callables-20260919.md",
@@ -15704,11 +15704,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -15732,7 +15732,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/jvm-callables-20260919.md",
@@ -15919,15 +15919,15 @@
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
-          "sha256": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0"
+          "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
-          "sha256": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9"
+          "sha256": "84823a0cec2e37e6ca0704bf4e1ffc320c7fbcd797b37fae72cea78a8eca631c"
         },
         {
           "path": "src/release/native-nuget.mjs",
-          "sha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae"
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
         },
         {
           "path": "tests/dotnet-callable-contract.test.mjs",
@@ -15971,11 +15971,11 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "tests/fixtures/onboarding/callables/Callables.lean",
@@ -15995,7 +15995,7 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/dotnet-callables-20260919.md",
@@ -16178,15 +16178,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "flake.nix",
@@ -16397,15 +16397,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/cpp-callables-20260919.md",
@@ -16600,15 +16600,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/rust-callables-20260919.md",
@@ -16739,15 +16739,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/ruby-callables-20260919.md",
@@ -16878,15 +16878,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/python-callables-20260918.md",
@@ -17005,15 +17005,15 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/c-callables-20260918.md",
@@ -17124,19 +17124,19 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/perl-callables-20260918.json",
@@ -17231,11 +17231,11 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/php-platform-words-20260922.json",
@@ -17279,7 +17279,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/abi/component-scalars.mjs",
@@ -17287,7 +17287,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/adoption/type-surface.mjs",
@@ -17439,7 +17439,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/documentation/package-api/scalars.json",
@@ -17543,7 +17543,7 @@
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/word-contract.test.mjs",
@@ -17626,11 +17626,11 @@
         },
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/char-native-20260918.md",
@@ -17638,7 +17638,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/c/generate.mjs",
@@ -18484,7 +18484,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/wit-compounds-20260920.json",
@@ -18500,7 +18500,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -18806,7 +18806,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -18909,7 +18909,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -19056,7 +19056,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/build/native-project.mjs",
@@ -19068,11 +19068,11 @@
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
-          "sha256": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9"
+          "sha256": "84823a0cec2e37e6ca0704bf4e1ffc320c7fbcd797b37fae72cea78a8eca631c"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
-          "sha256": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0"
+          "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
         },
         {
           "path": "src/build/canonical-build.mjs",
@@ -19084,7 +19084,7 @@
         },
         {
           "path": "src/release/native-nuget.mjs",
-          "sha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae"
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
         },
         {
           "path": "tests/native-dotnet.test.mjs",
@@ -20082,15 +20082,15 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/evidence/wit-ordinary-regression-20260924.json",
@@ -20110,11 +20110,11 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "site/paths.mjs",
@@ -20186,7 +20186,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -20342,7 +20342,7 @@
         },
         {
           "path": "src/backends/dotnet/copied-graph-assets.mjs",
-          "sha256": "47c20dcfa2ee512448d0307c4b44ce89fb370f8aeeb3ba7d6dfe90d9a10938dc"
+          "sha256": "7bb005094319594e259e382488f6ca1ce1ffa7406759dbce7438d28c85800e3a"
         },
         {
           "path": "src/backends/dotnet/copied-graph-conversions.mjs",
@@ -20470,7 +20470,7 @@
         },
         {
           "path": "src/backends/managed/package-audit.mjs",
-          "sha256": "566c9f9db2a97b208475c98d6ffd01171922921dc3150f4d299f60294404f28a"
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
         },
         {
           "path": "src/backends/native/runtime-broker.mjs",
@@ -20950,11 +20950,11 @@
         },
         {
           "path": "src/build/native-dotnet-artifacts.mjs",
-          "sha256": "eae9f12bb4bd86243ad4e3bad77e166b92d1612c37e09b19cd7b0c9bc8eaeeb9"
+          "sha256": "84823a0cec2e37e6ca0704bf4e1ffc320c7fbcd797b37fae72cea78a8eca631c"
         },
         {
           "path": "src/build/native-dotnet-projection.mjs",
-          "sha256": "92b78d2c7a95c4de4c95f4f7d79ce5498862ac89e190e7fe56f589eeef9bb1c0"
+          "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
         },
         {
           "path": "src/build/native-gmp.mjs",
@@ -20966,7 +20966,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -21142,7 +21142,7 @@
         },
         {
           "path": "src/release/native-nuget.mjs",
-          "sha256": "bab5bd7db97e7271c6bf74eed711d6680caf1c32e528f095f747972512292dae"
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
         },
         {
           "path": "src/release/native-pypi.mjs",
@@ -21206,7 +21206,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/dotnet-graph-package.test.mjs",
@@ -21521,7 +21521,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/c-structured-callables-20260924.json",
@@ -21533,11 +21533,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/c.md",
@@ -21545,11 +21545,11 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/reviewed-source.mjs",
@@ -21601,7 +21601,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/onboarding/structured-callables/Structured.lean",
@@ -21657,11 +21657,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/wit-recursive-acceptance.test.mjs",
@@ -21688,7 +21688,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/cpp-structured-callables-20260924.json",
@@ -21704,11 +21704,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/cpp.md",
@@ -21716,7 +21716,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "site/workflows.test.mjs",
@@ -21724,7 +21724,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/cpp/callables.mjs",
@@ -21776,7 +21776,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/structured-callable-consumers/cpp.cpp",
@@ -21808,11 +21808,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -21835,7 +21835,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/rust-structured-callables-20260924.json",
@@ -21851,11 +21851,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/cargo.md",
@@ -21863,11 +21863,11 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/rust/callables.mjs",
@@ -21895,7 +21895,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/structured-callable-consumers/rust-faults.rs",
@@ -21963,11 +21963,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -21990,7 +21990,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/python-structured-callables-20260924.json",
@@ -22006,11 +22006,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/pypi.md",
@@ -22018,11 +22018,11 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/python/copied-model.mjs",
@@ -22046,7 +22046,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/structured-callable-consumers/python-faults.py",
@@ -22122,11 +22122,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -22149,7 +22149,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/ruby-structured-callables-20260924.json",
@@ -22165,11 +22165,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/rubygems.md",
@@ -22177,11 +22177,11 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/ruby/copied-model.mjs",
@@ -22201,7 +22201,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/structured-callable-consumers/ruby-faults.rb",
@@ -22273,11 +22273,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -22300,7 +22300,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/dotnet-structured-callables-20260924.json",
@@ -22316,23 +22316,23 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/nuget.md",
-          "sha256": "0b741d826e7ea37e3f0631a2e0c2610050aca07c77e5d893be5ba01bf276efa1"
+          "sha256": "3cf75ed0dcfec973127de74bf946b479e0651dd287dfe1b1f3b6926a413dd06a"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/dotnet/copied-model.mjs",
@@ -22352,7 +22352,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/dotnet-callable-contract.test.mjs",
@@ -22372,7 +22372,7 @@
         },
         {
           "path": "tests/dotnet-structured-callable-contract.test.mjs",
-          "sha256": "c14e0c9e98a95c07ed7e183b7258b6dd7aff427e25853fca50688e7f43ebd1ef"
+          "sha256": "c120ef91cd31c5bf8a3ff8ac3c9066dcdc1546f51ca9b30cdc1939a14bb12e1e"
         },
         {
           "path": "tests/dotnet-structured-callable-evidence.test.mjs",
@@ -22436,11 +22436,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -22463,7 +22463,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/jvm-structured-callables-20260925.json",
@@ -22479,11 +22479,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/maven.md",
@@ -22491,11 +22491,11 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/jvm/callables.mjs",
@@ -22531,7 +22531,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/dotnet-structured-callable-evidence.test.mjs",
@@ -22639,11 +22639,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -22690,7 +22690,7 @@
       "files": [
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "docs/evidence/perl-structured-callables-20260925.json",
@@ -22706,11 +22706,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/cpan.md",
@@ -22718,11 +22718,11 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/perl/copied-aliases.mjs",
@@ -22738,7 +22738,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/callable-consumers/perl.pl",
@@ -22838,11 +22838,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -22921,7 +22921,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": ".github/workflows/performance.yml",
@@ -22929,15 +22929,15 @@
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/architecture/cross-language-authoring.md",
-          "sha256": "fe176440715a0233712827c683f55afead127601dc9f86b4cc0e949069f68d3b"
+          "sha256": "95f24e1c80d6b2027a2d9a9e43454be140add2aafbd2a5a47a2b990b4606bbbe"
         },
         {
           "path": "docs/architecture/elaborated-export-metadata.md",
@@ -22953,11 +22953,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/npm.md",
@@ -22969,7 +22969,7 @@
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "schema/compiler-adapter-plan.schema.json",
@@ -22981,7 +22981,7 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/abi/component-structured-callables.mjs",
@@ -22989,7 +22989,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -23093,7 +23093,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/structured-callable-consumers/Npm.lean",
@@ -23145,11 +23145,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -23180,7 +23180,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-structured-callables-20260925.json",
@@ -23196,7 +23196,7 @@
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/php.md",
@@ -23204,11 +23204,11 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/php/copied-model.mjs",
@@ -23240,7 +23240,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/structured-callable-consumers/php-faults.php",
@@ -23316,11 +23316,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/word-evidence.test.mjs",
@@ -23347,7 +23347,7 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "docs/evidence/php-wasm-structured-callables-20260925.json",
@@ -23363,7 +23363,7 @@
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/php.md",
@@ -23371,11 +23371,11 @@
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/php/copied-zend-conversions.mjs",
@@ -23407,7 +23407,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/helpers/copied-fixture-php-wasm.mjs",
@@ -23507,11 +23507,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         }
       ],
       "artifacts": [
@@ -23550,19 +23550,19 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/contributing/testing.md",
-          "sha256": "fe0cdb838be263bd76d8ef743e6d7d56db822c61698c4e28e9161331d92fec6d"
+          "sha256": "b404370eec32e92e664c9aa32c70793fc29cc2b62dac9b3fc93807809cc3c9f9"
         },
         {
           "path": "docs/evidence/wit-structured-callables-20260925.json",
@@ -23578,7 +23578,7 @@
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/wit-wasi.md",
@@ -23586,19 +23586,19 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/c/native-callables.mjs",
@@ -23634,7 +23634,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/documentation/consumers/wit-wasi/structured.c",
@@ -23698,11 +23698,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/wit-callable-contract.test.mjs",
@@ -23769,19 +23769,19 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/contributing/testing.md",
-          "sha256": "fe0cdb838be263bd76d8ef743e6d7d56db822c61698c4e28e9161331d92fec6d"
+          "sha256": "b404370eec32e92e664c9aa32c70793fc29cc2b62dac9b3fc93807809cc3c9f9"
         },
         {
           "path": "docs/evidence/native-recursive-callable-codegen-20260925.json",
@@ -23797,7 +23797,7 @@
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/c.md",
@@ -23809,19 +23809,19 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/backends/c/callable-graph-model.mjs",
@@ -23873,7 +23873,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -23901,7 +23901,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/documentation/consumers/c/recursive-callables.c",
@@ -23985,11 +23985,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -24032,23 +24032,23 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/architecture/cross-language-authoring.md",
-          "sha256": "fe176440715a0233712827c683f55afead127601dc9f86b4cc0e949069f68d3b"
+          "sha256": "95f24e1c80d6b2027a2d9a9e43454be140add2aafbd2a5a47a2b990b4606bbbe"
         },
         {
           "path": "docs/contributing/testing.md",
-          "sha256": "fe0cdb838be263bd76d8ef743e6d7d56db822c61698c4e28e9161331d92fec6d"
+          "sha256": "b404370eec32e92e664c9aa32c70793fc29cc2b62dac9b3fc93807809cc3c9f9"
         },
         {
           "path": "docs/evidence/native-recursive-callable-codegen-20260925.json",
@@ -24104,11 +24104,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/c.md",
@@ -24124,15 +24124,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -24144,7 +24144,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -24368,7 +24368,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -24444,7 +24444,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/documentation/consumers/c/recursive-callables.c",
@@ -24740,11 +24740,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -24771,23 +24771,23 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/architecture/cross-language-authoring.md",
-          "sha256": "fe176440715a0233712827c683f55afead127601dc9f86b4cc0e949069f68d3b"
+          "sha256": "95f24e1c80d6b2027a2d9a9e43454be140add2aafbd2a5a47a2b990b4606bbbe"
         },
         {
           "path": "docs/contributing/testing.md",
-          "sha256": "fe0cdb838be263bd76d8ef743e6d7d56db822c61698c4e28e9161331d92fec6d"
+          "sha256": "b404370eec32e92e664c9aa32c70793fc29cc2b62dac9b3fc93807809cc3c9f9"
         },
         {
           "path": "docs/evidence/native-recursive-callable-codegen-20260925.json",
@@ -24843,11 +24843,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/c.md",
@@ -24863,15 +24863,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -24883,7 +24883,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -25087,7 +25087,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -25155,7 +25155,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/documentation/consumers/c/recursive-callables.c",
@@ -25403,7 +25403,7 @@
         },
         {
           "path": "tests/rust-recursive-callable-contract.test.mjs",
-          "sha256": "b7499acbc780c34590e08bd65a95233abec66b5de87e49fdb2cdb628b6863a1f"
+          "sha256": "4937e27bdb35d7f460b1aca767919be3f441f849cba3ea24d70ee914c31a9162"
         },
         {
           "path": "tests/rust-recursive-callable-evidence.test.mjs",
@@ -25431,11 +25431,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -25462,23 +25462,23 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/architecture/cross-language-authoring.md",
-          "sha256": "fe176440715a0233712827c683f55afead127601dc9f86b4cc0e949069f68d3b"
+          "sha256": "95f24e1c80d6b2027a2d9a9e43454be140add2aafbd2a5a47a2b990b4606bbbe"
         },
         {
           "path": "docs/contributing/testing.md",
-          "sha256": "fe0cdb838be263bd76d8ef743e6d7d56db822c61698c4e28e9161331d92fec6d"
+          "sha256": "b404370eec32e92e664c9aa32c70793fc29cc2b62dac9b3fc93807809cc3c9f9"
         },
         {
           "path": "docs/evidence/native-recursive-callable-codegen-20260925.json",
@@ -25534,11 +25534,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/c.md",
@@ -25554,15 +25554,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -25574,7 +25574,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -25826,7 +25826,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -25906,7 +25906,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/documentation/consumers/c/recursive-callables.c",
@@ -26150,7 +26150,7 @@
         },
         {
           "path": "tests/ruby-recursive-callable-contract.test.mjs",
-          "sha256": "3506255c67d5b90aba1cc9212a6a017fd7fd853c0647a08449fdea5f059866ba"
+          "sha256": "e52cb11ab82d0b6905d788b2fa77a8ea940e908d90885fc56e56d914cdb400ef"
         },
         {
           "path": "tests/ruby-recursive-callable-evidence.test.mjs",
@@ -26174,7 +26174,7 @@
         },
         {
           "path": "tests/rust-recursive-callable-contract.test.mjs",
-          "sha256": "b7499acbc780c34590e08bd65a95233abec66b5de87e49fdb2cdb628b6863a1f"
+          "sha256": "4937e27bdb35d7f460b1aca767919be3f441f849cba3ea24d70ee914c31a9162"
         },
         {
           "path": "tests/rust-recursive-callable-evidence.test.mjs",
@@ -26182,11 +26182,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -26213,27 +26213,27 @@
       "files": [
         {
           "path": ".github/workflows/consumer-matrix.yml",
-          "sha256": "e9a2cec95aa154246071dc53de7c2f5064c5ff7f849377e3959811bcc3260f23"
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
         },
         {
           "path": ".github/workflows/perl-consumer.yml",
-          "sha256": "be1b94c9b9098339120a30b3db00f29ed33f7ca1d7915f86f6c9df4d34967eab"
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
         },
         {
           "path": "config/checked-javascript.json",
-          "sha256": "930e3f57c8392b18ff03ce07886d6d558d88d63810b135a8134fb974cd6d385d"
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
         },
         {
           "path": "config/cli-package.v1.json",
-          "sha256": "56008d4f315c8adf8aed32840c2bb10d01938432e62edd5d92934b712fd74ecb"
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
         },
         {
           "path": "docs/architecture/cross-language-authoring.md",
-          "sha256": "fe176440715a0233712827c683f55afead127601dc9f86b4cc0e949069f68d3b"
+          "sha256": "95f24e1c80d6b2027a2d9a9e43454be140add2aafbd2a5a47a2b990b4606bbbe"
         },
         {
           "path": "docs/contributing/testing.md",
-          "sha256": "fe0cdb838be263bd76d8ef743e6d7d56db822c61698c4e28e9161331d92fec6d"
+          "sha256": "b404370eec32e92e664c9aa32c70793fc29cc2b62dac9b3fc93807809cc3c9f9"
         },
         {
           "path": "docs/evidence/native-recursive-callable-codegen-20260925.json",
@@ -26285,11 +26285,11 @@
         },
         {
           "path": "docs/lean/existing-package.md",
-          "sha256": "b8a2e6f4127394ea43a873a6497be3fd529b8b5207e7ae1c26fe17eff35e90d6"
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
         },
         {
           "path": "docs/lean/export-decisions.md",
-          "sha256": "1b01b77fa3c427ab46746c5e35b654d7e4f71d60ce0bbaf9fcf0196d35e68b16"
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
         },
         {
           "path": "docs/publish/c.md",
@@ -26305,15 +26305,15 @@
         },
         {
           "path": "nix/perl-engine-source-boundary.json",
-          "sha256": "335ce0817346bad50d44db0e565b2941925734e678629bd6d13c3a1cde289459"
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
         },
         {
           "path": "package.json",
-          "sha256": "ea395913f38d0ea1c3a0ab01c6a81bf07b951d531ca8c08d9fc51d8d7fe9428c"
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
         },
         {
           "path": "scripts/generate-type-docs.mjs",
-          "sha256": "e13039ee55dae575613c48a83365b12eab097a05fe2a3345e5d6862932087c60"
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
         },
         {
           "path": "src/abi/component-recursive-abi.mjs",
@@ -26325,7 +26325,7 @@
         },
         {
           "path": "src/adoption/test-profiles.mjs",
-          "sha256": "48b6c9461c100d28090f511051010f923beb0f05fe5b28d8fb1dc1a54bda16ad"
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
         },
         {
           "path": "src/analyze/NativeExports.lean",
@@ -26621,7 +26621,7 @@
         },
         {
           "path": "src/build/native-graph-projection.mjs",
-          "sha256": "497589d3116dc207205dd39eac1a0bc14bd32b0748640eb66aae43f719e0b75b"
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
         },
         {
           "path": "src/build/native-graph-sources.mjs",
@@ -26709,7 +26709,7 @@
         },
         {
           "path": "tests/documentation.test.mjs",
-          "sha256": "2facdfeb5a627288e20f4602b730ed968296683d2895ee9c80496227b3a61e5b"
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
         },
         {
           "path": "tests/fixtures/callable-consumers/perl.pl",
@@ -26917,7 +26917,7 @@
         },
         {
           "path": "tests/helpers/perl-recursive-callable-evidence.mjs",
-          "sha256": "e6f529fcc53f0616994bdc184e1e771970c4a4d399f16d276673a72106c213bf"
+          "sha256": "d83d645af3031c041c8aad4ed518dc46a1a340cd8acf5a44a300f38e2b8eb905"
         },
         {
           "path": "tests/helpers/perl-recursive-callable-faults.mjs",
@@ -26933,7 +26933,7 @@
         },
         {
           "path": "tests/helpers/perl-recursive-callable-source-history.mjs",
-          "sha256": "e54e65269784f2b58013546f39cc0c369a22e651ae7954f7f67b993e1ad78cc4"
+          "sha256": "f64d67bf7681ed591019b50e2184d73891bdf457d28d6fa4e9a8695ec895f53c"
         },
         {
           "path": "tests/helpers/perl-structured-callable-acceptance.mjs",
@@ -27037,11 +27037,11 @@
         },
         {
           "path": "tests/perl-recursive-callable-contract.test.mjs",
-          "sha256": "00804086004e8cbe2990b4e0737869cf6783926fa8779d63cc1832735e90767c"
+          "sha256": "7b106c2ddcd3eaf0b73a71d6ee2c550487576df74b4daa1a9af2db4085cb6e3b"
         },
         {
           "path": "tests/perl-recursive-callable-evidence.test.mjs",
-          "sha256": "1da952b87cc109be1a7b8ec8081dcc5545284e890429e43d8932c91a8186c46d"
+          "sha256": "51ad384759ec00a57d2e1c55d1c42a0a55b096684b09252a38cb1b1587c8b1b8"
         },
         {
           "path": "tests/perl-recursive-callables.test.mjs",
@@ -27069,7 +27069,7 @@
         },
         {
           "path": "tests/ruby-recursive-callable-contract.test.mjs",
-          "sha256": "3506255c67d5b90aba1cc9212a6a017fd7fd853c0647a08449fdea5f059866ba"
+          "sha256": "e52cb11ab82d0b6905d788b2fa77a8ea940e908d90885fc56e56d914cdb400ef"
         },
         {
           "path": "tests/ruby-recursive-callable-evidence.test.mjs",
@@ -27081,11 +27081,11 @@
         },
         {
           "path": "tests/type-surface-docs.test.mjs",
-          "sha256": "4d2dd3d2cc7045e4fd50400288b3cb644077a36604e54ce8d1eaf7e4a04b5dcc"
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
         },
         {
           "path": "tests/type-surface.test.mjs",
-          "sha256": "a39e4126a4cf2891c5fcfbf65db79c13f6bd690fa359f3bb864a839584958f37"
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
         },
         {
           "path": "tests/wit-structured-callable-evidence.test.mjs",
@@ -27108,6 +27108,589 @@
         {
           "path": "perl/reviewed-ir/archives/LeanBridge-Runtime-0.0021077105972069317209149720310456379222307736612943794450800215956035193341312891.tar.gz",
           "sha256": "3bd658273dae8b782f9ff211a6e1c3af2e7b904a335c7ccca0352cd00abd801d"
+        }
+      ]
+    },
+    {
+      "id": "dotnet-recursive-callables-installed",
+      "kind": "installed",
+      "revision": "a8a255329c102155add79169d71a05246190b8fd",
+      "command": "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 node --test tests/dotnet-recursive-callables.test.mjs",
+      "scope": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged.",
+      "files": [
+        {
+          "path": ".github/workflows/consumer-matrix.yml",
+          "sha256": "54a4b373aa8a7f6af277fa7f6e294f71fec8d02358d31bf19c7ba5bd4cd71568"
+        },
+        {
+          "path": ".github/workflows/perl-consumer.yml",
+          "sha256": "7e6960c78008f7439bb3707d2e4bd03adba66a8ec60fc72f38641224ff8d15f8"
+        },
+        {
+          "path": "config/checked-javascript.json",
+          "sha256": "13b681f67495109a45802b07eb2e9526bc960f9b5d2690f38a37304feb55558a"
+        },
+        {
+          "path": "config/cli-package.v1.json",
+          "sha256": "afa2c3af6994acbe49f3f1660feda3ce4ee9fc5159611f9e00c9ba6040506915"
+        },
+        {
+          "path": "docs/architecture/cross-language-authoring.md",
+          "sha256": "95f24e1c80d6b2027a2d9a9e43454be140add2aafbd2a5a47a2b990b4606bbbe"
+        },
+        {
+          "path": "docs/consume/java.md",
+          "sha256": "675573712990f0ab220ca7f750a0c5cd0a25aa9fd3ea156da8e69d595f352fb3"
+        },
+        {
+          "path": "docs/consume/kotlin.md",
+          "sha256": "fcefbe7172f814192c8ff2664b636cfc24ebdc9812f015742bde74788df09584"
+        },
+        {
+          "path": "docs/contributing/testing.md",
+          "sha256": "b404370eec32e92e664c9aa32c70793fc29cc2b62dac9b3fc93807809cc3c9f9"
+        },
+        {
+          "path": "docs/evidence/dotnet-current-graph-packages-20260924.json",
+          "sha256": "fbcc5a3eb0132ecd4174dd962277b7abafe52cc4598a88d46b56999b8a05b8a0"
+        },
+        {
+          "path": "docs/evidence/dotnet-recursive-callables-20260926.json",
+          "sha256": "ca2f981d45d0d68f01bcc814f07cd0bc6421d98e611a29cbb161e2c6d72682cc"
+        },
+        {
+          "path": "docs/evidence/dotnet-recursive-callables-20260926.md",
+          "sha256": "0dda65e21b63cbebec5c289245746215f2b45f7e3013b294588e4dc62c3e873d"
+        },
+        {
+          "path": "docs/evidence/dotnet-structured-callables-20260924.json",
+          "sha256": "317b7afb10403a34e4c59513b8e4230a234af657ca843281504c6c3017a0fef3"
+        },
+        {
+          "path": "docs/evidence/dotnet-structured-callables-20260924.md",
+          "sha256": "5cbfd51c7bf5d10fd97eef777005e5113acc545f402b30cda2dd7f1b7339d274"
+        },
+        {
+          "path": "docs/evidence/dotnet-structured-codegen-regression-20260924.json",
+          "sha256": "e41e761916db4a71a019b0d35767953ddab6a9b8fb38ff2f58b6abffd59d76db"
+        },
+        {
+          "path": "docs/evidence/jvm-recursive-packages-20260923.json",
+          "sha256": "21e1d56463a6464d634a4835ff85a3cdb03699a23d17257e4844215dff20745a"
+        },
+        {
+          "path": "docs/evidence/native-recursive-callable-codegen-20260925.json",
+          "sha256": "3f28c7d5126fdf21bb9f51ab343821729c31e145ecc599c24d263c5b2b999084"
+        },
+        {
+          "path": "docs/evidence/native-recursive-callables-20260925.json",
+          "sha256": "b1e45f7ee2227ffb5085a67f1ec5bfda91e07d718c4a2f2536b35e80a5284360"
+        },
+        {
+          "path": "docs/evidence/native-recursive-callables-20260925.md",
+          "sha256": "cb7fba0d2693e23a9a574b071b35229a56910e459fa0f3288e1ff8c2096d95ec"
+        },
+        {
+          "path": "docs/evidence/native-shared-regressions-20260924.json",
+          "sha256": "dea040a6dcc1c4450a4fc743b559741302760618fd8d97db2e5571e0cff85669"
+        },
+        {
+          "path": "docs/evidence/php-current-family-regressions-20260924.json",
+          "sha256": "b1d1d81511582800818f503ce827588d349debd2c019d00a04769f16f9c4d7d4"
+        },
+        {
+          "path": "docs/evidence/php-recursive-packages-20260923.json",
+          "sha256": "d372e0d6516b8353cde14dcee91d7eaf9f6e25309039cbc5a25f0a05041f17b0"
+        },
+        {
+          "path": "docs/evidence/php-wasm-recursive-loading-20260924.json",
+          "sha256": "2fff42ca2ba935e1d3c7e8e0ebb453dcfb304766dae3f1bd80efe10e3e5baeca"
+        },
+        {
+          "path": "docs/evidence/php-wasm-recursive-packages-20260924.json",
+          "sha256": "8b3831e1b79729d1e5c6a6745d99a93014b5b0da2035e7104f72b97fba906f76"
+        },
+        {
+          "path": "docs/evidence/php-wasm-shared-regressions-20260924.json",
+          "sha256": "482d36cb3697ae4661a7ef851270b92fb5f4b510d070e018566d6aebc713ec2f"
+        },
+        {
+          "path": "docs/evidence/recursive-managed-acceptance-20260924.json",
+          "sha256": "dc33953b4bcc74cb854c1055170284253726fdeb64db5fed35c9ca095682ae05"
+        },
+        {
+          "path": "docs/evidence/structured-source-refresh-20260924.json",
+          "sha256": "6946fb2d0fe99093e3f3524c0e0f5ff26739431d2e77000558f4596622bb895e"
+        },
+        {
+          "path": "docs/evidence/wit-recursive-registration-20260924.json",
+          "sha256": "ddec4276d47fdabd85d50200d0008bee35be09bd830f7fe7e7b84352e15291e4"
+        },
+        {
+          "path": "docs/lean/existing-package.md",
+          "sha256": "fd00b07c996c24a625eafb965ea5c91caa5f7b7c706e22fd7684908bcf00ae7c"
+        },
+        {
+          "path": "docs/lean/export-decisions.md",
+          "sha256": "e7da03891c2164bfcc034e57dd8fc5e9001b1b2c195bc8416b0a1e003ca2abd5"
+        },
+        {
+          "path": "docs/php.md",
+          "sha256": "7a15853dba24611feb8171c344d3f0075a3f9b8166877ee0d4cd9d577b35a815"
+        },
+        {
+          "path": "docs/publish/c.md",
+          "sha256": "9214b521b7e047c843e7f0116fbab85db087c515c9d4079633d17d584eb67865"
+        },
+        {
+          "path": "docs/publish/cpp.md",
+          "sha256": "e9dfa309771dc2bfafec6b1390ecdd9e79857b289f9ac6360f0cfbb19f2dd734"
+        },
+        {
+          "path": "docs/publish/nuget.md",
+          "sha256": "3cf75ed0dcfec973127de74bf946b479e0651dd287dfe1b1f3b6926a413dd06a"
+        },
+        {
+          "path": "nix/perl-engine-source-boundary.json",
+          "sha256": "1577cf1266c77b6ac4f78bbd0e1f3b36c9356e7e6b028f695663c9a1820026b9"
+        },
+        {
+          "path": "package.json",
+          "sha256": "368b6ec4e6e60773ed2b54495a04961ec0a4c715bd21d89a86c31553cd375827"
+        },
+        {
+          "path": "scripts/generate-type-docs.mjs",
+          "sha256": "adb2fa6c220126b3ec8fd6098d238618d7aaee12501f71c882f89a98f1195947"
+        },
+        {
+          "path": "src/adoption/test-profiles.mjs",
+          "sha256": "2b3d96f796de1f65a8be78b182cf39bc59ecc373323bb90a8af9d1f74267042a"
+        },
+        {
+          "path": "src/backends/c/callable-graph-model.mjs",
+          "sha256": "98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8"
+        },
+        {
+          "path": "src/backends/c/callable-graph-package.mjs",
+          "sha256": "df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f"
+        },
+        {
+          "path": "src/backends/c/graph-package.mjs",
+          "sha256": "ecc374ad27d7ca70a2286a7abf7350b630eff4797afd9b9674c85035d5f21bb9"
+        },
+        {
+          "path": "src/backends/c/native-callable-graph-borrows.mjs",
+          "sha256": "f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7"
+        },
+        {
+          "path": "src/backends/c/native-callable-graph-calls.mjs",
+          "sha256": "5a8b8273048c1c3ec52f85c02ca327bb1e1277b3cdc573182d5efa2c21817786"
+        },
+        {
+          "path": "src/backends/c/native-callable-graph-payloads.mjs",
+          "sha256": "6d74a564de2323b9b32cbad70799fd1c7e8cab966de17668e2f351fcd96748e9"
+        },
+        {
+          "path": "src/backends/c/native-graph-adapters.mjs",
+          "sha256": "827bb1e9c17b0d6b4c695274db0747de9f9059a50d36439504054e6d7bd82034"
+        },
+        {
+          "path": "src/backends/cpp/callable-graph-package.mjs",
+          "sha256": "63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801"
+        },
+        {
+          "path": "src/backends/dotnet/callable-graph-calls.mjs",
+          "sha256": "fd7788b9e24a1b200b7ed29a4528cad26c76319580ce356fb0d8161926d33bb0"
+        },
+        {
+          "path": "src/backends/dotnet/callable-graph-model.mjs",
+          "sha256": "ca1bcee4e4dc10b01cfdb27a1c97a7ed886b912d947ffa7cb77f56fd2b54ae09"
+        },
+        {
+          "path": "src/backends/dotnet/callable-graph-package.mjs",
+          "sha256": "f9d3ba3195cc59a0c1dca0d9046d41996a5a1ad3cf41db5d6842c0bf5be7c921"
+        },
+        {
+          "path": "src/backends/dotnet/callable-graph-runtime.mjs",
+          "sha256": "18b6a6601e177bcd1d30ce3f3820b3f4017ea019b2080ee564015f846c00236c"
+        },
+        {
+          "path": "src/backends/dotnet/copied-graph-assets.mjs",
+          "sha256": "7bb005094319594e259e382488f6ca1ce1ffa7406759dbce7438d28c85800e3a"
+        },
+        {
+          "path": "src/backends/dotnet/copied-model.mjs",
+          "sha256": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b"
+        },
+        {
+          "path": "src/backends/dotnet/copied-values.mjs",
+          "sha256": "b096d55b3e71c125cbb63a26d6d1a960be0fa8e6975205f09e288f275e1986f3"
+        },
+        {
+          "path": "src/backends/managed/package-audit.mjs",
+          "sha256": "6f2321bb527a11969244a2bfffa3c2bd4f80c3a03d5eddd40e9f4bdcf97ccf9c"
+        },
+        {
+          "path": "src/build/native-c-projection.mjs",
+          "sha256": "6bf7d2eafd8dd9e17297f49a0e8e1683e2692d3183fe40cbfa1f8ec9bdc1750e"
+        },
+        {
+          "path": "src/build/native-callable-graph.mjs",
+          "sha256": "579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8"
+        },
+        {
+          "path": "src/build/native-component.mjs",
+          "sha256": "6fed4ad6f27289c3d5263c740848c13d62d03c0e17359e093b0e623d44b8314a"
+        },
+        {
+          "path": "src/build/native-dotnet-artifacts.mjs",
+          "sha256": "84823a0cec2e37e6ca0704bf4e1ffc320c7fbcd797b37fae72cea78a8eca631c"
+        },
+        {
+          "path": "src/build/native-dotnet-projection.mjs",
+          "sha256": "b193f3b7fa86bcf8c7ad976922fcdac84528b30872a8c0ba827d1c60d88f1597"
+        },
+        {
+          "path": "src/build/native-graph-model.mjs",
+          "sha256": "7df39660169d14436709af0cd46ee0363c9527b778df77c9e49d38022fa8b538"
+        },
+        {
+          "path": "src/build/native-graph-projection.mjs",
+          "sha256": "599857dbf60ebf16e692ec5a0c3d9844551c75b0152e3b23b0770375d1a97f9f"
+        },
+        {
+          "path": "src/build/native-graph-sources.mjs",
+          "sha256": "958c9e237e362243936c030bdb3fda500ad6e85428ef14f022d697f81e75d5da"
+        },
+        {
+          "path": "src/build/native-project.mjs",
+          "sha256": "153231e966e5afb54229eb64e54a570217e6ecb20de5c062c381a3eee787b2b2"
+        },
+        {
+          "path": "src/release/native-c-family.mjs",
+          "sha256": "bbec82759d42b40682878dd97df2e1c0f6897bc2ebc2c17fb216c3e1da172ffa"
+        },
+        {
+          "path": "src/release/native-nuget.mjs",
+          "sha256": "da154e0b96bcbff3d813a58b722c1f92019082a224ff8ba96a1ddd5fdd5fd861"
+        },
+        {
+          "path": "tests/c-family-recursive-documentation.test.mjs",
+          "sha256": "c0305eeab48b1e1af759fc9bd4fd13073131c6d9ab53afd5d22f017a258d85d4"
+        },
+        {
+          "path": "tests/c-recursive-callable-package.test.mjs",
+          "sha256": "77e1a13ef265df7db606d9126ce261f0450f4b0f4961087ce6921be793c45c22"
+        },
+        {
+          "path": "tests/callable-graph-names.test.mjs",
+          "sha256": "11c2f2295e0067bb5b1420f1d9e7c62b004a44d254bd4f2b3dfb685a20e8d858"
+        },
+        {
+          "path": "tests/cpp-recursive-callable-package.test.mjs",
+          "sha256": "27db03b07fc11fae5a1b5869b6612ddafcfd30c599261d76f2adf7e48d1fa6a5"
+        },
+        {
+          "path": "tests/current-source-evidence.test.mjs",
+          "sha256": "58c91c23a9fe56ddea454d8e0134ebe8f300312aca9671aaea6a57d1b20386d6"
+        },
+        {
+          "path": "tests/documentation.test.mjs",
+          "sha256": "cc1f6e98ae0ff4a718006b13b5a0f4a33ab4d660c18f240577778caccb9783e2"
+        },
+        {
+          "path": "tests/dotnet-callable-contract.test.mjs",
+          "sha256": "ab680178e5f8aa20c2ae734d7abaf2a647e0ea1e43024397f2062916e870c230"
+        },
+        {
+          "path": "tests/dotnet-collection-evidence.test.mjs",
+          "sha256": "2743ac78612e6c58063e2d80c0e6b191870a647ae952477c068f137124a10c40"
+        },
+        {
+          "path": "tests/dotnet-compound-contract.test.mjs",
+          "sha256": "8725aab2a559a194adc0004c50b97a614418100416403ed5651a222817ddc299"
+        },
+        {
+          "path": "tests/dotnet-list-contract.test.mjs",
+          "sha256": "b541b6babab2bb8424c8f208bd20444b3499e188665048194cb9f28a75fd47ab"
+        },
+        {
+          "path": "tests/dotnet-recursive-callable-contract.test.mjs",
+          "sha256": "22a605900257bc438534f5d0bda2a0edb0492bd5b97c72e94d00ae6c5b07e3fa"
+        },
+        {
+          "path": "tests/dotnet-recursive-callable-evidence.test.mjs",
+          "sha256": "0b5d693669b416a2e542e48cdbc25dfafc1419704fd3f2b126ea2e34491ab5c4"
+        },
+        {
+          "path": "tests/dotnet-recursive-callables.test.mjs",
+          "sha256": "64429516ae5a401be584984b89bd786502b07c499030b25ab69814177972fc31"
+        },
+        {
+          "path": "tests/dotnet-structured-callable-contract.test.mjs",
+          "sha256": "c120ef91cd31c5bf8a3ff8ac3c9066dcdc1546f51ca9b30cdc1939a14bb12e1e"
+        },
+        {
+          "path": "tests/dotnet-structured-callable-evidence.test.mjs",
+          "sha256": "8490f69cc0c0a4fd581edd0f902d9cf064b5c95074f57aee078944d652522474"
+        },
+        {
+          "path": "tests/dotnet-structured-callables.test.mjs",
+          "sha256": "9524d8276516226dfed58a4b908176f06046ec502a2f9e2fa083cd4e0a96ccf8"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/c/recursive-callables.c",
+          "sha256": "0579ef959cf9b91eb918b93cd5a93df308a05de61d1a632024b4932225056d10"
+        },
+        {
+          "path": "tests/fixtures/documentation/consumers/cpp/recursive-callables.cpp",
+          "sha256": "245b6b700859b5afd603c93c2ea6389dc76e732a17eb55d2b25cdaff5fa345df"
+        },
+        {
+          "path": "tests/fixtures/structured-callable-consumers/dotnet-faults.cs",
+          "sha256": "052ff8782938713119886ba9d7c24aaff81922bf9af91d33191f6a5ea20c5700"
+        },
+        {
+          "path": "tests/fixtures/structured-callable-consumers/dotnet-invalid.json",
+          "sha256": "aebf29eb601fc616814a525d90030f416100b9a7c6bc7d3eb4a2b81b113e2acd"
+        },
+        {
+          "path": "tests/fixtures/structured-callable-consumers/dotnet-recursive-faults.cs",
+          "sha256": "88eeae3906d8103f23585634dc9f84120e7b11107c4ec3d96fa330036294868f"
+        },
+        {
+          "path": "tests/fixtures/structured-callable-consumers/dotnet-recursive-installed.cs",
+          "sha256": "9833a15a63a2a5e07affbf6df6df4b32d5dc4247237384e1084864725139aec9"
+        },
+        {
+          "path": "tests/fixtures/structured-callable-consumers/dotnet-recursive.cs",
+          "sha256": "b4218b1ab179b4dbd084a45ccb8ab71a1ae269dca7b6af3604787890abc45f75"
+        },
+        {
+          "path": "tests/fixtures/structured-callable-consumers/dotnet-values.cs",
+          "sha256": "e7a5a08e0bc40f44216d2e3b09d85eb7cf252253f65d476dafd3dd68f9b46095"
+        },
+        {
+          "path": "tests/fixtures/structured-callable-consumers/dotnet.cs",
+          "sha256": "bb192591e04adf62bb81deeffb969e44ebff534c7874ddb167e5557263afc8af"
+        },
+        {
+          "path": "tests/helpers/c-family-recursive-callable-install.mjs",
+          "sha256": "9918876fcc4b8e4a796bc05021225b867d8abf54343eae65dfe57ad6eb757582"
+        },
+        {
+          "path": "tests/helpers/c-recursive-callable-edges.mjs",
+          "sha256": "6512e3b9c71ad0820cad836c1c3bd50fb18f92513d27cf4f07957c972eaab698"
+        },
+        {
+          "path": "tests/helpers/c-recursive-callable-faults.mjs",
+          "sha256": "c6571759e2058fb6401286e3e532573cdf9c34867ae5d5d9c8b9924a84f033fc"
+        },
+        {
+          "path": "tests/helpers/c-recursive-callable-fixture.mjs",
+          "sha256": "29cc5b68428e54872921c776620690b62a71656866443641aeea5a9a6a74d6a3"
+        },
+        {
+          "path": "tests/helpers/cpp-recursive-callable-fixture.mjs",
+          "sha256": "e73a261ce7bf851ab798a449d572b5d2b1b9783f9ce013c5ad1e280c9460cded"
+        },
+        {
+          "path": "tests/helpers/cpp-structured-callable-install.mjs",
+          "sha256": "416b2b11c7eeab1b349ec43d1070dcf6d98268144a0cb98db0f5dd5dc826a5f0"
+        },
+        {
+          "path": "tests/helpers/dotnet-current-graph-evidence.mjs",
+          "sha256": "f5d9a0b4df7b35cf872730d99784b858463b6d84096ffba2d37e1c42d02ac27a"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-acceptance.mjs",
+          "sha256": "ac2a4da7a1c4d97b957b257b02f2d45653191b1641c829e34ab17d39f8468797"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-consumer.mjs",
+          "sha256": "1ae9cc0376682aceae87584f939e9cec08e826a1c8e64630631938e37e372d25"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-docs.mjs",
+          "sha256": "d1d69fd35861e457033932bd9088c77361ba28abaac3c75afe540e10c2dcb3a0"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-evidence.mjs",
+          "sha256": "d3b2237ddce1ec783bedd2ebaea9f9699bffef98ddd81b3038e37a458c925a0f"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-faults.mjs",
+          "sha256": "c52faf15aaeff75e8607920a603374cd62ad3211e54c65f6da4d1b08b926690d"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-mixed.mjs",
+          "sha256": "84535895ef4da8b2b3d42752eff8f5371d70bf085867c9c5d8d44011d9dcab10"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-ownership.mjs",
+          "sha256": "43ec99c8ae1036da7ee79ade4e15204b1ab0ba533f344e537e2058767259d323"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-probes.mjs",
+          "sha256": "c57c01260bb5b886ae88558e45d128971121d26dfbbcc16e56aea8fa38af7fcb"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-source-history.mjs",
+          "sha256": "7c0824827660507d6333a164296a6fef177370774044ff5aa5bf748f239956ee"
+        },
+        {
+          "path": "tests/helpers/dotnet-recursive-callable-types.mjs",
+          "sha256": "9eb95fc4dda35cd7e7c0240059cdbb3a26ece17f447a815b4c16d28198adc781"
+        },
+        {
+          "path": "tests/helpers/dotnet-structured-callable-evidence.mjs",
+          "sha256": "31c3efb26827d00b795028226aeade063d9e15268cb007c65a0486a22ceeadfc"
+        },
+        {
+          "path": "tests/helpers/dotnet-structured-callable-faults.mjs",
+          "sha256": "21b74d1a91dcecab9f5cdef91524e0c664c926f9258470e9b267fe7aa1945329"
+        },
+        {
+          "path": "tests/helpers/dotnet-structured-callable-install.mjs",
+          "sha256": "3c20be908c1d1ccb56478d4acbd09f6262a8d68d14c759c2c1e97da092cd7dae"
+        },
+        {
+          "path": "tests/helpers/dotnet-structured-callable-regression.mjs",
+          "sha256": "82677515efd3d2885dcf253577adbecb198503fd0d74968e95dcd6d5c3cfff98"
+        },
+        {
+          "path": "tests/helpers/dotnet-structured-callable-source-history.mjs",
+          "sha256": "1d86e33b20974b60b05f8e3389dee1045e55877e97514e8e55bec8960bf5b735"
+        },
+        {
+          "path": "tests/helpers/dotnet-structured-callable-types.mjs",
+          "sha256": "a7f85046c5f788958062b9eca6a9a812593f3d511a0003e85e0a8400f9899cf4"
+        },
+        {
+          "path": "tests/helpers/native-recursive-callable-calls-probe.mjs",
+          "sha256": "db3593ddaa8bb1061394546229e4833039f7d1fd3437ded1b6a480dd883ff80d"
+        },
+        {
+          "path": "tests/helpers/native-recursive-callable-evidence.mjs",
+          "sha256": "a336e9f14a6361403c5ffb8cca486f12c34f229b12d49e4be0c97cb0e451a4a7"
+        },
+        {
+          "path": "tests/helpers/native-recursive-callable-fixture.mjs",
+          "sha256": "2250cd0ea57b4a1263e024eefc97aa2bf1cc09c017247f7124b5a498923b4948"
+        },
+        {
+          "path": "tests/helpers/native-recursive-callable-regression.mjs",
+          "sha256": "cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27"
+        },
+        {
+          "path": "tests/helpers/native-recursive-callable-source-history.mjs",
+          "sha256": "9a9a0d47e48a843f16a86fab142e721d2fa5cef1143b22a00698b5130bb192c6"
+        },
+        {
+          "path": "tests/helpers/perl-recursive-callable-evidence.mjs",
+          "sha256": "d83d645af3031c041c8aad4ed518dc46a1a340cd8acf5a44a300f38e2b8eb905"
+        },
+        {
+          "path": "tests/helpers/perl-recursive-callable-source-history.mjs",
+          "sha256": "f64d67bf7681ed591019b50e2184d73891bdf457d28d6fa4e9a8695ec895f53c"
+        },
+        {
+          "path": "tests/helpers/recursive-acceptance-updates.mjs",
+          "sha256": "8c56523b7c82a81b5b3bd330d9ae541443157b2587ccbf92568b2440994a8c2e"
+        },
+        {
+          "path": "tests/helpers/recursive-documentation-history.mjs",
+          "sha256": "1d2ad5718dedf56f9786ed2171085ca56b8514fb859a189f4fa2e9121602f977"
+        },
+        {
+          "path": "tests/helpers/recursive-managed-acceptance.mjs",
+          "sha256": "82ab7e809daf424467261e0becbecb8cf67a093e8a36b2f93eb7919c2e82cd53"
+        },
+        {
+          "path": "tests/helpers/ruby-structured-callable-evidence.mjs",
+          "sha256": "22fb677664d065949eb6bbb612fee2e66e25ad836f6d4418081dc2af41083640"
+        },
+        {
+          "path": "tests/helpers/ruby-structured-callable-source-history.mjs",
+          "sha256": "c4563d923412070bbde244516c3ad7700b348033c67289f668e3aaf6a5aa93f6"
+        },
+        {
+          "path": "tests/helpers/wit-graph-source-lineage.mjs",
+          "sha256": "62e70d87652b3250544daa028d787c16daef62448a5a6cc7a3a1874b2ca4423e"
+        },
+        {
+          "path": "tests/helpers/wit-structured-callable-evidence.mjs",
+          "sha256": "de54a32cb804b28b2205c5001cc9554e4688d1af7c4a4c1b62f0d91f789d7fe7"
+        },
+        {
+          "path": "tests/helpers/wit-structured-callable-source-history.mjs",
+          "sha256": "6c77e66d40c357bf092b52707f45523fc6d7ce0f3c6f5cbbfbae5c7e776bf685"
+        },
+        {
+          "path": "tests/native-graph-package.test.mjs",
+          "sha256": "ecd61d6644979ef58aaddc372bbcc193ccd47b1e10e70fa00c535ecfe095fcec"
+        },
+        {
+          "path": "tests/native-recursive-callable-compile.test.mjs",
+          "sha256": "aa40bd14c43f5718d969e2be408a2c02b0c880781c5d83a279acb2fbf2ccddc6"
+        },
+        {
+          "path": "tests/native-recursive-callable-evidence.test.mjs",
+          "sha256": "a7020cb4a39232ddac5490ccc2ced49c71417c51dc5f24082946830934847aa7"
+        },
+        {
+          "path": "tests/native-recursive-callable-model.test.mjs",
+          "sha256": "cfb695261485093944ca2be651557fcc78caaa9f3db7d11020547a2f43491562"
+        },
+        {
+          "path": "tests/native-shared-admission.test.mjs",
+          "sha256": "d37b4382f217c44929ab051ec47179722f81f6f0d72af441128894a56a83598d"
+        },
+        {
+          "path": "tests/perl-recursive-callable-contract.test.mjs",
+          "sha256": "7b106c2ddcd3eaf0b73a71d6ee2c550487576df74b4daa1a9af2db4085cb6e3b"
+        },
+        {
+          "path": "tests/perl-recursive-callable-evidence.test.mjs",
+          "sha256": "51ad384759ec00a57d2e1c55d1c42a0a55b096684b09252a38cb1b1587c8b1b8"
+        },
+        {
+          "path": "tests/ruby-recursive-callable-contract.test.mjs",
+          "sha256": "e52cb11ab82d0b6905d788b2fa77a8ea940e908d90885fc56e56d914cdb400ef"
+        },
+        {
+          "path": "tests/ruby-structured-callable-evidence.test.mjs",
+          "sha256": "47b94cee79cb38217f583932f406bb1ad22e7b0782122eb5127a77783f374897"
+        },
+        {
+          "path": "tests/rust-recursive-callable-contract.test.mjs",
+          "sha256": "4937e27bdb35d7f460b1aca767919be3f441f849cba3ea24d70ee914c31a9162"
+        },
+        {
+          "path": "tests/type-surface-docs.test.mjs",
+          "sha256": "b9411de17d96c207052d0a84ff2c3bc4fa0e1a7d33f01ad34e52beed2dc7eee9"
+        },
+        {
+          "path": "tests/type-surface.test.mjs",
+          "sha256": "593075b3831cb3507bf8b3b44b4b6fb0456d82cddc781e68d6d3501b05cdfc7c"
+        },
+        {
+          "path": "tests/wit-copied-graph-model.test.mjs",
+          "sha256": "4df3d15dbcf8a90bcf1f30b0ccc55a4dfc711a53da7167fee1c99c973a082de0"
+        },
+        {
+          "path": "tests/wit-structured-callable-evidence.test.mjs",
+          "sha256": "de01bf98b10acd4f4fbeefc99e7bf66746d97303881e3ed791de6b7a88bd6820"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "dotnet/ordinary-source/archives/Lean.Structured.1.0.0.nupkg",
+          "sha256": "a635bad586535c7e6dafc31eafd19b0a8a8fd7736692b4aaec022b15ce214536"
+        },
+        {
+          "path": "dotnet/reviewed-ir/archives/Lean.Structured.1.0.0.nupkg",
+          "sha256": "841c9c4d18b01856069e992209e0005cfcf1497e28362ce3df17c8688349dd15"
         }
       ]
     }
@@ -60286,6 +60869,136 @@
       ],
       "conversionNotes": {
         "recursive": "Recursive records, variants and aliases retain their public representations and independent copied storage. Callback frames retain reply buffers until native copying finishes; callback exceptions propagate after cleanup without losing their identity. Malformed native output retires the runtime. Private closure leases release on close or finalization, with deferred release during active invocation."
+      }
+    },
+    {
+      "id": "dotnet-recursive-callables-ordinary-source",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged.",
+      "hostTypes": {
+        "recursive": {
+          "callback-parameter": "Named sealed C# records and constructors, typed arrays, synchronous Func/Action delegates and owned LeanClosure values",
+          "callback-result": "Named sealed C# records and constructors, typed arrays, synchronous Func/Action delegates and owned LeanClosure values"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        }
+      },
+      "limitations": [
+        ".NET 8 on little-endian Linux x86-64. Finite copied values only: 128 conversion levels, 262144 visited nodes, 16 MiB native and separate accounted host-storage budgets. These bounds do not cover Lean working memory or every CLR allocation. Native reentry is bounded at 64 active calls; owned closures share 4096 identity slots.",
+        "Callbacks are synchronous call-scoped borrows. Returned closures invoke only in their creating thread and process and use explicit Dispose or fallback finalization. Resource-containing aggregates, nested callable identities, retained host callbacks, asynchronous delivery and post-fork calls are unsupported."
+      ],
+      "conversionNotes": {
+        "recursive": "Recursive records, variants and aliases retain typed C# representations and independent copied storage. Callback scopes retain reply buffers until native copying finishes. Exceptions retain their identity after cleanup. Malformed native output retires the runtime. Owned closures defer disposal during active calls, and finalizers release abandoned identities."
+      }
+    },
+    {
+      "id": "dotnet-recursive-callables-reviewed-ir",
+      "profiles": [
+        "dotnet"
+      ],
+      "shapes": [
+        "recursive"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged.",
+      "hostTypes": {
+        "recursive": {
+          "callback-parameter": "Named sealed C# records and constructors, typed arrays, synchronous Func/Action delegates and owned LeanClosure values",
+          "callback-result": "Named sealed C# records and constructors, typed arrays, synchronous Func/Action delegates and owned LeanClosure values"
+        }
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "dotnet-recursive-callables-installed"
+          ],
+          "note": "Original NuGet packages preserve recursive callbacks and owned closures on ordinary-source and reviewed-IR paths. Producers are removed before offline installation into empty caches, and relocated consumers run without compiler tools or the .NET SDK. Each path passes 8808 recursive checks, 19 lifetime checks, 274237 acyclic checks, 23663 injected failures and nine reply-owner checks. Malformed native results clear once and retire the runtime. Removing ownership or retirement protection produces the expected managed failure. Public consumers and exact documentation examples use the unchanged installed assembly. Mixed packages pass 128266 primitive and sixteen-argument delegate checks. All original installed files remain unchanged."
+        }
+      },
+      "limitations": [
+        ".NET 8 on little-endian Linux x86-64. Finite copied values only: 128 conversion levels, 262144 visited nodes, 16 MiB native and separate accounted host-storage budgets. These bounds do not cover Lean working memory or every CLR allocation. Native reentry is bounded at 64 active calls; owned closures share 4096 identity slots.",
+        "Callbacks are synchronous call-scoped borrows. Returned closures invoke only in their creating thread and process and use explicit Dispose or fallback finalization. Resource-containing aggregates, nested callable identities, retained host callbacks, asynchronous delivery and post-fork calls are unsupported."
+      ],
+      "conversionNotes": {
+        "recursive": "Recursive records, variants and aliases retain typed C# representations and independent copied storage. Callback scopes retain reply buffers until native copying finishes. Exceptions retain their identity after cleanup. Malformed native output retires the runtime. Owned closures defer disposal during active calls, and finalizers release abandoned identities."
       }
     }
   ]

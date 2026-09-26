@@ -12,10 +12,12 @@ import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-value
 import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { assertDotnetStructuredCodegenRegression } from "./helpers/dotnet-structured-callable-regression.mjs";
 import { assertDotnetStructuredFaults, instrumentDotnetStructuredCallables } from "./helpers/dotnet-structured-callable-faults.mjs";
+import { beforeDotnetRecursiveCallables } from "./helpers/dotnet-recursive-callable-source-history.mjs";
 
 test("C# structured callbacks preserve all earlier generated packages byte for byte", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/dotnet-structured-codegen-regression-20260924.json"));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(beforeDotnetRecursiveCallables(path, await readFile(path, "utf8"), hash)), hash, path);
 	assertDotnetStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);

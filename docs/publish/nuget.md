@@ -1,6 +1,6 @@
 # Build and publish C# / .NET packages
 
-Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays and Lists, acyclic copied records, tagged variants, options, results, binary products, and synchronous primitive and acyclic structured callbacks and closures. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
+Build an ordinary Lean project into an installable NuGet package with `--target nuget`. Its generated C# API supports all 19 primitive types, nested arrays and Lists, copied records, tagged variants, options, results, binary products, and finite recursive values, including synchronous callback and closure payloads. Lean `Char` maps to `System.Text.Rune`. Consumers install the prepared archive without compiling Lean or writing marshalling code.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/aurora --target nuget \
 
 The result includes `archives/Acme.Aurora.2.0.0-rc.1.nupkg` and `native-release.json`, which records the exact archive digest. The archive contains the compiled .NET 8 assembly, native adapter, Lean component, shared runtime, generated sources, compiler evidence and dependency license notices. Its README identifies the generated namespace and API. A different NuGet package ID does not rename the Lean-derived C# namespace.
 
-The native profile accepts concrete functions with copied values and synchronous primitive or acyclic structured callbacks and returned closures. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. [Recursive copied values](../consume/dotnet.md#recursive-values) use separately documented depth and storage limits. Recursive callable payloads, resource-containing aggregates and asynchronous delivery remain separate work.
+The native profile accepts concrete functions with copied values and synchronous callbacks and returned closures, including finite recursive payloads. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Acyclic nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. [Recursive copied values](../consume/dotnet.md#recursive-values) and [recursive callbacks](#export-recursive-callbacks-and-closures) use separately documented depth and storage limits. Resource-containing aggregates and asynchronous delivery remain separate work.
 
 Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
 
@@ -160,11 +160,45 @@ buffers retain callback results until native copying finishes. Exceptions retain
 their original object and stack after cleanup. Closures require creating-thread
 invocation and support deterministic `Dispose` through `using`.
 
-The 32-level acyclic type bound and 16 MiB per-call copy budget apply. Recursive
-callback payloads, copied callback identities, resource-containing aggregates and
-asynchronous delivery remain separate work. See the
+The 32-level acyclic type bound and 16 MiB per-call copy budget apply to this
+projection. [Recursive callback payloads](#export-recursive-callbacks-and-closures)
+use the finite-graph projection below. Copied callback identities,
+resource-containing aggregates and asynchronous delivery remain separate work. See the
 [installed consumer example](../consume/dotnet.md#structured-callback-values)
 and [NuGet acceptance record](../evidence/dotnet-structured-callables-20260924.md).
+
+### Export recursive callbacks and closures
+
+Recursive records and variants keep their C# value types inside synchronous
+callbacks and returned Lean functions. Select NuGet without adding a C target.
+
+```lean
+namespace Structured
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+def makeRecursive (captured : Tree) : Bool → Tree → Tree := fun selected value => if selected then captured else value
+
+end Structured
+```
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": { "nuget": { "name": "Lean.Structured" } }
+}
+```
+
+The exported arity of `makeRecursive` is one: Lean receives the captured tree and
+returns an owned function. Its C# type is `LeanClosure<Func<bool, Tree, Tree>>`.
+No constructor numbers, native pointers or handwritten marshalling appear in the
+consumer API.
 
 ## Build and inspect the package
 

@@ -113,8 +113,9 @@ after Lean returns; temporary buffers and native outputs are released.
 
 Native assets load automatically after input validation. Modified libraries
 fail their hash checks. Malformed native output retires the shared runtime;
-ordinary input and allocation failures remain recoverable. Recursive callbacks
-and resource-containing recursive values are separate work.
+ordinary input and allocation failures remain recoverable. See
+[recursive callback values](#recursive-callback-values) for callbacks and
+returned closures. Resource-containing recursive values remain separate work.
 
 ### Named aliases
 
@@ -323,8 +324,55 @@ target's C# type. Exceptions propagate after scoped buffers and native results
 are released. Use `using` to dispose returned closures.
 
 The 16 MiB per-call copy budget and 32-level acyclic type bound still apply.
-Recursive callback payloads and resource-containing aggregates remain separate
-work. Host callbacks borrow the call and must finish synchronously.
+[Recursive callback payloads](#recursive-callback-values) use the finite-graph
+projection below. Resource-containing aggregates remain separate work. Host
+callbacks borrow the call and must finish synchronously.
+
+### Recursive callback values
+
+Save this example as `Program.cs` in a project that references the prepared
+`Lean.Structured` package:
+
+```csharp
+using System;
+using LeanBridge.Structured;
+
+var original = new TreeLeaf(19);
+var changed = Api.CallRecursive(original, tree => tree is TreeLeaf leaf
+    ? new TreeLeaf(leaf.Value + 1)
+    : tree);
+Console.WriteLine(((TreeLeaf)changed).Value);
+
+using var choose = Api.MakeRecursive(original);
+Console.WriteLine(((TreeLeaf)choose.Invoke(true, changed)).Value);
+Console.WriteLine(((TreeLeaf)choose.Invoke(false, changed)).Value);
+```
+
+The output is `20`, `19`, then `20`. Callback inputs and results have independent
+copied storage. `TreeBranch.Children` is a typed array, and transparent aliases
+keep the underlying C# value type.
+
+Callbacks use synchronous `Func` or `Action` delegates and expire when their
+exported call returns. Returned `LeanClosure` values expose `Invoke`, `IsClosed`
+and `Dispose`; `using` releases the native identity deterministically. A closure
+runs on its creating thread and process. Disposal during an active call defers
+release until the call returns. Callback exceptions retain their object identity
+after conversion storage is released.
+
+Conversions allow 128 value levels, 262144 visited nodes, a 16 MiB native-copy
+budget and a separate 16 MiB conversion-storage budget. Native reentry allows 64
+active calls, and owned closures share 4096 identity slots. These bounds do not
+limit all CLR allocations or Lean working memory. Invalid copied inputs and
+depth/node limits raise `ArgumentException`; native allocation or identity-arena
+exhaustion raises `OutOfMemoryException`. Those errors allow subsequent calls.
+Malformed native output retires the runtime.
+
+Resource-containing aggregates, callable identities inside copied containers,
+retained host callbacks, asynchronous delivery and post-fork calls are not part
+of this projection.
+
+The [installed acceptance record](../evidence/dotnet-recursive-callables-20260926.md)
+includes both source paths, fault injection, typed callers, and SDK-free execution.
 
 ### Alpha interoperability example
 
@@ -468,7 +516,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Generated records and cases preserve direct and mutual recursion. Typed arrays remain mutable; calls return independent copied storage. Cycles, null payloads and malformed branches reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB native-copy and scratch/output budgets. Native outputs and partial input allocations are released on failure. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and tuples` (input, result, field); `Named sealed C# records and constructors, typed arrays, synchronous Func/Action delegates and owned LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Generated records and cases preserve direct and mutual recursion. Typed arrays remain mutable; calls return independent copied storage. Cycles, null payloads and malformed branches reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB native-copy and scratch/output budgets. Native outputs and partial input allocations are released on failure. Recursive records, variants and aliases retain typed C# representations and independent copied storage. Callback scopes retain reply buffers until native copying finishes. Exceptions retain their identity after cleanup. Malformed native output retires the runtime. Owned closures defer disposal during active calls, and finalizers release abandoned identities. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

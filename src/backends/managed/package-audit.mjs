@@ -5,6 +5,7 @@
  */
 
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import { generateCallableDotnetGraphPackage } from "../dotnet/callable-graph-package.mjs";
 import { generateCopiedDotnetGraphPackage } from "../dotnet/copied-graph-package.mjs";
 import { generateCopiedJvmGraphPackage } from "../jvm/copied-graph-package.mjs";
 
@@ -70,9 +71,10 @@ export const auditManagedBindingPackage = (ir, files, target) => {
 	// Copied nominal types may legitimately be called NativeLibrary or MemorySegment.
 	// For this generator require the entire public source to match regeneration;
 	// never exempt a matching word in arbitrary caller-supplied public source.
-	const graph = target === "dotnet" && manifest.generator === "dotnet-copied-graph-v1"
-		? generateCopiedDotnetGraphPackage(ir) : target === "jvm" && manifest.generator === "jvm-copied-graph-v1"
-			? generateCopiedJvmGraphPackage(ir) : null;
+	const graph = target === "dotnet" && manifest.generator === "dotnet-callable-graph-v1"
+		? generateCallableDotnetGraphPackage(ir) : target === "dotnet" && manifest.generator === "dotnet-copied-graph-v1"
+			? generateCopiedDotnetGraphPackage(ir) : target === "jvm" && manifest.generator === "jvm-copied-graph-v1"
+				? generateCopiedJvmGraphPackage(ir) : null;
 	if(graph && JSON.stringify(manifest.publicFiles) !== JSON.stringify(JSON.parse(graph["binding-manifest.json"]).publicFiles))
 		fail("private-ffi-public", `Recursive ${target} public file selection differs from its checked generator`);
 	for(const path of manifest.publicFiles ?? [])

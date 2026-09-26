@@ -153,6 +153,8 @@ const profileManifest = Object.freeze({
 		, "dotnet-callable-contract"
 		, "dotnet-structured-callable-contract"
 		, "dotnet-structured-callable-evidence"
+		, "dotnet-recursive-callable-contract"
+		, "dotnet-recursive-callable-evidence"
 		, "dotnet-compound-contract"
 		, "dotnet-list-contract"
 		, "dotnet-alias-contract"
@@ -350,6 +352,7 @@ const profileManifest = Object.freeze({
 	, native: Object.freeze([
 		"dotnet-callables"
 		, "dotnet-structured-callables"
+		, "dotnet-recursive-callables"
 		, "dotnet-compounds"
 		, "dotnet-lists"
 		, "dotnet-aliases"

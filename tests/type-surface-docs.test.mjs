@@ -101,6 +101,17 @@ test("Perl recursive documentation binds copied and callback positions to their 
 	assert.doesNotMatch(reference, /recursive values in the other seven profiles/iu);
 });
 
+test("C# recursive tables distinguish installed callback and copied-value receipts", async () => {
+	const source = await readFile("docs/consume/dotnet.md", "utf8");
+	const recursive = row(source, "Recursive copied structures");
+	assert.match(recursive, /callback input, callback result/u);
+	assert.doesNotMatch(recursive, /Not audited/u);
+	for(const cell of cells.filter(cell => cell.profile === "dotnet" && cell.shape === "recursive"))
+		assert.deepEqual(cell.stages.installedExecution.evidence, [cell.position.startsWith("callback-") ? "dotnet-recursive-callables-installed" : "managed-recursive-installed"]);
+	assert.match(row(source, "Identity-bearing value"), /Not audited/u);
+	assert.match(source, /dotnet-recursive-callables-20260926\.md/u);
+});
+
 test("WIT recursive tables record installed copied values and retain callback gaps", async () => {
 	const source = await readFile("docs/consume/wit-wasi.md", "utf8");
 	const recursive = row(source, "Recursive copied structures");
@@ -206,16 +217,17 @@ test("Ruby copied callback rows include recursive values but retain resource exc
 	assert.match(source, /ruby-recursive-callables-20260925\.md/u);
 });
 
-test("C# copied callback rows retain recursive and resource exclusions", async () => {
+test("C# copied callback rows include recursive payloads and retain resource exclusions", async () => {
 	const source = await readFile("docs/consume/dotnet.md", "utf8");
-	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+	for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum", "Recursive copied structures"])
 	{
 		const mapping = row(source, shape);
 		assert.match(mapping, /callback input, callback result/u);
 		assert.doesNotMatch(mapping, /Not audited/u);
 	}
-	assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
+	assert.match(row(source, "Identity-bearing value"), /Not audited/u);
 	assert.match(source, /dotnet-structured-callables-20260924\.md/u);
+	assert.match(source, /dotnet-recursive-callables-20260926\.md/u);
 });
 
 test("Java and Kotlin distinguish callable, collection-field and asynchronous evidence", async () => {

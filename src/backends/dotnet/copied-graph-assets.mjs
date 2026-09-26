@@ -9,8 +9,9 @@
  *
  * @param model - Checked graph package model.
  * @param evidence - Verified native filenames and hashes, or null for inspection.
+ * @param selectedSymbols - Optional exact callable entry points and lifecycle symbols.
  */
-export const dotnetGraphAssets = (model, evidence) => {
+export const dotnetGraphAssets = (model, evidence, selectedSymbols = null) => {
 	if(evidence === null) return `internal static class GraphNative
 {
     internal static bool IsLoaded => false;
@@ -25,7 +26,9 @@ export const dotnetGraphAssets = (model, evidence) => {
 	if(libraries.length < 4 || libraries.some(([name, hash]) => !/^lib[A-Za-z0-9_.-]+\.so(?:\.\d+)*$/.test(name) || !/^[a-f0-9]{64}$/.test(hash))
 		|| [evidence.library, "libleanshared.so", "liblean_bridge_native.so"].some(name => !Object.hasOwn(evidence.libraries, name)))
 		throw new TypeError("C# graph loading requires exact native asset identities");
-	const symbols = [...model.functions.map(fn => `${fn.name}_graph`), ...["initialize", "ready", "retire"].map(name => `${model.prefix}_graph_${name}`)];
+	const symbols = selectedSymbols ?? [...model.functions.map(fn => `${fn.name}_graph`), ...["initialize", "ready", "retire"].map(name => `${model.prefix}_graph_${name}`)];
+	if(!Array.isArray(symbols) || symbols.length === 0 || symbols.length !== new Set(symbols).size || symbols.some(name => !/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)))
+		throw new TypeError("C# graph loading requires distinct checked symbol names");
 	return `internal static class GraphNative
 {
     private static readonly int Process = global::System.Environment.ProcessId;

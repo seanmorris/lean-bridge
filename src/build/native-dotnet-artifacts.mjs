@@ -8,6 +8,7 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { compileCopiedDotnetModel } from "../backends/dotnet/copied-model.mjs";
 import { compileCopiedDotnetGraphPackageModel } from "../backends/dotnet/copied-graph-package.mjs";
+import { compileCallableDotnetGraphPackageModel } from "../backends/dotnet/callable-graph-model.mjs";
 import { nativeGraphProjectionSources } from "./native-graph-sources.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from "./native-artifacts.mjs";
 
@@ -22,7 +23,7 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
 export const ordinaryDotnetEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true });
-	const projection = model.copiedGraph ? compileCopiedDotnetGraphPackageModel(model.bindingIr) : compileCopiedDotnetModel(model.bindingIr);
+	const projection = model.copiedGraph ? (model.copiedGraph.callbacks ? compileCallableDotnetGraphPackageModel : compileCopiedDotnetGraphPackageModel)(model.bindingIr) : compileCopiedDotnetModel(model.bindingIr);
 	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
 	const copiedGraph = model.copiedGraph ? { schemaVersion: 1, layoutSha256: projection.layoutSha256 } : undefined;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));

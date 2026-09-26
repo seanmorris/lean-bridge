@@ -102,7 +102,8 @@ jobs:
   perl:
     name: Perl XS (${{ matrix.configuration }})
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    # All package families run sequentially; the complete matrix exceeds one hour.
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:

@@ -12,6 +12,7 @@ import { compileCopiedDotnetGraphPackageModel } from "../backends/dotnet/copied-
 import { compileCopiedJvmGraphPackageModel } from "../backends/jvm/copied-graph-package.mjs";
 import { compileCopiedPhpGraphPackageModel } from "../backends/php/copied-graph-package.mjs";
 import { compileCopiedWitGraphPackageModel } from "../backends/wit/copied-graph-package.mjs";
+import { compileCallableDotnetGraphPackageModel } from "../backends/dotnet/callable-graph-model.mjs";
 import { compileCallableGraphPackageModel } from "../backends/c/callable-graph-model.mjs";
 import { compileCallablePythonGraphPackageModel } from "../backends/python/callable-graph-model.mjs";
 import { compileCallableRustGraphPackageModel } from "../backends/rust/callable-graph-model.mjs";
@@ -28,8 +29,8 @@ import { compileCallablePerlGraphPackageModel } from "../backends/perl/callable-
 export const compileNativeGraphProjection = (ir, targets, moduleName) => {
 	if(ir.types.some(type => type.kind === "callback"))
 	{
-		if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "pypi", "cargo", "rubygems", "cpan"].includes(target)))
-			throw Object.assign(new TypeError("Recursive callable packages currently require C, C++, PyPI, Cargo, RubyGems or CPAN projections"), { code: "native-graph-projection-unavailable" });
+		if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["c", "cpp", "pypi", "cargo", "rubygems", "cpan", "nuget"].includes(target)))
+			throw Object.assign(new TypeError("Recursive callable packages currently require C, C++, PyPI, Cargo, RubyGems, CPAN or NuGet projections"), { code: "native-graph-projection-unavailable" });
 		if(targets.includes("cpan") && moduleName === undefined)
 			throw Object.assign(new TypeError("CPAN callable graph projection requires its checked module namespace"), { code: "native-graph-projection-unavailable" });
 		const cTargets = targets.filter(target => ["c", "cpp"].includes(target));
@@ -38,8 +39,9 @@ export const compileNativeGraphProjection = (ir, targets, moduleName) => {
 		const rust = targets.includes("cargo") ? compileCallableRustGraphPackageModel(ir) : null;
 		const ruby = targets.includes("rubygems") ? compileCallableRubyGraphPackageModel(ir) : null;
 		const perl = targets.includes("cpan") ? compileCallablePerlGraphPackageModel(ir, moduleName) : null;
-		const selected = c ?? python ?? rust ?? ruby ?? perl;
-		for(const projection of [c, python, rust, ruby, perl].filter(Boolean))
+		const dotnet = targets.includes("nuget") ? compileCallableDotnetGraphPackageModel(ir) : null;
+		const selected = c ?? python ?? rust ?? ruby ?? perl ?? dotnet;
+		for(const projection of [c, python, rust, ruby, perl, dotnet].filter(Boolean))
 			if(projection.layoutSha256 !== selected.layoutSha256)
 				throw new TypeError("Native callable graph layouts differ across selected targets");
 		return selected;
