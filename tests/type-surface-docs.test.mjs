@@ -112,6 +112,20 @@ test("C# recursive tables distinguish installed callback and copied-value receip
 	assert.match(source, /dotnet-recursive-callables-20260926\.md/u);
 });
 
+test("JVM recursive tables preserve distinct Java and Kotlin APIs and retain resource gaps", async () => {
+	for(const profile of ["java", "kotlin"])
+	{
+		const source = await readFile(`docs/consume/${profile}.md`, "utf8");
+		const recursive = row(source, "Recursive copied structures");
+		assert.match(recursive, /callback input, callback result/u);
+		assert.doesNotMatch(recursive, /Not audited/u);
+		for(const cell of cells.filter(cell => cell.profile === profile && cell.shape === "recursive"))
+			assert.deepEqual(cell.stages.installedExecution.evidence, [cell.position.startsWith("callback-") ? "jvm-recursive-callables-installed" : "managed-recursive-installed"]);
+		assert.match(row(source, "Identity-bearing value"), /Not audited/u);
+		assert.match(source, /jvm-recursive-callables-20260926\.md/u);
+	}
+});
+
 test("WIT recursive tables record installed copied values and retain callback gaps", async () => {
 	const source = await readFile("docs/consume/wit-wasi.md", "utf8");
 	const recursive = row(source, "Recursive copied structures");
@@ -241,14 +255,14 @@ test("Java and Kotlin distinguish callable, collection-field and asynchronous ev
 	assert.deepEqual(cells.find(cell => cell.id === "kotlin/nat/reviewed-ir/field").stages.installedExecution.evidence, ["kotlin-collections-installed"]);
 	for(const source of [java, kotlin])
 	{
-		for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum"])
+		for(const shape of ["Array α", "List α", "Option α", "Except ε α", "Prod α β / tuples", "Copied structure", "Type alias", "Inductive sum", "Recursive copied structures"])
 		{
 			const mapping = row(source, shape);
 			assert.match(mapping, /callback input, callback result/u);
 			assert.doesNotMatch(mapping, /Not audited/u);
 		}
-		assert.match(row(source, "Recursive copied structures"), /Not audited \(callback input, callback result\)/u);
 		assert.match(source, /jvm-structured-callables-20260925\.md/u);
+		assert.match(source, /jvm-recursive-callables-20260926\.md/u);
 		assert.match(row(source, "Except ε α"), /Result\.err\(error\)/u);
 		assert.doesNotMatch(row(source, "Except ε α"), /Result(?:<T, E>)?\.error\(/u);
 		assert.match(row(source, "Nat"), /`BigInteger` \(input, result, field, callback input, callback result\).*Ordinary source: Installed checks passed\./u);

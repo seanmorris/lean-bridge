@@ -133,6 +133,6 @@ export const assertJvmSharedSourceTransition = async (path, source, expected) =>
 	const record = JSON.parse(await readFile(receiptPath));
 	if(record.predecessors[path]?.sha256 !== expected) return false;
 	await assertJvmSharedRegressionEvidence(record);
-	assert.equal(sha256(source), record.sourceHashes[path], path);
+	assert.equal(sha256(beforeWitPackageIntegration(path, source, record.sourceHashes[path])), record.sourceHashes[path], path);
 	return true;
 };

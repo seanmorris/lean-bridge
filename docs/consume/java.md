@@ -245,7 +245,7 @@ that exceeds the JVM argument-slot limit becomes an immutable final class with
 typed accessors and a typed `builder()`. Set every field before `build()`.
 
 The [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)
-execute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. Recursive callable payloads and resource-containing aggregates remain separate work.
+execute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. [Recursive callbacks](#recursive-callback-values) also have installed-package checks. Resource-containing aggregates remain separate work.
 
 ### Callbacks and returned Lean functions
 
@@ -265,7 +265,7 @@ Callbacks borrow one synchronous call. Their copied arguments remain valid after
 
 Call `invoke` on the closure's creating platform thread. Java virtual threads are rejected for callable operations because they can move between native threads. `close` is idempotent, may run on another thread, and defers native release while a call is active. All references and saved method references reject invocation after closing. `isClosed` reports explicit closure; a Cleaner releases abandoned leases as a fallback. Use try-with-resources for deterministic cleanup.
 
-Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. Futures, suspend functions, retained host callbacks, recursive callable payloads and resource-containing aggregates remain unsupported. Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
+Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. Futures, suspend functions, retained host callbacks and resource-containing aggregates remain unsupported. Recursive copied payloads use the [recursive callback profile](#recursive-callback-values). Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
 
 ### Structured callback values
 
@@ -315,6 +315,62 @@ constructors. Java and Kotlin use distinct generated value types in the same
 JAR. Do not mix Java records with the companion Kotlin API. Both adapters share
 the native runtime, process guards and closure leases. The callback lifetime,
 thread and cleanup rules above also apply to structured payloads.
+
+### Recursive callback values
+
+Recursive values can cross callback arguments, callback results and returned
+functions in the prepared Maven package. Import the Java API and its Java value
+classes together. For the `org.leanbridge:structured:1.0.0` acceptance package,
+save `RecursiveExample.java`:
+
+```java
+import java.math.BigInteger;
+import org.leanbridge.structured.*;
+
+public final class RecursiveExample {
+    private static BigInteger first(Tree tree) {
+        return ((TreeLeaf) ((TreeBranch) tree).children()[0]).value();
+    }
+
+    public static void main(String[] args) {
+        Tree[] children = { new TreeLeaf(BigInteger.valueOf(20)) };
+        Tree input = new TreeBranch(children);
+        Tree result = Api.callRecursive(input, value ->
+            new TreeBranch(new Tree[] { new TreeLeaf(BigInteger.valueOf(42)) }));
+        System.out.println(first(result)); // 42
+        try (var held = Api.makeRecursive(input)) {
+            children[0] = new TreeLeaf(BigInteger.valueOf(99));
+            System.out.println(first(held.invoke(true, result)));  // 20
+            System.out.println(first(held.invoke(false, result))); // 42
+        }
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package), substituting
+`RecursiveExample.java` and the main class `RecursiveExample`. The
+[author recipe](../publish/maven.md#recursive-callback-values) defines this API.
+The package loads and verifies its bundled Lean runtime automatically.
+
+Callbacks receive independent copies. Their returned values and closure
+captures also own independent storage. Editing the input array after
+`makeRecursive` does not change the captured tree. Use `try` with resources to
+close returned functions. Invocation requires the creating platform thread.
+Closing from another thread is safe. A close during an active call marks the
+function closed immediately and releases its native ownership when active
+calls finish.
+
+Recursive callable conversions allow 128 value levels and 262,144 visited
+values, with separate 16 MiB native-copy and accounted host-storage budgets.
+These budgets do not measure Lean working memory or every JVM allocation.
+Cycles, null values, negative Nat values and invalid branches reject. Callback
+exceptions preserve the original Throwable after cleanup. Malformed native
+results retire the runtime; conversion limits and allocation failures allow
+later calls. Resources or callable identities inside copied aggregates,
+retained host callbacks and asynchronous delivery remain unsupported.
+
+[Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
+cover both authoring paths, typed callers, failure cleanup and runtime-only execution.
 
 ### Alpha interoperability example
 
@@ -470,7 +526,7 @@ The [conversion rules](../reference/types.md#full-type-surface) cover ranges, co
 | `Fin n` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Keep the bound and validate it before erasing proof fields. Fin 0 has no constructible value. |
 | `Subtype / {x // p x}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |
 | `Dependent parameters and results` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Preserve the dependency through a checked lowering or a reviewed exclusion; never discard it as an implicit argument. |
-| `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>` (input, result, field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Named records and sealed cases preserve recursive fields without JSON or numeric tags. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Cycles, null payloads and invalid cases reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB copy budgets; partial outputs are released on failure. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
+| `Recursive copied structures` | `Named records and sealed constructor cases; typed arrays, Option<T>, Result<T, E> and Pair<A, B>` (input, result, field); `Named Java records and constructors, typed arrays, SAM callbacks and AutoCloseable LeanClosure values` (callback input, callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Named records and sealed cases preserve recursive fields without JSON or numeric tags. Wide constructors use typed builders. Arrays remain mutable; results own independent storage. Cycles, null payloads and invalid cases reject. Conversions enforce 128 value levels, 262,144 visited values and separate 16 MiB copy budgets; partial outputs are released on failure. Recursive records, variants and aliases retain distinct typed Java and Kotlin representations and independently copied storage. Reply scopes retain buffers until native copying finishes. Throwable identity survives cleanup. Malformed native output retires the shared runtime. Owned closures defer release during active calls and Cleaner reclamation releases abandoned identities. Required: Bound nesting and allocation; reject host cycles unless the declared identity model supports them. |
 | `Polymorphic exports` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Generation rejected | Required: Deliver checked finite specializations; record open-generic gaps without using an untyped transport. |
 | `Implicit arguments {α}` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Separate erased type arguments from implicit runtime values; resolve them from elaborated information. |
 | `Instance arguments [C α]` | No host mapping recorded | Ordinary source: Not audited. Reviewed IR: Not audited | Required: Specialize or supply the selected dictionary without changing runtime behavior. |

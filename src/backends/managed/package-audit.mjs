@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { generateCallableJvmGraphPackage } from "../jvm/callable-graph-package.mjs";
 
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { generateCallableDotnetGraphPackage } from "../dotnet/callable-graph-package.mjs";
@@ -73,8 +74,9 @@ export const auditManagedBindingPackage = (ir, files, target) => {
 	// never exempt a matching word in arbitrary caller-supplied public source.
 	const graph = target === "dotnet" && manifest.generator === "dotnet-callable-graph-v1"
 		? generateCallableDotnetGraphPackage(ir) : target === "dotnet" && manifest.generator === "dotnet-copied-graph-v1"
-			? generateCopiedDotnetGraphPackage(ir) : target === "jvm" && manifest.generator === "jvm-copied-graph-v1"
-				? generateCopiedJvmGraphPackage(ir) : null;
+			? generateCopiedDotnetGraphPackage(ir) : target === "jvm" && manifest.generator === "jvm-callable-graph-v1"
+				? generateCallableJvmGraphPackage(ir) : target === "jvm" && manifest.generator === "jvm-copied-graph-v1"
+					? generateCopiedJvmGraphPackage(ir) : null;
 	if(graph && JSON.stringify(manifest.publicFiles) !== JSON.stringify(JSON.parse(graph["binding-manifest.json"]).publicFiles))
 		fail("private-ffi-public", `Recursive ${target} public file selection differs from its checked generator`);
 	for(const path of manifest.publicFiles ?? [])

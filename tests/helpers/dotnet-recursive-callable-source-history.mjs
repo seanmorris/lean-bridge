@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeJvmRecursiveCallables } from "./jvm-recursive-callable-source-history.mjs";
 
 export const dotnetRecursiveCallableHistoryPath = "docs/evidence/dotnet-recursive-callable-integration-20260926.json";
 export const dotnetRecursiveCallableChangedPaths = [
@@ -78,6 +79,7 @@ export const reverseDotnetRecursiveCallableUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforeDotnetRecursiveCallables = (path, source, expected) => {
+	source = beforeJvmRecursiveCallables(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !dotnetRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(dotnetRecursiveCallableHistoryPath, "utf8"));

@@ -28,11 +28,11 @@ test("Ruby recursive callbacks preserve the checked graph and hide native storag
 
 test("RubyGems recursive callbacks agree with every selected supported native target", () => {
 	const ir = nativeRecursiveCallableReviewedIr(), expected = compileCallableRubyGraphPackageModel(ir).layoutSha256;
-	for(const targets of [["rubygems"], ["rubygems", "c"], ["cpp", "rubygems"], ["pypi", "rubygems"], ["cargo", "rubygems"], ["nuget", "rubygems"], ["rubygems", "c", "cpp", "pypi", "cargo", "nuget"]])
+	for(const targets of [["rubygems"], ["rubygems", "c"], ["cpp", "rubygems"], ["pypi", "rubygems"], ["cargo", "rubygems"], ["nuget", "rubygems"], ["rubygems", "maven"], ["rubygems", "c", "cpp", "pypi", "cargo", "nuget", "maven"]])
 		assert.equal(compileNativeGraphProjection(ir, targets).layoutSha256, expected);
 	for(const targets of [["rubygems", "cpan"], ["rubygems", "c", "cpp", "pypi", "cargo", "cpan"]])
 		assert.equal(compileNativeGraphProjection(ir, targets, "LeanBridge::Recursive").layoutSha256, expected);
-	for(const targets of [[], ["rubygems", "rubygems"], ["rubygems", "cpan"], ["rubygems", "maven"], ["unknown"]])
+	for(const targets of [[], ["rubygems", "rubygems"], ["rubygems", "cpan"], ["unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 });
 

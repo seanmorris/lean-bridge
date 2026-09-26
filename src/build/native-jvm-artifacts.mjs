@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { compileCallableJvmGraphPackageModel } from "../backends/jvm/callable-graph-model.mjs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
@@ -22,7 +23,7 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
 export const ordinaryJvmEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true });
-	const projection = model.copiedGraph ? compileCopiedJvmGraphPackageModel(model.bindingIr) : compileCopiedJvmModel(model.bindingIr);
+	const projection = model.copiedGraph ? (model.copiedGraph.callbacks ? compileCallableJvmGraphPackageModel : compileCopiedJvmGraphPackageModel)(model.bindingIr) : compileCopiedJvmModel(model.bindingIr);
 	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
 	const copiedGraph = model.copiedGraph ? { schemaVersion: 1, layoutSha256: projection.layoutSha256 } : undefined;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));

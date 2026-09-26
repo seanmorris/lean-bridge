@@ -10,13 +10,27 @@ import { canonicalJson, sha256 } from "../../capsule/node.mjs";
  *
  * @param model - Validated recursive package model.
  * @param evidence - Verified native asset identities, or null for inspection.
+ * @param callable - Resolve graph callback entry points and generation-checked tokens.
  */
-export const jvmGraphAssets = (model, evidence) => {
+export const jvmGraphAssets = (model, evidence, callable = false) => {
+	const className = callable ? "_CallableGraphNative" : "_GraphNative";
+	const resultType = callable ? "Links" : "_GraphRuntime.Target[]";
+	const links = callable ? "    record Links(java.lang.invoke.MethodHandle[] exports, java.lang.invoke.MethodHandle[] invokes,\n        java.lang.invoke.MethodHandle[] drops, java.lang.invoke.MethodHandle clear, _GraphRuntime.Lifecycle lifecycle) { }\n" : "";
+	const address = "java.lang.foreign.ValueLayout.ADDRESS", long = "java.lang.foreign.ValueLayout.JAVA_LONG";
+	const descriptor = (arity, lease = false) => "java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.JAVA_INT, " + [...lease ? [long] : [], ...Array(arity + 1).fill(address)].join(", ") + ")";
+	const lookup = (symbol, desc) => "downcall(lookup, " + JSON.stringify(symbol) + ", " + desc + ")";
+	const array = items => "new java.lang.invoke.MethodHandle[] { " + items.join(", ") + " }";
+	const resolved = callable ? "                var resolved = new Links("
+		+ array(model.functions.map(fn => lookup(fn.native, descriptor(fn.parameters.length)))) + ", "
+		+ array([...model.callbacks.values()].map(cb => lookup(cb.call, descriptor(cb.parameters.length, true)))) + ", "
+		+ array([...model.callbacks.values()].map(cb => lookup(cb.dispose, "java.lang.foreign.FunctionDescriptor.ofVoid(" + long + ")")))
+		+ ", clear, lifecycle);" : `                var resolved = new _GraphRuntime.Target[${model.functions.length}];
+${model.functions.map((fn, index) => `                resolved[${index}] = new _GraphRuntime.Target(downcall(lookup, "${fn.name}_graph", java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.JAVA_INT, ${Array.from({ length: fn.parameters.length + 1 }, () => "java.lang.foreign.ValueLayout.ADDRESS").join(", ")})), clear, lifecycle);`).join("\n")}`;
 	if(evidence === null) return `package ${model.namespace};
-final class _GraphNative {
-    private _GraphNative() { }
+final class ${className} {
+${links}    private ${className}() { }
     static boolean loaded() { return false; }
-    static _GraphRuntime.Target[] resolve() { throw new IllegalStateException("Build a prepared Maven release before calling this API"); }
+    static ${resultType} resolve() { throw new IllegalStateException("Build a prepared Maven release before calling this API"); }
 }
 `;
 	if(evidence.componentId !== model.ir.component.id || evidence.library !== `lib${model.prefix}.so`
@@ -29,11 +43,11 @@ final class _GraphNative {
 		throw new TypeError("JVM graph loading requires exact native asset identities");
 	return `package ${model.namespace};
 
-final class _GraphNative {
-    private _GraphNative() { }
-    private static volatile _GraphRuntime.Target[] targets;
+final class ${className} {
+${links}    private ${className}() { }
+    private static volatile ${resultType} targets;
     static boolean loaded() { return targets != null; }
-    static _GraphRuntime.Target[] resolve() {
+    static ${resultType} resolve() {
         var ready = targets; if (ready != null) return ready;
         if (!System.getProperty("os.name").equals("Linux") || !java.util.Set.of("amd64", "x86_64").contains(System.getProperty("os.arch"))
             || java.nio.ByteOrder.nativeOrder() != java.nio.ByteOrder.LITTLE_ENDIAN)
@@ -75,8 +89,7 @@ ${libraries.map(([name, hash]) => `                verify(root.resolve(${JSON.st
                     public void after() { try { if ((int)available.invokeExact() != 1) _GraphRuntime.status(5); } catch (Throwable error) { throw propagate(error); } }
                     public void poison() { try { retire.invokeExact(); } catch (Throwable error) { throw propagate(error); } }
                 };
-                var resolved = new _GraphRuntime.Target[${model.functions.length}];
-${model.functions.map((fn, index) => `                resolved[${index}] = new _GraphRuntime.Target(downcall(lookup, "${fn.name}_graph", java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.JAVA_INT, ${Array.from({ length: fn.parameters.length + 1 }, () => "java.lang.foreign.ValueLayout.ADDRESS").join(", ")})), clear, lifecycle);`).join("\n")}
+${resolved}
                 properties.setProperty(component, receipt); properties.setProperty(component + ".path", root.toString());
                 targets = resolved; return resolved;
             } catch (Throwable error) {
@@ -93,7 +106,7 @@ ${model.functions.map((fn, index) => `                resolved[${index}] = new _
         return new LeanBridgeException(4, "Cannot load or call the prepared Lean component", error);
     }
     private static java.io.InputStream resource(String name) throws java.io.IOException {
-        var input = _GraphNative.class.getResourceAsStream("/META-INF/lean-bridge/native/linux-x64/" + name);
+        var input = ${className}.class.getResourceAsStream("/META-INF/lean-bridge/native/linux-x64/" + name);
         if (input == null) throw new java.io.IOException("Missing packaged native asset " + name);
         return input;
     }

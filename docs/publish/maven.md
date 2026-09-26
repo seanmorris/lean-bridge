@@ -1,6 +1,6 @@
 # Build and publish Java and Kotlin packages
 
-Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays and Lists, copied records, tagged variants, options, results, binary products, bounded recursive copied values and synchronous callables with primitive or acyclic copied payloads. Consumers install the artifacts without compiling Lean or writing native conversions.
+Build an ordinary Lean project with `--target maven` to produce a prepared Java/Kotlin JAR and POM. Generated APIs support all nineteen primitive types, nested arrays and Lists, copied records, tagged variants, options, results, binary products, bounded recursive copied values and synchronous callables with primitive, acyclic or recursive copied payloads. Consumers install the artifacts without compiling Lean or writing native conversions.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/maple --target maven \
 
 The release contains `archives/maple-api-2.0.0-rc.1.jar`, its companion `.pom`, and `native-release.json` with their hashes. `packages/maven/repository/` also contains both files in Maven's group/artifact/version layout, with SHA-256 sidecars. The JAR includes Java 22 classes, the companion `.kotlin` API with Kotlin type metadata, native libraries, generated sources, compiler evidence and dependency license notices. Its POM declares `kotlin-stdlib:2.2.0`; downstream Maven and Gradle projects resolve it automatically. Its README names both generated APIs. Changing the Maven coordinate does not rename their Lean-derived packages.
 
-Calls accept concrete copied values, synchronous callbacks and returned closures. Acyclic conversions allow 32 type levels with 16 MiB copy budgets. [Recursive copied values](../consume/java.md#recursive-values) allow 128 value levels and 262,144 visited values, with separate 16 MiB native-copy and scratch/output budgets. These limits do not measure Lean working memory or all JVM heap allocation. Recursive callable payloads, resource-containing aggregates and asynchronous effects remain unsupported. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
+Calls accept concrete copied values, synchronous callbacks and returned closures. Acyclic conversions allow 32 type levels with 16 MiB copy budgets. [Recursive copied values](../consume/java.md#recursive-values) allow 128 value levels and 262,144 visited values, with separate 16 MiB native-copy and scratch/output budgets. These limits do not measure Lean working memory or all JVM heap allocation. [Recursive callback values](#recursive-callback-values) use the same bounded graph conversion. Resource-containing aggregates and asynchronous effects remain unsupported. Repeat `--target` to share one native compilation across Maven, NuGet, C, C++ and CPAN when all selected targets admit the complete API. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Test the original archives with the [Java](../consume/java.md#call-an-ordinary-lean-package) and [Kotlin](../consume/kotlin.md#call-an-ordinary-lean-package) consumers. Archive assembly verifies compiled artifacts without invoking a compiler. Verify the release with `lean-bridge verify --receipt /absolute/path/to/maple-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
@@ -108,7 +108,7 @@ end Maple
 
 Include both exports and set `"arities": { "Maple.make_word": 1 }` to return a function after accepting the captured value. For reviewed Binding IR, the outer parameter count makes that decision; do not also configure `arities`.
 
-Callbacks accept one to sixteen primitive or acyclic copied arguments and a copied result. Java and Kotlin use generated functional interfaces such as `FnUInt32ToUInt32`; returned functions implement their matching interface and `AutoCloseable`. Exact integers retain `BigInteger`. Calls borrow host callbacks synchronously and contain thrown exceptions until native cleanup. See the [Java](../consume/java.md#callbacks-and-returned-lean-functions) and [Kotlin](../consume/kotlin.md#callbacks-and-returned-lean-functions) examples for thread ownership and cleanup.
+Callbacks accept one to sixteen primitive, acyclic or recursive copied arguments and a copied result. Java and Kotlin use generated functional interfaces such as `FnUInt32ToUInt32`; returned functions implement their matching interface and `AutoCloseable`. Exact integers retain `BigInteger`. Calls borrow host callbacks synchronously and contain thrown exceptions until native cleanup. See the [Java](../consume/java.md#callbacks-and-returned-lean-functions) and [Kotlin](../consume/kotlin.md#callbacks-and-returned-lean-functions) examples for thread ownership and cleanup.
 
 Both source paths use the existing private C callable ABI. A combined build rejects the complete request if a selected target does not support its callable signatures.
 
@@ -160,10 +160,61 @@ and results retain independent nested storage. Both adapters share process
 guards, native loading and closure leases. The [Java](../consume/java.md#structured-callback-values)
 and [Kotlin](../consume/kotlin.md#structured-callback-values) examples use the same JAR.
 
-Callback payloads must be acyclic copied values. Host callbacks borrow the
+This acyclic profile uses copied callback payloads. See the [recursive callback profile](#recursive-callback-values) for recursive types. Host callbacks borrow the
 enclosing synchronous call, and returned closures own explicit leases.
-Recursive callable payloads, callback identities or resources inside copied
+Callback identities or resources inside copied
 aggregates, retained host callbacks and asynchronous delivery remain unsupported.
+
+## Recursive callback values
+
+Ordinary-source and reviewed-IR Maven builds support recursive copied values in
+callback arguments, callback results and returned closures. Java and Kotlin
+consume one JAR, with separate typed value classes and a shared native runtime.
+
+For the consumer examples, save `Structured.lean`:
+
+```lean
+namespace Structured
+
+inductive Tree where
+  | leaf (value : Nat)
+  | branch (children : Array Tree)
+
+def callRecursive (value : Tree) (callback : Tree → Tree) := callback value
+def makeRecursive (captured : Tree) : Bool → Tree → Tree :=
+  fun selected value => if selected then captured else value
+
+end Structured
+```
+
+Select both functions and the capture arity in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Structured"],
+  "exports": ["Structured.callRecursive", "Structured.makeRecursive"],
+  "arities": { "Structured.makeRecursive": 1 },
+  "targets": {
+    "maven": { "name": "org.leanbridge:structured", "version": "1.0.0" }
+  }
+}
+```
+
+These coordinates identify the local acceptance example. Choose your own when
+publishing. Build and verify the release with the commands above, then publish
+its original JAR and POM using the repository instructions below. Reviewed
+contracts specify the outer parameter count instead of configuring `arities`.
+
+The [Java](../consume/java.md#recursive-callback-values) and
+[Kotlin](../consume/kotlin.md#recursive-callback-values) examples use typed lambdas
+and deterministic closure cleanup. Callback inputs, returned values and
+captures keep independent copied storage. Recursive conversion permits 128
+value levels, 262,144 visited values and separate 16 MiB native-copy and
+accounted host-storage budgets. Callbacks are synchronous and call-scoped;
+returned functions own explicit leases. Resources and callable identities
+inside copied aggregates, retained host callbacks and asynchronous delivery
+remain unsupported.
 
 ## Build the repository layout
 

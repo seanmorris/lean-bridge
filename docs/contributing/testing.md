@@ -1993,6 +1993,38 @@ the checks, source hashes, and ownership limits. Set
 `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` only for local tests on older glibc;
 those development archives are not the production release profile.
 
+### Recursive Java and Kotlin callbacks
+
+```sh
+LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 \
+  node --test tests/jvm-recursive-callables.test.mjs
+node --test tests/jvm-recursive-callable-contract.test.mjs \
+  tests/jvm-recursive-callable-evidence.test.mjs
+```
+
+The suite builds Maven-only packages through ordinary-source and reviewed-IR
+authoring. Each Java and Kotlin consumer installs the original JAR and POM
+offline into an empty Maven cache. The runner removes producer directories
+before installation, then removes installed sources and the handoff before
+running relocated consumers with a `java.base`-only runtime. The exact Java,
+Kotlin and Lean documentation examples compile as part of acceptance.
+
+Separate source copies check every host and native allocation failure across
+nine copied shapes, four seeds and five callback/closure paths. Ownership
+mutations must fail before decoding released memory. Malformed results must
+clear once and retire the runtime. Lifetime checks cover concurrent close,
+creating-thread ownership, virtual-thread rejection, Throwable identity,
+Cleaner recovery and 4,096 live closure slots. A changed-PID simulation checks
+the process guard; the suite does not fork a running JVM.
+
+Mixed packages exercise all nineteen primitive callback families and
+sixteen-argument Unit functions beside recursive values. CI retains both
+`build/recursive-callables/jvm-recursive.json` and
+`build/recursive-callables/jvm-mixed.json`. The
+[acceptance record](../evidence/jvm-recursive-callables-20260926.md) binds these
+results to package and source hashes. Use `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`
+only for local testing on older glibc, not production archives.
+
 ### Recursive C# packages
 
 ```sh

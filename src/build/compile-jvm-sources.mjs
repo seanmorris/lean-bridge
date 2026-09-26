@@ -86,7 +86,7 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 		const metadata = JSON.parse(files["binding-manifest.json"]), module = kotlinModule(metadata.namespace);
 		// Inline nested Type/Argument messages exceed Kotlin's metadata decoder
 		// limit at 32 container levels. Type-table references retain every level.
-		const copiedGraph = metadata.generator === "jvm-copied-graph-v1";
+		const copiedGraph = ["jvm-copied-graph-v1", "jvm-callable-graph-v1"].includes(metadata.generator);
 		const options = kotlinOptions(module, copiedGraph);
 		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", `${join(lib, "kotlin-stdlib.jar")}${delimiter}${join(lib, "annotations-13.0.jar")}`, "-d", "classes", ...kotlinSources, ...javaSources]);
 		classpath = `classes${delimiter}${join(lib, "kotlin-stdlib.jar")}`;

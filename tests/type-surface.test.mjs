@@ -64,10 +64,10 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	}
 });
 
-test("recursive copied acceptance covers all profiles and npm/C-family/Python/Rust/Ruby/Perl/C# callback payloads", () => {
+test("recursive copied acceptance covers all profiles and npm/C-family/Python/Rust/Ruby/Perl/C#/JVM callback payloads", () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "recursive");
 	const installed = cells.filter(cell => cell.stages.installedExecution.state === "passed");
-	assert.equal(installed.length, 150);
+	assert.equal(installed.length, 158);
 	assert.equal(new Set(installed.map(cell => cell.profile)).size, 17);
 	const promoted = installed.filter(cell => ["dotnet", "java", "kotlin", "php-native", "php-wasm"].includes(cell.profile) && !cell.position.startsWith("callback-"));
 	assert.equal(promoted.length, 30);
@@ -98,6 +98,8 @@ test("recursive copied acceptance covers all profiles and npm/C-family/Python/Ru
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["perl-recursive-callables-installed"]);
 		else if(cell.profile === "dotnet")
 			assert.deepEqual(cell.stages.installedExecution.evidence, ["dotnet-recursive-callables-installed"]);
+		else if(["java", "kotlin"].includes(cell.profile))
+			assert.deepEqual(cell.stages.installedExecution.evidence, ["jvm-recursive-callables-installed"]);
 		else assert.notEqual(cell.stages.installedExecution.state, "passed", cell.id);
 	}
 });
@@ -360,7 +362,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile
 		&& cell.path === "ordinary-source" && !observed.includes(cell)
-		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed"].includes(id))))
+		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "jvm-recursive-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed"].includes(id))))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 

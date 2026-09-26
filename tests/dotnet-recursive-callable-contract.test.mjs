@@ -16,9 +16,9 @@ import { auditManagedBindingPackage } from "../src/backends/managed/package-audi
 test("NuGet-only recursive admission preserves original signatures and cross-target layout", () => {
 	const ir = nativeRecursiveCallableReviewedIr(), model = compileNativeGraphProjection(ir, ["nuget"]);
 	assert.equal(model.ir, ir); assert.equal(model.functions.length, 33); assert.equal(model.callbacks.size, 18);
-	for(const targets of [["c", "nuget"], ["nuget", "cpp"], ["pypi", "nuget"], ["cargo", "nuget"], ["rubygems", "nuget"], ["cpan", "nuget"], ["c", "cpp", "pypi", "cargo", "rubygems", "cpan", "nuget"]])
+	for(const targets of [["c", "nuget"], ["nuget", "cpp"], ["pypi", "nuget"], ["cargo", "nuget"], ["rubygems", "nuget"], ["cpan", "nuget"], ["nuget", "maven"], ["c", "cpp", "pypi", "cargo", "rubygems", "cpan", "nuget", "maven"]])
 		assert.equal(compileNativeGraphProjection(ir, targets, "LeanBridge::Structured").layoutSha256, model.layoutSha256);
-	for(const targets of [[], ["nuget", "nuget"], ["nuget", "maven"], ["nuget", "php-native"], ["nuget", "wit-wasi"], ["unknown"]])
+	for(const targets of [[], ["nuget", "nuget"], ["nuget", "php-native"], ["nuget", "wit-wasi"], ["unknown"]])
 		assert.throws(() => compileNativeGraphProjection(ir, targets), { code: "native-graph-projection-unavailable" });
 });
 

@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { generateCallableJvmGraphPackage } from "../backends/jvm/callable-graph-package.mjs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
@@ -31,7 +32,7 @@ import { packageOrdinaryMaven } from "../release/native-maven.mjs";
 export const projectOrdinaryJvm = async ({ working, nativeRoot, runtimeRoot, adapterRoot, leanPrefix, settings, glibcMinimumVersion, environment, signal }) => {
 	const { model, projection, evidence } = await ordinaryJvmEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const root = join(working, "native/jvm");
-	const files = model.copiedGraph ? generateCopiedJvmGraphPackage(model.bindingIr, evidence) : generateCopiedJvmKotlinPackage(model.bindingIr, evidence);
+	const files = model.copiedGraph ? (model.copiedGraph.callbacks ? generateCallableJvmGraphPackage : generateCopiedJvmGraphPackage)(model.bindingIr, evidence) : generateCopiedJvmKotlinPackage(model.bindingIr, evidence);
 	auditManagedBindingPackage(model.bindingIr, files, "jvm");
 	for(const [path, contents] of Object.entries(files))
 	{ await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), contents, { flag: "wx" }); }

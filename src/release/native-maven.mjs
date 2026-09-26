@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { generateCallableJvmGraphPackage } from "../backends/jvm/callable-graph-package.mjs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,7 +41,7 @@ export const packageOrdinaryMaven = async ({ working, jvmRoot, nativeRoot, runti
 		|| compiled.namespace !== projection.namespace || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| !/^javac 22(?:[.+ -]|$)/.test(compiled.compiler)
 		|| (await nativeArtifactPaths(jvmRoot)).some(path => path !== "native-jvm.json" && !Object.hasOwn(compiled.files, path))) throw new Error("Compiled JVM projection differs from native evidence");
-	const sources = model.copiedGraph ? generateCopiedJvmGraphPackage(model.bindingIr, evidence) : generateCopiedJvmKotlinPackage(model.bindingIr, evidence);
+	const sources = model.copiedGraph ? (model.copiedGraph.callbacks ? generateCallableJvmGraphPackage : generateCopiedJvmGraphPackage)(model.bindingIr, evidence) : generateCopiedJvmKotlinPackage(model.bindingIr, evidence);
 	for(const [path, contents] of Object.entries(sources))
 		if(await readFile(join(jvmRoot, path), "utf8") !== contents) throw new Error("Generated JVM source differs from the compiled model");
 	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
