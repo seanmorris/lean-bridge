@@ -15,6 +15,7 @@ import { ownedCHistoryPath } from "./owned-c-source-history.mjs";
 import { ownedReviewedBaseline, ownedReviewedChangedPaths, ownedReviewedAddedPaths, ownedReviewedExecutionPath, reverseOwnedReviewedUpdate } from "./owned-reviewed-source-history.mjs";
 import { beforeOwnedPackage, ownedPackageChangedPaths } from "./owned-package-source-history.mjs";
 import { ownedHostChangedPaths } from "./owned-host-source-history.mjs";
+import { ownedCiChangedPaths } from "./owned-ci-source-history.mjs";
 
 export const ownedReviewedCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/reviewed-owned-source.test.mjs tests/reviewed-source.test.mjs tests/reviewed-callables.test.mjs tests/owned-c-values.test.mjs";
 export const ownedReviewedScope = { compiledLean: true, publicCValues: true
@@ -29,7 +30,7 @@ export const ownedReviewedExecutionSources = [...new Set([
 const source = async path => beforeOwnedPackage(path, await readFile(path, "utf8"));
 const historicalBytes = async path => {
 	const bytes = await readFile(path);
-	return ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path)
+	return ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path)
 		? beforeOwnedPackage(path, bytes.toString("utf8")) : bytes;
 };
 

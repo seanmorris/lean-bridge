@@ -12,6 +12,7 @@ import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { ownedPackageExecutionSources, assertOwnedPackageIntegration } from "./owned-package-evidence.mjs";
 import { ownedPackageHistoryPath } from "./owned-package-source-history.mjs";
 import { ownedHostBaseline, ownedHostChangedPaths, ownedHostAddedPaths, ownedHostExecutionPath, reverseOwnedHostUpdate } from "./owned-host-source-history.mjs";
+import { beforeOwnedCi, ownedCiHistoricalBytes } from "./owned-ci-source-history.mjs";
 
 export const ownedHostCommands = {
 	core: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-host-callbacks.test.mjs"
@@ -32,7 +33,7 @@ export const ownedHostExecutionSources = [...new Set([
 	, "tests/owned-host-callbacks.test.mjs", "tests/owned-host-packaging.test.mjs"
 	, "tests/perl-contract.test.mjs", "nix/perl-engine-source-boundary.json"
 ])].sort();
-const source = path => readFile(path, "utf8");
+const source = async path => beforeOwnedCi(path, await readFile(path, "utf8"));
 const passing = (run, command, count) => {
 	assert.equal(run.command, command); assert.equal(run.exitCode, 0);
 	assert.equal(sha256(run.text), run.sha256);
@@ -53,7 +54,7 @@ export const assertOwnedHostExecution = async record => {
 	for(const [name, count] of Object.entries({ core: 5, packages: 4, packageRegressions: 4, nixBoundary: 48 }))
 		passing(record.runs[name], ownedHostCommands[name], count);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedHostExecutionSources);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCiHistoricalBytes(path, await readFile(path))), digest, path);
 	for(const collection of [record.inputs, record.core, record.packages, record.packageRegressions])
 		assert.deepEqual(Object.keys(collection).sort(), ["ordinary", "reviewed"]);
 	for(const mode of ["ordinary", "reviewed"])
@@ -150,7 +151,7 @@ export const assertOwnedHostIntegration = async record => {
 	const updates = new Map(record.updates.map(item => [item.path, item])), restored = {};
 	for(const path of paths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = ownedCiHistoricalBytes(path, await readFile(path)); assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -160,7 +161,9 @@ export const assertOwnedHostIntegration = async record => {
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document, ...contracts } = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const { document: currentDocument, ...contracts } = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const document = JSON.parse(await source("docs/type-surface.v1.json"));
+	assert.equal(currentDocument.contractVersion, document.contractVersion);
 	const expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

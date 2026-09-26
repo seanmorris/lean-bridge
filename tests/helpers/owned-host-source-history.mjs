@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedCi } from "./owned-ci-source-history.mjs";
 
 export const ownedHostBaseline = "b74df10a50bbdc277f6e111718ddeb5af5006c72";
 export const ownedHostHistoryPath = "docs/evidence/owned-host-integration-20260926.json";
@@ -56,6 +57,7 @@ let history;
  * @param update - Recorded previous/current identities and reverse edits.
  */
 export const reverseOwnedHostUpdate = (source, update) => {
+	source = beforeOwnedCi(update.path, source, update.currentSha256);
 	assert.ok(ownedHostChangedPaths.includes(update.path), update.path);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length);
@@ -82,6 +84,7 @@ export const reverseOwnedHostUpdate = (source, update) => {
  * @param expected - Optional exact digest at which normalization must stop.
  */
 export const beforeOwnedHost = (path, source, expected) => {
+	source = beforeOwnedCi(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedHostChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedHostHistoryPath, "utf8"));

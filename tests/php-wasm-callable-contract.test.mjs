@@ -51,7 +51,7 @@ test("Zend callable admission includes copied aggregate replies", () => {
 test("wasm32 callback generations retire without token truncation or reuse", { skip: !existsSync("/usr/bin/cc") }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-wasm-callback-registry-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
-	await saveLakeFile(root, "registry.c", `#include <stdint.h>\n#include <stddef.h>\n#include <pthread.h>\n#include <assert.h>\nstatic pthread_mutex_t runtime_mutex = PTHREAD_MUTEX_INITIALIZER;\nenum { LEAN_BRIDGE_RUNTIME_READY = 2 };\nstatic unsigned runtime_state = LEAN_BRIDGE_RUNTIME_READY;\n${nativeCallbackHeader}\n${phpWasmCallbackBroker}\nstatic void invoke(void) {}\nint main(void) {
+	await saveLakeFile(root, "registry.c", `#include <stdint.h>\n#include <stddef.h>\n#include <pthread.h>\n#include <assert.h>\nstatic pthread_mutex_t runtime_mutex = PTHREAD_MUTEX_INITIALIZER;\nenum { LEAN_BRIDGE_RUNTIME_READY = 2 };\nstatic unsigned runtime_state = LEAN_BRIDGE_RUNTIME_READY;\nstatic int process_valid = 1;\nstatic int lean_bridge_native_process_valid(void) { return process_valid; }\n${nativeCallbackHeader}\n${phpWasmCallbackBroker}\nstatic void invoke(void) {}\nint main(void) {
   callback_slots[0].generation = (UINT32_MAX >> 12) - 1;
   uint64_t last = lb_native_callback_register(invoke, NULL);
   assert(last != 0 && last <= UINT32_MAX && (last & 4095) == 0);
@@ -59,6 +59,11 @@ test("wasm32 callback generations retire without token truncation or reuse", { s
   uint64_t next = lb_native_callback_register(invoke, NULL);
   assert(next != 0 && next <= UINT32_MAX && (next & 4095) == 1);
   assert(lb_native_callback_lookup(last).invoke == NULL); assert(lb_native_callback_take_error());
+  process_valid = 0;
+  assert(lb_native_callback_register(invoke, NULL) == 0);
+  assert(lb_native_callback_lookup(next).invoke == NULL); assert(lb_native_callback_take_error());
+  assert(lb_native_callback_wrong_thread(next)); lb_native_callback_release(next);
+  process_valid = 1;
   assert(lb_native_callback_lookup(next).invoke == invoke); lb_native_callback_release(next);
   for (unsigned i = 0; i < 4096; i++) callback_slots[i].generation = UINT32_MAX >> 12;
   assert(lb_native_callback_register(invoke, NULL) == 0); return 0;
