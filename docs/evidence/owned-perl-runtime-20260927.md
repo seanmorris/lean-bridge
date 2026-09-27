@@ -4,9 +4,11 @@ The private Perl ownership runtime executes freshly compiled Lean on Perl 5.36.3
 and 5.38.2, with threaded and unthreaded builds of each interpreter. Both
 ordinary-source analysis and independently reviewed IR pass the same checks.
 
-This stage does not enable ownership-containing values in installed CPAN
-packages. Owned-component package wiring, source registration and installed
-owned-package acceptance remain.
+Public CPAN admission for ownership-containing values remains disabled. The
+internal package projection now installs source-free scalar archives through
+both prebuilt XS and local XS compilation. The package acceptance record is in
+[Owned Perl packages](owned-perl-packages-20260927.md). Source registration,
+public build routing and the remaining installed-package checks are still open.
 
 ## Verified behavior
 
@@ -148,7 +150,7 @@ usable. The runtime archive binds the loader source and all four compiled XS
 variants. The report is `build/owned-perl-loader/installed.json`.
 
 These checks install the shared runtime and exercise private test extensions.
-They do not claim installed owned-component or private-GMP package acceptance.
+Owned-component and private-GMP package checks use a separate installed suite.
 The existing installed-package regression also passes, including its check that
 calls fail after shared-runtime retirement without leaking broker identities.
 

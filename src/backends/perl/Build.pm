@@ -48,6 +48,17 @@ sub verify {
     die "Corrupt package artifact: $path\n" unless sha256_hex(read_bytes($path)) eq $manifest->{files}{$path};
   }
 }
+sub owned_values {
+  my ($manifest) = @_;
+  return unless exists $manifest->{ownedValues};
+  my $owned = $manifest->{ownedValues};
+  die "Invalid owned Perl package contract\n" unless ref($owned) eq 'HASH'
+    && $manifest->{module} ne 'LeanBridge::Runtime' && $owned->{schemaVersion} == 1
+    && $owned->{prefix} =~ /\A[A-Za-z_][A-Za-z0-9_]*\z/
+    && $owned->{gmpLibrary} eq 'libgmp-lean-bridge.so.10'
+    && $owned->{componentLibrary} =~ /\A[A-Za-z0-9_][A-Za-z0-9_.+-]*\.so\z/;
+  return $owned;
+}
 sub compile_xs {
   my ($manifest, $directory) = @_;
   require ExtUtils::ParseXS;
@@ -59,12 +70,23 @@ sub compile_xs {
   my $c = "$directory/$stem.c";
   ExtUtils::ParseXS::process_file(filename => checked_path($manifest->{xs}), output => $c, prototypes => 0);
   my @include = ('.', $manifest->{include});
+  my $runtime_root;
   if ($manifest->{module} ne 'LeanBridge::Runtime') {
     require LeanBridge::Runtime;
     die "Incompatible shared Lean runtime package version\n" unless $LeanBridge::Runtime::VERSION eq $manifest->{runtimeVersion};
     die "Incompatible shared Lean runtime\n" unless LeanBridge::Runtime::_identity() eq $manifest->{runtimeIdentity};
     my $root = $INC{'LeanBridge/Runtime.pm'}; $root =~ s/\.pm\z//;
+    $runtime_root = $root;
     push @include, "$root/include";
+  }
+  my @link_flags = ('-Wl,--build-id=none');
+  if (my $owned = owned_values($manifest)) {
+    push @include, map { checked_path($_) } qw(owned/include owned/internal owned/gmp/include);
+    my $relative = $manifest->{module}; $relative =~ s{::}{/}g;
+    my $native = checked_path("lib/$relative/native");
+    # Order is part of the ownership ABI: the C adapter must use private GMP.
+    push @link_flags, '-L', $native, '-L', "$runtime_root/native", '-Wl,--no-as-needed',
+      "-l:$owned->{gmpLibrary}", "-l:$owned->{componentLibrary}", '-llean_bridge_native', '-lleanshared';
   }
   # CBuilder appends Config's optimize flags after extra_compiler_flags. A distro
   # -g there would restore debug paths and make relocated archives differ.
@@ -75,7 +97,7 @@ sub compile_xs {
   my $object = $builder->compile(source => $c, include_dirs => \@include,
     extra_compiler_flags => $flags);
   my $library = $builder->link(objects => $object, module_name => $manifest->{module},
-    lib_file => "$directory/$stem.$Config{dlext}", extra_linker_flags => '-Wl,--build-id=none');
+    lib_file => "$directory/$stem.$Config{dlext}", extra_linker_flags => \@link_flags);
   # Paths vary between build roots. Keep exact flags and portable root tokens.
   my %roots = (abs_path('.') => '\${DISTRIBUTION}', abs_path("$Config{archlib}/CORE") => '\${PERL_CORE}');
   if ($manifest->{module} ne 'LeanBridge::Runtime') {
@@ -96,6 +118,30 @@ sub compile_xs {
   write_json("$directory/receipt.json", $receipt);
   verify($manifest);
   return ($library, $receipt);
+}
+sub seal_owned_loader {
+  my ($manifest, $relative, $receipt) = @_;
+  return unless owned_values($manifest);
+  my $original = "lib/$relative.pm";
+  my $source = read_bytes($original);
+  my $marker = '__LEAN_BRIDGE_OWNED_XS_SHA256__';
+  my $hash = $receipt->{outputSha256};
+  die "Invalid installed XS identity\n" unless defined($hash) && $hash =~ /\A[0-9a-f]{64}\z/;
+  my $count = ($source =~ s/\Q$marker\E/$hash/g);
+  die "Owned Perl loader has no unique XS seal\n" unless $count == 1;
+  # Keep the verified distribution sources unchanged, including on reconfigure.
+  # A complete private data copy also supports the mandatory pre-install load.
+  for my $path ((sort keys %{$manifest->{files}}), "lib/$relative/install-receipt.json") {
+    next unless index($path, "lib/$relative/") == 0;
+    my $target = "_owned-install/$path";
+    make_path(dirname($target)); copy($path, $target) or die "Cannot stage owned loader data: $!\n";
+  }
+  my $target = "_owned-install/$original";
+  make_path(dirname($target));
+  open my $file, '>:raw', $target or die "Cannot stage owned Perl loader: $!\n";
+  print {$file} $source;
+  close $file or die "Cannot finish owned Perl loader: $!\n";
+  return $target;
 }
 sub configure {
   my $manifest = read_json('lean-bridge-package.json');
@@ -131,6 +177,7 @@ sub configure {
   make_path(dirname($binary)); copy($library, $binary) or die "Cannot stage XS: $!\n";
   my $receipt_path = "lib/$relative/install-receipt.json";
   make_path(dirname($receipt_path)); write_json($receipt_path, $receipt);
+  my $sealed_loader = seal_owned_loader($manifest, $relative, $receipt);
   my %pm;
   for my $path (sort keys %{$manifest->{files}}) {
     next unless $path =~ m{\Alib/};
@@ -139,9 +186,14 @@ sub configure {
   }
   $pm{$binary} = "\$(INST_ARCHLIB)/auto/$relative/$stem.$Config{dlext}";
   $pm{$receipt_path} = "\$(INST_LIB)/$relative/install-receipt.json";
+  if (defined $sealed_loader) {
+    delete $pm{"lib/$relative.pm"};
+    $pm{$sealed_loader} = "\$(INST_LIB)/$relative.pm";
+  }
   # Loading the chosen XS is mandatory, including in prebuilt-only mode.
   # Corrupt or ABI-incompatible binaries fail here. They never trigger fallback.
-  system($^X, '-Ilib', '-M' . $manifest->{module}, '-e', '1') == 0
+  system($^X, (defined($sealed_loader) ? ('-I_owned-install/lib') : ()),
+    '-Ilib', '-M' . $manifest->{module}, '-e', '1') == 0
     or die "Installed XS compatibility check failed\n";
   my $metadata = read_json('META.json');
   WriteMakefile(NAME => $manifest->{module}, VERSION => $manifest->{version},

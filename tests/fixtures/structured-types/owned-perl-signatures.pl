@@ -6,6 +6,7 @@ use Scalar::Util qw(blessed);
 use JSON::PP;
 use LeanBridge::OwnedProbe;
 
+my $installed = @ARGV && $ARGV[0] eq '--installed';
 my ($checks, $primitives) = (0, 0);
 my %called;
 sub check { my ($ok, $why) = @_; die "signature check " . ($checks + 1) . ": $why\n" unless $ok; ++$checks; }
@@ -21,14 +22,19 @@ sub same {
         : ref($expected) eq 'Math::BigInt' ? $actual->bcmp($expected) == 0
         : $actual eq $expected, $why);
 }
-sub snapshot { [LeanBridge::OwnedProbe::snapshot()] }
+sub snapshot {
+    return [LeanBridge::Runtime::_snapshot()->{live_identities}] if $installed;
+    return [LeanBridge::OwnedProbe::snapshot()];
+}
 sub restored {
     my ($before) = @_;
     my $after = snapshot();
-    check(join(',', @$before[0 .. 3, 6, 7]) eq join(',', @$after[0 .. 3, 6, 7]),
+    my @fields = $installed ? (0) : (0 .. 3, 6, 7);
+    check(join(',', @$before[@fields]) eq join(',', @$after[@fields]),
         'balanced owner ledger: ' . encode_json($after));
 }
 my $empty = snapshot();
+check($empty->[0] == 1, 'one installed native ownership session') if $installed;
 my $large = Math::BigInt->new(2)->bpow(521)->badd(9);
 my $ticket = invoke('new_ticket', $large, "forest 🌿\0tail");
 same(invoke('serial', $ticket), $large, 'unbounded owned resource serial');
@@ -180,6 +186,10 @@ $ticket->close(); undef $ticket;
 restored($empty);
 LeanBridge::OwnedProbe::Runtime::shutdown();
 my $final = snapshot();
-check($final->[0] == 0 && $final->[1] == 0 && $final->[2] == 0, 'all ownership released');
+if ($installed) {
+    check($final->[0] == 0, 'installed broker identities released after shutdown');
+} else {
+    check($final->[0] == 0 && $final->[1] == 0 && $final->[2] == 0, 'all ownership released');
+}
 print encode_json({checks => $checks, primitives => $primitives, exports => [sort keys %called],
-    live => $final->[1], identities => $final->[2]});
+    $installed ? (brokerIdentities => $final->[0]) : (live => $final->[1], identities => $final->[2])});

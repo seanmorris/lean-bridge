@@ -39,23 +39,32 @@ for my $name ('libleanshared.so', 'liblean_bridge_native.so') {
   _load("$root/native/$name", $manifest->{files}{"lib/$name"}{sha256});
 }
 __PACKAGE__->bootstrap($VERSION);
-sub _load_component {
+sub _check_component {
   _check_context();
-  my ($path, $library, $sha256, $runtime_identity, $sources, $component_id) = @_;
+  my ($runtime_identity, $sources, $component_id, $sha256) = @_;
   die "Incompatible shared Lean runtime\n" unless $identity eq $runtime_identity;
   die "Missing compiled Lean component identity\n"
     unless defined($component_id) && !ref($component_id) && length($component_id);
   die "Conflicting compiled Lean component: $component_id\n"
     if exists($component_libraries{$component_id}) && $component_libraries{$component_id} ne $sha256;
-  $path =~ s/\.pm\z//;
-  LeanBridge::Runtime::Platform::installed_abi(JSON::PP->new->decode(_read("$path/install-receipt.json")));
   for my $module (keys %$sources) {
     die "Conflicting compiled Lean module: $module\n"
       if exists($module_sources{$module}) && $module_sources{$module} ne $sources->{$module};
   }
-  _load("$path/native/$library", $sha256);
+}
+sub _record_component {
+  _check_component(@_);
+  my ($runtime_identity, $sources, $component_id, $sha256) = @_;
   $component_libraries{$component_id} = $sha256;
   @module_sources{keys %$sources} = values %$sources;
+}
+sub _load_component {
+  my ($path, $library, $sha256, $runtime_identity, $sources, $component_id) = @_;
+  _check_component($runtime_identity, $sources, $component_id, $sha256);
+  $path =~ s/\.pm\z//;
+  LeanBridge::Runtime::Platform::installed_abi(JSON::PP->new->decode(_read("$path/install-receipt.json")));
+  _load("$path/native/$library", $sha256);
+  _record_component($runtime_identity, $sources, $component_id, $sha256);
 }
 sub CLONE_SKIP { 1 }
 1;

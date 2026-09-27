@@ -12,6 +12,8 @@ import { createDeterministicTarGzFromFiles, tarGzipPackingIdentity } from "./det
 import { readVerifiedNativeRuntime, readVerifiedNativeComponent } from "../build/native-artifacts.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { cpanPackageMetadata, verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
+import { generateOwnedPerlPackage } from "../backends/perl/owned-package.mjs";
+import { readOwnedPerlGmp } from "../build/owned-perl-artifacts.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
@@ -137,6 +139,8 @@ export const refreshCpanInventory = async (directory, manifest) => {
  * @param root0.runtimeRoot - Verified process-wide native runtime directory.
  * @param root0.componentRoot - Compiled native component directory, or null for the shared runtime package.
  * @param root0.runtimePackageRoot - Completed shared CPAN runtime, including all selected XS variants.
+ * @param root0.ownedGmpRoot - Verified private GMP root, or null for ordinary packages.
+ * @param root0.ownedModuleName - Owned Perl namespace, separate from the native model.
  * @param root0.leanPrefix - Pinned Lean installation containing the compiler and matching headers.
  * @param root0.version - Pinned interpreter version or CPAN decimal release version.
  * @param root0.glibcMinimumVersion - Minimum documented Linux glibc version.
@@ -145,10 +149,13 @@ export const stageCpanPackage = async ({ outputRoot
 	, runtimeRoot
 	, componentRoot = null
 	, runtimePackageRoot = null
+	, ownedGmpRoot = null, ownedModuleName = null
 	, leanPrefix
 	, version = "0.001", glibcMinimumVersion = "2.38" }) => {
 	if(!componentVersionPattern.test(version)) throw new TypeError("CPAN version must use Perl decimal version syntax");
 	if(!componentRoot && version !== "0.001") throw new Error("CPAN runtime version is derived from its prepared payload");
+	if((ownedGmpRoot === null) !== (ownedModuleName === null) || ownedGmpRoot !== null && !componentRoot)
+		throw new TypeError("Owned CPAN staging requires a component, private GMP and module name");
 	if(!/^2\.\d+$/.test(glibcMinimumVersion)) throw new TypeError("invalid CPAN glibc floor");
 	const directory = resolve(outputRoot); await empty(directory);
 	const { manifest: runtime, identity: nativeRuntimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
@@ -159,10 +166,12 @@ export const stageCpanPackage = async ({ outputRoot
 	const runtimeIdentity = sha256(canonicalJson(binding));
 	void leanPrefix;
 	let moduleName = "LeanBridge::Runtime", xs = "Runtime.xs", include = "lib/LeanBridge/Runtime/include";
-	let packageMetadata = {}, runtimeVersion = version;
+	let packageMetadata = {}, runtimeVersion = version, ownedValues = null;
 	if(componentRoot)
 	{
-		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity, { copiedGraphs: true });
+		const isOwned = ownedGmpRoot !== null;
+		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity
+			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned });
 		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
 		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
 		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");
@@ -172,8 +181,20 @@ export const stageCpanPackage = async ({ outputRoot
 		runtimeVersion = prepared.manifest.version;
 		for(const [path, bytes] of sourceNotices.files)
 			await save(join(directory, "notices", path), bytes);
-		moduleName = model.moduleName; xs = "Component.xs"; include = ".";
-		const files = generatePerlBindingPackage(model, { ...receipt, runtimeIdentity }), relative = moduleName.replaceAll("::", "/");
+		moduleName = ownedModuleName ?? model.moduleName; xs = "Component.xs"; include = ".";
+		const relative = moduleName.replaceAll("::", "/");
+		let files;
+		if(isOwned)
+		{
+			const gmp = await readOwnedPerlGmp(ownedGmpRoot);
+			const generated = generateOwnedPerlPackage({ model
+				, receipt: { ...receipt, runtimeIdentity }
+				, metadata: JSON.parse(await readFile(join(componentRoot, "metadata.json"), "utf8"))
+				, moduleName, gmpSha256: gmp.sha256 });
+			files = generated.files; ownedValues = generated.owned;
+			for(const path of gmp.paths) await copy(join(ownedGmpRoot, path), join(directory, "owned/gmp", path));
+			await copy(join(ownedGmpRoot, "lib", gmp.library), join(directory, `lib/${relative}/native/${gmp.library}`));
+		} else files = generatePerlBindingPackage(model, { ...receipt, runtimeIdentity });
 		for(const [path, bytes] of Object.entries(files)) await save(join(directory, path), path.endsWith(".pm") ? bytes.replace("our $VERSION = '0.001';", `our $VERSION = '${version}';`)
 			.replace("use LeanBridge::Runtime;", `use LeanBridge::Runtime;\ndie "Incompatible shared Lean runtime package version\\n" unless $LeanBridge::Runtime::VERSION eq '${runtimeVersion}';`) : bytes);
 		await copy(join(componentRoot, receipt.library), join(directory, `lib/${relative}/native/${receipt.library}`));
@@ -240,6 +261,7 @@ export const stageCpanPackage = async ({ outputRoot
 		, xs
 		, include
 		, prebuilt: []
+		, ...(ownedValues ? { ownedValues } : {})
 		, files: {} };
 	await refreshCpanInventory(directory, manifest);
 	return { directory, manifest };

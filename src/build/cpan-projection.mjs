@@ -21,10 +21,13 @@ import { installCpanArchive } from "../release/cpan-install.mjs";
  * @param options.environment - Explicit toolchain environment.
  * @param options.signal - Optional abort signal.
  * @param options.onProgress - Build progress observer.
+ * @param options.ownedGmpRoot - Verified private GMP root for an owned component.
+ * @param options.ownedModuleName - Owned package namespace, separate from Lean IR.
  */
 export const projectCpanPackages = async ({
 	working, runtimeRoot, nativeRoot, leanPrefix
 	, settings = {}, environment = process.env, signal, onProgress
+	, ownedGmpRoot = null, ownedModuleName = null
 }) => {
 	const perls = environment.LEAN_BRIDGE_PERLS ? JSON.parse(environment.LEAN_BRIDGE_PERLS) : ["perl"];
 	if(!Array.isArray(perls) || !perls.length || perls.some(perl => typeof perl !== "string" || !perl))
@@ -40,7 +43,10 @@ export const projectCpanPackages = async ({
 		await compileCpanXsVariant({ packageRoot: runtimePackage, perl, environment });
 	}
 	const runtimeArchive = await archiveCpanPackage({ packageRoot: runtimePackage, outputRoot: archives });
-	await stageCpanPackage({ outputRoot: componentPackage, componentRoot: nativeRoot, runtimePackageRoot: runtimePackage, runtimeRoot, leanPrefix, version, glibcMinimumVersion: floor });
+	await stageCpanPackage({ outputRoot: componentPackage
+		, componentRoot: nativeRoot
+		, runtimePackageRoot: runtimePackage, runtimeRoot, leanPrefix, version
+		, glibcMinimumVersion: floor, ownedGmpRoot, ownedModuleName });
 	for(const perl of perls)
 	{
 		signal?.throwIfAborted();
