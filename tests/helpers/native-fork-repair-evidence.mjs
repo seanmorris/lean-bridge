@@ -12,6 +12,7 @@ import { nativeRecursiveCallableCallsProbe } from "./native-recursive-callable-c
 import { assertOwnedDotnetProcess } from "./owned-dotnet-process-evidence.mjs";
 import { ownedDotnetProcessPath } from "./owned-dotnet-process-history.mjs";
 import { nativeForkRepairBaseline, nativeForkRepairChangedPaths, nativeForkRepairAddedPaths, reverseNativeForkRepair } from "./native-fork-repair-history.mjs";
+import { beforeManagedCiIsolation, managedCiIsolationHistoricalBytes } from "./managed-ci-isolation-history.mjs";
 
 export const nativeForkRepairCommand = "LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs";
 export const nativeForkRepairScope = {
@@ -56,7 +57,8 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 	const updates = new Map(record.updates.map(item => [item.path, item]));
 	for(const path of paths)
 	{
-		const bytes = await readFile(path); assert.equal(sha256(bytes), record.sources[path], path);
+		const bytes = managedCiIsolationHistoricalBytes(path, await readFile(path), record.sources[path]);
+		assert.equal(sha256(bytes), record.sources[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -99,7 +101,8 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 	assert.deepEqual(record.transport.reports[0].nativeLibrary, record.transport.reports[1].nativeLibrary);
 	assert.deepEqual(record.inventory, previous.inventory); assert.equal(record.inventory.promoted, 0);
 	const { document, ...contracts } = await readTypeSurface();
-	const old = JSON.parse(reverseNativeForkRepair(await readFile("docs/type-surface.v1.json", "utf8"), updates.get("docs/type-surface.v1.json")));
+	const inventory = beforeManagedCiIsolation("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const old = JSON.parse(reverseNativeForkRepair(inventory, updates.get("docs/type-surface.v1.json")));
 	const expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{
@@ -107,7 +110,7 @@ export const assertNativeForkRepair = async (record, replay = true) => {
 		if(update)
 		{ assert.equal(file.sha256, update.previousSha256); file.sha256 = update.currentSha256; }
 	}
-	assert.deepEqual(document, expected);
+	assert.deepEqual(JSON.parse(inventory), expected);
 	assert.deepEqual(typeSurfaceCells(document, contracts), typeSurfaceCells(old, contracts));
 	if(replay) await assertOwnedDotnetProcess(previous);
 };

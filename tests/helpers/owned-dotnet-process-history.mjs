@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeNativeForkRepair, nativeForkRepairChangedPaths } from "./native-fork-repair-history.mjs";
+import { beforeNativeForkRepair, nativeForkRepairNormalizationPaths } from "./native-fork-repair-history.mjs";
 
 export const ownedDotnetProcessBaseline = "02d067429ab3b2b72d38270ea9c491c81017fe2f";
 export const ownedDotnetProcessPath = "docs/evidence/owned-dotnet-process-20260927.json";
@@ -31,7 +31,7 @@ export const ownedDotnetProcessChangedPaths = [
 	, "tests/owned-dotnet-evidence.test.mjs"
 	, "tests/owned-dotnet-loading-evidence.test.mjs"
 ].sort();
-export const ownedDotnetProcessNormalizationPaths = [...new Set([...ownedDotnetProcessChangedPaths, ...nativeForkRepairChangedPaths])].sort();
+export const ownedDotnetProcessNormalizationPaths = [...new Set([...ownedDotnetProcessChangedPaths, ...nativeForkRepairNormalizationPaths])].sort();
 export const ownedDotnetProcessAddedPaths = [
 	"docs/evidence/owned-dotnet-process-20260927.md"
 	, "tests/fixtures/structured-types/owned-dotnet-cold.c"
