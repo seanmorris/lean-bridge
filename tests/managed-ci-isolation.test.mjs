@@ -20,6 +20,9 @@ test("managed CI isolates timeout budgets, profile gates and artifact names", as
 
 test("managed CI rejects dropped gates, shared artifacts and incomplete bootstrap", async () => {
 	const source = await workflow();
+	const match = /^ {2}managed-consumers:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu.exec(source);
+	assert.ok(match);
+	const body = match[0];
 	for(const [before, after] of [
 		["profile: [dotnet, jvm, ruby]", "profile: [dotnet, jvm]"]
 		, ["fail-fast: false", "fail-fast: true"]
@@ -31,8 +34,8 @@ test("managed CI rejects dropped gates, shared artifacts and incomplete bootstra
 		, ["      - name: Prepare the pinned native compiler\n", "      - name: Prepare the pinned native compiler\n        if: matrix.profile == 'dotnet'\n"]
 		, ["steps.type_corpus_jvm.outcome != 'success'))", "steps.type_corpus_jvm.outcome == 'failure'))"]
 	]) {
-		const changed = source.replace(before, after);
-		assert.notEqual(changed, source, before);
-		assert.throws(() => assertManagedCiIsolation(changed), undefined, before);
+		const changed = body.replace(before, after);
+		assert.notEqual(changed, body, before);
+		assert.throws(() => assertManagedCiIsolation(source.replace(body, changed)), undefined, before);
 	}
 });

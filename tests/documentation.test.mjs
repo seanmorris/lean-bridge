@@ -13,6 +13,7 @@ import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { docPages } from "../site/registry.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
+import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
 import {
 	ConsumerSupportError,
 	consumerSummaryMarkdown,
@@ -555,7 +556,21 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/equality\/jvm\.json/);
   assert.match(workflow, /test -s build\/collections\/jvm-conversions\.json/);
   assert.match(workflow, /test -s build\/collections\/jvm\.json/);
-  assert.match(workflow, /build\/callables\/jvm\.json\n\s*build\/structured-callables\/jvm\.json\n\s*build\/recursive-callables\/jvm-recursive\.json\n\s*build\/recursive-callables\/jvm-mixed\.json\n\s*build\/compounds\/jvm\.json\n\s*build\/lists\/jvm\.json\n\s*build\/aliases\/jvm\.json\n\s*build\/variants\/jvm\.json\n\s*build\/equality\/jvm\.json\n\s*build\/recursive\/jvm-values\.json\n\s*build\/recursive\/jvm-conversions\.json\n\s*build\/recursive\/jvm-native\.json\n\s*build\/recursive\/kotlin-values\.json\n\s*build\/recursive\/jvm-package-cold\.json\n\s*build\/recursive\/jvm-packages\.json\n\s*build\/recursive\/jvm-reproducibility\.json\n\s*build\/recursive\/jvm-composition\.json\n\s*build\/recursive\/jvm-conflicts\.json\n\s*build\/collections\/jvm-conversions\.json\n\s*build\/collections\/jvm\.json\n\s*if-no-files-found: error/);
+  const jvmUpload = workflow.split("- name: Upload installed Java and Kotlin corpus observations\n")[1].split("      - name:")[0];
+  const jvmReports = jvmUpload.split("          path: |\n")[1].split("          if-no-files-found:")[0].trim().split("\n").map(line => line.trim());
+  assert.deepEqual(jvmReports, [
+    "build/type-corpus/java-kotlin.json"
+    , "build/type-corpus/reviewed-native-java-kotlin.json"
+    , "build/char-native/java-kotlin.json", "build/word-native/java-kotlin.json"
+    , "build/callables/jvm.json", "build/structured-callables/jvm.json"
+    , "build/recursive-callables/jvm-recursive.json"
+    , "build/recursive-callables/jvm-mixed.json"
+    , ...["runtime", "values", "layout", "kotlin", "conversions", "calls", "packaging"].map(name => `build/owned-jvm-${name}/`)
+    , ...["compounds", "lists", "aliases", "variants", "equality"].map(name => `build/${name}/jvm.json`)
+    , ...["jvm-values", "jvm-conversions", "jvm-native", "kotlin-values", "jvm-package-cold", "jvm-packages", "jvm-reproducibility", "jvm-composition", "jvm-conflicts"].map(name => `build/recursive/${name}.json`)
+    , "build/collections/jvm-conversions.json", "build/collections/jvm.json"
+  ]);
+  assert.match(jvmUpload, /if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_CALLABLE_TEST=1 node --test tests/python-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_PYTHON_STRUCTURED_CALLABLE_TEST=1 node --test tests/python-structured-callables.test.mjs"));
   assert.match(workflow, /test -s build\/structured-callables\/python\.json/);
@@ -685,7 +700,6 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_jvm\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_jvm\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-jvm-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/java-kotlin\.json\n\s*build\/type-corpus\/reviewed-native-java-kotlin\.json\n\s*build\/char-native\/java-kotlin\.json\n\s*build\/word-native\/java-kotlin\.json\n\s*build\/callables\/jvm\.json\n\s*build\/structured-callables\/jvm\.json\n\s*build\/recursive-callables\/jvm-recursive\.json\n\s*build\/recursive-callables\/jvm-mixed\.json\n\s*build\/compounds\/jvm\.json\n\s*build\/lists\/jvm\.json\n\s*build\/aliases\/jvm\.json\n\s*build\/variants\/jvm\.json\n\s*build\/equality\/jvm\.json\n\s*build\/recursive\/jvm-values\.json\n\s*build\/recursive\/jvm-conversions\.json\n\s*build\/recursive\/jvm-native\.json\n\s*build\/recursive\/kotlin-values\.json\n\s*build\/recursive\/jvm-package-cold\.json\n\s*build\/recursive\/jvm-packages\.json\n\s*build\/recursive\/jvm-reproducibility\.json\n\s*build\/recursive\/jvm-composition\.json\n\s*build\/recursive\/jvm-conflicts\.json\n\s*build\/collections\/jvm-conversions\.json\n\s*build\/collections\/jvm\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:dotnet"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=dotnet node --test tests/type-corpus.test.mjs");
   assert.match(workflow, /id: ordinary_dotnet\n\s*continue-on-error: true/);
   assert.match(workflow, /id: type_corpus_dotnet/);
@@ -698,7 +712,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.equal(packageDocument.scripts["test:type-corpus:c"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:cpp"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=cpp node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:c-family"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp node --test tests/type-corpus.test.mjs");
-  assert.match(workflow, /id: ordinary_c\n\s*continue-on-error: true/);
+  assert.match(workflow, /id: ordinary_c\n\s*if: matrix.profile == 'c-family'\n\s*continue-on-error: true/);
   assert.match(workflow, /id: type_corpus_c_family/);
   assert.match(workflow, /node --test tests\/native-c-family\.test\.mjs tests\/native-c-copied\.test\.mjs && npm run test:type-corpus:c-family/);
   assert.match(workflow, /steps\.ordinary_c\.outcome != 'success'/);
@@ -807,9 +821,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   const consumerWorkflows = `${workflow}\n${perlWorkflow}`;
   const contract = await readConsumerSupport();
   const managed = assertManagedCiIsolation(workflow);
+  const native = assertNativeCiIsolation(workflow, JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json")));
   for(const consumer of contract.consumers)
 {
-    if(!managed.profiles.includes(consumer.id))
+    if(!managed.profiles.includes(consumer.id) && !native.selectedConsumers.includes(consumer.id))
       assert.match(consumerWorkflows, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
     if(["python", "rust", "c", "cpp", "dotnet", "jvm", "ruby"].includes(consumer.id))
 {

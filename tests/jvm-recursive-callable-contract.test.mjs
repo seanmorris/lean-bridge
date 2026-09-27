@@ -148,10 +148,13 @@ test('the scoped JVM callable loader keeps exact asset hashes and long-token des
 	};
 	const source = assets(model, evidence);
 	assert.match(source, /volatile Links targets/); assert.match(source, /static Links resolve\(\)/);
-	assert.match(source, /verifyResource\("libstructured.so",/);
+	for(const [name, hash] of Object.entries(evidence.libraries))
+		assert.ok(source.includes(`hashes.put(${JSON.stringify(name)}, ${JSON.stringify(hash)});`));
+	assert.match(source, /for \(var entry : hashes.entrySet\(\)\) verifyResource\(entry.getKey\(\), entry.getValue\(\)\)/);
 	assert.match(source, /Conflicting builds of the same Lean component/);
 	assert.match(source, /Incompatible Lean runtime identities/);
-	assert.match(source, /_CallableGraphNative\.class\.getResourceAsStream/);
+	assert.match(source, /_Assets\.class\.getResourceAsStream/);
+	assert.ok(source.indexOf('verifyResource(entry.getKey(), entry.getValue())') < source.indexOf('if (properties.containsKey(component))'));
 	for(const cb of model.callbacks.values())
 	{
 		assert.ok(source.includes(JSON.stringify(cb.call)));

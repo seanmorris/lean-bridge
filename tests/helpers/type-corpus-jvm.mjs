@@ -77,7 +77,7 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	await mkdir(extracted);
 	await jvmRun("/usr/bin/unzip", ["-q", installedJar, "-d", extracted], project, clean);
 	const receiptPath = "META-INF/lean-bridge/package-receipt.json", receipt = await json(join(extracted, receiptPath));
-	assert.equal(receipt.kind, "lean-bridge-ordinary-maven-package");
+	assert.equal(receipt.kind, fixture?.packageKind ?? "lean-bridge-ordinary-maven-package");
 	assert.equal(receipt.namespace, library.jvmModule);
 	assert.deepEqual(receipt.kotlin, { namespace: `${library.jvmModule}.kotlin`, standardLibraryVersion: "2.2.0" });
 	assert.equal(receipt.name, pkg.name); assert.equal(receipt.version, pkg.version);
@@ -114,8 +114,15 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 		await saveLakeFile(project, `src/${example.file}`, example.source);
 	}
 	await saveLakeFile(project, "src/Wire.java", await readFile(join(repository, "tests/fixtures/type-corpus/consumers/Wire.java")));
+	const javaSupport = fixture?.javaSupport ?? {};
+	for(const [name, source] of Object.entries(javaSupport))
+	{
+		assert.match(name, /^[A-Za-z][A-Za-z0-9]*\.java$/u);
+		assert.ok(!["Wire.java", "Consumer.java", ...examples.map(example => example.file)].includes(name));
+		await saveLakeFile(project, "src/" + name, source);
+	}
 	const javacArgs = [...javaCompilerOptions, "-sourcepath", "empty-source", "-classpath", resolvedClasspath, "-d", "classes"];
-	await jvmRun(tools.javac, [...javacArgs, "src/Wire.java", ...javaProfile ? [file, ...examples.map(example => `src/${example.file}`)] : []], project, clean);
+	await jvmRun(tools.javac, [...javacArgs, "src/Wire.java", ...Object.keys(javaSupport).map(name => "src/" + name), ...javaProfile ? [file, ...examples.map(example => `src/${example.file}`)] : []], project, clean);
 	let kotlin, kotlinArgs;
 	if(!javaProfile)
 	{

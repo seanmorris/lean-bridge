@@ -12,6 +12,7 @@ import { beforeManagedCiIsolation, managedCiIsolationHistoricalBytes, managedCiI
 import { nativeForkRepairHistoricalBytes } from "./helpers/native-fork-repair-history.mjs";
 import { ownedDotnetHistoricalBytes } from "./helpers/owned-dotnet-source-history.mjs";
 import { ownedRubyHistoricalBytes } from "./helpers/owned-ruby-source-history.mjs";
+import { beforeOwnedJvmPackages } from "./helpers/owned-jvm-source-history.mjs";
 
 const receipt = async () => JSON.parse(await readFile(managedCiIsolationPath, "utf8"));
 
@@ -45,7 +46,7 @@ test("managed CI evidence rejects dropped profiles, commands and manufactured ex
 test("managed CI history authenticates whole files through every recent evidence layer", async () => {
 	for(const update of (await receipt()).updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeOwnedJvmPackages(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(beforeManagedCiIsolation(update.path, current)), update.previousSha256);
 		assert.equal(beforeManagedCiIsolation(update.path, current, update.currentSha256), current);
 		for(const historicalBytes of [managedCiIsolationHistoricalBytes, nativeForkRepairHistoricalBytes, ownedDotnetHistoricalBytes, ownedRubyHistoricalBytes])

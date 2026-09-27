@@ -13,7 +13,7 @@ import java.util.TreeSet;
 final class Loading {
     private Loading() { }
     private static Path root(String component) {
-        String path = System.getProperty("lean.bridge.jvm.native-library-v1." + component + "@1.0.0.path");
+        String path = System.getProperty("lean.bridge.jvm.native-library-v1.component:" + component + "@1.0.0.path");
         if (path == null) throw new AssertionError("Component is not registered: " + component);
         return Path.of(path);
     }

@@ -16,6 +16,7 @@ import { listReviewedIr } from "./helpers/list-fixture.mjs";
 import { nativeAliasReviewedIr } from "./helpers/native-alias-fixture.mjs";
 import { nativeVariantReviewedIr } from "./helpers/native-variant-fixture.mjs";
 import { assertJvmHistoricalSource, readJvmHistoricalEvidence } from "./helpers/jvm-source-history.mjs";
+import { beforeOwnedJvmGenerated } from "./helpers/owned-jvm-source-history.mjs";
 
 const receipt = () => readJvmHistoricalEvidence("java-collections-20260922");
 const observations = run => ({ checks: run.checks
@@ -122,9 +123,12 @@ test("JVM conversion and equality evidence distinguishes host checks from instal
 	}
 	assert.deepEqual(conversion.observation, { checks: 984, nativeCalls: 0, rejected: 562 });
 	assert.equal(conversion.probeSourceSha256, sha256(await readFile("tests/fixtures/collection-consumers/jvm-conversions.java")));
-	const javaSources = fixture => Object.fromEntries(Object.entries(generateCopiedJvmPackage(fixture())).filter(([path]) => path.endsWith(".java")).map(([path, source]) => [path, sha256(source)]));
-	assert.deepEqual(conversion.generatedSourceHashes, javaSources(collectionReviewedIr));
-	assert.deepEqual(equality.generatedSourceHashes, Object.assign({}, ...[collectionReviewedIr, compoundReviewedIr, listReviewedIr, nativeAliasReviewedIr, nativeVariantReviewedIr].map(javaSources)));
+	const javaSources = (fixture, expected) => Object.fromEntries(Object.entries(generateCopiedJvmPackage(fixture()))
+		.filter(([path]) => path.endsWith(".java"))
+		.map(([path, source]) => [path, sha256(beforeOwnedJvmGenerated(path, source, expected[path]))]));
+	assert.deepEqual(conversion.generatedSourceHashes, javaSources(collectionReviewedIr, conversion.generatedSourceHashes));
+	assert.deepEqual(equality.generatedSourceHashes, Object.assign({}, ...[collectionReviewedIr, compoundReviewedIr, listReviewedIr, nativeAliasReviewedIr, nativeVariantReviewedIr]
+		.map(fixture => javaSources(fixture, equality.generatedSourceHashes))));
 	for(const [profile, extension, checks] of [["java", "java", 32069], ["kotlin", "kt", 15642]])
 	{
 		assert.equal(equality.consumerHashes[profile], sha256(await readFile(`tests/fixtures/collection-consumers/jvm-equality.${extension}`)));

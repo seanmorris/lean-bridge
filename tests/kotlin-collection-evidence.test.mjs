@@ -21,6 +21,7 @@ import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { jvmCallableSignatures } from "./helpers/jvm-callable-fixture.mjs";
 import { assertCurrentKotlinCollectionSources } from "./helpers/current-collection-evidence.mjs";
 import { beforeJvmStructuredCallables } from "./helpers/jvm-structured-callable-source-history.mjs";
+import { beforeOwnedJvmGenerated } from "./helpers/owned-jvm-source-history.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/kotlin-collections-20260922.json"));
 const digest = value => sha256(canonicalJson(value));
@@ -93,7 +94,10 @@ test("Kotlin collections bind current sources to both original installed source 
 		assert.equal(Object.keys(run.installedFiles).length, 77);
 		// NativeAssets embeds compiled library identities checked below and by the installed loader.
 		for(const [path, source] of Object.entries(sources).filter(([path]) => /\.(java|kt)$/.test(path) && !path.endsWith("/NativeAssets.java")))
-			assert.equal(run.installedFiles[`META-INF/lean-bridge/jvm/${path}`].sha256, sha256(source), path);
+		{
+			const expected = run.installedFiles[`META-INF/lean-bridge/jvm/${path}`].sha256;
+			assert.equal(sha256(beforeOwnedJvmGenerated(path, source, expected)), expected, path);
+		}
 		for(const path of ["org/leanbridge/collections/Api.class", "org/leanbridge/collections/kotlin/Api.class", "META-INF/lean_bridge_org_leanbridge_collections.kotlin_module"])
 			assert.ok(run.installedFiles[path]);
 		assert.deepEqual(run.observation.errors, []);

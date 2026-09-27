@@ -216,6 +216,73 @@ returned functions own explicit leases. Resources and callable identities
 inside copied aggregates, retained host callbacks and asynchronous delivery
 remain unsupported.
 
+## Owned resources and aggregates
+
+Select the owned-value profile when records or other containers carry resources.
+For a Lean package named `owned-aggregates`, put these declarations in `Owned.lean`:
+
+```lean
+namespace Owned
+
+structure Ticket where
+  serial : Nat
+  label : String
+
+structure Payload where
+  count : Int
+  bytes : ByteArray
+
+structure Bundle where
+  primary : Ticket
+  spare : Option Ticket
+  peers : Array Ticket
+  history : List Ticket
+  payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩
+def serial (ticket : Ticket) : Nat := ticket.serial
+def callbackRecord (value : Bundle) (callback : Bundle → Bundle) : Bundle :=
+  callback value
+
+end Owned
+```
+
+Select the resource and ownership policy in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.callbackRecord"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": {
+    "maven": { "name": "org.leanbridge:owned-values", "version": "1.2.3" }
+  }
+}
+```
+
+Build with `lean-bridge build --project . --target maven --output release`.
+Verify `release/package-set-receipt.json` with `lean-bridge verify` before
+handing off or publishing the JAR and POM. Use coordinates you control for
+publication. The [Java](../consume/java.md#owned-resources-and-aggregates) and
+[Kotlin](../consume/kotlin.md#owned-resources-and-aggregates) examples call this API.
+
+The package contains both typed APIs, the compiled Lean component, the shared
+runtime and a private GMP library. Compatible JVM packages share verified
+dependencies. Loading rejects conflicting component builds, incompatible
+runtimes and unverified preloads. Native libraries remain loaded until process
+exit; normal JVM shutdown removes their extracted files.
+
+Reviewed contracts use the same ownership-aware Maven projection. Borrowed
+inputs and explicitly owned results are supported. Transferred inputs,
+anchored results and asynchronous delivery need separate lifetime support.
+
 ## Build the repository layout
 
 The separate Alpha interoperability fixture retains its resource and callback examples.
