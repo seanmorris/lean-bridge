@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedDotnetProcess, ownedDotnetProcessChangedPaths } from "./owned-dotnet-process-history.mjs";
+import { beforeOwnedDotnetProcess, ownedDotnetProcessNormalizationPaths } from "./owned-dotnet-process-history.mjs";
 
 export const ownedDotnetBaseline = "ab88c3888c3db7d4a1946e79093773233cdfafef";
 export const ownedDotnetHistoryPath = "docs/evidence/owned-dotnet-integration-20260927.json";
@@ -36,7 +36,7 @@ export const ownedDotnetChangedPaths = [
 	, "tests/helpers/wit-recursive-callable-evidence.mjs"
 	, "tests/owned-ruby-evidence.test.mjs"
 ].sort();
-export const ownedDotnetNormalizationPaths = [...new Set([...ownedDotnetChangedPaths, ...ownedDotnetProcessChangedPaths])].sort();
+export const ownedDotnetNormalizationPaths = [...new Set([...ownedDotnetChangedPaths, ...ownedDotnetProcessNormalizationPaths])].sort();
 export const ownedDotnetAddedPaths = [
 	ownedDotnetExecutionPath
 	, ...["foundation", "callbacks", "loading"].flatMap(name =>
