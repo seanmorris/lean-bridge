@@ -5,8 +5,8 @@ and 5.38.2, with threaded and unthreaded builds of each interpreter. Both
 ordinary-source analysis and independently reviewed IR pass the same checks.
 
 This stage does not enable ownership-containing values in installed CPAN
-packages. Package authentication, source registration and installed package
-acceptance remain.
+packages. Owned-component package wiring, source registration and installed
+owned-package acceptance remain.
 
 ## Verified behavior
 
@@ -126,6 +126,32 @@ oversized containers fail before a result is published. Every process exercises
 allocation failures. The failure walks restore their baseline ledgers; final
 host and native allocations and broker identities are zero.
 
+## Authenticated private loading
+
+The shared CPAN runtime provides context-checked private loading and mapped-file
+inspection for owned extensions. A generated package supplies the expected file
+hashes. The loader checks every supplied file and existing mapping before
+opening a new dependency. Compatible copies reuse the original pinned paths;
+they must still supply their own intact files on every load.
+
+Four actual installed runtimes execute 24 consumer processes with 812
+assertions. A competing-symbol fixture confirms that the private extension
+calls its dependency while a separate extension retains the original global
+binding. A private-only symbol stays out of that separate extension's lookup
+scope. One hundred repeated mapping probes release all temporary loader
+references, allowing an otherwise unpinned library to unload.
+
+The same matrix rejects altered or missing files, conflicting SONAMEs,
+unregistered preloaded libraries, malformed descriptors, fork children and
+cloned interpreter threads. Rejected warm loads leave the original extension
+usable. The runtime archive binds the loader source and all four compiled XS
+variants. The report is `build/owned-perl-loader/installed.json`.
+
+These checks install the shared runtime and exercise private test extensions.
+They do not claim installed owned-component or private-GMP package acceptance.
+The existing installed-package regression also passes, including its check that
+calls fail after shared-runtime retirement without leaking broker identities.
+
 ## Serialization reference retention
 
 On all four tested interpreters, Storable retains one reference when an object's
@@ -139,13 +165,15 @@ reference. Library destructors verify host cleanup at interpreter exit.
 
 ```sh
 source scripts/env.sh
-LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test \
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node --test \
   tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs \
   tests/owned-perl-conversions.test.mjs tests/owned-perl-xs.test.mjs \
-  tests/owned-perl-scalars.test.mjs
+  tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs
 ```
 
-The default interpreter matrix uses the four pinned Perl installations under
+This recorded run used glibc 2.36 and compiled its runtime locally. The
+production package floor remains unchanged. The default interpreter matrix
+uses the four pinned Perl installations under
 `.toolchains/perl/`. `LEAN_BRIDGE_PERLS` selects an explicit JSON array of
 interpreter paths. Reports are written to
 `build/owned-perl-runtime/ordinary.json` and
@@ -154,5 +182,6 @@ runtime, XS and consumer hashes. Conversion reports are in
 `build/owned-perl-conversions/{ordinary,reviewed}.json`; public XS execution
 reports are in `build/owned-perl-calls/{ordinary,reviewed}.json`; scalar reports
 are in `build/owned-perl-scalars/{ordinary,reviewed}.json`. The completed local
-run passed all fourteen tests with no skips. These reports bind local native
-executions, not installed archive receipts.
+run passed all fifteen tests with no skips. The ownership reports bind local
+native executions; the loader report additionally binds its installed shared
+runtime archive. Owned-component archive acceptance remains separate.

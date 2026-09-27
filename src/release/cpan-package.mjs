@@ -153,7 +153,7 @@ export const stageCpanPackage = async ({ outputRoot
 	const directory = resolve(outputRoot); await empty(directory);
 	const { manifest: runtime, identity: nativeRuntimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const bindingSources = {};
-	for(const name of ["Runtime.xs", "runtime.h", "Runtime.pm", "Platform.pm"])
+	for(const name of ["Runtime.xs", "runtime.h", "Runtime.pm", "Platform.pm", "OwnedAssets.pm"])
 		bindingSources[name] = sha256(await readFile(join(templates, name)));
 	const binding = { schemaVersion: 1, nativeRuntimeIdentity, sources: bindingSources };
 	const runtimeIdentity = sha256(canonicalJson(binding));
@@ -195,6 +195,7 @@ export const stageCpanPackage = async ({ outputRoot
 		await save(join(directory, "lib/LeanBridge/Runtime/binding.json"), json(binding));
 		await save(join(directory, "lib/LeanBridge/Runtime/target.json"), json({ glibcMinimumVersion }));
 		await copy(join(templates, "Platform.pm"), join(directory, "lib/LeanBridge/Runtime/Platform.pm"));
+		await copy(join(templates, "OwnedAssets.pm"), join(directory, "lib/LeanBridge/Runtime/OwnedAssets.pm"));
 		for(const path of Object.keys(runtime.files).filter(path => path.startsWith("lib/")))
       await copy(join(runtimeRoot, path), join(directory, "lib/LeanBridge/Runtime/native", basename(path)));
 		for(const path of Object.keys(runtime.files).filter(path => path.startsWith("include/lean/")))

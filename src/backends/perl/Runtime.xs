@@ -1,4 +1,9 @@
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include "runtime.h"
+#include <dlfcn.h>
+#include <link.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -29,6 +34,22 @@ typedef struct lbp_handle {
 void lbp_check_interpreter(pTHX) {
   if (lbp_interpreter != LBP_CONTEXT || lbp_pid != getpid() || !pthread_equal(lbp_thread, pthread_self()))
     croak("Lean Bridge requires its initiating process and Perl interpreter thread; cross-interpreter calls are unsupported");
+}
+static const char *lbp_library_path(pTHX_ SV *value, int absolute) {
+  lbp_check_interpreter(aTHX);
+  SvGETMAGIC(value);
+  if (!SvOK(value) || SvROK(value) || !SvPOK(value))
+    croak("Native library path must be a nonempty string");
+  STRLEN length;
+  const char *path = SvPV_nomg(value, length);
+  if (!length || memchr(path, '\0', length)) croak("Native library path contains empty or NUL bytes");
+  if ((absolute || strchr(path, '/')) && path[0] != '/') croak("Native library path must be absolute");
+  return path;
+}
+static void lbp_library_probe_end(pTHX_ void *data) {
+  SV *guard = data;
+  void *handle = INT2PTR(void *, SvUVX(guard));
+  if (handle) { dlclose(handle); SvUVX(guard) = 0; }
 }
 lbp_scope *lbp_begin(pTHX) {
   lbp_check_interpreter(aTHX);
@@ -208,6 +229,40 @@ _check_context()
   PPCODE:
     lbp_check_interpreter(aTHX);
     XSRETURN_EMPTY;
+
+void
+_open_private_library(path)
+    SV *path
+  PPCODE:
+    const char *name = lbp_library_path(aTHX_ path, 1);
+    /* Native owners can outlive the importing module. Keep this reference pinned.
+       Deep binding makes the extension prefer its private GMP dependency over
+       Lean's already-global GMP symbols. The dependency itself stays local. */
+    if (!dlopen(name, RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND))
+      croak("Cannot load private native artifact %s: %s", name, dlerror());
+    XSRETURN_EMPTY;
+
+void
+_mapped_library(path)
+    SV *path
+  PPCODE:
+    const char *name = lbp_library_path(aTHX_ path, 0);
+    ENTER;
+    /* Register cleanup before acquiring a loader reference. These mortals live
+       in the caller's scope, beyond LEAVE and the cleanup of the probe handle. */
+    SV *guard = sv_2mortal(newSVuv(0));
+    SAVEDESTRUCTOR_X(lbp_library_probe_end, guard);
+    void *handle = dlopen(name, RTLD_NOW | RTLD_NOLOAD);
+    SvUVX(guard) = PTR2UV(handle);
+    SV *result = &PL_sv_undef;
+    if (handle) {
+      struct link_map *mapping = NULL;
+      if (dlinfo(handle, RTLD_DI_LINKMAP, &mapping) || !mapping || !mapping->l_name || !*mapping->l_name)
+        croak("Cannot inspect mapped native artifact %s", name);
+      result = sv_2mortal(newSVpv(mapping->l_name, 0));
+    }
+    LEAVE;
+    XPUSHs(result);
 
 void
 _snapshot(...)
