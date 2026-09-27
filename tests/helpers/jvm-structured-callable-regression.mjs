@@ -13,6 +13,7 @@ import { compoundReviewedIr } from "./compound-fixture.mjs";
 import { listReviewedIr } from "./list-fixture.mjs";
 import { nativeAliasReviewedIr } from "./native-alias-fixture.mjs";
 import { nativeVariantReviewedIr } from "./native-variant-fixture.mjs";
+import { beforeOwnedJvmGenerated } from "./owned-jvm-source-history.mjs";
 
 export const jvmStructuredRegressionFixtures = {
 	callables: () => callableReviewedIr(jvmCallableSignatures)
@@ -36,7 +37,10 @@ export const assertJvmStructuredCodegenRegression = record => {
 		const ir = jvmStructuredRegressionFixtures[fixture.name]();
 		assert.equal(fixture.bindingIrSha256, sha256(canonicalJson(ir)));
 		const files = generateCopiedJvmKotlinPackage(ir);
-		assert.deepEqual(fixture.files, Object.fromEntries(Object.entries(files).map(([path, source]) => [path, { bytes: Buffer.byteLength(source), sha256: sha256(source) }])));
+		assert.deepEqual(fixture.files, Object.fromEntries(Object.entries(files).map(([path, source]) => {
+			const previous = beforeOwnedJvmGenerated(path, source, fixture.files[path]?.sha256);
+			return [path, { bytes: Buffer.byteLength(previous), sha256: sha256(previous) }];
+		})));
 		assert.equal(fixture.identicalToPredecessor, true);
 	}
 };

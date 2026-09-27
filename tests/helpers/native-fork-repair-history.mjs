@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeManagedCiIsolation, managedCiIsolationChangedPaths } from "./managed-ci-isolation-history.mjs";
+import { beforeManagedCiIsolation, managedCiIsolationNormalizationPaths } from "./managed-ci-isolation-history.mjs";
 
 export const nativeForkRepairBaseline = "6e73096a2e309bca71106924a5276e0a2ddb0c8c";
 export const nativeForkRepairPath = "docs/evidence/native-fork-repair-20260927.json";
@@ -20,7 +20,7 @@ export const nativeForkRepairChangedPaths = [
 	, "tests/native-recursive-callable-compile.test.mjs"
 	, "tests/owned-dotnet-process-evidence.test.mjs"
 ].sort();
-export const nativeForkRepairNormalizationPaths = [...new Set([...nativeForkRepairChangedPaths, ...managedCiIsolationChangedPaths])].sort();
+export const nativeForkRepairNormalizationPaths = [...new Set([...nativeForkRepairChangedPaths, ...managedCiIsolationNormalizationPaths])].sort();
 export const nativeForkRepairAddedPaths = [
 	"docs/evidence/native-fork-repair-20260927.md"
 	, "tests/helpers/native-fork-repair-evidence.mjs"

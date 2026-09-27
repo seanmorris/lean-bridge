@@ -36,6 +36,7 @@ import { packageOrdinaryPhp } from "../release/native-composer.mjs";
 import { projectOwnedNativeCFamily } from "./owned-c-projection.mjs";
 import { projectOwnedRuby } from "./owned-ruby-projection.mjs";
 import { projectOwnedDotnet } from "./owned-dotnet-projection.mjs";
+import { projectOwnedJvm } from "./owned-jvm-projection.mjs";
 
 /**
  * Reuse compiled source and runtime artifacts across C and C++ projections.
@@ -52,13 +53,14 @@ import { projectOwnedDotnet } from "./owned-dotnet-projection.mjs";
  */
 export const projectNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target)), ownedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget"].includes(target)), ownedHostCallbacks: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget"].includes(target)) });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "php-native", "wit-wasi"].includes(target)), ownedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"].includes(target)), ownedHostCallbacks: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"].includes(target)) });
 	if(model.ownedGraph)
 	{
-		const shared = targets.filter(target => !["rubygems", "nuget"].includes(target));
+		const shared = targets.filter(target => !["rubygems", "nuget", "maven"].includes(target));
 		const projections = shared.length ? await projectOwnedNativeCFamily({ working, nativeRoot, runtimeRoot, leanPrefix, targets: shared, settings, environment, signal }) : [];
 		if(targets.includes("rubygems")) projections.push(await projectOwnedRuby({ working, nativeRoot, runtimeRoot, leanPrefix, settings: settings.rubygems, environment, signal }));
 		if(targets.includes("nuget")) projections.push(await projectOwnedDotnet({ working, nativeRoot, runtimeRoot, leanPrefix, settings: settings.nuget, environment, signal }));
+		if(targets.includes("maven")) projections.push(await projectOwnedJvm({ working, nativeRoot, runtimeRoot, leanPrefix, settings: settings.maven, environment, signal }));
 		return targets.map(target => projections.find(item => item.ecosystem === target));
 	}
 	const graph = model.copiedGraph ? compileNativeGraphProjection(model.bindingIr, targets) : null;

@@ -245,7 +245,7 @@ that exceeds the JVM argument-slot limit becomes an immutable final class with
 typed accessors and a typed `builder()`. Set every field before `build()`.
 
 The [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)
-execute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. [Recursive callbacks](#recursive-callback-values) also have installed-package checks. Resource-containing aggregates remain separate work.
+execute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. [Recursive callbacks](#recursive-callback-values) also have installed-package checks. For values containing resources, use the [owned profile](#owned-resources-and-aggregates).
 
 ### Callbacks and returned Lean functions
 
@@ -265,7 +265,7 @@ Callbacks borrow one synchronous call. Their copied arguments remain valid after
 
 Call `invoke` on the closure's creating platform thread. Java virtual threads are rejected for callable operations because they can move between native threads. `close` is idempotent, may run on another thread, and defers native release while a call is active. All references and saved method references reject invocation after closing. `isClosed` reports explicit closure; a Cleaner releases abandoned leases as a fallback. Use try-with-resources for deterministic cleanup.
 
-Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. Futures, suspend functions, retained host callbacks and resource-containing aggregates remain unsupported. Recursive copied payloads use the [recursive callback profile](#recursive-callback-values). Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
+Callbacks accept one to sixteen copied arguments. Calls share a 16 MiB conversion budget. Each native adapter allows 64 nested callable invocations on a thread; the shared runtime allows 4,096 live closure identities. These limits do not bound Lean or JVM heap allocation. Use a fresh process after fork. Futures, suspend functions and retained host callbacks remain unsupported. Resource-containing payloads use the [owned profile](#owned-resources-and-aggregates); recursive copied payloads use the [recursive callback profile](#recursive-callback-values). Do not start detached work that uses a borrowed function. See the [installed primitive callable checks](../evidence/jvm-callables-20260919.md) and the structured example below.
 
 ### Structured callback values
 
@@ -372,9 +372,64 @@ retained host callbacks and asynchronous delivery remain unsupported.
 [Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
 cover both authoring paths, typed callers, failure cleanup and runtime-only execution.
 
+### Owned resources and aggregates
+
+The owned-value Maven profile supports resources inside records, arrays, Lists,
+options, results, products and recursive variants. Its JAR contains the Java API,
+the Kotlin API and their native dependencies. Consumers do not install Lean or
+configure a shared-runtime path.
+
+For the owned aggregate example, save `OwnedExample.java`:
+
+```java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.*;
+
+public final class OwnedExample {
+    public static void main(String[] args) {
+        try (var ticket = Api.newTicket(BigInteger.valueOf(42), "demo")) {
+            var input = new Bundle(ticket, Option.none(), new Ticket[0],
+                new Ticket[0], new Payload(BigInteger.ZERO, new byte[0]));
+            var output = Api.callbackRecord(input, borrowed -> borrowed);
+            try (var returned = output.primary()) {
+                System.out.println(Api.serial(returned)); // 42
+            }
+        }
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package), substituting
+`OwnedExample.java` and `OwnedExample`. The
+[author recipe](../publish/maven.md#owned-resources-and-aggregates) defines this API.
+
+Each resource or returned closure implements `AutoCloseable`. Close every
+returned owner, including owners inside containers. `retain()` creates a new
+owner that remains usable after the original closes. Copying a Java record or
+array shares its existing wrappers and does not retain them. Value equality
+compares copied contents, but resource leaves compare wrapper identity.
+
+Callbacks borrow resource and closure arguments until the callback returns.
+Call `retain()` inside the callback to keep an argument. A returned Lean closure's
+`asCallback()` preserves its native identity when passed back to Lean.
+`OwnedCallbacks.withRecovery(callback, recoveryValue)` supplies cleanup recovery
+for callbacks without a default result. A thrown callback still reaches the
+caller as the original exception; the recovery value is not a successful result.
+
+Calls, closure invocation and `retain()` require the creating platform thread.
+Cross-thread close and Cleaner cleanup queue releases for that thread. Native
+thread-exit cleanup releases outstanding ownership even if Java still holds the
+wrappers. Virtual threads and use after fork reject.
+
+Conversions share a limit of 128 value levels, 262,144 visits, a 16 MiB
+native-copy budget and a separate 16 MiB accounted Java-storage budget per call.
+These limits do not measure Lean working memory or every JVM allocation.
+Transferred inputs, anchored results and asynchronous callbacks are separate
+work. A saved host callback does not remain callable after its enclosing call.
+
 ### Alpha interoperability example
 
-The remaining example uses `org.leanbridge:lean-alpha:0.0.0`. Its separate fixture API also demonstrates identity-bearing resources, which ordinary-source Maven builds do not yet admit. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the authenticated Alpha release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`.
+The remaining example uses the separate `org.leanbridge:lean-alpha:0.0.0` fixture API. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the authenticated Alpha release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`.
 
 ## Resolve the package
 

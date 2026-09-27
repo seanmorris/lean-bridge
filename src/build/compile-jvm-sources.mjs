@@ -20,12 +20,13 @@ const kotlinJars = ["kotlin-compiler.jar", "kotlin-stdlib.jar", "annotations-13.
  * @param namespace - Independently derived Java namespace.
  * @param options - Independently verified native graph profile.
  * @param options.copiedGraph - Use finite metadata references for deep graph fields.
+ * @param options.ownedValues - Use finite metadata references for owned compositions.
  */
-export const validateKotlinCompilation = (evidence, namespace, { copiedGraph = false } = {}) => {
+export const validateKotlinCompilation = (evidence, namespace, { copiedGraph = false, ownedValues = false } = {}) => {
 	const module = kotlinModule(namespace), hashes = evidence?.compilerFiles;
 	if(evidence?.namespace !== `${namespace}.kotlin` || evidence?.standardLibraryVersion !== "2.2.0"
 		|| !/^info: kotlinc-jvm 2\.2\.0 /m.test(evidence?.version ?? "")
-		|| evidence?.module !== module || JSON.stringify(evidence?.options) !== JSON.stringify(kotlinOptions(module, copiedGraph))
+		|| evidence?.module !== module || JSON.stringify(evidence?.options) !== JSON.stringify(kotlinOptions(module, copiedGraph || ownedValues))
 		|| !hashes || Array.isArray(hashes) || typeof hashes !== "object"
 		|| kotlinJars.some(name => !Object.hasOwn(hashes, name))
 		|| Object.entries(hashes).some(([name, hash]) => !/^[A-Za-z0-9_.+-]+\.jar$/.test(name) || !/^[a-f0-9]{64}$/.test(hash)))
@@ -87,11 +88,12 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 		// Inline nested Type/Argument messages exceed Kotlin's metadata decoder
 		// limit at 32 container levels. Type-table references retain every level.
 		const copiedGraph = ["jvm-copied-graph-v1", "jvm-callable-graph-v1"].includes(metadata.generator);
-		const options = kotlinOptions(module, copiedGraph);
+		const ownedValues = metadata.generator === "jvm-owned-values-v1";
+		const options = kotlinOptions(module, copiedGraph || ownedValues);
 		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", `${join(lib, "kotlin-stdlib.jar")}${delimiter}${join(lib, "annotations-13.0.jar")}`, "-d", "classes", ...kotlinSources, ...javaSources]);
 		classpath = `classes${delimiter}${join(lib, "kotlin-stdlib.jar")}`;
 		kotlin = { version, module, options, compilerFiles, namespace: metadata.kotlin.namespace, standardLibraryVersion: "2.2.0" };
-		validateKotlinCompilation(kotlin, metadata.namespace, { copiedGraph });
+		validateKotlinCompilation(kotlin, metadata.namespace, { copiedGraph, ownedValues });
 	}
 	await run(javac, ["--release", "22", "-g:none", "-proc:none", "-encoding", "UTF-8", "-classpath", classpath, "-sourcepath", "src/main/java", "-d", "classes", ...javaSources]);
 	return { compiler, ...kotlin ? { kotlin } : {} };

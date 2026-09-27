@@ -1196,6 +1196,34 @@ jobs:
           LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs
           test -s build/recursive-callables/jvm-recursive.json
           test -s build/recursive-callables/jvm-mixed.json
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs
+          test -s build/owned-jvm-runtime/ordinary.json
+          test -s build/owned-jvm-runtime/reviewed.json
+          test -s build/owned-jvm-values/public.json
+          test -s build/owned-jvm-layout/ordinary.json
+          test -s build/owned-jvm-layout/reviewed.json
+          test -s build/owned-jvm-layout/scalars-ordinary.json
+          test -s build/owned-jvm-layout/scalars-reviewed.json
+          test -s build/owned-jvm-kotlin/composed.json
+          test -s build/owned-jvm-kotlin/scalars.json
+          test -s build/owned-jvm-conversions/ordinary.json
+          test -s build/owned-jvm-conversions/reviewed.json
+          test -s build/owned-jvm-conversions/scalars-ordinary.json
+          test -s build/owned-jvm-conversions/scalars-reviewed.json
+          test -s build/owned-jvm-calls/values-ordinary.json
+          test -s build/owned-jvm-calls/values-reviewed.json
+          test -s build/owned-jvm-calls/scalars-ordinary.json
+          test -s build/owned-jvm-calls/scalars-reviewed.json
+          test -s build/owned-jvm-calls/signatures-ordinary.json
+          test -s build/owned-jvm-calls/signatures-reviewed.json
+          test -s build/owned-jvm-packaging/callbacks-ordinary.json
+          test -s build/owned-jvm-packaging/callbacks-reviewed.json
+          test -s build/owned-jvm-packaging/scalars-ordinary.json
+          test -s build/owned-jvm-packaging/scalars-reviewed.json
+          test -s build/owned-jvm-packaging/coexistence.json
+          test -s build/owned-jvm-packaging/documentation.json
           LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs
           test -s build/compounds/jvm.json
           LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs
@@ -1241,6 +1269,13 @@ jobs:
             build/structured-callables/jvm.json
             build/recursive-callables/jvm-recursive.json
             build/recursive-callables/jvm-mixed.json
+            build/owned-jvm-runtime/
+            build/owned-jvm-values/
+            build/owned-jvm-layout/
+            build/owned-jvm-kotlin/
+            build/owned-jvm-conversions/
+            build/owned-jvm-calls/
+            build/owned-jvm-packaging/
             build/compounds/jvm.json
             build/lists/jvm.json
             build/aliases/jvm.json
@@ -1394,6 +1429,9 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"

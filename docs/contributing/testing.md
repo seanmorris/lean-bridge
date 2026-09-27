@@ -2025,6 +2025,44 @@ sixteen-argument Unit functions beside recursive values. CI retains both
 results to package and source hashes. Use `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`
 only for local testing on older glibc, not production archives.
 
+### Owned Java and Kotlin values
+
+Use the pinned Lean toolchain, JDK 22.0.2, Kotlin 2.2.0, Maven and a native
+C/C++ compiler. Run the ownership, public API and installed-package suites:
+
+```sh
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs \
+  tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs \
+  tests/owned-jvm-conversions.test.mjs tests/owned-jvm-calls.test.mjs \
+  tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs \
+  tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs \
+  tests/owned-jvm-documentation.test.mjs
+node --test tests/owned-jvm-ci.test.mjs
+```
+
+The Maven acceptance builds through the CLI on ordinary-source and reviewed-IR
+paths, verifies the handoff without producer tools, installs the original JAR
+and POM offline, and executes separate Java and Kotlin consumers. Tests remove
+the author source and installed source before rerunning relocated consumers
+on a `java.base`-only runtime. Exact public signatures, Kotlin metadata,
+resource ownership, nested copied values and synchronous callbacks are checked.
+The publishing recipe and consumer examples also build and execute verbatim.
+
+Other tests inject host/native allocation failures, reject expired borrows and
+foreign resource types, and observe native cleanup after platform threads
+exit. Mixed owned, copied and recursive packages exercise both languages,
+multiple loading orders, concurrent calls and shared retirement. Real JAR
+copies with missing or replaced native libraries must reject before mapping
+new libraries, including when another classloader has loaded the original.
+The loader fixture also checks conflicting identities, unverified preloads,
+private GMP isolation and simulated process-origin changes. It does not fork
+a running JVM.
+
+CI requires all eleven suites, checks 25 nonempty reports and retains the
+`build/owned-jvm-*` report directories. Runtime, converter and callable
+evidence receipts remain separate from installed Maven acceptance.
+
 ### Recursive native PHP callbacks
 
 Run the Composer acceptance with 64-bit PHP 8.2 or newer, FFI, Composer, the
