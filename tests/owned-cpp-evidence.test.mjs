@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedCppExecution, assertOwnedCppIntegration } from "./helpers/owned-cpp-evidence.mjs";
 import { beforeOwnedCpp, reverseOwnedCppUpdate, ownedCppHistoryPath, ownedCppExecutionPath } from "./helpers/owned-cpp-source-history.mjs";
+import { beforeOwnedCppOrder, ownedCppOrderHistoryPath, ownedCppOrderPaths } from "./helpers/owned-cpp-order-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -53,7 +54,7 @@ test("C++ ownership evidence rejects changed claims, sources, execution and pack
 test("C++ ownership source history rejects unknown text and overlapping edits", async () => {
 	for(const update of (await json(ownedCppHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeOwnedCppOrder(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseOwnedCppUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeOwnedCpp(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedCpp(update.path, source, update.currentSha256), source);
@@ -63,4 +64,33 @@ test("C++ ownership source history rejects unknown text and overlapping edits", 
 		assert.throws(() => reverseOwnedCppUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
 		assert.throws(() => reverseOwnedCppUpdate(source, { ...update, edits: [...update.edits, update.edits[0]] }));
 	}
+});
+
+test("C++ inventory repair preserves membership, original receipts and exact source predecessors", async () => {
+	const record = await json(ownedCppOrderHistoryPath);
+	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
+	assert.equal(record.kind, "owned-cpp-inventory-order");
+	assert.deepEqual(record.updates.map(update => update.path), ownedCppOrderPaths);
+	for(const update of record.updates)
+	{
+		const source = await readFile(update.path, "utf8");
+		assert.equal(sha256(source), update.currentSha256);
+		const previous = beforeOwnedCppOrder(update.path, source);
+		assert.equal(sha256(previous), update.previousSha256);
+		assert.equal(beforeOwnedCppOrder(update.path, source, update.currentSha256), source);
+		assert.equal(beforeOwnedCppOrder(update.path, previous), previous);
+		const unknown = source + "\n/* unrecorded */\n";
+		assert.equal(beforeOwnedCppOrder(update.path, unknown), unknown);
+		if(update.path === "package.json" || update.path === "config/cli-package.v1.json")
+		{
+			const oldManifest = JSON.parse(previous), currentManifest = JSON.parse(source);
+			assert.deepEqual(currentManifest, { ...oldManifest, files: [...oldManifest.files].sort() });
+			assert.equal(new Set(currentManifest.files).size, currentManifest.files.length);
+		}
+	}
+	assert.deepEqual(Object.keys(record.receipts).sort(), [ownedCppExecutionPath, ownedCppHistoryPath].sort());
+	for(const [path, digest] of Object.entries(record.receipts)) assert.equal(sha256(await readFile(path)), digest);
+	assert.deepEqual(Object.keys(record.additions), ["tests/helpers/owned-cpp-order-history.mjs"]);
+	for(const [path, digest] of Object.entries(record.additions)) assert.equal(sha256(await readFile(path)), digest);
+	assert.equal(beforeOwnedCppOrder("src/build/native-project.mjs", "unrecorded"), "unrecorded");
 });

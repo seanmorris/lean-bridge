@@ -14,6 +14,7 @@ import { ownedHostExecutionSources, assertOwnedHostIntegration } from "./owned-h
 import { ownedHostHistoryPath } from "./owned-host-source-history.mjs";
 import { ownedCiHistoryPath } from "./owned-ci-source-history.mjs";
 import { ownedCppBaseline, ownedCppChangedPaths, ownedCppAddedPaths, ownedCppExecutionPath, reverseOwnedCppUpdate } from "./owned-cpp-source-history.mjs";
+import { ownedCppOrderHistoricalBytes } from "./owned-cpp-order-history.mjs";
 
 export const ownedCppCommands = {
 	core: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-cpp-runtime.test.mjs tests/owned-cpp-callables.test.mjs"
@@ -198,7 +199,7 @@ export const assertOwnedCppIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = ownedCppOrderHistoricalBytes(path, await readFile(path)); assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -208,7 +209,10 @@ export const assertOwnedCppIntegration = async record => {
 		if(previousSources[path]) assert.equal(sha256(restored[path] ?? current), previousSources[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document, ...contracts } = await readTypeSurface(), previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const { document: currentDocument, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(ownedCppOrderHistoricalBytes("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json")));
+	assert.deepEqual(typeSurfaceCells(currentDocument, contracts), typeSurfaceCells(document, contracts));
+	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

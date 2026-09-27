@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedCppOrder } from "./owned-cpp-order-history.mjs";
 
 export const ownedCppBaseline = "de6ec9dde00779476152481876de339f4cb82656";
 export const ownedCppHistoryPath = "docs/evidence/owned-cpp-integration-20260927.json";
@@ -50,6 +51,7 @@ let history;
  * @param update - Recorded source identities and literal edits.
  */
 export const reverseOwnedCppUpdate = (source, update) => {
+	source = beforeOwnedCppOrder(update.path, source, update.currentSha256);
 	assert.ok(ownedCppChangedPaths.includes(update.path), update.path);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length);
@@ -75,6 +77,7 @@ export const reverseOwnedCppUpdate = (source, update) => {
  * @param expected - Optional identity at which normalization must stop.
  */
 export const beforeOwnedCpp = (path, source, expected) => {
+	source = beforeOwnedCppOrder(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedCppChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedCppHistoryPath, "utf8"));

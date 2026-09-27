@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "planNode": 1219,
+  "kind": "owned-cpp-inventory-order",
+  "baselineRevision": "511f43f1b02a6bddb5517f47a497e8eda766a065",
+  "updates": [
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072",
+      "currentSha256": "736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624",
+      "edits": [
+        {
+          "start": 8944,
+          "previous": "    \"src/backends/cpp/primitives.mjs\",\n",
+          "current": ""
+        },
+        {
+          "start": 9159,
+          "previous": "",
+          "current": "    \"src/backends/cpp/primitives.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "fdf64ee5452db847ee87d2f4d638e70420a889c803e336f9c15cc787edbbd8a7",
+      "currentSha256": "62882f316f590819033f7661205d410b6d33dee9cac473c8042cd873b8e35f00",
+      "edits": [
+        {
+          "start": 32724,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 33760,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 55282,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 56318,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 72477,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 73521,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 88778,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 89814,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 112668,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 409810,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 410460,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 989300,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 990347,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1114932,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1116426,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1144492,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1145824,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1154606,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1156084,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1166367,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1170177,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1198928,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1202721,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1229207,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1233003,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1262358,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1265966,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1302159,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1307518,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1328729,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1333070,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1351107,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1355607,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1370774,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1375299,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        },
+        {
+          "start": 1394162,
+          "previous": "          \"sha256\": \"3e2e366d67dc731cbebe718102e9527b6389b0606f07034ed147bfe491994072\"\n",
+          "current": "          \"sha256\": \"736a4438a29adc4abacfad08a6441f1bd5bab4d5bc3a5714b9bddad3c12ff624\"\n"
+        },
+        {
+          "start": 1395789,
+          "previous": "          \"sha256\": \"2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82\"\n",
+          "current": "          \"sha256\": \"2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb\"\n"
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "2a72234900c9acd2fb199dc5f5bdc84f10c4db7a57e39511e5ccc458fcc01a82",
+      "currentSha256": "2c34d66329b2aefac02beb142cef91c68145967002fadd11ece0cbf69b6352bb",
+      "edits": [
+        {
+          "start": 8823,
+          "previous": "    \"src/backends/cpp/primitives.mjs\",\n",
+          "current": ""
+        },
+        {
+          "start": 9038,
+          "previous": "",
+          "current": "    \"src/backends/cpp/primitives.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-cpp-evidence.mjs",
+      "previousSha256": "88d6aa16738797648f9e5e8a812fe108c103a396cc15249db65bd77f4b968d56",
+      "currentSha256": "72faca1c4e6881c281754851e4fc853905ba7902f0e17187d30d365d620381b6",
+      "edits": [
+        {
+          "start": 1023,
+          "previous": "",
+          "current": "import { ownedCppOrderHistoricalBytes } from \"./owned-cpp-order-history.mjs\";\n"
+        },
+        {
+          "start": 14350,
+          "previous": "\t\tconst current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);\n",
+          "current": "\t\tconst current = ownedCppOrderHistoricalBytes(path, await readFile(path)); assert.equal(sha256(current), record.sourceHashes[path], path);\n"
+        },
+        {
+          "start": 14899,
+          "previous": "\tconst { document, ...contracts } = await readTypeSurface(), previousDocument = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n",
+          "current": "\tconst { document: currentDocument, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(ownedCppOrderHistoricalBytes(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\")));\n\tassert.deepEqual(typeSurfaceCells(currentDocument, contracts), typeSurfaceCells(document, contracts));\n\tconst previousDocument = JSON.parse(restored[\"docs/type-surface.v1.json\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-cpp-source-history.mjs",
+      "previousSha256": "cfc3ae2333a7962612dadaf38e3cd7e052d2159ce3735b5eb3d264168b3d1a83",
+      "currentSha256": "411b718b608bac7f0840cc2353d9d91f45c0b17308d3e207af3da59495afc2f2",
+      "edits": [
+        {
+          "start": 222,
+          "previous": "",
+          "current": "import { beforeOwnedCppOrder } from \"./owned-cpp-order-history.mjs\";\n"
+        },
+        {
+          "start": 2606,
+          "previous": "",
+          "current": "\tsource = beforeOwnedCppOrder(update.path, source, update.currentSha256);\n"
+        },
+        {
+          "start": 3843,
+          "previous": "",
+          "current": "\tsource = beforeOwnedCppOrder(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-cpp-evidence.test.mjs",
+      "previousSha256": "c81172aef53356675e685728405e6c539e0c9a246f5d66accfcf1862cf764877",
+      "currentSha256": "a395b669720e373bb8290d4ebab5ca8bf70c149156b48afe05d3c6a75dfd0bf5",
+      "edits": [
+        {
+          "start": 503,
+          "previous": "",
+          "current": "import { beforeOwnedCppOrder, ownedCppOrderHistoryPath, ownedCppOrderPaths } from \"./helpers/owned-cpp-order-history.mjs\";\n"
+        },
+        {
+          "start": 3261,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst source = beforeOwnedCppOrder(update.path, await readFile(update.path, \"utf8\"));\n"
+        },
+        {
+          "start": 3999,
+          "previous": "",
+          "current": "\ntest(\"C++ inventory repair preserves membership, original receipts and exact source predecessors\", async () => {\n\tconst record = await json(ownedCppOrderHistoryPath);\n\tassert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);\n\tassert.equal(record.kind, \"owned-cpp-inventory-order\");\n\tassert.deepEqual(record.updates.map(update => update.path), ownedCppOrderPaths);\n\tfor(const update of record.updates)\n\t{\n\t\tconst source = await readFile(update.path, \"utf8\");\n\t\tassert.equal(sha256(source), update.currentSha256);\n\t\tconst previous = beforeOwnedCppOrder(update.path, source);\n\t\tassert.equal(sha256(previous), update.previousSha256);\n\t\tassert.equal(beforeOwnedCppOrder(update.path, source, update.currentSha256), source);\n\t\tassert.equal(beforeOwnedCppOrder(update.path, previous), previous);\n\t\tconst unknown = source + \"\\n/* unrecorded */\\n\";\n\t\tassert.equal(beforeOwnedCppOrder(update.path, unknown), unknown);\n\t\tif(update.path === \"package.json\" || update.path === \"config/cli-package.v1.json\")\n\t\t{\n\t\t\tconst oldManifest = JSON.parse(previous), currentManifest = JSON.parse(source);\n\t\t\tassert.deepEqual(currentManifest, { ...oldManifest, files: [...oldManifest.files].sort() });\n\t\t\tassert.equal(new Set(currentManifest.files).size, currentManifest.files.length);\n\t\t}\n\t}\n\tassert.deepEqual(Object.keys(record.receipts).sort(), [ownedCppExecutionPath, ownedCppHistoryPath].sort());\n\tfor(const [path, digest] of Object.entries(record.receipts)) assert.equal(sha256(await readFile(path)), digest);\n\tassert.deepEqual(Object.keys(record.additions), [\"tests/helpers/owned-cpp-order-history.mjs\"]);\n\tfor(const [path, digest] of Object.entries(record.additions)) assert.equal(sha256(await readFile(path)), digest);\n\tassert.equal(beforeOwnedCppOrder(\"src/build/native-project.mjs\", \"unrecorded\"), \"unrecorded\");\n});\n"
+        }
+      ]
+    }
+  ],
+  "receipts": {
+    "docs/evidence/owned-cpp-integration-20260927.json": "183ce8bb5eed0effb10dd31dd1ddf2763b2c8d9a2b4be99e31cdaae5828275f2",
+    "docs/evidence/owned-cpp-execution-20260927.json": "db9952eb18b45ea36a3b14d20f86bbee246699c8217459152d6e18ef1c01293e"
+  },
+  "additions": {
+    "tests/helpers/owned-cpp-order-history.mjs": "5b455a6b41f4afb900770887c314085d54ff376b6c0721334119b7cb79a481f2"
+  }
+}
