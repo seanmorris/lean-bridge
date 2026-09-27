@@ -15,6 +15,7 @@ import { generateOwnedPerlConversions } from "../src/backends/perl/owned-convers
 import { generateOwnedPerlXs } from "../src/backends/perl/owned-xs.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
 import { ownedHostCallbackReviewedIr } from "./helpers/owned-host-callback-fixture.mjs";
+import { ownedDotnetCallbacksReviewedIr } from "./helpers/owned-dotnet-callback-fixture.mjs";
 import { perlGraphCommands } from "./helpers/perl-graph-probes.mjs";
 import { ownedPerlConversionProbe } from "./helpers/owned-perl-conversion-probe.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -53,12 +54,14 @@ test("Perl ownership support rejects injected component prefixes", () => {
 		assert.throws(() => ownedPerlRuntime(name));
 });
 
-for(const reviewed of [false, true]) test(`Perl leases clean real Lean results on all selected ABIs (${reviewed ? "reviewed" : "ordinary"})`, {
+for(const complete of [false, true])
+for(const reviewed of [false, true]) test(`Perl leases clean real Lean results on all selected ABIs (${reviewed ? "reviewed" : "ordinary"}${complete ? ", complete signatures" : ""})`, {
 	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 600000
 }, async t => {
-	const compiled = await compileOwnedAggregateFixture(t, { fixture: "owned-host-callbacks"
+	const reportName = `${complete ? "complete-" : ""}${reviewed ? "reviewed" : "ordinary"}`;
+	const compiled = await compileOwnedAggregateFixture(t, { fixture: complete ? "owned-dotnet-callables" : "owned-host-callbacks"
 		, hostCallbacks: true
-		, ...(reviewed ? { reviewedIr: ownedHostCallbackReviewedIr() } : {}) });
+		, ...(reviewed ? { reviewedIr: complete ? ownedDotnetCallbacksReviewedIr() : ownedHostCallbackReviewedIr() } : {}) });
 	const generated = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component, hostCallbacks: true });
@@ -174,7 +177,7 @@ $builder->link(objects => [$object], module_name => 'LeanBridge::OwnedProbe',
 		}
 		observations.push({ perl, modes });
 	}
-	await saveLakeFile(resolve("build/owned-perl-runtime"), `${reviewed ? "reviewed" : "ordinary"}.json`, canonicalJson({
+	await saveLakeFile(resolve("build/owned-perl-runtime"), reportName + ".json", canonicalJson({
 		observations, compiledLean: true
 		, installedPackage: false, nativeHostCallbacks: false
 		, sourceIdentitySha256: sha256(canonicalJson(compiled.sourceIdentity))
@@ -199,7 +202,7 @@ $builder->link(objects => [$object], module_name => 'LeanBridge::OwnedProbe',
 		assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 		t.diagnostic("conversions " + JSON.stringify(observed)); converted.push({ perl, observed });
 	}
-	await saveLakeFile(resolve("build/owned-perl-conversions"), `${reviewed ? "reviewed" : "ordinary"}.json`, canonicalJson({
+	await saveLakeFile(resolve("build/owned-perl-conversions"), reportName + ".json", canonicalJson({
 		observations: converted, compiledLean: true, installedPackage: false
 		, nativeHostCallbacks: false
 		, sourceIdentitySha256: sha256(canonicalJson(compiled.sourceIdentity))
@@ -220,12 +223,14 @@ ${xs.slice(xs.indexOf("\nvoid\nreset("))}
 `;
 	await saveLakeFile(compiled.directory, "Probe.xs", callXs);
 	await saveLakeFile(compiled.directory, "calls.pl", callConsumer);
+	const signatureConsumer = complete ? await readFile("tests/fixtures/structured-types/owned-perl-signatures.pl", "utf8") : null;
+	if(complete) await saveLakeFile(compiled.directory, "signatures.pl", signatureConsumer);
 	await saveLakeFile(compiled.directory, "LeanBridge/OwnedProbe.pm", `${calls.valuesSource}
 package LeanBridge::OwnedProbe;
 require DynaLoader; our @ISA = ('DynaLoader'); our $VERSION = '0.001';
 __PACKAGE__->bootstrap($VERSION); 1;
 `);
-	const called = [];
+	const called = [], signatures = [];
 	for(const perl of perlGraphCommands())
 	{
 		await runCopied(perl, ["build.pl"], compiled.directory, { ...environment, CC: "/usr/bin/cc", LD: "/usr/bin/cc" });
@@ -236,12 +241,25 @@ __PACKAGE__->bootstrap($VERSION); 1;
 		assert.ok(observed.exceptions > 0); assert.ok(observed.nativeFailures > 0);
 		assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 		t.diagnostic("public calls " + JSON.stringify(observed)); called.push({ perl, observed });
+		if(complete)
+		{
+			const execution = await runCopied(perl, ["-I.", "signatures.pl"], compiled.directory, environment);
+			assert.equal(execution.stderr, "");
+			const signature = JSON.parse(execution.stdout);
+			assert.deepEqual(signature.exports, calls.functions.map(fn => fn.publicName).sort());
+			assert.equal(signature.primitives, 19);
+			assert.ok(signature.checks > 100);
+			assert.equal(signature.live, 0); assert.equal(signature.identities, 0);
+			t.diagnostic("complete signatures " + JSON.stringify(signature));
+			signatures.push({ perl, observed: signature });
+		}
 	}
-	await saveLakeFile(resolve("build/owned-perl-calls"), `${reviewed ? "reviewed" : "ordinary"}.json`, canonicalJson({
+	await saveLakeFile(resolve("build/owned-perl-calls"), reportName + ".json", canonicalJson({
 		observations: called, compiledLean: true
 		, installedPackage: false, nativeHostCallbacks: true
 		, sourceIdentitySha256: sha256(canonicalJson(compiled.sourceIdentity))
 		, declarationsSha256: sha256(calls.declarations), xsSha256: sha256(callXs)
 		, valuesSha256: sha256(calls.valuesSource), probeSha256: sha256(callConsumer)
+		, ...(complete ? { signatures, signatureConsumerSha256: sha256(signatureConsumer) } : {})
 	}));
 });

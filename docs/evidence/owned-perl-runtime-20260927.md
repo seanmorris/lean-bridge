@@ -5,8 +5,8 @@ and 5.38.2, with threaded and unthreaded builds of each interpreter. Both
 ordinary-source analysis and independently reviewed IR pass the same checks.
 
 This stage does not enable ownership-containing values in installed CPAN
-packages. Complete scalar/composition execution coverage, package
-authentication, source registration and installed package acceptance remain.
+packages. Dedicated scalar-packet boundary coverage, package authentication,
+source registration and installed package acceptance remain.
 
 ## Verified behavior
 
@@ -90,8 +90,27 @@ identities are zero.
 
 Sixteen additional XS/header checks compile all four fixture families on all
 four Perl ABIs, including higher-order and all nineteen primitive callback
-signatures. These compilation checks do not establish execution coverage for
-every scalar and composed signature. Installed CPAN acceptance remains separate.
+signatures. Installed CPAN acceptance remains separate.
+
+## Complete callback and composition fixture
+
+A second compiled fixture contains 51 exports. On both authoring paths and all
+four Perl ABIs, an additional consumer executes all 51 through the generated
+public API. Each process passes 114 checks, including every primitive callback
+type, higher-order borrowed functions, explicit function retention, returned
+multi-argument closures and returned closures that accept Perl callbacks.
+
+The same run covers every Choice constructor, empty containers, aliases,
+recursive optional links, nested Array/List/Option/Except values, mixed records,
+Unicode, NUL, UInt64 maximum and signed integer minima. None, Some(None),
+Some(Some(false)) and Some Unit retain their distinct meanings. Each final
+ownership ledger is zero.
+
+This larger fixture also repeats the lifetime, conversion and public-call fault
+walks above. Its source-bound reports use `complete-ordinary.json` and
+`complete-reviewed.json` in the same three report directories. A dedicated
+all-scalar record fixture with floating-point bit patterns and malformed-field
+boundaries remains part of the package acceptance work.
 
 ## Serialization reference retention
 
@@ -119,5 +138,5 @@ interpreter paths. Reports are written to
 runtime, XS and consumer hashes. Conversion reports are in
 `build/owned-perl-conversions/{ordinary,reviewed}.json`; public XS execution
 reports are in `build/owned-perl-calls/{ordinary,reviewed}.json`. The completed
-local run passed all ten tests with no skips. These reports bind local native
+local run passed all twelve tests with no skips. These reports bind local native
 executions, not installed archive receipts.
