@@ -143,7 +143,7 @@ assert mix([[1, 2], [], [3]]) == ((3,), (), (2, 1))
 Run `./.venv/bin/python lists.py` after installing its prepared wheel. Native
 output cleanup is automatic, including if a nested Python conversion fails.
 The [installed List checks](../evidence/python-lists-20260920.md) cover both source
-paths. List callback payloads remain unsupported.
+paths. Lists also work as [callback and closure payloads](#structured-callback-values).
 
 ### Named aliases
 
@@ -205,8 +205,8 @@ results and products. Returned containers are independent tuples, even when
 inputs use lists. The 32-level type limit and existing copy budgets apply.
 The [installed variant checks](../evidence/python-variants-20260921.md) cover
 both source paths, strict stubs, relocation and conversion-failure cleanup.
-Recursive values use the graph adapter described below. Callable and
-identity-bearing variant payloads remain unsupported.
+Recursive values use the graph adapter described below. Identity-bearing variant
+payloads require the explicit [ownership profile](#resource-containing-values).
 
 ### Recursive values
 
@@ -323,8 +323,8 @@ Callback result buffers stay alive until Lean finishes copying them. Each
 Python call and its callbacks share a 16 MiB conversion allowance. Native
 conversions have a separate 16 MiB allowance; neither limit bounds the Lean
 algorithm's working memory or all Python allocator overhead. Resource-containing
-aggregates, asynchronous delivery and callbacks inside copied containers remain
-unsupported.
+aggregates use the separate [ownership profile](#resource-containing-values).
+Asynchronous delivery and callbacks inside copied containers remain unsupported.
 
 The [installed structured callback checks](../evidence/python-structured-callables-20260924.md)
 cover both source paths on CPython 3.11 and 3.12, strict typing, relocated wheels,
@@ -372,9 +372,67 @@ The [installed recursive callback checks](../evidence/python-recursive-callables
 cover both source paths, Python 3.11/3.12, strict typing, allocation failures,
 creator-thread exit and closure-capacity recovery.
 
+### Resource-containing values
+
+When the publisher selects resource identities and an explicit ownership policy,
+ordinary wheels expose those resources inside records, variants, arrays, Lists,
+options, results, products and recursive values. Install the publisher's wheel
+normally. It includes the generated API, compatible Lean runtime and GMP;
+application code needs no native-library configuration.
+
+For the Owned acceptance package, save this as `owned-values.py`:
+
+```python
+import lean_owned_aggregates as api
+
+with api.new_ticket(2**256 + 1, "receipt") as ticket:
+    bundle = api.Bundle(ticket, None, (), (), api.Payload(-7, b"payload"))
+    returned = api.callback_record(bundle, lambda value: value)
+    with returned.primary as copied_ticket:
+        assert api.serial(copied_ticket) == 2**256 + 1
+        assert api.label(copied_ticket) == "receipt"
+
+    with api.identity_closure(None) as echo:
+        with echo(bundle).primary as copied_ticket:
+            assert api.serial(copied_ticket) == api.serial(ticket)
+```
+
+Run `./.venv/bin/python owned-values.py`. Records and constructor cases are
+frozen dataclasses. Returned containers are independent tuples, while resource
+fields retain their original Lean identities through checked ownership leases.
+All nineteen primitive types can appear alongside resource fields.
+
+Use `with` or `close()` to release a resource wrapper. A shallow Python copy
+shares its ownership lease; closing either wrapper leaves the other usable.
+`retain()` acquires independent native ownership. Garbage collection supplies
+fallback cleanup on the creating thread. Resources reject use on another thread,
+after creator-thread exit or after fork. Deep copying and pickling identities
+are rejected.
+
+Callback containers are independent values, but their resource fields borrow
+the invocation and expire when it returns. Call `retain()` inside the callback
+to keep one. Reply values are copied and retained before callback-local storage
+expires. An original callback exception returns to the caller after native
+cleanup. Functions that require a failure-path value accept
+`with_recovery(function, typed_value)`; that value never turns a failed callback
+into a successful result. Async functions and awaitable replies are rejected.
+
+Returned Lean closures support `with`, `retain()` and `close()`. They can be
+passed back as callbacks, including higher-order arguments. Returning a closure
+that captures a call-scoped Python callback does not extend that callback's
+lifetime; invoking the expired callback raises `LeanBridgeError`.
+
+Each call shares limits of 128 levels, 262,144 visited nodes, 16 MiB of native
+conversion data and 16 MiB of accounted Python conversion storage across its
+inputs, callbacks and result. Cycles and invalid values are rejected. These
+limits do not bound Lean's working memory or every Python allocation overhead.
+See [owned-wheel acceptance](../evidence/owned-python-packages-20260927.md) and
+the [author configuration](../publish/pypi.md#export-resource-containing-values).
+
 ### Alpha resource example
 
-The remaining example uses the separate Alpha fixture for resource identity and its fixed callback API. Resources still require that separate projection; primitive, structured and recursive callbacks and returned closures work in ordinary wheels as shown above.
+The remaining example uses the separate Alpha fixture and its fixed API.
+New packages use the ordinary source and ownership profiles described above.
 
 ### Requirements and package
 

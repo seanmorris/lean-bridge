@@ -18,6 +18,7 @@ import { copiedRustLock } from "../../src/backends/rust/copied-values.mjs";
 import { ownedCppExecutionSources, assertOwnedCppIntegration } from "./owned-cpp-evidence.mjs";
 import { ownedCppHistoryPath } from "./owned-cpp-source-history.mjs";
 import { ownedCppOrderHistoryPath } from "./owned-cpp-order-history.mjs";
+import { beforeOwnedPython, ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
 import { ownedRustBaseline, ownedRustChangedPaths, ownedRustAddedPaths, ownedRustExecutionPath, beforeOwnedRust, reverseOwnedRustUpdate } from "./owned-rust-source-history.mjs";
 
 export const ownedRustCommands = {
@@ -197,13 +198,18 @@ export const assertOwnedRustIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const bytes = await readFile(path);
+		const current = ownedPythonChangedPaths.includes(path) ? beforeOwnedPython(path, bytes.toString("utf8")) : bytes;
+		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update) restored[path] = reverseOwnedRustUpdate(current.toString("utf8"), update);
 		if(previousSources[path]) assert.equal(sha256(restored[path] ?? current), previousSources[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document, ...contracts } = await readTypeSurface(), previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const { document: currentDocument, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeOwnedPython("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	assert.deepEqual(typeSurfaceCells(currentDocument, contracts), typeSurfaceCells(document, contracts));
+	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

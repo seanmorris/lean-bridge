@@ -27,6 +27,30 @@ import {
 	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
+test("owned Python documentation and CI require installed wheels and typed lifetime checks", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const step = workflow.split("- name: Compare installed Python corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
+	assert.match(step, /bootstrap-rust-ci\.sh/u);
+	for(const command of ["tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs"
+		, "tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs"])
+		assert.ok(step.includes(`LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test ${command}`));
+	for(const name of ["ordinary", "reviewed", "scalars-ordinary", "scalars-reviewed"])
+		assert.ok(step.includes(`test -s build/owned-python-packaging/${name}.json`));
+	for(const directory of ["runtime", "values", "packaging"])
+		assert.ok(workflow.includes(`build/owned-python-${directory}/`));
+	const consumer = await readFile("docs/consume/python.md", "utf8");
+	assert.match(consumer, /### Resource-containing values/u);
+	assert.match(consumer, /retain\(\)/u);
+	assert.match(consumer, /with_recovery/u);
+	assert.doesNotMatch(consumer, /Resources remain in the separate Alpha fixture/u);
+	const publisher = await readFile("docs/publish/pypi.md", "utf8");
+	const owned = publisher.split("## Export resource-containing values\n")[1].split("\n## ")[0];
+	const configuration = JSON.parse(owned.split("```json\n")[1].split("\n```\n")[0]);
+	assert.deepEqual(configuration.resources, ["Owned.Ticket"]);
+	assert.equal(configuration.ownedAggregates.ownership, "lease");
+	assert.equal(configuration.targets.pypi.name, "owned-values");
+});
+
 test("owned Cargo documentation and CI require installed packages and typed lifetime checks", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const step = workflow.split("- name: Compare isolated Cargo corpus consumers with fresh Lean\n")[1].split("      - name:")[0];
@@ -517,7 +541,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   for(const version of ["3.11", "3.12"]) assert.ok(workflow.includes(`python-version: "${version}"`));
   assert.match(workflow, /LEAN_BRIDGE_COLLECTION_PYTHONS:.*steps\.collection_python311\.outputs\.python-path.*steps\.collection_python312\.outputs\.python-path/);
   assert.match(workflow, /python-collection-typecheck\/bin\/python -m pip install --no-cache-dir mypy==2\.3\.1/);
-  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*build\/owned-python-runtime\/\n\s*build\/owned-python-values\/\n\s*build\/owned-python-packaging\/\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs"));
@@ -698,7 +722,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-python-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*build\/owned-python-runtime\/\n\s*build\/owned-python-values\/\n\s*build\/owned-python-packaging\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests\/python-variants\.test\.mjs/);
   assert.match(workflow, /test -s build\/variants\/python\.json/);
   assert.match(workflow, /id: type_corpus_ruby/);

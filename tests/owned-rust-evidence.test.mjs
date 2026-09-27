@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedRustExecution, assertOwnedRustIntegration } from "./helpers/owned-rust-evidence.mjs";
 import { beforeOwnedRust, reverseOwnedRustUpdate, ownedRustHistoryPath, ownedRustExecutionPath } from "./helpers/owned-rust-source-history.mjs";
+import { beforeOwnedPython } from "./helpers/owned-python-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -52,7 +53,7 @@ test("Rust ownership evidence rejects altered lifetimes, execution and package c
 test("Rust source history preserves exact predecessors and rejects unrecorded edits", async () => {
 	for(const update of (await json(ownedRustHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeOwnedPython(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(reverseOwnedRustUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeOwnedRust(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedRust(update.path, source, update.currentSha256), source);

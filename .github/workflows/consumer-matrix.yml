@@ -799,6 +799,16 @@ jobs:
           test -s build/recursive/python-native.json
           LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs
           test -s build/recursive/python-packages.json
+          bash scripts/bootstrap-rust-ci.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs
+          test -s build/owned-python-packaging/ordinary.json
+          test -s build/owned-python-packaging/reviewed.json
+          test -s build/owned-python-packaging/scalars-ordinary.json
+          test -s build/owned-python-packaging/scalars-reviewed.json
           test -s build/type-corpus/python.json
           test -s build/type-corpus/reviewed-native-python.json
       - name: Upload the real-Lean type corpus report
@@ -824,6 +834,9 @@ jobs:
             build/recursive/python-conversions.json
             build/recursive/python-native.json
             build/recursive/python-packages.json
+            build/owned-python-runtime/
+            build/owned-python-values/
+            build/owned-python-packaging/
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -962,6 +975,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 node --test tests/python-copied-graph-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_TEST=1 LEAN_BRIDGE_PYTHON_GRAPH_NATIVE_TEST=1 node --test tests/python-copied-graph-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false

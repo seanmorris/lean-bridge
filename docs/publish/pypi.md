@@ -1,6 +1,6 @@
 # Build and publish Python packages
 
-Build an ordinary Lake project into a prepared Python wheel with `--target pypi`. Consumers install it with pip and call typed Python functions without compiling Lean or configuring native libraries. Ordinary wheels also support synchronous primitive callbacks and returned Lean closures. The separate Alpha projection remains available for its resource fixture.
+Build an ordinary Lake project into a prepared Python wheel with `--target pypi`. Consumers install it with pip and call typed Python functions without compiling Lean or configuring native libraries. Synchronous callbacks and returned Lean closures accept copied values. Resource-containing values use the explicit ownership profile below.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -103,8 +103,9 @@ Export `List` parameters, results or record fields without a target-specific
 annotation. Python accepts exact lists or tuples and returns owned tuples.
 Lists can nest with arrays, copied records, options, results and binary products.
 Their conversion limits match the other copied containers. List and Array keep
-distinct contract types even though both use Python sequences. List callback
-payloads remain unsupported. See the [consumer example](../consume/python.md#lists)
+distinct contract types even though both use Python sequences. Lists also work
+as [callback and closure payloads](#structured-callback-values).
+See the [consumer example](../consume/python.md#lists)
 and [installed checks on both source paths](../evidence/python-lists-20260920.md).
 
 ## Export named copied aliases
@@ -282,6 +283,61 @@ their capture and require `close()` or a `with` block. Cyclic Python inputs,
 invalid constructors and values beyond the 128-level, 262,144-node or 16 MiB
 copy limits are rejected. Callback exceptions propagate after native cleanup.
 Copied fields cannot contain resources or callable identities.
+
+## Export resource-containing values
+
+Select nominal resources and the aggregate ownership policy in shared export
+configuration. For the Owned acceptance project:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "exports": [
+    "Owned.newTicket", "Owned.serial", "Owned.label",
+    "Owned.callbackRecord", "Owned.identityClosure"
+  ],
+  "arities": { "Owned.identityClosure": 1 },
+  "targets": {
+    "pypi": { "name": "owned-values", "version": "1.2.3" }
+  }
+}
+```
+
+Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
+The source analyzer derives container and callback types from elaborated Lean.
+An independently reviewed version-4 contract can specify the same ownership
+decisions and is checked against fresh compiler metadata before building.
+
+Python receives typed resource wrappers, frozen dataclasses, constructor unions,
+finite aliases and tuples. Resource leaves can appear in records, variants,
+arrays, Lists, options, results, binary products and recursive values. All
+nineteen primitive fields keep their ordinary Python conversions. Synchronous
+host callbacks borrow resource leaves for one invocation; `retain()` explicitly
+extends ownership. Returned Lean closures can receive typed callbacks and serve
+as callback arguments themselves. Transfer and anchored-result lowering are
+not part of this ownership profile.
+
+The wheel includes GMP and the shared Lean runtime with their licenses and
+source notices. Import verifies the bundled libraries, shares compatible loaded
+libraries, and rejects conflicting or externally preloaded unverified native
+libraries. Consumer setup remains an ordinary pip install and Python import.
+The author needs Python 3.11+, Lean and the native C build tools. A PyPI-only
+build needs no public C package. Combined C, C++, Cargo and PyPI selections
+share one compiled component and owned C adapter.
+
+Run the [resource-containing consumer example](../consume/python.md#resource-containing-values)
+against the original wheel before upload. The
+[owned-wheel checks](../evidence/owned-python-packages-20260927.md) cover source-free
+offline installs, relocation, typed consumers, ownership and loader isolation.
+Upload this wheel using the same Twine workflow below.
 
 ## Choose the package name and platform
 

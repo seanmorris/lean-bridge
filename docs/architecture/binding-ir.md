@@ -88,6 +88,17 @@ libraries, verify the C/GMP ABI during the producer build and load the runtime
 automatically. Package verification regenerates the Rust API and rejects changed
 lifetimes, sources or native artifacts.
 
+The [Python ownership projection](../consume/python.md#resource-containing-values)
+uses frozen dataclasses, named variants and native containers with checked resource
+leases. Callback resource leaves borrow the invocation; explicit `retain()` keeps
+independent ownership after return. Native cleanup precedes propagation of the
+original Python exception. Prepared wheels bundle authenticated Lean and GMP
+libraries and load them automatically on ordinary import. Producer-side ABI
+assertions check ctypes layouts. Strict stubs cover resource-containing values,
+recursive aliases and higher-order calls. The loader rejects incompatible or
+externally preloaded runtimes and post-fork reuse before taking its registry lock.
+This profile requires GIL-enabled Python 3.11+ on Linux x86-64.
+
 ## Rich values cross as rich values
 
 The `result` constructor stores its arguments as `[success, error]`. Lean `Except ε α` therefore lowers to `result<α, ε>`. For example, `Except String UInt32` becomes `result<uint32, string>`, with a numeric success payload and a text error payload. This argument order is part of the IR contract, independent of the order used by a source language. Recognizing the type during analysis does not enable compound signatures in ordinary compiled packages; those still require their transport adapters.

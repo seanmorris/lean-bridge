@@ -55,18 +55,18 @@ test("unsupported native targets reject owned source decisions before compiling"
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const project = join(directory, "source");
 	await cp(resolve("tests/fixtures/onboarding/owned-aggregates"), project, { recursive: true });
-	for(const targets of [["pypi"], ["cpan"], ["nuget"], ["maven"], ["rubygems"], ["php-native"], ["wit-wasi"], ["c", "pypi"], ["c", "cpp", "cpan"]])
+	for(const targets of [["cpan"], ["nuget"], ["maven"], ["rubygems"], ["php-native"], ["wit-wasi"], ["c", "cpp", "cpan"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), /ownedAggregates/);
-	for(const targets of [["cargo"], ["c", "cargo"], ["cpp", "cargo"], ["c", "cpp", "cargo"]])
+	for(const targets of [["cargo"], ["c", "cargo"], ["cpp", "cargo"], ["c", "cpp", "cargo"], ["pypi"], ["c", "pypi"], ["cpp", "pypi"], ["c", "cpp", "cargo", "pypi"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), { code: "ENOENT" });
 	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Owned"] }));
 	await saveLakeFile(project, "api.binding-ir.json", canonicalJson(ownedAggregateReviewedIr()));
 	await assert.rejects(buildNativeProject({ projectRoot: project
-		, targets: ["pypi"], outputRoot: join(directory, "unused")
+		, targets: ["nuget"], outputRoot: join(directory, "unused")
 		, environment: copiedCleanEnvironment }), { code: "consumer-upgrade-required" });
 	await assert.rejects(access(join(directory, "unused")), { code: "ENOENT" });
 });

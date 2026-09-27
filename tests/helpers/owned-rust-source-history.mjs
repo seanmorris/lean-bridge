@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPython } from "./owned-python-source-history.mjs";
 
 export const ownedRustBaseline = "16e4ef6994b2594bf87e0b2805a85b437c53f091";
 export const ownedRustHistoryPath = "docs/evidence/owned-rust-integration-20260927.json";
@@ -73,6 +74,7 @@ export const reverseOwnedRustUpdate = (source, update) => {
  * @param expected - Optional identity at which normalization stops.
  */
 export const beforeOwnedRust = (path, source, expected) => {
+	source = beforeOwnedPython(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedRustChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedRustHistoryPath, "utf8"));
