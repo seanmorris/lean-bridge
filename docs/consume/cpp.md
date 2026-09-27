@@ -323,6 +323,78 @@ budget. Invalid values and exceeded limits throw `Error` with status
 cleanup releases the native result. Malformed results retire the shared runtime.
 See the [C++ conversion checks](../evidence/cpp-recursive-conversions-20260922.md).
 
+## Resource-containing values
+
+Packages built with an explicit [aggregate ownership policy](../publish/cpp.md#resource-containing-values)
+support resources inside records, variants and containers, including recursive
+values. They ship their C adapter, Lean runtime, GMP and any required Boost headers.
+Use the package's CMake target or pkg-config flags; no separate runtime setup or
+Lean installation is needed.
+
+Containers own their copied storage. Resource leaves have named wrapper types,
+such as `Ticket`, and preserve their underlying identity. Copying a wrapper shares
+its result lease. `close()` releases that wrapper, while other owning copies stay
+usable. `retain()` creates an independent lease. Default-constructed, moved-from
+and closed wrappers reject calls.
+
+Resource arguments passed into a callback are borrowed until that invocation
+returns. Copying the wrapper does not extend the borrow. Retain a resource inside
+the callback when it needs to survive the call. For the
+[owned-value example](../../tests/fixtures/onboarding/owned-cpp-composition/Owned.lean):
+
+```cpp
+#include "owned_aggregates.hpp"
+#include <cassert>
+
+namespace api = lean_bridge::owned_aggregates;
+
+int main() {
+    auto first = api::new_ticket(41, "saved");
+    const api::Bundle input{first, std::nullopt, {first}, {}, {-7, {0, 255}}};
+    api::Ticket borrowed, kept;
+    auto output = api::callback_record(input, [&](const api::Bundle& value) {
+        borrowed = value.primary;
+        kept = value.primary.retain();
+        return value;
+    });
+    assert(borrowed.is_closed());
+    assert(api::serial(kept) == 41);
+    assert(output == input);
+}
+```
+
+Returned closures in this ownership API use function-call syntax, `close()`,
+`is_closed()` and `retain()`. They can receive typed host callbacks, including
+mutable function objects. A retained Lean closure cannot extend a captured host
+callback's call-scoped lifetime.
+
+Factories without a usable failure-path value in their arguments require
+`with_recovery(callback, value)`. The recovery must have the callback's declared
+result type and pass normal input validation. For example:
+
+```cpp
+auto fallback = api::new_ticket(0, "recovery");
+auto created = api::factory(api::with_recovery(
+    [](const std::monostate&) { return api::new_ticket(42, "created"); },
+    fallback));
+```
+
+Failure never returns the recovery as a successful result. C++ exceptions retain
+their original type and payload after C and Lean cleanup. Later host callbacks
+in that failed call are suppressed; subsequent independent calls can recover.
+
+Resource calls belong to the creating thread and process. Foreign-thread
+destruction queues cleanup for the creator; it does not allow foreign-thread
+calls. Thread exit releases registered owners and invalidates escaped wrappers.
+Objects inherited through `fork` reject use.
+
+Each call shares 128-level, 262,144-visit and 16 MiB native/storage conversion
+budgets across inputs, callbacks and output. Boundary failures throw `Error` with
+a `status` member; C++ allocation failures throw `std::bad_alloc`. The
+[owned-value checks](../evidence/owned-cpp-values-20260927.md) exercise both source
+paths, boxed recursion, nested options, retained resources and source-free installs.
+The inventory below retains its separately audited copied-value and Alpha cells.
+
 ### Type conversions
 
 Profiles: C++. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.

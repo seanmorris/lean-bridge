@@ -7,6 +7,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generateOwnedCPackage } from "../backends/c/owned-package.mjs";
+import { generateOwnedCppPackage } from "../backends/cpp/owned-package.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime } from "./native-artifacts.mjs";
 import { buildNativeGmp } from "./native-gmp.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -20,19 +21,24 @@ import { packageOwnedNativeC } from "../release/owned-c-package.mjs";
  * @param options.nativeRoot - Verified component directory.
  * @param options.runtimeRoot - Verified shared runtime directory.
  * @param options.leanPrefix - Pinned Lean distribution containing license notices.
- * @param options.settings - Validated C package coordinates.
+ * @param options.targets - C and/or C++ projections sharing this adapter.
+ * @param options.settings - Validated package coordinates by target.
  * @param options.environment - Explicit compiler and platform environment.
  * @param options.signal - Optional build cancellation signal.
  */
-export const projectOwnedNativeC = async ({ working, nativeRoot, runtimeRoot, leanPrefix, settings, environment = process.env, signal }) => {
+export const projectOwnedNativeCFamily = async ({ working, nativeRoot, runtimeRoot, leanPrefix, targets, settings = {}, environment = process.env, signal }) => {
+	if(!Array.isArray(targets) || !targets.length || targets.some(target => !["c", "cpp"].includes(target)) || new Set(targets).size !== targets.length)
+		throw new TypeError("Owned C-family projections require distinct c/cpp targets");
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true });
 	if(!model.ownedGraph) throw new TypeError("Owned C projection requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
+	if(targets.includes("cpp") && !hostCallbacks) throw new TypeError("Owned C++ projection requires authenticated callback/copy support");
 	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks });
+	const cpp = targets.includes("cpp") ? generateOwnedCppPackage(model.bindingIr) : null;
 	const p = generated.values.prefix, root = join(working, "native/owned-c-binding");
-	for(const [path, source] of Object.entries(generated.files))
+	for(const [path, source] of Object.entries({ ...generated.files, ...cpp?.files }))
 	{
 		await mkdir(dirname(join(root, path)), { recursive: true });
 		await writeFile(join(root, path), source, { flag: "wx" });
@@ -54,6 +60,10 @@ export const projectOwnedNativeC = async ({ working, nativeRoot, runtimeRoot, le
 		, "-Wl,-z,defs", "-Wl,--build-id=none", "-Wl,-rpath,$ORIGIN"
 		, "-Wl,-z,nodelete"
 		, `-Wl,-soname,${library}`, "-o", join(root, "lib", library)]);
+	if(cpp) await run(environment.CXX ?? "c++", ["-std=c++20", "-Wall"
+		, "-Wextra", "-Werror", "-pthread"
+		, "-I", join(root, "include"), "-I", join(gmpRoot, "include")
+		, "-fsyntax-only", join(root, `src/${p}.cpp`)]);
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid native glibc floor");
 	const libraries = [join(root, "lib", library)
@@ -83,7 +93,10 @@ export const projectOwnedNativeC = async ({ working, nativeRoot, runtimeRoot, le
 			, ...(hostCallbacks ? { hostCallbacks: model.ownedGraph.hostCallbacks } : {})
 			, headerSha256: sha256(generated.publicHeader)
 			, sourceSha256: sha256(generated.source) }
+		, ...(cpp ? { cppValues: cpp.contract } : {})
 		, gmp: { version: "6.3.0" }, files };
 	await writeFile(join(root, "native-c-adapter.json"), canonicalJson(adapter));
-	return packageOwnedNativeC({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, settings, glibcMinimumVersion: floor });
+	const projections = [];
+	for(const target of targets) projections.push(await packageOwnedNativeC({ working, adapterRoot: root, nativeRoot, runtimeRoot, leanPrefix, target, settings: settings[target], glibcMinimumVersion: floor }));
+	return projections;
 };

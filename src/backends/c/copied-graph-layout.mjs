@@ -72,6 +72,60 @@ const components = (ids, edges) => {
 };
 
 /**
+ * Bound cyclic and shared inline layouts without changing value semantics.
+ * Both copied and explicitly owned projections supply already validated nodes.
+ *
+ * @param nodes - Finite node map with aggregate flags and semantic fields.
+ */
+export const planNativeGraphStorage = nodes => {
+	const ids = [...nodes.keys()].sort();
+	const members = id => { const node = nodes.get(id); return [...node.fields, ...node.cases.flatMap(branch => branch.fields)]; };
+	const inline = id => members(id).filter(field => nodes.get(field.type).aggregate).map(field => field.type);
+	const { membership, groups } = components(ids, inline);
+	for(const id of ids) for(const field of members(id))
+		if(nodes.get(field.type).aggregate && membership.get(id) === membership.get(field.type)) field.storage = "pointer";
+	// Iterative postorder over the now-acyclic by-value dependency graph.
+	const emitted = new Set(), order = [];
+	for(const id of ids)
+	{
+		const stack = [{ id, done: false }];
+		while(stack.length)
+		{
+			const entry = stack.pop();
+			if(emitted.has(entry.id)) continue;
+			if(entry.done)
+			{ emitted.add(entry.id); order.push(entry.id); continue; }
+			stack.push({ id: entry.id, done: true });
+			for(const field of members(entry.id).filter(field => field.storage === "value"))
+				if(!emitted.has(field.type)) stack.push({ id: field.type, done: false });
+		}
+	}
+	// Acyclic sharing can also expand an inline C object exponentially. Bound
+	// each branch's embedded value count; primitive fields stay directly typed.
+	// This changes layout only, never the allowed runtime value depth or size.
+	const weights = new Map();
+	for(const id of order)
+	{
+		const node = nodes.get(id), branches = node.kind === "variant" ? node.cases.map(branch => branch.fields) : [node.fields];
+		let weight = 1;
+		for(const branch of branches)
+		{
+			let branchWeight = 1;
+			for(const [index, field] of branch.entries())
+			{
+				const child = nodes.get(field.type), childWeight = weights.get(field.type);
+				const limit = Math.max(inlineValueLimit, 1 + branch.length);
+				if(field.storage === "value" && child.aggregate && branchWeight + childWeight + branch.length - index - 1 > limit) field.storage = "pointer";
+				branchWeight += field.storage === "pointer" ? 1 : childWeight;
+			}
+			weight = Math.max(weight, branchWeight);
+		}
+		weights.set(id, weight);
+	}
+	return { ids, order, boxedGroups: groups.filter(group => group.length > 1 || inline(group[0]).includes(group[0])) };
+};
+
+/**
  * Resolve transparent aliases once, retain finite nominal edges, and box cyclic
  * or oversized inline fields. Array/List spans already supply indirection.
  * All members of an inline strongly connected component use the same rule;
@@ -203,55 +257,12 @@ export const compileCopiedCGraphLayout = (ir, { wordBits = 64 } = {}) => {
 			, type
 		})));
 	}
-	const ids = [...nodes.keys()].sort();
-	const members = id => { const node = nodes.get(id); return [...node.fields, ...node.cases.flatMap(branch => branch.fields)]; };
-	const inline = id => members(id).filter(field => nodes.get(field.type).aggregate).map(field => field.type);
-	const { membership, groups } = components(ids, inline);
-	for(const id of ids) for(const field of members(id))
-		if(nodes.get(field.type).aggregate && membership.get(id) === membership.get(field.type)) field.storage = "pointer";
-	// Iterative postorder over the now-acyclic by-value dependency graph.
-	const emitted = new Set(), order = [];
-	for(const id of ids)
-	{
-		const stack = [{ id, done: false }];
-		while(stack.length)
-		{
-			const entry = stack.pop();
-			if(emitted.has(entry.id)) continue;
-			if(entry.done)
-			{ emitted.add(entry.id); order.push(entry.id); continue; }
-			stack.push({ id: entry.id, done: true });
-			for(const field of members(entry.id).filter(field => field.storage === "value"))
-				if(!emitted.has(field.type)) stack.push({ id: field.type, done: false });
-		}
-	}
-	// Acyclic sharing can also expand an inline C object exponentially. Bound
-	// each branch's embedded value count; primitive fields stay directly typed.
-	// This changes layout only, never the allowed runtime value depth or size.
-	const weights = new Map();
-	for(const id of order)
-	{
-		const node = nodes.get(id), branches = node.kind === "variant" ? node.cases.map(branch => branch.fields) : [node.fields];
-		let weight = 1;
-		for(const branch of branches)
-		{
-			let branchWeight = 1;
-			for(const [index, field] of branch.entries())
-			{
-				const child = nodes.get(field.type), childWeight = weights.get(field.type);
-				const limit = Math.max(inlineValueLimit, 1 + branch.length);
-				if(field.storage === "value" && child.aggregate && branchWeight + childWeight + branch.length - index - 1 > limit) field.storage = "pointer";
-				branchWeight += field.storage === "pointer" ? 1 : childWeight;
-			}
-			weight = Math.max(weight, branchWeight);
-		}
-		weights.set(id, weight);
-	}
+	const { ids, order, boxedGroups } = planNativeGraphStorage(nodes);
 	return freeze({ schemaVersion: 1
 		, ...wordBits === 32 ? { wordBits } : {}
 		, prefix, roots, aliases, inlineValueLimit
 		, nodes: ids.map(id => nodes.get(id)), order
-		, boxedGroups: groups.filter(group => group.length > 1 || inline(group[0]).includes(group[0])) });
+		, boxedGroups });
 };
 
 /**

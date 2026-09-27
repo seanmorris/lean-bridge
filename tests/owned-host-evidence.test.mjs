@@ -10,6 +10,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedHostExecution, assertOwnedHostIntegration } from "./helpers/owned-host-evidence.mjs";
 import { beforeOwnedHost, reverseOwnedHostUpdate, ownedHostHistoryPath, ownedHostExecutionPath } from "./helpers/owned-host-source-history.mjs";
 import { beforeOwnedCi, reverseOwnedCiUpdate, ownedCiBaseline, ownedCiChangedPaths, ownedCiHistoricalBytes, ownedCiHistoryPath } from "./helpers/owned-ci-source-history.mjs";
+import { beforeOwnedCpp } from "./helpers/owned-cpp-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -73,10 +74,10 @@ test("owned CI repairs retain exact predecessors and passing contract executions
 	assert.equal(sha256(await readFile(record.previous.path)), record.previous.sha256);
 	const helper = "tests/helpers/owned-ci-source-history.mjs";
 	assert.deepEqual(Object.keys(record.additions), [helper]);
-	assert.equal(record.additions[helper], sha256(await readFile(helper)));
+	assert.equal(record.additions[helper], sha256(beforeOwnedCpp(helper, await readFile(helper, "utf8"))));
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = reverseOwnedCiUpdate(source, update);
+		const source = beforeOwnedCpp(update.path, await readFile(update.path, "utf8")), previous = reverseOwnedCiUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeOwnedCi(update.path, source), previous);
 		assert.equal(beforeOwnedCi(update.path, source, update.currentSha256), source);

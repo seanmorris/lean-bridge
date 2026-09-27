@@ -55,14 +55,14 @@ test("unsupported native targets reject owned source decisions before compiling"
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const project = join(directory, "source");
 	await cp(resolve("tests/fixtures/onboarding/owned-aggregates"), project, { recursive: true });
-	for(const targets of [["cpp"], ["c", "cpp"], ["pypi"], ["cpan"]])
+	for(const targets of [["pypi"], ["cpan"], ["cargo"], ["nuget"], ["maven"], ["rubygems"], ["php-native"], ["wit-wasi"], ["c", "pypi"], ["c", "cpp", "cpan"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), /ownedAggregates/);
 	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Owned"] }));
 	await saveLakeFile(project, "api.binding-ir.json", canonicalJson(ownedAggregateReviewedIr()));
 	await assert.rejects(buildNativeProject({ projectRoot: project
-		, targets: ["cpp"], outputRoot: join(directory, "unused")
+		, targets: ["pypi"], outputRoot: join(directory, "unused")
 		, environment: copiedCleanEnvironment }), { code: "consumer-upgrade-required" });
 	await assert.rejects(access(join(directory, "unused")), { code: "ENOENT" });
 });

@@ -184,7 +184,25 @@ test("README support table matches every matrix state", async () => {
   assert.equal((readme.match(/^\| .* \| `(?:supported|partial|blocked)` \|/gm) ?? []).length, contract.consumers.length);
 });
 
+const withoutCodeFences = source => {
+	let closing;
+	return source.split("\n").filter(line => {
+		if(closing)
+		{
+			if(closing.test(line)) closing = undefined;
+			return false;
+		}
+		const opening = /^ {0,3}(`{3,}|~{3,})(.*)$/u.exec(line);
+		if(!opening || opening[1][0] === "`" && opening[2].includes("`")) return true;
+		closing = new RegExp(`^ {0,3}${opening[1][0]}{${opening[1].length},}[ \\t]*$`, "u");
+		return false;
+	}).join("\n");
+};
+
 test("public documentation has valid local links, portable paths, and plain punctuation", async () => {
+  assert.equal(withoutCodeFences("[before](before.md)\n```cpp\n[&](const Value& value) {}\n```\n[after](after.md)"), "[before](before.md)\n[after](after.md)");
+  assert.equal(withoutCodeFences("[before](before.md)\n~~~~text\n~~~\n[inside](not-a-link.md)\n~~~~~\n[after](after.md)"), "[before](before.md)\n[after](after.md)");
+  assert.equal(withoutCodeFences("[before](before.md)\n```cpp\n[&](const Value& value) {}"), "[before](before.md)");
   for(const path of publicDocuments)
 {
     const source = await readFile(path, "utf8");
@@ -192,7 +210,7 @@ test("public documentation has valid local links, portable paths, and plain punc
     assert.doesNotMatch(source, /(?:^|[^A-Za-z0-9_])\/app(?:\/|\b)/, `${path} contains a workspace path`);
     assert.doesNotMatch(source, /\bperformance budgets?\b/i, `${path} presents performance as a budget`);
     assert.doesNotMatch(source, /https?:\/\/(?:www\.)?lean-?bridge\.dev/i, `${path} claims an unowned project domain`);
-    for(const match of source.matchAll(/\[[^\]]+\]\(([^)]+)\)/g))
+    for(const match of withoutCodeFences(source).matchAll(/\[[^\]]+\]\(([^)]+)\)/g))
 {
       const target = match[1].trim().replace(/^<|>$/g, "");
       if(/^(?:https?:|mailto:|#)/.test(target)) continue;
@@ -606,7 +624,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_c_family\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_c_family\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-c-family-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/c-cpp\.json\n\s*build\/type-corpus\/reviewed-native-c-cpp\.json\n\s*build\/char-native\/c-cpp\.json\n\s*build\/word-native\/c-cpp\.json\n\s*build\/callables\/c\.json\n\s*build\/structured-callables\/c\.json\n\s*build\/closure-thread\/installed\.json\n\s*build\/callables\/cpp\.json\n\s*build\/structured-callables\/cpp\.json\n\s*build\/native-recursive-callables\/transport\.json\n\s*build\/owned-aggregate-native\/transport\.json\n\s*build\/owned-aggregate-native\/values\.json\n\s*build\/owned-aggregate-native\/scalars\.json\n\s*build\/owned-aggregate-native\/public-c\.json\n\s*build\/owned-aggregate-native\/public-c-scalars\.json\n\s*build\/owned-aggregate-native\/reviewed-public-c\.json\n\s*build\/owned-c-packaging\/\n\s*build\/owned-host-callbacks\/ordinary\.json\n\s*build\/owned-host-callbacks\/reviewed\.json\n\s*build\/owned-host-packaging\/ordinary\.json\n\s*build\/owned-host-packaging\/reviewed\.json\n\s*build\/recursive-callables\/c\.json\n\s*build\/recursive-callables\/cpp\.json\n\s*build\/recursive-callables\/c-family-documentation\.json\n\s*build\/compounds\/native\.json\n\s*build\/lists\/native\.json\n\s*build\/collections\/native\.json\n\s*build\/aliases\/native\.json\n\s*build\/variants\/cpp\.json\n\s*build\/variants\/c\.json\n\s*build\/recursive\/c-family\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/c-cpp\.json\n\s*build\/type-corpus\/reviewed-native-c-cpp\.json\n\s*build\/char-native\/c-cpp\.json\n\s*build\/word-native\/c-cpp\.json\n\s*build\/callables\/c\.json\n\s*build\/structured-callables\/c\.json\n\s*build\/closure-thread\/installed\.json\n\s*build\/callables\/cpp\.json\n\s*build\/structured-callables\/cpp\.json\n\s*build\/native-recursive-callables\/transport\.json\n\s*build\/owned-aggregate-native\/transport\.json\n\s*build\/owned-aggregate-native\/values\.json\n\s*build\/owned-aggregate-native\/scalars\.json\n\s*build\/owned-aggregate-native\/public-c\.json\n\s*build\/owned-aggregate-native\/public-c-scalars\.json\n\s*build\/owned-aggregate-native\/reviewed-public-c\.json\n\s*build\/owned-c-packaging\/\n\s*build\/owned-host-callbacks\/ordinary\.json\n\s*build\/owned-host-callbacks\/reviewed\.json\n\s*build\/owned-host-packaging\/ordinary\.json\n\s*build\/owned-host-packaging\/reviewed\.json\n\s*build\/owned-cpp-runtime\/\n\s*build\/owned-cpp-callables\/\n\s*build\/owned-cpp-packaging\/ordinary\.json\n\s*build\/owned-cpp-packaging\/reviewed\.json\n\s*build\/recursive-callables\/c\.json\n\s*build\/recursive-callables\/cpp\.json\n\s*build\/recursive-callables\/c-family-documentation\.json\n\s*build\/compounds\/native\.json\n\s*build\/lists\/native\.json\n\s*build\/collections\/native\.json\n\s*build\/aliases\/native\.json\n\s*build\/variants\/cpp\.json\n\s*build\/variants\/c\.json\n\s*build\/recursive\/c-family\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_COMPOUND_TEST=1 node --test tests\/native-compounds\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_LIST_TEST=1 node --test tests\/native-lists\.test\.mjs/);
   assert.match(workflow, /test -s build\/lists\/native\.json/);

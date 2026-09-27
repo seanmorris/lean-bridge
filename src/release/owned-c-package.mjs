@@ -8,6 +8,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generateOwnedCPackage } from "../backends/c/owned-package.mjs";
+import { generateOwnedCppPackage } from "../backends/cpp/owned-package.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
@@ -24,9 +25,11 @@ import { validateNativeCSettings } from "./native-c-family.mjs";
  * @param options.runtimeRoot - Verified shared runtime directory.
  * @param options.leanPrefix - Pinned Lean distribution containing license notices.
  * @param options.settings - Public C package name and version.
+ * @param options.target - C or C++ host package to assemble.
  * @param options.glibcMinimumVersion - Verified minimum target glibc version.
  */
-export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, runtimeRoot, leanPrefix, settings = {}, glibcMinimumVersion }) => {
+export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, runtimeRoot, leanPrefix, target = "c", settings = {}, glibcMinimumVersion }) => {
+	if(!["c", "cpp"].includes(target)) throw new TypeError("Owned native packaging requires c or cpp");
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true });
@@ -35,6 +38,9 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks });
 	const p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
+	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr) : null;
+	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
+		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== (hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
 		|| adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt)) || adapter.bindingIrSha256 !== model.bindingIrSha256
@@ -43,14 +49,16 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 		|| adapter.ownedValues.headerSha256 !== sha256(generated.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(generated.source)
 		|| (await nativeArtifactPaths(adapterRoot)).some(path => path !== "native-c-adapter.json" && !Object.hasOwn(adapter.files, path)))
 		throw new Error("Owned C adapter differs from compiler-authenticated types or runtime");
-	for(const [path, source] of Object.entries(generated.files))
+	for(const [path, source] of Object.entries({ ...generated.files, ...cpp?.files }))
 		if(source !== await readFile(join(adapterRoot, path), "utf8")) throw new Error(`Owned C generated source differs: ${path}`);
 	const name = settings.name ?? p.replaceAll("_", "-"), version = settings.version ?? model.component.version;
 	validateNativeCSettings({ name, version });
-	const archiveRoot = `${name}-${version}-c`, root = join(working, "packages/c", archiveRoot);
+	const archiveRoot = `${name}-${version}-${target}`, root = join(working, "packages", target, archiveRoot);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (from, path) => { await mkdir(dirname(join(root, path)), { recursive: true }); await copyFile(from, join(root, path), 1); };
 	await copy(join(adapterRoot, `include/${p}.h`), `include/${p}.h`);
+	if(target === "cpp") for(const path of Object.keys(cpp.files).filter(path => !path.startsWith("src/")))
+		await copy(join(adapterRoot, path), path);
 	for(const path of Object.keys(adapter.files).filter(path => /^gmp\/(include|lib|share)\//u.test(path)))
 		await copy(join(adapterRoot, path), path.slice(4));
 	await copy(join(adapterRoot, "lib", adapter.library), `lib/${adapter.library}`);
@@ -74,25 +82,25 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	for(const [path, bytes] of (await readVerifiedSourceNotices(nativeRoot, model.sourceIdentity)).files) await save(`${evidence}/licenses/${path}`, bytes);
 	await copy(fileURLToPath(new URL("../../LICENSE", import.meta.url)), `${evidence}/licenses/LeanBridge-LICENSE`);
 	await save("package-metadata.json", canonicalJson(compiledPackageMetadata(model.sourceIdentity)));
-	const cmakePackage = `LeanBridge${p.split("_").map(part => part[0].toUpperCase() + part.slice(1)).join("")}`, cmakeTarget = `LeanBridge::${p}`;
+	const cmakePackage = `LeanBridge${p.split("_").map(part => part[0].toUpperCase() + part.slice(1)).join("")}${target === "cpp" ? "Cpp" : ""}`, cmakeTarget = `LeanBridge::${p}${target === "cpp" ? "_cpp" : ""}`;
 	await save(`lib/pkgconfig/${name}.pc`, `prefix=\${pcfiledir}/../..
 includedir=\${prefix}/include
 libdir=\${prefix}/lib
 
 Name: ${name}
-Description: Compiled Lean ${model.component.name} ownership-aware C11 API
+Description: Compiled Lean ${model.component.name} ownership-aware ${target === "cpp" ? "C++20" : "C11"} API
 Version: ${version}
-Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p} -l:libgmp.so.10
-Cflags: -I\${includedir}
+Libs: -L\${libdir} -Wl,-rpath,\${libdir} -l${p} -l:libgmp.so.10${target === "cpp" ? " -pthread" : ""}
+Cflags: -I\${includedir}${target === "cpp" ? " -pthread" : ""}${target === "cpp" && cpp.contract.boost ? " -DBOOST_MP_STANDALONE" : ""}
 `);
-	await save(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `get_filename_component(_LB_PREFIX "\${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+	await save(`lib/cmake/${cmakePackage}/${cmakePackage}Config.cmake`, `${target === "cpp" ? "include(CMakeFindDependencyMacro)\nfind_dependency(Threads REQUIRED)\n" : ""}get_filename_component(_LB_PREFIX "\${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 if(NOT TARGET ${cmakeTarget})
   add_library(${cmakeTarget} SHARED IMPORTED)
   set_target_properties(${cmakeTarget} PROPERTIES
     IMPORTED_LOCATION "\${_LB_PREFIX}/lib/${adapter.library}"
     INTERFACE_INCLUDE_DIRECTORIES "\${_LB_PREFIX}/include"
-    INTERFACE_COMPILE_FEATURES "c_std_11"
-    INTERFACE_LINK_LIBRARIES "\${_LB_PREFIX}/lib/libgmp.so.10"
+    INTERFACE_COMPILE_FEATURES "${target === "cpp" ? "cxx_std_20" : "c_std_11"}"${target === "cpp" && cpp.contract.boost ? '\n    INTERFACE_COMPILE_DEFINITIONS "BOOST_MP_STANDALONE"' : ""}
+    INTERFACE_LINK_LIBRARIES "\${_LB_PREFIX}/lib/libgmp.so.10${target === "cpp" ? ";Threads::Threads" : ""}"
   )
 endif()
 unset(_LB_PREFIX)
@@ -105,7 +113,52 @@ else()
   set(PACKAGE_VERSION_COMPATIBLE FALSE)
 endif()
 `);
-	await save("README.md", `# ${name} ${version}
+	await save("README.md", target === "cpp" ? `# ${name} ${version}
+
+Compiled ownership-aware C++20 API from ${model.component.id}. Linux x86-64,
+glibc ${glibcMinimumVersion} or newer. Consumers need a C++20 compiler, not Lean.
+The archive includes the shared Lean runtime, GMP 6.3.0 with corresponding source
+and notices, and ${cpp.contract.boost ? "pinned Boost 1.90.0 standalone headers and notices" : "generated value headers"}.
+
+Include ${p}.hpp. Functions live in lean_bridge::${p}. Use pkg-config package
+${name}, or find_package(${cmakePackage} CONFIG REQUIRED) and link ${cmakeTarget}.
+Both methods supply the GMP and thread dependencies; bundled libraries load
+automatically. Do not link the Lean shared library directly into a C++ executable.
+
+Records and variants have source-named fields and constructors. Arrays and lists
+are std::vector, options are std::optional, tuples are std::pair, and Result<T,E>
+has distinct Ok<T>/Err<E> alternatives. Recursive inline fields use deep-copy
+Box<T>. Nat and Int use exact Boost.Multiprecision integers; negative Nat inputs
+reject. Unit inputs use std::monostate and Unit results return void. Strings are
+UTF-8 std::string values, including embedded NUL; bytes are std::vector<uint8_t>.
+
+Resource wrappers share checked result leases and nominal identity when copied.
+close() releases that wrapper; other owning copies remain usable. retain() makes
+an independently owned reference. Calls reject closed, foreign-thread and inherited
+post-fork resources. Foreign-thread destruction queues disposal for the creating
+thread. Thread exit closes its session and releases registered native owners.
+Copied container storage is independent; its resource leaves retain their leases.
+
+Typed lambdas and function objects are call-scoped callbacks. Borrowed callback
+resource arguments expire on return, including copies of those wrappers. Call
+retain() inside the callback to keep a resource. Reply storage is copied into an
+owning C result before callback locals die. Original callback exceptions are
+rethrown after C/Lean cleanup; no exception crosses a C trampoline. Later host
+invocations in the same failed call are suppressed. Independent calls can recover.
+Factories that cannot derive a failure-path value require
+with_recovery(callback, typedValue); failures never publish it as successful output.
+Returned Lean closures support function-call syntax and retain(). A closure that
+captures a borrowed host callback cannot invoke that callback after the borrow ends.
+
+Input, callback and result conversions share per-call depth128,262144-visit and
+16MiB native/storage budgets. C/native conversion limits also apply; these do not
+cap Lean algorithm working memory or GMP allocator overhead. GMP retains its
+default fatal allocation-failure policy. Invalid inputs and partial conversions
+release their temporary storage and ownership. Boundaries throw Error with a status;
+C++ allocation failures throw std::bad_alloc.
+
+${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n")}
+` : `# ${name} ${version}
 
 Compiled ownership-aware C11 API from ${model.component.id}. Linux x86-64,
 glibc ${glibcMinimumVersion} or newer. Consumers do not need Lean. The archive includes
@@ -158,12 +211,14 @@ ${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n"
 	const files = [];
 	for(const path of await nativeArtifactPaths(root)) files.push({ path, bytes: await readFile(join(root, path)), mode: 0o644 });
 	const manifest = { schemaVersion: hostCallbacks ? 3 : 2
-		, kind: "lean-bridge-native-c-package"
-		, ecosystem: "c", name, version, component: model.component
+		, kind: `lean-bridge-native-${target}-package`
+		, ecosystem: target, name, version, component: model.component
 		, profile: "native-library-v1"
 		, runtimeIdentity, bindingIrSha256: model.bindingIrSha256, glibcMinimumVersion
-		, cmakePackage, cmakeTarget, pkgConfig: name, exactIntegers: "gmp-6.3.0"
+		, cmakePackage, cmakeTarget, pkgConfig: name
+		, ...(target === "c" ? { exactIntegers: "gmp-6.3.0" } : cpp.contract.boost ? { exactIntegers: "boost-multiprecision-1.90.0" } : {})
 		, ownedValues: adapter.ownedValues
+		, ...(target === "cpp" ? { cppValues: cpp.contract } : {})
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, adapterReceiptSha256: sha256(canonicalJson(adapter))
 		, files: Object.fromEntries(files.map(file => [file.path, { bytes: file.bytes.length, sha256: sha256(file.bytes) }])) };
@@ -174,8 +229,8 @@ ${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n"
 	const bytes = createDeterministicTarGzFromFiles({ files: files.map(file => ({ ...file, path: `${archiveRoot}/${file.path}` })), sourceDateEpoch: 1 });
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
-	return { ecosystem: "c"
-		, backend: hostCallbacks ? "native-c-owned-v2" : "native-c-owned-v1"
+	return { ecosystem: target
+		, backend: `native-${target}-owned-v${hostCallbacks ? 2 : 1}`
 		, runtimeIdentity
 		, glibcMinimumVersion
 		, packages: [{ archive, sha256: sha256(bytes), bytes: bytes.length, name, version, compilerAccess: false }]

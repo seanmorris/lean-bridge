@@ -14,7 +14,7 @@ const scalar = {
 	, nat: "Nat", int: "Int", char: "char32_t", usize: "uint64_t", isize: "int64_t"
 	, float32: "float", float64: "double"
 };
-const box = `namespace detail {
+export const cppValueBox = `namespace detail {
 template<class T, class U> struct BoxInput : std::is_same<T, U> {};
 template<class... T, class U> struct BoxInput<std::variant<T...>, U>
   : std::bool_constant<std::is_same_v<std::variant<T...>, U> || (std::is_same_v<T, U> || ...)> {};
@@ -95,7 +95,7 @@ export const generateCopiedCppGraphValues = ir => {
 		, "#include <type_traits>", "#include <utility>", "#include <variant>"
 		, "#include <vector>"
 		, ...bigint ? ["#ifndef BOOST_MP_STANDALONE", "#define BOOST_MP_STANDALONE", "#endif", "#include <boost/multiprecision/cpp_int.hpp>"] : []
-		, `namespace lean_bridge::${layout.prefix} {`, box
+		, `namespace lean_bridge::${layout.prefix} {`, cppValueBox
 		, "template<class T> struct Ok { T value; friend bool operator==(const Ok&, const Ok&) = default; };"
 		, "template<class E> struct Err { E value; friend bool operator==(const Err&, const Err&) = default; };"
 		, "template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;"

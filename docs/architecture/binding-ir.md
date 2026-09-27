@@ -52,8 +52,10 @@ dedicated tests. A separately compiled C consumer now exercises semantic value
 types, opaque identities and explicit session/result lifetimes. The same C
 consumer also executes an independently authored v4 contract after fresh Lean
 reconciliation. The review selects resources and ownership policies; it cannot
-supply layouts or proof evidence. C-only package builds now ship that transport
-with the shared runtime, GMP and relocatable build metadata. Installed ordinary
+supply layouts or proof evidence. C and C++ package builds ship that transport
+with the shared runtime, GMP and relocatable build metadata. C++ adds named value
+types, standard containers, exact Boost integers and checked RAII resource leases.
+Installed ordinary
 and reviewed consumers execute without producer source or Lean. Other host
 projections, transfer and anchored-result lowering, and Wasm remain unfinished. Existing
 version-3 backends reject this contract.
@@ -62,11 +64,19 @@ The [owned host callback projection](../evidence/owned-host-callbacks-20260926.m
 executes typed recovery and call-scoped C borrows for resource-containing
 values. Temporary callback replies preserve resource identity through the parent
 transaction. Ordinary and reviewed compiler paths pass lifetime, reentry and
-allocation-failure checks. C-only builds include the callback adapter in prepared
+allocation-failure checks. C and C++ builds include the callback adapter in prepared
 packages. Native model version 7 authenticates signature-specific recovery and
 callback source; native, public-adapter and package receipts record that capability.
 Readers reconstruct it from compiler metadata and reject changed lifetime rules
 or callback implementations even when their claimed file hashes are updated.
+
+The [C++ ownership projection](../evidence/owned-cpp-values-20260927.md) expires
+callback resource wrappers at return unless the consumer explicitly retains them.
+It copies callback replies into owned C storage before destroying local values,
+then rethrows original exceptions after C/Lean cleanup. C++ package receipts bind
+the generated headers, lifetime rules and pinned Boost dependency to the native
+contract. Ordinary and reviewed installed consumers also execute boxed recursion
+and higher-order closures accepting mutable callbacks.
 
 ## Rich values cross as rich values
 

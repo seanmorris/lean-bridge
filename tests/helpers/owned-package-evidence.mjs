@@ -14,6 +14,7 @@ import { ownedReviewedHistoryPath } from "./owned-reviewed-source-history.mjs";
 import { ownedPackageBaseline, ownedPackageChangedPaths, ownedPackageAddedPaths, ownedPackageExecutionPath, reverseOwnedPackageUpdate } from "./owned-package-source-history.mjs";
 import { beforeOwnedHost, ownedHostChangedPaths } from "./owned-host-source-history.mjs";
 import { ownedCiChangedPaths } from "./owned-ci-source-history.mjs";
+import { ownedCppChangedPaths } from "./owned-cpp-source-history.mjs";
 
 export const ownedPackageCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-c-packaging.test.mjs";
 export const ownedPackageRegressionCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/reviewed-owned-source.test.mjs tests/reviewed-source.test.mjs tests/reviewed-callables.test.mjs tests/owned-c-values.test.mjs";
@@ -38,7 +39,7 @@ export const ownedPackageExecutionSources = [...new Set([
 const source = async path => beforeOwnedHost(path, await readFile(path, "utf8"));
 const historicalBytes = async path => {
 	const bytes = await readFile(path);
-	return ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) ? beforeOwnedHost(path, bytes.toString("utf8")) : bytes;
+	return ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) ? beforeOwnedHost(path, bytes.toString("utf8")) : bytes;
 };
 const passing = (run, command, count) => {
 	assert.equal(run.command, command); assert.equal(run.exitCode, 0);

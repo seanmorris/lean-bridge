@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedCpp, ownedCppChangedPaths } from "./owned-cpp-source-history.mjs";
 
 export const ownedCiBaseline = "650641c1274543a334aa7d50c43c70de945984a0";
 export const ownedCiHistoryPath = "docs/evidence/owned-ci-repair-20260926.json";
@@ -32,6 +33,7 @@ let history;
  * @param update - Recorded file identities and nonoverlapping ordered edits.
  */
 export const reverseOwnedCiUpdate = (source, update) => {
+	source = beforeOwnedCpp(update.path, source, update.currentSha256);
 	assert.ok(ownedCiChangedPaths.includes(update.path), update.path);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length);
@@ -57,6 +59,7 @@ export const reverseOwnedCiUpdate = (source, update) => {
  * @param expected - Optional identity at which normalization stops.
  */
 export const beforeOwnedCi = (path, source, expected) => {
+	source = beforeOwnedCpp(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedCiChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedCiHistoryPath, "utf8"));
@@ -70,5 +73,5 @@ export const beforeOwnedCi = (path, source, expected) => {
  * @param path - Exact repository-relative path.
  * @param bytes - Complete current bytes.
  */
-export const ownedCiHistoricalBytes = (path, bytes) => ownedCiChangedPaths.includes(path)
+export const ownedCiHistoricalBytes = (path, bytes) => ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path)
 	? beforeOwnedCi(path, bytes.toString("utf8")) : bytes;

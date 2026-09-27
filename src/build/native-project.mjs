@@ -14,6 +14,7 @@ import { CanonicalBuildError } from "./build-error.mjs";
 import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
 import { generateOwnedCValues } from "../backends/c/owned-values.mjs";
+import { generateOwnedCppPackage } from "../backends/cpp/owned-package.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { compilePrimitiveCppModel } from "../backends/cpp/primitives.mjs";
 import { validateGmpSurface } from "../backends/c/gmp-projection.mjs";
@@ -46,7 +47,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 {
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target)))
 		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and cpan targets");
-	const ownedGraphs = targets.every(target => target === "c");
+	const ownedGraphs = targets.every(target => ["c", "cpp"].includes(target));
 	try
 	{ await readNativeReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal, ownedGraphs); }
 	catch(error)
@@ -92,7 +93,11 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)
-				{ generateOwnedCValues(model.bindingIr, { hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) }); return; }
+				{
+					generateOwnedCValues(model.bindingIr, { hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
+					if(targets.includes("cpp")) generateOwnedCppPackage(model.bindingIr);
+					return;
+				}
 				if(model.copiedGraph)
 				{ compileNativeGraphProjection(model.bindingIr, targets, model.moduleName); return; }
 				if(targets.includes("cpan")) validatePerlModel(model);

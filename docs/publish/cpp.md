@@ -80,7 +80,7 @@ For an ordinary export that returns a function, set its outer parameter count in
 
 Arrays, Lists, options, results, products, acyclic records, tagged variants and aliases work in callback and returned-closure signatures on both authoring paths. Declare their Lean types directly. The [structured fixture](../../tests/fixtures/onboarding/structured-callables/Structured.lean) and [C++ consumer example](../consume/cpp.md#structured-callbacks-and-closures) show the generated API.
 
-C++ receives owned values in callbacks and copies the returned value into Lean. Consumers use standard containers and generated value types without C buffers or ownership hooks. Callback and closure results receive the same validation as ordinary arguments, including nonnegative `Nat`, valid UTF-8 and the conversion budget. Acyclic type nesting is limited to 32 levels. Packages containing recursive callback values use the graph conversion limits instead. Callback identities inside copied fields, resource aggregates and asynchronous calls remain unsupported.
+C++ receives owned values in callbacks and copies the returned value into Lean. Consumers use standard containers and generated value types without C buffers or ownership hooks. Callback and closure results receive the same validation as ordinary arguments, including nonnegative `Nat`, valid UTF-8 and the conversion budget. Acyclic type nesting is limited to 32 levels. Packages containing recursive callback values use the graph conversion limits instead. Copied fields cannot hide resource or callback identities. Resource aggregates use the explicit ownership API below; asynchronous calls remain unsupported.
 
 Select `--target cpp`, or combine `--target c --target cpp`. All seventeen consumer profiles accept acyclic copied callback signatures. The [installed structured acceptance](../evidence/cpp-structured-callables-20260924.md) includes typed compiler rejections, exception recovery, allocation-failure cleanup and runtime-only deployment.
 
@@ -92,6 +92,48 @@ archive is needed. The [C++ consumer](../consume/cpp.md#recursive-callbacks) use
 named constructors, owned containers and move-only returned closures.
 Recursive callback payloads currently work in C, C++ and npm packages. A combined
 release still requires every selected target to support every export.
+
+## Resource-containing values
+
+Select resource types and the [aggregate ownership policy](c.md#resource-containing-c-values)
+in `lean-bridge.exports.json`, then build with `--target cpp`. Add `--target c`
+to generate both archives from one native compilation. Other targets must support
+that ownership contract before they can join the same build.
+
+The [owned-value fixture](../../tests/fixtures/onboarding/owned-cpp-composition/lean-bridge.exports.json)
+selects `Owned.Ticket` as a resource and uses lease ownership with required
+disposal, queued finalization and cycle rejection. It exports resource-bearing
+collections, records, variants, boxed recursive chains and typed callbacks.
+Set `arities` to the outer argument count for exports returning functions.
+Independently reviewed version-4 contracts can select the same API after the
+builder reconciles them with fresh Lean metadata.
+
+```sh
+lean-bridge build --project /path/to/owned-package \
+  --target c --target cpp --output /path/to/new-owned-release
+```
+
+C++ packages contain generated value/call headers, the shared C adapter, the
+compiled Lean component and runtime, GMP 6.3.0, and pinned Boost 1.90.0 headers
+when exact integers are used. The CMake target supplies C++20, threads and the
+Boost standalone definition. pkg-config supplies matching include/link settings.
+The archive records its package and target names; the C++ CMake name ends in
+`Cpp` and its target ends in `_cpp`, so it can coexist with the C target.
+
+Resource wrappers use checked leases and automatic cleanup. Copied containers
+own their storage while resource leaves preserve identity. Callback resources
+borrow the invocation's lifetime; consumers call `retain()` to keep one. Returned
+closures can receive typed mutable callbacks. Factories that cannot derive typed
+recovery require the consumer's `with_recovery(callback, value)` wrapper.
+See [resource-containing C++ values](../consume/cpp.md#resource-containing-values).
+
+Packaging regenerates the headers and lifetime rules from the authenticated
+contract and compares the pinned Boost files. Recomputed file hashes cannot
+authorize altered adapters. The
+[installed checks](../evidence/owned-cpp-values-20260927.md) build both source paths,
+delete producer inputs before installation, and run consumers through pkg-config,
+relocated CMake and sanitizers. Transfer and anchored-result lowering remain
+separate work; copied records still cannot conceal resource ownership.
 
 ## Build the reviewed Alpha example
 

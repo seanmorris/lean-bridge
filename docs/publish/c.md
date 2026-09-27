@@ -65,7 +65,8 @@ values. Select the resource types and their aggregate ownership policy explicitl
 
 These names come from the repository's
 [owned aggregate fixture](../../tests/fixtures/onboarding/owned-aggregates/Owned.lean).
-Build the project with `--target c`. Do not add other targets until they implement
+Build the project with `--target c`, or add [C++](cpp.md#resource-containing-values)
+with `--target cpp`. Do not add other targets until they implement
 this transport. A reviewed version-4 contract supplies the exports, resource
 selection and policy instead; its configuration retains only module authorization,
 package metadata and target coordinates. Lean checks the reviewed types and
