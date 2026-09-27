@@ -56,6 +56,14 @@ test("native recursive callbacks authenticate the complete finite descriptor", (
 	}
 });
 
+test("callback-only graph APIs do not emit an unused out-of-line closure store", () => {
+	const model = createCompiledNativeModel(fixture());
+	const adapter = generateCompiledNativeLeanAdapters(model);
+	const generated = generateNativeCallableGraphCalls(model.bindingIr, model.copiedGraph, { initializer: `initialize_${adapter.module}` });
+	assert.match(generated.source, /static inline uint64_t ng_closure_store/u);
+	assert.ok(generated.closures.length > 0);
+});
+
 test("native callable descriptors match an independent nine-shape public review", () => {
 	for(const recursive of [false, true])
 	{

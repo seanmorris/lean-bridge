@@ -99,6 +99,16 @@ recursive aliases and higher-order calls. The loader rejects incompatible or
 externally preloaded runtimes and post-fork reuse before taking its registry lock.
 This profile requires GIL-enabled Python 3.11+ on Linux x86-64.
 
+The [Ruby ownership projection](../consume/ruby.md#resource-containing-values)
+uses frozen value classes and checked result leases. `dup` and `clone` create
+independent close guards; `retain` creates an independent native owner. Callback
+resource leaves expire on return unless explicitly retained. Ruby exceptions
+return after native cleanup, and Fiber switches reject before suspension.
+The prepared gem authenticates and loads Lean and a private GMP automatically.
+Its private C forwarders check the exact Fiddle storage layouts during the
+producer build. Compatible copied and owned gems use one loader registry.
+This profile requires MRI Ruby 3.3 on Linux x86-64 with 1:1 native threads.
+
 ## Rich values cross as rich values
 
 The `result` constructor stores its arguments as `[success, error]`. Lean `Except ε α` therefore lowers to `result<α, ε>`. For example, `Except String UInt32` becomes `result<uint32, string>`, with a numeric success payload and a text error payload. This argument order is part of the IR contract, independent of the order used by a source language. Recognizing the type during analysis does not enable compound signatures in ordinary compiled packages; those still require their transport adapters.

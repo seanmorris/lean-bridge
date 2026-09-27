@@ -1249,6 +1249,12 @@ jobs:
         id: type_corpus_ruby
         continue-on-error: true
         run: |
+          sudo apt-get install -y python3-venv pkg-config
+          bash scripts/bootstrap-rust-ci.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+          export LEAN_BRIDGE_PYTHON="$(command -v python3)"
           export LEAN_BRIDGE_RUBY="$(command -v ruby)"
           export LEAN_BRIDGE_GEM="$(command -v gem)"
           source scripts/env.sh
@@ -1258,6 +1264,13 @@ jobs:
           LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs
           LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs
           LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs
+          test -s build/owned-ruby-packaging/ordinary.json
+          test -s build/owned-ruby-packaging/reviewed.json
+          test -s build/owned-ruby-packaging/scalars-ordinary.json
+          test -s build/owned-ruby-packaging/scalars-reviewed.json
+          test -s build/owned-ruby-packaging/coexistence.json
           LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs
           LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs
           LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs
@@ -1302,6 +1315,13 @@ jobs:
             build/recursive/ruby-conversions.json
             build/recursive/ruby-native.json
             build/recursive/ruby-packages.json
+            build/owned-ruby-runtime/
+            build/owned-ruby-values/
+            build/owned-ruby-layout/
+            build/owned-ruby-conversions/
+            build/owned-ruby-gmp/
+            build/owned-ruby-loading/
+            build/owned-ruby-packaging/
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -1363,6 +1383,8 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs"

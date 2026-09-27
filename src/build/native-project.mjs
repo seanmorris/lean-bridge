@@ -17,6 +17,7 @@ import { generateOwnedCValues } from "../backends/c/owned-values.mjs";
 import { generateOwnedCppPackage } from "../backends/cpp/owned-package.mjs";
 import { generateOwnedRustPackage } from "../backends/rust/owned-package.mjs";
 import { generateOwnedPythonPackage } from "../backends/python/owned-package.mjs";
+import { generateOwnedRubyPackage } from "../backends/ruby/owned-package.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { compilePrimitiveCppModel } from "../backends/cpp/primitives.mjs";
 import { validateGmpSurface } from "../backends/c/gmp-projection.mjs";
@@ -49,7 +50,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 {
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target)))
 		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and cpan targets");
-	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi"].includes(target));
+	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems"].includes(target));
 	try
 	{ await readNativeReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal, ownedGraphs); }
 	catch(error)
@@ -100,6 +101,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					if(targets.includes("cpp")) generateOwnedCppPackage(model.bindingIr);
 					if(targets.includes("cargo")) generateOwnedRustPackage(model.bindingIr);
 					if(targets.includes("pypi")) generateOwnedPythonPackage(model.bindingIr);
+					if(targets.includes("rubygems")) generateOwnedRubyPackage(model.bindingIr);
 					return;
 				}
 				if(model.copiedGraph)

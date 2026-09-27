@@ -16,8 +16,11 @@ import { processBuildRunner } from "./process-runner.mjs";
  * @param options.root - Adapter staging directory.
  * @param options.environment - Selected native compiler environment.
  * @param options.signal - Optional build cancellation.
+ * @param options.privateSoname - Isolate the library from host-loaded GMP.
  */
-export const buildNativeGmp = async ({ root, environment = process.env, signal }) => {
+export const buildNativeGmp = async ({ root, environment = process.env, signal, privateSoname = false }) => {
+	if(typeof privateSoname !== "boolean") throw new TypeError("Private GMP identity must be a Boolean");
+	const stem = privateSoname ? "libgmp-lean-bridge" : "libgmp";
 	const scratch = join(root, "gmp-build"), source = join(scratch, "gmp-6.3.0"), build = join(scratch, "build");
 	await mkdir(build, { recursive: true });
 	const archive = await gmpSource();
@@ -28,15 +31,18 @@ export const buildNativeGmp = async ({ root, environment = process.env, signal }
 		, "--enable-fat", "--enable-shared", "--disable-static"
 		, "--disable-cxx", "--with-pic", "ABI=64"
 		, `CC=${environment.CC ?? "cc"}`
-		, `CFLAGS=-O2 -g0 -ffile-prefix-map=${scratch}=/build/gmp`
-		, "LDFLAGS=-Wl,--build-id=none"];
+		, `CFLAGS=-O2 -g0${privateSoname ? " -fPIC" : ""} -ffile-prefix-map=${scratch}=/build/gmp`
+		, "LDFLAGS=-Wl,--build-id=none"
+		// PIC also keeps the upstream test executables from copying library data
+		// into executable COPY relocations while GMP binds its own symbols.
+		, ...privateSoname ? ["LIBGMP_LDFLAGS=-release lean-bridge -Wl,-Bsymbolic"] : []];
 	try
 	{
 		await run("tar", ["-xf", join(scratch, "gmp.tar.xz"), "-C", scratch]);
 		await run("sh", [join(source, "configure"), ...flags]);
 		await run("make", ["-j2"]);
 		await run("make", ["-j2", "check"]);
-		const files = { "include/gmp.h": join(build, "gmp.h"), "lib/libgmp.so.10": join(build, ".libs/libgmp.so.10.5.0") };
+		const files = { "include/gmp.h": join(build, "gmp.h"), [`lib/${stem}.so.10`]: join(build, `.libs/${stem}.so.10.5.0`) };
 		for(const license of ["COPYING", "COPYING.LESSERv3", "COPYINGv2", "COPYINGv3"])
 			files[`share/lean-bridge/licenses/GMP-${license}`] = join(source, license);
 		const hashes = {};
@@ -52,6 +58,7 @@ export const buildNativeGmp = async ({ root, environment = process.env, signal }
 		await mkdir(join(root, "share/lean-bridge/sources"), { recursive: true });
 		await writeFile(join(root, "share/lean-bridge/sources/gmp-6.3.0.tar.xz"), archive);
 		await writeFile(join(root, "share/lean-bridge/gmp.json"), canonicalJson({ ...gmpIdentity, files: hashes
+			, ...privateSoname ? { soname: `${stem}.so.10`, binding: "local-symbols" } : {}
 			, compiler: (await run(environment.CC ?? "cc", ["--version"])).stdout.split("\n")[0]
 			, configure: flags.map(flag => flag.replaceAll(scratch, "/build/gmp"))
 			, checked: true }));

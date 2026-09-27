@@ -1,0 +1,160 @@
+{
+  "command": {
+    "command": "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-gmp.test.mjs",
+    "exitCode": 0,
+    "log": "build-owned-ruby-gmp-isolation-pic.log",
+    "sha256": "a3d492b2c144b455ef5428217aed1f88603cfa82a23ebf2f80a41b701d928226",
+    "stdout": "TAP version 13\n# Subtest: private GMP selection rejects arbitrary library identities\nok 1 - private GMP selection rejects arbitrary library identities\n  ---\n  duration_ms: 2.113667\n  type: 'test'\n  ...\n# Subtest: Ruby keeps its GMP while a private checked library supplies bridge integers\nok 2 - Ruby keeps its GMP while a private checked library supplies bridge integers\n  ---\n  duration_ms: 83588.762706\n  type: 'test'\n  ...\n# {\"ruby\":\"ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]\",\"hostVersion\":\"6.2.1\",\"bundledVersion\":\"6.3.0\",\"interposedWithoutDeepBind\":true,\"privateWithDeepBind\":true,\"rubyAllocatorsUnchanged\":true,\"privateAllocatorsIndependent\":true,\"leanAllocatorsIndependent\":true,\"roundTrips\":500}\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 83713.395115\n"
+  },
+  "date": "2026-09-27",
+  "defaultRegression": {
+    "exitCode": 0,
+    "path": "build-owned-ruby-gmp-default-regression.log",
+    "report": {
+      "baseline": "ef9bd830d49a932a13bbc0d683a7a14cd7139b62",
+      "baselineSourceSha256": "2bc6ca37ebda72f0433f8fa808ef28509f0851c453f053c319b2195a3707f272",
+      "currentSourceSha256": "77a8530b302a202dbcfd050666de3699307704f3ae7011c1410be2c6faafce1c",
+      "defaultArtifactsByteIdentical": true,
+      "files": {
+        "include/gmp.h": {
+          "bytes": 84337,
+          "sha256": "855212f29a6a159f63a90925f445e5d89a6775fd8aa09fd275a4f92b921fcbde"
+        },
+        "lib/libgmp.so.10": {
+          "bytes": 706376,
+          "sha256": "bdb6ab8202f23707f6501fe97a1a5cef0ed0d7ee2d2c0287c93fad0698095468"
+        },
+        "share/lean-bridge/gmp.json": {
+          "bytes": 1615,
+          "sha256": "0171ea1d2bbfdc4d7f82f3943519b87330964b2a679ce17c299fe84efa1220cc"
+        },
+        "share/lean-bridge/licenses/GMP-COPYING": {
+          "bytes": 35147,
+          "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+        },
+        "share/lean-bridge/licenses/GMP-COPYING.LESSERv3": {
+          "bytes": 7639,
+          "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c"
+        },
+        "share/lean-bridge/licenses/GMP-COPYINGv2": {
+          "bytes": 18092,
+          "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+        },
+        "share/lean-bridge/licenses/GMP-COPYINGv3": {
+          "bytes": 35150,
+          "sha256": "e6037104443f9a7829b2aa7c5370d0789a7bda3ca65a0b904cdc0c2e285d9195"
+        },
+        "share/lean-bridge/sources/gmp-6.3.0.tar.xz": {
+          "bytes": 2094196,
+          "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898"
+        }
+      }
+    },
+    "sha256": "cfcdc20c4c26029f57b316cb7cb9657814bcda0b6bf8ec98c6e019f05795b301"
+  },
+  "kind": "owned-ruby-gmp-isolation",
+  "planNode": 1219,
+  "report": {
+    "bytes": 4041,
+    "path": "build/owned-ruby-gmp/isolation.json",
+    "report": {
+      "compilerProbeLibrarySha256": "f4c9448aa1577b25e5d8b98be91ef3ca5df8bdf5181c23d662a8e418ddecfb83",
+      "compilerProbeSha256": "1943fdbbf9dc8c0cda334c291666d1f136161a064676d4d99ed104d990c9eef0",
+      "dynamic": "\nDynamic section at offset 0x2de0 contains 26 entries:\n  Tag        Type                         Name/Value\n 0x0000000000000001 (NEEDED)             Shared library: [libgmp-lean-bridge.so.10]\n 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]\n 0x000000000000001d (RUNPATH)            Library runpath: [$ORIGIN]\n 0x000000000000000c (INIT)               0x1000\n 0x000000000000000d (FINI)               0x1264\n 0x0000000000000019 (INIT_ARRAY)         0x3dd0\n 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)\n 0x000000000000001a (FINI_ARRAY)         0x3dd8\n 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)\n 0x000000006ffffef5 (GNU_HASH)           0x260\n 0x0000000000000005 (STRTAB)             0x3f0\n 0x0000000000000006 (SYMTAB)             0x288\n 0x000000000000000a (STRSZ)              288 (bytes)\n 0x000000000000000b (SYMENT)             24 (bytes)\n 0x0000000000000003 (PLTGOT)             0x3fe8\n 0x0000000000000002 (PLTRELSZ)           168 (bytes)\n 0x0000000000000014 (PLTREL)             RELA\n 0x0000000000000017 (JMPREL)             0x620\n 0x0000000000000007 (RELA)               0x560\n 0x0000000000000008 (RELASZ)             192 (bytes)\n 0x0000000000000009 (RELAENT)            24 (bytes)\n 0x000000006ffffffe (VERNEED)            0x530\n 0x000000006fffffff (VERNEEDNUM)         1\n 0x000000006ffffff0 (VERSYM)             0x510\n 0x000000006ffffff9 (RELACOUNT)          3\n 0x0000000000000000 (NULL)               0x0\n",
+      "gmp": {
+        "binding": "local-symbols",
+        "checked": true,
+        "compiler": "cc (Debian 12.2.0-14+deb12u1) 12.2.0",
+        "configure": [
+          "--build=x86_64-pc-linux-gnu",
+          "--host=x86_64-pc-linux-gnu",
+          "--enable-fat",
+          "--enable-shared",
+          "--disable-static",
+          "--disable-cxx",
+          "--with-pic",
+          "ABI=64",
+          "CC=cc",
+          "CFLAGS=-O2 -g0 -fPIC -ffile-prefix-map=/build/gmp=/build/gmp",
+          "LDFLAGS=-Wl,--build-id=none",
+          "LIBGMP_LDFLAGS=-release lean-bridge -Wl,-Bsymbolic"
+        ],
+        "files": {
+          "include/gmp.h": {
+            "bytes": 84343,
+            "sha256": "e2077aa325d47013d92ea21613beb0e2fb3800ff2f2a2ec2af4cd772afdc094b"
+          },
+          "lib/libgmp-lean-bridge.so.10": {
+            "bytes": 691784,
+            "sha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+          },
+          "share/lean-bridge/licenses/GMP-COPYING": {
+            "bytes": 35147,
+            "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+          },
+          "share/lean-bridge/licenses/GMP-COPYING.LESSERv3": {
+            "bytes": 7639,
+            "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c"
+          },
+          "share/lean-bridge/licenses/GMP-COPYINGv2": {
+            "bytes": 18092,
+            "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+          },
+          "share/lean-bridge/licenses/GMP-COPYINGv3": {
+            "bytes": 35150,
+            "sha256": "e6037104443f9a7829b2aa7c5370d0789a7bda3ca65a0b904cdc0c2e285d9195"
+          }
+        },
+        "license": "LGPL-3.0-or-later OR GPL-2.0-or-later",
+        "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+        "signingKey": "343C2FF0FBEE5EC2EDBEF399F3599FF828C67298",
+        "soname": "libgmp-lean-bridge.so.10",
+        "source": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
+        "version": "6.3.0"
+      },
+      "installedPackage": false,
+      "observation": {
+        "bundledVersion": "6.3.0",
+        "hostVersion": "6.2.1",
+        "interposedWithoutDeepBind": true,
+        "leanAllocatorsIndependent": true,
+        "privateAllocatorsIndependent": true,
+        "privateWithDeepBind": true,
+        "roundTrips": 500,
+        "ruby": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+        "rubyAllocatorsUnchanged": true
+      },
+      "rubyProbeSha256": "139b60bc8e9ec30b7a3e3196353e05e8a10f738aa1f5f64285f8e37a8390de79"
+    },
+    "sha256": "e896f681aa59371898079af9c0a7f027f8c2e89a20cdd806e4e135a25d45f817"
+  },
+  "schemaVersion": 1,
+  "scope": {
+    "defaultBuildUnchanged": true,
+    "installedPackage": false,
+    "privateGmp": true,
+    "typeSurfacePromotions": 0
+  },
+  "sources": [
+    {
+      "bytes": 3697,
+      "path": "src/build/native-gmp.mjs",
+      "sha256": "77a8530b302a202dbcfd050666de3699307704f3ae7011c1410be2c6faafce1c"
+    },
+    {
+      "bytes": 3646,
+      "path": "tests/owned-ruby-gmp.test.mjs",
+      "sha256": "785c932681fe18cb7056f7862e6cb6a7ff05cba4b1cc8cc0e3e9b5e944c42bf4"
+    },
+    {
+      "bytes": 672,
+      "path": "tests/fixtures/structured-types/owned-ruby-gmp.c",
+      "sha256": "1943fdbbf9dc8c0cda334c291666d1f136161a064676d4d99ed104d990c9eef0"
+    },
+    {
+      "bytes": 2780,
+      "path": "tests/fixtures/structured-types/owned-ruby-gmp.rb",
+      "sha256": "139b60bc8e9ec30b7a3e3196353e05e8a10f738aa1f5f64285f8e37a8390de79"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeOwnedRust, ownedRustChangedPaths } from "./owned-rust-source-history.mjs";
 import { ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
+import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
 
 export const ownedCppOrderHistoryPath = "docs/evidence/owned-cpp-inventory-order-20260927.json";
 export const ownedCppOrderPaths = [
@@ -53,5 +54,5 @@ export const beforeOwnedCppOrder = (path, source, expected) => {
  * @param path - Repository-relative source path.
  * @param bytes - Complete file contents.
  */
-export const ownedCppOrderHistoricalBytes = (path, bytes) => ownedCppOrderPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path)
+export const ownedCppOrderHistoricalBytes = (path, bytes) => ownedCppOrderPaths.includes(path) || ownedRustChangedPaths.includes(path) || (ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path))
 	? beforeOwnedCppOrder(path, bytes.toString("utf8")) : bytes;

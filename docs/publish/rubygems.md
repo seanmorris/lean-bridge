@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/willow --target rubygems \
 
 The release contains `archives/willow-api-2.0.0.rc.1-x86_64-linux.gem` and `native-release.json` with its hash. The gem includes Ruby sources, compiled native libraries, compiler evidence and dependency license notices. Its README lists the Lean-derived module and function names. Changing the gem coordinate does not rename that module.
 
-The acyclic copied profile supports up to 32 type levels. Packages with recursive types use the [recursive limits](#export-recursive-values). Native input/output conversion shares a 16 MiB budget; Ruby conversion scratch has a separate 16 MiB budget. Resource-containing copied values and asynchronous effects remain outside these profiles. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
+The acyclic copied profile supports up to 32 type levels. Packages with recursive types use the [recursive limits](#export-recursive-values). Native input/output conversion shares a 16 MiB budget; Ruby conversion scratch has a separate 16 MiB budget. Resource-containing aggregates use the [explicit ownership profile](#export-resource-containing-values). Asynchronous effects remain unsupported. Repeat `--target` to share one native compilation with other native targets when all accept the exports. Add npm when the API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes); that adds one Wasm compilation. A failed target leaves no partial release.
 
 Archive assembly uses RubyGems without invoking a compiler. Test the original gem with the [ordinary Ruby consumer](../consume/ruby.md#call-an-ordinary-lean-package). Verify the release with `lean-bridge verify --receipt /absolute/path/to/willow-release/package-set-receipt.json`. Distribute this receipt, its `.json.sha256` sidecar and the named archives together. The receipt checks local file consistency; it is unsigned.
 
@@ -297,6 +297,81 @@ delivery remain unsupported.
 
 RubyGems-only builds need no extra C package target. A combined native build can
 also select C, C++, PyPI and Cargo when each accepts the complete contract.
+
+## Export resource-containing values
+
+Select resource types and the aggregate ownership contract explicitly. In a
+Lake package named `owned-aggregates`, add these definitions to `Owned.lean`:
+
+```lean
+namespace Owned
+
+structure Ticket where
+  serial : Nat
+  label : String
+
+structure Payload where
+  count : Int
+  bytes : ByteArray
+
+structure Bundle where
+  primary : Ticket
+  spare : Option Ticket
+  peers : Array Ticket
+  history : List Ticket
+  payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩
+def serial (ticket : Ticket) : Nat := ticket.serial
+def callbackRecord (value : Bundle) (callback : Bundle → Bundle) : Bundle := callback value
+
+end Owned
+```
+
+Configure the exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.callbackRecord"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": {
+    "rubygems": { "name": "owned-values", "version": "1.2.3" }
+  }
+}
+```
+
+Build with the ordinary `--target rubygems` command. The
+[Ruby example](../consume/ruby.md#resource-containing-values) requires the
+installed gem and uses generated value classes, `retain`, `with` and `close`.
+
+The ownership profile supports resource-bearing records, variants, recursive
+values and synchronous callback payloads. All nineteen primitive fields retain
+their normal Ruby meaning. Ordinary source and independently reviewed Binding
+IR use the same compiler-checked C layouts and lifetime rules. Host callbacks
+borrow for one call; retaining a callback argument retains its resource, not
+the host callback itself. Transferred inputs, anchored results and asynchronous
+delivery remain unsupported.
+
+The gem bundles an isolated GMP 6.3.0 library and its source and license notices.
+Its loader authenticates native files and shares compatible Lean libraries
+across gems. Ruby's system GMP keeps its own allocator. The producer records
+both the public C implementation and Ruby's private pointer-call adapter, with
+compiler-checked storage assertions. Consumers need no compiler or extension
+build. Ruby uses a separate adapter from C, C++, Cargo and PyPI in combined
+builds; those targets still reuse the same compiled Lean component.
+
+Limits are depth 128, 262,144 visits, 16 MiB of native conversion data and a
+separate 16 MiB of accounted Ruby conversion storage per call, including
+callbacks and results. Resource use belongs to the creating Ruby thread and
+process. MRI Ruby 3.3 on Linux x86-64 with 1:1 threads is required.
 
 ## Build the gem
 

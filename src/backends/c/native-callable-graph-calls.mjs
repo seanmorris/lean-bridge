@@ -29,6 +29,7 @@ export const generateNativeCallableGraphCalls = (ir, descriptor, { initializer, 
 	const p = generated.layout.prefix, copy = generated.payloads.copy;
 	const callbacks = new Map(abi.callbacks.map(signature => [signature.id, signature]));
 	const callback = ref => callbacks.get(ref.id);
+	const storesClosures = [...abi.exports, ...abi.callbacks].some(item => callback(item.result));
 	const callbackName = signature => `${p}_callback_${signature.key}`;
 	const walker = ref => `ng_${sha256(copy(ref).id).slice(0, 20)}`;
 	const kind = signature => JSON.stringify(`${ir.component.id}:graph-callback:${signature.key}`);
@@ -80,7 +81,7 @@ static pthread_mutex_t ng_closure_mutex = PTHREAD_MUTEX_INITIALIZER;
    stay bound to the original thread lifetime, not a recycled OS identifier. */
 static uint64_t ng_closure_thread_serial;
 static _Thread_local uint64_t ng_closure_thread;
-static uint64_t ng_closure_store(lean_object *value, const char *kind) {
+static ${storesClosures ? "" : "inline "}uint64_t ng_closure_store(lean_object *value, const char *kind) {
   uint64_t token = 0;
   pthread_mutex_lock(&ng_closure_mutex);
   if (!ng_closure_thread) {

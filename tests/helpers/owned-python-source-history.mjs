@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedRuby } from "./owned-ruby-source-history.mjs";
 
 export const ownedPythonBaseline = "78d2e09252d81f0b123d6175bb6ea454c9205577";
 export const ownedPythonHistoryPath = "docs/evidence/owned-python-integration-20260927.json";
@@ -76,6 +77,7 @@ export const reverseOwnedPythonUpdate = (source, update) => {
  * @param expected - Optional identity at which normalization stops.
  */
 export const beforeOwnedPython = (path, source, expected) => {
+	source = beforeOwnedRuby(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedPythonChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedPythonHistoryPath, "utf8"));

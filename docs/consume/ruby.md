@@ -367,6 +367,68 @@ Callbacks cannot be retained after the exporting call, and resources or callable
 identities cannot appear inside copied fields. Asynchronous delivery, post-fork
 reuse, Ractors and M:N threads remain unsupported.
 
+### Resource-containing values
+
+An author can export records, variants and recursive values that contain
+resources using the [explicit ownership profile](../publish/rubygems.md#export-resource-containing-values).
+Install the prepared gem normally. It loads Lean and its private GMP dependency
+automatically; applications need no Fiddle declarations or library paths.
+
+For the `owned-values` gem built from a Lake package named `owned-aggregates`,
+save `owned.rb`:
+
+```ruby
+require "lean_bridge/owned_aggregates"
+API = LeanBridge::OwnedAggregates
+
+retained = nil
+begin
+  API.new_ticket(42, "receipt").with do |ticket|
+    payload = API::Payload.new(count: -7, bytes: "\0\xff".b)
+    bundle = API::Bundle.new(
+      primary: ticket, spare: nil, peers: [], history: [], payload: payload
+    )
+    result = API.callback_record(bundle, ->(value) {
+      retained = value.primary.retain
+      value
+    })
+    begin
+      puts API.serial(result.primary)
+    ensure
+      result.primary.close
+    end
+  end
+  puts API.serial(retained)
+ensure
+  retained&.close
+end
+```
+
+Run `ruby owned.rb`. It prints `42` twice. `retain` keeps the callback's resource
+alive after the callback returns and after the original ticket closes.
+Unretained callback resources, including their duplicates, expire on return.
+
+Use `with`, `close`, or an `ensure` block for deterministic cleanup. Each `dup`
+or `clone` has an independent close guard over the shared result owner. Closing
+one wrapper does not close its duplicates. `retain` creates an independent
+native owner. Resource equality preserves identity; serialization and hashing
+of resource wrappers reject.
+
+Copied contents remain independent Ruby values. Options use `nil` or `Some`,
+results use `Ok` or `Err`, and products use nested two-element Arrays. Original
+callback exceptions return after native cleanup. Nonlocal exits cannot cross
+the native call; attempted Fiber switches raise `FiberError`. A callback without
+an argument-derived recovery value uses `API.with_recovery(callable, value)`.
+Recovery values let Lean finish cleanup; they are never returned as successful
+results of a failed callback.
+
+This profile requires MRI Ruby 3.3 on little-endian Linux x86-64 with 1:1 native
+threads. Resource calls belong to their creating Ruby thread and process. Thread
+exit closes remaining owners; Ractors, M:N threads and calls after fork reject.
+Inputs, callbacks and results share depth 128, 262,144 visits and a 16 MiB native
+conversion budget, with a separate 16 MiB Ruby conversion-storage budget.
+Transferred inputs, anchored results and asynchronous callbacks are not enabled.
+
 ### Alpha interoperability example
 
 The remaining example uses `lean_bridge_alpha-0.0.0.gem`. It exercises resources and callbacks through the separate Alpha fixture API. Resource identities remain separate from ordinary copied values and primitive callables.

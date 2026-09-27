@@ -55,11 +55,11 @@ test("unsupported native targets reject owned source decisions before compiling"
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const project = join(directory, "source");
 	await cp(resolve("tests/fixtures/onboarding/owned-aggregates"), project, { recursive: true });
-	for(const targets of [["cpan"], ["nuget"], ["maven"], ["rubygems"], ["php-native"], ["wit-wasi"], ["c", "cpp", "cpan"]])
+	for(const targets of [["cpan"], ["nuget"], ["maven"], ["php-native"], ["wit-wasi"], ["c", "cpp", "cpan"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), /ownedAggregates/);
-	for(const targets of [["cargo"], ["c", "cargo"], ["cpp", "cargo"], ["c", "cpp", "cargo"], ["pypi"], ["c", "pypi"], ["cpp", "pypi"], ["c", "cpp", "cargo", "pypi"]])
+	for(const targets of [["cargo"], ["c", "cargo"], ["cpp", "cargo"], ["c", "cpp", "cargo"], ["pypi"], ["c", "pypi"], ["cpp", "pypi"], ["c", "cpp", "cargo", "pypi"], ["rubygems"], ["c", "rubygems"], ["c", "cpp", "cargo", "pypi", "rubygems"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), { code: "ENOENT" });

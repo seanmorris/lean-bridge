@@ -19,6 +19,7 @@ import { ownedPythonInstalledProbe } from "./owned-python-installed-probes.mjs";
 import { ownedRustExecutionSources, assertOwnedRustIntegration } from "./owned-rust-evidence.mjs";
 import { ownedRustHistoryPath, ownedRustExecutionPath } from "./owned-rust-source-history.mjs";
 import { ownedPythonBaseline, ownedPythonChangedPaths, ownedPythonAddedPaths, ownedPythonExecutionPath, reverseOwnedPythonUpdate } from "./owned-python-source-history.mjs";
+import { beforeOwnedRuby, ownedRubyHistoricalBytes } from "./owned-ruby-source-history.mjs";
 
 export const ownedPythonCommands = {
 	core: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs"
@@ -188,7 +189,7 @@ export const assertOwnedPythonExecution = async record => {
 	assert.deepEqual(Object.keys(record.runs).sort(), Object.keys(ownedPythonCommands).sort());
 	for(const [name, count] of Object.entries({ core: 9, packages: 4, contracts: 57 })) passing(record.runs[name], ownedPythonCommands[name], count);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedPythonExecutionSources);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedRubyHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	const historicalRust = await json(ownedRustExecutionPath);
 	const foundation = await json("docs/evidence/owned-python-values-20260927.json");
 	for(const collection of [record.runtime, record.values, record.scalars, record.packages, record.scalarPackages])
@@ -260,13 +261,17 @@ export const assertOwnedPythonIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = ownedRubyHistoricalBytes(path, await readFile(path), record.sourceHashes[path]);
+		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update) restored[path] = reverseOwnedPythonUpdate(current.toString("utf8"), update);
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document, ...contracts } = await readTypeSurface(), previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const { document: currentDocument, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(beforeOwnedRuby("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	assert.deepEqual(typeSurfaceCells(currentDocument, contracts), typeSurfaceCells(document, contracts));
+	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{
