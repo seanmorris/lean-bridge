@@ -10,10 +10,12 @@ import { dotnetGraphException } from "./copied-graph-runtime.mjs";
  * Finalizers only flag releases; C cleanup runs on the creating native thread.
  *
  * @param prefix - Checked public C package identifier.
+ * @param options - Generated assembly composition options.
+ * @param options.includeException - Emit the standalone probe's exception type.
  */
-export const ownedDotnetRuntime = prefix => {
+export const ownedDotnetRuntime = (prefix, { includeException = true } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned .NET prefix");
-	return `${dotnetGraphException}
+	return `${includeException ? dotnetGraphException : ""}
 internal sealed unsafe partial class OwnedRuntime
 {
     private readonly delegate* unmanaged[Cdecl]<int> processValid;

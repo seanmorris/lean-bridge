@@ -15,21 +15,27 @@ internal sealed class OwnedLimit : global::System.ArgumentException
     internal OwnedLimit(string message) : base(message) { }
 }
 
+internal sealed class OwnedValueBudget
+{
+    internal int Nodes = ${componentRecursiveLimits.valueNodes};
+    internal nuint Native = 16 * 1024 * 1024;
+    internal nuint Managed = 16 * 1024 * 1024;
+}
+
 internal sealed unsafe class OwnedValueScope : global::System.IDisposable
 {
     internal readonly OwnedState State;
     internal readonly OwnedFactories Factories;
     internal readonly bool CheckOnly;
     private readonly global::System.Func<OwnedLease>? lease;
-    internal int Nodes = ${componentRecursiveLimits.valueNodes};
-    private nuint nativeRemaining = 16 * 1024 * 1024;
-    private nuint managedRemaining = 16 * 1024 * 1024;
+    internal readonly OwnedValueBudget Budget;
+    internal int Nodes => Budget.Nodes;
     private readonly global::System.Collections.Generic.HashSet<object> hosts = new(global::System.Collections.Generic.ReferenceEqualityComparer.Instance);
     private readonly global::System.Collections.Generic.HashSet<(int, nuint)> outputs = new();
     private readonly global::System.Collections.Generic.List<nint> allocations = new();
     private readonly global::System.Collections.Generic.List<OwnedHandle> roots = new();
-    internal OwnedValueScope(OwnedState state, OwnedFactories factories, bool checkOnly = false, global::System.Func<OwnedLease>? lease = null)
-    { state.Require(); State = state; Factories = factories; CheckOnly = checkOnly; this.lease = lease; }
+    internal OwnedValueScope(OwnedState state, OwnedFactories factories, bool checkOnly = false, global::System.Func<OwnedLease>? lease = null, OwnedValueBudget? budget = null)
+    { state.Require(); State = state; Factories = factories; CheckOnly = checkOnly; this.lease = lease; Budget = budget ?? new(); }
     internal OwnedLease Lease()
     {
         State.Require();
@@ -41,12 +47,12 @@ internal sealed unsafe class OwnedValueScope : global::System.IDisposable
         if (width == 0 || count > remaining / width) throw new OwnedLimit("16 MiB ownership conversion budget exceeded");
         remaining -= count * width;
     }
-    internal void Native(nuint count, nuint width = 1) => Charge(ref nativeRemaining, count, width);
-    internal void Storage(nuint count, nuint width = 1) => Charge(ref managedRemaining, count, width);
+    internal void Native(nuint count, nuint width = 1) => Charge(ref Budget.Native, count, width);
+    internal void Storage(nuint count, nuint width = 1) => Charge(ref Budget.Managed, count, width);
     private void Visit(int depth, int size, bool storage)
     {
         if (depth > ${componentRecursiveLimits.valueDepth} || Nodes == 0) throw new OwnedLimit("Ownership value depth or node limit exceeded");
-        --Nodes;
+        --Budget.Nodes;
         if (storage) Native((nuint)size);
     }
     internal void Enter(object? identity, int depth, int size, bool storage)
