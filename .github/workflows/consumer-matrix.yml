@@ -1020,9 +1020,13 @@ jobs:
         run: exit 1
 
   managed-consumers:
-    name: .NET, JVM, and Ruby
+    name: Managed consumer (${{ matrix.profile }})
     runs-on: ubuntu-24.04
     timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [dotnet, jvm, ruby]
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -1042,21 +1046,26 @@ jobs:
         id: consumer
         continue-on-error: true
         run: npm run test:consumer:managed
+      - name: Prepare the pinned native compiler
+        run: |
+          sudo apt-get update && sudo apt-get install -y build-essential zstd m4
+          bash scripts/bootstrap-toolchains.sh --lean-only
       - name: Install the ordinary C# compiler
+        if: matrix.profile == 'dotnet'
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.424'
       - name: Compile ordinary Lean APIs and install relocated NuGet releases
+        if: matrix.profile == 'dotnet'
         id: ordinary_dotnet
         continue-on-error: true
         env:
           LEAN_BRIDGE_NATIVE_DOTNET_TEST: "1"
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential zstd m4
-          bash scripts/bootstrap-toolchains.sh --lean-only
           source scripts/env.sh
           node --test tests/native-dotnet.test.mjs
       - name: Compare installed NuGet corpus packages with fresh Lean results
+        if: matrix.profile == 'dotnet'
         id: type_corpus_dotnet
         continue-on-error: true
         run: |
@@ -1108,7 +1117,7 @@ jobs:
           test -s build/type-corpus/dotnet.json
           test -s build/type-corpus/reviewed-native-dotnet.json
       - name: Upload the .NET real-Lean type corpus report
-        if: always()
+        if: always() && matrix.profile == 'dotnet'
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-dotnet-${{ github.sha }}
@@ -1146,11 +1155,13 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Install the ordinary Java compiler
+        if: matrix.profile == 'jvm'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '22.0.2'
       - name: Compile ordinary Lean APIs and install Maven packages in Java and Kotlin
+        if: matrix.profile == 'jvm'
         id: ordinary_jvm
         continue-on-error: true
         env:
@@ -1167,6 +1178,7 @@ jobs:
           source scripts/env.sh
           node --test tests/native-jvm.test.mjs
       - name: Compare isolated Java and Kotlin corpus consumers with fresh Lean
+        if: matrix.profile == 'jvm'
         id: type_corpus_jvm
         continue-on-error: true
         run: |
@@ -1216,7 +1228,7 @@ jobs:
           test -s build/type-corpus/java-kotlin.json
           test -s build/type-corpus/reviewed-native-java-kotlin.json
       - name: Upload installed Java and Kotlin corpus observations
-        if: always()
+        if: always() && matrix.profile == 'jvm'
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-jvm-${{ github.sha }}
@@ -1249,10 +1261,12 @@ jobs:
           overwrite: true
           retention-days: 30
       - name: Install the ordinary Ruby runtime
+        if: matrix.profile == 'ruby'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3.12'
       - name: Build ordinary Lean APIs and install relocated RubyGems releases
+        if: matrix.profile == 'ruby'
         id: ordinary_ruby
         env:
           LEAN_BRIDGE_NATIVE_RUBY_TEST: "1"
@@ -1262,6 +1276,7 @@ jobs:
           source scripts/env.sh
           node --test tests/native-ruby.test.mjs
       - name: Compare installed Ruby corpus packages with fresh Lean results
+        if: matrix.profile == 'ruby'
         id: type_corpus_ruby
         continue-on-error: true
         run: |
@@ -1310,7 +1325,7 @@ jobs:
           test -s build/type-corpus/ruby.json
           test -s build/type-corpus/reviewed-native-ruby.json
       - name: Upload the Ruby real-Lean type corpus report
-        if: always()
+        if: always() && matrix.profile == 'ruby'
         uses: actions/upload-artifact@v7
         with:
           name: type-corpus-ruby-${{ github.sha }}
@@ -1345,7 +1360,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          for consumer in dotnet jvm ruby; do
+          for consumer in ${{ matrix.profile }}; do
             consumer_command="npm run test:consumer:managed"
             test_result="${{ steps.consumer.outcome == 'success' && 'passed' || 'failed' }}"
             executed="${{ steps.consumer.outcome == 'success' && 'true' || 'false' }}"
@@ -1423,13 +1438,13 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: consumer-results-managed-${{ github.sha }}
-          path: build/consumer-ci/results/*.json
+          name: consumer-results-managed-${{ matrix.profile }}-${{ github.sha }}
+          path: build/consumer-ci/results/${{ matrix.profile }}.json
           if-no-files-found: error
           overwrite: true
           retention-days: 30
       - name: Enforce managed consumer support
-        if: steps.consumer.outcome != 'success' || steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success' || steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success' || steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success'
+        if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
         run: exit 1
 
   wasi-consumer:

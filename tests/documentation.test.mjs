@@ -12,6 +12,7 @@ import test from "node:test";
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { docPages } from "../site/registry.mjs";
+import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 import {
 	ConsumerSupportError,
 	consumerSummaryMarkdown,
@@ -805,9 +806,11 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /nix shell --inputs-from \. nixpkgs#perl/);
   const consumerWorkflows = `${workflow}\n${perlWorkflow}`;
   const contract = await readConsumerSupport();
+  const managed = assertManagedCiIsolation(workflow);
   for(const consumer of contract.consumers)
 {
-    assert.match(consumerWorkflows, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+    if(!managed.profiles.includes(consumer.id))
+      assert.match(consumerWorkflows, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
     if(["python", "rust", "c", "cpp", "dotnet", "jvm", "ruby"].includes(consumer.id))
 {
       assert.match(workflow, /--performance "build\/consumer-ci\/performance\/\$consumer\.json"/);

@@ -11,6 +11,7 @@ import { assertNativeForkRepair } from "./helpers/native-fork-repair-evidence.mj
 import { beforeNativeForkRepair, nativeForkRepairHistoricalBytes, nativeForkRepairPath, reverseNativeForkRepair } from "./helpers/native-fork-repair-history.mjs";
 import { ownedDotnetHistoricalBytes, ownedDotnetNormalizationPaths } from "./helpers/owned-dotnet-source-history.mjs";
 import { ownedRubyHistoricalBytes } from "./helpers/owned-ruby-source-history.mjs";
+import { beforeManagedCiIsolation } from "./helpers/managed-ci-isolation-history.mjs";
 
 const receipt = async () => JSON.parse(await readFile(nativeForkRepairPath, "utf8"));
 
@@ -51,7 +52,7 @@ test("native fork repair evidence rejects changed statuses, execution and source
 test("native fork repair history preserves unknown files and authenticates complete transitions", async () => {
 	for(const update of (await receipt()).updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeManagedCiIsolation(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(beforeNativeForkRepair(update.path, current)), update.previousSha256);
 		assert.equal(beforeNativeForkRepair(update.path, current, update.currentSha256), current);
 		assert.ok(ownedDotnetNormalizationPaths.includes(update.path));

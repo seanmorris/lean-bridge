@@ -25,6 +25,7 @@ const profileManifest = Object.freeze({
 		, "owned-dotnet-callback-evidence", "owned-dotnet-loading-evidence"
 		, "owned-dotnet-evidence", "owned-dotnet-process-evidence"
 		, "native-fork-repair-evidence"
+		, "managed-ci-isolation", "managed-ci-isolation-evidence"
 		, "binding-semantic-parity"
 		, "callback-runtime"
 		, "checked-javascript"
