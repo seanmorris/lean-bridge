@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeJvmProbeRepair, jvmProbeRepairChangedPaths } from "./jvm-probe-repair-history.mjs";
 
 export const ownedJvmBaseline = "4ae2450fd9dfd164486970993d0923e667c18bbf";
 export const ownedJvmHistoryPath = "docs/evidence/owned-jvm-integration-20260927.json";
@@ -168,11 +169,14 @@ export const reverseOwnedJvmUpdate = (source, update) => {
  * @param expected - Optional requested identity at which normalization stops.
  */
 export const beforeOwnedJvmPackages = (path, source, expected) => {
+	source = beforeJvmProbeRepair(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedJvmChangedPaths.includes(path)) return source;
 	const update = record().updates.find(item => item.path === path);
 	return update?.currentSha256 === digest ? reverseOwnedJvmUpdate(source, update) : source;
 };
+
+export const ownedJvmNormalizationPaths = [...new Set([...ownedJvmChangedPaths, ...jvmProbeRepairChangedPaths])].sort();
 
 /**
  * Normalize declared text only and preserve unrelated binary data byte-for-byte.
@@ -181,7 +185,7 @@ export const beforeOwnedJvmPackages = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional requested identity.
  */
-export const ownedJvmHistoricalBytes = (path, bytes, expected) => ownedJvmChangedPaths.includes(path)
+export const ownedJvmHistoricalBytes = (path, bytes, expected) => ownedJvmNormalizationPaths.includes(path)
 	? beforeOwnedJvmPackages(path, bytes.toString("utf8"), expected) : bytes;
 
 /**

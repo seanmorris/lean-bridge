@@ -7,12 +7,51 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeJvmProbeRepair, jvmProbeRepairBaseline, jvmProbeRepairBytes, jvmProbeRepairChangedPaths, jvmProbeRepairPath } from "./helpers/jvm-probe-repair-history.mjs";
 import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { jvmStructuredRegressionFixtures } from "./helpers/jvm-structured-callable-regression.mjs";
 import { assertOwnedJvmGeneratedHistory, assertOwnedJvmPackageExecution, assertOwnedJvmPackageIntegration } from "./helpers/owned-jvm-package-evidence.mjs";
 import { beforeOwnedJvmPackages, beforeOwnedJvmGenerated, ownedJvmHistoricalBytes, ownedJvmHistoryPath, ownedJvmExecutionPath, reverseOwnedJvmUpdate } from "./helpers/owned-jvm-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+
+test("recursive JVM probe repair preserves every published predecessor and rejects source drift", async () => {
+	const record = await json(jvmProbeRepairPath), previous = await json(ownedJvmHistoryPath);
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.kind, "jvm-recursive-probe-repair");
+	assert.equal(record.baselineRevision, jvmProbeRepairBaseline);
+	assert.equal(record.previous.path, ownedJvmHistoryPath);
+	assert.equal(sha256(await readFile(record.previous.path)), record.previous.sha256);
+	assert.equal(record.productionCodeChanged, false); assert.equal(record.promotedCells, 0);
+	assert.equal(record.failure.reproduced, true);
+	assert.equal(record.acceptance.status, "passed");
+	assert.equal(record.acceptance.command, "LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test --test-name-pattern='original recursive Maven' tests/jvm-recursive-callables.test.mjs");
+	assert.equal(sha256(record.acceptance.output), record.acceptance.outputSha256);
+	for(const line of ["# tests 1", "# pass 1", "# fail 0", "# skipped 0"])
+		assert.ok(record.acceptance.output.split("\n").includes(line), line);
+	assert.deepEqual(record.updates.map(update => update.path).sort(), jvmProbeRepairChangedPaths);
+	for(const [path, hash] of Object.entries(record.sources))
+		assert.equal(sha256(await readFile(path)), hash, path);
+	for(const update of record.updates)
+	{
+		const current = await readFile(update.path, "utf8");
+		assert.equal(sha256(current), update.currentSha256);
+		assert.equal(update.previousSha256, previous.sources[update.path]);
+		const old = beforeJvmProbeRepair(update.path, current);
+		assert.equal(sha256(old), update.previousSha256);
+		assert.equal(beforeJvmProbeRepair(update.path, old), old);
+		assert.equal(beforeJvmProbeRepair(update.path, current, update.currentSha256), current);
+		const drift = current + "\nunknown repair drift\n";
+		assert.equal(beforeJvmProbeRepair(update.path, drift), drift);
+		assert.notEqual(sha256(drift), record.sources[update.path]);
+	}
+	const probe = await readFile("tests/helpers/jvm-recursive-callable-probes.mjs", "utf8");
+	assert.match(probe, /GraphFaultProbe\.symbols=_CallableGraphNative\.fixtureSymbols\(\)/u);
+	assert.match(probe, /fixtureSymbols\(\) \{ return _Assets\.lookup\(\); \}/u);
+	assert.doesNotMatch(probe, /Path\.of\(System\.getProperty/u);
+	const binary = Buffer.from([0, 255, 192, 128]);
+	assert.equal(jvmProbeRepairBytes("unrelated.bin", binary), binary);
+});
 
 test("owned JVM packages retain exact installed acceptance and immutable predecessors", async () => {
 	await assertOwnedJvmPackageIntegration(await json(ownedJvmHistoryPath));
@@ -60,10 +99,11 @@ test("owned JVM evidence rejects widened scope and forged package or execution c
 test("owned JVM source history reverses exact edits and preserves unknown bytes", async () => {
 	for(const update of (await json(ownedJvmHistoryPath)).updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const latest = await readFile(update.path, "utf8");
+		const current = beforeJvmProbeRepair(update.path, latest);
 		assert.equal(sha256(reverseOwnedJvmUpdate(current, update)), update.previousSha256);
-		assert.equal(sha256(beforeOwnedJvmPackages(update.path, current)), update.previousSha256);
-		assert.equal(beforeOwnedJvmPackages(update.path, current, update.currentSha256), current);
+		assert.equal(sha256(beforeOwnedJvmPackages(update.path, latest)), update.previousSha256);
+		assert.equal(beforeOwnedJvmPackages(update.path, latest, update.currentSha256), current);
 		assert.equal(sha256(ownedJvmHistoricalBytes(update.path, Buffer.from(current), update.previousSha256)), update.previousSha256);
 		const unknown = current + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedJvmPackages(update.path, unknown), unknown);

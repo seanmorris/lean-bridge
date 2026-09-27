@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJvmPackages, ownedJvmChangedPaths } from "./owned-jvm-source-history.mjs";
+import { beforeOwnedJvmPackages, ownedJvmNormalizationPaths } from "./owned-jvm-source-history.mjs";
 
 export const managedCiIsolationBaseline = "733bd5a289841309c3ed0b6a99e322cdcb361a09";
 export const managedCiIsolationPath = "docs/evidence/managed-ci-isolation-20260927.json";
@@ -19,7 +19,7 @@ export const managedCiIsolationChangedPaths = [
 	, "tests/helpers/owned-dotnet-process-history.mjs"
 	, "tests/native-fork-repair-evidence.test.mjs"
 ].sort();
-export const managedCiIsolationNormalizationPaths = [...new Set([...managedCiIsolationChangedPaths, ...ownedJvmChangedPaths])].sort();
+export const managedCiIsolationNormalizationPaths = [...new Set([...managedCiIsolationChangedPaths, ...ownedJvmNormalizationPaths])].sort();
 export const managedCiIsolationAddedPaths = [
 	"docs/evidence/managed-ci-isolation-20260927.md"
 	, "tests/helpers/managed-ci-isolation.mjs"

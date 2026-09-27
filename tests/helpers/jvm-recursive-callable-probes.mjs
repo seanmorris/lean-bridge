@@ -108,9 +108,15 @@ export const checkJvmRecursiveProbes = async ({ root, extracted, installedJar: j
 	const adapterHash = await digest(join(libraries, adapter.library)); assert.notEqual(adapterHash, compiled.evidence.libraries[adapter.library]);
 	const evidence = { ...compiled.evidence, libraries: { ...compiled.evidence.libraries, [adapter.library]: adapterHash } };
 	const changed = instrumentJvmRecursiveCallbacks(sources, model.namespace), files = changed.files, prefix = 'src/main/java/' + model.namespace.replaceAll('.', '/');
-	files[prefix + '/_CallableGraphNative.java'] = jvmGraphAssets({ ...model, functions: model.functions.map(fn => fn === recursive ? { ...fn, native: 'fixture_poisoned_result' } : fn) }, evidence, true);
-	// Resource authentication remains intact; only the separate probe adapter's
-	// expected digest and poisoned symbol are different from the installed package.
+	const loader = jvmGraphAssets({ ...model, functions: model.functions.map(fn => fn === recursive ? { ...fn, native: 'fixture_poisoned_result' } : fn) }, evidence, true);
+	const declaration = 'final class _CallableGraphNative {';
+	assert.equal(loader.split(declaration).length, 2);
+	// The isolated probe gets symbols from the same authenticated loader as the
+	// public calls, without copying its cache keys or accepting a directory override.
+	files[prefix + '/_CallableGraphNative.java'] = loader.replace(declaration, declaration
+		+ '\n    static java.lang.foreign.SymbolLookup fixtureSymbols() { return _Assets.lookup(); }');
+	// The test-only accessor, expected adapter digest and poisoned result symbol
+	// are separate from the unchanged installed package.
 	for(const name of ['GraphFaultProbe', 'GraphFaultCases']) files[prefix + '/' + name + '.java'] = await readFile('tests/fixtures/structured-callable-consumers/jvm-recursive-' + name + '.java', 'utf8');
 	files[prefix + '/GraphProbeSetup.java'] = `package ${model.namespace};
 import java.lang.foreign.*;
@@ -120,8 +126,7 @@ final class GraphProbeSetup {
  ${layout.java}
  static void initialize() throws Throwable {
   _CallableGraphNative.resolve();
-  var root=java.nio.file.Path.of(System.getProperty(${JSON.stringify('lean.bridge.jvm.native-library-v1.' + evidence.componentId + '.path')}));
-  GraphFaultProbe.symbols=SymbolLookup.libraryLookup(root.resolve(${JSON.stringify(adapter.library)}),Arena.global());
+  GraphFaultProbe.symbols=_CallableGraphNative.fixtureSymbols();
   long count=(long)GraphFaultProbe.symbol("graph_fixture_layout_count",FunctionDescriptor.of(JAVA_LONG)).invokeExact();
   var actual=layouts(); var expected=expectedLayouts(); GraphFaultProbe.check(count==actual.length && count==expected.length);
   for(int i=0;i<actual.length;++i) {
