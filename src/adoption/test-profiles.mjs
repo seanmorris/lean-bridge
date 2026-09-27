@@ -28,6 +28,7 @@ const profileManifest = Object.freeze({
 		, "owned-jvm-call-evidence", "owned-jvm-ci", "owned-jvm-package-evidence"
 		, "native-fork-repair-evidence"
 		, "managed-ci-isolation", "managed-ci-isolation-evidence"
+		, "native-ci-isolation"
 		, "binding-semantic-parity"
 		, "callback-runtime"
 		, "checked-javascript"

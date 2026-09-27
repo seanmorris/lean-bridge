@@ -13,6 +13,7 @@ import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { docPages } from "../site/registry.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
+import { assertNativeCiIsolation } from "./helpers/native-ci-isolation.mjs";
 import {
 	ConsumerSupportError,
 	consumerSummaryMarkdown,
@@ -711,7 +712,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.equal(packageDocument.scripts["test:type-corpus:c"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:cpp"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=cpp node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:c-family"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp node --test tests/type-corpus.test.mjs");
-  assert.match(workflow, /id: ordinary_c\n\s*continue-on-error: true/);
+  assert.match(workflow, /id: ordinary_c\n\s*if: matrix.profile == 'c-family'\n\s*continue-on-error: true/);
   assert.match(workflow, /id: type_corpus_c_family/);
   assert.match(workflow, /node --test tests\/native-c-family\.test\.mjs tests\/native-c-copied\.test\.mjs && npm run test:type-corpus:c-family/);
   assert.match(workflow, /steps\.ordinary_c\.outcome != 'success'/);
@@ -820,9 +821,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   const consumerWorkflows = `${workflow}\n${perlWorkflow}`;
   const contract = await readConsumerSupport();
   const managed = assertManagedCiIsolation(workflow);
+  const native = assertNativeCiIsolation(workflow, JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json")));
   for(const consumer of contract.consumers)
 {
-    if(!managed.profiles.includes(consumer.id))
+    if(!managed.profiles.includes(consumer.id) && !native.selectedConsumers.includes(consumer.id))
       assert.match(consumerWorkflows, new RegExp(`(?:--consumer |consumer in [^\\n]*)${consumer.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
     if(["python", "rust", "c", "cpp", "dotnet", "jvm", "ruby"].includes(consumer.id))
 {

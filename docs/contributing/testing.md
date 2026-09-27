@@ -1477,6 +1477,13 @@ Choose the command for the package boundary you changed. These commands run from
 
 The [native runner](../../scripts/test-native-consumers.mjs) installs the original release archives and executes the Python, Rust, C, and C++ guide files against real Lean. It retains its steady-state benchmark separately and writes `build/documentation-native-acceptance/acceptance.json`. Successful native and managed reports use `result: "passed"`; the managed report is `build/documentation-consumers/managed.json`.
 
+CI runs the C/C++, Python and Rust acceptance suites in three independent matrix
+jobs. Each job has its own four-hour limit, runs the shared installed-release
+baseline, then executes its selected ordinary-source and type-corpus checks.
+Failures do not cancel the other jobs. Each job publishes only its own consumer
+rows; the support summary still requires all fourteen targets. A selected step
+that fails, is skipped or is cancelled prevents that consumer from passing.
+
 The native PHP job installs the Composer sources and runs the guide's program; its separate conformance and performance checks run in the same job. The PHP-Wasm job prepares its pinned Emscripten 3.1.68 and PHP source inputs, installs the host and generated package in a clean Node project, and executes the checked-in PHP and host files as part of the native/lazy/startup release gate.
 
 For changes spanning native PHP and both PHP-Wasm profiles, run `npm run test:php-release` in the pinned PHP build environment. This regression gate builds and tests the fixture profiles locally; it does not upload them.
