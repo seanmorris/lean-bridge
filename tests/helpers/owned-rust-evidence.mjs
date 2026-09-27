@@ -20,6 +20,7 @@ import { ownedCppHistoryPath } from "./owned-cpp-source-history.mjs";
 import { ownedCppOrderHistoryPath } from "./owned-cpp-order-history.mjs";
 import { beforeOwnedPython, ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
 import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
+import { ownedDotnetChangedPaths } from "./owned-dotnet-source-history.mjs";
 import { ownedRustBaseline, ownedRustChangedPaths, ownedRustAddedPaths, ownedRustExecutionPath, beforeOwnedRust, reverseOwnedRustUpdate } from "./owned-rust-source-history.mjs";
 
 export const ownedRustCommands = {
@@ -200,7 +201,7 @@ export const assertOwnedRustIntegration = async record => {
 	for(const path of paths)
 	{
 		const bytes = await readFile(path);
-		const current = (ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path)) ? beforeOwnedPython(path, bytes.toString("utf8")) : bytes;
+		const current = (ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetChangedPaths.includes(path)) ? beforeOwnedPython(path, bytes.toString("utf8")) : bytes;
 		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update) restored[path] = reverseOwnedRustUpdate(current.toString("utf8"), update);

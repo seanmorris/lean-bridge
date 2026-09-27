@@ -1070,6 +1070,14 @@ jobs:
           test -s build/structured-callables/dotnet.json
           LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 node --test tests/dotnet-recursive-callables.test.mjs
           test -s build/recursive-callables/dotnet.json
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-runtime.test.mjs tests/owned-dotnet-layout.test.mjs tests/owned-dotnet-values.test.mjs tests/owned-dotnet-conversions.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-callables.test.mjs tests/owned-dotnet-callback-signatures.test.mjs tests/owned-dotnet-package.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-packaging.test.mjs tests/owned-dotnet-coexistence.test.mjs
+          test -s build/owned-dotnet-packaging/compositions-ordinary.json
+          test -s build/owned-dotnet-packaging/compositions-reviewed.json
+          test -s build/owned-dotnet-packaging/scalars-ordinary.json
+          test -s build/owned-dotnet-packaging/scalars-reviewed.json
+          test -s build/owned-dotnet-packaging/coexistence.json
           LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs
           test -s build/compounds/dotnet.json
           LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs
@@ -1126,6 +1134,14 @@ jobs:
             build/recursive/dotnet-composition.json
             build/recursive/dotnet-reproducibility.json
             build/recursive/dotnet-conflicts.json
+            build/owned-dotnet-runtime/
+            build/owned-dotnet-layout/
+            build/owned-dotnet-values/
+            build/owned-dotnet-conversions/
+            build/owned-dotnet-callables/
+            build/owned-dotnet-callback-signatures/
+            build/owned-dotnet-loading/
+            build/owned-dotnet-packaging/
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -1337,6 +1353,9 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_DOTNET_TEST=1 node --test tests/native-dotnet.test.mjs && npm run test:type-corpus:dotnet && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=dotnet node --test tests/type-corpus-reviewed-native.test.mjs && LEAN_BRIDGE_DOTNET_CALLABLE_TEST=1 node --test tests/dotnet-callables.test.mjs tests/dotnet-callable-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_STRUCTURED_CALLABLE_TEST=1 node --test tests/dotnet-structured-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_RECURSIVE_CALLABLE_TEST=1 node --test tests/dotnet-recursive-callables.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-runtime.test.mjs tests/owned-dotnet-layout.test.mjs tests/owned-dotnet-values.test.mjs tests/owned-dotnet-conversions.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-callables.test.mjs tests/owned-dotnet-callback-signatures.test.mjs tests/owned-dotnet-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-packaging.test.mjs tests/owned-dotnet-coexistence.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs"

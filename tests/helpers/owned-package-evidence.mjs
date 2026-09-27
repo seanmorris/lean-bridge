@@ -18,6 +18,7 @@ import { ownedCppChangedPaths } from "./owned-cpp-source-history.mjs";
 import { ownedRustChangedPaths } from "./owned-rust-source-history.mjs";
 import { ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
 import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
+import { ownedDotnetChangedPaths } from "./owned-dotnet-source-history.mjs";
 
 export const ownedPackageCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-c-packaging.test.mjs";
 export const ownedPackageRegressionCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/reviewed-owned-source.test.mjs tests/reviewed-source.test.mjs tests/reviewed-callables.test.mjs tests/owned-c-values.test.mjs";
@@ -42,7 +43,7 @@ export const ownedPackageExecutionSources = [...new Set([
 const source = async path => beforeOwnedHost(path, await readFile(path, "utf8"));
 const historicalBytes = async path => {
 	const bytes = await readFile(path);
-	return ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || (ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path))
+	return ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetChangedPaths.includes(path)
 		? beforeOwnedHost(path, bytes.toString("utf8")) : bytes;
 };
 const passing = (run, command, count) => {

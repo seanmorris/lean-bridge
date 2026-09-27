@@ -109,6 +109,17 @@ Its private C forwarders check the exact Fiddle storage layouts during the
 producer build. Compatible copied and owned gems use one loader registry.
 This profile requires MRI Ruby 3.3 on Linux x86-64 with 1:1 native threads.
 
+The [C# ownership projection](../consume/dotnet.md#resource-containing-values)
+uses nominal records and variants with sealed, disposable resource and closure
+wrappers. Aggregate inputs borrow their resource leaves; returned wrappers own
+checked leases. Callback borrows expire on return unless retained explicitly.
+Typed delegates preserve higher-order signatures and rethrow the original host
+exception after native cleanup. The prepared NuGet assembly authenticates and
+loads Lean and private GMP automatically, sharing its loader with copied-value
+packages. Creator-thread exit drains native owners even when managed wrappers
+remain reachable. Finalizers queue cleanup rather than calling Lean from the
+finalizer thread. This profile requires .NET 8 on Linux x86-64.
+
 ## Rich values cross as rich values
 
 The `result` constructor stores its arguments as `[success, error]`. Lean `Except ε α` therefore lowers to `result<α, ε>`. For example, `Except String UInt32` becomes `result<uint32, string>`, with a numeric success payload and a text error payload. This argument order is part of the IR contract, independent of the order used by a source language. Recognizing the type during analysis does not enable compound signatures in ordinary compiled packages; those still require their transport adapters.

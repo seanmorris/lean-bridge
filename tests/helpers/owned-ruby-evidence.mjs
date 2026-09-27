@@ -19,6 +19,7 @@ import { assertOwnedRubyConversions } from "./owned-ruby-conversion-evidence.mjs
 import { assertRubyRecursiveFaults } from "./ruby-recursive-callable-install.mjs";
 import { assertRubyStructuredFaults } from "./ruby-structured-callable-install.mjs";
 import { ownedRubyBaseline, ownedRubyChangedPaths, ownedRubyAddedPaths, ownedRubyExecutionPath, reverseOwnedRubyUpdate, ownedRubyHistoricalBytes } from "./owned-ruby-source-history.mjs";
+import { beforeOwnedDotnet, ownedDotnetHistoricalBytes } from "./owned-dotnet-source-history.mjs";
 
 export const ownedRubyScope = { profiles: ["rubygems"]
 	, companions: ["c", "cpp", "cargo", "pypi"]
@@ -304,7 +305,7 @@ export const assertOwnedRubyExecution = async record => {
 	assert.deepEqual(Object.keys(record.runs).sort(), Object.keys(ownedRubyCommands).sort());
 	for(const [name, count] of Object.entries({ packages: 5, copied: 1, callbacks: 3 })) passing(record.runs[name], ownedRubyCommands[name], count);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedRubyExecutionSources);
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedDotnetHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	await predecessors(record);
 	for(const collection of [record.packages, record.scalarPackages]) assert.deepEqual(Object.keys(collection).sort(), ["ordinary", "reviewed"]);
 	for(const mode of ["ordinary", "reviewed"])
@@ -344,13 +345,16 @@ export const assertOwnedRubyIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = ownedDotnetHistoricalBytes(path, await readFile(path), record.sourceHashes[path]);
+		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update) restored[path] = reverseOwnedRubyUpdate(current.toString("utf8"), update);
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document, ...contracts } = await readTypeSurface(), previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const { document: currentDocument, ...contracts } = await readTypeSurface(); void currentDocument;
+	const document = JSON.parse(beforeOwnedDotnet("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const previousDocument = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(previousDocument);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

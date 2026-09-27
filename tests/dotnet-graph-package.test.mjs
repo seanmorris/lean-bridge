@@ -137,7 +137,12 @@ test("recursive C# package APIs are deterministic, typed and separate from nativ
 test("recursive C# loading requires exact native identities and safe parameter names", () => {
 	const ir = dotnetConversionIr(), evidence = loadingEvidence();
 	const files = generateCopiedDotnetGraphPackage(ir, evidence), calls = files["src/LeanBridge.Recursive/Calls.cs"];
-	assert.ok(calls.indexOf("Verify(global::System.IO.Path.Combine") < calls.indexOf("NativeLibrary.Load("));
+	const verify = calls.indexOf("foreach (var item in libraries) Verify(");
+	const open = calls.indexOf("var value = Open(");
+	assert.ok(verify >= 0 && open > verify, "authenticate files before dlopen");
+	assert.match(calls, /linux-x64-deepbind-v1/u);
+	assert.match(calls, /EntryPoint = "getpid"/u);
+	assert.doesNotMatch(calls, /Environment.ProcessId|NativeLibrary.Load/u);
 	assert.match(calls, /Conflicting builds of the same Lean component/);
 	assert.match(calls, /Incompatible Lean runtime identities in one process/);
 	assert.match(calls, /global::System.Threading.Volatile.Write/);
@@ -145,7 +150,7 @@ test("recursive C# loading requires exact native identities and safe parameter n
 		, { runtimeIdentity: "x" }, { library: "../librecursive.so" }
 		, { libraries: { ...evidence.libraries, "../outside.so": "3".repeat(64) } }
 		, { libraries: { "librecursive.so": "3".repeat(64) } }])
-		assert.throws(() => generateCopiedDotnetGraphPackage(ir, { ...evidence, ...change }), /loading/);
+		assert.throws(() => generateCopiedDotnetGraphPackage(ir, { ...evidence, ...change }), /loading|native library evidence/u);
 	for(const name of ["a-b", "x);", "", "é"])
 	{
 		const invalid = structuredClone(ir); invalid.declarations[0].parameters[0].name = name;

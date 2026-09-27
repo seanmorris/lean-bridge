@@ -4,6 +4,7 @@
  * @file
  */
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
+import { verifiedDotnetAssets } from "./verified-assets.mjs";
 import { compileCopiedDotnetModel } from "./copied-model.mjs";
 import { copiedConversions, copiedNativeTypes, copiedScope, copiedCompoundTypes } from "./copied-conversions.mjs";
 import { dotnetValue, dotnetResult, dotnetNativeCall, dotnetCallableTypes, dotnetCallableState, dotnetCallableSupport, dotnetCallableImports, dotnetClosurePublic } from "./callables.mjs";
@@ -26,58 +27,11 @@ ${fields.map(field => `        hash.Add(global::System.Collections.StructuralCom
     }
 }`;
 
-const loader = evidence => !evidence ? `    static Native() => throw new InvalidOperationException("Generate a compiled NuGet release before calling this API");` : `    private static readonly nint Handle = Load();
-    static Native() => NativeLibrary.SetDllImportResolver(typeof(Native).Assembly, (name, assembly, searchPath) => name == Library ? Handle : 0);
-    private static nint Load()
+const loader = evidence => `    static Native() => NativeLibrary.SetDllImportResolver(typeof(Native).Assembly, (name, assembly, searchPath) => name == Library ? Assets.Handle : 0);
+    internal static void EnsureProcess() => Assets.EnsureProcess();
+    private static class Assets
     {
-        if (!OperatingSystem.IsLinux() || RuntimeInformation.ProcessArchitecture != Architecture.X64 || !BitConverter.IsLittleEndian)
-            throw new PlatformNotSupportedException("This Lean package requires Linux x86-64 with glibc");
-        var roots = new[] { Path.Combine(AppContext.BaseDirectory, "runtimes", "linux-x64", "native"), AppContext.BaseDirectory };
-        var root = global::System.Array.Find(roots, path => File.Exists(Path.Combine(path, Library)))
-            ?? throw new DllNotFoundException("The installed Lean native assets are missing");
-${Object.entries(evidence.libraries).map(([file, digest]) => `        Verify(Path.Combine(root, ${JSON.stringify(file)}), ${JSON.stringify(digest)});`).join("\n")}
-        var domain = AppDomain.CurrentDomain;
-        lock (domain)
-        {
-            const string key = "lean-bridge.native-library-v1.dotnet";
-            var registry = domain.GetData(key) as global::System.Collections.Generic.Dictionary<string, object>;
-            if (registry is null)
-            {
-                registry = new();
-                domain.SetData(key, registry);
-            }
-            const string identity = ${JSON.stringify(evidence.runtimeIdentity)};
-            if (registry.TryGetValue("runtime", out var existing) && !Equals(existing, identity))
-                throw new InvalidOperationException("Incompatible Lean runtime identities in one process");
-            if (registry.TryGetValue("failed", out _)) throw new InvalidOperationException("Lean native loading failed earlier in this process");
-            const string component = ${JSON.stringify(`component:${evidence.componentId}`)};
-            const string receipt = ${JSON.stringify(evidence.componentReceiptSha256)};
-            if (registry.TryGetValue(component, out var loaded))
-            {
-                var entry = (Tuple<string, nint>)loaded;
-                if (entry.Item1 != receipt) throw new InvalidOperationException("Conflicting builds of the same Lean component");
-                return entry.Item2;
-            }
-            try
-            {
-                if (existing is null)
-                {
-                    registry["runtime"] = identity;
-                    registry["lean"] = NativeLibrary.Load(Path.Combine(root, "libleanshared.so"));
-                    registry["broker"] = NativeLibrary.Load(Path.Combine(root, "liblean_bridge_native.so"));
-                }
-                var handle = NativeLibrary.Load(Path.Combine(root, Library));
-                registry[component] = Tuple.Create(receipt, handle);
-                return handle;
-            }
-            catch { registry["failed"] = true; throw; }
-        }
-    }
-    private static void Verify(string path, string expected)
-    {
-        using var file = File.OpenRead(path);
-        if (!string.Equals(Convert.ToHexString(global::System.Security.Cryptography.SHA256.HashData(file)), expected, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Installed Lean native library differs from the compiled package: " + Path.GetFileName(path));
+${verifiedDotnetAssets(evidence)}
     }`;
 
 const runtimeSource = (model, evidence) => {

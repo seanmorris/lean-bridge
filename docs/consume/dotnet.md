@@ -115,7 +115,65 @@ Native assets load automatically after input validation. Modified libraries
 fail their hash checks. Malformed native output retires the shared runtime;
 ordinary input and allocation failures remain recoverable. See
 [recursive callback values](#recursive-callback-values) for callbacks and
-returned closures. Resource-containing recursive values remain separate work.
+returned closures. For structures containing resources, use the
+[ownership profile](#resource-containing-values).
+
+### Resource-containing values
+
+Install the prepared ownership-profile NuGet package using the same local-feed
+steps. Its generated resource and returned-closure classes implement
+`IDisposable`. Records, arrays, Lists, options, results, tuples and recursive
+variants can contain these wrappers without exposing native pointers.
+
+For the [Owned package](../publish/nuget.md#export-resource-containing-values),
+save this as `Program.cs`:
+
+```csharp
+using System;
+using System.Numerics;
+using LeanBridge.OwnedAggregates;
+
+using var ticket = Api.NewTicket(BigInteger.One << 200, "registration");
+var input = new Bundle(ticket, Option<Ticket>.None, Array.Empty<Ticket>(),
+    Array.Empty<Ticket>(), new Payload(-1, new byte[] { 0, 255 }));
+
+Ticket? kept = null;
+var output = Api.CallbackRecord(input, borrowed => {
+    kept = borrowed.Primary.Retain();
+    return borrowed;
+});
+using var returned = output.Primary;
+using var retained = kept ?? throw new Exception("Callback did not run");
+Console.WriteLine(Api.Serial(returned));
+Console.WriteLine(Api.Serial(retained));
+```
+
+Callback arguments borrow their resources until the callback returns. Call
+`Retain()` inside the callback to create an independent owner. The returned
+record owns new wrappers; dispose each resource or closure wrapper when done.
+Copying a C# record or array shares its existing wrappers and does not call
+`Retain()`. Resource leaves compare wrapper identity.
+
+Calls, closure invocation and retention require the creating thread.
+`Dispose()` on another thread queues native release for the creator's next call
+or thread exit. Finalizers only queue releases. Creator-thread exit releases
+native owners even when the managed `Thread` and wrappers remain reachable.
+An expired borrow or disposed wrapper rejects further calls.
+
+Returned closures expose typed `Invoke`, `AsCallback`, `Retain`, `IsClosed`
+and `Dispose`. Pass `AsCallback` to another Lean function without converting
+the closure into an untyped delegate. Host callbacks are synchronous; async
+delegates reject before execution. If a callback's result has no safe default,
+use `OwnedCallbacks.WithRecovery(callback, recoveryValue)`. A thrown callback
+exception keeps its identity and stack after native cleanup; the recovery value
+is not returned to the caller.
+
+Conversions share depth 128, 262,144 visits and separate 16 MiB native and
+accounted managed-storage limits across arguments, callbacks and results.
+The package automatically loads its verified Lean libraries and private GMP.
+Compatible owned and copied packages share one runtime. Start a fresh process
+after fork. Transferred inputs, anchored results and asynchronous delivery
+require separate lifetime support.
 
 ### Named aliases
 
@@ -195,7 +253,7 @@ if (result.IsError)
 
 Lean `Except E T` uses `Result<T, E>.Ok(value)` or `.Err(error)`. Check `IsOk` or `IsError`, then read `Value` or `Error`. Domain errors return `Err`; load and conversion failures throw exceptions. An inactive payload property throws `InvalidOperationException`. `default(Result<T, E>)` has no branch and is rejected at the boundary. The wrappers compare active payloads by value, including nested arrays, and support safe `ToString()` calls in every state.
 
-Calls copy array contents even when an option, result or tuple contains them. Returned arrays do not alias the input or each other. The existing 16 MiB conversion budgets and 32-level type limit also apply to compounds. [Compound acceptance](../evidence/dotnet-compounds-20260920.md) covers installed packages, compiler rejections, runtime-only deployment and separately instrumented cleanup checks. Compounds also work in [structured callbacks](#structured-callback-values). Resource-containing aggregates remain separate work.
+Calls copy array contents even when an option, result or tuple contains them. Returned arrays do not alias the input or each other. The existing 16 MiB conversion budgets and 32-level type limit also apply to compounds. [Compound acceptance](../evidence/dotnet-compounds-20260920.md) covers installed packages, compiler rejections, runtime-only deployment and separately instrumented cleanup checks. Compounds also work in [structured callbacks](#structured-callback-values). Resource-containing aggregates use the [ownership profile](#resource-containing-values).
 
 ### Tagged variants
 
@@ -325,7 +383,7 @@ are released. Use `using` to dispose returned closures.
 
 The 16 MiB per-call copy budget and 32-level acyclic type bound still apply.
 [Recursive callback payloads](#recursive-callback-values) use the finite-graph
-projection below. Resource-containing aggregates remain separate work. Host
+projection below. Resource-containing aggregates use the [ownership profile](#resource-containing-values). Host
 callbacks borrow the call and must finish synchronously.
 
 ### Recursive callback values

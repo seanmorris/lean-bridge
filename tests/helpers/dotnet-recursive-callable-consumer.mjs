@@ -35,7 +35,11 @@ export const prepareDotnetRecursiveConsumer = async ({ root, installed, probeRoo
 	const observer = `using System;
 using System.Runtime.InteropServices;
 internal static unsafe class NativeProbe {
- private static readonly nint Handle = NativeLibrary.Load(System.IO.Path.Combine(AppContext.BaseDirectory,"recursive-observer.so"));
+ private static readonly nint Handle = Open();
+ private static nint Open() {
+  using (var initial = LeanBridge.Structured.Api.MakeRecursive(new LeanBridge.Structured.TreeLeaf(0))) { }
+  return NativeLibrary.Load(System.IO.Path.Combine(AppContext.BaseDirectory,"recursive-observer.so"));
+ }
  internal const int LayoutCount = ${layout.count};
  internal static uint Live() => ((delegate* unmanaged[Cdecl]<uint>)NativeLibrary.GetExport(Handle,"fixture_live"))();
  // Full C/C# field-offset parity is checked by the separate original-source probe.

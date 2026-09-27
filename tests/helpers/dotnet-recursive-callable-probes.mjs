@@ -26,7 +26,11 @@ const nativeProbe = (library, layout) => `using System;
 using System.Runtime.InteropServices;
 using LeanBridge.Structured.Interop;
 internal static unsafe class NativeProbe {
-private static readonly nint Handle = NativeLibrary.Load(${JSON.stringify(library)});
+private static readonly nint Handle = Open();
+private static nint Open() {
+ _ = GraphNative.Resolve();
+ return NativeLibrary.Load(${JSON.stringify(library)});
+}
 internal const int LayoutCount = ${layout.count};
 internal static uint Live() => ((delegate* unmanaged[Cdecl]<uint>)NativeLibrary.GetExport(Handle, "fixture_live"))();
 internal static void LayoutCheck() {
@@ -191,7 +195,11 @@ export const checkDotnetRecursiveProbes = async ({ root, installed, runtimeHeade
 	const deployedLibrary = join(faults, 'out/runtimes/linux-x64/native', adapter.library);
 	const faultNative = `using System.Runtime.InteropServices;
 internal static unsafe class FaultNative {
-private static readonly nint Handle = NativeLibrary.Load(${JSON.stringify(deployedLibrary)});
+private static readonly nint Handle = Open();
+private static nint Open() {
+ _ = LeanBridge.Structured.Interop.GraphNative.Resolve();
+ return NativeLibrary.Load(${JSON.stringify(deployedLibrary)});
+}
 private static nint Symbol(string name) => NativeLibrary.GetExport(Handle,"fixture_fault_"+name);
 internal static void Reset(ulong value) => ((delegate* unmanaged[Cdecl]<ulong,void>)Symbol("reset"))(value);
 internal static void Poison() => ((delegate* unmanaged[Cdecl]<void>)Symbol("poison"))();

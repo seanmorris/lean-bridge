@@ -32,7 +32,7 @@ lean-bridge build --project /absolute/path/to/aurora --target nuget \
 
 The result includes `archives/Acme.Aurora.2.0.0-rc.1.nupkg` and `native-release.json`, which records the exact archive digest. The archive contains the compiled .NET 8 assembly, native adapter, Lean component, shared runtime, generated sources, compiler evidence and dependency license notices. Its README identifies the generated namespace and API. A different NuGet package ID does not rename the Lean-derived C# namespace.
 
-The native profile accepts concrete functions with copied values and synchronous callbacks and returned closures, including finite recursive payloads. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Acyclic nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. [Recursive copied values](../consume/dotnet.md#recursive-values) and [recursive callbacks](#export-recursive-callbacks-and-closures) use separately documented depth and storage limits. Resource-containing aggregates and asynchronous delivery remain separate work.
+The native profile accepts concrete functions with copied values and synchronous callbacks and returned closures, including finite recursive payloads. It supports finite specializations and compiler-checked record constructors/accessors, including records Lean represents as scalars. Acyclic nesting is bounded to 32 types; copies have a 16 MiB per-call budget. Unsupported signatures and conflicting generated names fail at the Lean declaration. [Recursive copied values](../consume/dotnet.md#recursive-values) and [recursive callbacks](#export-recursive-callbacks-and-closures) use separately documented depth and storage limits. Resource-containing aggregates use the [explicit ownership profile](#export-resource-containing-values). Asynchronous delivery remains unsupported.
 
 Repeat `--target` to produce C, C++, CPAN and NuGet from one native compilation. Add npm when the selected API fits its [supported shapes](../lean/export-decisions.md#start-with-the-runnable-npm-shapes), including nested arrays and acyclic copied records; that adds one WebAssembly compilation. Failed projections leave no partial release directory. See the [installed C# example](../consume/dotnet.md#call-an-ordinary-lean-package).
 
@@ -199,6 +199,86 @@ The exported arity of `makeRecursive` is one: Lean receives the captured tree an
 returns an owned function. Its C# type is `LeanClosure<Func<bool, Tree, Tree>>`.
 No constructor numbers, native pointers or handwritten marshalling appear in the
 consumer API.
+
+## Export resource-containing values
+
+Select resource types and the aggregate ownership contract explicitly. In a
+Lake package named `owned-aggregates`, add these definitions to `Owned.lean`:
+
+```lean
+namespace Owned
+
+structure Ticket where
+  serial : Nat
+  label : String
+
+structure Payload where
+  count : Int
+  bytes : ByteArray
+
+structure Bundle where
+  primary : Ticket
+  spare : Option Ticket
+  peers : Array Ticket
+  history : List Ticket
+  payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩
+def serial (ticket : Ticket) : Nat := ticket.serial
+def callbackRecord (value : Bundle) (callback : Bundle → Bundle) : Bundle := callback value
+
+end Owned
+```
+
+Configure the exports in `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.callbackRecord"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": {
+    "nuget": { "name": "Owned.Values", "version": "1.2.3" }
+  }
+}
+```
+
+Build with `--target nuget`. The [C# consumer](../consume/dotnet.md#resource-containing-values)
+references the resulting `Owned.Values` archive and calls
+`LeanBridge.OwnedAggregates.Api`. Consumers need no Lean or native compiler.
+They need the .NET SDK to compile their C# application; deployed applications
+need only the matching .NET 8 runtime.
+
+The ownership profile accepts resource-containing records, variants, recursive
+values and synchronous callback arguments and results. It preserves all nineteen
+primitive types inside these structures. Both ordinary source and reviewed
+Binding IR pass through the Lean compiler and the same checked native layout.
+Declare returned closures with their outer argument count in `arities`, as in
+the [closure example](#export-recursive-callbacks-and-closures).
+
+Resource and closure results have explicit leases. Borrowed callback values
+expire at callback return; `Retain` creates an independent owner. A retained
+resource does not retain a host callback. Transferred inputs, anchored results,
+retained host callbacks and asynchronous delivery remain unsupported.
+
+NuGet bundles the component, shared Lean runtime and a private GMP 6.3.0
+library, together with source and license notices. Its loader checks native
+hashes, runtime identity and loading policy before use. The managed assembly
+uses a private C/C++ lifetime adapter; combined C, C++, Cargo, PyPI, RubyGems
+and NuGet builds still share the compiled Lean component.
+
+The generated API enforces creator-thread use, queues cross-thread/finalizer
+disposal, and drains native owners when the creator exits. Per-call conversion
+limits are depth 128, 262,144 values, 16 MiB native storage and a separate
+16 MiB accounted managed-storage budget, including callbacks and results.
+These limits do not bound Lean working memory or all CLR allocation overhead.
 
 ## Build and inspect the package
 

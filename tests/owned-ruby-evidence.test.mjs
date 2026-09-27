@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedRubyExecution, assertOwnedRubyIntegration } from "./helpers/owned-ruby-evidence.mjs";
 import { beforeOwnedRuby, reverseOwnedRubyUpdate, ownedRubyHistoryPath, ownedRubyExecutionPath, ownedRubyHistoricalBytes } from "./helpers/owned-ruby-source-history.mjs";
+import { beforeOwnedDotnet } from "./helpers/owned-dotnet-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -65,7 +66,7 @@ test("Ruby ownership evidence rejects altered lifetime, package and execution cl
 test("Ruby source history restores only whole recorded identities and preserves binary files", async () => {
 	for(const update of (await json(ownedRubyHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeOwnedDotnet(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedRubyUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeOwnedRuby(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedRuby(update.path, source, update.currentSha256), source);

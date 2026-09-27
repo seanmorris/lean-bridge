@@ -23,10 +23,11 @@ import { ownedCppChangedPaths } from "./owned-cpp-source-history.mjs";
 import { ownedRustChangedPaths } from "./owned-rust-source-history.mjs";
 import { ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
 import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
+import { ownedDotnetChangedPaths } from "./owned-dotnet-source-history.mjs";
 
 const historicalSource = async (path, text = false) => {
 	const bytes = await readFile(path);
-	const value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || (ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path))
+	const value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetChangedPaths.includes(path)
 		? beforeOwnedAggregates(path, bytes.toString("utf8")) : bytes;
 	return text ? value.toString("utf8") : value;
 };

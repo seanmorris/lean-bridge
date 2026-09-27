@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedDotnet, ownedDotnetChangedPaths } from "./owned-dotnet-source-history.mjs";
 
 export const ownedRubyBaseline = "ef9bd830d49a932a13bbc0d683a7a14cd7139b62";
 export const ownedRubyHistoryPath = "docs/evidence/owned-ruby-integration-20260927.json";
@@ -62,6 +63,7 @@ let history;
  * @param update - Exact predecessor identities and literal edits.
  */
 export const reverseOwnedRubyUpdate = (source, update) => {
+	source = beforeOwnedDotnet(update.path, source, update.currentSha256);
 	assert.ok(ownedRubyChangedPaths.includes(update.path), update.path);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
@@ -87,6 +89,7 @@ export const reverseOwnedRubyUpdate = (source, update) => {
  * @param expected - Optional identity at which normalization stops.
  */
 export const beforeOwnedRuby = (path, source, expected) => {
+	source = beforeOwnedDotnet(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedRubyChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedRubyHistoryPath, "utf8"));
@@ -101,5 +104,5 @@ export const beforeOwnedRuby = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional identity at which normalization stops.
  */
-export const ownedRubyHistoricalBytes = (path, bytes, expected) => ownedRubyChangedPaths.includes(path)
+export const ownedRubyHistoricalBytes = (path, bytes, expected) => ownedRubyChangedPaths.includes(path) || ownedDotnetChangedPaths.includes(path)
 	? beforeOwnedRuby(path, bytes.toString("utf8"), expected) : bytes;

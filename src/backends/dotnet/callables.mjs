@@ -135,7 +135,7 @@ export const dotnetNativeCall = (model, { name, native, parameters, result, clos
 	const args = [...closure ? ["active.Pointer"] : [], ...inputs.map((value, i) => `${value.aggregate || callable(value) ? "in " : ""}input${i}`), ...unit(output) ? [] : ["ref output"], "out var error"];
 	return `    internal static ${dotnetResult(model, output)} ${name}(${[...closure ? ["ClosureLease lease"] : [], ...inputs.map((value, i) => `${model.publicType(value)} arg${i}`)].join(", ")})
     {
-        ${model.surface.callbacks.size ? "ProcessGuard.Ensure();" : ""}
+        Native.EnsureProcess();
         ${closure ? "using var active = lease.Enter();" : ""}
         ${scope ? "using var scope = new Scope();" : ""}
         ${hasCallbacks ? "using var callbacks = new CallbackFrame();" : ""}
