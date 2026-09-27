@@ -18,36 +18,9 @@ import { ownedHostCallbackReviewedIr } from "./helpers/owned-host-callback-fixtu
 import { ownedDotnetCallbacksReviewedIr } from "./helpers/owned-dotnet-callback-fixture.mjs";
 import { perlGraphCommands } from "./helpers/perl-graph-probes.mjs";
 import { ownedPerlConversionProbe } from "./helpers/owned-perl-conversion-probe.mjs";
+import { ownedPerlProbeInstrumentation as instrumentation } from "./helpers/owned-perl-native.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
-
-const instrumentation = `#include "EXTERN.h"
-#include "perl.h"
-#include "XSUB.h"
-#include <stdlib.h>
-#include <assert.h>
-#include <unistd.h>
-static size_t probe_live, probe_attempts, probe_fail, probe_points, probe_die;
-static void *probe_malloc(size_t size) {
-  if (++probe_attempts == probe_fail) return NULL;
-  void *value = malloc(size); if (value) ++probe_live; return value;
-}
-static void probe_free(void *value) {
-  if (!value) return;
-  assert(probe_live); --probe_live; free(value);
-}
-static void probe_checkpoint(pTHX) {
-  if (++probe_points == probe_die) croak("injected Perl ownership exception");
-}
-__attribute__((destructor)) static void probe_final(void) {
-  if (probe_live) { fprintf(stderr, "unreleased Perl ownership allocations: %zu\\n", probe_live); _exit(87); }
-}
-#define LB_PERL_GRAPH_MALLOC probe_malloc
-#define LB_PERL_GRAPH_FREE probe_free
-#define LB_PERL_OWNED_MALLOC probe_malloc
-#define LB_PERL_OWNED_FREE probe_free
-#define LB_PERL_GRAPH_CHECKPOINT() probe_checkpoint(aTHX)
-`;
 
 test("Perl ownership support rejects injected component prefixes", () => {
 	for(const name of ["Bad", "a__b", "a;\n#error injected", "", undefined, null, true, {}])

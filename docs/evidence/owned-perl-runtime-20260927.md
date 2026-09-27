@@ -5,8 +5,8 @@ and 5.38.2, with threaded and unthreaded builds of each interpreter. Both
 ordinary-source analysis and independently reviewed IR pass the same checks.
 
 This stage does not enable ownership-containing values in installed CPAN
-packages. Dedicated scalar-packet boundary coverage, package authentication,
-source registration and installed package acceptance remain.
+packages. Package authentication, source registration and installed package
+acceptance remain.
 
 ## Verified behavior
 
@@ -108,9 +108,23 @@ ownership ledger is zero.
 
 This larger fixture also repeats the lifetime, conversion and public-call fault
 walks above. Its source-bound reports use `complete-ordinary.json` and
-`complete-reviewed.json` in the same three report directories. A dedicated
-all-scalar record fixture with floating-point bit patterns and malformed-field
-boundaries remains part of the package acceptance work.
+`complete-reviewed.json` in the same three report directories.
+
+## Scalar records and boundaries
+
+The scalar fixture executes all eight public exports through generated XS on
+both authoring paths and all four Perl ABIs. Each consumer passes 667 checks.
+Lean inspects all 19 primitive fields in a resource-bearing record, including
+4096-bit integers, Unicode scalar boundaries, embedded NUL, empty containers,
+and distinct nested Option and Unit values. Float32 and Float64 checks cover
+signed zero, subnormals, infinities and NaN payloads. Lean's bit conversion
+canonicalizes NaN; the round-trip export preserves the original payload.
+
+Malformed fields, integer overflow, invalid Unicode, wrong wrapper types and
+oversized containers fail before a result is published. Every process exercises
+39 XS allocation failures, 168 Perl exception checkpoints and 31 native
+allocation failures. The failure walks restore their baseline ledgers; final
+host and native allocations and broker identities are zero.
 
 ## Serialization reference retention
 
@@ -127,7 +141,8 @@ reference. Library destructors verify host cleanup at interpreter exit.
 source scripts/env.sh
 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test \
   tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs \
-  tests/owned-perl-conversions.test.mjs tests/owned-perl-xs.test.mjs
+  tests/owned-perl-conversions.test.mjs tests/owned-perl-xs.test.mjs \
+  tests/owned-perl-scalars.test.mjs
 ```
 
 The default interpreter matrix uses the four pinned Perl installations under
@@ -137,6 +152,7 @@ interpreter paths. Reports are written to
 `build/owned-perl-runtime/reviewed.json`, with source identities and generated
 runtime, XS and consumer hashes. Conversion reports are in
 `build/owned-perl-conversions/{ordinary,reviewed}.json`; public XS execution
-reports are in `build/owned-perl-calls/{ordinary,reviewed}.json`. The completed
-local run passed all twelve tests with no skips. These reports bind local native
+reports are in `build/owned-perl-calls/{ordinary,reviewed}.json`; scalar reports
+are in `build/owned-perl-scalars/{ordinary,reviewed}.json`. The completed local
+run passed all fourteen tests with no skips. These reports bind local native
 executions, not installed archive receipts.
