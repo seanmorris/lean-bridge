@@ -1,0 +1,799 @@
+{
+  "callbacks": {
+    "bytes": 2541044,
+    "path": "docs/evidence/owned-dotnet-callbacks-20260927.json",
+    "sha256": "d433d2b37afbec89f3b36a399444021d323872a4ecb1f44bd6a8777fbbbef44f"
+  },
+  "capturedOn": "2026-09-27",
+  "commands": [
+    {
+      "command": "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-dotnet-package.test.mjs",
+      "exitCode": 0,
+      "path": "build-owned-dotnet-loading-fourth.log",
+      "sha256": "9288f12e95453831ddf39da2207b1044713fb69e3bf3de3d06a9d08de1bd33d9",
+      "stdout": "TAP version 13\n# Subtest: owned C\\# package generation binds its loader to exact private native assets\nok 1 - owned C\\# package generation binds its loader to exact private native assets\n  ---\n  duration_ms: 78.293511\n  type: 'test'\n  ...\n# Subtest: owned C\\# package sources load real Lean with private GMP (ordinary)\nok 2 - owned C\\# package sources load real Lean with private GMP (ordinary)\n  ---\n  duration_ms: 90402.678549\n  type: 'test'\n  ...\n# {\"checks\":167,\"privateGmp\":true,\"forkBeforeLock\":true,\"identities\":0}\n# Subtest: owned C\\# package sources load real Lean with private GMP (reviewed)\nok 3 - owned C\\# package sources load real Lean with private GMP (reviewed)\n  ---\n  duration_ms: 90154.177286\n  type: 'test'\n  ...\n# {\"checks\":167,\"privateGmp\":true,\"forkBeforeLock\":true,\"identities\":0}\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 180756.387811\n"
+    },
+    {
+      "command": "node_modules/.bin/eslint src/backends/dotnet/verified-assets.mjs src/backends/dotnet/owned-package.mjs tests/owned-dotnet-package.test.mjs",
+      "exitCode": 0,
+      "path": "build-owned-dotnet-loader-lint-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": ""
+    }
+  ],
+  "foundation": {
+    "bytes": 2400074,
+    "path": "docs/evidence/owned-dotnet-foundation-20260927.json",
+    "sha256": "4047eea1ec19c9179ac8b8d954beb9b8f0d3791c101251ca1625873f79eab77c"
+  },
+  "kind": "owned-dotnet-loading-execution",
+  "planNode": 1219,
+  "reports": [
+    {
+      "bytes": 3478,
+      "path": "build/owned-dotnet-loading/ordinary.json",
+      "report": {
+        "compiledLean": true,
+        "compilerWorkspaceRemoved": true,
+        "contract": {
+          "assembly": "LeanBridge.OwnedAggregates",
+          "backend": "owned-dotnet-v1",
+          "bindingIrSha256": "c2fb66d6909be428674d8d803c331df889d00376dab3eb14b11d7ed2e0f84218",
+          "callsSha256": "3979cb09236d74b2ce9727f0ee301362424bf71a144efc77ac339cde4957ad61",
+          "cleanupSha256": "e193eccb89bafbd94111d949fcdb108e6077b93684092c7359017beb0029a88c",
+          "conversionsSha256": "f38b9739204d4554415b9da83bf0795e9c57ea4e38123a98f490f3dd61a0da51",
+          "gmp": "libgmp-lean-bridge.so.10",
+          "guardSha256": "2e17ee19b67852e769be9b1edadeb95439d1a86e2785db219ee666329a1dceb6",
+          "headerSha256": "caa2765759278a2970df9385935ac9bae0b287df20821509890df5ad2dcdd33e",
+          "loadingPolicy": "linux-x64-deepbind-v1",
+          "namespace": "LeanBridge.OwnedAggregates",
+          "runtimeSha256": "baf49a3f08bddf4bb19b55157d1c8482d47308ae312178b0bcf0871038f46f07",
+          "schemaVersion": 1,
+          "valuesSha256": "23ee586d80f6e732d7dea00da1b038c69295012c3a3baba90be995f327aad82a"
+        },
+        "evidence": {
+          "componentId": "owned-aggregates@1.0.0",
+          "componentReceiptSha256": "289ba31a5fdcb45eb4441c734c8e939b7fc2cd83381e16e268b4cc4ffee426ae",
+          "libraries": {
+            "libgmp-lean-bridge.so.10": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a",
+            "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+            "libowned_aggregates_dotnet.so": "d9c9ff37c11035fdd2a78b42530f460defc59904a9179b6bb65989d258ef7b97"
+          },
+          "library": "libowned_aggregates_dotnet.so",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+        },
+        "generatedFiles": {
+          "NuGet.Config": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c",
+          "README.md": "7b17f8f05b6e7ef9009b2f7faba33aaf5b03a657503a4fb324abd4de94ce0c50",
+          "binding-manifest.json": "71ffd47a45cbb3c0edbf889d6855c787186f7da4afacb390f8e744918f8329f3",
+          "src/LeanBridge.OwnedAggregates/Api.cs": "7d1ae24706e306e8f86088f2ecbfaf4d30c9c8cf282e7b527dfafcce4af4ce20",
+          "src/LeanBridge.OwnedAggregates/Calls.cs": "3979cb09236d74b2ce9727f0ee301362424bf71a144efc77ac339cde4957ad61",
+          "src/LeanBridge.OwnedAggregates/Conversions.cs": "f38b9739204d4554415b9da83bf0795e9c57ea4e38123a98f490f3dd61a0da51",
+          "src/LeanBridge.OwnedAggregates/LeanBridge.OwnedAggregates.csproj": "903b5d75172c0ca0cf0d8e052d40150a96b609b47cae7eccfa282a6c745a5e19",
+          "src/LeanBridge.OwnedAggregates/Lifetime.cs": "baf49a3f08bddf4bb19b55157d1c8482d47308ae312178b0bcf0871038f46f07",
+          "src/LeanBridge.OwnedAggregates/Loader.cs": "9550ce1f64dc8ed94fab3c26c149aeb9245fb731eff86964081125739d1eacb1",
+          "src/LeanBridge.OwnedAggregates/Values.cs": "95ee9f3a313a70a249f2eb2052dcbdb1b80b601801a86f392d1befa94e5da868"
+        },
+        "installedNuget": false,
+        "managedSourcesRemoved": true,
+        "nativeProbeSha256": "05d24edfd08006cddc8737b41715830c4f092f31c5112fc26ac92cd1c9a70eff",
+        "observation": {
+          "checks": 167,
+          "forkBeforeLock": true,
+          "identities": 0,
+          "privateGmp": true
+        },
+        "probeSha256": "376dc0c18bd9168af2499f6e73df0c6b381cc01f9a3db0ff0c2bb596ff508456",
+        "rejectsComponentConflict": true,
+        "rejectsRuntimeConflict": true,
+        "rejectsSymlinkDirectory": true,
+        "rejectsSymlinkLibrary": true,
+        "rejectsTamperedLibrary": true,
+        "rejectsUnverifiedPreload": true,
+        "relocated": true
+      },
+      "sha256": "dd2524d04f9a0d7d1148d530d720fe87b7bfa06d7d8e16c60afee62ce63cf9fb"
+    },
+    {
+      "bytes": 3478,
+      "path": "build/owned-dotnet-loading/reviewed.json",
+      "report": {
+        "compiledLean": true,
+        "compilerWorkspaceRemoved": true,
+        "contract": {
+          "assembly": "LeanBridge.OwnedAggregates",
+          "backend": "owned-dotnet-v1",
+          "bindingIrSha256": "619e8e8b917c9caa2ea1c4ec1be58b60b1df7914bfe42fb4f5555c08b405bfcd",
+          "callsSha256": "3979cb09236d74b2ce9727f0ee301362424bf71a144efc77ac339cde4957ad61",
+          "cleanupSha256": "e193eccb89bafbd94111d949fcdb108e6077b93684092c7359017beb0029a88c",
+          "conversionsSha256": "f38b9739204d4554415b9da83bf0795e9c57ea4e38123a98f490f3dd61a0da51",
+          "gmp": "libgmp-lean-bridge.so.10",
+          "guardSha256": "2e17ee19b67852e769be9b1edadeb95439d1a86e2785db219ee666329a1dceb6",
+          "headerSha256": "caa2765759278a2970df9385935ac9bae0b287df20821509890df5ad2dcdd33e",
+          "loadingPolicy": "linux-x64-deepbind-v1",
+          "namespace": "LeanBridge.OwnedAggregates",
+          "runtimeSha256": "baf49a3f08bddf4bb19b55157d1c8482d47308ae312178b0bcf0871038f46f07",
+          "schemaVersion": 1,
+          "valuesSha256": "23ee586d80f6e732d7dea00da1b038c69295012c3a3baba90be995f327aad82a"
+        },
+        "evidence": {
+          "componentId": "owned-aggregates@1.0.0",
+          "componentReceiptSha256": "82394ee32b5faa3c8b907e728070f0b1c87a89712a4daac8802ce553de372a3b",
+          "libraries": {
+            "libgmp-lean-bridge.so.10": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a",
+            "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+            "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+            "libowned_aggregates_dotnet.so": "7caa78f8d1d370c51be64558e1fdfc705bddcc3e513f1e4789ab1083563de4db"
+          },
+          "library": "libowned_aggregates_dotnet.so",
+          "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+        },
+        "generatedFiles": {
+          "NuGet.Config": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c",
+          "README.md": "7b17f8f05b6e7ef9009b2f7faba33aaf5b03a657503a4fb324abd4de94ce0c50",
+          "binding-manifest.json": "329ad416fa0ee94c5f8ed983d5e2ffefe61a3d87164c8df199e544ea90bff398",
+          "src/LeanBridge.OwnedAggregates/Api.cs": "7d1ae24706e306e8f86088f2ecbfaf4d30c9c8cf282e7b527dfafcce4af4ce20",
+          "src/LeanBridge.OwnedAggregates/Calls.cs": "3979cb09236d74b2ce9727f0ee301362424bf71a144efc77ac339cde4957ad61",
+          "src/LeanBridge.OwnedAggregates/Conversions.cs": "f38b9739204d4554415b9da83bf0795e9c57ea4e38123a98f490f3dd61a0da51",
+          "src/LeanBridge.OwnedAggregates/LeanBridge.OwnedAggregates.csproj": "903b5d75172c0ca0cf0d8e052d40150a96b609b47cae7eccfa282a6c745a5e19",
+          "src/LeanBridge.OwnedAggregates/Lifetime.cs": "baf49a3f08bddf4bb19b55157d1c8482d47308ae312178b0bcf0871038f46f07",
+          "src/LeanBridge.OwnedAggregates/Loader.cs": "ed1b9f63a39d3784caf1fb2ca675690b5720e692dfb616bb55e4c5d53c807d3f",
+          "src/LeanBridge.OwnedAggregates/Values.cs": "95ee9f3a313a70a249f2eb2052dcbdb1b80b601801a86f392d1befa94e5da868"
+        },
+        "installedNuget": false,
+        "managedSourcesRemoved": true,
+        "nativeProbeSha256": "36515077682f77078f1f51aaa4f8f6a355f3c29ea6eb2819ac195be2a05f9b3a",
+        "observation": {
+          "checks": 167,
+          "forkBeforeLock": true,
+          "identities": 0,
+          "privateGmp": true
+        },
+        "probeSha256": "376dc0c18bd9168af2499f6e73df0c6b381cc01f9a3db0ff0c2bb596ff508456",
+        "rejectsComponentConflict": true,
+        "rejectsRuntimeConflict": true,
+        "rejectsSymlinkDirectory": true,
+        "rejectsSymlinkLibrary": true,
+        "rejectsTamperedLibrary": true,
+        "rejectsUnverifiedPreload": true,
+        "relocated": true
+      },
+      "sha256": "ebc4eca9aba4be8b6737f8b42ec0d1cb1dd3de97b40d2348b9efc68b58bb0024"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": {
+    "authenticatedLoading": true,
+    "compiledLean": true,
+    "defaultClrProtections": true,
+    "installedNuget": false,
+    "preparedForkProbe": true,
+    "privateGmp": true,
+    "relocatedExecution": true,
+    "sourceFreeExecution": true,
+    "typeSurfacePromotions": 0
+  },
+  "sources": [
+    {
+      "bytes": 7386,
+      "path": "src/abi/component-callables.mjs",
+      "sha256": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe"
+    },
+    {
+      "bytes": 10970,
+      "path": "src/abi/component-copied.mjs",
+      "sha256": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599"
+    },
+    {
+      "bytes": 9982,
+      "path": "src/abi/component-records.mjs",
+      "sha256": "f2512547e19eea386b57b5d7187c85d06523f58560b87f3380e6ecb200d7ea2a"
+    },
+    {
+      "bytes": 3332,
+      "path": "src/abi/component-recursive-abi.mjs",
+      "sha256": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4"
+    },
+    {
+      "bytes": 9320,
+      "path": "src/abi/component-recursive.mjs",
+      "sha256": "684f81daabbb20b8e61ce22a56fb26c5e565213dde1d08942f46afa3640bdba9"
+    },
+    {
+      "bytes": 4437,
+      "path": "src/abi/component-scalars.mjs",
+      "sha256": "745058db0327c9060222ff58d45c272595e23125c2169d80287ff9035cf3608e"
+    },
+    {
+      "bytes": 9102,
+      "path": "src/abi/component-structured-callables.mjs",
+      "sha256": "04ba94b6ff2993e140ec39e4f9187bafc3546dc08a1c29ffb58c8f26c6792291"
+    },
+    {
+      "bytes": 5961,
+      "path": "src/abi/generic-specialization.mjs",
+      "sha256": "5c7472382e4426adf5f280037965d39d7eb16949414db80226ee5962dca05df9"
+    },
+    {
+      "bytes": 5252,
+      "path": "src/abi/owned-aggregate-model.mjs",
+      "sha256": "37aef971788bc71822069c440585e2219ad73415664daacb62cb7b2ca9f7fb2e"
+    },
+    {
+      "bytes": 52735,
+      "path": "src/analyze/NativeExports.lean",
+      "sha256": "1a6fc817276453148403b09d8fa979d5e0ee897049d646afe8f727bf02c0f985"
+    },
+    {
+      "bytes": 4885,
+      "path": "src/analyze/copied-metadata-graph.mjs",
+      "sha256": "7ad41f21d0cfd4933c73e7293131499219b72309d172f2e8201580885f1abc58"
+    },
+    {
+      "bytes": 17967,
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "sha256": "1362aa142e52680b630cbc36a5a10aea5b00e424eb65714eb8d751a7ae1577fb"
+    },
+    {
+      "bytes": 21530,
+      "path": "src/analyze/export-configuration.mjs",
+      "sha256": "2709b0c1f462a808cb026abb4163850be71f2da89c79eb54c99ebd3e2f2652ae"
+    },
+    {
+      "bytes": 3714,
+      "path": "src/analyze/generator-configuration.mjs",
+      "sha256": "c3fe383a04ae977a6144f80507967ffe3077b450ec7dedce03bb7c8c12123c38"
+    },
+    {
+      "bytes": 29931,
+      "path": "src/analyze/lean-project.mjs",
+      "sha256": "810ba5b9adf3b9af61763b8ed9fdc8eb0b4fa491bd53f287439536be63df3695"
+    },
+    {
+      "bytes": 5972,
+      "path": "src/analyze/native-metadata.mjs",
+      "sha256": "2e53f31da0423a94614c2dadd79b2b831bfc27e9fe0aca3a53e01c45a1f252a7"
+    },
+    {
+      "bytes": 8308,
+      "path": "src/analyze/native-types.mjs",
+      "sha256": "63ad0d7ab3289fc6a1ca18fca5b3612583818364b0801816ff836ef8cafa3379"
+    },
+    {
+      "bytes": 1011,
+      "path": "src/analyze/owned-aggregate-policy.mjs",
+      "sha256": "e0061654f70ee68ccf706e8f8e90d892a9aa9e920dacc5b5e2c95742513a1f4d"
+    },
+    {
+      "bytes": 7175,
+      "path": "src/analyze/owned-metadata-graph.mjs",
+      "sha256": "61db690927b14a98904f5d38430be04095ad1ffe572608a587ce35b7a34fc959"
+    },
+    {
+      "bytes": 4317,
+      "path": "src/analyze/package-license.mjs",
+      "sha256": "c74fe23a652541ff210dcf4d402b9e0bb383fe9755b6087d12847ea6c85fbb70"
+    },
+    {
+      "bytes": 10419,
+      "path": "src/analyze/package-metadata.mjs",
+      "sha256": "9299d99704984b17dbf840c366c92260f3eedeeca0506020c06ee5257f2ee850"
+    },
+    {
+      "bytes": 14797,
+      "path": "src/analyze/reviewed-owned-source.mjs",
+      "sha256": "a64812e76c0799df8cc64870fdef123e298a19d78e526b8a39e951a97ca7c0fb"
+    },
+    {
+      "bytes": 16829,
+      "path": "src/analyze/reviewed-source.mjs",
+      "sha256": "2f18698e2e2670762ead59e84b00c0e95d5921039f79c8269af5c809dced0aaa"
+    },
+    {
+      "bytes": 13010,
+      "path": "src/analyze/semantic-model.mjs",
+      "sha256": "717c920b43971e78034f226214e78bf8956ccc5f99b3f9ac69cc97a16475c1d6"
+    },
+    {
+      "bytes": 45870,
+      "path": "src/backends/c/generate.mjs",
+      "sha256": "2b7283f0fdd4b0f911c51b984c81a7f769af09b9044dca7988bfbdd9e59e7518"
+    },
+    {
+      "bytes": 844,
+      "path": "src/backends/c/gmp.mjs",
+      "sha256": "f1e593796a33ccfa804a93e6ded229a55c43e5a6e7670be5a2d429bba19224e0"
+    },
+    {
+      "bytes": 5891,
+      "path": "src/backends/c/owned-callbacks.mjs",
+      "sha256": "88c3c05064f1b690313aec5ec9db3492ff88837818f1573df9a8f116cfa04df9"
+    },
+    {
+      "bytes": 10785,
+      "path": "src/backends/c/owned-package.mjs",
+      "sha256": "846b2f5c29ed67ea8c2d7f7a7bc7f5989566e184f4608008c9e8b1966f2c1d97"
+    },
+    {
+      "bytes": 8801,
+      "path": "src/backends/c/owned-runtime.mjs",
+      "sha256": "8a9f735ab544032dc06fe15d6791da9031e1b9990d7a93db2cf3908c2c905714"
+    },
+    {
+      "bytes": 12349,
+      "path": "src/backends/c/owned-values.mjs",
+      "sha256": "5ef5efea0ee2bfd3901abfb59b5d9f08975167eae8ef99ad7fc94f5083e392ae"
+    },
+    {
+      "bytes": 3006,
+      "path": "src/backends/c/package-audit.mjs",
+      "sha256": "bbcc42ebdc6c7d69e46860e48bbc1573e70af04ca8cb85ce4123496788b5395c"
+    },
+    {
+      "bytes": 11921,
+      "path": "src/backends/c/primitive-surface.mjs",
+      "sha256": "893d7f649bf489c766e5d38f04ce4e1b7cb7967acc8f63bf6f82b9b6f5cd64df"
+    },
+    {
+      "bytes": 9631,
+      "path": "src/backends/dotnet/copied-graph-equality.mjs",
+      "sha256": "dc4f4f92b2c85210c28b013eac84390cd864f64cc4c7aa77ca00cfb32d7b0c97"
+    },
+    {
+      "bytes": 6741,
+      "path": "src/backends/dotnet/copied-graph-runtime.mjs",
+      "sha256": "c0456ef395dbea8f5fcc7a5a6f06e9050a741a2916e2cc2cda3b429e91bd8ce2"
+    },
+    {
+      "bytes": 8551,
+      "path": "src/backends/dotnet/owned-callables.mjs",
+      "sha256": "d50aa52bd7ba5dc8c695a7c80f997a12a0f5b6c44b4160e37c60460be9d2350a"
+    },
+    {
+      "bytes": 7110,
+      "path": "src/backends/dotnet/owned-calls.mjs",
+      "sha256": "23d158b4aeec942b947234662a2f5e98921c3981c5189c79ec34f08da8420e81"
+    },
+    {
+      "bytes": 5545,
+      "path": "src/backends/dotnet/owned-conversion-runtime.mjs",
+      "sha256": "baabf32d12ff93f145718f3013b302ea51d511deae67d56ff7feba94374eaac4"
+    },
+    {
+      "bytes": 10033,
+      "path": "src/backends/dotnet/owned-conversions.mjs",
+      "sha256": "0b0692ac340acdd37656fa819cf02f446a98e024cb7b321e5d9d7ed5a5d99b8d"
+    },
+    {
+      "bytes": 5402,
+      "path": "src/backends/dotnet/owned-layout.mjs",
+      "sha256": "dd7441007d0877d0af3f172d5dd33951f0ac0e8f8d9b0e810d2a5d9e6ca892dc"
+    },
+    {
+      "bytes": 7885,
+      "path": "src/backends/dotnet/owned-package.mjs",
+      "sha256": "3483757c23b29234b60b5e6c66a19954c5023d096aceb5c14c9a9efcce957fca"
+    },
+    {
+      "bytes": 11256,
+      "path": "src/backends/dotnet/owned-runtime.mjs",
+      "sha256": "6b16e9ab802f84a2de51a316485f195c92fd5f69849cf1f38c78d686d166ed2c"
+    },
+    {
+      "bytes": 4288,
+      "path": "src/backends/dotnet/owned-scalars.mjs",
+      "sha256": "7d054940be36575281bd5caee0c933d45120238adcdb43042a6186d5b093ea15"
+    },
+    {
+      "bytes": 2791,
+      "path": "src/backends/dotnet/owned-thread-exit.mjs",
+      "sha256": "c7a5696e116f30724d9f852e10da4bd318fc8919424b1b813088022daaa0b2f3"
+    },
+    {
+      "bytes": 10226,
+      "path": "src/backends/dotnet/owned-values.mjs",
+      "sha256": "104ef25e2d99e6ec13e39a9b41028ecd75e76d99e0e84baebaf16121c1a28282"
+    },
+    {
+      "bytes": 10913,
+      "path": "src/backends/dotnet/verified-assets.mjs",
+      "sha256": "9346fba0252a2ad3d071f4f8d53a45ab478250b3c9ca085aa5796b84ddf75e76"
+    },
+    {
+      "bytes": 11415,
+      "path": "src/backends/native/owned-aggregate-leases.mjs",
+      "sha256": "bf300ba7e2be370b4fe9ac3c7cd92ad96496208bf6aa8e012d20d64242e59c7e"
+    },
+    {
+      "bytes": 16645,
+      "path": "src/backends/native/owned-value-adapters.mjs",
+      "sha256": "47b1984e2ad7b29211dcaf7ba39b00c4ceb0c523a662c37e1026b3b8cc793906"
+    },
+    {
+      "bytes": 6288,
+      "path": "src/backends/native/owned-value-layout.mjs",
+      "sha256": "9e5d529ae122b41f9e0c342715bc19c255f3b3f52272eccdddf48db8be78303a"
+    },
+    {
+      "bytes": 8263,
+      "path": "src/backends/native/owned-value-runtime.mjs",
+      "sha256": "e0bc6063167c1f86b7abd466f9a309ea449d7cf5ccaaa30ef7ad2a984304845a"
+    },
+    {
+      "bytes": 13335,
+      "path": "src/backends/native/runtime-broker.mjs",
+      "sha256": "1c9f030f998af5fb4d4641efad9ccb51822443fed7ad5b37635b98aac89287ed"
+    },
+    {
+      "bytes": 1478,
+      "path": "src/backends/perl/naming.mjs",
+      "sha256": "052c47c48e5528fab5de26790dbf96d71be72516487d9e977700754ed5f6ae0d"
+    },
+    {
+      "bytes": 1778,
+      "path": "src/backends/php/brick-math.mjs",
+      "sha256": "a1712d1ed8d43dc86a0d4f99a325efdfbb4cc3d238b8025592452d578a7179cc"
+    },
+    {
+      "bytes": 10979,
+      "path": "src/backends/php/callables.mjs",
+      "sha256": "5552cfc08b928676b183173ca656e4c05a9a0275880645db191b4ab0ab64d0ab"
+    },
+    {
+      "bytes": 6282,
+      "path": "src/backends/php/copied-equality.mjs",
+      "sha256": "9eec1bcc845f5494897b631f5d8829bf7cf52c3ef4dd440eb970a1ff07f078a7"
+    },
+    {
+      "bytes": 5629,
+      "path": "src/backends/php/copied-model.mjs",
+      "sha256": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6"
+    },
+    {
+      "bytes": 1647,
+      "path": "src/backends/php/copied-names.mjs",
+      "sha256": "8c0a0bd0cbbb8d785daa12986f345141ee763769f0a70cd6b812e4e1542a5f16"
+    },
+    {
+      "bytes": 6439,
+      "path": "src/backends/php/copied-variants.mjs",
+      "sha256": "e02c4841e6780a17a37c2c32520243ef56e6535daf3ac6ddda6b7f3b36923e27"
+    },
+    {
+      "bytes": 9938,
+      "path": "src/binding-ir/canonical.mjs",
+      "sha256": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20"
+    },
+    {
+      "bytes": 46487,
+      "path": "src/binding-ir/contract.mjs",
+      "sha256": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6"
+    },
+    {
+      "bytes": 3297,
+      "path": "src/binding-ir/sha256.mjs",
+      "sha256": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac"
+    },
+    {
+      "bytes": 1673,
+      "path": "src/build/build-error.mjs",
+      "sha256": "a4a34b25823d89e2cf6a5b53c60e0c161cae125b5b5b6e87f965fab7de616d41"
+    },
+    {
+      "bytes": 8369,
+      "path": "src/build/component-recursive-lean.mjs",
+      "sha256": "7bcff37a068738a5fc029621f411ae422ae6e286b5f31b13dfb5360fb0e74c28"
+    },
+    {
+      "bytes": 3292,
+      "path": "src/build/component-structured-callable-defaults.mjs",
+      "sha256": "05f317e3b90912a1959d3086875f36213e8022a85f09a05cd23a4b95fe9ac46f"
+    },
+    {
+      "bytes": 6259,
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "sha256": "8791cb354561e54f7082126608ef058fc0f98abf72146d4eb0d32eeed7c6d369"
+    },
+    {
+      "bytes": 19472,
+      "path": "src/build/elaborated-component.mjs",
+      "sha256": "2ac169cb0c9012c7a64fc6156f6ea33ca9920787afed802dff50b74288d1e723"
+    },
+    {
+      "bytes": 3089,
+      "path": "src/build/lake-build-workspace.mjs",
+      "sha256": "fabd63e61a3804e973372454554ae869f22631cd4e3265f924ce70a38a18c5f8"
+    },
+    {
+      "bytes": 34186,
+      "path": "src/build/lake-dependency-snapshot.mjs",
+      "sha256": "edf7e2d7aa98ed6e16c86e137ad760da0a08824db058d1d90a809cb270bdd5d9"
+    },
+    {
+      "bytes": 3337,
+      "path": "src/build/lake-entry-modules.mjs",
+      "sha256": "5dfe232855bccf9875e82b0a2ce4ed264b0f39d1b8c5b1a65db82d8e5d0d95fb"
+    },
+    {
+      "bytes": 26661,
+      "path": "src/build/lake-generated-workspace.mjs",
+      "sha256": "5485851ff9a54a7d5a98ea9201829786b54484ba57f3f39a0142ea445b0c1908"
+    },
+    {
+      "bytes": 17097,
+      "path": "src/build/lake-generator-prerequisites.mjs",
+      "sha256": "b38ac2c92fd6f7fa4d9d3a21a4781958fb78d4bd181afcaf451e1163f5e21820"
+    },
+    {
+      "bytes": 22877,
+      "path": "src/build/lake-generators.mjs",
+      "sha256": "7e14cd0fea2f6c717f195c765cbc55a4a3458658f4035f091e7725f950f7284f"
+    },
+    {
+      "bytes": 13879,
+      "path": "src/build/lake-native-inputs.mjs",
+      "sha256": "fd2fc0a5e736dbd750776889afc08d01d039a4608c51f1b49f778e0bdb0cc81f"
+    },
+    {
+      "bytes": 15078,
+      "path": "src/build/lake-workspace.mjs",
+      "sha256": "74d9fb9fe0a66fabdf0fcfc51aff42df61d73b0747657e341bc140b0fa0a23f5"
+    },
+    {
+      "bytes": 1786,
+      "path": "src/build/native-allocation-guard.mjs",
+      "sha256": "8afef64367c009b05953a08b4a92d97c0a2f5fc7b47443ff2051784394f2c174"
+    },
+    {
+      "bytes": 8361,
+      "path": "src/build/native-artifacts.mjs",
+      "sha256": "4242d8fa729ea6d745428736b18724ba3f75d70f27cb5e193d4bddf0c5550e51"
+    },
+    {
+      "bytes": 4561,
+      "path": "src/build/native-callable-graph.mjs",
+      "sha256": "579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8"
+    },
+    {
+      "bytes": 13577,
+      "path": "src/build/native-component.mjs",
+      "sha256": "94bcf482e8364162c77c049bd9e2a98bd918c892f0adfbf0e95c260459cd7024"
+    },
+    {
+      "bytes": 3697,
+      "path": "src/build/native-gmp.mjs",
+      "sha256": "77a8530b302a202dbcfd050666de3699307704f3ae7011c1410be2c6faafce1c"
+    },
+    {
+      "bytes": 9191,
+      "path": "src/build/native-graph-model.mjs",
+      "sha256": "acd6d75cf09fdf46c339b1e6c0a6a060dfc845bc95d8b354ff7678655a18429d"
+    },
+    {
+      "bytes": 18716,
+      "path": "src/build/native-model.mjs",
+      "sha256": "5f61db19dc9da58f32cfc5570992b474eb7579574ff97a0ee599fdc50bc5cbe5"
+    },
+    {
+      "bytes": 12604,
+      "path": "src/build/owned-aggregate-carriers.mjs",
+      "sha256": "1f84bbb74d4a99363e5304f3d7302851326a59327755419fa7c426345b87501b"
+    },
+    {
+      "bytes": 6500,
+      "path": "src/build/owned-callback-carriers.mjs",
+      "sha256": "a2bb7ddcb79b242ba7330541d9df52a706afbfeca2d8be31935de6fcaee0abe3"
+    },
+    {
+      "bytes": 3905,
+      "path": "src/build/owned-native-model.mjs",
+      "sha256": "46e00ec7cf76b591a96cf53d338b5eeed4eba70a05694db27c3d5fbb925cbc73"
+    },
+    {
+      "bytes": 2668,
+      "path": "src/build/process-runner.mjs",
+      "sha256": "f1c9d51f97abdbb1fcf0ff04ee5e70b20ffce770ffe6ca7a843d7e35877fdf36"
+    },
+    {
+      "bytes": 19177,
+      "path": "src/capsule/contract.mjs",
+      "sha256": "590f6758e4b25f7a73e04333276facec891fd26debd2fa5621e183b27ca6082f"
+    },
+    {
+      "bytes": 3332,
+      "path": "src/capsule/node.mjs",
+      "sha256": "2ffbff5c27dbdd89fac9dd6ce5a1a3082430c9bdfbdcc3908941eaf1d009fb1b"
+    },
+    {
+      "bytes": 8610,
+      "path": "src/release/component-package-receipt.mjs",
+      "sha256": "76fcbba827ce3850b688763b64786dd3141b4bde07f78eacabdfe65c3b3da9b0"
+    },
+    {
+      "bytes": 1923,
+      "path": "src/release/cpan-install.mjs",
+      "sha256": "1b19d72d6926f9b23ff7d5b6f325bc21c60934214d28cdd3f53e2c1fd819a10f"
+    },
+    {
+      "bytes": 4346,
+      "path": "src/release/deterministic-zip.mjs",
+      "sha256": "d4ad36273ade6791a45c2952fe6b0e55fc048851e6913cd8e842313838798244"
+    },
+    {
+      "bytes": 9764,
+      "path": "src/release/source-notices.mjs",
+      "sha256": "a9a185b8bbe109d7dfe9d8b10e408f661434c75df3fef2f0689d2fc34b21dee9"
+    },
+    {
+      "bytes": 3615,
+      "path": "tests/fixtures/onboarding/owned-cpp-composition/Owned.lean",
+      "sha256": "619a2d1202e7da77c99ac397d8504a605801203be86b97c3f0d420e4a3fd44d1"
+    },
+    {
+      "bytes": 1026,
+      "path": "tests/fixtures/onboarding/owned-cpp-composition/lean-bridge.exports.json",
+      "sha256": "2282790a9ca9706c94e6327267873edf8270d367d5164fc2f1adc0c88d8f3339"
+    },
+    {
+      "bytes": 5314,
+      "path": "tests/fixtures/onboarding/owned-dotnet-callables/Owned.lean",
+      "sha256": "4be0ae13abd383c31aad3c50196c7ade2349f3ae45546b3b9a1f8db80e899a18"
+    },
+    {
+      "bytes": 1570,
+      "path": "tests/fixtures/onboarding/owned-dotnet-callables/lean-bridge.exports.json",
+      "sha256": "2a5b474e549a4c48476e6691d9d2445be195b73d55189d7f2fd8d564fd2efa39"
+    },
+    {
+      "bytes": 1414,
+      "path": "tests/fixtures/onboarding/owned-host-callbacks/Owned.lean",
+      "sha256": "967c7cb1942001ea8144930eb11edf103a395383b09e08eacf2d04fe3e0a920c"
+    },
+    {
+      "bytes": 548,
+      "path": "tests/fixtures/onboarding/owned-host-callbacks/lean-bridge.exports.json",
+      "sha256": "2e72a8754a75af5faa4811a16b0a6ee636916b288dacb64eb73cde763764a032"
+    },
+    {
+      "bytes": 2247,
+      "path": "tests/fixtures/onboarding/owned-scalars/Owned.lean",
+      "sha256": "1afc75611b331b4d572d36eca72215c4609077107f27d769be99dee94b395a0a"
+    },
+    {
+      "bytes": 384,
+      "path": "tests/fixtures/onboarding/owned-scalars/lean-bridge.exports.json",
+      "sha256": "a56567ca0243e66932c2406e046c9fcacc682aa5e8f849d950b89007efb608f9"
+    },
+    {
+      "bytes": 11471,
+      "path": "tests/fixtures/structured-types/owned-dotnet-callables.cs",
+      "sha256": "46a4faaf136090c46d7ead54c6ced1a340d0f9181b7234e316ad4a733119b69b"
+    },
+    {
+      "bytes": 7107,
+      "path": "tests/fixtures/structured-types/owned-dotnet-callback-signatures.cs",
+      "sha256": "44c6f292098b96ad6381b5f5d2aae0107bdcdc121988aa7484f9c41f4892a22d"
+    },
+    {
+      "bytes": 5407,
+      "path": "tests/fixtures/structured-types/owned-dotnet-compositions.cs",
+      "sha256": "c18c27d45709792089927b0e53b4a77cb89dd87e8c579335d0c29ab807113fc5"
+    },
+    {
+      "bytes": 4007,
+      "path": "tests/fixtures/structured-types/owned-dotnet-conversions.cs",
+      "sha256": "bccbb5c34d01036dd0228810d365113cc4b3417f556749e4be14cb3962617680"
+    },
+    {
+      "bytes": 6726,
+      "path": "tests/fixtures/structured-types/owned-dotnet-loading.cs",
+      "sha256": "376dc0c18bd9168af2499f6e73df0c6b381cc01f9a3db0ff0c2bb596ff508456"
+    },
+    {
+      "bytes": 17749,
+      "path": "tests/fixtures/structured-types/owned-dotnet-runtime.cs",
+      "sha256": "98621152bd0c12d1b14c6effaa0b2c83fa138997facce9b3efe33d501985590e"
+    },
+    {
+      "bytes": 4464,
+      "path": "tests/fixtures/structured-types/owned-dotnet-scalars.cs",
+      "sha256": "f857de6a2414d303016583bd03109e31eb7c109276485cde5ffc35e535c132d2"
+    },
+    {
+      "bytes": 15132,
+      "path": "tests/fixtures/type-corpus/cases.mjs",
+      "sha256": "30615735b9fa8af40a2d40cf645fb22ad3679b57abc3951e18395eaa5f2b5d10"
+    },
+    {
+      "bytes": 3926,
+      "path": "tests/helpers/brick-math.mjs",
+      "sha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+    },
+    {
+      "bytes": 12697,
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "sha256": "8ea1e26b1a89eb5b46354af7ce400b011f509cd2e014ebb1793f229f93cc7cb3"
+    },
+    {
+      "bytes": 9902,
+      "path": "tests/helpers/lake-workspace.mjs",
+      "sha256": "56d4cb8097c41158f01ef4ae6ea0542dc188afab50894a49586528e366d3f082"
+    },
+    {
+      "bytes": 6466,
+      "path": "tests/helpers/owned-aggregate-fixture.mjs",
+      "sha256": "7096e0d2a0498a891fecff0fba38315063eddee08997f3256faca766daee4089"
+    },
+    {
+      "bytes": 8870,
+      "path": "tests/helpers/owned-aggregate-native.mjs",
+      "sha256": "e6d6919beceff5dfbd4e32fba2c21d9e515322ccf3839771d1399dde1d79b7d8"
+    },
+    {
+      "bytes": 3619,
+      "path": "tests/helpers/owned-cpp-composition-fixture.mjs",
+      "sha256": "e820a3f26e6fae859436500b9f689ccbcf23e277c561c95022b1c475a47bd106"
+    },
+    {
+      "bytes": 2567,
+      "path": "tests/helpers/owned-dotnet-callback-fixture.mjs",
+      "sha256": "39ba76036afab443ce6cfa4f614c65dc2a9033e805efceee3f5cd65b43f51938"
+    },
+    {
+      "bytes": 5231,
+      "path": "tests/helpers/owned-dotnet-native.mjs",
+      "sha256": "647d51f1bf3eb554f346b26ddc95d5131e3665cb4b1478cee972c3f06e85487a"
+    },
+    {
+      "bytes": 3172,
+      "path": "tests/helpers/owned-host-callback-fixture.mjs",
+      "sha256": "0e8faff91dbdaf6e14309546bad43efb07080144ff445680399a8140a46744b9"
+    },
+    {
+      "bytes": 3107,
+      "path": "tests/helpers/owned-python-scalars-fixture.mjs",
+      "sha256": "a663bf759df32efd431f6a737ae12aa760f74e46adeea4e27722bc2a0785912d"
+    },
+    {
+      "bytes": 3557,
+      "path": "tests/helpers/type-corpus-reviewed-ir.mjs",
+      "sha256": "621813a636c435e89184359b349227f98710bb7c0c6a15a921cbfc40e78274f7"
+    },
+    {
+      "bytes": 2220,
+      "path": "tests/owned-dotnet-callables.test.mjs",
+      "sha256": "773f3fb3ad78fce8a6423833c09b3d4211edfb3619566c739d72372a83ccd964"
+    },
+    {
+      "bytes": 2955,
+      "path": "tests/owned-dotnet-callback-signatures.test.mjs",
+      "sha256": "3f7bc194961331af9c904260e95d8675fda693e6bb1ffcbd35fad52a150767c2"
+    },
+    {
+      "bytes": 15472,
+      "path": "tests/owned-dotnet-conversions.test.mjs",
+      "sha256": "564f5647f9cd0cdf2a101674ec7affbe8935a5ce7580129bb1a607baabff2d8b"
+    },
+    {
+      "bytes": 9033,
+      "path": "tests/owned-dotnet-layout.test.mjs",
+      "sha256": "2c186282254667fddda3012bd37e640cc5ebb2b85e959a03354fe2ed5e7c241d"
+    },
+    {
+      "bytes": 11267,
+      "path": "tests/owned-dotnet-package.test.mjs",
+      "sha256": "4aa2a865e24fab918fb8fe8a39d7d84193aa31a19ff8f5efad866da00422ee28"
+    },
+    {
+      "bytes": 11886,
+      "path": "tests/owned-dotnet-runtime.test.mjs",
+      "sha256": "e39692570e3dd1fb4856b696bcb6e0c284ab1c305b6982f1e6907d55ce5f22d7"
+    },
+    {
+      "bytes": 7175,
+      "path": "tests/owned-dotnet-values.test.mjs",
+      "sha256": "02dc63775bf4908a22f11cca13cc7f2396a3992e78e67ddb75d1e70f9a76fdff"
+    }
+  ]
+}
