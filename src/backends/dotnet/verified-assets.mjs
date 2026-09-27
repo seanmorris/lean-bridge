@@ -35,7 +35,12 @@ export const verifiedDotnetAssets = evidence => {
     private static extern nint Open([global::System.Runtime.InteropServices.MarshalAs(global::System.Runtime.InteropServices.UnmanagedType.LPUTF8Str)] string path, int flags);
     [global::System.Runtime.InteropServices.DllImport("libdl.so.2", EntryPoint = "dlclose", ExactSpelling = true)]
     private static extern int Close(nint handle);
-    private static readonly int Process = global::System.OperatingSystem.IsLinux() ? CurrentProcess() : 0;
+    private const string ProcessKey = "lean-bridge.native-library-v1.dotnet.process";
+    // A package first touched in a forked child must retain the origin of a
+    // peer's already loaded runtime, rather than adopting the child's PID.
+    private static readonly int Process = global::System.OperatingSystem.IsLinux()
+        ? global::System.AppDomain.CurrentDomain.GetData(ProcessKey) is int original ? original : CurrentProcess()
+        : 0;
     private static nint handle;
     internal static bool IsLoaded { get { EnsureProcess(); return global::System.Threading.Volatile.Read(ref handle) != 0; } }
     internal static void EnsureProcess()
@@ -70,6 +75,10 @@ ${libraries.map(([name, hash]) => `                [${JSON.stringify(name)}] = $
             {
                 ready = global::System.Threading.Volatile.Read(ref handle);
                 if (ready != 0) return ready;
+                var origin = domain.GetData(ProcessKey);
+                if (origin is not null && !global::System.Object.Equals(origin, Process))
+                    throw new global::System.InvalidOperationException("Lean runtime process origin differs; start a fresh process");
+                if (origin is null) domain.SetData(ProcessKey, Process);
                 const string key = "lean-bridge.native-library-v1.dotnet";
                 var registry = domain.GetData(key) as global::System.Collections.Generic.Dictionary<string, object>;
                 if (registry is null)

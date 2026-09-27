@@ -171,9 +171,10 @@ is not returned to the caller.
 Conversions share depth 128, 262,144 visits and separate 16 MiB native and
 accounted managed-storage limits across arguments, callbacks and results.
 The package automatically loads its verified Lean libraries and private GMP.
-Compatible owned and copied packages share one runtime. Start a fresh process
-after fork. Transferred inputs, anchored results and asynchronous delivery
-require separate lifetime support.
+Compatible owned and copied packages share one runtime. Calls in a forked child
+reject, including a package first used in that child. Execute a fresh program
+before calling Lean there. Transferred inputs, anchored results and asynchronous
+delivery require separate lifetime support.
 
 ### Named aliases
 

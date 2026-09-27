@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedDotnetProcess, ownedDotnetProcessChangedPaths } from "./owned-dotnet-process-history.mjs";
 
 export const ownedDotnetBaseline = "ab88c3888c3db7d4a1946e79093773233cdfafef";
 export const ownedDotnetHistoryPath = "docs/evidence/owned-dotnet-integration-20260927.json";
@@ -35,6 +36,7 @@ export const ownedDotnetChangedPaths = [
 	, "tests/helpers/wit-recursive-callable-evidence.mjs"
 	, "tests/owned-ruby-evidence.test.mjs"
 ].sort();
+export const ownedDotnetNormalizationPaths = [...new Set([...ownedDotnetChangedPaths, ...ownedDotnetProcessChangedPaths])].sort();
 export const ownedDotnetAddedPaths = [
 	ownedDotnetExecutionPath
 	, ...["foundation", "callbacks", "loading"].flatMap(name =>
@@ -65,6 +67,7 @@ let history;
  * @param update - Exact current and previous identities with ordered edits.
  */
 export const reverseOwnedDotnetUpdate = (source, update) => {
+	source = beforeOwnedDotnetProcess(update.path, source, update.currentSha256);
 	assert.ok(ownedDotnetChangedPaths.includes(update.path), update.path);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
@@ -90,6 +93,7 @@ export const reverseOwnedDotnetUpdate = (source, update) => {
  * @param expected - Optional exact identity at which normalization stops.
  */
 export const beforeOwnedDotnet = (path, source, expected) => {
+	source = beforeOwnedDotnetProcess(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedDotnetChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedDotnetHistoryPath, "utf8"));
@@ -104,5 +108,5 @@ export const beforeOwnedDotnet = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional exact identity at which normalization stops.
  */
-export const ownedDotnetHistoricalBytes = (path, bytes, expected) => ownedDotnetChangedPaths.includes(path)
+export const ownedDotnetHistoricalBytes = (path, bytes, expected) => ownedDotnetNormalizationPaths.includes(path)
 	? beforeOwnedDotnet(path, bytes.toString("utf8"), expected) : bytes;

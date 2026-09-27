@@ -14,11 +14,12 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { verifyNativeFiles } from "../src/build/native-artifacts.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { ownedDotnetRuntimeOnly } from "./helpers/owned-dotnet-installed.mjs";
+import { checkOwnedDotnetCold, prepareOwnedDotnetCold } from "./helpers/owned-dotnet-cold.mjs";
 import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 test("owned, copied and ordinary NuGet peers share loading, fork guards and retirement", {
-	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1200000
+	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1800000
 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-owned-dotnet-peers-"));
 	t.after(() => process.env.LEAN_BRIDGE_DOTNET_DEBUG === "1"
@@ -107,6 +108,7 @@ int probe_fork(int (*call)(int), int kind) {
 			.filter(([path]) => !["[Content_Types].xml", "_rels/.rels", `${pkg.name}.nuspec`].includes(path))));
 		manifests.push(manifest);
 	}
+	const cold = await prepareOwnedDotnetCold({ consumer, packages, command, env });
 	const runtime = await ownedDotnetRuntimeOnly(join(directory, "runtime-only"), command);
 	if(process.env.LEAN_BRIDGE_DOTNET_DEBUG === "1") runtime.env.LEAN_BRIDGE_DOTNET_DEBUG = "1";
 	const relocated = join(directory, "relocated");
@@ -127,11 +129,13 @@ int probe_fork(int (*call)(int), int kind) {
 			, forkChecks: 1, forkKind, libraries: 11 });
 		observations.push(observation); t.diagnostic(JSON.stringify(observation));
 	}
+	const coldLoading = await checkOwnedDotnetCold({ directory: relocated, runtime, prepared: cold });
+	t.diagnostic(`cold loader: ${JSON.stringify(coldLoading.observations)}`);
 	await saveLakeFile(resolve("build/owned-dotnet-packaging"), "coexistence.json", canonicalJson({
 		schemaVersion: 1, planNode: 1219, installedNuget: true
 		, sourceFreeExecution: true, sourceUnchanged: true, sdkFreeExecution: true
 		, consumerRemoved: true, packageCachesRemoved: true, relocated: true
 		, consumerSha256: sha256(source), forkProbeSha256: sha256(forkProbe)
-		, inputs, manifests, observations
+		, inputs, manifests, observations, coldLoading
 	}));
 });

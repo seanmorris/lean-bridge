@@ -11,7 +11,7 @@ import { beforeOwnedCpp, ownedCppChangedPaths } from "./owned-cpp-source-history
 import { ownedRustChangedPaths } from "./owned-rust-source-history.mjs";
 import { ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
 import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
-import { ownedDotnetChangedPaths } from "./owned-dotnet-source-history.mjs";
+import { ownedDotnetNormalizationPaths } from "./owned-dotnet-source-history.mjs";
 
 export const ownedCiBaseline = "650641c1274543a334aa7d50c43c70de945984a0";
 export const ownedCiHistoryPath = "docs/evidence/owned-ci-repair-20260926.json";
@@ -77,5 +77,5 @@ export const beforeOwnedCi = (path, source, expected) => {
  * @param path - Exact repository-relative path.
  * @param bytes - Complete current bytes.
  */
-export const ownedCiHistoricalBytes = (path, bytes) => ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetChangedPaths.includes(path)
+export const ownedCiHistoricalBytes = (path, bytes) => ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)
 	? beforeOwnedCi(path, bytes.toString("utf8")) : bytes;

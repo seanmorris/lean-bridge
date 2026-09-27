@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedDotnet, ownedDotnetChangedPaths } from "./owned-dotnet-source-history.mjs";
+import { beforeOwnedDotnet, ownedDotnetNormalizationPaths } from "./owned-dotnet-source-history.mjs";
 
 export const ownedRubyBaseline = "ef9bd830d49a932a13bbc0d683a7a14cd7139b62";
 export const ownedRubyHistoryPath = "docs/evidence/owned-ruby-integration-20260927.json";
@@ -104,5 +104,5 @@ export const beforeOwnedRuby = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional identity at which normalization stops.
  */
-export const ownedRubyHistoricalBytes = (path, bytes, expected) => ownedRubyChangedPaths.includes(path) || ownedDotnetChangedPaths.includes(path)
+export const ownedRubyHistoricalBytes = (path, bytes, expected) => ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)
 	? beforeOwnedRuby(path, bytes.toString("utf8"), expected) : bytes;

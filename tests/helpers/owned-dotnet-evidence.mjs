@@ -17,6 +17,7 @@ import { assertDotnetStructuredFaults } from "./dotnet-structured-callable-fault
 import { ownedRubyExecutionSources, assertOwnedRubyIntegration } from "./owned-ruby-evidence.mjs";
 import { ownedRubyHistoryPath } from "./owned-ruby-source-history.mjs";
 import { ownedDotnetBaseline, ownedDotnetChangedPaths, ownedDotnetAddedPaths, ownedDotnetExecutionPath, reverseOwnedDotnetUpdate } from "./owned-dotnet-source-history.mjs";
+import { beforeOwnedDotnetProcess, beforeOwnedDotnetProcessGenerated, ownedDotnetProcessHistoricalBytes } from "./owned-dotnet-process-history.mjs";
 
 export const ownedDotnetScope = { profiles: ["nuget"]
 	, paths: ["ordinary-source", "reviewed-ir"], installedPackage: true
@@ -127,8 +128,9 @@ export const assertOwnedDotnetPackageReport = async (report, mode, scalar, sourc
 	const generated = generateOwnedDotnetPackage(model.bindingIr, evidence);
 	for(const [path, text] of Object.entries(generated.files))
 	{
-		assert.deepEqual(compiled.files[path], identity(text), path);
-		if(path.startsWith("src/") || path === "binding-manifest.json") assert.deepEqual(manifest.files[`lean-bridge/dotnet/${path}`], identity(text), path);
+		const original = beforeOwnedDotnetProcessGenerated(path, text, compiled.files[path].sha256);
+		assert.deepEqual(compiled.files[path], identity(original), path);
+		if(path.startsWith("src/") || path === "binding-manifest.json") assert.deepEqual(manifest.files[`lean-bridge/dotnet/${path}`], identity(original), path);
 	}
 	assert.deepEqual(compiled.files["global.json"], identity(canonicalJson({ sdk: { version: compiled.sdk, rollForward: "disable", allowPrerelease: false } })));
 	for(const extension of ["dll", "xml"])
@@ -208,10 +210,19 @@ export const assertOwnedDotnetExecution = async record => {
 	assert.deepEqual(Object.keys(record.runs).sort(), Object.keys(ownedDotnetCommands).sort());
 	for(const [name, count] of Object.entries({ packages: 4, coexistence: 1, recursive: 1, callbacks: 2 })) passing(record.runs[name], ownedDotnetCommands[name], count);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedDotnetExecutionSources);
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedDotnetProcessHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	const references = ["foundation", "callbacks", "loading"].map(name => `docs/evidence/owned-dotnet-${name}-20260927.json`);
 	assert.deepEqual(record.references.map(item => item.path), references);
 	for(const reference of record.references) assert.deepEqual({ bytes: reference.bytes, sha256: reference.sha256 }, identity(await readFile(reference.path)));
+	await assertOwnedDotnetReports(record);
+};
+
+/**
+ * Check complete installed reports against their compiler and package receipts.
+ *
+ * @param record - Four packages, mixed peer execution and callback regressions.
+ */
+export const assertOwnedDotnetReports = async record => {
 	for(const group of [record.packages, record.scalarPackages]) assert.deepEqual(Object.keys(group).sort(), ["ordinary", "reviewed"]);
 	for(const mode of ["ordinary", "reviewed"])
 	{
@@ -310,13 +321,17 @@ export const assertOwnedDotnetIntegration = async record => {
 	const updates = new Map(record.updates.map(update => [update.path, update])), restored = {};
 	for(const path of paths)
 	{
-		const current = await readFile(path); assert.equal(sha256(current), record.sourceHashes[path], path);
+		const current = ownedDotnetProcessHistoricalBytes(path, await readFile(path), record.sourceHashes[path]);
+		assert.equal(sha256(current), record.sourceHashes[path], path);
 		const update = updates.get(path);
 		if(update) restored[path] = reverseOwnedDotnetUpdate(current.toString("utf8"), update);
 		if(previous.sourceHashes[path]) assert.equal(sha256(restored[path] ?? current), previous.sourceHashes[path], path);
 		if(record.additions[path]) assert.equal(record.additions[path], record.sourceHashes[path], path);
 	}
-	const { document, ...contracts } = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
+	const { irSchema, consumers } = await readTypeSurface();
+	const contracts = { irSchema, consumers };
+	const document = JSON.parse(beforeOwnedDotnetProcess("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sourceHashes["docs/type-surface.v1.json"]));
+	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	const expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{

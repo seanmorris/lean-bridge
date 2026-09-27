@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedDotnetExecution, assertOwnedDotnetIntegration } from "./helpers/owned-dotnet-evidence.mjs";
 import { beforeOwnedDotnet, reverseOwnedDotnetUpdate, ownedDotnetHistoryPath, ownedDotnetExecutionPath, ownedDotnetHistoricalBytes } from "./helpers/owned-dotnet-source-history.mjs";
+import { beforeOwnedDotnetProcess } from "./helpers/owned-dotnet-process-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -64,7 +65,7 @@ test("C# ownership evidence rejects altered lifetime, package and execution clai
 test("C# source history restores only recorded identities and preserves binary files", async () => {
 	for(const update of (await json(ownedDotnetHistoryPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = beforeOwnedDotnetProcess(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseOwnedDotnetUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeOwnedDotnet(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedDotnet(update.path, source, update.currentSha256), source);

@@ -9,6 +9,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedAggregateCarriers } from "../src/build/owned-aggregate-carriers.mjs";
 import { generateOwnedDotnetPackage } from "../src/backends/dotnet/owned-package.mjs";
+import { beforeOwnedDotnetProcessGenerated, ownedDotnetProcessHistoricalBytes } from "./helpers/owned-dotnet-process-history.mjs";
 
 const verify = async record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
@@ -33,8 +34,8 @@ const verify = async record => {
 	{
 		assert.match(entry.path, /^(?:src|tests)\/[A-Za-z0-9_./-]+$/u);
 		assert.ok(!entry.path.includes(".."));
-		const bytes = await readFile(entry.path);
-		assert.equal(bytes.length, entry.bytes); assert.equal(sha256(bytes), entry.sha256, entry.path);
+		const bytes = ownedDotnetProcessHistoricalBytes(entry.path, await readFile(entry.path), entry.sha256);
+		assert.equal(Buffer.byteLength(bytes), entry.bytes); assert.equal(sha256(bytes), entry.sha256, entry.path);
 	}
 	assert.equal(record.commands.length, 2);
 	for(const [index, entry] of record.commands.entries())
@@ -55,7 +56,8 @@ const verify = async record => {
 		const generated = generateOwnedAggregateCarriers({ ...input, hostCallbacks: true });
 		const model = generateOwnedDotnetPackage(generated.model.bindingIr, report.evidence);
 		assert.deepEqual(report.contract, model.contract);
-		assert.deepEqual(report.generatedFiles, Object.fromEntries(Object.entries(model.files).map(([path, text]) => [path, sha256(text)])));
+		assert.deepEqual(report.generatedFiles, Object.fromEntries(Object.entries(model.files).map(([path, text]) =>
+			[path, sha256(beforeOwnedDotnetProcessGenerated(path, text, report.generatedFiles[path]))])));
 		assert.equal(report.evidence.componentReceiptSha256, sha256(canonicalJson({ sourceIdentity: input.sourceIdentity, metadata: input.metadata })));
 		assert.equal(report.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-dotnet-loading.cs")));
 		assert.deepEqual(report.observation, { checks: 167, privateGmp: true, forkBeforeLock: true, identities: 0 });

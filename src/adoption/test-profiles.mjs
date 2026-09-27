@@ -23,7 +23,7 @@ const profileManifest = Object.freeze({
 		, "owned-python-evidence", "owned-python-package"
 		, "owned-ruby-conversion-evidence", "owned-ruby-evidence"
 		, "owned-dotnet-callback-evidence", "owned-dotnet-loading-evidence"
-		, "owned-dotnet-evidence"
+		, "owned-dotnet-evidence", "owned-dotnet-process-evidence"
 		, "binding-semantic-parity"
 		, "callback-runtime"
 		, "checked-javascript"
