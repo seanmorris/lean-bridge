@@ -1,6 +1,6 @@
 # Build and publish Rust packages
 
-Build an ordinary Lake project with `--target cargo` to produce a typed Rust crate with compiled native libraries. Consumers use Cargo without Lean or handwritten FFI. The separate Alpha recipe below exercises resource and callback APIs.
+Build an ordinary Lake project with `--target cargo` to produce a typed Rust crate with compiled native libraries. Consumers use Cargo without Lean or handwritten FFI. Resource-containing values require the explicit ownership contract described below.
 
 For ordinary-source builds, declare the library's [description, authors and URLs](../publishing.md#declare-package-metadata) once in `lean-bridge.exports.json`.
 
@@ -31,7 +31,7 @@ The build compiles Lean and its C adapter, checks the generated Rust with a pinn
 
 The crate retains the library's and captured Lake dependencies' [source notices](../publishing.md#retain-library-and-dependency-licenses). Set [shared license terms](../publishing.md#declare-license-terms) in `package.license` to populate Cargo's `license` field. Without a declaration, the field remains unset; it never borrows Lean Bridge's MIT license.
 
-This path supports pure copied primitives, nested arrays and Lists, copied records, tagged variants, options, results, binary products and finite recursive values. Synchronous callbacks and returned closures accept those copied values, including recursive trees. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. Resource-containing aggregates and asynchronous operations remain separate work. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
+This path supports pure copied primitives, nested arrays and Lists, copied records, tagged variants, options, results, binary products and finite recursive values. Synchronous callbacks and returned closures accept those copied values, including recursive trees. Rust receives typed `FnMut` callbacks returning `Result` and owned `LeanClosure` values with automatic `Drop` cleanup. Resource-containing aggregates use the [ownership profile](#export-resource-containing-values). Asynchronous operations remain unsupported. The crate pins `num-bigint` and `sha2`; Cargo resolves them normally, so author checks need network access or a populated Cargo cache. The native libraries are embedded in downstream executables. See [ordinary Rust consumption](../consume/rust.md#ordinary-project-packages), [copied-value acceptance](../evidence/native-rust-20260915.md) and [callable acceptance](../evidence/rust-callables-20260919.md).
 
 Authenticate and distribute the original archive through your controlled release channel. For a registry upload, follow the separate Cargo review below with your crate's coordinates. The preparation commands preserve the supplied lockfile and handle Alpha's optional `.cargo_vcs_info.json`. The unsigned native receipts are not universal transaction authorizations. Check the registry's package size limit before selecting this delivery method: the crate includes a full Lean runtime.
 
@@ -83,7 +83,7 @@ No Cargo-specific alias configuration is needed. See the
 [consumer example](../consume/rust.md#named-aliases) and
 [installed crate checks](../evidence/rust-aliases-20260921.md). Recursive targets
 use the graph profile below. Acyclic aliases can be callback and closure payloads;
-identity-bearing aggregates remain separate work. All selected targets must
+identity-bearing aggregates require explicit ownership. All selected targets must
 accept an alias's complete type graph.
 
 ## Export copied tagged variants
@@ -213,6 +213,54 @@ callbacks remain unsupported.
 
 See the [consumer example](../consume/rust.md#recursive-callback-values) and
 [installed acceptance](../evidence/rust-recursive-callables-20260925.md).
+
+## Export resource-containing values
+
+Declare the resource types and the lifetime policy for aggregates containing
+them. For the `Owned` acceptance module, the following configuration produces
+the consumer API shown under [resource-containing values](../consume/rust.md#resource-containing-values):
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.bundle", "Owned.callbackRecord"],
+  "targets": { "cargo": { "name": "owned-values", "version": "1.2.3" } }
+}
+```
+
+Use your own module, resource names, exports and package coordinates. Build with
+`lean-bridge build --project ./owned --target cargo --output ./release-owned`.
+The compiler checks the resource definitions and all aggregate and callable
+signatures. Independently reviewed version-4 contracts receive the same fresh
+compiler checks. Missing ownership policies fail before native compilation.
+
+This profile requires the C author toolchain and Rust 1.90 or newer. The build
+compiles and bundles GMP 6.3.0, including its license and corresponding source.
+Cargo-only builds do not need Boost or a public C package. A combined
+`--target c --target cpp --target cargo` build shares one native component and
+owned-value adapter. Each selected target must accept the complete contract.
+
+Generated records and enums use native Rust containers, transparent aliases and
+`Box` fields for recursion. Resource leaves keep checked leases, including in
+callback arguments and returned closures. The Rust compiler rejects mismatched
+resource types, sending or sharing resource wrappers between threads, and
+callbacks missing required typed recovery. Runtime checks reject expired
+borrows and post-fork calls. Transfer, anchored results and asynchronous
+delivery are not enabled by this lease profile.
+
+The adapter enforces depth 128, 262,144 visits and separate 16 MiB Rust/native
+accounting budgets. Each package binds its generated types, lifetime rules,
+C/GMP ABI assertions and native libraries to the compiler-derived contract.
+Packaging rechecks these inputs before creating the archive. Consumers need
+neither Lean nor GMP installed and supply no native linker configuration.
 
 ## Package identity and publisher prerequisites
 

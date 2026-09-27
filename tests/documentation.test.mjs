@@ -27,6 +27,28 @@ import {
 	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
+test("owned Cargo documentation and CI require installed packages and typed lifetime checks", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const step = workflow.split("- name: Compare isolated Cargo corpus consumers with fresh Lean\n")[1].split("      - name:")[0];
+	assert.match(step, /bootstrap-rust-ci\.sh/u); assert.match(step, /export CARGO_HOME=/u);
+	for(const name of ["runtime", "values", "packaging"])
+		assert.ok(step.includes(`LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-${name}.test.mjs`));
+	for(const mode of ["ordinary", "reviewed"])
+		assert.ok(step.includes(`test -s build/owned-rust-packaging/${mode}.json`));
+	const consumer = await readFile("docs/consume/rust.md", "utf8");
+	assert.match(consumer, /### Resource-containing values/u);
+	assert.match(consumer, /borrowed\.is_closed\(\)/u);
+	assert.match(consumer, /retained = value\.primary\.retain\(\)\?/u);
+	assert.match(consumer, /with_recovery\(callback, value\)/u);
+	assert.doesNotMatch(consumer, /resource identities are not part of the ordinary Rust source path/u);
+	const publisher = await readFile("docs/publish/cargo.md", "utf8");
+	const owned = publisher.split("## Export resource-containing values\n")[1].split("\n## ")[0];
+	const configuration = JSON.parse(owned.split("```json\n")[1].split("\n```")[0]);
+	assert.deepEqual(configuration.resources, ["Owned.Ticket"]);
+	assert.equal(configuration.ownedAggregates.ownership, "lease");
+	assert.equal(configuration.targets.cargo.name, "owned-values");
+});
+
 test("WIT structured CI requires installed consumers, ownership probes and executable examples", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const step = workflow.split("- name: Execute installed WIT structured callbacks and documentation\n")[1]?.split("      - name:")[0];
@@ -529,7 +551,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/collections\/rust\.json/);
   assert.match(workflow, /test -s build\/variants\/rust\.json/);
   assert.match(workflow, /test -s build\/aliases\/rust\.json/);
-  assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/structured-callables\/rust\.json\n\s*build\/recursive-callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/recursive\/rust-values\.json\n\s*build\/recursive\/rust-conversions\.json\n\s*build\/recursive\/rust-native\.json\n\s*build\/recursive\/rust-packages\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/structured-callables\/rust\.json\n\s*build\/recursive-callables\/rust\.json\n\s*build\/owned-rust-runtime\/\n\s*build\/owned-rust-values\/\n\s*build\/owned-rust-packaging\/ordinary\.json\n\s*build\/owned-rust-packaging\/reviewed\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/recursive\/rust-values\.json\n\s*build\/recursive\/rust-conversions\.json\n\s*build\/recursive\/rust-native\.json\n\s*build\/recursive\/rust-packages\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /build\/word-native\/ruby\.json\n\s*build\/callables\/ruby\.json\n\s*build\/structured-callables\/ruby\.json\n\s*build\/recursive-callables\/ruby\.json\n\s*build\/compounds\/ruby\.json\n\s*build\/lists\/ruby\.json\n\s*build\/aliases\/ruby\.json\n\s*build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*build\/recursive\/ruby-values\.json\n\s*build\/recursive\/ruby-conversions\.json\n\s*build\/recursive\/ruby-native\.json\n\s*build\/recursive\/ruby-packages\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   for(const target of ["npm", "php-wasm"])
@@ -643,7 +665,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_rust\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_rust\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-rust-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/structured-callables\/rust\.json\n\s*build\/recursive-callables\/rust\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/recursive\/rust-values\.json\n\s*build\/recursive\/rust-conversions\.json\n\s*build\/recursive\/rust-native\.json\n\s*build\/recursive\/rust-packages\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/rust\.json\n\s*build\/type-corpus\/reviewed-native-rust\.json\n\s*build\/char-native\/rust\.json\n\s*build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/structured-callables\/rust\.json\n\s*build\/recursive-callables\/rust\.json\n\s*build\/owned-rust-runtime\/\n\s*build\/owned-rust-values\/\n\s*build\/owned-rust-packaging\/ordinary\.json\n\s*build\/owned-rust-packaging\/reviewed\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/recursive\/rust-values\.json\n\s*build\/recursive\/rust-conversions\.json\n\s*build\/recursive\/rust-native\.json\n\s*build\/recursive\/rust-packages\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:node"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:browser"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:npm"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=node-javascript,node-typescript,browser-javascript,browser-react,browser-worker node --test tests/type-corpus.test.mjs");

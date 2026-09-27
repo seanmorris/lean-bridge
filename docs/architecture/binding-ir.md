@@ -52,7 +52,7 @@ dedicated tests. A separately compiled C consumer now exercises semantic value
 types, opaque identities and explicit session/result lifetimes. The same C
 consumer also executes an independently authored v4 contract after fresh Lean
 reconciliation. The review selects resources and ownership policies; it cannot
-supply layouts or proof evidence. C and C++ package builds ship that transport
+supply layouts or proof evidence. C, C++ and Cargo package builds ship that transport
 with the shared runtime, GMP and relocatable build metadata. C++ adds named value
 types, standard containers, exact Boost integers and checked RAII resource leases.
 Installed ordinary
@@ -64,7 +64,7 @@ The [owned host callback projection](../evidence/owned-host-callbacks-20260926.m
 executes typed recovery and call-scoped C borrows for resource-containing
 values. Temporary callback replies preserve resource identity through the parent
 transaction. Ordinary and reviewed compiler paths pass lifetime, reentry and
-allocation-failure checks. C and C++ builds include the callback adapter in prepared
+allocation-failure checks. C, C++ and Cargo builds include the callback adapter in prepared
 packages. Native model version 7 authenticates signature-specific recovery and
 callback source; native, public-adapter and package receipts record that capability.
 Readers reconstruct it from compiler metadata and reject changed lifetime rules
@@ -77,6 +77,16 @@ then rethrows original exceptions after C/Lean cleanup. C++ package receipts bin
 the generated headers, lifetime rules and pinned Boost dependency to the native
 contract. Ordinary and reviewed installed consumers also execute boxed recursion
 and higher-order closures accepting mutable callbacks.
+
+The [Rust ownership projection](../consume/rust.md#resource-containing-values)
+uses typed structs, enums and native containers with thread-confined resource
+leases. Cloning a container copies its value storage and shares checked resource
+leases. Callback borrows expire on return; explicit `retain()` creates independent
+native ownership. Rust callbacks return typed results, and original panic payloads
+resume only after C has returned. Prepared Cargo crates embed authenticated
+libraries, verify the C/GMP ABI during the producer build and load the runtime
+automatically. Package verification regenerates the Rust API and rejects changed
+lifetimes, sources or native artifacts.
 
 ## Rich values cross as rich values
 

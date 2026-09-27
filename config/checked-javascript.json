@@ -6,6 +6,14 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/backends/rust/owned-callables.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/rust/owned-conversions.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/rust/owned-package.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/rust/owned-runtime.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/backends/rust/owned-values.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/owned-rust-artifacts.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/owned-rust-projection.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/release/owned-cargo.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/owned-callbacks.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/owned-package.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/backends/c/owned-runtime.mjs", "classification": "strict-migration-backlog" },

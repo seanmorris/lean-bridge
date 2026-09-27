@@ -134,7 +134,7 @@ export const assertOwnedCppExecution = async record => {
 	for(const [name, count] of Object.entries({ core: 13, packages: 5, cPackages: 8, contracts: 55 }))
 		passing(record.runs[name], ownedCppCommands[name], count);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedCppExecutionSources);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedCppOrderHistoricalBytes(path, await readFile(path))), digest, path);
 	for(const collection of [record.runtime, record.packages, record.cPackages.aggregates, record.cPackages.callbacks])
 		assert.deepEqual(Object.keys(collection).sort(), ["ordinary", "reviewed"]);
 	assert.deepEqual(Object.keys(record.inputs).sort(), ["owned-aggregates", "owned-host-callbacks"]);

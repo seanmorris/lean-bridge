@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedRust, ownedRustChangedPaths } from "./owned-rust-source-history.mjs";
 
 export const ownedCppOrderHistoryPath = "docs/evidence/owned-cpp-inventory-order-20260927.json";
 export const ownedCppOrderPaths = [
@@ -24,6 +25,7 @@ let history;
  * @param expected - Optional identity at which normalization stops.
  */
 export const beforeOwnedCppOrder = (path, source, expected) => {
+	source = beforeOwnedRust(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedCppOrderPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedCppOrderHistoryPath, "utf8"));
@@ -50,5 +52,5 @@ export const beforeOwnedCppOrder = (path, source, expected) => {
  * @param path - Repository-relative source path.
  * @param bytes - Complete file contents.
  */
-export const ownedCppOrderHistoricalBytes = (path, bytes) => ownedCppOrderPaths.includes(path)
+export const ownedCppOrderHistoricalBytes = (path, bytes) => ownedCppOrderPaths.includes(path) || ownedRustChangedPaths.includes(path)
 	? beforeOwnedCppOrder(path, bytes.toString("utf8")) : bytes;

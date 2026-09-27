@@ -282,7 +282,7 @@ A returned `LeanClosure<fn(...) -> T>` provides typed `.call(...)`, idempotent `
 
 A callback can call another Lean export or an owned closure on the same thread. Its first `Err` stops further callback execution and returns the original error. With unwinding enabled, a panic is caught inside the callback, then resumed on the Rust side after the native call returns. `panic=abort`, out-of-memory aborts and a panic hook that terminates the process cannot be recovered. Rust's normal panic-hook and destructor behavior still applies. Conversion limits cover all callbacks in one call, including retained result buffers. A callback that Lean stores beyond the call becomes invalid; later invocation returns an error instead of accessing expired Rust state.
 
-The [Rust callable acceptance record](../evidence/rust-callables-20260919.md) covers both package paths, compile-time rejections, error and panic cleanup, exhausted closure registries, nested calls and source-free execution. Recursive callback values use the graph adapter described below. Resource-containing aggregates and asynchronous callbacks remain separate work.
+The [Rust callable acceptance record](../evidence/rust-callables-20260919.md) covers both package paths, compile-time rejections, error and panic cleanup, exhausted closure registries, nested calls and source-free execution. Recursive callback values use the graph adapter described below. Resource-containing values use the explicit ownership profile described further down. Asynchronous callbacks remain unsupported.
 
 ### Structured callback values
 
@@ -376,9 +376,75 @@ covers both authoring paths, offline installation, recursive equality, closure
 capacity, compile-time misuse, allocation failures, panic cleanup and execution
 after deleting the author and installed source trees.
 
+### Resource-containing values
+
+Packages with an explicit ownership contract expose resources as named checked
+wrappers. They can appear inside `Vec`, `Option`, `Result`, tuples, records,
+variants, aliases and recursive `Box` fields. Copied payloads still own their
+storage. `Clone` copies that storage but shares resource leases; resource equality
+compares native identity. Closing one owning wrapper does not close its clones.
+`retain()` acquires independent native ownership, and `Drop` releases it.
+
+For the `owned-values` acceptance package, add its prepared crate as your Cargo
+dependency and save this as `src/main.rs`:
+
+```rust
+use owned_values::{
+    bundle, callback_record, new_ticket, serial, BigInt, BigUint,
+    Bundle, Error, Payload, Ticket,
+};
+
+fn main() -> Result<(), Error> {
+    let ticket = new_ticket(&BigUint::from(42u32), "door")?;
+    let input = bundle(&ticket, &None, &[ticket.clone()], &[],
+        &Payload { count: BigInt::from(1), bytes: vec![7] })?;
+    let mut borrowed = Ticket::default();
+    let mut retained = Ticket::default();
+    let output = callback_record(&input, |mut value: Bundle| {
+        borrowed = value.primary.clone();
+        retained = value.primary.retain()?;
+        value.payload.bytes.push(255);
+        Ok(value)
+    })?;
+
+    assert!(borrowed.is_closed());
+    assert_eq!(serial(&retained)?, BigUint::from(42u32));
+    assert_eq!(input.payload.bytes, vec![7]);
+    assert_eq!(output.payload.bytes, vec![7, 255]);
+    let mut copy = ticket.clone();
+    copy.close();
+    assert_eq!(serial(&ticket)?, BigUint::from(42u32));
+    Ok(())
+}
+```
+
+Run `cargo run --release`. Cargo compiles Rust only. The crate embeds and verifies
+the Lean runtime, component, adapter and GMP, then loads them automatically.
+The executable can run after you delete the crate source and dependency tree.
+
+Callbacks receive owned copied data and call-scoped resource borrows. Those
+borrows expire when the callback returns, even if you cloned their wrappers.
+Call `retain()` inside the callback to keep a resource. The bridge snapshots
+callback replies before the callback's local values disappear. A callback may
+reenter Lean on its current thread; stored host callbacks expire after the call.
+
+Returned Lean closures have typed `call()`, `retain()`, `close()` and `is_closed()`
+methods and can be passed to another callable argument. Rust `FnMut` callbacks
+return `Result<T, Error>`. If a signature cannot derive failure recovery from
+its inputs, pass `with_recovery(callback, value)` with the declared result type.
+The recovery value lets native cleanup finish; the original error or panic still
+reaches the Rust caller. Panics resume only after the C trampoline returns.
+
+Resource wrappers and aggregates containing them are neither `Send` nor `Sync`.
+Independent threads may each create and use their own resources. Closed wrappers
+and inherited post-fork resources reject calls. The ownership profile permits
+depth 128, 262,144 visits and separate 16 MiB Rust/native accounting budgets.
+These limits do not bound Lean working memory or every allocator overhead.
+Rust and GMP retain their fatal allocator-exhaustion policies.
+
 ### Alpha resource and callback example
 
-The remaining example uses the separate Alpha fixture. Its resource identities are not part of the ordinary Rust source path. Alpha also uses an older loader that needs its installed native files to remain in place.
+The remaining example uses the separate Alpha fixture and its older API. Its loader needs the installed native files to remain in place. New packages can use the explicit ownership profile above.
 
 ### Requirements and package
 

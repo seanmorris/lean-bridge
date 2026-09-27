@@ -855,6 +855,11 @@ jobs:
           test -s build/structured-callables/rust.json
           LEAN_BRIDGE_RUST_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/rust-recursive-callables.test.mjs tests/rust-recursive-callable-contract.test.mjs
           test -s build/recursive-callables/rust.json
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-runtime.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-values.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-packaging.test.mjs
+          test -s build/owned-rust-packaging/ordinary.json
+          test -s build/owned-rust-packaging/reviewed.json
           LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs
           test -s build/compounds/rust.json
           LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs
@@ -889,6 +894,10 @@ jobs:
             build/callables/rust.json
             build/structured-callables/rust.json
             build/recursive-callables/rust.json
+            build/owned-rust-runtime/
+            build/owned-rust-values/
+            build/owned-rust-packaging/ordinary.json
+            build/owned-rust-packaging/reviewed.json
             build/compounds/rust.json
             build/lists/rust.json
             build/aliases/rust.json
@@ -963,6 +972,9 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_CALLABLE_TEST=1 node --test tests/rust-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/rust-structured-callables.test.mjs tests/rust-structured-callable-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/rust-recursive-callables.test.mjs tests/rust-recursive-callable-contract.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-runtime.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-values.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-packaging.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"
