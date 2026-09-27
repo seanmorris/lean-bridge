@@ -17,6 +17,7 @@ import { ownedDotnetColdProject } from "./owned-dotnet-cold.mjs";
 import { assertOwnedDotnetReports, assertOwnedDotnetIntegration } from "./owned-dotnet-evidence.mjs";
 import { ownedDotnetHistoryPath, ownedDotnetExecutionPath } from "./owned-dotnet-source-history.mjs";
 import { ownedDotnetProcessBaseline, ownedDotnetProcessChangedPaths, ownedDotnetProcessAddedPaths, reverseOwnedDotnetProcess } from "./owned-dotnet-process-history.mjs";
+import { beforeNativeForkRepair, nativeForkRepairHistoricalBytes } from "./native-fork-repair-history.mjs";
 
 export const ownedDotnetProcessCommands = {
 	admission: "node --test --test-name-pattern='unsupported native targets' tests/owned-c-packaging.test.mjs"
@@ -143,7 +144,8 @@ export const assertOwnedDotnetProcess = async (record, replay = true) => {
 	const updates = new Map(record.updates.map(item => [item.path, item]));
 	for(const path of paths)
 	{
-		const bytes = await readFile(path); assert.equal(sha256(bytes), record.sources[path], path);
+		const bytes = nativeForkRepairHistoricalBytes(path, await readFile(path), record.sources[path]);
+		assert.equal(sha256(bytes), record.sources[path], path);
 		const update = updates.get(path);
 		if(update)
 		{
@@ -175,7 +177,8 @@ export const assertOwnedDotnetProcess = async (record, replay = true) => {
 	assert.equal(record.inventory.promoted, 0);
 	assert.deepEqual(record.inventory, previous.inventory);
 	const { document, ...contracts } = await readTypeSurface();
-	const old = JSON.parse(reverseOwnedDotnetProcess(await readFile("docs/type-surface.v1.json", "utf8"), updates.get("docs/type-surface.v1.json")));
+	const inventory = beforeNativeForkRepair("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
+	const old = JSON.parse(reverseOwnedDotnetProcess(inventory, updates.get("docs/type-surface.v1.json")));
 	const expected = structuredClone(old);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 	{
@@ -183,7 +186,7 @@ export const assertOwnedDotnetProcess = async (record, replay = true) => {
 		if(update)
 		{ assert.equal(file.sha256, update.previousSha256); file.sha256 = update.currentSha256; }
 	}
-	assert.deepEqual(document, expected);
+	assert.deepEqual(JSON.parse(inventory), expected);
 	assert.deepEqual(typeSurfaceCells(document, contracts), typeSurfaceCells(old, contracts));
 	if(replay) await assertOwnedDotnetIntegration(previous);
 };

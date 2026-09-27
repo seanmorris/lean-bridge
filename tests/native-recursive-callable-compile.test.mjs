@@ -302,6 +302,10 @@ test("fresh ordinary and reviewed native recursive callback carriers execute on 
 			await assert.rejects(() => executeCalls(mutation.name), /call check at/);
 		}
 		reports.push({ path: reviewed ? "reviewed-ir" : "ordinary-source"
+			, input: { metadata: JSON.parse(await readFile(join(compiled.root, "metadata.json"), "utf8"))
+				, component: compiled.model.component, moduleName: compiled.model.moduleName
+				, sourceIdentity: compiled.receipt.sourceIdentity }
+			, initializer: compiled.receipt.initializer
 			, result
 			, sanitized
 			, rejectedCleanupMutations: mutations.map(mutation => mutation.name)

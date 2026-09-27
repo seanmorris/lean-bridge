@@ -292,7 +292,14 @@ static void lifecycle(void) {
   ${record.name} record = {0}, record_out = {0};
   CHECK(${recordLease.call}(token, &record, &record_out) == NG_INVALID); ++rejections;
   pid_t child = fork(); CHECK(child >= 0);
-  if (!child) { bool selected = false; memset(&out, 0, sizeof(out)); _exit(${lease.call}(token, &selected, &input, &out) == NG_INVALID ? 0 : 1); }
+  if (!child) {
+    alarm(5); bool selected = false; memset(&out, 0, sizeof(out));
+    unsigned char expected[sizeof(out)]; memcpy(expected, &out, sizeof(out));
+    /* The shared runtime rejects fork before checking the inherited closure. */
+    uint32_t status = ${lease.call}(token, &selected, &input, &out);
+    if (status != NG_RUNTIME) fprintf(stderr, "fork status=%u expected=%u\\n", status, NG_RUNTIME);
+    _exit(status == NG_RUNTIME && !selected && !memcmp(expected, &out, sizeof(out)) ? 0 : 1);
+  }
   int result = 0; CHECK(waitpid(child, &result, 0) == child && WIFEXITED(result) && WEXITSTATUS(result) == 0); ++rejections;
   bool selected = true; dispose_on_decode = token; memset(&out, 0, sizeof(out));
   CHECK(${lease.call}(token, &selected, &input, &out) == NG_OK); CHECK(equal_${id(tree)}(&input, &out)); ${clear(tree, "&out")}
