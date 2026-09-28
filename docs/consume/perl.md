@@ -156,7 +156,7 @@ are pinned before converters can invoke Perl code, and scoped cleanup releases
 partial conversions on failure. The existing 32-level schema limit and 16 MiB
 conversion budget apply; they do not bound the entire Perl heap or Lean working
 memory. [Recursive values](#recursive-values) use a separate bounded adapter.
-Callable and identity-bearing payloads remain separate work.
+Resource-bearing variants use the [explicit ownership profile](#resource-containing-values).
 The [installed variant checks](../evidence/perl-variants-20260921.md) cover both
 source paths and all four pinned Perl ABIs.
 
@@ -394,6 +394,77 @@ closures and resources cannot appear inside these copied values.
 The [installed recursive checks](../evidence/perl-recursive-packages-20260923.md)
 cover both source paths, four pinned Perl ABIs and both prebuilt and XS-only
 installation. They also execute the example above from relocated packages.
+
+### Resource-containing values
+
+Packages using the [explicit ownership profile](../publish/cpan.md#export-resource-containing-values)
+can put resources inside records, variants and recursive values. Install them
+through the same CPAN or archive workflow. The generated module loads Lean and
+its private GMP library automatically.
+
+For the author example, save `owned.pl`:
+
+```perl
+use strict;
+use warnings;
+use Math::BigInt;
+use LeanBridge::OwnedValues;
+
+my ($ticket, $result, $retained);
+my $ok = eval {
+  $ticket = LeanBridge::OwnedValues::new_ticket(Math::BigInt->new(42), 'receipt');
+  my $payload = LeanBridge::OwnedValues::Payload->new(
+    count => Math::BigInt->new(-7), bytes => "\0\xff"
+  );
+  my $bundle = LeanBridge::OwnedValues::Bundle->new(
+    primary => $ticket, spare => undef, peers => [], history => [],
+    payload => $payload
+  );
+  $result = LeanBridge::OwnedValues::callback_record($bundle, sub {
+    $retained = $_[0]->primary->retain;
+    return $_[0];
+  });
+  print LeanBridge::OwnedValues::serial($result->primary)->bstr, "\n";
+  $result->primary->close;
+  $ticket->close;
+  print LeanBridge::OwnedValues::serial($retained)->bstr, "\n";
+  1;
+};
+my $error = $@;
+$result->primary->close if defined $result;
+$ticket->close if defined $ticket;
+$retained->close if defined $retained;
+die $error unless $ok;
+```
+
+Run `perl owned.pl`. It prints `42` twice. The retained resource survives both
+the callback and the original ticket's closure. An unretained callback resource
+expires when its callback returns.
+
+Resource and closure wrappers expose `retain`, `close` and `closed`. Retention
+creates an independent owner. Repeated `close` is safe; a plain Perl assignment
+aliases the same wrapper, so closing either alias closes it for both references.
+Finalization releases abandoned wrappers, but explicit cleanup gives predictable
+resource use. Returned Lean closures also expose `call`.
+
+Use exact generated record and constructor classes. Arrays and Lists use dense
+array references; options use `undef` or `Some`, results use `Ok` or `Err`,
+and products stay nested pairs. Calls reject cycles, tied containers, malformed
+fields and resources from another component. Copied payloads retain independent
+storage. Each resource belongs to its creating interpreter, thread and process;
+serialization, cross-thread use and calls after fork reject.
+
+Callbacks run synchronously and may reenter the API. Original Perl exceptions
+return after native cleanup. A callback signature without an argument-derived
+recovery value uses `Runtime::Callback->new(code => $callback,
+recovery => $value)` wrapper, named in the package's POD. The typed recovery
+value lets Lean finish cleanup after an exception; it does not turn the failure
+into a successful result.
+
+Input, callback and result conversions share depth 128, 262,144 visits and a
+16 MiB native data budget, with a separate 16 MiB conversion-storage budget.
+Native reentry permits 64 active calls. Transferred inputs, anchored results,
+retained host callbacks and asynchronous delivery remain unsupported.
 
 ## Values and cleanup
 

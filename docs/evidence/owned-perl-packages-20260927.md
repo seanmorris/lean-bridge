@@ -1,6 +1,6 @@
 # Owned Perl CPAN packages
 
-The internal CPAN projection packages the generated ownership adapter inside
+The CPAN projection packages the generated ownership adapter inside
 each XS image. Each component includes a private GMP 6.3.0 build and pins the
 shared Lean runtime package. Installation seals the generated Perl loader with
 the digest of the selected XS image. The loader also pins the Lean component
@@ -67,6 +67,24 @@ directory. The four interpreters are Perl 5.36.3 and 5.38.2, each with threaded
 and unthreaded builds. The glibc override describes this local test host; it
 does not change the production package floor.
 
-Public owned-CPAN admission remains disabled. CLI routing, release source
-registration and consumer documentation still need acceptance before enabling
-that path. These local results do not expand the published type-surface claims.
+## Public CLI integration
+
+The CLI now accepts the explicit ownership profile through `--target cpan`.
+All four package cases passed through that route, with 32 installations and
+192 cold/warm authentication processes. Each test copies only the release
+receipt and named archives, deletes its producer and Lean source, verifies the
+handoff, and installs into a relocated consumer. Owned Lean models contain no
+Perl namespace; the CPAN projection applies `targets.cpan.module` separately.
+
+The author recipe also passed a combined `--target c --target cpan` build. Its
+unmodified consumer example ran in eight installations, covering both modes
+on all four Perl ABIs. Reports are in
+`build/owned-perl-package/documentation.json`. The current runtime suite passed
+16 tests without skips; the legacy Perl installation regression passed both
+tests. CLI/Nix source registration, documentation and workflow checks passed
+90 tests without skips.
+
+The [source and execution record](owned-perl-integration-20260928.json) retains
+the new observations and exact predecessor identities. Earlier published JVM
+receipts remain unchanged. These ownership checks do not promote additional
+cells in the published type-surface inventory.

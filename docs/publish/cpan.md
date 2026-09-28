@@ -408,6 +408,81 @@ The [recursive acceptance record](../evidence/perl-recursive-packages-20260923.m
 records independent builds, source-free installations, failure cleanup and
 execution of the exact author and consumer examples.
 
+## Export resource-containing values
+
+Select resource types and their aggregate ownership contract explicitly. In a
+Lake package named `owned-aggregates`, add `Owned.lean`:
+
+```lean
+namespace Owned
+
+structure Ticket where
+  serial : Nat
+  label : String
+
+structure Payload where
+  count : Int
+  bytes : ByteArray
+
+structure Bundle where
+  primary : Ticket
+  spare : Option Ticket
+  peers : Array Ticket
+  history : List Ticket
+  payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩
+def serial (ticket : Ticket) : Nat := ticket.serial
+def callbackRecord (value : Bundle) (callback : Bundle → Bundle) : Bundle := callback value
+
+end Owned
+```
+
+Configure `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.callbackRecord"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": {
+    "cpan": { "module": "LeanBridge::OwnedValues", "version": "0.001" }
+  }
+}
+```
+
+Build with the ordinary `--target cpan` command. Install both archives and run
+the [Perl example](../consume/perl.md#resource-containing-values).
+Records, variants, arrays, Lists, options, results, products, aliases and finite
+recursive values can contain resources. Synchronous callbacks and returned Lean
+closures preserve the same value types. All nineteen primitive mappings apply
+inside these values and callback signatures.
+
+Host callbacks borrow for the call. A consumer can retain a resource from a
+callback using `retain`; that does not retain the host callback itself.
+Transferred inputs, anchored results and asynchronous callbacks remain
+unsupported.
+
+The CPAN component bundles a private GMP 6.3.0 library and its source and license
+notices. Each XS variant includes the generated ownership adapter. Both
+`prebuilt-only` and `build-xs` installation authenticate the selected native
+files; neither recompiles Lean or GMP. The loader automatically shares the
+compatible Lean runtime and private GMP across components. CPAN namespaces
+belong to the package projection, not the compiled Lean model, so a combined
+`--target c --target cpan` build reuses one Lean component.
+
+Conversions allow depth 128, 262,144 visits and 16 MiB of native conversion data,
+plus a separate 16 MiB conversion-storage budget. Calls belong to their creating
+Perl interpreter, thread and process. See the
+[installed package checks](../evidence/owned-perl-packages-20260927.md).
+
 ## Verify the release candidate
 
 Before publication:

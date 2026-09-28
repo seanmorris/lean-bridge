@@ -102,8 +102,8 @@ jobs:
   perl:
     name: Perl XS (${{ matrix.configuration }})
     runs-on: ubuntu-24.04
-    # All package families run sequentially; the complete matrix exceeds one hour.
-    timeout-minutes: 90
+    # Copied and owned package families run sequentially on each Perl ABI.
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
@@ -169,6 +169,30 @@ jobs:
           test -s build/recursive/perl-component-collision.json
           test -s build/recursive/perl-composition.json
           test -s build/recursive/perl-documentation.json
+      - name: Verify owned Perl values and installed CPAN archives
+        env:
+          CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl"
+          source scripts/env.sh
+          export LEAN_BRIDGE_OWNED_NATIVE_TEST=1
+          node --test --test-concurrency=1 tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs tests/owned-perl-conversions.test.mjs
+          node --test --test-concurrency=1 tests/owned-perl-xs.test.mjs tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs
+          node --test --test-concurrency=1 tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs tests/owned-perl-documentation.test.mjs
+          for report in ordinary reviewed complete-ordinary complete-reviewed; do
+            test -s "build/owned-perl-runtime/$report.json"
+            test -s "build/owned-perl-conversions/$report.json"
+            test -s "build/owned-perl-calls/$report.json"
+          done
+          test -s build/owned-perl-scalars/ordinary.json
+          test -s build/owned-perl-scalars/reviewed.json
+          test -s build/owned-perl-loader/installed.json
+          test -s build/owned-perl-package/ordinary.json
+          test -s build/owned-perl-package/reviewed.json
+          test -s build/owned-perl-package/callbacks-ordinary.json
+          test -s build/owned-perl-package/callbacks-reviewed.json
+          test -s build/owned-perl-package/coexistence.json
+          test -s build/owned-perl-package/documentation.json
       - name: Upload this configuration's real-Lean corpus report
         if: always()
         uses: actions/upload-artifact@v7
@@ -194,6 +218,12 @@ jobs:
             build/recursive/perl-component-collision.json
             build/recursive/perl-composition.json
             build/recursive/perl-documentation.json
+            build/owned-perl-runtime/
+            build/owned-perl-conversions/
+            build/owned-perl-calls/
+            build/owned-perl-scalars/
+            build/owned-perl-loader/
+            build/owned-perl-package/
           if-no-files-found: error
           overwrite: true
           retention-days: 30

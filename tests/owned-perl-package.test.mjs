@@ -8,10 +8,10 @@ import { cp, mkdir, mkdtemp, readFile, rename, rm, symlink } from "node:fs/promi
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/native-component.mjs";
-import { projectOwnedPerl } from "../src/build/owned-perl-projection.mjs";
+import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { readVerifiedCpanPackage } from "../src/release/cpan-package.mjs";
 import { installCpanArchive } from "../src/release/cpan-install.mjs";
+import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./helpers/owned-dotnet-callback-fixture.mjs";
@@ -19,6 +19,7 @@ import { inspectOwnedPerlInstalledAssets } from "./helpers/owned-perl-installed-
 import { perlGraphCommands } from "./helpers/perl-graph-probes.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 
 const explain = error => { error.message += `: ${JSON.stringify(error.details ?? {})}`; throw error; };
 
@@ -43,25 +44,35 @@ for(const reviewed of [false, true]) test(`installed owned Perl ${complete ? "ca
 	}
 	const perls = perlGraphCommands(), before = await lakeInputState(project);
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
-	const runtimeRoot = join(producer, "native/runtime"), nativeRoot = join(producer, "native/component");
-	const environment = { ...process.env, LEAN_BRIDGE_PERLS: JSON.stringify(perls) };
-	await buildNativeSharedRuntime({ outputRoot: runtimeRoot, leanPrefix }).catch(explain);
-	// Package projection is private until complete installed acceptance. The
-	// compiled Lean artifact remains language-neutral and uses the admitted C lane.
-	await buildNativeComponent({ projectRoot: project, outputRoot: nativeRoot
-		, runtimeRoot, leanPrefix, targets: ["c"], ownedGraphs: true
-		, ownedHostCallbacks: true }).catch(explain);
-	const built = await projectOwnedPerl({ working: producer
-		, nativeRoot, runtimeRoot, leanPrefix
-		, settings: config.targets.cpan, environment
-		, onProgress: event => t.diagnostic(event.message) }).catch(explain);
+	const environment = { ...process.env, LEAN_BRIDGE_PERLS: JSON.stringify(perls), LEAN_BRIDGE_LEAN_PREFIX: leanPrefix };
+	const cli = resolve("scripts/lean-bridge.mjs");
+	t.diagnostic("CLI builds the Lean component, shared runtime and owned CPAN package");
+	const invocation = await processBuildRunner.capture({ command: process.execPath
+		, args: [cli, "build", "--project", project, "--output", producer, "--target", "cpan", "--json"]
+		, cwd: directory, env: environment, timeoutMs: 600000 }).catch(explain);
+	const response = JSON.parse(invocation.stdout);
+	assert.equal(response.status, "ok");
+	const built = response.result;
+	assert.deepEqual(built.targets, ["cpan"]);
+	assert.equal(built.backend, "perl");
 	assert.deepEqual(await lakeInputState(project), before);
+	const model = JSON.parse(await readFile(join(producer, "native/component/model.json"), "utf8"));
+	assert.ok(model.ownedGraph.hostCallbacks);
+	assert.equal("moduleName" in model, false);
+	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), reviewed);
 	const prepared = await readVerifiedCpanPackage(join(producer, "packages/component"));
 	assert.equal(prepared.manifest.ownedValues.schemaVersion, 1);
 	assert.equal(prepared.manifest.prebuilt.length, perls.length);
-	await cp(join(producer, "archives"), handoff, { recursive: true });
+	const packageSet = await copyPackageSetHandoff(producer, handoff);
+	assert.deepEqual(packageSet.packages.map(pkg => [pkg.target, pkg.role]), [["cpan", "component"], ["cpan", "runtime"]]);
 	await rm(project, { recursive: true, force: true });
 	await rm(producer, { recursive: true, force: true });
+	const receiptPath = join(handoff, "package-set-receipt.json");
+	await verifyPackageSetReceipt({ receiptPath });
+	const verification = await processBuildRunner.capture({ command: process.execPath
+		, args: [cli, "verify", "--receipt", receiptPath, "--json"]
+		, cwd: directory, env: copiedCleanEnvironment }).catch(explain);
+	assert.equal(JSON.parse(verification.stdout).result.verificationType, "local-package-set");
 	const consumerSource = await readFile(`tests/fixtures/structured-types/owned-perl-${complete ? "signatures" : "installed-scalars"}.pl`, "utf8");
 	const expectedExports = complete ? [
 		"bundle", "callback_record", "callback_recursive", "construct", "dispatch"
@@ -90,7 +101,7 @@ for(const reviewed of [false, true]) test(`installed owned Perl ${complete ? "ca
 			, ...mode === "build-xs" ? { CC: "/usr/bin/cc", LD: "/usr/bin/cc" } : {} };
 		for(const pkg of built.packages)
 		{
-			const archive = join(handoff, pkg.archive);
+			const archive = join(handoff, "archives", pkg.archive);
 			assert.equal(sha256(await readFile(archive)), pkg.sha256);
 			await installCpanArchive({ archive, workingRoot: consumer, prefix, perl, mode, environment: installEnv }).catch(explain);
 		}
@@ -119,6 +130,8 @@ for(const reviewed of [false, true]) test(`installed owned Perl ${complete ? "ca
 	}
 	await saveLakeFile(resolve("build/owned-perl-package"), `${complete ? "callbacks-" : ""}${reviewed ? "reviewed" : "ordinary"}.json`, canonicalJson({
 		packages: built, observations, installedPackage: true
+		, cliIntegrated: true, cliBuild: response, packageSetReceipt: packageSet
+		, receiptVerifiedWithoutProducer: true, sourceUnchanged: true
 		, producerRemoved: true, relocated: true
 		, consumerSha256: sha256(consumerSource), owned: prepared.manifest.ownedValues
 		, files: prepared.manifest.files

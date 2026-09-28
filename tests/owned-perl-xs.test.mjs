@@ -9,6 +9,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { generateOwnedPerlXs } from "../src/backends/perl/owned-xs.mjs";
+import { ownedPerlNamespace } from "../src/build/owned-perl-projection.mjs";
 import { ownedHostCallbackReviewedIr } from "./helpers/owned-host-callback-fixture.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./helpers/owned-dotnet-callback-fixture.mjs";
@@ -23,6 +24,16 @@ const fixtures = {
 	, signatures: ownedDotnetCallbacksReviewedIr
 	, scalars: ownedPythonScalarsReviewedIr
 };
+
+test("owned CPAN namespaces remain a validated host projection", () => {
+	const component = { name: "owned-aggregates", id: "owned-aggregates@1.0.0", version: "1.0.0" };
+	const before = structuredClone(component);
+	assert.equal(ownedPerlNamespace(component), "LeanBridge::OwnedAggregates");
+	assert.equal(ownedPerlNamespace(component, { module: "LeanBridge::Example::Owned" }), "LeanBridge::Example::Owned");
+	assert.deepEqual(component, before);
+	for(const module of ["", "Example::Owned", "LeanBridge::Runtime", "LeanBridge::Runtime::Owned", "LeanBridge::Bad;die", "LeanBridge::"])
+		assert.throws(() => ownedPerlNamespace(component, { module }), /invalid or reserved/u);
+});
 
 test("owned Perl emits every function, identity method and scoped callback boundary", () => {
 	for(const fixture of Object.values(fixtures))

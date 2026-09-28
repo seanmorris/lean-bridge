@@ -104,7 +104,6 @@ export const buildElaboratedComponent = async ({ projectRoot
 		exports ??= config.exports ?? [];
 		resources ??= config.resources ?? [];
 		arities ??= config.arities ?? {};
-		if(targets.includes("cpan")) moduleName ??= config.targets?.cpan?.module;
 		const inventory = await inspectLeanProject(project, { signal });
 		const reviewedBindingIr = await readNativeReviewedSource(project, inventory, signal, ownedGraphs);
 		let reviewedSelection;
@@ -258,7 +257,8 @@ export const buildElaboratedComponent = async ({ projectRoot
 		if(lakeWorkspace) sourceIdentity.lakeDependencies = { ...lakeWorkspace.evidence, snapshotSha256: lakeSnapshot.sha256 };
 		const model = createModel({ metadata
 			, component: elaboratedComponent(analysis.project)
-			, moduleName: moduleName ?? (targets.includes("cpan") ? `LeanBridge::${analysis.project.name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("")}` : undefined)
+			, moduleName: moduleName ?? (targets.includes("cpan") && request.ownedAggregates === undefined ? config.targets?.cpan?.module
+				?? `LeanBridge::${analysis.project.name.split(/[^A-Za-z0-9]+/).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("")}` : undefined)
 			, sourceIdentity });
 		if(model.profile !== profile || model.pointerBits !== (profile === "native-library-v1" ? 64 : 32)) throw new TypeError("Compiled model differs from its target profile");
 		validateModel?.(model);

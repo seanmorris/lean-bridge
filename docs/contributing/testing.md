@@ -2070,6 +2070,39 @@ CI requires all eleven suites, checks 25 nonempty reports and retains the
 `build/owned-jvm-*` report directories. Runtime, converter and callable
 evidence receipts remain separate from installed Maven acceptance.
 
+### Owned Perl values
+
+Use the pinned Lean compiler, a native C compiler and the supported Perl
+interpreters. The default local run covers Perl 5.36.3 and 5.38.2, each threaded
+and unthreaded. Set `LEAN_BRIDGE_CORPUS_PERL` to one absolute interpreter path
+to run the same checks for a single ABI, as each CI matrix job does.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs \
+  tests/owned-perl-conversions.test.mjs tests/owned-perl-xs.test.mjs \
+  tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs \
+  tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs \
+  tests/owned-perl-documentation.test.mjs
+```
+
+The installed suite builds through the CLI on ordinary-source and reviewed-IR
+paths. It verifies a receipt-only archive handoff after deleting the producer,
+installs in both `prebuilt-only` and `build-xs` modes, relocates the prefix and
+runs without Lean, Lake or Node. Cases cover all nineteen primitive fields and
+callback signatures, recursive resource-bearing values, independent retention
+and cleanup. Changing XS, Lean or private GMP files must reject on both cold
+and warm loads without leaking owners.
+
+The coexistence suite rebuilds archives independently and checks four loading
+orders for two owned packages, a recursive copied package and a primitive
+package. The documentation suite builds the author recipe with C and CPAN
+targets, then runs the unmodified consumer example from installed packages.
+CI requires all nine suites and retains their `build/owned-perl-*` reports.
+Use `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` only when testing on an older local
+glibc, not when preparing production archives.
+
 ### Recursive native PHP callbacks
 
 Run the Composer acceptance with 64-bit PHP 8.2 or newer, FFI, Composer, the

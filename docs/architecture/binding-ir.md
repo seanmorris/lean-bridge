@@ -133,6 +133,16 @@ GMP dependencies with copied and recursive packages. Consumers compile with JDK 
 and can deploy with a Java 22 runtime. They do not need Lean, native declarations
 or a native compiler.
 
+The [Perl ownership projection](../consume/perl.md#resource-containing-values)
+uses generated nominal records and constructors, dense array references and
+checked resource wrappers. Borrowed callback wrappers expire on return;
+`retain` creates an independent result owner. Perl exceptions preserve their
+identity after native cleanup. Each XS image contains the compiler-checked C
+ownership adapter. Prepared CPAN packages authenticate XS, the Lean component
+and private GMP before loading, including after a warm import. Independent
+components share compatible libraries and reject foreign resource owners.
+CPAN module names stay outside the language-neutral Lean model.
+
 ## Rich values cross as rich values
 
 The `result` constructor stores its arguments as `[success, error]`. Lean `Except ε α` therefore lowers to `result<α, ε>`. For example, `Except String UInt32` becomes `result<uint32, string>`, with a numeric success payload and a text error payload. This argument order is part of the IR contract, independent of the order used by a source language. Recognizing the type during analysis does not enable compound signatures in ordinary compiled packages; those still require their transport adapters.

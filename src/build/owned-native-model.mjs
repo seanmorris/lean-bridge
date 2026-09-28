@@ -19,7 +19,7 @@ const callbackCapability = carriers => ({ schemaVersion: 1
  * @param options - Fresh compiler report, source identities and package coordinates.
  */
 export const createOwnedCompiledNativeModel = options => {
-	if(options.moduleName !== undefined) throw new TypeError("Owned native components do not implement Perl namespace projection");
+	if(options.moduleName !== undefined) throw new TypeError("Owned native models cannot contain a host-language namespace");
 	const { metadata, sourceIdentity, component } = options;
 	const hostCallbacks = options.hostCallbacks ?? false;
 	if(typeof hostCallbacks !== "boolean") throw new TypeError("Owned host callback capability must be explicit");

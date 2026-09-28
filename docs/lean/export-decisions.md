@@ -123,6 +123,14 @@ Shared export configuration selects modules, optional exact exports, resources, 
 
 Use the [Perl conversion table](../consume/perl.md#type-conversions) for position-specific installed coverage. The compiler supplies native types and declaration selection; npm's primitive frame is a separate ABI.
 
+The [explicit ownership profile](../publish/cpan.md#export-resource-containing-values)
+also admits resource leaves in records, variants, containers and finite recursive
+values, including synchronous callback payloads. Returned wrappers own checked
+leases; callback borrows expire on return unless retained. Ordinary-source and
+reviewed-IR builds emit CPAN archives with an authenticated private GMP library.
+Both prebuilt and XS-only installation work without Lean sources. Transferred
+inputs, anchored results and asynchronous delivery remain unsupported.
+
 ## Types understood by source analysis
 
 The compiler-backed analyzer projects:

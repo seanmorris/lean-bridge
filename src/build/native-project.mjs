@@ -7,6 +7,7 @@ import { mkdir, mkdtemp, readdir, rename, rm, writeFile } from "node:fs/promises
 import { dirname, join, resolve } from "node:path";
 import { buildNativeComponent, buildNativeSharedRuntime } from "./native-component.mjs";
 import { projectCpanPackages } from "./cpan-projection.mjs";
+import { ownedPerlNamespace, projectOwnedPerl } from "./owned-perl-projection.mjs";
 import { canonicalJson } from "../capsule/node.mjs";
 import { assertExportConfigurationCapabilities, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -20,6 +21,7 @@ import { generateOwnedPythonPackage } from "../backends/python/owned-package.mjs
 import { generateOwnedRubyPackage } from "../backends/ruby/owned-package.mjs";
 import { generateOwnedDotnetPackage } from "../backends/dotnet/owned-package.mjs";
 import { generateOwnedJvmPackage } from "../backends/jvm/owned-package.mjs";
+import { generateOwnedPerlXs } from "../backends/perl/owned-xs.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { compilePrimitiveCppModel } from "../backends/cpp/primitives.mjs";
 import { validateGmpSurface } from "../backends/c/gmp-projection.mjs";
@@ -52,7 +54,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 {
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target)))
 		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and cpan targets");
-	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"].includes(target));
+	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan"].includes(target));
 	try
 	{ await readNativeReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal, ownedGraphs); }
 	catch(error)
@@ -106,6 +108,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					if(targets.includes("rubygems")) generateOwnedRubyPackage(model.bindingIr);
 					if(targets.includes("nuget")) generateOwnedDotnetPackage(model.bindingIr);
 					if(targets.includes("maven")) generateOwnedJvmPackage(model.bindingIr);
+					if(targets.includes("cpan")) generateOwnedPerlXs(model.bindingIr, ownedPerlNamespace(model.component, config.targets?.cpan));
 					return;
 				}
 				if(model.copiedGraph)
@@ -128,7 +131,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			working, nativeRoot, runtimeRoot, leanPrefix
 			, targets: cTargets, settings: config.targets
 			, environment, signal }) : [];
-		if(targets.includes("cpan")) projections.push(await projectCpanPackages({
+		if(targets.includes("cpan")) projections.push(await (built.model.ownedGraph ? projectOwnedPerl : projectCpanPackages)({
 			working, runtimeRoot, nativeRoot, leanPrefix
 			, settings: config.targets?.cpan
 			, environment, signal, onProgress }));

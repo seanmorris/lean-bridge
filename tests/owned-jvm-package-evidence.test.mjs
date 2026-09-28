@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedPerlPackages, ownedPerlHistoricalBytes } from "./helpers/owned-perl-source-history.mjs";
 import { beforeJvmProbeRepair, jvmProbeRepairBaseline, jvmProbeRepairBytes, jvmProbeRepairChangedPaths, jvmProbeRepairPath } from "./helpers/jvm-probe-repair-history.mjs";
 import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { jvmStructuredRegressionFixtures } from "./helpers/jvm-structured-callable-regression.mjs";
@@ -31,10 +32,10 @@ test("recursive JVM probe repair preserves every published predecessor and rejec
 		assert.ok(record.acceptance.output.split("\n").includes(line), line);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), jvmProbeRepairChangedPaths);
 	for(const [path, hash] of Object.entries(record.sources))
-		assert.equal(sha256(await readFile(path)), hash, path);
+		assert.equal(sha256(ownedPerlHistoricalBytes(path, await readFile(path))), hash, path);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeOwnedPerlPackages(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(current), update.currentSha256);
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		const old = beforeJvmProbeRepair(update.path, current);
