@@ -40,7 +40,7 @@ lean-bridge build --project ./clover --target php-native --output ./release-php
 
 The build compiles Lean and the shared C adapter, generates and syntax-checks PHP, verifies the native artifacts, then produces `release-php/archives/example-clover-api-2.0.0-RC.1-linux-x86_64.zip`. The ZIP includes `composer.json`, PHP sources, compiled libraries, license notices, source identities and `lean-bridge/package-receipt.json`. Repeat another supported `--target` to share compilation. Every requested target must succeed before the release directory appears.
 
-Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, records, concrete copied variants, options, results, nested binary products and synchronous callables with those payloads, including [finite recursive values](#export-recursive-callbacks). FPM, ZTS, resources and asynchronous delivery remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [structured callback record](../evidence/php-structured-callables-20260925.md) record installed checks and archive identities.
+Use the [ordinary PHP consumer](../php.md#ordinary-project-packages) to install the ZIP with Composer and execute it outside the source tree. This path accepts copied primitives, arrays, Lists, records, concrete copied variants, options, results, nested binary products and synchronous callables with those payloads, including [finite recursive values](#export-recursive-callbacks). The [explicit ownership profile](#export-resource-containing-values) also accepts resources inside these values. FPM, ZTS and asynchronous delivery remain separate work. The [copied-value record](../evidence/native-php-copied-20260915.md), [compound record](../evidence/php-native-compounds-20260920.md) and [structured callback record](../evidence/php-structured-callables-20260925.md) record installed checks and archive identities.
 
 Native PHP maps `Option` to `null` or a generated `Some`, `Except` to `Ok` or
 `Err`, and each `Prod` to exactly two consecutive array elements. Branch classes
@@ -64,6 +64,87 @@ and returned functions.
 Distribute the original ZIP through a controlled release channel or a Composer repository. For a static Composer repository, use the generated `composer.json` as the version's package metadata and set `dist.type` to `zip` and `dist.url` to the immutable archive URL. Supply the release-root `package-set-receipt.json`, its `.json.sha256` sidecar, and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). This package needs no second native archive or extension configuration. Composer repository metadata and authentication use the same [publication procedure](#publish-to-the-private-https-repository).
 
 Review the source library's license and bundled notices before publication; generated metadata does not grant redistribution rights. Native package receipts are unsigned build inventories, not universal transaction authorizations. The stock CLI has no Composer registry-upload adapter.
+
+### Export resource-containing values
+
+For native PHP, declare resources and aggregate ownership explicitly. In a Lake
+package named `owned-aggregates`, add `Owned.lean`:
+
+```lean
+namespace Owned
+
+structure Ticket where
+  serial : Nat
+  label : String
+
+structure Payload where
+  count : Int
+  bytes : ByteArray
+
+structure Bundle where
+  primary : Ticket
+  spare : Option Ticket
+  peers : Array Ticket
+  history : List Ticket
+  payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket := ⟨serial, label⟩
+def serial (ticket : Ticket) : Nat := ticket.serial
+def callbackRecord (value : Bundle) (callback : Bundle → Bundle) : Bundle := callback value
+
+end Owned
+```
+
+Configure `lean-bridge.exports.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.callbackRecord"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "targets": {
+    "php-native": { "name": "example/owned-values", "version": "1.0.0" }
+  }
+}
+```
+
+Build the native Composer release:
+
+```sh
+lean-bridge build --project ./owned-aggregates --target php-native --output ./release-owned-php
+```
+
+The generated ZIP contains the PHP API, authenticated native libraries, private
+GMP 6.3.0, its corresponding source and license notices, and the package receipt.
+Composer installs `brick/math` 1.0.0. Consumers use ordinary autoloading and the
+[resource example](../php.md#resource-containing-values), without native
+declarations, runtime paths or a compilation step. Publish this ZIP using the
+[Composer repository procedure](#publish-to-the-private-https-repository).
+Distribute the release-root package-set receipt and its named archives unchanged.
+
+Records, variants, arrays, Lists, options, results, products, aliases and finite
+recursive values may contain resources. Synchronous callbacks and returned Lean
+closures use the same generated value types. All nineteen primitive mappings
+apply inside these values. Ordinary source and compiler-checked reviewed
+contracts use the same ownership transport. Repeat another admitted native
+target, such as `--target c`, to reuse the compiled Lean component.
+
+Callback resource borrows expire when the callback returns. PHP consumers call
+`retain()` for a resource or Lean closure they need afterward; retaining a
+borrowed PHP callback does not extend its lifetime. Conversions allow 128 value
+levels, 262,144 visits and separate 16 MiB storage budgets. Calls run in the main
+NTS CLI context, with checked process identity and deferred cleanup during active
+calls. PHP-Wasm resource-containing packages, transferred inputs, anchored
+results and asynchronous callbacks remain unsupported. The
+[installed package checks](../evidence/owned-php-packages-20260928.md) cover native
+package loading, relocation, independent builds and mixed packages.
 
 ### Export named copied aliases
 

@@ -372,6 +372,75 @@ conversion limits. The [native PHP](evidence/php-native-aliases-20260921.md) and
 paths and caller modes. Native and PHP-Wasm callbacks accept concrete copied
 aliases through their resolved target type.
 
+### Resource-containing values
+
+Native Composer packages can expose resources inside records, variants, arrays,
+Lists, options, results, products and finite recursive values. Install the
+publisher's ZIP with the [same Composer setup](#ordinary-project-packages).
+For the [author example](publish/php.md#export-resource-containing-values), require
+`example/owned-values` version `1.0.0` and save this as `owned.php`:
+
+```php
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Brick\Math\BigInteger;
+use LeanOwnedAggregates\{Bundle, Bytes, Payload};
+use function LeanOwnedAggregates\{callback_record, new_ticket, serial};
+
+$ticket = new_ticket(BigInteger::of(42), 'order');
+$result = null;
+$retained = null;
+try {
+    $bundle = new Bundle($ticket, null, [], [],
+        new Payload(BigInteger::of(7), Bytes::fromString('payload')));
+    $result = callback_record($bundle, static function(Bundle $borrowed) use (&$retained): Bundle {
+        $retained = $borrowed->primary->retain();
+        return $borrowed;
+    });
+    echo serial($result->primary), PHP_EOL;
+    $result->primary->close();
+    echo serial($retained), PHP_EOL;
+} finally {
+    $result?->primary->close();
+    $retained?->close();
+    $ticket->close();
+}
+```
+
+Run `php owned.php`. It prints `42` twice. Composer autoloading supplies the API
+and loads the bundled native libraries on the first valid call.
+
+Each returned resource wrapper owns a checked lease. `retain()` creates an
+independently closable wrapper; assigning a wrapper to another PHP variable does
+not. `close()` is idempotent, and calls through a closed wrapper fail. Close the
+resources contained in a result, including array elements and optional fields.
+Destruction and request shutdown provide fallback cleanup. Resource wrappers
+cannot be constructed, cloned or serialized by application code.
+
+Callback resources and Lean closures are borrowed for that callback invocation.
+Call `retain()` inside the callback to keep one afterward, as above. A borrowed
+PHP callback still expires with its enclosing call. Returned Lean closures are
+invokable and support the same `retain()` and `close()` operations. PHP
+exceptions return as the original `Throwable` after native cleanup. Callbacks
+without a type-safe automatic recovery value require
+`with_recovery($callback, $fallback)`, using a valid result of the declared type.
+
+Records remain readonly, arrays and Lists use consecutive-key PHP arrays,
+`Option` uses `null` or `Some`, and `Except` uses `Ok` or `Err`. Aliases keep
+their underlying PHP values. The existing nineteen primitive mappings apply.
+Validation rejects cycles, foreign resource classes and invalid fields before
+native entry. Conversions allow 128 value levels, 262,144 visits and separate
+16 MiB storage budgets; exact integers allow up to 16,384 decimal digits.
+
+Use the main NTS CLI execution context. Calls from Fibers and inherited
+post-fork processes reject. Compatible owned and copied packages share their
+bundled runtime automatically. These resource-containing packages currently
+target native PHP, not PHP-Wasm. Transferred inputs, anchored results and
+asynchronous callbacks remain unsupported.
+
 ### Native callbacks and returned functions
 
 Native Composer packages support synchronous callbacks and returned Lean functions across all 19 primitive types, from ordinary source or a compiler-checked reviewed contract. Pass a PHP callable directly. For the Clover package:
@@ -391,7 +460,7 @@ The returned `LeanClosure` is invokable with exactly its declared positional arg
 
 Callbacks accept one to sixteen arguments with primitive, acyclic copied or [finite recursive payloads](#recursive-callback-values). Their PHPDoc states the signature, and the bridge validates inputs and results in weak and strict callers. `Nat`, `Int`, `UInt64` and native `USize` remain `Brick\Math\BigInteger`. Unit uses `null`, including a callback with a `void` return. Callback arguments are independent copies. The callback itself is borrowed for one synchronous call; Lean cannot invoke it afterward. Exceptions return as the same `Throwable`, preserving its trace and previous exception. Later callbacks in a failed call do not run.
 
-Reference parameters, reference returns and generators reject. Creation and invocation require the main NTS CLI execution context; calls from a Fiber reject. A Fiber can close a closure. Close defers native release until an active call returns. Start a fresh process after fork. Each native adapter permits 64 nested calls per thread, and the shared runtime permits 4,096 closure identities. Existing conversion limits still apply. Resources and asynchronous functions need further support. See the [installed native PHP callable checks](evidence/php-callables-20260919.md).
+Reference parameters, reference returns and generators reject. Creation and invocation require the main NTS CLI execution context; calls from a Fiber reject. A Fiber can close a closure. Close defers native release until an active call returns. Start a fresh process after fork. Each native adapter permits 64 nested calls per thread, and the shared runtime permits 4,096 closure identities. Existing conversion limits still apply. [Resource-containing callbacks](#resource-containing-values) use the explicit ownership profile; asynchronous functions remain unsupported. See the [installed native PHP callable checks](evidence/php-callables-20260919.md).
 
 ### Structured callback values
 

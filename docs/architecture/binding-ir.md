@@ -143,6 +143,17 @@ and private GMP before loading, including after a warm import. Independent
 components share compatible libraries and reject foreign resource owners.
 CPAN module names stay outside the language-neutral Lean model.
 
+The [native PHP ownership projection](../php.md#resource-containing-values)
+uses readonly value classes, consecutive-key arrays and opaque resource or
+closure wrappers. Callback borrows expire on return; `retain()` creates an
+independent lease. The private FFI adapter validates fields and types in both
+weak and strict callers, preserves the original callback `Throwable`, and
+releases partial results after failure. Prepared Composer packages authenticate
+their bundled Lean, ownership adapter and private GMP libraries before loading.
+Compatible owned and copied packages share one runtime. Native calls run in the
+main NTS CLI context; post-fork and Fiber calls reject. PHP-Wasm ownership is a
+separate transport and is not admitted by this projection.
+
 ## Rich values cross as rich values
 
 The `result` constructor stores its arguments as `[success, error]`. Lean `Except ε α` therefore lowers to `result<α, ε>`. For example, `Except String UInt32` becomes `result<uint32, string>`, with a numeric success payload and a text error payload. This argument order is part of the IR contract, independent of the order used by a source language. Recognizing the type during analysis does not enable compound signatures in ordinary compiled packages; those still require their transport adapters.
