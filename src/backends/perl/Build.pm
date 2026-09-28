@@ -88,22 +88,29 @@ sub compile_xs {
     push @link_flags, '-L', $native, '-L', "$runtime_root/native", '-Wl,--no-as-needed',
       "-l:$owned->{gmpLibrary}", "-l:$owned->{componentLibrary}", '-llean_bridge_native', '-lleanshared';
   }
+  # Keep root identities for both compiler diagnostics and the build receipt.
+  my @root_mappings = ([abs_path('.'), '\${DISTRIBUTION}', '/lean-bridge/distribution'],
+    [abs_path("$Config{archlib}/CORE"), '\${PERL_CORE}', '/perl/core']);
+  push @root_mappings, [abs_path($runtime_root), '\${LEAN_BRIDGE_RUNTIME}', '/lean-bridge/runtime']
+    if defined $runtime_root;
   # CBuilder appends Config's optimize flags after extra_compiler_flags. A distro
   # -g there would restore debug paths and make relocated archives differ.
   my $builder = LeanBridgeBuild::Compiler->new(quiet => 0, config => { optimize => '-O2 -g0' });
   die "C compiler unavailable; install one or select a compatible prebuilt XS\n" unless $builder->have_compiler;
   $builder->{lean_bridge_commands} = [];
-  my $flags = '-O2 -g0 -fvisibility=default';
+  my @flags = qw(-O2 -g0 -fvisibility=default);
+  # Lean's inline assertions embed __FILE__ even with debug information disabled.
+  # Their runtime-header location must not expose a producer/installer directory.
+  push @flags, map { "-ffile-prefix-map=$_->[0]=$_->[2]" } @root_mappings
+    if owned_values($manifest);
   my $object = $builder->compile(source => $c, include_dirs => \@include,
-    extra_compiler_flags => $flags);
+    extra_compiler_flags => \@flags);
   my $library = $builder->link(objects => $object, module_name => $manifest->{module},
     lib_file => "$directory/$stem.$Config{dlext}", extra_linker_flags => \@link_flags);
   # Paths vary between build roots. Keep exact flags and portable root tokens.
-  my %roots = (abs_path('.') => '\${DISTRIBUTION}', abs_path("$Config{archlib}/CORE") => '\${PERL_CORE}');
-  if ($manifest->{module} ne 'LeanBridge::Runtime') {
-    my $runtime_root = $INC{'LeanBridge/Runtime.pm'}; $runtime_root =~ s/\.pm\z//;
-    $roots{abs_path($runtime_root)} = '\${LEAN_BRIDGE_RUNTIME}';
-  }
+  my %roots = map { $_->[0] => $_->[1] } @root_mappings;
+  my $flags = join ' ', @flags;
+  for my $root (sort { length($b) <=> length($a) } keys %roots) { $flags =~ s/\Q$root\E/$roots{$root}/g; }
   my @commands = map { [map {
     my $argument = $_;
     for my $root (sort { length($b) <=> length($a) } keys %roots) { $argument =~ s/\Q$root\E/$roots{$root}/g; }

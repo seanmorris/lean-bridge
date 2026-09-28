@@ -27,13 +27,28 @@ sharing its public-call scenarios with the installed suite. Installed checks
 use the shared runtime's actual identity counter, without allocation-probe
 exports or placeholder counters.
 
-The ordinary scalar package also passed 48 installed authentication processes:
-each XS, Lean component and private GMP file was changed before a cold load
-and before a warm reload, across all four ABIs and both install modes. All 336
-checks passed. Rejection happens before loading any component dependency on
+All four package cases passed 192 installed authentication processes: each XS,
+Lean component and private GMP file was changed before a cold load and before
+a warm reload, across all four ABIs and both install modes. All 1,344 checks
+passed. Rejection happens before loading any component dependency on
 the cold path. The warm path keeps the original native functions usable and
-returns to zero broker identities after shutdown. The other three package
-cases are undergoing the same additional authentication checks.
+returns to zero broker identities after shutdown.
+
+## Reproduction and shared-runtime use
+
+An independent producer rebuilds the first owned component, its XS variants
+and private GMP dependency. Generated files and both CPAN archives must match
+byte-for-byte. The test initially found producer paths embedded by Lean's
+inline header assertions. Owned XS compilation now maps those paths to stable
+virtual roots, and the independent rebuild passes.
+
+The same suite installs two owned components alongside recursive copied and
+primitive packages after removing their producers. Sixteen consumer processes
+cover four load orders on all four Perl ABIs, passing 5,168 checks and 512
+callbacks. They reject 1,024 direct or nested foreign-owner inputs and verify one
+Lean runtime, broker and private GMP mapping. Closing one component preserves
+the other component's session. All final identity and wrapper counters are
+zero. Reports are in `build/owned-perl-package/coexistence.json`.
 
 ## Reproduce
 
@@ -41,6 +56,9 @@ cases are undergoing the same additional authentication checks.
 source scripts/env.sh
 LEAN_BRIDGE_OWNED_NATIVE_TEST=1 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node --test \
   tests/owned-perl-package.test.mjs
+
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 node --test \
+  tests/owned-perl-coexistence.test.mjs
 ```
 
 The scalar reports are `build/owned-perl-package/{ordinary,reviewed}.json`.
@@ -49,7 +67,6 @@ directory. The four interpreters are Perl 5.36.3 and 5.38.2, each with threaded
 and unthreaded builds. The glibc override describes this local test host; it
 does not change the production package floor.
 
-Public owned-CPAN admission remains disabled. Installed authentication checks,
-cross-component coexistence, producer reproduction, CLI routing, release source
+Public owned-CPAN admission remains disabled. CLI routing, release source
 registration and consumer documentation still need acceptance before enabling
 that path. These local results do not expand the published type-surface claims.
