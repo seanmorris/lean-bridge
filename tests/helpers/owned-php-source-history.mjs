@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedWasm32, ownedWasm32ChangedPaths } from "./owned-wasm32-source-history.mjs";
+import { beforeOwnedWasm32, ownedWasm32NormalizationPaths } from "./owned-wasm32-source-history.mjs";
 
 export const ownedPhpBaseline = "629557e8179e9e91ba2ecb3fe75a8dcac107c6ce";
 export const ownedPhpHistoryPath = "docs/evidence/owned-php-integration-20260928.json";
@@ -83,7 +83,7 @@ export const ownedPhpAddedPaths = [
 	, "tests/owned-php-runtime.test.mjs"
 	, "tests/owned-php-values.test.mjs"
 ];
-export const ownedPhpNormalizationPaths = [...new Set([...ownedPhpChangedPaths, ...ownedWasm32ChangedPaths])].sort();
+export const ownedPhpNormalizationPaths = [...new Set([...ownedPhpChangedPaths, ...ownedWasm32NormalizationPaths])].sort();
 let cached;
 
 /**

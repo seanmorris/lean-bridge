@@ -8,11 +8,13 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedWasm32Ci, assertOwnedWasm32Execution } from "./helpers/owned-wasm32-evidence.mjs";
+import { jvmThreadExitHistoricalBytes } from "./helpers/jvm-thread-exit-repair-history.mjs";
 import { beforeOwnedWasm32, ownedWasm32Baseline, ownedWasm32HistoryPath
 	, ownedWasm32Previous, ownedWasm32ChangedPaths, ownedWasm32AddedPaths
 	, ownedWasm32HistoricalBytes, reverseOwnedWasm32Update } from "./helpers/owned-wasm32-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+const source = async (path, expected) => jvmThreadExitHistoricalBytes(path, await readFile(path), expected);
 
 test("owned wasm32 history preserves the exact native PHP receipt and all source identities", async () => {
 	const record = await json(ownedWasm32HistoryPath);
@@ -26,13 +28,13 @@ test("owned wasm32 history preserves the exact native PHP receipt and all source
 		...Object.keys(previous.sources), ...ownedWasm32ChangedPaths
 		, ...ownedWasm32AddedPaths
 	])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await source(path, hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedWasm32ChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8");
+		const current = (await source(update.path, update.currentSha256)).toString();
 		const prior = beforeOwnedWasm32(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedWasm32(update.path, prior), prior);
@@ -46,9 +48,9 @@ test("owned wasm32 history preserves the exact native PHP receipt and all source
 	}
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(ownedWasm32HistoricalBytes("unknown.bin", binary), binary);
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = (await source("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"])).toString();
 	const prior = JSON.parse(beforeOwnedWasm32("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await source(file.path, record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 

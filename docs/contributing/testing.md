@@ -2046,6 +2046,7 @@ LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
   tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs \
   tests/owned-jvm-documentation.test.mjs
 node --test tests/owned-jvm-ci.test.mjs
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs
 ```
 
 The Maven acceptance builds through the CLI on ordinary-source and reviewed-IR
@@ -2066,9 +2067,18 @@ The loader fixture also checks conflicting identities, unverified preloads,
 private GMP isolation and simulated process-origin changes. It does not fork
 a running JVM.
 
-CI requires all eleven suites, checks 25 nonempty reports and retains the
+CI requires the eleven ownership suites and the thread-exit regression, checks
+27 nonempty reports and retains the
 `build/owned-jvm-*` report directories. Runtime, converter and callable
 evidence receipts remain separate from installed Maven acceptance.
+
+The thread-exit regression holds the native TLS destructor behind a test-only
+gate. Java's `Thread.join()` returns while that gate is closed. The repaired
+signature exercise waits for native cleanup before sampling the allocation
+baseline. Removing that wait makes the same compiled fixture fail its first
+rollback assertion. Both ordinary and reviewed builds run the positive and
+negative controls. CI retains `build/owned-jvm-thread-exit/ordinary.json` and
+`build/owned-jvm-thread-exit/reviewed.json`.
 
 ### Owned Perl values
 
