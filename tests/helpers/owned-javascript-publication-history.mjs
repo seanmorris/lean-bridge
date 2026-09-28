@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeCoreHistoryPerformance, coreHistoryChangedPaths } from "./core-history-performance-history.mjs";
+import { beforeCoreHistoryPerformance, coreHistoryNormalizationPaths } from "./core-history-performance-history.mjs";
 
 export const ownedJavaScriptPublicationBaseline = "471a4dc971303143025d60aa988397313d549bdb";
 export const ownedJavaScriptPublicationHistoryPath = "docs/evidence/owned-javascript-publication-20260928.json";
@@ -49,7 +49,7 @@ export const ownedJavaScriptPublicationAddedPaths = [
 	, "tests/owned-javascript-publication.test.mjs"
 ].sort();
 let cached;
-export const ownedJavaScriptPublicationNormalizationPaths = [...new Set([...ownedJavaScriptPublicationChangedPaths, ...coreHistoryChangedPaths])].sort();
+export const ownedJavaScriptPublicationNormalizationPaths = [...new Set([...ownedJavaScriptPublicationChangedPaths, ...coreHistoryNormalizationPaths])].sort();
 
 /**
  * Reverse ordered literal edits only when both complete source hashes match.

@@ -1154,6 +1154,30 @@ exception, not terminate with a fatal signal. All installed files must remain
 unchanged, and the public consumer runs again after the probes. Each ABI job
 requires and uploads `build/recursive-callables/perl.json`.
 
+### Staged WIT owned graphs
+
+Run the ownership projection and canonical-ABI lifetime checks with the pinned
+component-enabled Wasmtime C API selected:
+
+```sh
+LEAN_BRIDGE_WIT_OWNED_CANONICAL_TEST=1 \
+  node --test tests/wit-owned-canonical.test.mjs tests/wit-owned-graph-model.test.mjs
+```
+
+The projection preserves recursive resource-containing records, variants,
+containers, aliases and callable signatures. Input graphs contain borrowed
+resources; output graphs contain owned resources. Each root includes only its
+reachable node tables. The tests compare parsed WIT with the compiled component.
+
+An independent C host exercises 15 canonical input shapes, including mixed
+borrowed and transferred resources, empty branches, indirect arguments, and a
+257-case variant. Each case runs 1,024 calls and checks returned-owner disposal
+and the original owner's continued validity. Removing nested borrow cleanup
+must reproduce the borrow-handle trap. The downstream WIT job requires these
+tests. They do not execute Lean or establish installed owned-graph support.
+Native conversion, package integration, transferred Lean inputs and anchored
+borrowed results remain open.
+
 ### Staged WIT callable projection
 
 The separate component projection probe requires no Lean compiler:

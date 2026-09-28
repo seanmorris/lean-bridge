@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { createCanonicalBorrowDrops } from "./canonical-borrow-drops.mjs";
 
 /**
  * Round a canonical record offset up to its next field alignment.
@@ -19,6 +20,7 @@ const leaf = {
 	, float32: ["f32", 4], float64: ["f64", 8]
 };
 const layout = (copy, cache) => {
+	if(copy.aliasTarget) return layout(copy.aliasTarget, cache);
 	if(copy.resource) return { flat: ["i32"], size: 4, alignment: 4 };
 	if(cache.has(copy)) return cache.get(copy);
 	if(copy.variant || copy.compound === "option" || copy.compound === "result")
@@ -114,6 +116,7 @@ ${["i32", "i64", "f32", "f64"].map(type => `  (alias core export $allocation "po
  */
 export const renderCopiedWitComponent = ({ surface, functions: exports = surface.functions, types, resources = [], typeBody, importName, exportName, preserveTypes = false }) => {
 	const layouts = new Map();
+	const nestedBorrows = createCanonicalBorrowDrops({ layout: copy => layout(copy, layouts), align });
 	const functions = exports.map((fn, index) => {
 		const input = fn.parameters.flatMap(parameter => layout(parameter.copy, layouts).flat), result = layout(fn.resultCopy ?? surface.copy(fn.declaration.result.type), layouts);
 		const parameters = input.length > 16 ? ["i32"] : input;
@@ -121,12 +124,13 @@ export const renderCopiedWitComponent = ({ surface, functions: exports = surface
 		let offset = 0, flat = 0;
 		// Canonical lowering creates guest borrow handles. Even after the native
 		// import releases its borrow, this forwarding instance must drop its own.
-		const drop = fn.parameters.flatMap(parameter => {
-			const value = layout(parameter.copy, layouts); offset = align(offset, value.alignment);
-			const handle = input.length > 16 ? `(i32.load offset=${offset} (local.get 0))` : `(local.get ${flat})`;
-			offset += value.size; flat += value.flat.length;
-			return parameter.copy.resource && parameter.copy.borrowed ? [`      (call $drop${parameter.copy.resourceIndex} ${handle})`] : [];
-		}).join("\n");
+		const drop = fn.parameters.some(parameter => nestedBorrows.hasNested(parameter.copy))
+			? nestedBorrows.parameters(fn.parameters, input) : fn.parameters.flatMap(parameter => {
+				const value = layout(parameter.copy, layouts); offset = align(offset, value.alignment);
+				const handle = input.length > 16 ? `(i32.load offset=${offset} (local.get 0))` : `(local.get ${flat})`;
+				offset += value.size; flat += value.flat.length;
+				return parameter.copy.resource && parameter.copy.borrowed ? [`      (call $drop${parameter.copy.resourceIndex} ${handle})`] : [];
+			}).join("\n");
 		return { fn, index, result, parameters, indirect, returned, drop, lowered: [...parameters, ...(indirect ? ["i32"] : [])] };
 	});
 	const typeIndex = copy => copy.witIndex ?? copy.index;
@@ -151,7 +155,7 @@ ${functions.map(({ index }) => `  (core func $lower${index} (canon lower (func $
 ${resources.length ? resources.map(resource => `  (core func $drop${resource.index} (canon resource.drop $publicResource${resource.index}))`).join("\n") + "\n" : ""}  (core module $forward
     (import "allocation" "realloc" (func $allocate (param i32 i32 i32 i32) (result i32)))
 ${resources.length ? `    (import "allocation" "memory" (memory 1))\n    (import "allocation" "enter" (func $enter))\n${resources.map(resource => `    (import "resources" "drop${resource.index}" (func $drop${resource.index} (param i32)))`).join("\n")}\n` : ""}${functions.map(({ index, lowered, indirect, returned }) => `    (import "host" "f${index}" (func $f${index} ${lowered.length ? `(param ${lowered.join(" ")})` : ""} ${indirect ? "" : `(result ${returned})`}))`).join("\n")}
-${functions.map(({ index, parameters, indirect, returned, result, drop }) => `    (func (export "f${index}") ${parameters.length ? `(param ${parameters.join(" ")})` : ""} (result ${returned})${indirect || drop ? ` (local $result ${returned})` : ""}${resources.length ? "\n      call $enter" : ""}${indirect ? `\n      (local.set $result (call $allocate (i32.const 0) (i32.const 0) (i32.const ${result.alignment}) (i32.const ${result.size})))` : ""}
+${nestedBorrows.definitions()}${functions.map(({ index, parameters, indirect, returned, result, drop }) => `    (func (export "f${index}") ${parameters.length ? `(param ${parameters.join(" ")})` : ""} (result ${returned})${indirect || drop ? ` (local $result ${returned})` : ""}${resources.length ? "\n      call $enter" : ""}${indirect ? `\n      (local.set $result (call $allocate (i32.const 0) (i32.const 0) (i32.const ${result.alignment}) (i32.const ${result.size})))` : ""}
 ${parameters.map((_, i) => `      local.get ${i}`).join("\n")}
       ${indirect ? "local.get $result\n      " : ""}call $f${index}${drop && !indirect ? "\n      local.set $result" : ""}${drop ? `\n${drop}` : ""}${indirect || drop ? "\n      local.get $result" : ""}
     )`).join("\n")}

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedWitProjection, ownedWitProjectionChangedPaths } from "./wit-owned-projection-history.mjs";
 
 export const coreHistoryBaseline = "6307e03dec4453f3b13a1c58ce4c686f5592f637";
 export const coreHistoryPath = "docs/evidence/core-history-performance-20260928.json";
@@ -86,6 +87,7 @@ export const coreHistoryAddedPaths = [
 	, "tests/source-history-memo.test.mjs"
 ].sort();
 let cached;
+export const coreHistoryNormalizationPaths = [...new Set([...coreHistoryChangedPaths, ...ownedWitProjectionChangedPaths])].sort();
 
 /**
  * Reverse exact literal edits while authenticating both complete file versions.
@@ -119,6 +121,7 @@ export const reverseCoreHistoryUpdate = (source, update) => {
  * @param expected - Optional exact stopping identity.
  */
 export const beforeCoreHistoryPerformance = (path, source, expected) => {
+	source = beforeOwnedWitProjection(path, source, expected);
 	if(!coreHistoryChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected) return source;
@@ -138,5 +141,5 @@ export const beforeCoreHistoryPerformance = (path, source, expected) => {
  * @param bytes - Complete input bytes.
  * @param expected - Optional stopping identity.
  */
-export const coreHistoryHistoricalBytes = (path, bytes, expected) => coreHistoryChangedPaths.includes(path)
+export const coreHistoryHistoricalBytes = (path, bytes, expected) => coreHistoryNormalizationPaths.includes(path)
 	? beforeCoreHistoryPerformance(path, bytes.toString("utf8"), expected) : bytes;

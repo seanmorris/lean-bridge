@@ -285,6 +285,8 @@ const profileManifest = Object.freeze({
 		, "wit-graph-composition"
 		, "wit-composition-evidence"
 		, "wit-recursive-acceptance"
+		, "wit-owned-canonical"
+		, "wit-owned-graph-model", "wit-owned-projection-evidence"
 		, "wit-recursive-callable-model"
 		, "wit-recursive-callable-host"
 		, "wit-recursive-callable-native"
