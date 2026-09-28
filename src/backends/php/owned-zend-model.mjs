@@ -84,6 +84,7 @@ export const compileOwnedPhpZendModel = ir => {
 	const semantic = new Map(layout.model.types.map(node => [node.id, node]));
 	const callbacks = layout.callbacks.map((callback, index) => ({ ...callback, index
 		, type: nodes.get(callback.id).index
+		, hostArguments: callback.parameters.map((id, position) => position > 0 && nodes.get(id).kind === "callback")
 		, automaticRecovery: ownedCallbackRecovery(layout.model, semantic.get(callback.id), id => id) !== null }));
 	const identity = layout.model.bindingIrSha256, stem = `lb_owned_${identity.slice(0, 20)}`;
 	return { namespace: values.namespace, integerBits: 32, wordBits: 32
