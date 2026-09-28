@@ -28,7 +28,22 @@ export const createComponentCallableRuntime = module => {
 	if(module._bridge_callable_abi() !== 1) throw new TypeError("Unsupported component callable runtime version");
 	const callbacks = new Map(), leases = new Map(), frames = [];
 	let nextToken = 0, poisoned = false;
-	const requireOpen = () => { if(poisoned) throw new Error("Component callable runtime is poisoned"); };
+	const requireOpen = () => {
+		if(poisoned) throw new Error("Component callable runtime is poisoned");
+		try
+		{
+			if(module._bridge_lean_runtime_status && module._bridge_lean_runtime_status() !== 2)
+				throw new Error("Component callable runtime is retired");
+		}
+		catch(error)
+		{ poisoned = true; throw error; }
+	};
+	const retired = () => {
+		try
+		{ requireOpen(); return false; }
+		catch
+		{ return true; }
+	};
 	const record = (frame, error) => {
 		if(frame && !frame.failed)
 		{ frame.failed = true; frame.error = error; }
@@ -36,7 +51,7 @@ export const createComponentCallableRuntime = module => {
 	const cleanup = (operation, failing = false) => {
 		if(poisoned) return;
 		try
-		{ operation(); }
+		{ requireOpen(); operation(); }
 		catch(error)
 		{ poisoned = true; if(!failing) throw error; }
 	};
@@ -50,6 +65,7 @@ export const createComponentCallableRuntime = module => {
 		}
 	};
 	const allocate = bytes => {
+		requireOpen();
 		if(!Number.isSafeInteger(bytes) || bytes < 0 || bytes > scalarCopyLimit) throw new RangeError("Component copy budget exceeded");
 		let pointer;
 		try
@@ -75,7 +91,7 @@ export const createComponentCallableRuntime = module => {
 	const releaseNative = state => {
 		if(state.active || state.released) return;
 		state.released = true; leases.delete(state.token);
-		if(!poisoned)
+		if(!retired())
 		{
 			try
 			{ withKind(state.signature.key, key => module._bridge_callable_release(state.token, key)); }
@@ -128,7 +144,7 @@ export const createComponentCallableRuntime = module => {
 				{ state.active--; if(state.disposed) cleanup(() => releaseNative(state), failing); }
 			};
 			Object.defineProperties(callable, {
-				disposed: { get: () => state.disposed || poisoned }
+				disposed: { get: () => state.disposed || retired() }
 				, dispose: { value: () => release(state) }
 				, [Symbol.dispose]: { value: () => { release(state); } }
 			});

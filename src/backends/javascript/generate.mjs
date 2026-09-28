@@ -16,6 +16,7 @@ import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
 import { sha256 } from "../../capsule/node.mjs";
 import { emitCopiedValidators } from "./copied-validators.mjs";
+import { compileOwnedJavaScriptPackageModel, renderOwnedJavaScriptPackageLayout } from "./owned-package.mjs";
 
 const fail = (code, message, details = {}) => {
 	throw new JavaScriptProjectionError(code, message, details);
@@ -751,6 +752,7 @@ const emitDocumentation = ir => {
  * @param ir - Binding IR document that defines the source types and operations.
  */
 export const compileJavaScriptPackageModel = ir => {
+	if(ir.schemaVersion === 4) return compileOwnedJavaScriptPackageModel(ir);
 	validateBindingIr(ir);
 	const coverage = analyzeJavaScriptCoverage(ir);
 	if(!coverage.supported)
@@ -769,6 +771,7 @@ export const compileJavaScriptPackageModel = ir => {
  * @param model - Validated JavaScript package projection model.
  */
 export const renderJavaScriptPackageLayout = model => {
+	if(model.kind === "owned-javascript-package") return renderOwnedJavaScriptPackageLayout(model);
 	const { ir, typeMap } = model;
 	const generated = emitDeclarations(ir, typeMap);
 	const packageManifest = {

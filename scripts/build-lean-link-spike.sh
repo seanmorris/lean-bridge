@@ -29,7 +29,9 @@ fi
 
 SOURCE_DIR="$LEAN_WASM_PROJECT_ROOT/poc/lean-link-spike"
 GRAPH_LOCK="$SOURCE_DIR/graph-lock.json"
-BUILD_DIR="$LEAN_WASM_LINK_SPIKE_DIR"
+# Keep the prepared runtime used by other acceptance runs untouched during a
+# contributor rebuild. Release builds retain the configured default directory.
+BUILD_DIR="${LEAN_BRIDGE_LINK_OUTPUT_DIR:-$LEAN_WASM_LINK_SPIKE_DIR}"
 GENERATED_DIR="$BUILD_DIR/generated"
 STARTUP_DIR="$BUILD_DIR/startup"
 LAZY_DIR="$BUILD_DIR/lazy"
@@ -104,6 +106,7 @@ node "$LEAN_WASM_PROJECT_ROOT/scripts/generate-value-frame.mjs" \
   --ir "$SOURCE_DIR/bindings/alpha.binding-ir.json" \
   --declaration lean:Alpha.roundTrip \
   > "$GENERATED_DIR/alpha_value_frame.generated.h"
+node "$LEAN_WASM_PROJECT_ROOT/scripts/generate-owned-wasm-broker.mjs" "$GENERATED_DIR"
 
 INCLUDES=(
   -I"$GENERATED_DIR"
@@ -133,6 +136,9 @@ BRIDGE_EXPORTS=(
   _bridge_lean_runtime_init_runs
   _bridge_lean_library_init_runs
   _bridge_lean_runtime_shutdown
+  _bridge_lean_runtime_retire
+  _bridge_lean_runtime_component_initialize
+  _bridge_component_runtime_can_shutdown
   _bridge_lean_component_initialize
   _bridge_lean_component_call_nat2_nat
   _bridge_lean_component_call_string_bool
@@ -199,6 +205,8 @@ BRIDGE_EXPORTS=(
   _malloc
   _free
 )
+mapfile -t OWNED_RUNTIME_EXPORTS < "$GENERATED_DIR/owned-runtime-exports.txt"
+BRIDGE_EXPORTS+=("${OWNED_RUNTIME_EXPORTS[@]}")
 
 build_side() {
   local output_dir=$1
@@ -216,8 +224,11 @@ compile_main_objects() {
   local output_dir=$1
   emcc "${TARGET_FLAGS[@]}" \
     -DBRIDGE_LEAN_RUNTIME_TEST_HOOKS=1 \
+    -DBRIDGE_LEAN_OWNED_RUNTIME=1 \
     "${INCLUDES[@]}" \
     -c "$SOURCE_DIR/main.c" -o "$output_dir/main.o"
+  emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
+    -c "$GENERATED_DIR/owned-runtime.c" -o "$output_dir/owned-runtime.o"
   em++ "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
     -I"$RUNTIME_SOURCE/src" \
     -c "$SOURCE_DIR/runtime_lifecycle.cpp" -o "$output_dir/runtime_lifecycle.o"
@@ -234,6 +245,7 @@ build_main() {
     "$output_dir/main.o" \
     "$output_dir/runtime_lifecycle.o" \
     "$output_dir/component_scalar.o" \
+    "$output_dir/owned-runtime.o" \
     -Wl,--start-group \
     "$LEAN_INIT" \
     "$LEAN_RUNTIME" \
@@ -324,18 +336,20 @@ build_main "$BROWSER_DIR"
 
 compile_main_objects "$FINAL_STATIC_DIR"
 FINAL_STATIC_OBJECTS=()
-PROJECT_GENERATED_DIR=${GENERATED_DIR#"$LEAN_WASM_PROJECT_ROOT/"}
+PROJECT_GENERATED_DIR="${LEAN_WASM_LINK_SPIKE_DIR#"$LEAN_WASM_PROJECT_ROOT/"}/generated"
 PROJECT_SOURCE_DIR=${SOURCE_DIR#"$LEAN_WASM_PROJECT_ROOT/"}
 for library in "${LEAN_LIBRARIES[@]}"; do
   module_name=${library,,}
   (
     cd "$LEAN_WASM_PROJECT_ROOT"
+    # LLVM includes the primary source filename in its LTO identity. Supplying
+    # the canonical filename keeps alternate output roots byte-identical.
     emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
-      -c "$PROJECT_GENERATED_DIR/$library.c" \
-      -o "$FINAL_STATIC_DIR/$module_name.generated.o"
+      -x c - -Xclang -main-file-name -Xclang "$PROJECT_GENERATED_DIR/$library.c" \
+      -c -o "$FINAL_STATIC_DIR/$module_name.generated.o" < "$GENERATED_DIR/$library.c"
     emcc "${TARGET_FLAGS[@]}" "${INCLUDES[@]}" \
-      -c "$PROJECT_SOURCE_DIR/${module_name}_shim.c" \
-      -o "$FINAL_STATIC_DIR/$module_name.shim.o"
+      -x c - -Xclang -main-file-name -Xclang "$PROJECT_SOURCE_DIR/${module_name}_shim.c" \
+      -c -o "$FINAL_STATIC_DIR/$module_name.shim.o" < "$SOURCE_DIR/${module_name}_shim.c"
   )
   FINAL_STATIC_OBJECTS+=(
     "$FINAL_STATIC_DIR/$module_name.generated.o"
@@ -364,6 +378,7 @@ em++ \
   "$FINAL_STATIC_DIR/main.o" \
   "$FINAL_STATIC_DIR/runtime_lifecycle.o" \
   "$FINAL_STATIC_DIR/component_scalar.o" \
+  "$FINAL_STATIC_DIR/owned-runtime.o" \
   "${FINAL_STATIC_OBJECTS[@]}" \
   -Wl,--start-group \
   "$LEAN_INIT" \

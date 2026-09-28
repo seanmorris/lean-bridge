@@ -100,7 +100,7 @@ test("primitive validation preserves big integers and rejects fixed-width overfl
 	assert.throws(() => assertComponentSignature({ id: "io", resultMode: "promise", parameters: [], result: { kind: "primitive", name: "nat" } }), /asynchronous result/);
 });
 
-test("failed scalar calls free their arena and never invoke a function twice", () => {
+test("scalar input and status failures clean up, while malformed replies quarantine the arena", () => {
 	const live = new Set();
 	let next = 64;
 	let calls = 0;
@@ -115,6 +115,8 @@ test("failed scalar calls free their arena and never invoke a function twice", (
 	assert.throws(() => callComponentScalar(module, () => { calls++; }, signature, ["already copied", -1n]), TypeError);
 	assert.equal(calls, 0);
 	assert.equal(live.size, 0);
+	assert.throws(() => callComponentScalar(module, () => { calls++; return 5; }, signature, ["copied", 1n]), /scalar call failed \(5\)/u);
+	assert.equal(calls, 1); assert.equal(live.size, 0); assert.equal(cleared, 2);
 	assert.throws(() => callComponentScalar(module, frame => {
 		calls++;
 		const view = new DataView(module.HEAP8.buffer);
@@ -122,9 +124,102 @@ test("failed scalar calls free their arena and never invoke a function twice", (
 		view.setBigUint64(frame + 24, 2n, true);
 		return 0;
 	}, signature, ["copied", 1n]), /boolean representation/);
-	assert.equal(calls, 1);
-	assert.equal(live.size, 0);
+	assert.equal(calls, 2);
+	assert.equal(live.size, 3, "A corrupt reply quarantines its frame and both argument copies");
 	assert.equal(cleared, 2);
+});
+
+test("a legacy scalar trap quarantines its arena and retires the shared loader", async t => {
+	t.mock.method(globalThis, "fetch", async () => new Response(payload));
+	const f = await fixture(), input = descriptor(), result = { kind: "primitive", name: "bool" };
+	input.bindingIr.declarations = [{ id: "lean:test", resultMode: "value", parameters: [], result: { type: result } }];
+	input.privateAbi.exports = [{ bindingId: "lean:test"
+		, symbol: "lean_bridge_" + "1".repeat(24)
+		, resultMode: "value", parameters: [], result }];
+	const loaded = await f.runtime.loadComponent(input), failure = new Error("legacy Wasm trap");
+	let clears = 0, frees = 0;
+	f.module._bridge_scalar_frame_clear = () => { clears++; };
+	f.module._free = () => { frees++; };
+	f.module._bridge_scalar_call = () => { throw failure; };
+	assert.throws(() => loaded.call("lean:test", []), error => error === failure);
+	assert.equal(clears, 0); assert.equal(frees, 0);
+	assert.throws(() => loaded.call("lean:test", []), /poisoned/u);
+	assert.throws(() => f.runtime.loadComponent(descriptor()), /poisoned/u);
+});
+
+test("malformed scalar replies cannot pass forged ownership bits to native cleanup", async t => {
+	t.mock.method(globalThis, "fetch", async () => new Response(payload));
+	for(const status of [0, 5])
+	{
+		const f = await fixture(), input = descriptor(), result = { kind: "primitive", name: "bool" };
+		input.bindingIr.declarations = [{ id: "lean:test", resultMode: "value", parameters: [], result: { type: result } }];
+		input.privateAbi.exports = [{ bindingId: "lean:test"
+			, symbol: "lean_bridge_" + "1".repeat(24)
+			, resultMode: "value", parameters: [], result }];
+		const loaded = await f.runtime.loadComponent(input);
+		let clears = 0, frees = 0, replied = false;
+		f.module._bridge_scalar_frame_clear = () => { clears++; };
+		f.module._free = () => { if(replied) frees++; };
+		f.module._bridge_scalar_call = (_name, frame) => {
+			const view = new DataView(f.module.HEAP8.buffer);
+			view.setUint32(frame + 8, status, true);
+			view.setUint32(frame + 16, 1, true);
+			// C cleanup would free address 512, despite the invalid Bool reply.
+			view.setUint32(frame + 20, 2, true);
+			view.setBigUint64(frame + 24, 512n, true);
+			replied = true; return status;
+		};
+		assert.throws(() => loaded.call("lean:test", []), /Invalid component bool flags/u);
+		assert.equal(clears, 0); assert.equal(frees, 1, "Only the dispatch-name allocation precedes reply validation");
+		assert.throws(() => loaded.call("lean:test", []), /poisoned/u);
+		assert.throws(() => f.runtime.loadComponent(descriptor()), /poisoned/u);
+	}
+});
+
+test("scalar cleanup preserves an input error and stops after its first native trap", () => {
+	const inputFailure = new Error("invalid host input"), cleanupFailure = new Error("cleanup trap");
+	let frees = 0, poisons = 0;
+	const module = { HEAP8: new Uint8Array(1024), _malloc: () => 64
+		, _free: () => { frees++; }
+		, _bridge_scalar_frame_clear: () => { throw cleanupFailure; } };
+	const signature = { resultMode: "value"
+		, parameters: [{ kind: "primitive", name: "bytes" }]
+		, result: { kind: "primitive", name: "unit" } };
+	const value = new Proxy(new Uint8Array([1]), { get: () => { throw inputFailure; } });
+	assert.throws(() => callComponentScalar(module, () => assert.fail("invalid input entered Lean"), signature, [value]
+		, { assertOpen: () => {}, poison: () => { poisons++; } }), error => error === inputFailure);
+	assert.equal(frees, 0); assert.equal(poisons, 1);
+});
+
+test("a legacy initializer trap never reenters the allocator", async t => {
+	t.mock.method(globalThis, "fetch", async () => new Response(payload));
+	const f = await fixture(), failure = new Error("initializer trap");
+	let frees = 0;
+	f.module._bridge_lean_component_initialize = () => { throw failure; };
+	f.module._free = () => { frees++; };
+	await assert.rejects(f.runtime.loadComponent(descriptor()), error => error === failure);
+	assert.equal(frees, 0);
+	assert.throws(() => f.runtime.loadComponent(descriptor()), /poisoned/u);
+});
+
+for(const operation of ["_malloc", "_free"]) test(`an initializer ${operation} trap retires the shared loader`, async t => {
+	t.mock.method(globalThis, "fetch", async () => new Response(payload));
+	const f = await fixture(), failure = new Error(`${operation} trap`);
+	let attempts = 0;
+	f.module[operation] = () => { attempts++; throw failure; };
+	await assert.rejects(f.runtime.loadComponent(descriptor()), error => error === failure);
+	assert.equal(attempts, 1);
+	assert.throws(() => f.runtime.loadComponent({ ...descriptor(), id: "another@1.0.0" }), /poisoned/u);
+	assert.equal(attempts, 1);
+});
+
+test("initializer cleanup preserves the first failure while retiring the heap", async t => {
+	t.mock.method(globalThis, "fetch", async () => new Response(payload));
+	const f = await fixture();
+	f.module._bridge_lean_component_initialize = () => 0;
+	f.module._free = () => { throw new Error("cleanup trap"); };
+	await assert.rejects(f.runtime.loadComponent(descriptor()), /initialization failed/u);
+	assert.throws(() => f.runtime.loadComponent(descriptor()), /poisoned/u);
 });
 
 test("source identities never retain remote access credentials or local machine paths", () => {

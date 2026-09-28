@@ -88,6 +88,72 @@ jobs:
       - name: Check documentation and the versioned support contract
         run: npm run test:docs
 
+  owned-javascript-wasm:
+    name: Owned JavaScript and production Wasm runtime
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      LEAN_BRIDGE_OWNED_JS_WASM_TEST: "1"
+      LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"
+      EMCC_CORES: "2"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install dependencies and pinned Lean and Wasm toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep zstd
+          npm ci --ignore-scripts
+          bash scripts/bootstrap-toolchains.sh
+      - name: Build the production runtime with the shared ownership broker
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/owned-javascript-wasm
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-javascript-wasm/runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+          test -s build/lean-link-spike/startup/main.wasm
+          test -s build/lean-link-spike/final-static/main.wasm
+      - name: Execute owned JavaScript values and generated public APIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test --test-concurrency=2 \
+            tests/owned-javascript-package.test.mjs \
+            tests/owned-javascript-wasm-layout.test.mjs \
+            tests/owned-javascript-wasm-component.test.mjs \
+            tests/owned-javascript-wasm-loader.test.mjs \
+            tests/owned-wasm-scalars.test.mjs tests/owned-wasm-values.test.mjs \
+            tests/owned-wasm-registry.test.mjs tests/owned-wasm-calls.test.mjs \
+            tests/owned-wasm-bindings.test.mjs \
+            tests/owned-javascript-wasm-native.test.mjs \
+            tests/owned-javascript-wasm-callbacks.test.mjs \
+            tests/owned-javascript-wasm-shared.test.mjs \
+            tests/owned-javascript-wasm-prepared.test.mjs \
+            tests/component-runtime.test.mjs tests/component-callable-runtime.test.mjs \
+            tests/javascript-generator.test.mjs tests/javascript-coverage.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/execution.log
+          test -s build/owned-javascript-wasm/execution.log
+          rg '^# fail 0$' build/owned-javascript-wasm/execution.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/execution.log
+      - name: Preserve owned JavaScript and runtime execution logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-javascript-wasm-${{ github.sha }}
+          path: |
+            build/owned-javascript-wasm/runtime.log
+            build/owned-javascript-wasm/execution.log
+          if-no-files-found: error
+          retention-days: 30
+
   node-consumers:
     name: Node and browser npm consumers
     runs-on: ubuntu-24.04
@@ -1812,6 +1878,7 @@ jobs:
       - reviewed-ir-admission
       - nix-cache
       - node-consumers
+      - owned-javascript-wasm
       - browser-consumer
       - php-consumers
       - native-consumers
@@ -1846,3 +1913,6 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Enforce owned JavaScript and Wasm execution
+        if: needs.owned-javascript-wasm.result != 'success'
+        run: exit 1

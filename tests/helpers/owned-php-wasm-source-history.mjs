@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmChangedPaths } from "./owned-javascript-wasm-source-history.mjs";
 
 export const ownedPhpWasmBaseline = "560dac4edb67c5b7cdd8bb945b684c1f2eb64f53";
 export const ownedPhpWasmHistoryPath = "docs/evidence/owned-php-wasm-integration-20260928.json";
@@ -127,6 +128,7 @@ export const ownedPhpWasmAddedPaths = [
 	, "tests/owned-php-zend-ownership.test.mjs"
 ].sort();
 let cached;
+export const ownedPhpWasmNormalizationPaths = [...new Set([...ownedPhpWasmChangedPaths, ...ownedJavaScriptWasmChangedPaths])].sort();
 
 /**
  * Reverse only recorded literal edits with matching complete file identities.
@@ -160,6 +162,7 @@ export const reverseOwnedPhpWasmUpdate = (source, update) => {
  * @param expected - Optional complete identity at which to stop.
  */
 export const beforeOwnedPhpWasmPackages = (path, source, expected) => {
+	source = beforeOwnedJavaScriptWasm(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedPhpWasmChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedPhpWasmHistoryPath, "utf8"));
@@ -179,5 +182,5 @@ export const beforeOwnedPhpWasmPackages = (path, source, expected) => {
  * @param bytes - Complete current or predecessor bytes.
  * @param expected - Optional complete predecessor identity.
  */
-export const ownedPhpWasmHistoricalBytes = (path, bytes, expected) => ownedPhpWasmChangedPaths.includes(path)
+export const ownedPhpWasmHistoricalBytes = (path, bytes, expected) => ownedPhpWasmNormalizationPaths.includes(path)
 	? beforeOwnedPhpWasmPackages(path, bytes.toString("utf8"), expected) : bytes;

@@ -1,0 +1,85 @@
+/**
+ * Require enabled ownership execution against freshly built production Wasm.
+ * This job does not claim installed npm ownership support.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+
+export const ownedJavaScriptWasmCiTests = [
+	"owned-javascript-package", "owned-javascript-wasm-layout"
+	, "owned-javascript-wasm-component", "owned-javascript-wasm-loader"
+	, "owned-wasm-scalars", "owned-wasm-values", "owned-wasm-registry"
+	, "owned-wasm-calls", "owned-wasm-bindings", "owned-javascript-wasm-native"
+	, "owned-javascript-wasm-callbacks", "owned-javascript-wasm-shared"
+	, "owned-javascript-wasm-prepared", "component-runtime"
+	, "component-callable-runtime", "javascript-generator", "javascript-coverage"
+].map(name => `tests/${name}.test.mjs`);
+export const ownedJavaScriptWasmTestCommand = "node --test --test-concurrency=2 " + ownedJavaScriptWasmCiTests.join(" ");
+export const ownedJavaScriptWasmCiLogs = [
+	"build/owned-javascript-wasm/runtime.log"
+	, "build/owned-javascript-wasm/execution.log"
+];
+
+const requiredStep = (job, name) => {
+	const step = job.split(`      - name: ${name}\n`)[1]?.split("      - name: ")[0];
+	assert.ok(step, name);
+	return step;
+};
+const script = step => {
+	assert.doesNotMatch(step, /^ {8}(?:if|continue-on-error):/mu);
+	assert.match(step, /^ {8}shell: bash$/mu);
+	const lines = step.split("        run: |\n")[1];
+	assert.ok(lines);
+	return lines.trim().replace(/^ {10}/gmu, "").replace(/\\\n\s*/gu, " ").replace(/ +/gu, " ");
+};
+
+/**
+ * Reject skipped compilers, disabled suites, missing logs or swallowed errors.
+ *
+ * @param workflow - Complete current consumer workflow.
+ */
+export const assertOwnedJavaScriptWasmCi = workflow => {
+	const job = workflow.match(/^ {2}owned-javascript-wasm:\n([^]*?)(?=^ {2}[a-z][a-z-]*:)/mu)?.[0];
+	assert.ok(job);
+	assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
+	assert.doesNotMatch(job, /^ {8}continue-on-error:/mu);
+	assert.match(job, /^ {4}runs-on: ubuntu-24\.04$/mu);
+	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_TEST: "1"$/mu);
+	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"$/mu);
+	assert.match(job, /^ {6}EMCC_CORES: "2"$/mu);
+	const prepare = requiredStep(job, "Install dependencies and pinned Lean and Wasm toolchains");
+	assert.doesNotMatch(prepare, /^ {8}if:/mu);
+	assert.match(prepare, /^ {10}bash scripts\/bootstrap-toolchains\.sh$/mu);
+	assert.match(prepare, /^ {10}npm ci --ignore-scripts$/mu);
+	for(const dependency of ["build-essential", "cmake", "jq", "libgmp-dev", "libuv1-dev", "ripgrep", "zstd"])
+		assert.ok(prepare.split("\n").some(line => line.includes("apt-get install") && line.split(" ").includes(dependency)), dependency);
+	const buildName = "Build the production runtime with the shared ownership broker";
+	const executeName = "Execute owned JavaScript values and generated public APIs";
+	assert.ok(job.indexOf(buildName) < job.indexOf(executeName));
+	assert.equal(script(requiredStep(job, buildName)), [
+		"set -euo pipefail", "mkdir -p build/owned-javascript-wasm"
+		, "bash scripts/build-lean-link-spike.sh 2>&1 | tee " + ownedJavaScriptWasmCiLogs[0]
+		, ...["lazy", "startup", "final-static"].map(profile => `test -s build/lean-link-spike/${profile}/main.wasm`)
+	].join("\n"));
+	assert.equal(script(requiredStep(job, executeName)), [
+		"set -euo pipefail"
+		, ownedJavaScriptWasmTestCommand + " 2>&1 | tee " + ownedJavaScriptWasmCiLogs[1]
+		, "test -s " + ownedJavaScriptWasmCiLogs[1]
+		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[1]
+		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[1]
+	].join("\n"));
+	const upload = requiredStep(job, "Preserve owned JavaScript and runtime execution logs");
+	assert.match(upload, /^ {8}if: always\(\)$/mu);
+	assert.match(upload, /^ {8}uses: actions\/upload-artifact@v7$/mu);
+	assert.match(upload, /^ {10}if-no-files-found: error$/mu);
+	for(const path of ownedJavaScriptWasmCiLogs) assert.ok(upload.includes("            " + path + "\n"));
+	const summary = workflow.split("  support-summary:\n")[1]; assert.ok(summary);
+	assert.ok(summary.split("    runs-on:")[0].includes("      - owned-javascript-wasm\n"));
+	const enforce = requiredStep(summary, "Enforce owned JavaScript and Wasm execution");
+	assert.equal(enforce.trim(), "if: needs.owned-javascript-wasm.result != 'success'\n        run: exit 1");
+	return { testFiles: ownedJavaScriptWasmCiTests.length
+		, requiredLogs: ownedJavaScriptWasmCiLogs.length
+		, productionRuntimeRequired: true, skippedTestsRejected: true
+		, failurePropagated: true };
+};

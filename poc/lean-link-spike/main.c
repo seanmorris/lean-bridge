@@ -31,10 +31,15 @@ typedef uint8_t (*lean_component_string_bool_fn)(lean_object *);
 static uint32_t bridge_run_library_initializer(
     lean_link_initializer_fn initialize
 );
+uint32_t bridge_lean_runtime_component_initialize(lean_link_initializer_fn initialize);
 
 extern lean_object *initialize_Init(uint8_t builtin);
 extern void lean_initialize_runtime_module(void);
 extern void bridge_lean_runtime_finalize_module(void);
+#if defined(BRIDGE_LEAN_OWNED_RUNTIME)
+extern uint32_t bridge_owned_runtime_can_shutdown(void);
+extern uint32_t bridge_component_runtime_can_shutdown(void);
+#endif
 
 enum bridge_lean_runtime_state {
   BRIDGE_LEAN_RUNTIME_COLD = 0,
@@ -70,6 +75,7 @@ static uint32_t native_pending_operations = 0;
 static uint32_t native_late_settlements = 0;
 static uint32_t native_cancelled_operations = 0;
 static uint32_t component_call_error = 0;
+static uint32_t library_initializers_active = 0;
 
 static void *bridge_lean_component_symbol(char const *symbol) {
   void *resolved;
@@ -95,7 +101,7 @@ uint32_t bridge_lean_component_initialize(char const *symbol) {
     (lean_link_initializer_fn)bridge_lean_component_symbol(symbol);
 
   if (!initialize) return 0;
-  if (!bridge_run_library_initializer(initialize)) {
+  if (!bridge_lean_runtime_component_initialize(initialize)) {
     component_call_error = 3;
     return 0;
   }
@@ -329,7 +335,9 @@ static uint32_t bridge_run_library_initializer(
   lean_object *result;
 
   if (!initialize) return 1;
+  library_initializers_active += 1;
   result = initialize(1);
+  library_initializers_active -= 1;
   library_init_runs += 1;
   if (lean_io_result_is_error(result)) {
     lean_dec(result);
@@ -337,6 +345,22 @@ static uint32_t bridge_run_library_initializer(
   }
   lean_dec(result);
   return 1;
+}
+
+/* Both copied and owned components initialize through this lifecycle. */
+EMSCRIPTEN_KEEPALIVE
+uint32_t bridge_lean_runtime_component_initialize(
+    lean_link_initializer_fn initialize
+) {
+  if (runtime_state != BRIDGE_LEAN_RUNTIME_READY || !initialize) return 0;
+  uint32_t initialized = bridge_run_library_initializer(initialize);
+  return initialized && runtime_state == BRIDGE_LEAN_RUNTIME_READY;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bridge_lean_runtime_retire(void) {
+  if (runtime_state != BRIDGE_LEAN_RUNTIME_SHUT_DOWN)
+    runtime_state = BRIDGE_LEAN_RUNTIME_FAILED;
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -401,11 +425,23 @@ uint32_t bridge_lean_runtime_shutdown(void) {
     runtime_state = BRIDGE_LEAN_RUNTIME_SHUT_DOWN;
     return 1;
   }
-  if (runtime_state != BRIDGE_LEAN_RUNTIME_READY || live_handles != 0) return 0;
+  if (runtime_state != BRIDGE_LEAN_RUNTIME_READY || live_handles != 0
+      || library_initializers_active != 0 || active_frames != 0
+      || native_pending_operations != 0) return 0;
+#if defined(BRIDGE_LEAN_OWNED_RUNTIME)
+  if (!bridge_owned_runtime_can_shutdown() || !bridge_component_runtime_can_shutdown()) return 0;
+#endif
 
   runtime_state = BRIDGE_LEAN_RUNTIME_SHUT_DOWN;
   bridge_lean_runtime_finalize_module();
   return 1;
+}
+
+static void bridge_initialize_registered_library(lean_link_initializer_fn initialize) {
+  if (initialize && runtime_state == BRIDGE_LEAN_RUNTIME_READY
+      && !bridge_lean_runtime_component_initialize(initialize)) {
+    bridge_lean_runtime_retire();
+  }
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -423,6 +459,7 @@ void bridge_register_lean_alpha(
     lean_link_payload_object_fn payload_values,
     lean_link_initializer_fn initialize
 ) {
+  uint32_t changed = alpha_initializer != initialize;
   alpha_box = box;
   alpha_read = read;
   alpha_payload = payload;
@@ -435,6 +472,7 @@ void bridge_register_lean_alpha(
   alpha_payload_bytes = payload_bytes;
   alpha_payload_values = payload_values;
   alpha_initializer = initialize;
+  if (changed) bridge_initialize_registered_library(initialize);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -443,9 +481,11 @@ void bridge_register_lean_beta(
     lean_link_read_fn read,
     lean_link_initializer_fn initialize
 ) {
+  uint32_t changed = beta_initializer != initialize;
   beta_identity = identity;
   beta_read = read;
   beta_initializer = initialize;
+  if (changed) bridge_initialize_registered_library(initialize);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -454,9 +494,11 @@ void bridge_register_lean_gamma(
     lean_link_read_fn read,
     lean_link_initializer_fn initialize
 ) {
+  uint32_t changed = gamma_initializer != initialize;
   gamma_identity = identity;
   gamma_read = read;
   gamma_initializer = initialize;
+  if (changed) bridge_initialize_registered_library(initialize);
 }
 
 EMSCRIPTEN_KEEPALIVE

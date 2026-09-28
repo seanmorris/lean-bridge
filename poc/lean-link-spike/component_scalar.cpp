@@ -11,6 +11,7 @@ static_assert(sizeof(bridge_scalar_slot) == 16, "scalar slot layout drift");
 static_assert(sizeof(bridge_scalar_frame) == 32, "scalar frame layout drift");
 static_assert(sizeof(size_t) == 4, "scalar-frame-v2 requires wasm32 Lean");
 static constexpr uint32_t copy_limit = 16 * 1024 * 1024;
+static uint32_t component_active_calls = 0;
 extern "C" uint32_t bridge_lean_runtime_status(void);
 
 extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_word_bits(void) {
@@ -453,7 +454,9 @@ extern "C" EMSCRIPTEN_KEEPALIVE uint32_t bridge_scalar_call(char const *symbol, 
   if (!in_heap((uintptr_t)frame, 32)) return 1;
   auto operation = (uint32_t (*)(bridge_scalar_frame *))dlsym(RTLD_DEFAULT, symbol);
   if (!operation) return 7;
+  component_active_calls++;
   uint32_t status = operation(frame);
+  component_active_calls--;
   frame->status = status;
   return status;
 }
@@ -475,6 +478,12 @@ struct callable_lease {
 };
 static callable_lease callable_leases[1024] = {};
 static uint32_t callable_next_token = 0;
+
+extern "C" uint32_t bridge_component_runtime_can_shutdown(void) {
+  if (recursive_arena_count || component_active_calls) return 0;
+  for (const auto &lease : callable_leases) if (lease.value) return 0;
+  return 1;
+}
 
 static bool callable_key_valid(char const *key) {
   if (!in_heap((uintptr_t)key, 41)) return false;

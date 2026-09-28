@@ -15,6 +15,8 @@ import { compileComponentCopiedCall } from "./component-copied-runtime.mjs";
 import { componentRecordAbi, componentCompoundAbi, componentNominalAbi, assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { componentRecursiveAbi, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 import { componentStructuredCallableAbi, assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../abi/component-structured-callables.mjs";
+import { componentOwnedWasmAbi, assertComponentOwnedWasmBindings } from "../abi/component-owned-wasm.mjs";
+import { createOwnedWasmComponentRuntime } from "./owned-wasm-component-runtime.mjs";
 
 const encoder = new TextEncoder();
 const digest = async bytes => [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))]
@@ -38,20 +40,37 @@ const readArtifact = async url => {
  * @param operation - Compiled scalar adapter invoked once with the allocated frame pointer.
  * @param signature - Pure primitive parameter and result types for this call.
  * @param args - Host arguments in declaration order.
+ * @param lifecycle - Shared retirement checks when called through the loader.
  */
-export const callComponentScalar = (module, operation, signature, args) => {
+export const callComponentScalar = (module, operation, signature, args, lifecycle = null) => {
 	assertComponentSignature(signature);
 	if(args.length !== signature.parameters.length) throw new TypeError(`Expected ${signature.parameters.length} arguments`);
 	const allocations = [];
+	let unsafe = false;
+	const native = operation => {
+		try
+		{
+			lifecycle?.assertOpen();
+			const result = operation(); lifecycle?.assertOpen(); return result;
+		}
+		catch(error)
+		{
+			unsafe = true;
+			try
+			{ lifecycle?.poison(); }
+			catch { /* Preserve the native failure. */ }
+			throw error;
+		}
+	};
 	const allocate = size => {
 		if(!Number.isSafeInteger(size) || size < 0 || size > scalarCopyLimit) throw new RangeError("Component copy budget exceeded");
-		const pointer = module._malloc(Math.max(1, size));
+		const pointer = native(() => module._malloc(Math.max(1, size)));
 		if(!pointer) throw new Error("Component allocation failed");
 		allocations.push(pointer);
 		return pointer;
 	};
 	const view = () => new DataView(module.HEAP8.buffer);
-	let frame = 0;
+	let frame = 0, failed = false, failure, value;
 	try
 	{
 		const size = scalarFrameHeaderBytes + scalarSlotBytes * args.length;
@@ -65,14 +84,30 @@ export const callComponentScalar = (module, operation, signature, args) => {
 			const slot = frame + scalarFrameHeaderBytes + index * scalarSlotBytes;
 			writeComponentScalarSlot(module, slot, parameter.name, args[index], allocate);
 		}
-		const status = operation(frame);
-		if(status !== 0 || view().getUint32(frame + 8, true) !== 0) throw new Error(`Component scalar call failed (${status})`);
-		return readComponentScalarSlot(module, frame + 16, signature.result.name);
-	} finally
-	{
-		if(frame) module._bridge_scalar_frame_clear(frame);
-		for(const pointer of allocations.reverse()) module._free(pointer);
+		const status = native(() => operation(frame));
+		const succeeded = status === 0 && view().getUint32(frame + 8, true) === 0;
+		// Cleanup follows the result's ownership bits. Validate a populated reply
+		// even on failure, and quarantine malformed pointers before reentering C.
+		const populated = view().getBigUint64(frame + 16, true) !== 0n || view().getBigUint64(frame + 24, true) !== 0n;
+		if(succeeded || populated) value = native(() => readComponentScalarSlot(module, frame + 16, signature.result.name));
+		if(!succeeded) throw new Error(`Component scalar call failed (${status})`);
 	}
+	catch(error)
+	{ failed = true; failure = error; }
+	const cleanup = operation => {
+		if(unsafe) return;
+		try
+		{ native(operation); }
+		catch(error)
+		{
+			if(!failed)
+			{ failed = true; failure = error; }
+		}
+	};
+	if(frame) cleanup(() => module._bridge_scalar_frame_clear(frame));
+	for(const pointer of allocations.reverse()) cleanup(() => module._free(pointer));
+	if(failed) throw failure;
+	return value;
 };
 
 /**
@@ -89,7 +124,55 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 	const callables = module._bridge_callable_abi ? createComponentCallableRuntime(module) : null;
 	let poisoned = false;
 	const poison = () => { poisoned = true; callables?.poison(); };
-	const assertOpen = () => { if(poisoned) throw new Error("Component runtime is poisoned"); callables?.assertOpen(); };
+	const assertOpen = () => {
+		if(poisoned) throw new Error("Component runtime is poisoned");
+		if(module._bridge_lean_runtime_status && module._bridge_lean_runtime_status() !== 2)
+		{ poison(); throw new Error("Component runtime is retired"); }
+		callables?.assertOpen();
+	};
+	const available = () => {
+		try
+		{ assertOpen(); return true; }
+		catch
+		{ return false; }
+	};
+	const native = operation => {
+		try
+		{
+			assertOpen();
+			const result = operation(); assertOpen(); return result;
+		}
+		catch(error)
+		{ poison(); throw error; }
+	};
+	const operationFor = (symbolName, allocationStatus) => {
+		const symbol = encoder.encode(`${symbolName}\0`);
+		return frame => {
+			assertOpen();
+			const name = native(() => module._malloc(symbol.length));
+			if(!name)
+			{
+				if(allocationStatus !== null)
+				{ new DataView(module.HEAP8.buffer).setUint32(frame + 8, allocationStatus, true); return allocationStatus; }
+				throw new Error("Component call allocation failed");
+			}
+			let trapped = false;
+			try
+			{
+				module.HEAP8.set(symbol, name);
+				const status = module._bridge_scalar_call(name, frame);
+				assertOpen(); return status;
+			}
+			catch(error)
+			{ trapped = true; poison(); throw error; }
+			finally
+			{
+				// A host dispatch can retire the heap without a Wasm trap.
+				// Do not reenter its allocator while unwinding that call.
+				if(!trapped && available()) native(() => module._free(name));
+			}
+		};
+	};
 	let linkQueue = Promise.resolve();
 	const loadComponent = descriptor => {
 		assertOpen();
@@ -100,9 +183,19 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 		const record = { fingerprint, promise: null, linking: false };
 		loaded.set(descriptor.id, record);
 		record.promise = (async () => {
+			const owned = descriptor.privateAbi.version === componentOwnedWasmAbi;
 			const structured = descriptor.privateAbi.version === componentStructuredCallableAbi;
 			const callable = structured || descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(descriptor.privateAbi.version);
-			if(callable)
+			if(owned)
+			{
+				if(!module._bridge_owned_runtime_abi || module._bridge_owned_runtime_abi() !== 1)
+					throw new Error("Shared runtime lacks the owned component ABI; rebuild it");
+				assertComponentOwnedWasmBindings(descriptor.privateAbi, descriptor.bindingIr);
+				if(descriptor.id !== descriptor.privateAbi.layout.native.model.component.id
+					|| descriptor.initializer !== descriptor.privateAbi.initializer)
+					throw new Error("Owned component descriptor identity mismatch");
+			}
+			else if(callable)
 			{
 				if(!callables) throw new Error("Shared runtime lacks the component callable ABI; rebuild it");
 				(structured ? assertComponentStructuredCallableBindings : assertComponentCallableBindings)(descriptor.privateAbi, descriptor.bindingIr);
@@ -139,8 +232,8 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 			}
 			const symbols = new Set();
 			const bindings = new Set();
-			if(descriptor.bindingIr.declarations.length !== descriptor.privateAbi.exports.length) throw new Error("Component binding count mismatch");
-			for(const declaration of descriptor.bindingIr.declarations)
+			if(!owned && descriptor.bindingIr.declarations.length !== descriptor.privateAbi.exports.length) throw new Error("Component binding count mismatch");
+			for(const declaration of owned ? [] : descriptor.bindingIr.declarations)
 			{
 				if(!callable && !copied) assertComponentSignature(declaration);
 				const abi = descriptor.privateAbi.exports.find(item => item.bindingId === declaration.id);
@@ -161,49 +254,40 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 { await module.loadDynamicLibrary(filename, { global: true, loadAsync: true, nodelete: true }); }
 				finally
 { module.FS.unlink(filename); }
+				if(owned) return createOwnedWasmComponentRuntime(module, descriptor
+					, operationFor(descriptor.privateAbi.controlSymbol, 3), { assertOpen, poison });
 				const symbolBytes = encoder.encode(`${descriptor.initializer}\0`);
-				const pointer = module._malloc(symbolBytes.length);
+				const pointer = native(() => module._malloc(symbolBytes.length));
 				if(!pointer) throw new Error("Component initializer allocation failed");
+				let failed = false, failure;
 				try
 				{
 					module.HEAP8.set(symbolBytes, pointer);
-					if(!module._bridge_lean_component_initialize(pointer) || module._bridge_lean_component_last_error()) throw new Error(`Lean component initialization failed for ${descriptor.id}`);
-				} finally
-{ module._free(pointer); }
+					const initialized = native(() => module._bridge_lean_component_initialize(pointer));
+					const status = native(() => module._bridge_lean_component_last_error());
+					if(!initialized || status) throw new Error(`Lean component initialization failed for ${descriptor.id}`);
+				}
+				catch(error)
+				{ failed = true; failure = error; }
+				if(available())
+				{
+					try
+					{ native(() => module._free(pointer)); }
+					catch(error)
+					{
+						if(!failed)
+						{ failed = true; failure = error; }
+					}
+				}
+				if(failed) throw failure;
 				const operations = new Map(descriptor.privateAbi.exports.map(abi => {
 					if(!descriptor.bindingIr.declarations.some(item => item.id === abi.bindingId)) throw new Error("Component binding identity mismatch");
-					const symbol = encoder.encode(`${abi.symbol}\0`);
-					return [abi.bindingId, frame => {
-						assertOpen();
-						const name = module._malloc(symbol.length);
-						if(!name)
-						{
-							if(copied || callable)
-							{ new DataView(module.HEAP8.buffer).setUint32(frame + 8, 5, true); return 5; }
-							throw new Error("Component call allocation failed");
-						}
-						let trapped = false;
-						try
-{ module.HEAP8.set(symbol, name); return module._bridge_scalar_call(name, frame); }
-						catch(error)
-{ trapped = true; poisoned = true; callables?.poison(); throw error; }
-						finally
-						{
-							// A host dispatch can retire the heap without a Wasm trap.
-							// Do not reenter its allocator while unwinding that call.
-							let available = !trapped;
-							try
-							{ assertOpen(); }
-							catch
-							{ available = false; }
-							if(available) module._free(name);
-						}
-					}];
+					return [abi.bindingId, operationFor(abi.symbol, copied || callable ? 5 : null)];
 				}));
 				if(callable) return callables.bind(descriptor.privateAbi, operations);
 				const calls = new Map(descriptor.privateAbi.exports.map(abi => {
 					const copiedCall = copied ? compileComponentCopiedCall(module, operations.get(abi.bindingId), abi, poison, descriptor.privateAbi.version, descriptor.privateAbi.types ?? descriptor.privateAbi.records) : null;
-					const call = args => { assertOpen(); return copiedCall ? copiedCall(args) : callComponentScalar(module, operations.get(abi.bindingId), abi, args); };
+					const call = args => { assertOpen(); return copiedCall ? copiedCall(args) : callComponentScalar(module, operations.get(abi.bindingId), abi, args, { assertOpen, poison }); };
 					return [abi.bindingId, call];
 				}));
 				return Object.freeze({ call: (id, args) => {

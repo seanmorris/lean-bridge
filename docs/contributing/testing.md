@@ -2380,6 +2380,51 @@ API. The documentation gate compiles the author guide and executes the consumer
 example unchanged. CI requires all five commands, verifies eight report files,
 uploads them as `owned-php-wasm-<commit>`, and fails the PHP job if any gate fails.
 
+## JavaScript ownership transport and generated APIs
+
+With the pinned Lean and Emscripten [author toolchains](author-toolchain.md)
+installed, build the browser runtime and run the owned-value checks:
+
+```sh
+source scripts/env.sh
+bash scripts/build-lean-link-spike.sh
+LEAN_BRIDGE_OWNED_JS_WASM_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST=1 \
+EMCC_CORES=2 node --test --test-concurrency=2 \
+  tests/owned-javascript-package.test.mjs \
+  tests/owned-javascript-wasm-layout.test.mjs \
+  tests/owned-javascript-wasm-component.test.mjs \
+  tests/owned-javascript-wasm-loader.test.mjs \
+  tests/owned-wasm-scalars.test.mjs tests/owned-wasm-values.test.mjs \
+  tests/owned-wasm-registry.test.mjs tests/owned-wasm-calls.test.mjs \
+  tests/owned-wasm-bindings.test.mjs \
+  tests/owned-javascript-wasm-native.test.mjs \
+  tests/owned-javascript-wasm-callbacks.test.mjs \
+  tests/owned-javascript-wasm-shared.test.mjs \
+  tests/owned-javascript-wasm-prepared.test.mjs \
+  tests/component-runtime.test.mjs tests/component-callable-runtime.test.mjs \
+  tests/javascript-generator.test.mjs tests/javascript-coverage.test.mjs
+```
+
+The tests compile ordinary and independently reviewed Lean APIs. They check
+wasm32 layouts, all primitive values, aggregate conversion, typed callbacks,
+borrow expiry, independent retention, malformed results and allocation failure.
+Production-runtime tests call the generated public functions while a legacy
+component shares the same heap. They require one core initialization and no
+tracked identities or attached components after cleanup. Strict TypeScript
+checks cover input types, returned function leases and rejected consumer code.
+
+Set `LEAN_BRIDGE_LINK_OUTPUT_DIR` for an alternate build directory and
+`LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT` to the same path when testing it.
+These checks cover the generated API and runtime. Owned npm archive generation,
+the installed CLI route and installed browser consumers are still being added.
+
+The downstream workflow runs these checks in its required `owned-javascript-wasm`
+job. It builds the production runtime with the pinned toolchains, enables both
+execution flags, rejects skipped tests and retains the build and execution logs
+as `owned-javascript-wasm-<commit>`. The support-summary job fails if this job
+does not succeed. This gate does not promote installed npm support claims.
+
 ## Release tooling checks
 
 From the checkout with its Node dependencies installed, run the focused release tests:

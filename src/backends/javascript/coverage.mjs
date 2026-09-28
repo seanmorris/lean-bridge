@@ -5,6 +5,7 @@
  */
 
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
+import { compileOwnedJavaScriptPackageModel } from "./owned-package.mjs";
 import { supportsErrorEnvelopeValue } from "../../abi/error-envelope.mjs";
 import { supportsIteratorValue } from "../../abi/iterator.mjs";
 import {
@@ -27,6 +28,13 @@ const namedTypeId = typeRef => (typeRef.kind === "named" ? typeRef.id : undefine
  * @param ir - Binding IR document that defines the source types and operations.
  */
 export const analyzeJavaScriptCoverage = ir => {
+	if(ir.schemaVersion === 4)
+	{
+		try
+		{ compileOwnedJavaScriptPackageModel(ir); return Object.freeze({ backend: "javascript", supported: true, gaps: Object.freeze([]) }); }
+		catch(error)
+		{ return Object.freeze({ backend: "javascript", supported: false, gaps: Object.freeze([gap(error.code ?? "owned-javascript-projection", error.message)]) }); }
+	}
 	validateBindingIr(ir);
 	const gaps = [];
 	const typeMap = new Map(ir.types.map(type => [type.id, type]));

@@ -151,6 +151,29 @@ const single = (nativeCall, name = "uint32") => {
 	return { ...f, signature, api: f.runtime.bind(abi, operations) };
 };
 
+test("native shared retirement invalidates legacy closures without native release", () => {
+	const f = single(() => assert.fail("retired call entered Lean"));
+	const closure = f.api.call("binding:1", []), before = f.counts();
+	f.module._bridge_lean_runtime_status = () => 3;
+	assert.equal(closure.disposed, true);
+	assert.throws(() => closure(1), /poisoned/u);
+	assert.equal(closure.dispose(), true);
+	assert.throws(() => f.api.call("binding:0", [1, value => value]), /poisoned/u);
+	assert.deepEqual(f.counts(), before);
+});
+
+test("native retirement during a legacy call stops arena cleanup", () => {
+	const f = single((f, frame) => {
+		const status = f.result(frame, "uint32", 7);
+		f.module._bridge_lean_runtime_status = () => 3;
+		return status;
+	});
+	assert.throws(() => f.api.call("binding:0", [1, value => value]), /retired/u);
+	assert.equal(f.counts().clearCount, 0);
+	assert.ok(f.counts().allocations > 0);
+	assert.throws(() => f.api.call("binding:1", []), /poisoned/u);
+});
+
 test("callback exceptions, including thrown undefined, retain identity after arena cleanup and suppress repeated callbacks", () => {
 	for(const error of [new Error("original callback"), undefined, null, 0])
 	{

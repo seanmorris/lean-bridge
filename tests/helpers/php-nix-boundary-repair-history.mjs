@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPhpWasmPackages, ownedPhpWasmChangedPaths } from "./owned-php-wasm-source-history.mjs";
+import { beforeOwnedPhpWasmPackages, ownedPhpWasmNormalizationPaths } from "./owned-php-wasm-source-history.mjs";
 
 export const phpNixBoundaryBaseline = "f2e2c6a324bc52cb4c34efdcef120c1b3cce8fe6";
 export const phpNixBoundaryHistoryPath = "docs/evidence/php-nix-boundary-repair-20260928.json";
@@ -28,7 +28,7 @@ export const phpNixBoundaryAddedPaths = [
 	, "tests/php-nix-boundary-repair-evidence.test.mjs"
 ].sort();
 let cached;
-export const phpNixBoundaryNormalizationPaths = [...new Set([...phpNixBoundaryChangedPaths, ...ownedPhpWasmChangedPaths])].sort();
+export const phpNixBoundaryNormalizationPaths = [...new Set([...phpNixBoundaryChangedPaths, ...ownedPhpWasmNormalizationPaths])].sort();
 
 /**
  * Reverse exact literal edits after checking both complete source identities.

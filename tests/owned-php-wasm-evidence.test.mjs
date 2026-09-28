@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmHistoricalBytes } from "./helpers/owned-javascript-wasm-source-history.mjs";
 import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
 import { generateCopiedPhpGraphZendAdapter } from "../src/backends/php/copied-graph-zend.mjs";
 import { assertOwnedPhpWasmExecution } from "./helpers/owned-php-wasm-package-evidence.mjs";
@@ -65,13 +66,15 @@ test("PHP-Wasm ownership preserves predecessor receipts and authenticates each s
 		...Object.keys(previous.sources), ...ownedPhpWasmChangedPaths
 		, ...ownedPhpWasmAddedPaths
 	])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources))
+		assert.equal(sha256(ownedJavaScriptWasmHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPhpWasmChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedPhpWasmBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedPhpWasmPackages(update.path, current);
+		const current = beforeOwnedJavaScriptWasm(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedPhpWasmPackages(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedPhpWasmPackages(update.path, prior), prior);
 		assert.equal(beforeOwnedPhpWasmPackages(update.path, current, update.currentSha256), current);

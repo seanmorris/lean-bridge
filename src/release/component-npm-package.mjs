@@ -146,7 +146,10 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		for(const declaration of ir.declarations) assertComponentSignature(declaration);
 		for(const declaration of abi.exports) assertComponentSignature(declaration);
 	}
-	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs").replaceAll("../abi/component-recursive.mjs", "./component-recursive.mjs").replaceAll("../abi/component-recursive-abi.mjs", "./component-recursive-abi.mjs").replaceAll("../abi/component-structured-callables.mjs", "./component-structured-callables.mjs");
+	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs").replaceAll("../abi/component-recursive.mjs", "./component-recursive.mjs").replaceAll("../abi/component-recursive-abi.mjs", "./component-recursive-abi.mjs").replaceAll("../abi/component-structured-callables.mjs", "./component-structured-callables.mjs")
+		.replaceAll("../abi/component-owned-wasm.mjs", "./component-owned-wasm.mjs")
+		.replaceAll("../abi/owned-wasm-control.mjs", "./owned-wasm-control.mjs")
+		.replaceAll("../binding-ir/", "./binding-ir/");
 	const runtimeSource = relocate(await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8"));
 	const scalarSource = await readFile(new URL("../abi/component-scalars.mjs", import.meta.url), "utf8");
 	const codecSource = (await readFile(new URL("./component-scalar-codec.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
@@ -192,6 +195,12 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
 	]);
 	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);
+	for(const name of ["bindings", "callbacks", "calls", "component-runtime", "registry", "scalars", "values"])
+		runtimeFiles.set(`internal/owned-wasm-${name}.mjs`, relocate(await readFile(new URL(`./owned-wasm-${name}.mjs`, import.meta.url), "utf8")));
+	for(const name of ["component-owned-wasm", "owned-wasm-control"])
+		runtimeFiles.set(`internal/${name}.mjs`, relocate(await readFile(new URL(`../abi/${name}.mjs`, import.meta.url), "utf8")));
+	for(const name of ["canonical", "contract", "sha256"])
+		runtimeFiles.set(`internal/binding-ir/${name}.mjs`, await readFile(new URL(`../binding-ir/${name}.mjs`, import.meta.url)));
 	for(const name of (await readdir(noticeRoot)).sort()) runtimeFiles.set(`notices/${name}`, await readFile(new URL(name, noticeRoot)));
 	const runtimeMetadata = {
 		name: "@lean-bridge/runtime"
