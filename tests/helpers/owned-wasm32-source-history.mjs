@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeJvmThreadExitRepair, jvmThreadExitRepairChangedPaths } from "./jvm-thread-exit-repair-history.mjs";
 
 export const ownedWasm32Baseline = "8261ccfbb22152dda4a4edef00aa161f3958ec78";
 export const ownedWasm32HistoryPath = "docs/evidence/owned-wasm32-transport-20260928.json";
@@ -34,6 +35,7 @@ export const ownedWasm32AddedPaths = [
 	, "tests/owned-wasm32-transport.test.mjs"
 ].sort();
 let cached;
+export const ownedWasm32NormalizationPaths = [...new Set([...ownedWasm32ChangedPaths, ...jvmThreadExitRepairChangedPaths])].sort();
 
 /**
  * Reverse exact edits only after authenticating both complete file identities.
@@ -67,6 +69,7 @@ export const reverseOwnedWasm32Update = (source, update) => {
  * @param expected - Optional exact identity at which to stop.
  */
 export const beforeOwnedWasm32 = (path, source, expected) => {
+	source = beforeJvmThreadExitRepair(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedWasm32ChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedWasm32HistoryPath, "utf8"));
@@ -86,5 +89,5 @@ export const beforeOwnedWasm32 = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional exact predecessor identity.
  */
-export const ownedWasm32HistoricalBytes = (path, bytes, expected) => ownedWasm32ChangedPaths.includes(path)
+export const ownedWasm32HistoricalBytes = (path, bytes, expected) => ownedWasm32NormalizationPaths.includes(path)
 	? beforeOwnedWasm32(path, bytes.toString("utf8"), expected) : bytes;

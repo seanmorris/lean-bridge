@@ -9,6 +9,9 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedJvmCalls } from "../../src/backends/jvm/owned-calls.mjs";
 import { ownedJvmCallNative, ownedJvmCallProbeMethods } from "./owned-jvm-call-fixture.mjs";
 import { assertOwnedJvmConversions, ownedJvmConversionReceipt } from "./owned-jvm-conversion-evidence.mjs";
+import { jvmThreadExitHistoricalBytes } from "./jvm-thread-exit-repair-history.mjs";
+
+const historicalSource = async (path, expected) => jvmThreadExitHistoricalBytes(path, await readFile(path), expected);
 
 export const ownedJvmCallReceipt = "docs/evidence/owned-jvm-calls-20260927.json";
 export const ownedJvmCallCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs";
@@ -56,7 +59,7 @@ export const assertOwnedJvmCalls = async record => {
 	const previous = await readFile(record.previous.path);
 	assert.equal(sha256(previous), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedJvmCallSources);
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await historicalSource(path, hash)), hash, path);
 	assert.equal(record.run.command, ownedJvmCallCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [name, count] of Object.entries({ tests: 7, pass: 7, fail: 0, skipped: 0, cancelled: 0 }))
@@ -79,7 +82,8 @@ export const assertOwnedJvmCalls = async record => {
 		assert.deepEqual(report.files, Object.fromEntries(Object.entries(model.files).map(([path, source]) => [path, sha256(source)])));
 		const runtime = Object.entries(model.files).find(([path]) => path.endsWith("/_OwnedRuntime.java"))[1];
 		assert.equal(report.instrumentedRuntimeSha256, sha256(runtime.replace("static void checkpoint() { }", "static void checkpoint() { OwnedCallProbe.allocation(); }")));
-		const exercise = await readFile(`tests/fixtures/structured-types/owned-jvm-callback-${kind}.java`, "utf8");
+		const exercisePath = `tests/fixtures/structured-types/owned-jvm-callback-${kind}.java`;
+		const exercise = (await historicalSource(exercisePath, record.sources[exercisePath])).toString();
 		const java = template.replace("/* METHODS */", () => ownedJvmCallProbeMethods(model)).replace("/* EXERCISE */", () => exercise);
 		const kotlin = (await readFile(`tests/fixtures/structured-types/owned-kotlin-callback-${kind}.kt`, "utf8"))
 			.replace("/* METHODS */", () => ownedJvmCallProbeMethods(model, true));

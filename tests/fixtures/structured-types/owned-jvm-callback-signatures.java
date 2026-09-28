@@ -44,9 +44,12 @@
             drop(result); result = kept[0].invoke(input);
             check(serial(result.primary()).intValueExact() == 17, "retained incoming closure"); drop(result);
             var failures = new Throwable[1];
+            long threadAllocations = count(live), threadOwners = count(identities), expectedExits = count(exits) + 1;
             var thread = new Thread(() -> { try { kept[0].invoke(input); } catch (Throwable error) { failures[0] = error; } });
             thread.start(); try { thread.join(); } catch (InterruptedException error) { throw new AssertionError(error); }
             check(failures[0] instanceof LeanBridgeException error && error.status() == 5, "closure creator-thread affinity");
+            // Thread.join() can return before the native TLS destructor finishes.
+            awaitExit(expectedExits, threadAllocations, threadOwners);
             kept[0].close();
             failures(() -> withFunction(input, (closure, value) -> {
                 var nested = closure.invoke(value); drop(nested); return value;

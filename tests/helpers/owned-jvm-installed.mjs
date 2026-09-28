@@ -39,7 +39,19 @@ export const ownedJvmInstalledFixture = async (scalar, namespace, functions) => 
 	const signatures = profile => ownedJvmInstalledSignatures(scalar, namespace, profile, functions);
 	const examples = scalar ? {} : await ownedJvmDocumentationExamples(namespace);
 	const kind = scalar ? "scalars" : "signatures";
-	const originalJava = await readFile(`tests/fixtures/structured-types/owned-jvm-callback-${kind}.java`, "utf8");
+	let originalJava = await readFile(`tests/fixtures/structured-types/owned-jvm-callback-${kind}.java`, "utf8");
+	if(!scalar)
+	{
+		// The standalone allocation probe observes private native TLS counters.
+		// Installed consumers retain the public wrong-thread rejection check.
+		for(const observation of [
+			"            long threadAllocations = count(live), threadOwners = count(identities), expectedExits = count(exits) + 1;\n"
+			, "            // Thread.join() can return before the native TLS destructor finishes.\n            awaitExit(expectedExits, threadAllocations, threadOwners);\n"
+		]) {
+			assert.equal(originalJava.split(observation).length, 2);
+			originalJava = originalJava.replace(observation, "");
+		}
+	}
 	const originalKotlin = await readFile(`tests/fixtures/structured-types/owned-kotlin-callback-${kind}.kt`, "utf8");
 	const support = await readFile("tests/fixtures/structured-types/OwnedInstalledSupport.java", "utf8");
 	const adaptJava = source => source.replaceAll("OwnedCallProbe::", "Consumer::")
@@ -111,7 +123,7 @@ fun main(args: Array<String>) {
 }
 `;
 	for(const source of [java, kotlin, support])
-		assert.doesNotMatch(source, /_Owned|OwnedCallProbe|\.foreign\b|SymbolLookup|\.bindings\b/u);
+		assert.doesNotMatch(source, /_Owned|OwnedCallProbe|\.foreign\b|SymbolLookup|\.bindings\b|awaitExit\(|count\(live\)|count\(identities\)|count\(exits\)/u);
 	const negatives = profile => {
 		const family = namespace + (profile === "kotlin" ? ".kotlin" : "");
 		const resourceFunction = scalar ? "makePacket" : "serial";

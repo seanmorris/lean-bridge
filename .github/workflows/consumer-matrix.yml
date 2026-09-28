@@ -1260,7 +1260,10 @@ jobs:
           test -s build/recursive-callables/jvm-mixed.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs
+          LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs
+          test -s build/owned-jvm-thread-exit/ordinary.json
+          test -s build/owned-jvm-thread-exit/reviewed.json
           test -s build/owned-jvm-runtime/ordinary.json
           test -s build/owned-jvm-runtime/reviewed.json
           test -s build/owned-jvm-values/public.json
@@ -1337,6 +1340,7 @@ jobs:
             build/owned-jvm-kotlin/
             build/owned-jvm-conversions/
             build/owned-jvm-calls/
+            build/owned-jvm-thread-exit/
             build/owned-jvm-packaging/
             build/compounds/jvm.json
             build/lists/jvm.json
@@ -1493,6 +1497,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_RECURSIVE_CALLABLE_TEST=1 node --test tests/jvm-recursive-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-runtime.test.mjs tests/owned-jvm-values.test.mjs tests/owned-jvm-layout.test.mjs tests/owned-jvm-kotlin.test.mjs tests/owned-jvm-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-calls.test.mjs tests/verified-jvm-assets.test.mjs tests/owned-jvm-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
