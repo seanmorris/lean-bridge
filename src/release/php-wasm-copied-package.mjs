@@ -13,6 +13,8 @@ import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/
 import { hasStructuredZendCallables } from "../backends/php/zend-callables.mjs";
 import { compileCopiedPhpGraphZendModel } from "../backends/php/copied-graph-zend.mjs";
 import { compileCallablePhpGraphZendModel } from "../backends/php/callable-graph-zend-model.mjs";
+import { compileOwnedPhpZendModel } from "../backends/php/owned-zend-model.mjs";
+import { ownedPhpWasmReadme } from "../backends/php/owned-zend-readme.mjs";
 import { phpCopiedAliases, phpAliasReadme } from "../backends/php/copied-aliases.mjs";
 import { phpVariantReadme } from "../backends/php/copied-variants.mjs";
 import { phpValueReadme } from "../backends/php/copied-equality.mjs";
@@ -37,7 +39,7 @@ const settings = (value, label) => {
 };
 
 const runtimePayload = async (root, runtime) => ({ ...runtime.manifest.files, "runtime.json": identity(await readFile(join(root, "runtime.json"))) });
-const phpSources = model => ["src/Api.php", "src/Internal/Native.php", ...model.copiedGraph ? ["src/Internal/Values.php", "src/Internal/GraphTypes.php", "src/Internal/Wire.php"] : []];
+const phpSources = model => ["src/Api.php", "src/Internal/Native.php", ...model.copiedGraph || model.ownedGraph ? ["src/Internal/Values.php", "src/Internal/GraphTypes.php", "src/Internal/Wire.php"] : []];
 const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSettings, composerSettings, notices, sourceNotices }) => {
 	const metadata = compiledPackageMetadata(model.sourceIdentity);
 	settings(npmSettings, "npm"); settings(composerSettings, "Composer");
@@ -58,10 +60,11 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 		, notices: Object.fromEntries(Object.entries(notices).map(([path, bytes]) => [path, identity(bytes)])) };
 	const loaderIdentity = sha256(json(identityBasis));
 	const runtimeVersion = `0.0.0-copied1.${loaderIdentity}`;
-	const projection = model.copiedGraph?.callbacks ? compileCallablePhpGraphZendModel(model.bindingIr)
-		: model.copiedGraph ? compileCopiedPhpGraphZendModel(model.bindingIr)
-			: compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
-	const { namespace } = projection, aliases = model.copiedGraph ? projection.aliases : phpCopiedAliases(projection);
+	const projection = model.ownedGraph ? compileOwnedPhpZendModel(model.bindingIr)
+		: model.copiedGraph?.callbacks ? compileCallablePhpGraphZendModel(model.bindingIr)
+			: model.copiedGraph ? compileCopiedPhpGraphZendModel(model.bindingIr)
+				: compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
+	const { namespace } = projection, aliases = model.copiedGraph || model.ownedGraph ? projection.aliases : phpCopiedAliases(projection);
 	const aliasFiles = aliases.length ? { "lean-bridge/aliases.json": json({ schemaVersion: 1, aliases }) } : {};
 	const definition = { id: model.component.id, identity: sha256(json(receipt)), namespace, library: basename(receipt.library), composer: composer.name, runtimeIdentity: runtime.identity };
 	const phpDependencies = { ...brickMath, ...aliasFiles, "bootstrap.php": "<?php\ndeclare(strict_types=1);\nrequire_once __DIR__ . '/dependencies/brick-math/autoload.php';\nrequire_once __DIR__ . '/src/Api.php';\n" };
@@ -84,7 +87,7 @@ export default descriptor;
 `;
 	const runtimePackage = { name: runtimeName, version: runtimeVersion, type: "module", description: "Shared Lean runtime for compiled PHP-Wasm copied APIs", exports: { ".": "./index.mjs" }, files: ["index.mjs", "host.mjs", "compiled", "licenses", "runtime-identity.json"], leanBridge: { profile, runtimeIdentity: runtime.identity, loaderIdentity } };
 	const componentPackage = { name: npm.name, version: npm.version, type: "module", description: `Compiled Lean API for PHP-Wasm: ${model.component.name}`, ...npmPackageMetadata(metadata), exports: { ".": "./index.mjs", "./package.json": "./package.json" }, files: ["index.mjs", "README.md", "lazy-library.txt", "compiled", "php", "licenses"], dependencies: { [runtimeName]: runtimeVersion }, peerDependencies: { "php-wasm": "0.1.0" }, leanBridge: { profile, component: model.component, componentIdentity: definition.identity, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.identity, composer } };
-	const composerPackage = { ...composer, type: "library", description: `Compiled Lean copied API for PHP-Wasm: ${model.component.name}`, ...composerPackageMetadata(metadata), require: { php: ">=8.4 <8.5", ...brickMathRequirement }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile, component: model.component, componentIdentity: definition.identity, runtimeIdentity: runtime.identity, npm: { name: npm.name, version: npm.version }, namespace } } };
+	const composerPackage = { ...composer, type: "library", description: `Compiled Lean ${model.ownedGraph ? "resource-containing" : "copied"} API for PHP-Wasm: ${model.component.name}`, ...composerPackageMetadata(metadata), require: { php: ">=8.4 <8.5", ...brickMathRequirement }, autoload: { files: ["src/Api.php"] }, extra: { "lean-bridge": { profile, component: model.component, componentIdentity: definition.identity, runtimeIdentity: runtime.identity, npm: { name: npm.name, version: npm.version }, namespace } } };
 	const readme = `# ${model.component.name} for PHP-Wasm
 
 Import this package's default descriptor and include it in PHP-Wasm's \`sharedLibs\` array. npm installs the matching Lean runtime dependency. The descriptor registers that runtime once per PHP host and mounts the generated PHP files.
@@ -105,7 +108,7 @@ For first-call loading, import \`{ lazy as api }\` from this package and pass \`
 
 This package uses PHP-Wasm 0.1.0, PHP 8.4.1 and the default host variant in Node or Chromium. Register descriptors before constructing the host. Lazy loading requires \`enable_dl=1\`; await each host request before starting another. After an extension-loading failure, create a new PHP instance. No compiler, FFI extension or install script is required. The handoff receipt verifies package bytes; the descriptor checks compatibility identities, not downloaded byte integrity.
 
-${model.copiedGraph ? `Records and variant cases are final readonly classes. List and Array use consecutive-key PHP arrays while retaining distinct Lean types. Products use nested two-element arrays. Option uses null for None and Some(value) for Some; Some(null) and nested Some preserve their declared nesting. Except uses Ok(value) or Err(error). Aliases use their target PHP values without extra wrappers. Generated PHPDoc describes nested types. Functions and constructors check exact arity and values in both weak and strict callers.
+${model.ownedGraph ? ownedPhpWasmReadme : model.copiedGraph ? `Records and variant cases are final readonly classes. List and Array use consecutive-key PHP arrays while retaining distinct Lean types. Products use nested two-element arrays. Option uses null for None and Some(value) for Some; Some(null) and nested Some preserve their declared nesting. Except uses Ok(value) or Err(error). Aliases use their target PHP values without extra wrappers. Generated PHPDoc describes nested types. Functions and constructors check exact arity and values in both weak and strict callers.
 
 On this 32-bit host, UInt32, UInt64, Int64, Nat, Int and USize use Brick\\Math\\BigInteger. ISize is a signed 32-bit PHP int. Unit is null; Char is one UTF-8 Unicode scalar. String preserves UTF-8 and NUL; Bytes::fromString preserves arbitrary bytes. Float values require PHP float; Float32 rounds to binary32. Big integers have a 16384-decimal-digit limit.
 
@@ -117,7 +120,7 @@ Generated records, variants, Some/Ok/Err and Bytes provide equals($other) and ha
 Lean List inputs, results and record fields use consecutive-key PHP arrays with \`list<T>\` PHPDoc. Empty Lists, order, duplicates and nesting are preserved. List and Array retain distinct IR and native identities. Returned mutable values are independent copies. Weak and strict callers receive the same validation and copy-budget checks. List callback payloads remain unsupported.`}
 ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks accept PHP callables with one to sixteen primitive arguments and a primitive result. Generated checks enforce exact values even in weak callers. UInt32, UInt64, Int64, Nat, Int and 32-bit USize use Brick\\Math\\BigInteger. Unit is null; Char is one Unicode scalar. Callback arguments are copied. The callable itself borrows one synchronous call; retained calls reject. Throwable failures preserve the original object after Lean cleanup. Reference parameters/returns, generators, compound callables and async reject.\n\nReturned LeanClosure objects are invokable with exactly the declared positional arguments. Call close() in finally; it is idempotent and defers disposal during an active call. isClosed() reports explicit closure, and destruction is a fallback. Saved callable aliases share the same lease. Cloning and serialization reject. Keep closures within their originating PHP instance. The pinned host cannot start Fibers. Each adapter allows 64 nested calls, the runtime allows 4096 closure identities, and existing 16 MiB conversion budgets apply.\n" : ""}
 `;
-	const callableReadme = !model.copiedGraph && hasStructuredZendCallables(projection) ? readme
+	const callableReadme = !model.ownedGraph && !model.copiedGraph && hasStructuredZendCallables(projection) ? readme
 		.replace("Compound callables, generic or indexed variants and recursive copied types remain unsupported.", "Recursive callback payloads, generic or indexed variants and recursive copied types remain unsupported.")
 		.replace("List callback payloads remain unsupported.", "Lists also retain these values in callbacks and captured closures.")
 		.replace("Primitive callbacks accept PHP callables with one to sixteen primitive arguments and a primitive result.", "Callbacks accept PHP callables with one to sixteen arguments and a result using primitives, arrays, Lists, options, results, products, acyclic records, variants and concrete copied aliases.")
@@ -132,13 +135,13 @@ ${model.types.some(type => type.kind === "callback") ? "\nPrimitive callbacks ac
 			, "runtime/package/package.json": json(runtimePackage)
 			, "component/package/index.mjs": componentIndex
 			, "component/package/package.json": json(componentPackage)
-			, "component/package/README.md": callableReadme + (model.copiedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
+			, "component/package/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
 			, "component/package/lazy-library.txt": definition.library
 			, ...Object.fromEntries(Object.entries(phpDependencies).map(([path, bytes]) => [`component/package/php/${path}`, bytes]))
 			, "composer/composer.json": json(composerPackage)
 			, "composer/lean-bridge/compiled-package.json": json({ schemaVersion: 1, profile, ...definition, bindingIrSha256: model.bindingIrSha256, sourceIdentity: model.sourceIdentity, ...(aliases.length ? { aliases } : {}) })
 			, ...Object.fromEntries(Object.entries(aliasFiles).map(([path, bytes]) => [`composer/${path}`, bytes]))
-			, "composer/README.md": callableReadme + (model.copiedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
+			, "composer/README.md": callableReadme + (model.copiedGraph || model.ownedGraph ? "" : phpAliasReadme(projection) + phpVariantReadme(projection) + phpValueReadme)
 			, ...Object.fromEntries(["runtime/package", "component/package", "composer"].flatMap(prefix => Object.entries(notices).map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 			, ...Object.fromEntries(["component/package", "composer"].flatMap(prefix => [...sourceNotices].map(([path, bytes]) => [`${prefix}/licenses/${path}`, bytes])))
 		}

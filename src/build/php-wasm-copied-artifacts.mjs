@@ -9,10 +9,12 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "./php-wasm-graph-model.mjs";
 import { generateCompiledPhpWasmGraph } from "./php-wasm-graph-component.mjs";
+import { generateCompiledPhpWasmOwned } from "./php-wasm-owned-component.mjs";
 import { generateCopiedPhpZendAdapter } from "../backends/php/copied-zend.mjs";
 import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
 import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 import { verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
+import { verifyReviewedOwnedSourceInputs } from "../analyze/reviewed-owned-source.mjs";
 
 export const phpWasmCopiedProfile = "php-wasm-copied-v1";
 export const phpWasmCopiedCompilerFiles = Object.freeze(["upstream/emscripten/emcc", "upstream/emscripten/em++.py", "upstream/emscripten/emcc.py", "upstream/emscripten/tools/link.py", "upstream/bin/clang", "upstream/bin/wasm-ld"]);
@@ -110,11 +112,13 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 	const metadata = await read("metadata.json");
 	const reconstructed = createCompiledPhpWasmModel({ metadata, component: model.component, sourceIdentity: receipt.sourceIdentity });
 	const adapters = generateCompiledPhpWasmLeanAdapters(reconstructed);
-	const graph = reconstructed.copiedGraph ? generateCompiledPhpWasmGraph(reconstructed, adapters) : null;
+	const graph = reconstructed.ownedGraph ? generateCompiledPhpWasmOwned(reconstructed, metadata, adapters)
+		: reconstructed.copiedGraph ? generateCompiledPhpWasmGraph(reconstructed, adapters) : null;
 	const zend = graph?.files ?? generateCopiedPhpZendAdapter(reconstructed.bindingIr);
 	const manifestPath = graph?.zendManifestPath ?? "copied-zend-manifest.json";
 	const zendManifest = JSON.parse(zend[manifestPath]);
-	if(!closed(receipt, ["schemaVersion", "profile", "pointerBits", "runtimeIdentity", "bindingIrSha256", "sourceIdentity", "metadataSha256", "modelSha256", "headerSha256", "adaptersSha256", "zendSha256", "initializer", "library", "wasmLibrary", "compiler", "phpHeadersSha256", "exports", ...graph ? ["copiedGraph"] : []])
+	const graphKey = reconstructed.ownedGraph ? "ownedGraph" : "copiedGraph";
+	if(!closed(receipt, ["schemaVersion", "profile", "pointerBits", "runtimeIdentity", "bindingIrSha256", "sourceIdentity", "metadataSha256", "modelSha256", "headerSha256", "adaptersSha256", "zendSha256", "initializer", "library", "wasmLibrary", "compiler", "phpHeadersSha256", "exports", ...graph ? [graphKey] : []])
 		|| receipt.schemaVersion !== 1 || receipt.profile !== phpWasmCopiedProfile || receipt.pointerBits !== 32
 		|| receipt.sourceIdentity.leanCommit !== phpWasmCopiedPins.leanCommit || !compilerIdentity(receipt.compiler) || !hash(receipt.phpHeadersSha256)
 		|| receipt.runtimeIdentity !== runtimeIdentity || !same(model, reconstructed)
@@ -124,7 +128,7 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 		|| receipt.headerSha256 !== sha256(adapters.header) || adapters.header !== await readFile(join(root, "component.h"), "utf8")
 		|| receipt.adaptersSha256 !== sha256(adapters.leanSource) || adapters.leanSource !== await readFile(join(root, "generated.lean"), "utf8")
 		|| receipt.zendSha256 !== sha256(zend[manifestPath])
-		|| graph && !same(receipt.copiedGraph, graph.receipt)
+		|| graph && !same(receipt[graphKey], graph.receipt)
 		|| receipt.initializer !== `initialize_${adapters.module}`
 		|| receipt.library !== `lib/php8.4-${zendManifest.extension}.so`
 		|| !same(receipt.exports, zendManifest.exports)) throw new Error("PHP-Wasm component differs from compiler metadata, adapters or runtime");
@@ -135,6 +139,7 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 	await validatePhpWasmCopiedBinary(bytes, true);
 	const notices = await readVerifiedSourceNotices(root, receipt.sourceIdentity);
 	verifyPackageMetadataSource(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
-	verifyReviewedSourceInputs(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
+	if(reconstructed.ownedGraph) verifyReviewedOwnedSourceInputs(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
+	else verifyReviewedSourceInputs(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
 	return { model, receipt };
 };

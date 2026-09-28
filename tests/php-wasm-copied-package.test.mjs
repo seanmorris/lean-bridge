@@ -13,6 +13,27 @@ const component = { id: "willow@1.0.0", identity: "4".repeat(64), runtimeIdentit
 const base = { library: new URL("file:///installed/willow/api.so"), api: new URL("file:///installed/willow/Api.php"), native: new URL("file:///installed/willow/Native.php"), registration: new URL("file:///installed/willow/lazy-library.txt") };
 const host = () => ({ phpVersion: "8.4", phpVariant: "", phpArgs: {} });
 
+test("owned and copied descriptors share one runtime with exact extension names", () => {
+	const owned = { ...component, id: "owned@1.0.0", namespace: "LeanOwned"
+		, composer: "example/owned"
+		, library: `php8.4-lb_owned_${"a".repeat(20)}.so` };
+	for(const mode of ["startup", "lazy"])
+	{
+		const a = descriptor(runtime, component, base), b = descriptor(runtime, owned, base);
+		const php = host(), entry = mode === "lazy" ? b.lazy : b;
+		assert.equal(a.getLibs(php).length, 2);
+		assert.deepEqual(entry.getLibs(php), [{ name: owned.library, url: base.library, ini: mode === "startup" }]);
+		assert.equal(entry.getFiles(php).length, mode === "lazy" ? 3 : 2);
+		assert.deepEqual(entry.getLibs(php), []);
+	}
+	for(const library of [
+		`php8.4-lb_owned_${"a".repeat(19)}.so`
+		, `php8.4-lb_owned_${"a".repeat(21)}.so`
+		, `php8.4-lb_other_${"a".repeat(20)}.so`
+		, owned.library + "\n", "../" + owned.library
+	]) assert.throws(() => descriptor(runtime, { ...owned, library }, base), /Invalid generated/);
+});
+
 test("installed descriptors deduplicate runtime, extension and PHP files per host", () => {
 	const a = descriptor(runtime, component, base), alias = descriptor(runtime, component, { ...base, library: new URL("file:///moved/willow/api.so") });
 	const b = descriptor(runtime, { ...component, id: "aspen@1.0.0", namespace: "LeanAspen", composer: "example/aspen", library: `php8.4-lb_aspen_${"6".repeat(16)}.so` }, base);

@@ -9,9 +9,15 @@ if (!class_exists(Loader::class, false)) {
     final class Loader {
         private static ?string $failure = null;
         private static bool $loading = false;
+        private static int $callbacks = 0;
+        public static function enterCallback(): void { ++self::$callbacks; }
+        public static function leaveCallback(): void { --self::$callbacks; }
         public static function load(string $library, string $function): void {
             if (self::$failure !== null) throw new \\RuntimeException(self::$failure);
             if (self::$loading) throw new \\RuntimeException('Reentrant PHP-Wasm extension loading is not supported');
+            // dl may suspend the host to fetch or instantiate a side module.
+            // The synchronous Lean stack cannot participate in that unwind.
+            if (self::$callbacks !== 0) throw new \\RuntimeException('Cannot load a PHP-Wasm extension inside a synchronous Lean callback. Use its startup descriptor or call that package before entering the callback.');
             $registration = '/__lean_bridge/php_wasm_lazy/' . $library . '.txt';
             if (!is_file($registration) || file_get_contents($registration) !== $library) {
                 throw new \\RuntimeException('Register this package lazy descriptor in dynamicLibs before PHP starts');

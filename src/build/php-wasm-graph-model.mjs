@@ -14,6 +14,7 @@ import { componentRecursiveHelper, componentRecursiveLeanSource, componentRecurs
 import { createPhpWasmCopiedModel, generateNativeLeanAdapters } from "./native-model.mjs";
 import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi, nativeCallableGraphHeader } from "./native-callable-graph.mjs";
 import { componentStructuredCopiedView, componentStructuredCallableLeanSource } from "./component-structured-callable-lean.mjs";
+import { createOwnedPhpWasmModel, generateOwnedPhpWasmLeanAdapters } from "./php-wasm-owned-model.mjs";
 
 const primitives = {
 	unit: "Unit", bool: "Bool", uint8: "UInt8", uint16: "UInt16"
@@ -70,6 +71,7 @@ export const phpWasmGraphCarrierAbi = model => {
 export const createCompiledPhpWasmModel = options => {
 	if(options.moduleName !== undefined) throw new TypeError("PHP-Wasm graph compilation does not accept a Perl namespace");
 	const { metadata, component, sourceIdentity } = options;
+	if(sourceIdentity.request.ownedAggregates !== undefined) return createOwnedPhpWasmModel(options);
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true });
 	if(!elaborated.declarations.some(containsGraph)) return createPhpWasmCopiedModel(options);
 	const semantic = createElaboratedSemanticModel({ metadata
@@ -132,6 +134,7 @@ const carrierHeader = (abi, exportCarriers = true) => {
  * @param model - Compiler-authenticated PHP-Wasm model.
  */
 export const generateCompiledPhpWasmLeanAdapters = model => {
+	if(model.ownedGraph) return generateOwnedPhpWasmLeanAdapters(model);
 	if(!model.copiedGraph) return generateNativeLeanAdapters(model);
 	const abi = phpWasmGraphCarrierAbi(model), module = `LeanBridgeNative${sha256(model.component.id).slice(0, 16)}`;
 	const exports = model.exports.map((item, index) => ({ bindingId: item.bindingId

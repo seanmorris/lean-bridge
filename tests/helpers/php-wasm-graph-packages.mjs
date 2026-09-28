@@ -95,18 +95,25 @@ const rejectArtifactDrift = async (root, runtimeIdentity) => {
  * @param options.release - Original package report and handoff directory.
  * @param options.host - Pinned PHP-Wasm host package directory.
  * @param options.diagnostic - Progress reporter.
+ * @param options.companions - Additional original releases sharing the runtime.
  */
-export const installPhpWasmGraphPackages = async ({ root, release, host, diagnostic }) => {
+export const installPhpWasmGraphPackages = async ({ root, release, host, diagnostic, companions = [] }) => {
 	const project = join(root, "install"), deployment = join(root, "deployed"), feed = join(root, "feed");
 	await saveLakeFile(project, "package.json", canonicalJson({ private: true, type: "module" })); await mkdir(feed);
 	const npm = [], archives = [];
-	let composer;
-	for(const item of release.report.archives)
+	const releases = [release, ...companions], composerArchives = new Map();
+	for(const entry of releases)
+	for(const item of entry.report.archives)
 	{
-		const path = join(feed, item.archive), bytes = await readFile(join(release.output, "archives", item.archive));
+		assert.equal(entry.report.runtimeIdentity, release.report.runtimeIdentity);
+		assert.equal(entry.report.loaderIdentity, release.report.loaderIdentity);
+		const path = join(feed, item.archive), bytes = await readFile(join(entry.output, "archives", item.archive));
 		assert.equal(bytes.length, item.bytes); assert.equal(sha256(bytes), item.sha256);
+		const previous = archives.find(archive => archive.archive === item.archive);
+		if(previous)
+		{ assert.deepEqual(item, previous); continue; }
 		await saveLakeFile(feed, item.archive, bytes); archives.push({ ...item });
-		if(item.ecosystem === "npm") npm.push(path); else composer = path;
+		if(item.ecosystem === "npm") npm.push(path); else composerArchives.set(item.name, path);
 	}
 	diagnostic("Installing the original npm archives and companion Composer ZIP offline");
 	const hostManifest = JSON.parse(await readFile(join(host, "package.json")));
@@ -127,16 +134,17 @@ export const installPhpWasmGraphPackages = async ({ root, release, host, diagnos
 	await runCopied(process.execPath, npmArgs, project, { ...copiedCleanEnvironment, PATH: bin });
 	assert.deepEqual(await phpWasmInventory(join(project, "node_modules/php-wasm")), hostFiles);
 	const npmLock = JSON.parse(await readFile(join(project, "package-lock.json")));
-	assert.deepEqual(Object.keys(npmLock.packages).sort(), ["", "node_modules/php-wasm", "node_modules/@lean-bridge/php-wasm-copied-runtime", `node_modules/${release.report.npmSettings.name}`].sort());
-	const composerMetadata = JSON.parse(await readFile(join(release.output, "composer/composer.json")));
+	assert.deepEqual(Object.keys(npmLock.packages).sort(), ["", "node_modules/php-wasm", "node_modules/@lean-bridge/php-wasm-copied-runtime", ...releases.map(entry => `node_modules/${entry.report.npmSettings.name}`)].sort());
+	const composerRecords = await Promise.all(releases.map(async entry => JSON.parse(await readFile(join(entry.output, "composer/composer.json")))));
+	const composerMetadata = composerRecords[0];
 	const composerHome = join(root, "composer-home"), composerCache = join(root, "composer-cache");
 	for(const path of [composerHome, composerCache])
 	{ await mkdir(path); assert.deepEqual(await readdir(path), []); }
 	await saveLakeFile(project, "composer.json", canonicalJson({ name: "test/recursive-php-wasm-consumer"
 		, config: { "allow-plugins": false, platform: { php: "8.4.1" } }
 		, repositories: [{ "packagist.org": false }, await brickMathRepository(feed)
-			, { type: "package", package: { ...composerMetadata, dist: { type: "zip", url: pathToFileURL(composer).href } } }]
-		, require: { [composerMetadata.name]: composerMetadata.version } }));
+			, ...composerRecords.map(metadata => ({ type: "package", package: { ...metadata, dist: { type: "zip", url: pathToFileURL(composerArchives.get(metadata.name)).href } } }))]
+		, require: Object.fromEntries(composerRecords.map(metadata => [metadata.name, metadata.version])) }));
 	await runCopied(process.env.LEAN_BRIDGE_COMPOSER ?? "composer", ["--no-plugins", "--no-scripts", "--no-interaction", "install", "--prefer-dist", "--no-progress", "--no-dev"], project
 		, { ...process.env, COMPOSER_ALLOW_SUPERUSER: "1", COMPOSER_DISABLE_NETWORK: "1", COMPOSER_HOME: composerHome, COMPOSER_CACHE_DIR: composerCache });
 	const composerEvidence = { manifest: JSON.parse(await readFile(join(project, "composer.json")))
@@ -144,10 +152,11 @@ export const installPhpWasmGraphPackages = async ({ root, release, host, diagnos
 		, installed: JSON.parse(await readFile(join(project, "vendor/composer/installed.json"))) };
 	validateBrickMathInstall(composerEvidence, await phpWasmInventory(project));
 	const installed = {};
-	for(const [from, into] of [["runtime/package", "node_modules/@lean-bridge/php-wasm-copied-runtime"], ["component/package", `node_modules/${release.report.npmSettings.name}`], ["composer", `vendor/${composerMetadata.name}`]])
+	for(const entry of releases)
+	for(const [from, into] of [["runtime/package", "node_modules/@lean-bridge/php-wasm-copied-runtime"], ["component/package", `node_modules/${entry.report.npmSettings.name}`], ["composer", `vendor/${entry.report.composerSettings.name}`]])
 	{
 		installed[into] = await phpWasmInventory(join(project, into));
-		assert.deepEqual(installed[into], await phpWasmInventory(join(release.output, from)));
+		assert.deepEqual(installed[into], await phpWasmInventory(join(entry.output, from)));
 	}
 	await rename(project, deployment);
 	await rm(feed, { recursive: true }); await rm(composerHome, { recursive: true }); await rm(composerCache, { recursive: true });

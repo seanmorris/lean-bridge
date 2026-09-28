@@ -75,7 +75,7 @@ ${model.surface.callbacks.size ? phpZendLease : ""}
 final class Native
 {
 ${phpWire(model)}
-${model.surface.callbacks.size ? phpZendCallableMethods(model, transport) : ""}
+${model.surface.callbacks.size ? phpZendCallableMethods(model, transport, Boolean(library)) : ""}
 ${model.surface.functions.map((fn, index) => model.surface.callbacks.size ? phpZendCall(model, transport, library, { name: `call${index}`, entry: `call${index}`, parameters: fn.declaration.parameters, result: fn.declaration.result }) : `    public static function call${index}(${fn.parameters.map((_, i) => `mixed $arg${i}`).join(", ")}): mixed {
         $budget = new Budget();
 ${fn.declaration.parameters.map((site, i) => { const c = model.surface.copy(site.type); return `        $input${i} = self::to${c.index}(Checks::check${c.index}($arg${i}, $budget));`; }).join("\n")}

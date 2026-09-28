@@ -31,6 +31,10 @@ test("Zend callable sources bind exact wasm32 values without exposing native lay
 	assert.match(c, /zend_catch \{ \*borrow->bailout = 1; \}/u);
 	assert.match(c, /lb_cleanup_call0\(ctx\);\n {2}if \(bailout\) zend_bailout/u);
 	assert.match(c, /if \(EG\(exception\)\).*RETURN_THROWS/u);
+	assert.match(files["src/Internal/Native.php"], /Loader::enterCallback\(\)/u);
+	assert.match(files["src/Internal/Native.php"], /finally \{ \\LeanBridge\\CopiedPhpWasmV1\\Loader::leaveCallback\(\); \}/u);
+	const native = generateCopiedPhpZendAdapter(ir, { integerBits: 64 });
+	assert.doesNotMatch(native["src/Internal/Native.php"], /CopiedPhpWasmV1|enterCallback|leaveCallback/u);
 });
 
 for(const [name, change] of Object.entries({

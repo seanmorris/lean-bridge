@@ -17,6 +17,8 @@ import { generateNativePrimitiveC } from "../backends/c/native-primitives.mjs";
 import { buildElaboratedComponent } from "./elaborated-component.mjs";
 import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "./php-wasm-graph-model.mjs";
 import { generateCompiledPhpWasmGraph } from "./php-wasm-graph-component.mjs";
+import { generateCompiledPhpWasmOwned } from "./php-wasm-owned-component.mjs";
+import { compileOwnedPhpZendModel } from "../backends/php/owned-zend-model.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -126,12 +128,14 @@ export const buildPhpWasmCopiedComponent = async options => {
 	const compiler = await toolchain(emsdkRoot, runner, signal);
 	if(!same(verifiedRuntime.manifest.compiler, compiler.compiler)) throw new Error("PHP-Wasm runtime/component compiler identity mismatch");
 	const phpHeaders = await capture(php, await phpWasmHeaderPaths(php));
-	return buildElaboratedComponent({ ...options, targets: ["php-wasm"]
+	return buildElaboratedComponent({ ...options
+		, targets: ["php-wasm"], ownedGraphs: true
 		, moduleName: undefined, profile, receiptName: "php-wasm-component.json"
 		, createModel: createCompiledPhpWasmModel
 		, createAdapters: generateCompiledPhpWasmLeanAdapters
 		, validateModel: model => {
-			if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr);
+			if(model.ownedGraph) compileOwnedPhpZendModel(model.bindingIr);
+			else if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr);
 			else if(model.copiedGraph) compileCopiedPhpGraphZendModel(model.bindingIr);
 			else compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 			options.validateModel?.(model);
@@ -139,13 +143,14 @@ export const buildPhpWasmCopiedComponent = async options => {
 		, compileComponent: async ({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace }) => {
 			if(lakeWorkspace && lakeNativeInputs(lakeWorkspace.resolution).length) throw new Error("PHP-Wasm copied compilation does not yet admit Lake native C inputs");
 			for(const path of Object.keys(phpHeaders)) await save(staging, `c/php/${path}`, await readFile(join(php, path)));
-			const graph = model.copiedGraph ? generateCompiledPhpWasmGraph(model, adapters) : null;
+			const graph = model.ownedGraph ? generateCompiledPhpWasmOwned(model, metadata, adapters)
+				: model.copiedGraph ? generateCompiledPhpWasmGraph(model, adapters) : null;
 			const zend = graph?.files ?? generateCopiedPhpZendAdapter(model.bindingIr);
 			const manifestPath = graph?.zendManifestPath ?? "copied-zend-manifest.json";
 			const manifest = JSON.parse(zend[manifestPath]);
 			const runtimeHeader = await readFile(join(runtime, "include/lean_bridge_native_runtime.h"), "utf8");
 			if(graph && !runtimeHeader.includes("#define LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION 1")) throw new Error("PHP-Wasm recursive packages require compiler inputs rebuilt with runtime retirement support");
-			if(model.copiedGraph?.callbacks && !runtimeHeader.includes(nativeCallbackHeader)) throw new Error("PHP-Wasm recursive callables require compiler inputs rebuilt with callback registry support");
+			if((model.copiedGraph?.callbacks || model.ownedGraph) && !runtimeHeader.includes(nativeCallbackHeader)) throw new Error("PHP-Wasm callables require compiler inputs rebuilt with callback registry support");
 			for(const [path, source] of Object.entries(zend)) await save(staging, path, source);
 			const initializer = `initialize_${adapters.module}`;
 			let adapterSources;
@@ -161,6 +166,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 			}
 			await save(staging, "c/width.c", '#include <php.h>\n#include <lean/lean.h>\n_Static_assert(sizeof(void *) == 4 && sizeof(size_t) == 4 && sizeof(zend_long) == 4, "PHP-Wasm requires wasm32");\n_Static_assert(PHP_VERSION_ID == 80401, "PHP headers must match PHP-Wasm 8.4.1");\n');
 			const roots = [staging, join(staging, "include"), join(staging, "c/binding/include"), join(staging, "c/binding/internal"), join(runtime, "include"), join(staging, "c/php"), ...["Zend", "main", "TSRM", "ext"].map(path => join(staging, "c/php", path))];
+			if(model.ownedGraph) roots.push(join(staging, "owned"));
 			// Retain the historical object order for acyclic components.
 			const paths = [...adapterSources]; paths.splice(2, 0, "c/width.c");
 			const sources = [...compileOrder.map(item => item.c), generatedC, ...paths.map(path => join(staging, path))];
@@ -170,7 +176,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 			for(const [i, source] of sources.entries())
 			{
 				const object = join(staging, `c/${i}.o`); objects.push(object);
-				const guard = guardedSources.has(source) ? ["-include", join(staging, "graph/allocation-guard.h")] : [];
+				const guard = guardedSources.has(source) ? ["-include", join(staging, graph.allocationGuard ?? "graph/allocation-guard.h")] : [];
 				try
 				{
 					await compiler.run(compiler.emcc, [...compileFlags, ...guard, `-ffile-prefix-map=${staging}=/build/php-wasm-component`, `-ffile-prefix-map=${runtime}=/build/php-wasm-runtime`, `-ffile-prefix-map=${resolve(emsdkRoot)}=/toolchains/php-wasm`, ...includes(roots), "-c", source, "-o", object]);
@@ -197,7 +203,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 				, headerSha256: sha256(adapters.header)
 				, adaptersSha256: sha256(adapters.leanSource)
 				, zendSha256: sha256(zend[manifestPath])
-				, ...graph ? { copiedGraph: graph.receipt } : {}
+				, ...graph ? { [model.ownedGraph ? "ownedGraph" : "copiedGraph"]: graph.receipt } : {}
 				, initializer, library, wasmLibrary: identity(bytes)
 				, compiler: compiler.compiler
 				, phpHeadersSha256: sha256(canonicalJson(phpHeaders))

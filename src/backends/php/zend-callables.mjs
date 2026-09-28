@@ -76,8 +76,9 @@ ${args.map((value, i) => `        $input${i} = ${callable(value) ? `self::borrow
  *
  * @param model - Checked PHP projection.
  * @param transport - Private Zend namespace.
+ * @param loading - Guard suspension only in the PHP-Wasm loading profile.
  */
-export const phpZendCallableMethods = (model, transport) => `    private static ?\\Closure $wrap = null;
+export const phpZendCallableMethods = (model, transport, loading = false) => `    private static ?\\Closure $wrap = null;
 ${[...model.surface.callbacks.values()].map(value => {
 	const { parameters, result } = value.type.callable, out = phpValue(model, result.type), i = value.index;
 	return `    private static function borrow${i}(mixed $value, Budget $budget, ?\\Throwable &$failure): \\Closure {
@@ -86,10 +87,10 @@ ${[...model.surface.callbacks.values()].map(value => {
         if ($reflection->isGenerator() || $reflection->returnsReference()) throw new \\TypeError('Lean callbacks cannot be generators or return references');
         foreach ($reflection->getParameters() as $parameter) if ($parameter->isPassedByReference()) throw new \\TypeError('Lean callbacks cannot take reference parameters');
         return static function (${parameters.map((_, n) => `mixed $arg${n}`).join(", ")}) use ($callback, $budget, &$failure): mixed {
-            try {
+${loading ? "            \\LeanBridge\\CopiedPhpWasmV1\\Loader::enterCallback();\n" : ""}            try {
                 $result = $callback(${parameters.map((site, n) => `self::from${phpValue(model, site.type).index}($arg${n})`).join(", ")});
                 return self::to${out.index}(Checks::check${out.index}($result, $budget));
-            } catch (\\Throwable $error) { $failure ??= $error; throw $error; }
+            } catch (\\Throwable $error) { $failure ??= $error; throw $error; }${loading ? "\n            finally { \\LeanBridge\\CopiedPhpWasmV1\\Loader::leaveCallback(); }" : ""}
         };
     }
     private static function own${i}(mixed $token): \\${model.namespace}\\LeanClosure {

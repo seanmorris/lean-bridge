@@ -117,6 +117,7 @@ final class Native
         $invoke = static function(mixed ...$wire) use ($frame, $callback, $signature, $parameters): mixed {
             if (!$frame->active) throw new \LogicException('Lean callback has expired');
             if ($frame->failure !== null) throw $frame->failure;
+            \LeanBridge\CopiedPhpWasmV1\Loader::enterCallback();
             try {
                 if (count($wire) !== count($parameters)) throw new GraphInvalidWire('Wrong native callback arity');
                 $arguments = [];
@@ -128,6 +129,7 @@ final class Native
                 try { self::malformed($error); }
                 catch (\Throwable $failure) { $frame->failure ??= $failure; throw $failure; }
             } catch (\Throwable $error) { $frame->failure ??= $error; throw $error; }
+            finally { \LeanBridge\CopiedPhpWasmV1\Loader::leaveCallback(); }
         };
         $fallback = $prepared['explicit'] ? GraphWire::transfer($signature['result'], $prepared['fallback'], false, $frame->writing) : null;
         return [$invoke, $prepared['explicit'], $fallback];

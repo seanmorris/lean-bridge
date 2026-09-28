@@ -104,6 +104,7 @@ export const phpZendGraphCalls = String.raw`
         return static function (mixed ...$wire) use ($callback, $frame, $fn): mixed {
             if (!$frame->active) throw new \LogicException('Lean callback has expired');
             if ($frame->failure !== null) throw $frame->failure;
+            \LeanBridge\CopiedPhpWasmV1\Loader::enterCallback();
             try {
                 if (count($wire) !== count($fn['parameters'])) throw new GraphInvalidWire('Wrong native callback arity');
                 $arguments = [];
@@ -115,6 +116,7 @@ export const phpZendGraphCalls = String.raw`
                 try { self::malformed($error); }
                 catch (\Throwable $failure) { $frame->failure ??= $failure; throw $failure; }
             } catch (\Throwable $error) { $frame->failure ??= $error; throw $error; }
+            finally { \LeanBridge\CopiedPhpWasmV1\Loader::leaveCallback(); }
         };
     }
     private static function own(int $signature, mixed $token): GRAPH_NAMESPACE\LeanClosure {

@@ -22,7 +22,7 @@ export const createPhpWasmCopiedDescriptor = (runtime, component, assets) => {
 		|| !hash(component?.identity) || !hash(component?.runtimeIdentity)
 		|| typeof component.id !== "string" || !component.id.length
 		|| !/^Lean[A-Za-z0-9_]+$/.test(component.namespace)
-		|| !/^php8\.4-lb_[a-z0-9_]+_[a-f0-9]{16}\.so$/.test(component.library)
+		|| !/^php8\.4-lb_(?:[a-z0-9_]+_[a-f0-9]{16}|owned_[a-f0-9]{20})\.so$/.test(component.library)
 		|| !/^[a-z][a-z0-9_-]*\/[a-z][a-z0-9_-]*$/.test(component.composer)
 		|| ![assets?.library, assets?.api, assets?.native, assets?.registration].every(url => url instanceof URL))
 		reject("invalid-php-wasm-descriptor", "Invalid generated PHP-Wasm copied descriptor");
