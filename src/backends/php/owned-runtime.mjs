@@ -208,6 +208,7 @@ final class NativeBinding implements ResourceBinding
         return $this->handle;
     }
     public function state(): OwnedState { $this->check(); return $this->lease->state; }
+    public function pin(OwnedState $state): OwnedLease { $this->raw($state); return $this->lease; }
     public function retain(): ResourceBinding {
         $this->check();
         if ($this->retainCall === null) throw new \LogicException('Missing native retain operation');
