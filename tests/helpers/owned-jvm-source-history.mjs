@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeJvmProbeRepair, jvmProbeRepairChangedPaths } from "./jvm-probe-repair-history.mjs";
-import { ownedPerlChangedPaths } from "./owned-perl-source-history.mjs";
+import { ownedPerlNormalizationPaths } from "./owned-perl-source-history.mjs";
 
 export const ownedJvmBaseline = "4ae2450fd9dfd164486970993d0923e667c18bbf";
 export const ownedJvmHistoryPath = "docs/evidence/owned-jvm-integration-20260927.json";
@@ -177,7 +177,7 @@ export const beforeOwnedJvmPackages = (path, source, expected) => {
 	return update?.currentSha256 === digest ? reverseOwnedJvmUpdate(source, update) : source;
 };
 
-export const ownedJvmNormalizationPaths = [...new Set([...ownedJvmChangedPaths, ...jvmProbeRepairChangedPaths, ...ownedPerlChangedPaths])].sort();
+export const ownedJvmNormalizationPaths = [...new Set([...ownedJvmChangedPaths, ...jvmProbeRepairChangedPaths, ...ownedPerlNormalizationPaths])].sort();
 
 /**
  * Normalize declared text only and preserve unrelated binary data byte-for-byte.

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePerlContractRepair, perlContractRepairChangedPaths } from "./perl-contract-repair-history.mjs";
 
 export const ownedPerlBaseline = "84d157c351f20ae3a41f3926db17cc14e69a3989";
 export const ownedPerlHistoryPath = "docs/evidence/owned-perl-integration-20260928.json";
@@ -27,6 +28,7 @@ export const ownedPerlChangedPaths = [
 	, "tests/owned-c-packaging.test.mjs"
 	, "tests/owned-jvm-package-evidence.test.mjs"
 ].sort();
+export const ownedPerlNormalizationPaths = [...new Set([...ownedPerlChangedPaths, ...perlContractRepairChangedPaths])].sort();
 export const ownedPerlAddedPaths = [
 	"docs/evidence/owned-perl-packages-20260927.md"
 	, "docs/evidence/owned-perl-runtime-20260927.md"
@@ -101,6 +103,7 @@ export const reverseOwnedPerlUpdate = (source, update) => {
  * @param expected - Optional requested identity at which to stop.
  */
 export const beforeOwnedPerlPackages = (path, source, expected) => {
+	source = beforePerlContractRepair(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedPerlChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedPerlHistoryPath, "utf8"));
@@ -119,5 +122,5 @@ export const beforeOwnedPerlPackages = (path, source, expected) => {
  * @param bytes - Complete current or historical file bytes.
  * @param expected - Optional requested identity.
  */
-export const ownedPerlHistoricalBytes = (path, bytes, expected) => ownedPerlChangedPaths.includes(path)
+export const ownedPerlHistoricalBytes = (path, bytes, expected) => ownedPerlNormalizationPaths.includes(path)
 	? beforeOwnedPerlPackages(path, bytes.toString("utf8"), expected) : bytes;

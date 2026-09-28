@@ -1,0 +1,669 @@
+{
+  "acceptance": [
+    {
+      "command": "node --test --test-name-pattern='CI requires recursive' tests/dotnet-recursive-callable-evidence.test.mjs",
+      "exitCode": 0,
+      "output": "TAP version 13\n# Subtest: CI requires recursive C\\# installs and preserves the complete per-ABI Perl suite\nok 1 - CI requires recursive C\\# installs and preserves the complete per-ABI Perl suite\n  ---\n  duration_ms: 8.912125\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1268.191821\n",
+      "outputSha256": "ebeb95db908ca45aa22e4154c8f68eee4b9cee3a2f5d99008a26bcd4af88af9e"
+    },
+    {
+      "command": "node --test --test-name-pattern='owned C# callback evidence preserves' tests/owned-dotnet-callback-evidence.test.mjs",
+      "exitCode": 0,
+      "output": "TAP version 13\n# Subtest: owned C\\# callback evidence preserves the foundation and requires every executed signature\nok 1 - owned C\\# callback evidence preserves the foundation and requires every executed signature\n  ---\n  duration_ms: 5146.813396\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 5543.72714\n",
+      "outputSha256": "78e0ca5afa5da8e84d0c8249e0a7e9eb8224151a4e5487e9844ef052c4906d49"
+    }
+  ],
+  "baselineRevision": "20d95044ae6f1dcf2d156cd8043126a16bbd1b4e",
+  "kind": "post-perl-contract-repair",
+  "planNode": 1219,
+  "previous": {
+    "path": "docs/evidence/owned-perl-integration-20260928.json",
+    "sha256": "a05b1678b37823a6fa9ab2956055969a26948cc2643706e08b2b7191d6d05f17"
+  },
+  "reproductions": [
+    {
+      "command": "node --test --test-name-pattern='CI requires recursive' tests/dotnet-recursive-callable-evidence.test.mjs",
+      "exitCode": 1,
+      "output": "TAP version 13\n# Subtest: CI requires recursive C\\# installs and preserves the complete per-ABI Perl suite\nnot ok 1 - CI requires recursive C\\# installs and preserves the complete per-ABI Perl suite\n  ---\n  duration_ms: 8.289055\n  type: 'test'\n  location: '/tmp/lean-bridge-perl-ci-repair-g6595j/tests/dotnet-recursive-callable-evidence.test.mjs:113:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    The input did not match the regular expression /^ {4}timeout-minutes: 90$/mu. Input:\n    \n    '    name: Perl XS (${{ matrix.configuration }})\\n' +\n      '    runs-on: ubuntu-24.04\\n' +\n      '    # Copied and owned package families run sequentially on each Perl ABI.\\n' +\n      '    timeout-minutes: 120\\n' +\n      '    strategy:\\n' +\n      '      fail-fast: false\\n' +\n      '      matrix:\\n' +\n      '        configuration:\\n' +\n      '          - 5.36.3-threaded\\n' +\n      '          - 5.36.3-unthreaded\\n' +\n      '          - 5.38.2-threaded\\n' +\n      '          - 5.38.2-unthreaded\\n' +\n      '    steps:\\n' +\n      '      - uses: actions/checkout@v6\\n' +\n      '        with:\\n' +\n      '          persist-credentials: false\\n' +\n      '      - uses: actions/setup-node@v6\\n' +\n      '        with:\\n' +\n      '          node-version: \"22\"\\n' +\n      '          cache: npm\\n' +\n      '      - name: Install the checkout dependencies\\n' +\n      '        run: npm ci --ignore-scripts --no-audit --no-fund\\n' +\n      '      - name: Install the native build tools\\n' +\n      '        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd\\n' +\n      '      - name: Install only the pinned Lean compiler\\n' +\n      '        run: bash scripts/bootstrap-toolchains.sh --lean-only\\n' +\n      '      - name: Restore this checksummed Perl toolchain\\n' +\n      '        uses: actions/cache@v4\\n' +\n      '        with:\\n' +\n      '          path: .toolchains/perl/${{ matrix.configuration }}\\n' +\n      \"          key: perl-abi-v2-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}\\n\" +\n      '      - name: Test both install paths on this Perl configuration\\n' +\n      '        run: npm run test:consumer:perl -- --configuration \"${{ matrix.configuration }}\"\\n' +\n      '      - name: Compare installed Perl corpus packages with fresh Lean results\\n' +\n      '        env:\\n' +\n      '          CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}\\n' +\n      '        run: |\\n' +\n      '          export LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl\"\\n' +\n      '          source scripts/env.sh\\n' +\n      '          npm run test:type-corpus:perl && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=perl node --test tests/type-corpus-reviewed-native.test.mjs\\n' +\n      '          LEAN_BRIDGE_CHAR_PROFILES=perl node --test tests/native-char.test.mjs\\n' +\n      '          LEAN_BRIDGE_WORD_PROFILES=perl node --test tests/native-words.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_CALLABLE_TEST=1 node --test tests/perl-callables.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_STRUCTURED_CALLABLE_TEST=1 node --test tests/perl-structured-callables.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/perl-recursive-callables.test.mjs tests/perl-recursive-callable-contract.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_LIST_TEST=1 node --test tests/perl-lists.test.mjs tests/perl-list-contract.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_COLLECTION_TEST=1 node --test tests/perl-collections.test.mjs tests/perl-collection-contract.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_ALIAS_TEST=1 node --test tests/perl-aliases.test.mjs tests/perl-alias-contract.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_VARIANT_TEST=1 node --test tests/perl-variants.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_GRAPH_TEST=1 node --test tests/perl-copied-graph-values.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 node --test tests/perl-copied-graph-conversions.test.mjs\\n' +\n      '          LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test tests/perl-graph-package.test.mjs\\n' +\n      '          test -s build/type-corpus/perl.json\\n' +\n      '          test -s build/type-corpus/reviewed-native-perl.json\\n' +\n      '          test -s build/structured-callables/perl.json\\n' +\n      '          test -s build/recursive-callables/perl.json\\n' +\n      '          test -s build/compounds/perl.json\\n' +\n      '          test -s build/lists/perl.json\\n' +\n      '          test -s build/collections/perl.json\\n' +\n      '          test -s build/aliases/perl.json\\n' +\n      '          test -s build/variants/perl.json\\n' +\n      '          test -s build/recursive/perl-values.json\\n' +\n      '          test -s build/recursive/perl-conversions.json\\n' +\n      '          test -s build/recursive/perl-native.json\\n' +\n      '          test -s build/recursive/perl-packages.json\\n' +\n      '          test -s build/recursive/perl-component-collision.json\\n' +\n      '          test -s build/recursive/perl-composition.json\\n' +\n      '          test -s build/recursive/perl-documentation.json\\n' +\n      '      - name: Verify owned Perl values and installed CPAN archives\\n' +\n      '        env:\\n' +\n      '          CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}\\n' +\n      '        run: |\\n' +\n      '          export LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl\"\\n' +\n      '          source scripts/env.sh\\n' +\n      '          export LEAN_BRIDGE_OWNED_NATIVE_TEST=1\\n' +\n      '          node --test --test-concurrency=1 tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs tests/owned-perl-conversions.test.mjs\\n' +\n      '          node --test --test-concurrency=1 tests/owned-perl-xs.test.mjs tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs\\n' +\n      '          node --test --test-concurrency=1 tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs tests/owned-perl-documentation.test.mjs\\n' +\n      '          for report in ordinary reviewed complete-ordinary complete-reviewed; do\\n' +\n      '            test -s \"build/owned-perl-runtime/$report.json\"\\n' +\n      '            test -s \"build/owned-perl-conversions/$report.json\"\\n' +\n      '            test -s \"build/owned-perl-calls/$report.json\"\\n' +\n      '          done\\n' +\n      '          test -s build/owned-perl-scalars/ordinary.json\\n' +\n      '          test -s build/owned-perl-scalars/reviewed.json\\n' +\n      '          test -s build/owned-perl-loader/installed.json\\n' +\n      '          test -s build/owned-perl-package/ordinary.json\\n' +\n      '          test -s build/owned-perl-package/reviewed.json\\n' +\n      '          test -s build/owned-perl-package/callbacks-ordinary.json\\n' +\n      '          test -s build/owned-perl-package/callbacks-reviewed.json\\n' +\n      '          test -s build/owned-perl-package/coexistence.json\\n' +\n      '          test -s build/owned-perl-package/documentation.json\\n' +\n      \"      - name: Upload this configuration's real-Lean corpus report\\n\" +\n      '        if: always()\\n' +\n      '        uses: actions/upload-artifact@v7\\n' +\n      '        with:\\n' +\n      '          name: type-corpus-perl-${{ matrix.configuration }}-${{ github.sha }}\\n' +\n      '          path: |\\n' +\n      '            build/type-corpus/perl.json\\n' +\n      '            build/type-corpus/reviewed-native-perl.json\\n' +\n      '            build/char-native/perl.json\\n' +\n      '            build/word-native/perl.json\\n' +\n      '            build/callables/perl.json\\n' +\n      '            build/structured-callables/perl.json\\n' +\n      '            build/recursive-callables/perl.json\\n' +\n      '            build/compounds/perl.json\\n' +\n      '            build/lists/perl.json\\n' +\n      '            build/collections/perl.json\\n' +\n      '            build/aliases/perl.json\\n' +\n      '            build/variants/perl.json\\n' +\n      '            build/recursive/perl-values.json\\n' +\n      '            build/recursive/perl-conversions.json\\n' +\n      '            build/recursive/perl-native.json\\n' +\n      '            build/recursive/perl-packages.json\\n' +\n      '            build/recursive/perl-component-collision.json\\n' +\n      '            build/recursive/perl-composition.json\\n' +\n      '            build/recursive/perl-documentation.json\\n' +\n      '            build/owned-perl-runtime/\\n' +\n      '            build/owned-perl-conversions/\\n' +\n      '            build/owned-perl-calls/\\n' +\n      '            build/owned-perl-scalars/\\n' +\n      '            build/owned-perl-loader/\\n' +\n      '            build/owned-perl-package/\\n' +\n      '          if-no-files-found: error\\n' +\n      '          overwrite: true\\n' +\n      '          retention-days: 30\\n' +\n      \"      - name: Upload this configuration's acceptance and benchmark evidence\\n\" +\n      '        if: always()\\n' +\n      '        uses: actions/upload-artifact@v7\\n' +\n      '        with:\\n' +\n      '          name: perl-abi-${{ matrix.configuration }}-${{ github.sha }}\\n' +\n      '          # Preserve the configuration directory when the four artifacts merge.\\n' +\n      '          path: |\\n' +\n      '            build/consumer-ci/perl/*/benchmark.json\\n' +\n      '            build/consumer-ci/perl/*/acceptance.json\\n' +\n      '            build/consumer-ci/perl/*/perl.json\\n' +\n      '          if-no-files-found: error\\n' +\n      '          overwrite: true\\n' +\n      '\\n' +\n      '  perl-summary:\\n' +\n      '    name: Combined Perl consumer observation\\n' +\n      '    if: always()\\n' +\n      '    needs:\\n' +\n      '      - compiler-checks\\n' +\n      '      - nix-engine\\n' +\n      '      - perl\\n' +\n      '    runs-on: ubuntu-24.04\\n' +\n      '    timeout-minutes: 10\\n' +\n      '    steps:\\n' +\n      '      - uses: actions/checkout@v6\\n' +\n      '        with:\\n' +\n      '          persist-credentials: false\\n' +\n      '      - uses: actions/setup-node@v6\\n' +\n      '        with:\\n' +\n      '          node-version: \"22\"\\n' +\n      \"      - name: Download all four configurations' evidence\\n\" +\n      '        id: evidence\\n' +\n      '        uses: actions/download-artifact@v5\\n' +\n      '        with:\\n' +\n      '          pattern: perl-abi-*-${{ github.sha }}\\n' +\n      '          path: build/consumer-ci/perl\\n' +\n      '          merge-multiple: true\\n' +\n      '      - name: Record Perl consumer observation\\n' +\n      '        if: always()\\n' +\n      '        env:\\n' +\n      \"          PERL_ACCEPTED: ${{ needs.compiler-checks.result == 'success' && needs.nix-engine.result == 'success' && needs.perl.result == 'success' && steps.evidence.outcome == 'success' }}\\n\" +\n      '        run: |\\n' +\n      '          test_result=failed\\n' +\n      '          if [[ \"$PERL_ACCEPTED\" == true ]]; then test_result=passed; fi\\n' +\n      '          node scripts/consumer-ci.mjs record --consumer perl \\\\\\n' +\n      '            --test-result \"$test_result\" \\\\\\n' +\n      '            --package-installation \"$PERL_ACCEPTED\" \\\\\\n' +\n      '            --real-lean-execution \"$PERL_ACCEPTED\" \\\\\\n' +\n      '            --performance build/consumer-ci/perl/5.38.2-threaded/perl.json \\\\\\n' +\n      '            --output build/consumer-ci/results/perl.json\\n' +\n      '          test \"$PERL_ACCEPTED\" = true\\n' +\n      '      - name: Upload consumer observation\\n' +\n      '        if: always()\\n' +\n      '        uses: actions/upload-artifact@v7\\n' +\n      '        with:\\n' +\n      '          name: consumer-results-perl-${{ github.sha }}\\n' +\n      '          path: build/consumer-ci/results/perl.json\\n' +\n      '          if-no-files-found: error\\n' +\n      '          overwrite: true\\n' +\n      '      - name: Upload warmed benchmark evidence\\n' +\n      '        if: always()\\n' +\n      '        uses: actions/upload-artifact@v7\\n' +\n      '        with:\\n' +\n      '          name: perl-benchmarks-${{ github.sha }}\\n' +\n      '          path: |\\n' +\n      '            build/consumer-ci/perl/**/benchmark.json\\n' +\n      '            build/consumer-ci/perl/**/acceptance.json\\n' +\n      '            build/consumer-ci/perl/**/perl.json\\n' +\n      '          if-no-files-found: warn\\n' +\n      '          overwrite: true\\n'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual: |-\n        name: Perl XS (${{ matrix.configuration }})\n        runs-on: ubuntu-24.04\n        # Copied and owned package families run sequentially on each Perl ABI.\n        timeout-minutes: 120\n        strategy:\n          fail-fast: false\n          matrix:\n            configuration:\n              - 5.36.3-threaded\n              - 5.36.3-unthreaded\n              - 5.38.2-threaded\n              - 5.38.2-unthreaded\n        steps:\n          - uses: actions/checkout@v6\n            with:\n              persist-credentials: false\n          - uses: actions/setup-node@v6\n            with:\n              node-version: \"22\"\n              cache: npm\n          - name: Install the checkout dependencies\n            run: npm ci --ignore-scripts --no-audit --no-fund\n          - name: Install the native build tools\n            run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd\n          - name: Install only the pinned Lean compiler\n            run: bash scripts/bootstrap-toolchains.sh --lean-only\n          - name: Restore this checksummed Perl toolchain\n            uses: actions/cache@v4\n            with:\n              path: .toolchains/perl/${{ matrix.configuration }}\n              key: perl-abi-v2-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}\n          - name: Test both install paths on this Perl configuration\n            run: npm run test:consumer:perl -- --configuration \"${{ matrix.configuration }}\"\n          - name: Compare installed Perl corpus packages with fresh Lean results\n            env:\n              CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}\n            run: |\n              export LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl\"\n              source scripts/env.sh\n              npm run test:type-corpus:perl && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=perl node --test tests/type-corpus-reviewed-native.test.mjs\n              LEAN_BRIDGE_CHAR_PROFILES=perl node --test tests/native-char.test.mjs\n              LEAN_BRIDGE_WORD_PROFILES=perl node --test tests/native-words.test.mjs\n              LEAN_BRIDGE_PERL_CALLABLE_TEST=1 node --test tests/perl-callables.test.mjs\n              LEAN_BRIDGE_PERL_STRUCTURED_CALLABLE_TEST=1 node --test tests/perl-structured-callables.test.mjs\n              LEAN_BRIDGE_PERL_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/perl-recursive-callables.test.mjs tests/perl-recursive-callable-contract.test.mjs\n              LEAN_BRIDGE_PERL_COMPOUND_TEST=1 node --test tests/perl-compounds.test.mjs\n              LEAN_BRIDGE_PERL_LIST_TEST=1 node --test tests/perl-lists.test.mjs tests/perl-list-contract.test.mjs\n              LEAN_BRIDGE_PERL_COLLECTION_TEST=1 node --test tests/perl-collections.test.mjs tests/perl-collection-contract.test.mjs\n              LEAN_BRIDGE_PERL_ALIAS_TEST=1 node --test tests/perl-aliases.test.mjs tests/perl-alias-contract.test.mjs\n              LEAN_BRIDGE_PERL_VARIANT_TEST=1 node --test tests/perl-variants.test.mjs\n              LEAN_BRIDGE_PERL_GRAPH_TEST=1 node --test tests/perl-copied-graph-values.test.mjs\n              LEAN_BRIDGE_PERL_GRAPH_CONVERSION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_NATIVE_TEST=1 node --test tests/perl-copied-graph-conversions.test.mjs\n              LEAN_BRIDGE_PERL_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COLLISION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_COMPOSITION_TEST=1 LEAN_BRIDGE_PERL_GRAPH_DOCUMENTATION_TEST=1 node --test tests/perl-graph-package.test.mjs\n              test -s build/type-corpus/perl.json\n              test -s build/type-corpus/reviewed-native-perl.json\n              test -s build/structured-callables/perl.json\n              test -s build/recursive-callables/perl.json\n              test -s build/compounds/perl.json\n              test -s build/lists/perl.json\n              test -s build/collections/perl.json\n              test -s build/aliases/perl.json\n              test -s build/variants/perl.json\n              test -s build/recursive/perl-values.json\n              test -s build/recursive/perl-conversions.json\n              test -s build/recursive/perl-native.json\n              test -s build/recursive/perl-packages.json\n              test -s build/recursive/perl-component-collision.json\n              test -s build/recursive/perl-composition.json\n              test -s build/recursive/perl-documentation.json\n          - name: Verify owned Perl values and installed CPAN archives\n            env:\n              CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}\n            run: |\n              export LEAN_BRIDGE_CORPUS_PERL=\"$PWD/.toolchains/perl/$CORPUS_PERL_CONFIGURATION/bin/perl\"\n              source scripts/env.sh\n              export LEAN_BRIDGE_OWNED_NATIVE_TEST=1\n              node --test --test-concurrency=1 tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs tests/owned-perl-conversions.test.mjs\n              node --test --test-concurrency=1 tests/owned-perl-xs.test.mjs tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs\n              node --test --test-concurrency=1 tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs tests/owned-perl-documentation.test.mjs\n              for report in ordinary reviewed complete-ordinary complete-reviewed; do\n                test -s \"build/owned-perl-runtime/$report.json\"\n                test -s \"build/owned-perl-conversions/$report.json\"\n                test -s \"build/owned-perl-calls/$report.json\"\n              done\n              test -s build/owned-perl-scalars/ordinary.json\n              test -s build/owned-perl-scalars/reviewed.json\n              test -s build/owned-perl-loader/installed.json\n              test -s build/owned-perl-package/ordinary.json\n              test -s build/owned-perl-package/reviewed.json\n              test -s build/owned-perl-package/callbacks-ordinary.json\n              test -s build/owned-perl-package/callbacks-reviewed.json\n              test -s build/owned-perl-package/coexistence.json\n              test -s build/owned-perl-package/documentation.json\n          - name: Upload this configuration's real-Lean corpus report\n            if: always()\n            uses: actions/upload-artifact@v7\n            with:\n              name: type-corpus-perl-${{ matrix.configuration }}-${{ github.sha }}\n              path: |\n                build/type-corpus/perl.json\n                build/type-corpus/reviewed-native-perl.json\n                build/char-native/perl.json\n                build/word-native/perl.json\n                build/callables/perl.json\n                build/structured-callables/perl.json\n                build/recursive-callables/perl.json\n                build/compounds/perl.json\n                build/lists/perl.json\n                build/collections/perl.json\n                build/aliases/perl.json\n                build/variants/perl.json\n                build/recursive/perl-values.json\n                build/recursive/perl-conversions.json\n                build/recursive/perl-native.json\n                build/recursive/perl-packages.json\n                build/recursive/perl-component-collision.json\n                build/recursive/perl-composition.json\n                build/recursive/perl-documentation.json\n                build/owned-perl-runtime/\n                build/owned-perl-conversions/\n                build/owned-perl-calls/\n                build/owned-perl-scalars/\n                build/owned-perl-loader/\n                build/owned-perl-package/\n              if-no-files-found: error\n              overwrite: true\n              retention-days: 30\n          - name: Upload this configuration's acceptance and benchmark evidence\n            if: always()\n            uses: actions/upload-artifact@v7\n            with:\n              name: perl-abi-${{ matrix.configuration }}-${{ github.sha }}\n              # Preserve the configuration directory when the four artifacts merge.\n              path: |\n                build/consumer-ci/perl/*/benchmark.json\n                build/consumer-ci/perl/*/acceptance.json\n                build/consumer-ci/perl/*/perl.json\n              if-no-files-found: error\n              overwrite: true\n    \n      perl-summary:\n        name: Combined Perl consumer observation\n        if: always()\n        needs:\n          - compiler-checks\n          - nix-engine\n          - perl\n        runs-on: ubuntu-24.04\n        timeout-minutes: 10\n        steps:\n          - uses: actions/checkout@v6\n            with:\n              persist-credentials: false\n          - uses: actions/setup-node@v6\n            with:\n              node-version: \"22\"\n          - name: Download all four configurations' evidence\n            id: evidence\n            uses: actions/download-artifact@v5\n            with:\n              pattern: perl-abi-*-${{ github.sha }}\n              path: build/consumer-ci/perl\n              merge-multiple: true\n          - name: Record Perl consumer observation\n            if: always()\n            env:\n              PERL_ACCEPTED: ${{ needs.compiler-checks.result == 'success' && needs.nix-engine.result == 'success' && needs.perl.result == 'success' && steps.evidence.outcome == 'success' }}\n            run: |\n              test_result=failed\n              if [[ \"$PERL_ACCEPTED\" == true ]]; then test_result=passed; fi\n              node scripts/consumer-ci.mjs record --consumer perl \\\n                --test-result \"$test_result\" \\\n                --package-installation \"$PERL_ACCEPTED\" \\\n                --real-lean-execution \"$PERL_ACCEPTED\" \\\n                --performance build/consumer-ci/perl/5.38.2-threaded/perl.json \\\n                --output build/consumer-ci/results/perl.json\n              test \"$PERL_ACCEPTED\" = true\n          - name: Upload consumer observation\n            if: always()\n            uses: actions/upload-artifact@v7\n            with:\n              name: consumer-results-perl-${{ github.sha }}\n              path: build/consumer-ci/results/perl.json\n              if-no-files-found: error\n              overwrite: true\n          - name: Upload warmed benchmark evidence\n            if: always()\n            uses: actions/upload-artifact@v7\n            with:\n              name: perl-benchmarks-${{ github.sha }}\n              path: |\n                build/consumer-ci/perl/**/benchmark.json\n                build/consumer-ci/perl/**/acceptance.json\n                build/consumer-ci/perl/**/perl.json\n              if-no-files-found: warn\n              overwrite: true\n    \n  operator: 'match'\n  stack: |-\n    TestContext.<anonymous> (file:///tmp/lean-bridge-perl-ci-repair-g6595j/tests/dotnet-recursive-callable-evidence.test.mjs:120:9)\n    async Test.run (node:internal/test_runner/test:1054:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 993.625509\n",
+      "outputSha256": "5ebaec887ce4e997ed90447b3fe322a23c5f3c798ba1289397c92123cfc1d682"
+    },
+    {
+      "command": "node --test --test-name-pattern='owned C# callback evidence preserves' tests/owned-dotnet-callback-evidence.test.mjs",
+      "exitCode": 1,
+      "output": "TAP version 13\n# Subtest: owned C\\# callback evidence preserves the foundation and requires every executed signature\nnot ok 1 - owned C\\# callback evidence preserves the foundation and requires every executed signature\n  ---\n  duration_ms: 120.413072\n  type: 'test'\n  location: '/tmp/lean-bridge-perl-ci-repair-g6595j/tests/owned-dotnet-callback-evidence.test.mjs:127:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    src/build/elaborated-component.mjs\n    \n    19473 !== 19472\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 19472\n  actual: 19473\n  operator: 'strictEqual'\n  stack: |-\n    verify (file:///tmp/lean-bridge-perl-ci-repair-g6595j/tests/owned-dotnet-callback-evidence.test.mjs:48:10)\n    async TestContext.<anonymous> (file:///tmp/lean-bridge-perl-ci-repair-g6595j/tests/owned-dotnet-callback-evidence.test.mjs:129:2)\n    async Test.run (node:internal/test_runner/test:1054:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 430.857181\n",
+      "outputSha256": "ecbb5f98fc43da059dd87d9a168c5a5ac1382bbf44897b4cafd3b4e65e65e19c"
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": {
+    "packageArtifactsChanged": false,
+    "productionCodeChanged": false,
+    "promotedCells": 0
+  },
+  "sources": {
+    "docs/evidence/perl-contract-repair-20260928.md": "c130f1eebe1a34a5d56f6ae0dece0ea047bece7655e67f783c7cfba580bb8a7e",
+    "docs/type-surface.v1.json": "88ffbb0a38fc7c7271538b9a211b7072226b05d3cc28c68c5d4c4831c12089a9",
+    "src/adoption/test-profiles.mjs": "8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8",
+    "tests/dotnet-recursive-callable-evidence.test.mjs": "47ef838eb46015df1000415086c4dbf20f605381b720d21d40544ff24a70f215",
+    "tests/helpers/jvm-probe-repair-history.mjs": "dca3f2a6bf955b70e694a25812038bd38182b92a71aadf4fe3d884632fb3eb54",
+    "tests/helpers/owned-jvm-source-history.mjs": "de8b7d3254d05d0d318757721a7721574a954aaa62bee2a08ef8738997bba0ed",
+    "tests/helpers/owned-perl-source-history.mjs": "0bfd2bffebd5854d6a4514d55ba6254cfaa405855257c7f60edbab23760fdf38",
+    "tests/helpers/perl-contract-repair-history.mjs": "812a96919f45b9f624e382e0522bb1d8cdcf905e51900b74be35432efb30f33e",
+    "tests/owned-dotnet-callback-evidence.test.mjs": "a3a8c8e7c03c676e0fc179fb91ae36a7e24e84a14cfbcc1a18c0569428dcd21d",
+    "tests/owned-perl-package-evidence.test.mjs": "32429ac1219e1e7269e2df6a061f395b3e884d9543e7b3d2bf92bb36e840072c",
+    "tests/perl-contract-repair-evidence.test.mjs": "defee984ace78a899120d7b4acef00394798cdb086d90556e4e33f911624e682"
+  },
+  "updates": [
+    {
+      "currentSha256": "88ffbb0a38fc7c7271538b9a211b7072226b05d3cc28c68c5d4c4831c12089a9",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 34246
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 56804
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 74007
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 90300
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 122950
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 146179
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 159145
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 174044
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 186977
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 200196
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 208734
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 217165
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 226179
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 234845
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 244420
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 253521
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 263370
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 275509
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 285543
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 294095
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 303389
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 316078
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 325329
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 334616
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 343739
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 352602
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 359987
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 367921
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 378571
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 385456
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 392665
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 399761
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 410620
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 417736
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 424114
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 430277
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 437036
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 443878
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 450720
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 460024
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 471258
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 480947
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 490540
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 502070
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 510633
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 521647
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 554177
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 560173
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 570436
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 579749
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 591297
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 599818
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 610774
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 660190
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 670292
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 677152
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 685124
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 699155
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 710368
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 724588
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 736042
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 748113
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 759401
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 767984
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 774442
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 782828
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 790963
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 802935
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 822073
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 877591
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 993166
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1050368
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1058112
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1064562
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1071822
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1079167
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1086220
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1093821
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1104101
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1117263
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1127521
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1135407
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1146144
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1156404
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1170823
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1203367
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1233649
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1266612
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1307838
+        },
+        {
+          "current": "          \"sha256\": \"47ef838eb46015df1000415086c4dbf20f605381b720d21d40544ff24a70f215\"\n",
+          "previous": "          \"sha256\": \"5be632df9c963fed9f33e2fdd79190a9a48b908bf036c6110c8e7995878d1d64\"\n",
+          "start": 1314431
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1333390
+        },
+        {
+          "current": "          \"sha256\": \"47ef838eb46015df1000415086c4dbf20f605381b720d21d40544ff24a70f215\"\n",
+          "previous": "          \"sha256\": \"5be632df9c963fed9f33e2fdd79190a9a48b908bf036c6110c8e7995878d1d64\"\n",
+          "start": 1337054
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1355927
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1375619
+        },
+        {
+          "current": "          \"sha256\": \"8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8\"\n",
+          "previous": "          \"sha256\": \"b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e\"\n",
+          "start": 1396262
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "7f027ecaec28c02e0c178d730aa2450b67fa1dc7b008d70b021089d70afcdb22"
+    },
+    {
+      "currentSha256": "8b13f29b26d9e76cda4fdbba1ce80d146b23e77a2c4c9736757aae95aace06b8",
+      "edits": [
+        {
+          "current": "\t\t, \"perl-contract-repair-evidence\"\n",
+          "previous": "",
+          "start": 996
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "b6bc8069c7eb3ef72320d91249c7f8d1577507001e754f8cdf5bfa6eb497ae7e"
+    },
+    {
+      "currentSha256": "47ef838eb46015df1000415086c4dbf20f605381b720d21d40544ff24a70f215",
+      "edits": [
+        {
+          "current": "\tassert.match(perl, /^ {4}timeout-minutes: 120$/mu);\n",
+          "previous": "\tassert.match(perl, /^ {4}timeout-minutes: 90$/mu);\n",
+          "start": 7254
+        },
+        {
+          "current": "\tfor(const name of [\"runtime\", \"values\", \"conversions\", \"xs\", \"scalars\", \"loader\", \"package\", \"coexistence\", \"documentation\"])\n\t\tassert.ok(perl.includes(`tests/owned-perl-${name}.test.mjs`));\n",
+          "previous": "",
+          "start": 7479
+        }
+      ],
+      "path": "tests/dotnet-recursive-callable-evidence.test.mjs",
+      "previousSha256": "5be632df9c963fed9f33e2fdd79190a9a48b908bf036c6110c8e7995878d1d64"
+    },
+    {
+      "currentSha256": "dca3f2a6bf955b70e694a25812038bd38182b92a71aadf4fe3d884632fb3eb54",
+      "edits": [
+        {
+          "current": "import { beforeOwnedPerlPackages, ownedPerlNormalizationPaths } from \"./owned-perl-source-history.mjs\";\n",
+          "previous": "import { beforeOwnedPerlPackages, ownedPerlChangedPaths } from \"./owned-perl-source-history.mjs\";\n",
+          "start": 233
+        },
+        {
+          "current": "export const jvmProbeRepairBytes = (path, bytes, expected) => jvmProbeRepairChangedPaths.includes(path) || ownedPerlNormalizationPaths.includes(path)\n",
+          "previous": "export const jvmProbeRepairBytes = (path, bytes, expected) => jvmProbeRepairChangedPaths.includes(path) || ownedPerlChangedPaths.includes(path)\n",
+          "start": 2593
+        }
+      ],
+      "path": "tests/helpers/jvm-probe-repair-history.mjs",
+      "previousSha256": "89316de7740d1e189217c36126effba28ed255e90b5adaf65e8398b1aaa4877c"
+    },
+    {
+      "currentSha256": "de8b7d3254d05d0d318757721a7721574a954aaa62bee2a08ef8738997bba0ed",
+      "edits": [
+        {
+          "current": "import { ownedPerlNormalizationPaths } from \"./owned-perl-source-history.mjs\";\n",
+          "previous": "import { ownedPerlChangedPaths } from \"./owned-perl-source-history.mjs\";\n",
+          "start": 336
+        },
+        {
+          "current": "export const ownedJvmNormalizationPaths = [...new Set([...ownedJvmChangedPaths, ...jvmProbeRepairChangedPaths, ...ownedPerlNormalizationPaths])].sort();\n",
+          "previous": "export const ownedJvmNormalizationPaths = [...new Set([...ownedJvmChangedPaths, ...jvmProbeRepairChangedPaths, ...ownedPerlChangedPaths])].sort();\n",
+          "start": 8408
+        }
+      ],
+      "path": "tests/helpers/owned-jvm-source-history.mjs",
+      "previousSha256": "0b068464bfdd6870b8e3f7d993dcc560ed7f4d1266980a230aeca56bd416d890"
+    },
+    {
+      "currentSha256": "0bfd2bffebd5854d6a4514d55ba6254cfaa405855257c7f60edbab23760fdf38",
+      "edits": [
+        {
+          "current": "import { beforePerlContractRepair, perlContractRepairChangedPaths } from \"./perl-contract-repair-history.mjs\";\n",
+          "previous": "",
+          "start": 231
+        },
+        {
+          "current": "export const ownedPerlNormalizationPaths = [...new Set([...ownedPerlChangedPaths, ...perlContractRepairChangedPaths])].sort();\n",
+          "previous": "",
+          "start": 1429
+        },
+        {
+          "current": "\tsource = beforePerlContractRepair(path, source, expected);\n",
+          "previous": "",
+          "start": 4798
+        },
+        {
+          "current": "export const ownedPerlHistoricalBytes = (path, bytes, expected) => ownedPerlNormalizationPaths.includes(path)\n",
+          "previous": "export const ownedPerlHistoricalBytes = (path, bytes, expected) => ownedPerlChangedPaths.includes(path)\n",
+          "start": 5709
+        }
+      ],
+      "path": "tests/helpers/owned-perl-source-history.mjs",
+      "previousSha256": "1f22d05346fcb9dc025e1d5d7095e262aa1b293ab0bcc60a1e0547a06a54be18"
+    },
+    {
+      "currentSha256": "a3a8c8e7c03c676e0fc179fb91ae36a7e24e84a14cfbcc1a18c0569428dcd21d",
+      "edits": [
+        {
+          "current": "import { ownedDotnetHistoricalBytes } from \"./helpers/owned-dotnet-source-history.mjs\";\n",
+          "previous": "",
+          "start": 712
+        },
+        {
+          "current": "\t\tconst bytes = ownedDotnetHistoricalBytes(entry.path, await readFile(entry.path), entry.sha256);\n\t\tassert.equal(Buffer.byteLength(bytes), entry.bytes, entry.path);\n",
+          "previous": "\t\tconst bytes = await readFile(entry.path);\n\t\tassert.equal(bytes.length, entry.bytes, entry.path);\n",
+          "start": 2594
+        }
+      ],
+      "path": "tests/owned-dotnet-callback-evidence.test.mjs",
+      "previousSha256": "0dab735787dd7dc719fec758bf025d3a84086577166ecd8b207b5396780aba13"
+    },
+    {
+      "currentSha256": "32429ac1219e1e7269e2df6a061f395b3e884d9543e7b3d2bf92bb36e840072c",
+      "edits": [
+        {
+          "current": "import { beforePerlContractRepair, perlContractRepairBytes } from \"./helpers/perl-contract-repair-history.mjs\";\n",
+          "previous": "",
+          "start": 269
+        },
+        {
+          "current": "\t\tassert.equal(sha256(perlContractRepairBytes(path, await readFile(path), hash)), hash, path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(path)), hash, path);\n",
+          "start": 1763
+        },
+        {
+          "current": "\t\tconst current = beforePerlContractRepair(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1898
+        }
+      ],
+      "path": "tests/owned-perl-package-evidence.test.mjs",
+      "previousSha256": "46235d4eb57436b14731b43e15e0cbf15f970fd3f37ba86852d0873fd7bffbd3"
+    }
+  ]
+}

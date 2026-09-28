@@ -27,6 +27,7 @@ const profileManifest = Object.freeze({
 		, "owned-jvm-runtime-evidence", "owned-jvm-conversion-evidence"
 		, "owned-jvm-call-evidence", "owned-jvm-ci", "owned-jvm-package-evidence"
 		, "owned-perl-package-evidence"
+		, "perl-contract-repair-evidence"
 		, "native-fork-repair-evidence"
 		, "managed-ci-isolation", "managed-ci-isolation-evidence"
 		, "native-ci-isolation"
