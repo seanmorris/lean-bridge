@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedZendBailoutRepair, ownedZendBailoutChangedPaths } from "./owned-zend-bailout-repair-history.mjs";
 
 export const ownedAnalysisBaseline = "caeec400c8c5848ee2e31da702dbb3345e106aa1";
 export const ownedAnalysisHistoryPath = "docs/evidence/owned-analysis-integration-20260928.json";
@@ -56,6 +57,7 @@ export const ownedAnalysisAddedPaths = [
 	, "tests/owned-compiler-analysis.test.mjs"
 ].sort();
 let cached;
+export const ownedAnalysisNormalizationPaths = [...new Set([...ownedAnalysisChangedPaths, ...ownedZendBailoutChangedPaths])].sort();
 
 /**
  * Undo only recorded edits with both complete source identities.
@@ -88,6 +90,7 @@ export const reverseOwnedAnalysisUpdate = (source, update) => {
  * @param expected - Optional stopping hash.
  */
 export const beforeOwnedAnalysis = (path, source, expected) => {
+	source = beforeOwnedZendBailoutRepair(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedAnalysisChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedAnalysisHistoryPath, "utf8"));

@@ -95,6 +95,7 @@ export const checkOwnedZendNativeFibers = async t => {
 	await saveLakeFile(compiled.directory, "probe.c", files["probe.c"]);
 	const report = { profile: "native-zend-owned-lifetime-fibers", wasm32: false
 		, phpVersion: (await run(php, ["-v"])).stdout.split("\n")[0]
+		, compilerVersion: (await run("cc", ["--version"])).stdout.split("\n")[0]
 		, files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)]))
 		, observations, rejectedMutations: mutations.map(mutation => mutation.name) };
 	t.diagnostic(JSON.stringify(report));

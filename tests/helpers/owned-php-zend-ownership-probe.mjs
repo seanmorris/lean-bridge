@@ -100,6 +100,15 @@ static ZEND_FUNCTION(owned_probe_close) {
   int status = lgo_handle_close(Z_RES_P(value)->ptr);
   if (status) { probe_error(status); RETURN_THROWS(); } RETURN_NULL();
 }
+// Keep mutable callback outputs in the caller's frame. Only this helper owns
+// the setjmp boundary, so those outputs remain defined after a Zend bailout.
+static void probe_borrow_invoke(lgo_borrow *borrow, uint64_t token, zval *callback,
+    zval *values, int *status, int *bailout) {
+  zend_try {
+    if (!*status) *status = lgo_wrap(${ticket.index}, token, NULL, borrow, &values[0]);
+    if (!*status && (call_user_function(EG(function_table), NULL, callback, &values[1], 1, &values[0]) != SUCCESS || EG(exception))) *status = 10;
+  } zend_catch { *bailout = 1; } zend_end_try();
+}
 static ZEND_FUNCTION(owned_probe_borrow) {
   zval *value, *callback;
   ZEND_PARSE_PARAMETERS_START(2, 2) Z_PARAM_ZVAL(value) Z_PARAM_ZVAL(callback) ZEND_PARSE_PARAMETERS_END();
@@ -113,10 +122,7 @@ static ZEND_FUNCTION(owned_probe_borrow) {
   if (!status) status = lb_owned_scope_acquire(&transaction.scope, lgo_kind(${ticket.index}), native, &token);
   if (!status) status = lgo_borrow_new(state, &transaction.scope, &borrow);
   int bailout = 0; zval values[2]; ZVAL_UNDEF(&values[0]); ZVAL_UNDEF(&values[1]);
-  zend_try {
-    if (!status) status = lgo_wrap(${ticket.index}, token, NULL, borrow, &values[0]);
-    if (!status && (call_user_function(EG(function_table), NULL, callback, &values[1], 1, &values[0]) != SUCCESS || EG(exception))) status = 10;
-  } zend_catch { bailout = 1; } zend_end_try();
+  probe_borrow_invoke(borrow, token, callback, values, &status, &bailout);
   status = lgo_borrow_finish(&borrow, &transaction, values, 2, status, &bailout);
   if (bailout) zend_bailout();
   if (status || EG(exception)) { probe_error(status); RETURN_THROWS(); } RETURN_NULL();

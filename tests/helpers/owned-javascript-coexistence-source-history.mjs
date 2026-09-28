@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedAnalysis, ownedAnalysisChangedPaths } from "./owned-analysis-source-history.mjs";
+import { beforeOwnedAnalysis, ownedAnalysisNormalizationPaths } from "./owned-analysis-source-history.mjs";
 
 export const ownedJavaScriptCoexistenceBaseline = "239fd61ea7664dbfd8191207c6396975e6345726";
 export const ownedJavaScriptCoexistenceHistoryPath = "docs/evidence/owned-javascript-coexistence-integration-20260928.json";
@@ -34,7 +34,7 @@ export const ownedJavaScriptCoexistenceAddedPaths = [
 	, "tests/owned-javascript-coexistence-evidence.test.mjs"
 	, "tests/owned-javascript-npm-coexistence.test.mjs"
 ].sort();
-export const ownedJavaScriptCoexistenceNormalizationPaths = [...new Set([...ownedJavaScriptCoexistenceChangedPaths, ...ownedAnalysisChangedPaths])].sort();
+export const ownedJavaScriptCoexistenceNormalizationPaths = [...new Set([...ownedJavaScriptCoexistenceChangedPaths, ...ownedAnalysisNormalizationPaths])].sort();
 let cached;
 
 /**

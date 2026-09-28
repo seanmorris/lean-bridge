@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedAnalysisExecution } from "./helpers/owned-analysis-evidence.mjs";
+import { ownedZendBailoutHistoricalBytes } from "./helpers/owned-zend-bailout-repair-history.mjs";
 import { beforeOwnedAnalysis, ownedAnalysisAddedPaths, ownedAnalysisBaseline
 	, ownedAnalysisBaselineSources, ownedAnalysisChangedPaths, ownedAnalysisHistoryPath
 	, ownedAnalysisPrevious, reverseOwnedAnalysisUpdate } from "./helpers/owned-analysis-source-history.mjs";
@@ -23,13 +24,15 @@ test("ownership analysis receipt binds current sources and preserves earlier pac
 	const previousBytes = await readFile(record.previous.path), previous = JSON.parse(previousBytes);
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedAnalysisChangedPaths, ...ownedAnalysisAddedPaths])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources))
+		assert.equal(sha256(ownedZendBailoutHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedAnalysisChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedAnalysisBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedAnalysis(update.path, current);
+		const current = ownedZendBailoutHistoricalBytes(update.path, await readFile(update.path), update.currentSha256).toString();
+		const prior = beforeOwnedAnalysis(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedAnalysis(update.path, prior), prior);
 		assert.equal(beforeOwnedAnalysis(update.path, current, update.currentSha256), current);

@@ -80,6 +80,7 @@ const profileManifest = Object.freeze({
 		, "owned-compiler-analysis"
 		, "owned-analysis-build-parity"
 		, "owned-analysis-evidence"
+		, "owned-zend-bailout-repair"
 		, "compiler-variant-metadata"
 		, "compiler-alias-metadata"
 		, "compiler-callable-aliases"
