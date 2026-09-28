@@ -152,7 +152,8 @@ These constructors compose with supported primitives, arrays, records and each
 other. Type nesting stops at 32 levels; the existing conversion budgets apply.
 Both PHP transports also accept the [named variants](#named-copied-variants) below.
 Native packages also accept these types in [structured callbacks](#structured-callback-values).
-PHP-Wasm compound callables and resource-containing copies remain unsupported.
+Both PHP transports accept these constructors in synchronous callbacks.
+Resources inside values require the [explicit ownership profile](#resource-containing-values).
 Recursive native and PHP-Wasm packages use the [bounded graph conversion](#recursive-values)
 described below. See the
 [native compound checks](evidence/php-native-compounds-20260920.md) and
@@ -374,9 +375,9 @@ aliases through their resolved target type.
 
 ### Resource-containing values
 
-Native Composer packages can expose resources inside records, variants, arrays,
-Lists, options, results, products and finite recursive values. Install the
-publisher's ZIP with the [same Composer setup](#ordinary-project-packages).
+Native Composer and PHP-Wasm packages can expose resources inside records,
+variants, arrays, Lists, options, results, products and finite recursive values.
+Install a native publisher's ZIP with the [same Composer setup](#ordinary-project-packages).
 For the [author example](publish/php.md#export-resource-containing-values), require
 `example/owned-values` version `1.0.0` and save this as `owned.php`:
 
@@ -435,11 +436,24 @@ Validation rejects cycles, foreign resource classes and invalid fields before
 native entry. Conversions allow 128 value levels, 262,144 visits and separate
 16 MiB storage budgets; exact integers allow up to 16,384 decimal digits.
 
-Use the main NTS CLI execution context. Calls from Fibers and inherited
-post-fork processes reject. Compatible owned and copied packages share their
-bundled runtime automatically. These resource-containing packages currently
-target native PHP, not PHP-Wasm. Transferred inputs, anchored results and
-asynchronous callbacks remain unsupported.
+Native packages require the main NTS CLI execution context. Calls from Fibers
+and inherited post-fork processes reject. PHP-Wasm packages use the main PHP
+execution context in Node or Chromium. Compatible owned and copied packages
+share their bundled runtime automatically.
+
+For PHP-Wasm, install the publisher's npm component and runtime archives using
+the [descriptor setup](#ordinary-php-wasm-packages). The companion Composer ZIP
+is optional. Run the same PHP operations inside that interpreter, using its
+descriptor's autoloader or your mounted Composer autoloader. No FFI extension,
+GMP extension or native-library paths are needed. The target's 32-bit integer
+mappings apply inside records and callbacks as well as at top level.
+
+Load any lazy peer package before a callback first calls it, or register its
+startup descriptor. First-use loading inside a synchronous Lean callback throws
+before downloading an extension; the peer remains usable from a normal call.
+After `php.refresh()`, require the autoloader again and initialize lazy peers
+outside callbacks. Do not reuse resource wrappers from an earlier request.
+Transferred inputs, anchored results and asynchronous callbacks remain unsupported.
 
 ### Native callbacks and returned functions
 
@@ -580,7 +594,7 @@ Options, results and nested products use the [same public PHP types](#options-re
 
 PHP-Wasm also accepts synchronous primitive, [structured](#structured-callback-values) and [recursive callbacks](#recursive-callback-values), and returns invokable `LeanClosure` objects with `close()` and `isClosed()`. Use the same lifetime rules as native PHP. On this 32-bit target, `UInt32`, `UInt64`, `Int64`, `Nat`, `Int` and `USize` use `Brick\Math\BigInteger`; `ISize` uses PHP `int` in -2147483648..2147483647. Callback arguments and results use those same types, including inside copied payloads. For example, a `UInt32 → UInt32` callback can be `fn(BigInteger $value) => $value->plus(1)`.
 
-The private Zend adapter preserves callback `Throwable` identity after Lean cleanup and owns returned functions through PHP resources. It keeps nested reply storage alive until Lean finishes copying it. Closing a function releases its native state; destruction provides a fallback. Keep functions within their originating PHP instance and close them before disposing that instance. The pinned PHP-Wasm host cannot start Fibers; use the main execution context. Asynchronous delivery and resource-containing payloads are not supported. [Primitive callable checks](evidence/php-wasm-callables-20260919.md) and [structured callable checks](evidence/php-wasm-structured-callables-20260925.md) cover both source paths and loading modes.
+The private Zend adapter preserves callback `Throwable` identity after Lean cleanup and owns returned functions through PHP resources. It keeps nested reply storage alive until Lean finishes copying it. Closing a function releases its native state; destruction provides a fallback. Keep functions within their originating PHP instance and close them before disposing that instance. The pinned PHP-Wasm host cannot start Fibers; use the main execution context. Resource-containing payloads use the [explicit ownership profile](#resource-containing-values). Asynchronous delivery is not supported. [Primitive callable checks](evidence/php-wasm-callables-20260919.md) and [structured callable checks](evidence/php-wasm-structured-callables-20260925.md) cover both source paths and loading modes.
 
 `exit` ends the current PHP request. Before running PHP again, call `await php.refresh()`, require the package's autoloader again and recreate PHP values and closures. A zero return code from `php.run()` after `exit` does not by itself show that another program executed.
 
@@ -672,6 +686,12 @@ Keep the rest of the file unchanged. Loading the PHP declarations does not fetch
 Register the default descriptor in `sharedLibs` for startup loading, or `lazy` in `dynamicLibs` for first-call loading. Different components can choose different modes. Do not register the same component in both modes. npm handles the same runtime dependency in either case.
 
 The pinned PHP host supports asynchronous library downloads through `dl()`. Keep `enable_dl=1`, its default, and await each `php.run()` before starting another. A failed extension load raises the package's `LeanBridgeError`; create a new PHP instance before trying again. The loader does not retry a partially linked library.
+
+A synchronous Lean callback cannot perform a package's first extension load.
+Use that package's startup descriptor or make its first call before entering the
+callback. This rejection happens before linking and does not require replacing
+the PHP instance. Repeat the initialization after `php.refresh()` when using a
+lazy descriptor.
 
 #### Run in a browser
 

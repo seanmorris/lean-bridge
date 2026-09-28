@@ -33,7 +33,7 @@ const directory = async (path, variable) => {
 };
 
 /**
- * Verify the copied startup handoff and retain one compiled artifact per ABI.
+ * Verify the PHP-Wasm handoff and retain one compiled artifact per ABI.
  *
  * @param options - Ordinary source, separate PHP-Wasm toolchain and output policy.
  */
@@ -44,10 +44,10 @@ export const buildPhpWasmProject = async options => {
 	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "PHP-Wasm output cannot replace the source project");
 	await absent(output);
 	const record = await readExportConfiguration(project, { signal });
-	assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "arities", "specializations", "contracts", "generators"], targetFields: ["npm", "composer"] });
+	assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "contracts", "generators"], targetFields: ["npm", "composer"] });
 	const config = record.configuration.targets?.["php-wasm"] ?? {};
 	// Source-only capture admits declarations; the wasm32 compiler admits types.
-	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "analysis" });
+	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "analysis", ownedGraphs: true });
 	const emsdkRoot = await directory(environment.LEAN_BRIDGE_PHP_EMSDK ?? join(engineRoot, ".toolchains/emsdk-php-wasm"), "LEAN_BRIDGE_PHP_EMSDK");
 	const rawInputs = ["LEAN_BRIDGE_PHP_SOURCE", "LEAN_BRIDGE_PHP_COPIED_RUNTIME", "LEAN_BRIDGE_PHP_LEAN_RUNTIME"].some(name => environment[name] !== undefined);
 	if(environment.LEAN_BRIDGE_PHP_INPUTS !== undefined && rawInputs)

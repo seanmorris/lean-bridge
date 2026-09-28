@@ -32,7 +32,7 @@ import { readVerifiedCanonicalBundle } from "../release/canonical-bundle-input.m
 import { validateComponentReleaseBundleManifest } from "../release/component-release-bundle.mjs";
 import { parsePublicationIndex } from "../release/release-rehearsal.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
-import { readReviewedSource } from "../analyze/reviewed-source.mjs";
+import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { buildNativeProject } from "./native-project.mjs";
 import { buildMultiProfileProject } from "./multi-profile-project.mjs";
@@ -64,9 +64,9 @@ const fail = (code, message, options) => {
 	throw new CanonicalBuildError(code, message, options);
 };
 
-const preflightReview = async (root, signal) => {
+const preflightReview = async (root, signal, ownedGraphs = false) => {
 	try
-	{ await readReviewedSource(root, await inspectLeanProject(root, { signal }), signal); }
+	{ await readNativeReviewedSource(root, await inspectLeanProject(root, { signal }), signal, ownedGraphs); }
 	catch(error)
 	{ fail(error.code ?? "invalid-reviewed-source", error.message, { details: error.details }); }
 };
@@ -812,7 +812,8 @@ export const buildCanonicalProject = async ({
 	{
 		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
 			fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
-		if(normalized.includes("npm") || phpWasm) await preflightReview(root, signal);
+		if(normalized.includes("npm") || phpWasm)
+			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm"].includes(target)));
 		if(normalized.length === 1 && phpWasm)
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
 		if(!normalized.includes("npm") && !phpWasm)

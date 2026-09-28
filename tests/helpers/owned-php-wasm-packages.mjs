@@ -4,10 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile, readdir, rm } from "node:fs/promises";
+import { cp, readFile, readdir, rm } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { buildPhpWasmCopiedComponent } from "../../src/build/php-wasm-copied-component.mjs";
 import { readVerifiedPhpWasmCopiedRuntime, readVerifiedPhpWasmCopiedComponent } from "../../src/build/php-wasm-copied-artifacts.mjs";
 import { buildPhpWasmCopiedPackages, readVerifiedPhpWasmCopiedPackageSet } from "../../src/release/php-wasm-copied-package.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./owned-dotnet-callback-fixture.mjs";
@@ -18,6 +17,8 @@ import { buildOwnedPhpWasmPeer, checkOwnedPhpWasmCoexistence } from "./owned-php
 import { buildOwnedPhpWasmObserver } from "./owned-php-wasm-observer.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { installOwnedPhpWasmCli } from "./owned-php-wasm-cli.mjs";
+import { copyPackageSetHandoff } from "./package-set.mjs";
 
 const hostSource = name => `import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
@@ -101,12 +102,14 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic) => {
 	const phpSource = resolve(process.env.LEAN_BRIDGE_PHP_SOURCE ?? "build/php-wasm-sdk/php8.4-src");
 	const host = resolve(process.env.LEAN_BRIDGE_PHP_WASM_HOST ?? "build/php-wasm-host/node_modules/php-wasm");
 	const runtime = await readVerifiedPhpWasmCopiedRuntime(runtimeRoot);
+	diagnostic("Installing the standalone CLI with verified PHP-Wasm compiler inputs");
+	const cli = await installOwnedPhpWasmCli({ directory: join(directory, "cli"), runtimeRoot, phpSource, leanPrefix, emsdkRoot });
 	const consumer = await readFile("tests/fixtures/structured-types/owned-php-wasm-installed.php", "utf8");
 	const observations = [];
 	for(const reviewed of [false, true])
 	{
 		const root = join(directory, reviewed ? "reviewed" : "ordinary"), author = join(root, "author");
-		const projectRoot = join(author, "project"), componentRoot = join(author, "component");
+		const projectRoot = join(author, "project"), buildRoot = join(author, "compiled"), componentRoot = join(buildRoot, "php-wasm/component");
 		const fixture = "tests/fixtures/onboarding/owned-dotnet-callables";
 		for(const path of ["Owned.lean", "lean-toolchain", "lakefile.toml"])
 			await saveLakeFile(projectRoot, path, await readFile(join(fixture, path)));
@@ -119,9 +122,8 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic) => {
 			, targets: { "php-wasm": { npm: npmSettings, composer: composerSettings } } }));
 		if(reviewed) await saveLakeFile(projectRoot, "reviewed.binding-ir.json", canonicalJson(ownedDotnetCallbacksReviewedIr()));
 		const before = await lakeInputState(projectRoot);
-		diagnostic(`${reviewed ? "reviewed" : "ordinary"}: building the real PHP-Wasm ownership component`);
-		await buildPhpWasmCopiedComponent({ projectRoot, outputRoot: componentRoot, leanPrefix, runtimeRoot, emsdkRoot, phpSource })
-			.catch(error => { error.message += ": " + JSON.stringify(error.details); throw error; });
+		diagnostic(`${reviewed ? "reviewed" : "ordinary"}: installed CLI builds the PHP-Wasm ownership release`);
+		const cliBuild = await cli.build(projectRoot, buildRoot);
 		assert.deepEqual(await lakeInputState(projectRoot), before);
 		const { model, receipt } = await readVerifiedPhpWasmCopiedComponent(componentRoot, runtime.identity);
 		assert.equal(model.pointerBits, 32); assert.equal(model.schemaVersion, 7);
@@ -130,20 +132,29 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic) => {
 			, sourceIdentity: model.sourceIdentity, component: model.component };
 		const rejected = await rejectDrift(componentRoot, runtime.identity);
 		const options = { componentRoot, runtimeRoot, leanPrefix, npmSettings, composerSettings };
-		const release = await buildPhpWasmCopiedPackages({ ...options, outputRoot: join(author, "release") });
-		await readVerifiedPhpWasmCopiedPackageSet(release.output);
+		const releaseRoot = join(buildRoot, "packages/php-wasm");
+		const release = { output: releaseRoot, ...await readVerifiedPhpWasmCopiedPackageSet(releaseRoot) };
+		const reassembled = await buildPhpWasmCopiedPackages({ ...options, outputRoot: join(author, "reassembled") });
+		assert.deepEqual(reassembled.report, release.report);
 		diagnostic(`${reviewed ? "reviewed" : "ordinary"}: independently rebuilding and comparing package bytes`);
-		const rebuiltRoot = join(author, "rebuilt");
-		await buildPhpWasmCopiedComponent({ projectRoot, outputRoot: rebuiltRoot, leanPrefix, runtimeRoot, emsdkRoot, phpSource });
+		const relocatedProject = join(author, "relocated-source"), repeatedRoot = join(author, "rebuilt"), rebuiltRoot = join(repeatedRoot, "php-wasm/component");
+		await cp(projectRoot, relocatedProject, { recursive: true });
+		const relocatedBefore = await lakeInputState(relocatedProject);
+		const repeatedCliBuild = await cli.build(relocatedProject, repeatedRoot);
 		assert.deepEqual(await lakeInputState(projectRoot), before);
+		assert.deepEqual(await lakeInputState(relocatedProject), relocatedBefore);
 		assert.deepEqual(JSON.parse(await readFile(join(rebuiltRoot, "artifacts.json"), "utf8")), JSON.parse(await readFile(join(componentRoot, "artifacts.json"), "utf8")));
-		const repeated = await buildPhpWasmCopiedPackages({ ...options, componentRoot: rebuiltRoot, outputRoot: join(author, "repacked") });
+		const repeated = await readVerifiedPhpWasmCopiedPackageSet(join(repeatedRoot, "packages/php-wasm"));
 		assert.deepEqual(repeated.report, release.report);
+		const handoff = join(root, "handoff"), packageSetReceipt = await copyPackageSetHandoff(buildRoot, handoff);
+		assert.deepEqual(JSON.parse(await readFile(join(repeatedRoot, "package-set-receipt.json"), "utf8")), packageSetReceipt);
 		diagnostic(`${reviewed ? "reviewed" : "ordinary"}: building the independent copied peer`);
 		const peer = await buildOwnedPhpWasmPeer({ author, leanPrefix, runtimeRoot, emsdkRoot, phpSource, runtimeIdentity: runtime.identity });
 		const observer = await buildOwnedPhpWasmObserver({ directory: join(author, "observer"), runtimeRoot, emsdkRoot, phpSource });
 		const installed = await installPhpWasmGraphPackages({ root, release, host, diagnostic, companions: [peer.release] });
 		await rm(author, { recursive: true }); await assert.rejects(() => readdir(author), { code: "ENOENT" });
+		const verification = await cli.verify(join(handoff, "package-set-receipt.json"));
+		await rm(handoff, { recursive: true });
 		await saveLakeFile(installed.deployment, "observer.so", observer.bytes);
 		await bundlePhpWasmGraph(installed.deployment, npmSettings.name);
 		await saveLakeFile(installed.deployment, "consumer.php", consumer);
@@ -163,6 +174,8 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic) => {
 		const browser = await checkOwnedPhpWasmBrowser(installed.deployment, diagnostic);
 		const coexistence = await checkOwnedPhpWasmCoexistence(installed.deployment, diagnostic);
 		observations.push({ reviewed, inputs, model, receipt, rejected, browser
+			, cliBuild, repeatedCliBuild, packageSetReceipt, verification
+			, deterministicReassembly: true, receiptVerifiedWithoutProducer: true
 			, packageReceipt: release.report
 			, reproducedArchives: repeated.report.archives
 			, coexistence: { ...coexistence, peer: peer.component, sourceFiles: peer.sourceFiles }
@@ -176,6 +189,7 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic) => {
 	assert.equal((await readVerifiedPhpWasmCopiedRuntime(runtimeRoot)).identity, runtime.identity);
 	return { schemaVersion: 1, profile: "installed-owned-php-wasm"
 		, compiledLean: true, installedPackage: true
+		, installedCli: cli.identity, cliAdmission: true
 		, runtimeIdentity: runtime.identity, runtimeManifest: runtime.manifest
 		, observations };
 };

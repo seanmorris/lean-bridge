@@ -8,9 +8,9 @@ import { dirname, join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readExportConfiguration, assertExportConfigurationCapabilities } from "../analyze/export-configuration.mjs";
 import { sourceApiIdentity } from "../analyze/semantic-model.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import { canonicalizeJsonValue, hashBindingIr } from "../binding-ir/canonical.mjs";
 import { buildNativeProject } from "./native-project.mjs";
-import { createNativeModel } from "./native-model.mjs";
+import { createCompiledNativeModel } from "./native-graph-model.mjs";
 import { verifyNativeFiles } from "./native-artifacts.mjs";
 import { prepareLakeEntryIntent } from "./lake-entry-intent.mjs";
 import { verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
@@ -40,10 +40,10 @@ const absent = async path => {
  * @param options - Captured intent, author configuration and verified models.
  */
 export const assertCompiledProfileApiAgreement = options => {
-	const { intent, configurationSha256, models } = options;
+	const { intent, configurationSha256, models, ownedGraphs = false } = options;
 	if(!Array.isArray(models) || !models.length || new Set(models.map(model => model.profile)).size !== models.length) fail("Expected one model per compiled profile");
 	const captured = intent.document.source, first = models[0];
-	const expected = sourceApiIdentity(first.bindingIr).sha256;
+	const expected = sourceApiIdentity(first.bindingIr, { ownedGraphs }).sha256;
 	for(const model of models)
 	{
 		const source = model.sourceIdentity;
@@ -59,10 +59,12 @@ export const assertCompiledProfileApiAgreement = options => {
 			|| source.leanCompilerSha256 !== first.sourceIdentity.leanCompilerSha256
 			|| source.extractorSha256 !== first.sourceIdentity.extractorSha256)
 			fail("Compiled profiles do not share captured sources, configuration, compiler and extractor");
-		if(model.bindingIrSha256 !== hashBindingIr(model.bindingIr)
+		const api = sourceApiIdentity(model.bindingIr, { ownedGraphs });
+		const bindingIrSha256 = ownedGraphs && model.bindingIr.schemaVersion === 4 ? sha256(canonicalizeJsonValue(model.bindingIr)) : hashBindingIr(model.bindingIr);
+		if(model.bindingIrSha256 !== bindingIrSha256
 			|| canonicalJson(model.component) !== canonicalJson(intent.document.component)
 			|| canonicalJson(model.bindingIr.component) !== canonicalJson(intent.document.component)
-			|| sourceApiIdentity(model.bindingIr).sha256 !== expected)
+			|| api.sha256 !== expected)
 			fail("Compiled profiles disagree on the selected source API");
 	}
 	return expected;
@@ -137,15 +139,17 @@ export const buildMultiProfileProject = async ({
 		|| Number(nativeTargets.length > 0) + wasmTargets.length < 2)
 		throw new CanonicalBuildError("invalid-package-targets", "Combined builds require two distinct ABIs and unique supported targets");
 	const npmSelected = wasmTargets.includes("npm"), phpSelected = wasmTargets.includes("php-wasm");
+	const ownedGraphs = !npmSelected && !nativeTargets.includes("wit-wasi");
 	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, "build/lean-bridge-release"));
 	if(output === project || project.startsWith(`${output}/`))
 		throw new CanonicalBuildError("invalid-output-root", "Build output cannot replace the source project");
 	await absent(output);
 	const record = await readExportConfiguration(project, { signal });
+	const fields = ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])];
 	for(const target of nativeTargets)
-		assertExportConfigurationCapabilities(record.configuration, { target, fields: ["package", "modules", "exports", "specializations", "contracts", "generators"], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
-	if(phpSelected) assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields: ["package", "modules", "exports", "specializations", "contracts", "generators"], targetFields: ["npm", "composer"] });
-	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: npmSelected ? "build" : "analysis" });
+		assertExportConfigurationCapabilities(record.configuration, { target, fields, targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
+	if(phpSelected) assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields, targetFields: ["npm", "composer"] });
+	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: npmSelected ? "build" : "analysis", ownedGraphs });
 	const runtimeRoot = npmSelected ? await resolveComponentRuntimeRoot({ engineRoot, environment }) : null;
 	await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-multi-profile-"));
@@ -166,14 +170,14 @@ export const buildMultiProfileProject = async ({
 			nativeModel = await json(join(componentRoot, "model.json"));
 			const nativeReceipt = await json(join(componentRoot, "native-component.json"));
 			await verifyNativeFiles(componentRoot, (await json(join(componentRoot, "artifacts.json"))).files);
-			const reconstructed = createNativeModel({ metadata: await json(join(componentRoot, "metadata.json"))
+			const reconstructed = createCompiledNativeModel({ metadata: await json(join(componentRoot, "metadata.json"))
 				, component: nativeModel.component, moduleName: nativeModel.moduleName
-				, sourceIdentity: nativeReceipt.sourceIdentity });
+				, sourceIdentity: nativeReceipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: ownedGraphs });
 			if(canonicalJson(reconstructed) !== canonicalJson(nativeModel) || sha256(canonicalJson(nativeModel)) !== nativeReceipt.modelSha256) fail("Native model changed after compilation");
 			models.push(nativeModel);
 		}
 		if(php) models.push((await readVerifiedPhpWasmCopiedComponent(join(phpRoot, "php-wasm/component"), php.runtimeIdentity)).model);
-		let sourceApiSha256 = assertCompiledProfileApiAgreement({ intent, configurationSha256: record.sha256, models });
+		let sourceApiSha256 = assertCompiledProfileApiAgreement({ intent, configurationSha256: record.sha256, models, ownedGraphs });
 		let npm, wasmIr;
 		if(npmSelected)
 		{

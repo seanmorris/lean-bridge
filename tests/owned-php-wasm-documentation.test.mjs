@@ -1,0 +1,80 @@
+/**
+ * Compile the PHP ownership author guide and run its exact PHP example in Wasm.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import test from "node:test";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import { readVerifiedPhpWasmCopiedPackageSet } from "../src/release/php-wasm-copied-package.mjs";
+import { installOwnedPhpWasmCli } from "./helpers/owned-php-wasm-cli.mjs";
+import { installPhpWasmGraphPackages } from "./helpers/php-wasm-graph-packages.mjs";
+import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
+import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+
+const block = (section, language) => {
+	const match = section.match(new RegExp("```" + language + "\\n([^]*?)\\n```"));
+	assert.ok(match, language + " documentation block"); return match[1] + "\n";
+};
+
+test("installed CLI compiles the ownership guide and PHP-Wasm runs the unmodified Composer example", {
+	skip: process.env.LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST !== "1"
+	, timeout: 600000
+}, async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-owned-php-wasm-docs-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const cli = await installOwnedPhpWasmCli({ directory: join(directory, "cli")
+		, runtimeRoot: resolve(process.env.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME ?? "build/owned-wasm32-runtime")
+		, phpSource: resolve(process.env.LEAN_BRIDGE_PHP_SOURCE ?? "build/php-wasm-sdk/php8.4-src")
+		, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
+		, emsdkRoot: resolve(process.env.LEAN_BRIDGE_PHP_EMSDK ?? ".toolchains/emsdk-php-wasm") });
+	const authorSection = (await readFile("docs/publish/php.md", "utf8")).split("### Export resource-containing values\n")[1].split("\n### ")[0];
+	const consumerSection = (await readFile("docs/php.md", "utf8")).split("### Resource-containing values\n")[1].split("\n### ")[0];
+	const lean = block(authorSection, "lean"), configuration = block(authorSection, "json"), consumer = block(consumerSection, "php");
+	const author = join(directory, "author"), project = join(author, "project"), output = join(author, "output");
+	await saveLakeFile(project, "Owned.lean", lean);
+	await saveLakeFile(project, "lean-bridge.exports.json", configuration);
+	await saveLakeFile(project, "lean-toolchain", "leanprover/lean4:v4.32.2\n");
+	await saveLakeFile(project, "lakefile.toml", 'name = "owned-aggregates"\nversion = "1.0.0"\n[[lean_lib]]\nname = "Owned"\n');
+	const before = await lakeInputState(project), build = await cli.build(project, output);
+	assert.deepEqual(await lakeInputState(project), before);
+	const handoff = join(directory, "handoff"), packageSetReceipt = await copyPackageSetHandoff(output, handoff);
+	const releaseRoot = join(output, "packages/php-wasm");
+	const installed = await installPhpWasmGraphPackages({ root: directory
+		, release: { output: releaseRoot, ...await readVerifiedPhpWasmCopiedPackageSet(releaseRoot) }
+		, host: resolve(process.env.LEAN_BRIDGE_PHP_WASM_HOST ?? "build/php-wasm-host/node_modules/php-wasm")
+		, diagnostic: message => t.diagnostic(message) });
+	await rm(author, { recursive: true });
+	const verification = await cli.verify(join(handoff, "package-set-receipt.json"));
+	await rm(handoff, { recursive: true });
+	await saveLakeFile(installed.deployment, "owned.php", consumer);
+	await saveLakeFile(installed.deployment, "run.mjs", `import assert from 'node:assert/strict';
+import {readFile,readdir} from 'node:fs/promises';
+import {join} from 'node:path';
+import {PhpNode} from 'php-wasm/PhpNode';
+import api from ${JSON.stringify(JSON.parse(configuration).targets["php-wasm"].npm.name)};
+const php=new PhpNode({version:'8.4',autoTransaction:false,sharedLibs:[api.extensions]});
+let stdout='',stderr='';
+php.addEventListener('output',event=>{stdout+=event.detail.join('');});
+php.addEventListener('error',event=>{stderr+=event.detail.join('');});
+await php.binary;await php.mkdir('/app');
+const mount=async(source,target)=>{await php.mkdir(target);for(const entry of await readdir(source,{withFileTypes:true})){
+  if(entry.isDirectory())await mount(join(source,entry.name),target+'/'+entry.name);
+  else await php.writeFile(target+'/'+entry.name,await readFile(join(source,entry.name)));}};
+await mount('vendor','/app/vendor');await php.writeFile('/app/owned.php',await readFile('owned.php','utf8'));
+assert.equal(await php.run("<?php require '/app/owned.php';"),0);assert.equal(stderr,'');
+assert.equal(stdout,'42\\n42\\n');console.log(JSON.stringify({output:stdout,unmodifiedExample:true}));
+`);
+	const run = await runCopied(process.execPath, ["run.mjs"], installed.deployment, copiedCleanEnvironment);
+	assert.equal(run.stderr, ""); const observed = JSON.parse(run.stdout);
+	assert.deepEqual(observed, { output: "42\n42\n", unmodifiedExample: true });
+	await saveLakeFile("build/owned-php-wasm", "documentation.json", canonicalJson({ schemaVersion: 1
+		, installedCli: cli.identity, build, packageSetReceipt, verification
+		, sourceUnchanged: true, authorRemoved: true, observed
+		, leanSha256: sha256(lean), configurationSha256: sha256(configuration)
+		, consumerSha256: sha256(consumer) }));
+});

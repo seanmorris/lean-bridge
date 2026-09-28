@@ -11,12 +11,12 @@ import { canonicalJson } from "../src/capsule/node.mjs";
 import { checkOwnedPhpWasmPackages } from "./helpers/owned-php-wasm-packages.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
-test("ordinary and reviewed owned PHP-Wasm archives execute after offline npm and Composer installation", {
+test("installed CLI builds ordinary and reviewed owned PHP-Wasm archives for npm and Composer consumers", {
 	skip: process.env.LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST !== "1"
 	, timeout: 900000
 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-owned-php-wasm-packages-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const report = await checkOwnedPhpWasmPackages(root, message => { t.diagnostic(message); process.stderr.write(message + "\n"); });
-	await saveLakeFile("build/owned-php-wasm", "packages.json", canonicalJson(report));
+	await saveLakeFile("build/owned-php-wasm", "packages-cli.json", canonicalJson(report));
 });

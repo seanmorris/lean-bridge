@@ -11,7 +11,7 @@ import { assertExportConfigurationCapabilities } from "../analyze/export-configu
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { prepareLakeDependencySnapshot, readLakeDependencySnapshot, verifyLakeSnapshotProject, writeLakeDependencySnapshot } from "./lake-dependency-snapshot.mjs";
 import { selectLakeEntryModules } from "./lake-entry-modules.mjs";
-import { readReviewedSource } from "../analyze/reviewed-source.mjs";
+import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-lake-entry-intent" }); };
@@ -65,13 +65,15 @@ const readIntent = async (inputRoot, signal) => {
  * @param options.lakeSnapshot - Optional independently captured release source.
  * @param options.signal - Optional cancellation signal.
  * @param options.purpose - Build intent or compiler-only analysis intent.
+ * @param options.ownedGraphs - Admit ownership reviews for an ownership-aware analysis consumer.
  */
-export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal, purpose = "build" }) => {
+export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal, purpose = "build", ownedGraphs = false }) => {
 	if(!["build", "analysis"].includes(purpose)) fail("Unknown public entry intent purpose");
+	if(typeof ownedGraphs !== "boolean" || (ownedGraphs && purpose !== "analysis")) fail("Ownership-aware intent requires an explicit analysis consumer");
 	const inventory = await inspectLeanProject(projectRoot, { signal });
 	let reviewedBindingIr;
 	try
-	{ reviewedBindingIr = await readReviewedSource(projectRoot, inventory, signal); }
+	{ reviewedBindingIr = await readNativeReviewedSource(projectRoot, inventory, signal, ownedGraphs); }
 	catch(error)
 	{ throw new CanonicalBuildError(error.code ?? "invalid-reviewed-source", error.message, { details: error.details }); }
 	const configuration = inventory.configurationRecord.configuration;
@@ -131,14 +133,15 @@ export const writeLakeEntryInputs = async ({ intent, outputRoot, signal }) => {
  * @param options.expectedSha256 - Intent digest retained in the engine request.
  * @param options.signal - Optional cancellation signal.
  * @param options.purpose - Expected build or compiler-only analysis intent.
+ * @param options.ownedGraphs - Explicit ownership capability of the receiving analysis consumer.
  */
-export const readLakeEntryIntent = async ({ inputRoot, expectedSha256, signal, purpose = "build" }) => {
+export const readLakeEntryIntent = async ({ inputRoot, expectedSha256, signal, purpose = "build", ownedGraphs = false }) => {
 	const bytes = await readIntent(inputRoot, signal);
 	if(sha256(bytes) !== expectedSha256) fail("Public entry intent identity changed");
 	const document = JSON.parse(bytes.toString("utf8"));
 	if(![2, 3].includes(document.schemaVersion) || document.kind !== (purpose === "analysis" ? "lean-bridge-lake-analysis-intent" : "lean-bridge-lake-entry-intent")) fail("Unsupported public entry intent");
 	const snapshot = await readLakeDependencySnapshot({ snapshotRoot: join(inputRoot, "lake"), expectedSha256: document.source?.lakeSnapshotSha256, signal });
-	const reconstructed = await prepareLakeEntryIntent({ projectRoot: join(inputRoot, "lake/root"), lakeSnapshot: snapshot, signal, purpose });
+	const reconstructed = await prepareLakeEntryIntent({ projectRoot: join(inputRoot, "lake/root"), lakeSnapshot: snapshot, signal, purpose, ownedGraphs });
 	if(bytes.toString() !== canonicalJson(reconstructed.document)) fail("Public entry intent differs from the captured project");
 	return reconstructed;
 };

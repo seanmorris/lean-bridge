@@ -67,7 +67,7 @@ Review the source library's license and bundled notices before publication; gene
 
 ### Export resource-containing values
 
-For native PHP, declare resources and aggregate ownership explicitly. In a Lake
+For native PHP or PHP-Wasm, declare resources and aggregate ownership explicitly. In a Lake
 package named `owned-aggregates`, add `Owned.lean`:
 
 ```lean
@@ -110,7 +110,11 @@ Configure `lean-bridge.exports.json`:
     "cycles": "reject"
   },
   "targets": {
-    "php-native": { "name": "example/owned-values", "version": "1.0.0" }
+    "php-native": { "name": "example/owned-values", "version": "1.0.0" },
+    "php-wasm": {
+      "npm": { "name": "@example/owned-values-wasm", "version": "1.0.0" },
+      "composer": { "name": "example/owned-values-wasm", "version": "1.0.0" }
+    }
   }
 }
 ```
@@ -141,10 +145,42 @@ Callback resource borrows expire when the callback returns. PHP consumers call
 borrowed PHP callback does not extend its lifetime. Conversions allow 128 value
 levels, 262,144 visits and separate 16 MiB storage budgets. Calls run in the main
 NTS CLI context, with checked process identity and deferred cleanup during active
-calls. PHP-Wasm resource-containing packages, transferred inputs, anchored
-results and asynchronous callbacks remain unsupported. The
+calls. Transferred inputs, anchored results and asynchronous callbacks remain
+unsupported. The
 [installed package checks](../evidence/owned-php-packages-20260928.md) cover native
 package loading, relocation, independent builds and mixed packages.
+
+For PHP-Wasm, use the [PHP-Wasm author toolchain](#build-an-ordinary-php-wasm-package)
+and build the same source:
+
+```sh
+lean-bridge build --project ./owned-aggregates --target php-wasm --output ./release-owned-wasm
+```
+
+This produces a component npm archive, its shared-runtime npm archive, and a
+companion Composer ZIP. Use the existing [PHP-Wasm publication flow](#php-wasm-with-npm)
+to distribute them. Consumers use the generated PHP classes and the installed
+descriptor, with startup or first-call loading. The build uses a checked 32-bit
+Zend adapter, not the native PHP FFI library. The 32-bit primitive mappings also
+apply to callback arguments and resource-containing values.
+
+To produce both PHP releases from one source capture, repeat the target:
+
+```sh
+lean-bridge build --project ./owned-aggregates --target php-native --target php-wasm --output ./release-owned-php-both
+```
+
+The build compiles once per ABI and compares the complete source API, including
+ownership policies. It exposes the release directory only after both targets
+succeed. The release-root package-set receipt covers every archive. A reviewed
+ownership contract can use the same targets; Lean checks its signatures against
+the captured source. JavaScript/npm and WIT/WASI ownership are separate targets
+and are not admitted by this PHP-Wasm support.
+
+Callbacks remain synchronous. Initialize lazy peer packages before entering a
+callback, including after interpreter refresh, or select startup descriptors.
+The loader rejects first-use loading inside a callback without poisoning the
+package. See the [consumer lifetime rules](../php.md#resource-containing-values).
 
 ### Export named copied aliases
 

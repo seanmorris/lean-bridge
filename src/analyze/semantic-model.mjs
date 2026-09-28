@@ -28,9 +28,11 @@ export const elaboratedComponent = facts => ({
  * Source locations and producer hashes remain bound by the complete Binding IR.
  *
  * @param document - Validated compiler-derived Binding IR, before host naming.
+ * @param options - Explicit capabilities of the profile comparison.
+ * @param options.ownedGraphs - Compare owned APIs without opening copied-only consumers.
  */
-export const sourceApiIdentity = document => {
-	validateBindingIr(document);
+export const sourceApiIdentity = (document, { ownedGraphs = false } = {}) => {
+	(ownedGraphs && document.schemaVersion === 4 ? validateOwnedAggregateBindingIr : validateBindingIr)(document);
 	const declarations = document.declarations.map(declaration => {
 		const extensions = { ...declaration.source.extensions };
 		delete extensions["lean-lang.org/source-position"];
@@ -38,6 +40,7 @@ export const sourceApiIdentity = document => {
 	});
 	const api = { schemaVersion: 1, kind: "lean-bridge-source-api"
 		, component: document.component
+		, ...(document.schemaVersion === 4 ? { aggregatePolicy: document.aggregatePolicy } : {})
 		, types: document.types, declarations, errors: document.errors
 		, capabilities: document.capabilities, assurance: document.assurance };
 	return Object.freeze({ document: api, sha256: sha256(canonicalJson(api)) });
