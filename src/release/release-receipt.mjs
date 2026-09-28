@@ -316,7 +316,8 @@ export const createReleaseReceiptStatement = ({
 	});
 	const component = authorization.schemaVersion === 2 && authorization.kind === "lean-bridge-component-authorization";
 	const flake = component ? null : lockArtifact(authorization, "flake.lock");
-	const graph = lockArtifact(authorization, component ? "component-build-plan.json" : "graph-lock.json");
+	const owned = component && authorization.authorizedArtifacts.some(item => item.path === "javascript-wasm-release.json");
+	const graph = lockArtifact(authorization, owned ? "owned-build-plan.json" : component ? "component-build-plan.json" : "graph-lock.json");
 	if(!component && flake.sha256 !== authorization.candidate.flakeLockSha256)
 	{
 		fail("release-receipt-flake-drift", "Authorized flake lock differs from the release candidate identity");

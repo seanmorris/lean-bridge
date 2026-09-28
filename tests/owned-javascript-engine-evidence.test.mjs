@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedJavaScriptEngineExecution } from "./helpers/owned-javascript-engine-evidence.mjs";
+import { beforeOwnedJavaScriptPublication, ownedJavaScriptPublicationHistoricalBytes } from "./helpers/owned-javascript-publication-history.mjs";
 import { beforeOwnedJavaScriptEngine, ownedJavaScriptEngineAddedPaths, ownedJavaScriptEngineBaseline
 	, ownedJavaScriptEngineBaselineSources, ownedJavaScriptEngineChangedPaths, ownedJavaScriptEngineHistoryPath
 	, ownedJavaScriptEnginePrevious, reverseOwnedJavaScriptEngineUpdate } from "./helpers/owned-javascript-engine-history.mjs";
@@ -25,13 +26,13 @@ test("owned npm engine integration authenticates source changes without rewritin
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources)
 		, ...Object.keys(ownedJavaScriptEngineBaselineSources)
 		, ...ownedJavaScriptEngineAddedPaths])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptPublicationHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptEngineChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedJavaScriptEngineBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedJavaScriptEngine(update.path, current);
+		const current = beforeOwnedJavaScriptPublication(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedJavaScriptEngine(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJavaScriptEngine(update.path, prior), prior);
 		assert.equal(beforeOwnedJavaScriptEngine(update.path, current, update.currentSha256), current);
@@ -41,9 +42,9 @@ test("owned npm engine integration authenticates source changes without rewritin
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }, { ...update, path: "unknown.mjs" }, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedJavaScriptEngineUpdate(current, changed));
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeOwnedJavaScriptPublication("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
 	const prior = JSON.parse(beforeOwnedJavaScriptEngine("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptPublicationHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior, "Engine acceptance must not promote unverified isolated or installed support");
 });
 

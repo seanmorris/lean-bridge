@@ -6,12 +6,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { assertOwnedJavaScriptWasmCi, ownedJavaScriptWasmCiLogs, ownedJavaScriptWasmCiTests, ownedJavaScriptNpmCiTests, ownedJavaScriptCoexistenceCiTests, ownedAnalysisCiTests, ownedJavaScriptEngineCiTests } from "./helpers/owned-javascript-wasm-ci.mjs";
+import { assertOwnedJavaScriptWasmCi, ownedJavaScriptWasmCiLogs, ownedJavaScriptWasmCiTests, ownedJavaScriptNpmCiTests, ownedJavaScriptCoexistenceCiTests, ownedAnalysisCiTests, ownedJavaScriptEngineCiTests, ownedJavaScriptPublicationCiTests } from "./helpers/owned-javascript-wasm-ci.mjs";
 
 test("owned JavaScript CI builds production Wasm and executes every generated API layer", async () => {
 	assert.deepEqual(assertOwnedJavaScriptWasmCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8")), {
 		testFiles: 17, installedTestFiles: 4, coexistenceTestFiles: 2
-		, analysisTestFiles: 2, engineTestFiles: 5, requiredLogs: 6
+		, analysisTestFiles: 2, engineTestFiles: 5
+		, publicationTestFiles: 1, requiredLogs: 7
 		, productionRuntimeRequired: true
 		, skippedTestsRejected: true, failurePropagated: true
 	});
@@ -25,6 +26,7 @@ test("owned JavaScript CI rejects disabled execution, missing observations and s
 		, ...ownedJavaScriptCoexistenceCiTests.map(path => [path, ""])
 		, ...ownedAnalysisCiTests.map(path => [path, ""])
 		, ...ownedJavaScriptEngineCiTests.map(path => [path, ""])
+		, ...ownedJavaScriptPublicationCiTests.map(path => [path, ""])
 		, ...ownedJavaScriptWasmCiLogs.map(path => ["            " + path + "\n", ""])
 		, ["  owned-javascript-wasm:\n", "  owned-javascript-wasm:\n    if: false\n"]
 		, ["      LEAN_BRIDGE_OWNED_JS_WASM_TEST: \"1\"", "      LEAN_BRIDGE_OWNED_JS_WASM_TEST: \"0\""]
@@ -38,6 +40,9 @@ test("owned JavaScript CI rejects disabled execution, missing observations and s
 		, ["      - name: Verify owned JavaScript engine and archive SDK contracts\n", "      - name: Verify owned JavaScript engine and archive SDK contracts\n        if: false\n"]
 		, ["tee build/owned-javascript-wasm/engine.log\n", "tee build/owned-javascript-wasm/engine.log || true\n"]
 		, ["          rg '^# skipped 0$' build/owned-javascript-wasm/engine.log\n", ""]
+		, ["      - name: Verify reproducible signed owned npm publication\n", "      - name: Verify reproducible signed owned npm publication\n        if: false\n"]
+		, ["tee build/owned-javascript-wasm/publication.log\n", "tee build/owned-javascript-wasm/publication.log || true\n"]
+		, ["          rg '^# skipped 0$' build/owned-javascript-wasm/publication.log\n", ""]
 		, ["      - name: Install owned npm browser engines\n", "      - name: Install owned npm browser engines\n        if: false\n"]
 		, ["      - name: Build and install owned npm packages through the standalone CLI\n", "      - name: Build and install owned npm packages through the standalone CLI\n        continue-on-error: true\n"]
 		, ["tee build/owned-javascript-wasm/installed.log\n", "tee build/owned-javascript-wasm/installed.log || true\n"]

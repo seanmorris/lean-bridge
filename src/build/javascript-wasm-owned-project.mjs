@@ -12,12 +12,15 @@ import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
 import { assertExportConfigurationCapabilities, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { buildOwnedJavaScriptWasmComponent } from "./javascript-wasm-owned-component.mjs";
 import { prepareIsolatedOwnedJavaScriptCompiler } from "./javascript-wasm-owned-isolated.mjs";
+import { identifyBuildEngine } from "./engine-execution-request.mjs";
 import { javascriptWasmOwnedPins as pins } from "./javascript-wasm-owned-artifacts.mjs";
 import { javascriptWasmOwnedProfile as profile } from "./javascript-wasm-owned-model.mjs";
 import { buildOwnedJavaScriptNpmPackages } from "../release/owned-javascript-npm-package.mjs";
 import { readVerifiedJavaScriptWasmCompilerInputs } from "../release/javascript-wasm-compiler-inputs.mjs";
 import { readVerifiedPackageSetReceipt } from "../release/package-set-receipt.mjs";
 import { writeCombinedPackageSet } from "../release/package-set-assembly.mjs";
+import { ownedJavaScriptReleaseEvidence } from "../release/owned-javascript-release-evidence.mjs";
+import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
 import { resolveComponentRuntimeRoot } from "../release/component-runtime-root.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { CanonicalBuildError } from "./build-error.mjs";
@@ -88,6 +91,7 @@ export const buildOwnedJavaScriptProject = async options => {
 		, fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "contracts", "generators"]
 		, targetFields: ["name", "version"] });
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "owned-javascript", ownedGraphs: true });
+	const engineIdentity = await identifyBuildEngine(engineRoot);
 	const compilerOptions = { project, engineRoot, environment, runner, intent, cache, signal };
 	const compiler = await (isolated ? prepareIsolatedOwnedJavaScriptCompiler(compilerOptions) : prepareHostCompiler(compilerOptions));
 	const runtimeRoot = await resolveComponentRuntimeRoot({ engineRoot, environment });
@@ -101,6 +105,7 @@ export const buildOwnedJavaScriptProject = async options => {
 		const packages = await buildOwnedJavaScriptNpmPackages({ componentRoot, runtimeRoot, outputRoot: join(staging, "packages/npm"), signal });
 		const report = await readVerifiedPackageSetReceipt({ receiptPath: join(packages.output, "package-set-receipt.json"), signal });
 		const manifest = { schemaVersion: 1, profile, backend: compiler.backend
+			, engineIdentitySha256: engineIdentity.identitySha256
 			, component: built.model.component
 			, bindingIrSha256: built.model.bindingIrSha256
 			, runtimeIdentity: packages.runtimeIdentity
@@ -113,8 +118,16 @@ export const buildOwnedJavaScriptProject = async options => {
 			, packageSet: "packages/npm/package-set-receipt.json"
 			, packages: report.receipt.packages };
 		await verifyLakeSnapshotSourceTree({ snapshot: intent.lakeSnapshot, projectRoot: project, signal });
+		if((await identifyBuildEngine(engineRoot)).identitySha256 !== engineIdentity.identitySha256)
+			throw new Error("Owned JavaScript build engine changed during compilation");
 		if((await readExportConfiguration(project, { signal })).sha256 !== record.sha256) throw new Error("Export configuration changed during owned JavaScript packaging");
 		await writeFile(join(staging, "javascript-wasm-release.json"), canonicalJson(manifest), { flag: "wx" });
+		const notices = await readVerifiedSourceNotices(componentRoot, built.receipt.sourceIdentity);
+		for(const [path, bytes] of ownedJavaScriptReleaseEvidence({ manifest, component: built, notices }))
+		{
+			await mkdir(dirname(join(staging, path)), { recursive: true });
+			await writeFile(join(staging, path), bytes, { flag: "wx", signal });
+		}
 		await writeCombinedPackageSet({ root: staging, roots: ["packages/npm"], component: manifest.component, source: { treeSha256: manifest.source.treeSha256 }, signal });
 		signal?.throwIfAborted(); await absent(output); await rename(staging, output);
 		return { ...manifest, output, targets: ["npm"] };

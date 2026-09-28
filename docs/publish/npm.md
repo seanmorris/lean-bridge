@@ -72,9 +72,27 @@ The pinned host SDK is the validated local build route. Explicit `nix` and
 `docker` backend selections now use a source-only ownership request through the
 component engine. The engine verifies the captured source, generated inputs,
 export selection and output inventory. Full isolated installed-package
-acceptance and the signed `publish` workflow remain open for this profile.
-Transferred inputs and results borrowed from another object also remain
-unsupported. The copied-value publication workflow is unchanged.
+acceptance remains open. Transferred inputs and results borrowed from another
+object also remain unsupported.
+
+Commit the author package and declare `package.license` with nonempty license
+terms before creating a publication candidate:
+
+```sh
+lean-bridge publish --project /path/to/library --target npm \
+  --dry-run --output /path/to/new-candidate
+lean-bridge publish --manifest /path/to/new-candidate/publish-manifest.json
+```
+
+The dry run compiles two independent clean checkouts and compares the complete
+release, including both npm archives. It validates the owned package-set receipt,
+reconstructs generated package bytes, and retains the ownership build plan,
+SBOM, compiler assurance and provenance. The execute command uses the same
+signer configuration and immutable registry transaction described below.
+Its shared-runtime dependency must already be available at the exact recorded
+version and archive hash. Retrying a completed transaction does not republish it.
+The resulting signed archive receipt can be checked without the author source
+or compiler. The copied-value publication workflow is unchanged.
 
 ## Export callbacks and returned functions
 

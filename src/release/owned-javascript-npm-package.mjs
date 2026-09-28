@@ -61,19 +61,16 @@ export const assertOwnedJavaScriptRuntime = ({ mainModule, mainWasm, sideWasm, p
 };
 
 /**
- * Create a component archive and the same content-addressed runtime used by
- * copied npm packages. Consumers install both without compilers or source trees.
+ * Reconstruct exact npm package bytes from a verified ownership component.
  *
  * @param options - Verified compiled component, prepared runtime and absent output.
  * @param options.componentRoot - Closed compiled ownership output.
  * @param options.runtimeRoot - Prepared shared main.mjs/main.wasm directory.
- * @param options.outputRoot - Absent package output directory.
  * @param options.signal - Optional cancellation signal.
  */
-export const buildOwnedJavaScriptNpmPackages = async ({ componentRoot, runtimeRoot, outputRoot, signal }) => {
-	const root = resolve(componentRoot), runtimeRootPath = resolve(runtimeRoot), output = resolve(outputRoot);
-	const existing = await lstat(output).catch(error => { if(error.code !== "ENOENT") throw error; return null; });
-	if(existing) throw new Error("Owned JavaScript package output already exists");
+export const assembleOwnedJavaScriptNpmPackages = async ({ componentRoot, runtimeRoot, signal }) => {
+	signal?.throwIfAborted();
+	const root = resolve(componentRoot), runtimeRootPath = resolve(runtimeRoot);
 	const verified = await readVerifiedOwnedJavaScriptWasmComponent(root);
 	const { model, receipt, privateAbi } = verified;
 	const config = receipt.sourceIdentity.exportConfigurationSource === null ? { schemaVersion: 1 } : JSON.parse(receipt.sourceIdentity.exportConfigurationSource);
@@ -117,6 +114,33 @@ export const buildOwnedJavaScriptNpmPackages = async ({ componentRoot, runtimeRo
 	const runtimeName = `lean-bridge-runtime-${runtime.version}.tgz`;
 	const archiveName = `${coordinate.name.replaceAll("/", "-")}-${coordinate.version}.tgz`;
 	const componentName = archiveName === runtimeName ? `component-${archiveName}` : archiveName;
+	const runtimeRef = { ecosystem: "npm", name: "@lean-bridge/runtime", version: runtime.version };
+	const entry = (item, role, path, bytes) => ({ target: "npm", ecosystem: "npm"
+		, name: item.name, version: item.version
+		, profile, role, runtimeIdentity: runtime.runtimeIdentity
+		, runtimeDelivery: role === "runtime" ? "provided" : "dependency"
+		, requires: role === "runtime" ? [] : [runtimeRef]
+		, artifacts: [{ path, bytes: bytes.length, sha256: sha256(bytes) }] });
+	const packages = [entry(runtimeRef, "runtime", runtimeName, runtimeArchive), entry(coordinate, "component", componentName, componentArchive)];
+	signal?.throwIfAborted();
+	return { verified, runtime, files, coordinate, runtimeName, runtimeArchive, componentName, componentArchive, packages };
+};
+
+/**
+ * Create component and shared-runtime archives without shipping author tools.
+ *
+ * @param options - Verified component, prepared runtime and absent output.
+ * @param options.componentRoot - Closed compiled ownership output.
+ * @param options.runtimeRoot - Prepared shared main.mjs/main.wasm directory.
+ * @param options.outputRoot - Absent package output directory.
+ * @param options.signal - Optional cancellation signal.
+ */
+export const buildOwnedJavaScriptNpmPackages = async ({ componentRoot, runtimeRoot, outputRoot, signal }) => {
+	const output = resolve(outputRoot);
+	const existing = await lstat(output).catch(error => { if(error.code !== "ENOENT") throw error; return null; });
+	if(existing) throw new Error("Owned JavaScript package output already exists");
+	const { verified: { model, receipt }, runtime, files, coordinate, runtimeName, runtimeArchive, componentName, componentArchive, packages }
+		= await assembleOwnedJavaScriptNpmPackages({ componentRoot, runtimeRoot, signal });
 	await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-owned-javascript-packages-"));
 	try
@@ -124,17 +148,10 @@ export const buildOwnedJavaScriptNpmPackages = async ({ componentRoot, runtimeRo
 		for(const [path, bytes] of runtime.files) await save(staging, `runtime/package/${path}`, bytes);
 		for(const [path, bytes] of files) await save(staging, `component/package/${path}`, bytes);
 		await save(staging, runtimeName, runtimeArchive); await save(staging, componentName, componentArchive);
-		const runtimeRef = { ecosystem: "npm", name: "@lean-bridge/runtime", version: runtime.version };
-		const entry = (item, role, path, bytes) => ({ target: "npm", ecosystem: "npm"
-			, name: item.name, version: item.version
-			, profile, role, runtimeIdentity: runtime.runtimeIdentity
-			, runtimeDelivery: role === "runtime" ? "provided" : "dependency"
-			, requires: role === "runtime" ? [] : [runtimeRef]
-			, artifacts: [{ path, bytes: bytes.length, sha256: sha256(bytes) }] });
 		await writePackageSetReceipt({ root: staging, component: model.component
 			, source: { treeSha256: receipt.sourceIdentity.sourceTreeSha256 }
 			, profiles: [{ id: profile, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: runtime.runtimeIdentity }]
-			, packages: [entry(runtimeRef, "runtime", runtimeName, runtimeArchive), entry(coordinate, "component", componentName, componentArchive)]
+			, packages
 			, signal });
 		await rename(staging, output);
 		return { output, runtimeIdentity: runtime.runtimeIdentity

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptPublication, ownedJavaScriptPublicationChangedPaths } from "./owned-javascript-publication-history.mjs";
 
 export const ownedJavaScriptEngineBaseline = "2494d70ddb05f85245133c1ce5c7610dba918a8d";
 export const ownedJavaScriptEngineHistoryPath = "docs/evidence/owned-javascript-engine-integration-20260928.json";
@@ -64,6 +65,7 @@ export const ownedJavaScriptEngineAddedPaths = [
 	, "tests/owned-javascript-isolated-project.test.mjs"
 ].sort();
 let cached;
+export const ownedJavaScriptEngineNormalizationPaths = [...new Set([...ownedJavaScriptEngineChangedPaths, ...ownedJavaScriptPublicationChangedPaths])].sort();
 
 /**
  * Undo only ordered literal edits authenticated by both complete source hashes.
@@ -96,6 +98,7 @@ export const reverseOwnedJavaScriptEngineUpdate = (source, update) => {
  * @param expected - Optional stopping source identity.
  */
 export const beforeOwnedJavaScriptEngine = (path, source, expected) => {
+	source = beforeOwnedJavaScriptPublication(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedJavaScriptEngineChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptEngineHistoryPath, "utf8"));
@@ -115,5 +118,5 @@ export const beforeOwnedJavaScriptEngine = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedJavaScriptEngineHistoricalBytes = (path, bytes, expected) => ownedJavaScriptEngineChangedPaths.includes(path)
+export const ownedJavaScriptEngineHistoricalBytes = (path, bytes, expected) => ownedJavaScriptEngineNormalizationPaths.includes(path)
 	? beforeOwnedJavaScriptEngine(path, bytes.toString("utf8"), expected) : bytes;

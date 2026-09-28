@@ -201,6 +201,16 @@ jobs:
           test -s build/owned-javascript-wasm/engine.log
           rg '^# fail 0$' build/owned-javascript-wasm/engine.log
           rg '^# skipped 0$' build/owned-javascript-wasm/engine.log
+      - name: Verify reproducible signed owned npm publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 tests/owned-javascript-publication.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/publication.log
+          test -s build/owned-javascript-wasm/publication.log
+          rg '^# fail 0$' build/owned-javascript-wasm/publication.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/publication.log
       - name: Preserve owned JavaScript and runtime execution logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -213,6 +223,7 @@ jobs:
             build/owned-javascript-wasm/coexistence.log
             build/owned-javascript-wasm/analysis.log
             build/owned-javascript-wasm/engine.log
+            build/owned-javascript-wasm/publication.log
           if-no-files-found: error
           retention-days: 30
 

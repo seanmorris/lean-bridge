@@ -2492,10 +2492,24 @@ node --test --test-concurrency=1 \
   tests/owned-javascript-isolated-project.test.mjs
 ```
 
+Owned npm publication tests compile two clean checkouts for both ordinary and
+reviewed APIs, compare their complete release bytes, and exercise signed
+publication and retry through an in-memory registry adapter. They verify the
+signed archive offline and install it after deleting the producer files.
+Changed package metadata, source evidence, build plans and archives must fail;
+an unlicensed package cannot be published. No external registry receives a write.
+The reviewed path injects the Nix transport and does not claim actual isolation.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 EMCC_CORES=2 \
+node --test --test-concurrency=1 tests/owned-javascript-publication.test.mjs
+```
+
 The downstream workflow runs these checks in its required `owned-javascript-wasm`
 job. It builds the production runtime with the pinned toolchains, enables all
 five execution flags, rejects skipped tests and retains the runtime, execution,
-installed-package, coexistence, analysis and engine logs
+installed-package, coexistence, analysis, engine and publication logs
 as `owned-javascript-wasm-<commit>`. The support-summary job fails if this job
 does not succeed. Type-surface support classifications are not changed by adding
 the gate.

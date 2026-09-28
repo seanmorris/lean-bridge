@@ -15,6 +15,7 @@ import { collectReleaseInventory, hashReleaseInventory } from "./reproducibility
 import { publicRepositoryIdentity } from "./source-identity.mjs";
 import { isSourceLicense, isSourceNotice } from "./source-notices.mjs";
 import { componentLicense } from "../analyze/package-license.mjs";
+import { readVerifiedOwnedJavaScriptRelease } from "./owned-javascript-publication.mjs";
 
 const kind = "lean-bridge-component-publish-plan";
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-component-publication" }); };
@@ -60,6 +61,39 @@ const evidenceFor = async root => {
 	const inventorySha256 = hashReleaseInventory(artifacts);
 	const id = sha256(canonicalJson({ source: report.source, component: report.component, inventorySha256 }));
 	equal(report.candidate, { id, inventorySha256 }, "Component candidate identity has changed");
+	const { receiptPath, checked, receipt } = inventory.has("javascript-wasm-release.json")
+		? await ownedEvidenceFor(root, inventory) : await copiedEvidenceFor(root, inventory, artifacts);
+	for(const build of report.builds)
+	{
+		if(build.receiptSha256 !== checked.receiptSha256 || build.componentIdentitySha256 !== checked.componentIdentitySha256
+			|| build.artifacts !== artifacts.length || !/^[0-9a-f]{64}$/.test(build.engineIdentitySha256)) fail("Build evidence does not identify the packaged component");
+	}
+	if(report.component !== checked.component || report.builds[0].engineIdentitySha256 !== report.builds[1].engineIdentitySha256) fail("Component build identities differ");
+	const reportSha256 = sha256(source);
+	const attestation = {
+		_type: "https://in-toto.io/Statement/v1"
+		, subject: artifacts.map(item => ({ name: `release/${item.path}`, digest: { sha256: item.sha256 } }))
+		, predicateType: "urn:lean-bridge:component-reproducibility:v2"
+		, predicate: { reportSha256, candidateId: id, source: report.source, builds: report.builds }
+	};
+	const authorization = {
+		schemaVersion: 2, kind: "lean-bridge-component-authorization"
+		, candidate: { id, sourceRevision: report.source.revision, source: report.source, component: report.component, artifactInventorySha256: inventorySha256 }
+		, evidence: { reportPath: "evidence/reproducibility.json", reportSha256, attestationPath: "evidence/reproducibility.intoto.json", attestationSha256: sha256(canonicalJson(attestation)) }
+		, authorizedArtifacts: artifacts
+	};
+	return { authorization, attestation, receipt, receiptPath, createdAt: report.createdAt };
+};
+
+const ownedEvidenceFor = async (root, inventory) => {
+	const release = await readVerifiedOwnedJavaScriptRelease({ root: join(root, "release"), inventory });
+	const report = JSON.parse(await readFile(join(root, "evidence/reproducibility.json"), "utf8"));
+	if(report.builds.some(build => build.engineIdentitySha256 !== release.manifest.engineIdentitySha256 || build.backend !== release.manifest.backend))
+		fail("Owned build evidence differs from its compiler engine");
+	return { receiptPath: `release/${release.receiptPath}`, receipt: release.receipt, checked: release.checked };
+};
+
+const copiedEvidenceFor = async (root, inventory, artifacts) => {
 	const receiptPath = "release/packages/npm/component-package-receipt.json";
 	const checked = await verifyComponentPackageReceipt({ receiptPath: join(root, receiptPath) });
 	const receipt = JSON.parse(await readFile(join(root, receiptPath), "utf8"));
@@ -113,26 +147,7 @@ const evidenceFor = async root => {
 		fail("Declare the component license in lean-bridge.exports.json (package.license) or package.json and include nonempty license terms before publishing");
 	for(const path of declared.licenseFiles ?? [])
 		if(!notices.some(item => item.path === path && inventory.get(`bundle/source/${path}`).bytes.toString().trim())) fail(`Declared license file is missing or empty: ${path}`);
-	for(const build of report.builds)
-	{
-		if(build.receiptSha256 !== checked.receiptSha256 || build.componentIdentitySha256 !== checked.componentIdentitySha256
-			|| build.artifacts !== artifacts.length || !/^[0-9a-f]{64}$/.test(build.engineIdentitySha256)) fail("Build evidence does not identify the packaged component");
-	}
-	if(report.component !== checked.component || report.builds[0].engineIdentitySha256 !== report.builds[1].engineIdentitySha256) fail("Component build identities differ");
-	const reportSha256 = sha256(source);
-	const attestation = {
-		_type: "https://in-toto.io/Statement/v1"
-		, subject: artifacts.map(item => ({ name: `release/${item.path}`, digest: { sha256: item.sha256 } }))
-		, predicateType: "urn:lean-bridge:component-reproducibility:v2"
-		, predicate: { reportSha256, candidateId: id, source: report.source, builds: report.builds }
-	};
-	const authorization = {
-		schemaVersion: 2, kind: "lean-bridge-component-authorization"
-		, candidate: { id, sourceRevision: report.source.revision, source: report.source, component: report.component, artifactInventorySha256: inventorySha256 }
-		, evidence: { reportPath: "evidence/reproducibility.json", reportSha256, attestationPath: "evidence/reproducibility.intoto.json", attestationSha256: sha256(canonicalJson(attestation)) }
-		, authorizedArtifacts: artifacts
-	};
-	return { authorization, attestation, receipt, receiptPath, createdAt: report.createdAt };
+	return { receiptPath, checked, receipt };
 };
 
 const manifestFor = ({ authorization, receipt, receiptPath, createdAt }, options, requestedTargets) => {

@@ -25,6 +25,8 @@ import { publicRepositoryIdentity } from "./source-identity.mjs";
 import { buildComponentNpmPackages } from "./component-npm-package.mjs";
 import { verifyComponentPackageReceipt } from "./component-package-receipt.mjs";
 import { writeComponentPublication } from "./component-publication.mjs";
+import { readVerifiedOwnedJavaScriptRelease } from "./owned-javascript-publication.mjs";
+import { javascriptWasmOwnedProfile } from "../build/javascript-wasm-owned-model.mjs";
 import {
 	collectReleaseInventory,
 	compareReleaseInventories,
@@ -268,7 +270,7 @@ export const runComponentReproducibilityGate = async ({
 		for(const [index, name] of ["A", "B"].entries())
 		{
 			const buildRoot = join(scratch, `build-${name.toLowerCase()}`);
-			const packageRoot = join(scratch, `packages-${name.toLowerCase()}`);
+			let packageRoot = join(scratch, `packages-${name.toLowerCase()}`);
 			const started = now();
 			onProgress?.({ phase: `build-${name.toLowerCase()}`, state: "started", message: `Building clean component ${name}`, current: index, total: 2 });
 			const result = await build({
@@ -281,14 +283,21 @@ export const runComponentReproducibilityGate = async ({
 				, signal
 				, ...(prepared.lakeSnapshot ? { lakeSnapshot: prepared.lakeSnapshot } : {})
 			});
-			const packages = await packageComponent({
-				bundleRoot: join(buildRoot, "bundle")
-				, runtimeRoot
-				, outputRoot: packageRoot
-			});
-			const receipt = await verifyReceipt({ receiptPath: join(packageRoot, "component-package-receipt.json") });
-			const inventory = await combinedInventory({ buildRoot, packageRoot });
-			built.push({ name, buildRoot, packageRoot, result, packages, receipt, inventory, durationMs: Math.max(0, now() - started) });
+			const owned = result.profile === javascriptWasmOwnedProfile;
+			let packages, receipt, inventory;
+			if(owned)
+			{
+				const release = await readVerifiedOwnedJavaScriptRelease({ root: buildRoot, signal });
+				packageRoot = join(buildRoot, "packages/npm");
+				packages = { report: release.receipt }; receipt = release.checked; inventory = release.inventory;
+			}
+			else
+			{
+				packages = await packageComponent({ bundleRoot: join(buildRoot, "bundle"), runtimeRoot, outputRoot: packageRoot });
+				receipt = await verifyReceipt({ receiptPath: join(packageRoot, "component-package-receipt.json") });
+				inventory = await combinedInventory({ buildRoot, packageRoot });
+			}
+			built.push({ name, buildRoot, packageRoot, result, packages, receipt, inventory, owned, durationMs: Math.max(0, now() - started) });
 			onProgress?.({ phase: `build-${name.toLowerCase()}`, state: "completed", message: `Clean component ${name} built`, current: index + 1, total: 2 });
 		}
 		if(prepared.lakeSnapshot)
@@ -320,13 +329,14 @@ export const runComponentReproducibilityGate = async ({
 		const candidateId = sha256(canonicalJson({ source: report.source, component: report.component, inventorySha256 }));
 		report.candidate = { id: candidateId, inventorySha256 };
 		report.result = "passed";
-		await Promise.all([
+		if(left.owned) await cp(left.buildRoot, join(staging, "release"), { recursive: true, dereference: true });
+		else await Promise.all([
 			cp(join(left.buildRoot, "bundle"), join(staging, "release", "bundle"), { recursive: true, dereference: true })
 			, cp(left.packageRoot, join(staging, "release", "packages", "npm"), { recursive: true, dereference: true })
 		]);
-		const copiedReceipt = await verifyReceipt({
-			receiptPath: join(staging, "release", "packages", "npm", "component-package-receipt.json")
-		});
+		const receiptName = left.owned ? "package-set-receipt.json" : "component-package-receipt.json";
+		const copiedReceipt = left.owned ? (await readVerifiedOwnedJavaScriptRelease({ root: join(staging, "release"), signal })).checked
+			: await verifyReceipt({ receiptPath: join(staging, "release", "packages", "npm", receiptName) });
 		await mkdir(join(staging, "evidence"), { recursive: true });
 		const reportSource = canonicalJson(report);
 		await writeFile(join(staging, "evidence", "reproducibility.json"), reportSource);
@@ -342,7 +352,7 @@ export const runComponentReproducibilityGate = async ({
 			, publishManifest: join(output, "publish-manifest.json")
 			, publishManifestSha256: manifestSha256
 			, plannedTargets: manifest.targets
-			, receipt: Object.freeze({ ...copiedReceipt, path: join(output, "release/packages/npm/component-package-receipt.json") })
+			, receipt: Object.freeze({ ...copiedReceipt, path: join(output, "release/packages/npm", receiptName) })
 			, packages: Object.freeze({
 				runtime: join(output, "release/packages/npm", left.packages.report.runtime.archive)
 				, component: join(output, "release/packages/npm", left.packages.report.package.archive)

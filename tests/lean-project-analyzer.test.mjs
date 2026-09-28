@@ -255,7 +255,13 @@ test("the published analysis schema closes the report and adapter questions", as
   assert.equal(schema.properties.project.additionalProperties, false);
   assert.equal(schema.$defs.candidate.additionalProperties, false);
   assert.equal(schema.$defs.hint.additionalProperties, false);
-  assert.equal(schema.properties.bindingIr.oneOf[1].properties.document.$ref, "binding-ir.schema.json");
+  assert.deepEqual(schema.properties.bindingIr.oneOf[1].properties.document, {
+    oneOf: [{ $ref: "binding-ir.schema.json" }, { $ref: "binding-ir-owned.schema.json" }]
+  });
+  assert.deepEqual(schema.properties.bindingIr.oneOf[1].allOf, [{
+    if: { properties: { document: { properties: { schemaVersion: { const: 4 } } } } }
+    , then: { properties: { origin: { const: "lean-elaborated" } } }
+  }]);
 
   const policySchema = JSON.parse(await readFile("schema/analysis-policy.schema.json", "utf8"));
   assert.equal(policySchema.additionalProperties, false);
