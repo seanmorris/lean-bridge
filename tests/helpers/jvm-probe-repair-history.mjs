@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPerlPackages, ownedPerlChangedPaths } from "./owned-perl-source-history.mjs";
+import { beforeOwnedPerlPackages, ownedPerlNormalizationPaths } from "./owned-perl-source-history.mjs";
 
 export const jvmProbeRepairBaseline = "578f04d09320e6998959390a3a0218ac6fd66d02";
 export const jvmProbeRepairPath = "docs/evidence/jvm-recursive-probe-repair-20260927.json";
@@ -59,5 +59,5 @@ export const beforeJvmProbeRepair = (path, source, expected) => {
  * @param bytes - Complete current or historical file bytes.
  * @param expected - Optional stopping identity.
  */
-export const jvmProbeRepairBytes = (path, bytes, expected) => jvmProbeRepairChangedPaths.includes(path) || ownedPerlChangedPaths.includes(path)
+export const jvmProbeRepairBytes = (path, bytes, expected) => jvmProbeRepairChangedPaths.includes(path) || ownedPerlNormalizationPaths.includes(path)
 	? beforeJvmProbeRepair(path, bytes.toString("utf8"), expected) : bytes;

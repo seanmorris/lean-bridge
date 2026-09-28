@@ -117,7 +117,9 @@ test("CI requires recursive C# installs and preserves the complete per-ABI Perl 
 	assert.match(workflow, /test -s build\/recursive-callables\/dotnet\.json/u);
 	assert.match(workflow, /^ {12}build\/recursive-callables\/dotnet\.json$/mu);
 	const perl = (await readFile(".github/workflows/perl-consumer.yml", "utf8")).split("  perl:\n")[1].split("\n  combine:")[0];
-	assert.match(perl, /^ {4}timeout-minutes: 90$/mu);
+	assert.match(perl, /^ {4}timeout-minutes: 120$/mu);
 	for(const name of ["recursive-callables", "structured-callables", "graph-package", "copied-graph-conversions"])
 		assert.ok(perl.includes(`tests/perl-${name}.test.mjs`));
+	for(const name of ["runtime", "values", "conversions", "xs", "scalars", "loader", "package", "coexistence", "documentation"])
+		assert.ok(perl.includes(`tests/owned-perl-${name}.test.mjs`));
 });

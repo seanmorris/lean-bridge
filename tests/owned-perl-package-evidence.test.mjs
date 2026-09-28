@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforePerlContractRepair, perlContractRepairBytes } from "./helpers/perl-contract-repair-history.mjs";
 import { assertOwnedPerlExecution } from "./helpers/owned-perl-package-evidence.mjs";
 import { beforeOwnedPerlPackages, ownedPerlBaseline, ownedPerlChangedPaths
 	, ownedPerlAddedPaths, ownedPerlHistoricalBytes, ownedPerlHistoryPath
@@ -29,10 +30,10 @@ test("owned Perl preserves published sources and rejects unrecorded edits", asyn
 	])].sort());
 	assert.deepEqual(record.updates.map(update => update.path), ownedPerlChangedPaths);
 	for(const [path, hash] of Object.entries(record.sources))
-		assert.equal(sha256(await readFile(path)), hash, path);
+		assert.equal(sha256(perlContractRepairBytes(path, await readFile(path), hash)), hash, path);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforePerlContractRepair(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		const prior = beforeOwnedPerlPackages(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedPerlPackages(update.path, prior), prior);

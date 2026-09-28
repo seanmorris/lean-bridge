@@ -12,6 +12,7 @@ import { generateOwnedDotnetCalls } from "../src/backends/dotnet/owned-calls.mjs
 import { generateOwnedDotnetConversions } from "../src/backends/dotnet/owned-conversions.mjs";
 import { compileOwnedDotnetLayout } from "../src/backends/dotnet/owned-layout.mjs";
 import { ownedDotnetRuntime } from "../src/backends/dotnet/owned-runtime.mjs";
+import { ownedDotnetHistoricalBytes } from "./helpers/owned-dotnet-source-history.mjs";
 
 const callbackObservation = [
 	{ mode: "callbacks", checks: 504, managedFailures: 96, nativeFailures: 95
@@ -44,8 +45,8 @@ const verify = async record => {
 	{
 		assert.match(entry.path, /^(?:src|tests)\/[A-Za-z0-9_./-]+$/u);
 		assert.ok(!entry.path.includes(".."));
-		const bytes = await readFile(entry.path);
-		assert.equal(bytes.length, entry.bytes, entry.path);
+		const bytes = ownedDotnetHistoricalBytes(entry.path, await readFile(entry.path), entry.sha256);
+		assert.equal(Buffer.byteLength(bytes), entry.bytes, entry.path);
 		assert.equal(sha256(bytes), entry.sha256, entry.path);
 	}
 	for(const source of foundation.sources)
