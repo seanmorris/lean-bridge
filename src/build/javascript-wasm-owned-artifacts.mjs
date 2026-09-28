@@ -13,25 +13,14 @@ import { readVerifiedSourceNotices } from "../release/source-notices.mjs";
 import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 import { verifyReviewedOwnedSourceInputs } from "../analyze/reviewed-owned-source.mjs";
 import { validateLakeNativeCompilation } from "./lake-native-inputs.mjs";
+import { javascriptWasmOwnedPins, javascriptWasmTargetHeaders, validJavaScriptWasmCompilerIdentity } from "./javascript-wasm-toolchain.mjs";
 
-export const javascriptWasmOwnedPins = Object.freeze({
-	leanCommit: "f3b06c705e6c85f5314019d5d3baab0fec5b580c"
-	, patchSetSha256: "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3"
-	, emscriptenVersion: "6.0.6"
-	, emscriptenCommit: "ce75e06884093bcefb86a6b8fd56a5d62a4cc245"
-	, emsdkCommit: "9981799f744be74ac67b1c1813ff172f63be0630"
-});
-export const javascriptWasmCompilerFiles = Object.freeze(["upstream/emscripten/emcc", "upstream/emscripten/em++.py", "upstream/emscripten/emcc.py", "upstream/emscripten/tools/link.py", "upstream/bin/clang", "upstream/bin/wasm-ld"]);
-export const javascriptWasmTargetHeaders = Object.freeze(["lean.h", "lean_gmp.h", "lean_libuv.h", "config.h", "version.h"]);
+export { javascriptWasmOwnedPins, javascriptWasmCompilerFiles, javascriptWasmTargetHeaders } from "./javascript-wasm-toolchain.mjs";
 const same = (a, b) => canonicalJson(a) === canonicalJson(b);
 const closed = (value, keys) => value && typeof value === "object" && !Array.isArray(value) && same(Object.keys(value).sort(), [...keys].sort());
 const identity = bytes => ({ bytes: bytes.length, sha256: sha256(bytes) });
 const hash = value => typeof value === "string" && /^[a-f0-9]{64}$(?![\s\S])/.test(value);
 const file = value => closed(value, ["bytes", "sha256"]) && Number.isSafeInteger(value.bytes) && value.bytes >= 0 && hash(value.sha256);
-const compilerIdentity = value => closed(value, ["version", "emsdkCommit", "files"])
-	&& value.emsdkCommit === javascriptWasmOwnedPins.emsdkCommit && typeof value.version === "string"
-	&& value.version.endsWith(` ${javascriptWasmOwnedPins.emscriptenVersion} (${javascriptWasmOwnedPins.emscriptenCommit})`)
-	&& closed(value.files, javascriptWasmCompilerFiles) && Object.values(value.files).every(item => file(item) && item.bytes > 0);
 
 /**
  * Require one imported heap/table and only the compiler-bound control export.
@@ -50,10 +39,11 @@ export const validateOwnedJavaScriptWasmBinary = async (bytes, controlSymbol) =>
 	// Emscripten reads these two data globals to install the component's EM_JS
 	// callbacks. They are metadata, not additional callable or resource exports.
 	const expected = [`function:${controlSymbol}`, "function:__wasm_call_ctors"
-		, "function:__wasm_apply_data_relocs"
 		, `global:__em_js__lbjs_${suffix}_dispatch_js`
 		, `global:__em_js__lbjs_${suffix}_finish_js`].sort();
-	if(!same(exports.map(item => `${item.kind}:${item.name}`).sort(), expected)
+	// The linker omits this private helper when the module has no data relocations.
+	const required = exports.map(item => `${item.kind}:${item.name}`).filter(name => name !== "function:__wasm_apply_data_relocs").sort();
+	if(!same(required, expected)
 		|| !imports.some(item => item.module === "env" && item.kind === "function" && item.name === "lean_bridge_native_component_initialize"))
 		throw Object.assign(new Error("Owned JavaScript components must import the shared broker and export only their checked control function"), {
 			details: { controlSymbol, exports, brokerImports: imports.filter(item => item.name.includes("component_initialize")) }
@@ -87,7 +77,7 @@ export const readVerifiedOwnedJavaScriptWasmComponent = async root => {
 	if(!closed(receipt, ["schemaVersion", "profile", "pointerBits", "pins", "bindingIrSha256", "sourceIdentity", "metadataSha256", "modelSha256", "headerSha256", "adaptersSha256", "ownedGraph", "initializer", "library", "wasmLibrary", "compiler", "targetHeaders", ...(receipt.nativeCompilation ? ["nativeCompilation"] : [])])
 		|| receipt.schemaVersion !== 1 || receipt.profile !== profile || receipt.pointerBits !== 32
 		|| !same(receipt.pins, javascriptWasmOwnedPins) || receipt.sourceIdentity.leanCommit !== javascriptWasmOwnedPins.leanCommit
-		|| !compilerIdentity(receipt.compiler) || !same(receipt.targetHeaders, headers) || !Object.values(headers).every(file)
+		|| !validJavaScriptWasmCompilerIdentity(receipt.compiler) || !same(receipt.targetHeaders, headers) || !Object.values(headers).every(file)
 		|| !same(model, reconstructed) || receipt.modelSha256 !== sha256(canonicalJson(model))
 		|| receipt.bindingIrSha256 !== model.bindingIrSha256 || !same(await read("binding-ir.json"), model.bindingIr)
 		|| receipt.metadataSha256 !== sha256(canonicalJson(metadata))

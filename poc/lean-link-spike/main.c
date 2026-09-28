@@ -1,4 +1,5 @@
 #include <emscripten/emscripten.h>
+#include <emscripten/eventloop.h>
 #include <emscripten/heap.h>
 #include <lean/lean.h>
 #include <dlfcn.h>
@@ -144,7 +145,7 @@ uint32_t bridge_lean_component_call_string_bool(
 typedef struct bridge_lean_pending_u32 {
   uint32_t token;
   uint32_t value;
-  uint8_t cancelled;
+  int timeout;
   struct bridge_lean_pending_u32 *next;
 } bridge_lean_pending_u32;
 
@@ -644,7 +645,6 @@ static void bridge_lean_alpha_defer_box_value_settle(void *argument) {
   uint32_t settled = 0;
 
   if (
-    !pending->cancelled &&
     runtime_state == BRIDGE_LEAN_RUNTIME_READY &&
     alpha_box &&
     alpha_read
@@ -655,7 +655,7 @@ static void bridge_lean_alpha_defer_box_value_settle(void *argument) {
       settled = bridge_lean_pending_resolve_u32(pending->token, result);
       if (!settled) native_late_settlements += 1;
     }
-  } else if (pending->cancelled || runtime_state != BRIDGE_LEAN_RUNTIME_READY) {
+  } else if (runtime_state != BRIDGE_LEAN_RUNTIME_READY) {
     native_cancelled_operations += 1;
   }
   while (*cursor && *cursor != pending) cursor = &(*cursor)->next;
@@ -683,28 +683,32 @@ uint32_t bridge_lean_alpha_defer_box_value(
   if (!pending) return 0;
   pending->token = pending_token;
   pending->value = value;
-  pending->cancelled = 0;
   pending->next = native_pending_head;
   native_pending_head = pending;
   native_pending_operations += 1;
-  emscripten_async_call(
+  pending->timeout = emscripten_set_timeout(
     bridge_lean_alpha_defer_box_value_settle,
-    pending,
-    1
+    1,
+    pending
   );
   return 1;
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t bridge_lean_alpha_cancel_defer_box_value(uint32_t pending_token) {
-  bridge_lean_pending_u32 *pending = native_pending_head;
+  bridge_lean_pending_u32 **cursor = &native_pending_head;
 
-  while (pending) {
-    if (pending->token == pending_token && !pending->cancelled) {
-      pending->cancelled = 1;
+  while (*cursor) {
+    bridge_lean_pending_u32 *pending = *cursor;
+    if (pending->token == pending_token) {
+      emscripten_clear_timeout(pending->timeout);
+      *cursor = pending->next;
+      native_pending_operations -= 1;
+      native_cancelled_operations += 1;
+      free(pending);
       return 1;
     }
-    pending = pending->next;
+    cursor = &pending->next;
   }
   return 0;
 }

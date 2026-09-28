@@ -212,6 +212,7 @@
                 "$runtime_root/cmake/lib/lean/libleanrt.a" \
                 "$out/cmake/lib/lean/"
               cp -a "$runtime_root/source/src/include/." "$out/source/src/include/"
+              cp "$runtime_root/source/.lean-wasm-patched" "$runtime_root/source/LICENSE" "$out/source/"
               runHook postInstall
             '';
           };
@@ -373,6 +374,9 @@
               export LEAN_WASM_LIBUV_SOURCE='${wasmToolchain.libuvSource}'
               export LEAN_WASM_EMSDK='${wasmToolchain.emsdk}'
               export LEAN_BRIDGE_LEAN='${wasmToolchain.leanHost}/bin/lean'
+              export LEAN_BRIDGE_LEAN_PREFIX='${wasmToolchain.leanHost}'
+              export LEAN_BRIDGE_JS_EMSDK='${wasmToolchain.emsdk}'
+              export LEAN_BRIDGE_JS_TARGET_RUNTIME='${component-runtime}'
               export LEAN_BRIDGE_EMCC='${wasmToolchain.emsdk}/upstream/emscripten/emcc'
               export LEAN_BRIDGE_RUNTIME_ROOT='${component-runtime}'
               '${pkgs.nodejs_22}/bin/node' '${componentEngineSource}/scripts/run-component-engine.mjs' "$@"

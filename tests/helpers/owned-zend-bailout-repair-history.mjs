@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptEngine, ownedJavaScriptEngineChangedPaths } from "./owned-javascript-engine-history.mjs";
 
 export const ownedZendBailoutBaseline = "c3a114694ba80a22db7fdee55fce3003bda77f23";
 export const ownedZendBailoutHistoryPath = "docs/evidence/owned-zend-bailout-repair-20260928.json";
@@ -28,6 +29,7 @@ export const ownedZendBailoutAddedPaths = [
 	, "tests/owned-zend-bailout-repair.test.mjs"
 ].sort();
 let cached;
+export const ownedZendBailoutNormalizationPaths = [...new Set([...ownedZendBailoutChangedPaths, ...ownedJavaScriptEngineChangedPaths])].sort();
 
 /**
  * Undo only complete authenticated sources and ordered literal edits.
@@ -60,6 +62,7 @@ export const reverseOwnedZendBailoutUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedZendBailoutRepair = (path, source, expected) => {
+	source = beforeOwnedJavaScriptEngine(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedZendBailoutChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedZendBailoutHistoryPath, "utf8"));
@@ -78,5 +81,5 @@ export const beforeOwnedZendBailoutRepair = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedZendBailoutHistoricalBytes = (path, bytes, expected) => ownedZendBailoutChangedPaths.includes(path)
+export const ownedZendBailoutHistoricalBytes = (path, bytes, expected) => ownedZendBailoutNormalizationPaths.includes(path)
 	? beforeOwnedZendBailoutRepair(path, bytes.toString("utf8"), expected) : bytes;

@@ -22,12 +22,15 @@ export const ownedJavaScriptCoexistenceCiTests = ["component-runtime-package-ide
 export const ownedJavaScriptCoexistenceTestCommand = "node --test --test-concurrency=1 " + ownedJavaScriptCoexistenceCiTests.join(" ");
 export const ownedAnalysisCiTests = ["owned-compiler-analysis", "owned-analysis-build-parity"].map(name => `tests/${name}.test.mjs`);
 export const ownedAnalysisTestCommand = "node --test --test-concurrency=1 " + ownedAnalysisCiTests.join(" ");
+export const ownedJavaScriptEngineCiTests = ["javascript-wasm-toolchain", "owned-javascript-archive-sdk", "owned-javascript-engine-request", "owned-javascript-engine", "owned-javascript-isolated-project"].map(name => `tests/${name}.test.mjs`);
+export const ownedJavaScriptEngineTestCommand = "node --test --test-concurrency=1 " + ownedJavaScriptEngineCiTests.join(" ");
 export const ownedJavaScriptWasmCiLogs = [
 	"build/owned-javascript-wasm/runtime.log"
 	, "build/owned-javascript-wasm/execution.log"
 	, "build/owned-javascript-wasm/installed.log"
 	, "build/owned-javascript-wasm/coexistence.log"
 	, "build/owned-javascript-wasm/analysis.log"
+	, "build/owned-javascript-wasm/engine.log"
 ];
 
 const requiredStep = (job, name) => {
@@ -112,6 +115,15 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[4]
 	].join("\n"));
 	const upload = requiredStep(job, "Preserve owned JavaScript and runtime execution logs");
+	const engineName = "Verify owned JavaScript engine and archive SDK contracts";
+	assert.ok(job.indexOf(analysisName) < job.indexOf(engineName));
+	assert.equal(script(requiredStep(job, engineName)), [
+		"set -euo pipefail", "source scripts/env.sh"
+		, ownedJavaScriptEngineTestCommand + " 2>&1 | tee " + ownedJavaScriptWasmCiLogs[5]
+		, "test -s " + ownedJavaScriptWasmCiLogs[5]
+		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[5]
+		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[5]
+	].join("\n"));
 	assert.match(upload, /^ {8}if: always\(\)$/mu);
 	assert.match(upload, /^ {8}uses: actions\/upload-artifact@v7$/mu);
 	assert.match(upload, /^ {10}if-no-files-found: error$/mu);
@@ -124,6 +136,7 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 		, installedTestFiles: ownedJavaScriptNpmCiTests.length
 		, coexistenceTestFiles: ownedJavaScriptCoexistenceCiTests.length
 		, analysisTestFiles: ownedAnalysisCiTests.length
+		, engineTestFiles: ownedJavaScriptEngineCiTests.length
 		, requiredLogs: ownedJavaScriptWasmCiLogs.length
 		, productionRuntimeRequired: true, skippedTestsRejected: true
 		, failurePropagated: true };

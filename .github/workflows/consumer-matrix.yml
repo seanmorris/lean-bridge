@@ -186,6 +186,21 @@ jobs:
           test -s build/owned-javascript-wasm/analysis.log
           rg '^# fail 0$' build/owned-javascript-wasm/analysis.log
           rg '^# skipped 0$' build/owned-javascript-wasm/analysis.log
+      - name: Verify owned JavaScript engine and archive SDK contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            tests/javascript-wasm-toolchain.test.mjs \
+            tests/owned-javascript-archive-sdk.test.mjs \
+            tests/owned-javascript-engine-request.test.mjs \
+            tests/owned-javascript-engine.test.mjs \
+            tests/owned-javascript-isolated-project.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/engine.log
+          test -s build/owned-javascript-wasm/engine.log
+          rg '^# fail 0$' build/owned-javascript-wasm/engine.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/engine.log
       - name: Preserve owned JavaScript and runtime execution logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -197,6 +212,7 @@ jobs:
             build/owned-javascript-wasm/installed.log
             build/owned-javascript-wasm/coexistence.log
             build/owned-javascript-wasm/analysis.log
+            build/owned-javascript-wasm/engine.log
           if-no-files-found: error
           retention-days: 30
 
@@ -1382,6 +1398,7 @@ jobs:
           LEAN_BRIDGE_NATIVE_JVM_TEST: "1"
         run: |
           sudo apt-get install -y maven unzip
+          mkdir -p build
           curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
           echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools

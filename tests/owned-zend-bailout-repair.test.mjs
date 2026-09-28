@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedZendBailoutExecution } from "./helpers/owned-zend-bailout-repair-evidence.mjs";
+import { beforeOwnedJavaScriptEngine, ownedJavaScriptEngineHistoricalBytes } from "./helpers/owned-javascript-engine-history.mjs";
 import { beforeOwnedZendBailoutRepair, ownedZendBailoutAddedPaths, ownedZendBailoutBaseline
 	, ownedZendBailoutChangedPaths, ownedZendBailoutHistoryPath, ownedZendBailoutPrevious
 	, reverseOwnedZendBailoutUpdate } from "./helpers/owned-zend-bailout-repair-history.mjs";
@@ -22,13 +23,13 @@ test("Zend bailout repair binds all current sources and leaves production and pr
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedZendBailoutAddedPaths])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptEngineHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedZendBailoutChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedZendBailoutRepair(update.path, current);
+		const current = beforeOwnedJavaScriptEngine(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedZendBailoutRepair(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedZendBailoutRepair(update.path, prior), prior);
 		assert.equal(beforeOwnedZendBailoutRepair(update.path, current, update.currentSha256), current);
@@ -40,9 +41,9 @@ test("Zend bailout repair binds all current sources and leaves production and pr
 	}
 	for(const path of Object.keys(previous.sources).filter(path => path.startsWith("src/") && path !== "src/adoption/test-profiles.mjs"))
 		assert.equal(record.sources[path], previous.sources[path], "No production changes: " + path);
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeOwnedJavaScriptEngine("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), record.sources["docs/type-surface.v1.json"]);
 	const prior = JSON.parse(beforeOwnedZendBailoutRepair("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptEngineHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior, "The repair must not promote installed support");
 });
 

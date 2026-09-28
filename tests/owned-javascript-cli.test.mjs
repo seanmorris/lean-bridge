@@ -38,10 +38,19 @@ for(const reviewed of [false, true]) test(`${reviewed ? "reviewed" : "ordinary"}
 		, targets: ["npm"]
 		, environment: { LEAN_BRIDGE_JS_EMSDK: join(root, "missing-sdk") } };
 	await assert.rejects(buildCanonicalProject(options), { code: "javascript-wasm-toolchain-unavailable" });
-	for(const backend of ["docker", "nix", "typo"])
-		await assert.rejects(buildCanonicalProject({ ...options, environment: { ...options.environment, LEAN_BRIDGE_BUILD_BACKEND: backend } }), { code: "javascript-wasm-backend-unsupported" });
+	const unavailable = { capture: async () => { throw Object.assign(new Error("Unavailable test backend"), { code: "ENOENT" }); } };
+	for(const backend of ["docker", "nix"])
+		await assert.rejects(buildCanonicalProject({ ...options, runner: unavailable, environment: { ...options.environment, LEAN_BRIDGE_BUILD_BACKEND: backend } }), { code: `${backend}-unavailable` });
+	await assert.rejects(buildCanonicalProject({ ...options, runner: unavailable, environment: { ...options.environment, LEAN_BRIDGE_BUILD_BACKEND: "typo" } }), { code: "invalid-build-backend" });
 	await assert.rejects(buildCanonicalProject({ ...options, cache: { policy: "use", directory: join(root, "cache") } }), { code: "cache-directory-unsupported" });
 	await assert.rejects(buildCanonicalProject({ ...options, cache: { policy: "typo" } }), { code: "invalid-cache-policy" });
+	for(const backend of ["auto", "nix", "docker"])
+	{
+		const request = { ...options, environment: { ...options.environment, LEAN_BRIDGE_BUILD_BACKEND: backend }
+			, runner: { capture: () => assert.fail("Invalid cache options reached a build tool") } };
+		await assert.rejects(buildCanonicalProject({ ...request, cache: { policy: "use", directory: 42 } }), { code: "invalid-cache-directory" });
+		await assert.rejects(buildCanonicalProject({ ...request, cache: { policy: "off", directory: join(root, "cache") } }), { code: "invalid-cache-policy" });
+	}
 	await assert.rejects(buildCanonicalProject({ ...options, targets: ["npm", "wit-wasi"] }), error => error.code === (reviewed ? "consumer-upgrade-required" : "unsupported-export-configuration"));
 	assert.deepEqual(await lakeInputState(project), before);
 	assert.deepEqual(await readdir(root), [reviewed ? "reviewed" : "ordinary"]);

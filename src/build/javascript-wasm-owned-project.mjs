@@ -11,6 +11,7 @@ import { inspectLeanProject } from "../analyze/lean-project.mjs";
 import { readNativeReviewedSource } from "../analyze/reviewed-owned-source.mjs";
 import { assertExportConfigurationCapabilities, readExportConfiguration } from "../analyze/export-configuration.mjs";
 import { buildOwnedJavaScriptWasmComponent } from "./javascript-wasm-owned-component.mjs";
+import { prepareIsolatedOwnedJavaScriptCompiler } from "./javascript-wasm-owned-isolated.mjs";
 import { javascriptWasmOwnedPins as pins } from "./javascript-wasm-owned-artifacts.mjs";
 import { javascriptWasmOwnedProfile as profile } from "./javascript-wasm-owned-model.mjs";
 import { buildOwnedJavaScriptNpmPackages } from "../release/owned-javascript-npm-package.mjs";
@@ -44,9 +45,18 @@ const directory = async (path, variable) => {
  * @param signal - Optional cancellation signal.
  */
 export const usesOwnedJavaScript = async (projectRoot, signal) => {
-	const inventory = await inspectLeanProject(projectRoot, { signal });
-	const review = await readNativeReviewedSource(projectRoot, inventory, signal, true);
-	return Boolean(inventory.configurationRecord.configuration.ownedAggregates || review && JSON.parse(review.source).schemaVersion === 4);
+	try
+	{
+		const inventory = await inspectLeanProject(projectRoot, { signal });
+		const review = await readNativeReviewedSource(projectRoot, inventory, signal, true);
+		return Boolean(inventory.configurationRecord.configuration.ownedAggregates || review && JSON.parse(review.source).schemaVersion === 4);
+	}
+	catch(error)
+	{
+		signal?.throwIfAborted();
+		if(error instanceof CanonicalBuildError) throw error;
+		throw new CanonicalBuildError(error.code ?? "invalid-reviewed-source", error.message, { details: error.details });
+	}
 };
 
 /**
@@ -66,59 +76,31 @@ export const buildOwnedJavaScriptProject = async options => {
 	await absent(output);
 	if(cache === null || typeof cache !== "object" || !["use", "refresh", "off"].includes(cache.policy))
 		throw new CanonicalBuildError("invalid-cache-policy", "Build cache policy must be use, refresh, or off");
-	if(cache.directory !== null && cache.directory !== undefined)
+	if(cache.directory !== null && cache.directory !== undefined && typeof cache.directory !== "string")
+		throw new CanonicalBuildError("invalid-cache-directory", "Build cache directory must be a path or null");
+	if(cache.policy === "off" && cache.directory !== null && cache.directory !== undefined)
+		throw new CanonicalBuildError("invalid-cache-policy", "Build cache directory must be null when caching is off");
+	const isolated = environment.LEAN_BRIDGE_BUILD_BACKEND !== undefined && environment.LEAN_BRIDGE_BUILD_BACKEND !== "auto";
+	if(!isolated && cache.directory !== null && cache.directory !== undefined)
 		throw new CanonicalBuildError("cache-directory-unsupported", "Owned JavaScript builds compile fresh and do not implement --cache-directory");
-	if(environment.LEAN_BRIDGE_BUILD_BACKEND && environment.LEAN_BRIDGE_BUILD_BACKEND !== "auto")
-		throw new CanonicalBuildError("javascript-wasm-backend-unsupported", "Owned JavaScript builds use the pinned Lean/Emscripten author SDK", { hint: "Use the default backend. An explicit Nix or Docker selection is never ignored." });
 	const record = await readExportConfiguration(project, { signal });
 	assertExportConfigurationCapabilities(record.configuration, { target: "npm"
 		, fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "specializations", "contracts", "generators"]
 		, targetFields: ["name", "version"] });
-	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "analysis", ownedGraphs: true });
-	const emsdkRoot = await directory(environment.LEAN_BRIDGE_JS_EMSDK ?? join(engineRoot, ".toolchains/emsdk"), "LEAN_BRIDGE_JS_EMSDK");
-	if(environment.LEAN_BRIDGE_JS_INPUTS !== undefined && environment.LEAN_BRIDGE_JS_TARGET_RUNTIME !== undefined)
-		throw new CanonicalBuildError("conflicting-javascript-wasm-inputs", "Select prepared JavaScript compiler inputs or a raw target tree, not both");
-	const bundled = join(engineRoot, "runtime/javascript-wasm");
-	const inputRoot = environment.LEAN_BRIDGE_JS_INPUTS ?? (environment.LEAN_BRIDGE_JS_TARGET_RUNTIME === undefined
-		&& await lstat(bundled).catch(error => { if(error.code === "ENOENT") return null; throw error; }) ? bundled : null);
-	const inputs = inputRoot === null ? null : await readVerifiedJavaScriptWasmCompilerInputs(await directory(inputRoot, "LEAN_BRIDGE_JS_INPUTS"), { signal });
-	const rawTarget = inputs ? null : await directory(environment.LEAN_BRIDGE_JS_TARGET_RUNTIME
-		?? join(engineRoot, `build/lean-runtime/${pins.leanCommit}-${pins.patchSetSha256}-browser`), "LEAN_BRIDGE_JS_TARGET_RUNTIME");
+	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: "owned-javascript", ownedGraphs: true });
+	const compilerOptions = { project, engineRoot, environment, runner, intent, cache, signal };
+	const compiler = await (isolated ? prepareIsolatedOwnedJavaScriptCompiler(compilerOptions) : prepareHostCompiler(compilerOptions));
 	const runtimeRoot = await resolveComponentRuntimeRoot({ engineRoot, environment });
-	let leanPrefix = environment.LEAN_BRIDGE_LEAN_PREFIX;
-	if(!leanPrefix)
-	{
-		try
-		{ leanPrefix = (await runner.capture({ command: "lean", args: ["--print-prefix"], cwd: project, env: environment, signal })).stdout.trim(); }
-		catch(error)
-		{ signal?.throwIfAborted(); throw new CanonicalBuildError("javascript-wasm-toolchain-unavailable", "The pinned host Lean compiler is unavailable", { hint: "Set LEAN_BRIDGE_LEAN_PREFIX to Lean 4.32.2.", details: error.details }); }
-	}
-	await directory(leanPrefix, "LEAN_BRIDGE_LEAN_PREFIX");
 	await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-owned-javascript-project-"));
 	try
 	{
-		const target = inputs ? join(staging, ".compiler-inputs") : rawTarget;
-		if(inputs)
-		{
-			for(const [path, bytes] of inputs.files)
-			{
-				const destination = join(target, path);
-				await mkdir(dirname(destination), { recursive: true }); await writeFile(destination, bytes, { flag: "wx" });
-			}
-			if((await readVerifiedJavaScriptWasmCompilerInputs(target, { signal })).identity !== inputs.identity) throw new Error("JavaScript compiler inputs changed while staging");
-		}
-		onProgress?.({ phase: "build", state: "info", message: "Compiling owned Lean exports for the shared JavaScript runtime" });
+		onProgress?.({ phase: "build", state: "info", message: `Compiling owned Lean exports with ${compiler.backend}` });
 		const componentRoot = join(staging, "javascript-wasm/component");
-		const built = await buildOwnedJavaScriptWasmComponent({ projectRoot: project
-			, outputRoot: componentRoot
-			, leanPrefix, leanRuntimeRoot: target, emsdkRoot
-			, environment, runner, signal
-			, configurationSha256: record.sha256, lakeSnapshot: intent.lakeSnapshot });
+		const built = await compiler.compile({ staging, componentRoot, configurationSha256: record.sha256 });
 		const packages = await buildOwnedJavaScriptNpmPackages({ componentRoot, runtimeRoot, outputRoot: join(staging, "packages/npm"), signal });
 		const report = await readVerifiedPackageSetReceipt({ receiptPath: join(packages.output, "package-set-receipt.json"), signal });
-		if(inputs) await rm(target, { recursive: true });
-		const manifest = { schemaVersion: 1, profile, backend: "pinned-author-sdk"
+		const manifest = { schemaVersion: 1, profile, backend: compiler.backend
 			, component: built.model.component
 			, bindingIrSha256: built.model.bindingIrSha256
 			, runtimeIdentity: packages.runtimeIdentity
@@ -127,6 +109,7 @@ export const buildOwnedJavaScriptProject = async options => {
 				, lakeSnapshotSha256: intent.lakeSnapshot.sha256
 				, toolchain: intent.document.source.toolchain }
 			, ...(intent.document.reviewedBindingIr ? { reviewedBindingIrSha256: intent.document.reviewedBindingIr.semanticSha256 } : {})
+			, ...(isolated ? { engineRequest: "javascript-wasm/engine-execution-request.json", engineReport: "javascript-wasm/engine-execution-report.json" } : {})
 			, packageSet: "packages/npm/package-set-receipt.json"
 			, packages: report.receipt.packages };
 		await verifyLakeSnapshotSourceTree({ snapshot: intent.lakeSnapshot, projectRoot: project, signal });
@@ -142,4 +125,45 @@ export const buildOwnedJavaScriptProject = async options => {
 		if(error instanceof CanonicalBuildError) throw error;
 		throw new CanonicalBuildError(error.code ?? "javascript-wasm-project-build-failed", error.message, { details: error.details });
 	}
+};
+
+const prepareHostCompiler = async ({ project, engineRoot, environment, runner, intent, signal }) => {
+	const emsdkRoot = await directory(environment.LEAN_BRIDGE_JS_EMSDK ?? join(engineRoot, ".toolchains/emsdk"), "LEAN_BRIDGE_JS_EMSDK");
+	if(environment.LEAN_BRIDGE_JS_INPUTS !== undefined && environment.LEAN_BRIDGE_JS_TARGET_RUNTIME !== undefined)
+		throw new CanonicalBuildError("conflicting-javascript-wasm-inputs", "Select prepared JavaScript compiler inputs or a raw target tree, not both");
+	const bundled = join(engineRoot, "runtime/javascript-wasm");
+	const inputRoot = environment.LEAN_BRIDGE_JS_INPUTS ?? (environment.LEAN_BRIDGE_JS_TARGET_RUNTIME === undefined
+		&& await lstat(bundled).catch(error => { if(error.code === "ENOENT") return null; throw error; }) ? bundled : null);
+	const inputs = inputRoot === null ? null : await readVerifiedJavaScriptWasmCompilerInputs(await directory(inputRoot, "LEAN_BRIDGE_JS_INPUTS"), { signal });
+	const rawTarget = inputs ? null : await directory(environment.LEAN_BRIDGE_JS_TARGET_RUNTIME
+		?? join(engineRoot, `build/lean-runtime/${pins.leanCommit}-${pins.patchSetSha256}-browser`), "LEAN_BRIDGE_JS_TARGET_RUNTIME");
+	let leanPrefix = environment.LEAN_BRIDGE_LEAN_PREFIX;
+	if(!leanPrefix)
+	{
+		try
+		{ leanPrefix = (await runner.capture({ command: "lean", args: ["--print-prefix"], cwd: project, env: environment, signal })).stdout.trim(); }
+		catch(error)
+		{ signal?.throwIfAborted(); throw new CanonicalBuildError("javascript-wasm-toolchain-unavailable", "The pinned host Lean compiler is unavailable", { hint: "Set LEAN_BRIDGE_LEAN_PREFIX to Lean 4.32.2.", details: error.details }); }
+	}
+	await directory(leanPrefix, "LEAN_BRIDGE_LEAN_PREFIX");
+	const compile = async ({ staging, componentRoot, configurationSha256 }) => {
+		const target = inputs ? join(staging, ".compiler-inputs") : rawTarget;
+		if(inputs)
+		{
+			for(const [path, bytes] of inputs.files)
+			{
+				const destination = join(target, path);
+				await mkdir(dirname(destination), { recursive: true }); await writeFile(destination, bytes, { flag: "wx" });
+			}
+			if((await readVerifiedJavaScriptWasmCompilerInputs(target, { signal })).identity !== inputs.identity) throw new Error("JavaScript compiler inputs changed while staging");
+		}
+		const built = await buildOwnedJavaScriptWasmComponent({ projectRoot: project
+			, outputRoot: componentRoot
+			, leanPrefix, leanRuntimeRoot: target, emsdkRoot
+			, environment, runner, signal
+			, configurationSha256, lakeSnapshot: intent.lakeSnapshot });
+		if(inputs) await rm(target, { recursive: true });
+		return built;
+	};
+	return { backend: "pinned-author-sdk", compile };
 };

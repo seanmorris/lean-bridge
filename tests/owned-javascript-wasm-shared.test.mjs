@@ -13,6 +13,9 @@ import { generateOwnedWasmBroker } from "../src/backends/javascript/owned-wasm-b
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { compileOwnedJavaScriptWasmFixture } from "./helpers/owned-javascript-wasm-native.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./helpers/owned-dotnet-callback-fixture.mjs";
+import { compileJavaScriptProjection } from "../src/backends/javascript/projection.mjs";
+import { alphaPrivateAbi } from "../poc/lean-link-spike/private-abi.mjs";
+import alphaBindingIr from "../poc/lean-link-spike/bindings/alpha.binding-ir.json" with { type: "json" };
 
 test("owned Wasm broker delegates every lifecycle transition to the existing runtime", () => {
 	const broker = generateOwnedWasmBroker();
@@ -46,6 +49,11 @@ test("the isolated core source boundary emits the shared ownership broker", asyn
 	assert.equal(await readFile(join(directory, "generated/lean_bridge_native_runtime.h"), "utf8"), broker.header);
 	assert.deepEqual((await readFile(join(directory, "generated/owned-runtime-exports.txt"), "utf8")).trim().split("\n")
 		, [...broker.exports, ...broker.supportExports].map(name => "_" + name).sort());
+	await processBuildRunner.capture({ command: process.execPath
+		, args: ["scripts/generate-lean-link-projection.mjs"]
+		, cwd: directory, timeoutMs: 30000 });
+	assert.deepEqual(JSON.parse(await readFile(join(directory, "poc/lean-link-spike/bindings/alpha.javascript-projection.json"), "utf8"))
+		, compileJavaScriptProjection(alphaBindingIr, alphaPrivateAbi));
 });
 
 for(const reviewed of [false, true]) test(`one real shared heap runs ${reviewed ? "legacy-first reviewed" : "owned-first ordinary"} Lean components`, {

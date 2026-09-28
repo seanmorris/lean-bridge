@@ -4,11 +4,33 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
+import { pathToFileURL } from "node:url";
+import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { assertManagedCiIsolation } from "./helpers/managed-ci-isolation.mjs";
 
 const workflow = () => readFile(".github/workflows/consumer-matrix.yml", "utf8");
+
+test("managed JVM bootstrap downloads Kotlin into a fresh checkout", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-jvm-bootstrap-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const archive = join(directory, "fixture.zip"), content = "local compiler archive fixture\n";
+	await writeFile(archive, content);
+	const source = await workflow();
+	const step = source.split("      - name: Compile ordinary Lean APIs and install Maven packages in Java and Kotlin\n")[1]?.split("      - name: ")[0];
+	assert.ok(step);
+	const commands = step.split("          sudo apt-get install -y maven unzip\n")[1]?.split("          echo '")[0];
+	assert.ok(commands);
+	const download = "https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip";
+	assert.ok(commands.includes(download));
+	await processBuildRunner.capture({ command: "bash"
+		, args: ["-e", "-c", commands.replace(download, pathToFileURL(archive).href)]
+		, cwd: directory, timeoutMs: 30000 });
+	assert.equal(await readFile(join(directory, "build/kotlin-compiler.zip"), "utf8"), content);
+});
 
 test("managed CI isolates timeout budgets, profile gates and artifact names", async () => {
 	assert.deepEqual(assertManagedCiIsolation(await workflow()), {

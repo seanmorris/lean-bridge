@@ -9,7 +9,8 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { buildElaboratedComponent } from "./elaborated-component.mjs";
 import { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters, javascriptWasmOwnedProfile as profile } from "./javascript-wasm-owned-model.mjs";
 import { generateCompiledJavaScriptWasmOwned } from "./javascript-wasm-owned-sources.mjs";
-import { javascriptWasmOwnedPins as pins, javascriptWasmCompilerFiles, javascriptWasmTargetHeaders, validateOwnedJavaScriptWasmBinary } from "./javascript-wasm-owned-artifacts.mjs";
+import { javascriptWasmOwnedPins as pins, javascriptWasmTargetHeaders, validateOwnedJavaScriptWasmBinary } from "./javascript-wasm-owned-artifacts.mjs";
+import { identifyJavaScriptWasmCompiler } from "./javascript-wasm-toolchain.mjs";
 import { compileLakeNativeInputs, lakeNativeInputs } from "./lake-native-inputs.mjs";
 import { compileOwnedJavaScriptPackageModel } from "../backends/javascript/owned-package.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
@@ -39,11 +40,7 @@ export const buildOwnedJavaScriptWasmComponent = async options => {
 	for(const key of ["CPATH", "C_INCLUDE_PATH", "CPLUS_INCLUDE_PATH", "OBJC_INCLUDE_PATH", "COMPILER_PATH", "GCC_EXEC_PREFIX", "LIBRARY_PATH", "CFLAGS", "CPPFLAGS", "LDFLAGS", "EMCC_CFLAGS", "CCC_OVERRIDE_OPTIONS", "DEPENDENCIES_OUTPUT", "SUNPRO_DEPENDENCIES"])
 		delete env[key];
 	const run = (command, args, cwd = sdk) => runner.capture({ command, args, cwd, env, signal, timeoutMs: 600000 });
-	const sdkCommit = (await run("git", ["-C", sdk, "rev-parse", "HEAD"])).stdout.trim();
-	const version = (await run(emcc, ["--version"])).stdout.split("\n")[0];
-	if(sdkCommit !== pins.emsdkCommit || !version.endsWith(` ${pins.emscriptenVersion} (${pins.emscriptenCommit})`))
-		throw new Error("Owned JavaScript compilation requires the pinned npm Emscripten 6.0.6 toolchain");
-	const compilerFiles = await capture(sdk, javascriptWasmCompilerFiles);
+	const compiler = await identifyJavaScriptWasmCompiler({ sdkRoot: sdk, run });
 	const inputPaths = ["source/.lean-wasm-patched", "source/LICENSE", ...javascriptWasmTargetHeaders.map(name => `cmake/include/lean/${name}`)];
 	const targetFiles = await capture(target, inputPaths);
 	if((await readFile(join(target, "source/.lean-wasm-patched"), "utf8")).trim() !== `${pins.leanCommit} ${pins.patchSetSha256} browser`)
@@ -72,7 +69,7 @@ export const buildOwnedJavaScriptWasmComponent = async options => {
 			const nativeInputs = lakeWorkspace ? lakeNativeInputs(lakeWorkspace.resolution) : [];
 			const native = nativeInputs.length ? await compileLakeNativeInputs({ snapshot: lakeSnapshot
 				, snapshotRoot: lakeWorkspace.snapshotRoot
-				, generated: lakeWorkspace.generatedSources
+				, generated: lakeWorkspace.generated
 				, inputs: nativeInputs, outputRoot: join(staging, "native-objects")
 				, compiler: emcc, profile: "side-module-2"
 				, includeRoots, runner, environment: env, signal }) : null;
@@ -107,10 +104,11 @@ export const buildOwnedJavaScriptWasmComponent = async options => {
 				, ownedGraph: generated.receipt
 				, initializer: generated.privateAbi.initializer
 				, library, wasmLibrary: identity(bytes), targetHeaders
-				, compiler: { version, emsdkCommit: sdkCommit, files: compilerFiles }
+				, compiler
 				, ...(native ? { nativeCompilation: native.document } : {}) };
 			const verify = async () => {
-				await native?.verify(); await verifyCapture(sdk, compilerFiles); await verifyCapture(target, targetFiles);
+				await native?.verify(); await verifyCapture(target, targetFiles);
+				if(!same(await identifyJavaScriptWasmCompiler({ sdkRoot: sdk, run }), compiler)) throw new Error("JavaScript compiler or origin changed during compilation");
 				for(const [path, expected] of Object.entries(targetHeaders))
 					if(!same(identity(await readFile(join(staging, path))), expected)) throw new Error("JavaScript staged target header changed during compilation");
 				for(const [path, source] of Object.entries(generated.files))

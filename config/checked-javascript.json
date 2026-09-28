@@ -6,6 +6,10 @@
 		"src/backends/php/php-wasm-copied-loader.mjs"
 	],
 	"deferred": [
+		{ "path": "src/build/javascript-wasm-toolchain.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/javascript-wasm-owned-output.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/javascript-wasm-owned-engine.mjs", "classification": "strict-migration-backlog" },
+		{ "path": "src/build/javascript-wasm-owned-isolated.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/build/javascript-wasm-owned-project.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/javascript-wasm-compiler-inputs.mjs", "classification": "strict-migration-backlog" },
 		{ "path": "src/release/owned-javascript-npm-package.mjs", "classification": "strict-migration-backlog" },

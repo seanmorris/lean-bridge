@@ -68,11 +68,13 @@ remains `UNLICENSED`. Add a supported native target to compile the same captured
 API for both widths. The combined build checks source, compiler, review and
 semantic API agreement before exposing either release.
 
-This owned-value route currently builds local handoffs with the pinned host SDK.
-Nix/Docker compilation and the signed `publish` workflow still need integration
-for this profile. Transferred inputs and results borrowed from another object
-also remain unsupported. The copied-value publication workflow described on
-this page is unchanged.
+The pinned host SDK is the validated local build route. Explicit `nix` and
+`docker` backend selections now use a source-only ownership request through the
+component engine. The engine verifies the captured source, generated inputs,
+export selection and output inventory. Full isolated installed-package
+acceptance and the signed `publish` workflow remain open for this profile.
+Transferred inputs and results borrowed from another object also remain
+unsupported. The copied-value publication workflow is unchanged.
 
 ## Export callbacks and returned functions
 

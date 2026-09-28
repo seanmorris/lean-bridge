@@ -137,6 +137,11 @@ export const executeComponentEngineRequest = async ({
 	const engine = resolve(engineRoot);
 	await assertAbsent(output);
 	const verifiedRequest = await readVerifiedEngineExecutionRequest({ requestPath, engineRoot: engine, inputRoot: inputs });
+	if(verifiedRequest.document.schemaVersion === 4)
+	{
+		const { executeOwnedJavaScriptEngine } = await import("./javascript-wasm-owned-engine.mjs");
+		return executeOwnedJavaScriptEngine({ verifiedRequest, inputs, output, engine, backend, runner, environment, signal });
+	}
 	if(verifiedRequest.document.schemaVersion === 3)
 	{
 		const { executeLeanAnalysisEngine } = await import("./lean-analysis-engine.mjs");

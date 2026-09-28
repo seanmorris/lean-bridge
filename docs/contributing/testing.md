@@ -2473,10 +2473,29 @@ node --test --test-concurrency=1 \
   tests/owned-analysis-build-parity.test.mjs
 ```
 
+The owned-component engine checks ordinary source and independent schema-4
+reviews, captured path dependencies, generated Lean and native inputs. It
+rejects changed requests, unauthorized files, symlinks, source substitutions
+and mismatched execution reports. Archive SDK tests compile and install real
+packages without requiring a fabricated `.git` directory. Public build tests
+inject only the Nix command transport and run the real compiler engine. These
+checks do not establish actual Nix or Docker isolation.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 EMCC_CORES=2 \
+node --test --test-concurrency=1 \
+  tests/javascript-wasm-toolchain.test.mjs \
+  tests/owned-javascript-archive-sdk.test.mjs \
+  tests/owned-javascript-engine-request.test.mjs \
+  tests/owned-javascript-engine.test.mjs \
+  tests/owned-javascript-isolated-project.test.mjs
+```
+
 The downstream workflow runs these checks in its required `owned-javascript-wasm`
 job. It builds the production runtime with the pinned toolchains, enables all
 five execution flags, rejects skipped tests and retains the runtime, execution,
-installed-package, coexistence and analysis logs
+installed-package, coexistence, analysis and engine logs
 as `owned-javascript-wasm-<commit>`. The support-summary job fails if this job
 does not succeed. Type-surface support classifications are not changed by adding
 the gate.

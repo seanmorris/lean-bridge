@@ -20,7 +20,8 @@
       "enum": [
         1,
         2,
-        3
+        3,
+        4
       ]
     },
     "kind": {
@@ -106,13 +107,15 @@
         "kind": {
           "enum": [
             "component-neutral-release-bundle",
-            "compiler-owned-project-analysis"
+            "compiler-owned-project-analysis",
+            "compiler-owned-javascript-component"
           ]
         },
         "bundleDirectory": {
           "enum": [
             "bundle",
-            "analysis"
+            "analysis",
+            "component"
           ]
         },
         "executionReport": {
@@ -203,7 +206,8 @@
           "schemaVersion": {
             "enum": [
               2,
-              3
+              3,
+              4
             ]
           }
         }
@@ -299,10 +303,10 @@
           "output": {
             "properties": {
               "kind": {
-                "const": "component-neutral-release-bundle"
+                "enum": ["component-neutral-release-bundle", "compiler-owned-javascript-component"]
               },
               "bundleDirectory": {
-                "const": "bundle"
+                "enum": ["bundle", "component"]
               }
             }
           },
@@ -315,17 +319,41 @@
               "anyOf": [
                 {
                   "required": [
-                    "compilerOwnedTypes"
-                  ]
-                },
-                {
-                  "required": [
                     "noAdapterCompilation"
                   ]
                 }
               ]
             }
           }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "schemaVersion": { "const": 4 } } },
+      "then": {
+        "properties": {
+          "targets": { "const": ["npm"] },
+          "output": {
+            "properties": {
+              "kind": { "const": "compiler-owned-javascript-component" },
+              "bundleDirectory": { "const": "component" }
+            }
+          },
+          "policies": { "required": ["compilerOwnedTypes"] }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "schemaVersion": { "enum": [1, 2] } } },
+      "then": {
+        "properties": {
+          "output": {
+            "properties": {
+              "kind": { "const": "component-neutral-release-bundle" },
+              "bundleDirectory": { "const": "bundle" }
+            }
+          },
+          "policies": { "not": { "required": ["compilerOwnedTypes"] } }
         }
       }
     }

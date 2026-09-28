@@ -16,7 +16,7 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { generateNativeLeanAdapters } from "./native-model.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { captureLockedLakeProject } from "./lake-workspace.mjs";
-import { verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
+import { verifyLakeDependencySnapshot, verifyLakeSnapshotSourceTree } from "./lake-dependency-snapshot.mjs";
 import { elaboratedComponent } from "../analyze/semantic-model.mjs";
 import { resolveLakeBuildWorkspace } from "./lake-build-workspace.mjs";
 import { selectLakeEntryModules, verifyLakeEntryModules } from "./lake-entry-modules.mjs";
@@ -50,6 +50,7 @@ const fileIdentity = async path => { const bytes = await readFile(path); return 
  * @param options.arities - Argument counts for returned closures.
  * @param options.configurationSha256 - Expected shared configuration digest.
  * @param options.lakeSnapshot - Shared immutable Lake source capture.
+ * @param options.sourceCaptureRoot - Engine mount containing the exact root and dependency capture.
  * @param options.targets - Projections whose configuration must be admitted.
  * @param options.ownedGraphs - Whether the selected native transport implements v4 ownership.
  * @param options.validateModel - Target admission before compiling adapters.
@@ -71,6 +72,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 	, arities
 	, configurationSha256
 	, lakeSnapshot
+	, sourceCaptureRoot
 	, targets = ["cpan"]
 	, ownedGraphs = false
 	, validateModel
@@ -87,6 +89,11 @@ export const buildElaboratedComponent = async ({ projectRoot
 	if(!Object.hasOwn(receipts, profile) || receipts[profile] !== receiptName) throw new TypeError("Invalid compiled component profile or receipt path");
 	const run = (command, args, options = {}) => runner.capture({ command, args, cwd: engineRoot, ...options });
 	const output = resolve(outputRoot), project = resolve(projectRoot);
+	if(sourceCaptureRoot !== undefined && (!lakeSnapshot || project !== join(resolve(sourceCaptureRoot), "root")))
+		throw new TypeError("Captured compilation requires the authenticated snapshot's root project");
+	const verifySnapshot = () => sourceCaptureRoot === undefined
+		? verifyLakeSnapshotSourceTree({ snapshot: lakeSnapshot, projectRoot: project, signal })
+		: verifyLakeDependencySnapshot({ snapshot: lakeSnapshot, snapshotRoot: sourceCaptureRoot, signal });
 	await absent(output); await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-native-component-"));
 	let lakeWorkspace;
@@ -136,7 +143,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 		if(!selectedModules.length || selectedModules.some(name => !namePattern.test(name) || !entries.some(entry => entry.module === name))) throw new Error("native module selection is invalid");
 		if([...exports, ...resources, ...Object.keys(arities)].some(name => !namePattern.test(name))) throw new Error("native export selection is invalid");
 		if(Object.values(arities).some(n => !Number.isSafeInteger(n) || n < 0 || n > 32)) throw new Error("invalid native export arity");
-		if(lakeSnapshot) await verifyLakeSnapshotSourceTree({ snapshot: lakeSnapshot, projectRoot: project, signal });
+		if(lakeSnapshot) await verifySnapshot();
 		else lakeSnapshot = await captureLockedLakeProject({ projectRoot: project, inputs: analysis.inputs, signal });
 		if(config.generators?.length && !lakeSnapshot) throw new Error("Lake generators require a captured lake-manifest.json");
 		let lakeModules;
@@ -279,7 +286,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 		await save(generatedC, `${await readFile(generatedC, "utf8")}\n#include "component.h"\n`);
 		const { receipt, verify } = await compileComponent({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace, lakeSnapshot, run, verifyElaborationInputs });
 		if((await inspectLeanProject(project, { signal })).sourceTreeSha256 !== analysis.sourceTreeSha256) throw new Error("native source changed during compilation");
-		if(lakeSnapshot) await verifyLakeSnapshotSourceTree({ snapshot: lakeSnapshot, projectRoot: project, signal });
+		if(lakeSnapshot) await verifySnapshot();
 		if(lakeWorkspace && sha256(await readFile(lean)) !== lakeWorkspace.document.leanCompilerSha256)
 			throw new Error("native Lean compiler changed during compilation");
 		await verify?.();

@@ -64,12 +64,13 @@ const readIntent = async (inputRoot, signal) => {
  * @param options.projectRoot - Original project directory.
  * @param options.lakeSnapshot - Optional independently captured release source.
  * @param options.signal - Optional cancellation signal.
- * @param options.purpose - Build intent or compiler-only analysis intent.
- * @param options.ownedGraphs - Admit ownership reviews for an ownership-aware analysis consumer.
+ * @param options.purpose - Copied build, compiler-only analysis, or owned JavaScript build.
+ * @param options.ownedGraphs - Explicit ownership capability of the receiving consumer.
  */
 export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal, purpose = "build", ownedGraphs = false }) => {
-	if(!["build", "analysis"].includes(purpose)) fail("Unknown public entry intent purpose");
-	if(typeof ownedGraphs !== "boolean" || (ownedGraphs && purpose !== "analysis")) fail("Ownership-aware intent requires an explicit analysis consumer");
+	if(!["build", "analysis", "owned-javascript"].includes(purpose)) fail("Unknown public entry intent purpose");
+	if(typeof ownedGraphs !== "boolean" || (ownedGraphs && purpose === "build") || (purpose === "owned-javascript" && !ownedGraphs))
+		fail("Ownership-aware intent requires an explicit ownership consumer");
 	const inventory = await inspectLeanProject(projectRoot, { signal });
 	let reviewedBindingIr;
 	try
@@ -78,6 +79,11 @@ export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal
 	{ throw new CanonicalBuildError(error.code ?? "invalid-reviewed-source", error.message, { details: error.details }); }
 	const configuration = inventory.configurationRecord.configuration;
 	if(purpose === "build") assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "arities", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
+	if(purpose === "owned-javascript")
+	{
+		if(!configuration.ownedAggregates && (!reviewedBindingIr || JSON.parse(reviewedBindingIr.source).schemaVersion !== 4)) fail("Owned JavaScript intent requires explicit aggregate ownership");
+		assertExportConfigurationCapabilities(configuration, { target: "npm", fields: ["package", "modules", "exports", "resources", "arities", "ownedAggregates", "generators", "specializations", "contracts"], targetFields: ["name", "version"] });
+	}
 	if(inventory.project.lakefile === null || !inventory.inputs.some(input => input.path === "lean-toolchain"))
 		fail("Compiler entry discovery requires a Lake project with lakefile.toml or lakefile.lean and a pinned lean-toolchain");
 	if(configuration.generators?.length && !inventory.inputs.some(input => input.path === "lake-manifest.json"))
@@ -92,7 +98,7 @@ export const prepareLakeEntryIntent = async ({ projectRoot, lakeSnapshot, signal
 	const facts = inventory.project;
 	const id = `${facts.name.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^[^a-z0-9]+/, "") || "lean-project"}@${facts.version}`;
 	const document = freeze({ schemaVersion: reviewedBindingIr ? 3 : 2
-		, kind: purpose === "analysis" ? "lean-bridge-lake-analysis-intent" : "lean-bridge-lake-entry-intent"
+		, kind: purpose === "analysis" ? "lean-bridge-lake-analysis-intent" : purpose === "owned-javascript" ? "lean-bridge-owned-javascript-intent" : "lean-bridge-lake-entry-intent"
 		, component: { id, name: facts.name, version: facts.version }
 		, source: { inputs: inventory.inputs, treeSha256: inventory.sourceTreeSha256
 			, toolchain: facts.toolchain, lakeSnapshotSha256: lakeSnapshot.sha256 }
@@ -132,14 +138,14 @@ export const writeLakeEntryInputs = async ({ intent, outputRoot, signal }) => {
  * @param options.inputRoot - Closed original source mount.
  * @param options.expectedSha256 - Intent digest retained in the engine request.
  * @param options.signal - Optional cancellation signal.
- * @param options.purpose - Expected build or compiler-only analysis intent.
- * @param options.ownedGraphs - Explicit ownership capability of the receiving analysis consumer.
+ * @param options.purpose - Expected copied build, analysis, or owned JavaScript intent.
+ * @param options.ownedGraphs - Explicit ownership capability of the receiving consumer.
  */
 export const readLakeEntryIntent = async ({ inputRoot, expectedSha256, signal, purpose = "build", ownedGraphs = false }) => {
 	const bytes = await readIntent(inputRoot, signal);
 	if(sha256(bytes) !== expectedSha256) fail("Public entry intent identity changed");
 	const document = JSON.parse(bytes.toString("utf8"));
-	if(![2, 3].includes(document.schemaVersion) || document.kind !== (purpose === "analysis" ? "lean-bridge-lake-analysis-intent" : "lean-bridge-lake-entry-intent")) fail("Unsupported public entry intent");
+	if(![2, 3].includes(document.schemaVersion) || document.kind !== (purpose === "analysis" ? "lean-bridge-lake-analysis-intent" : purpose === "owned-javascript" ? "lean-bridge-owned-javascript-intent" : "lean-bridge-lake-entry-intent")) fail("Unsupported public entry intent");
 	const snapshot = await readLakeDependencySnapshot({ snapshotRoot: join(inputRoot, "lake"), expectedSha256: document.source?.lakeSnapshotSha256, signal });
 	const reconstructed = await prepareLakeEntryIntent({ projectRoot: join(inputRoot, "lake/root"), lakeSnapshot: snapshot, signal, purpose, ownedGraphs });
 	if(bytes.toString() !== canonicalJson(reconstructed.document)) fail("Public entry intent differs from the captured project");
