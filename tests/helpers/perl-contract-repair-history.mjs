@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPhpPackages, ownedPhpChangedPaths } from "./owned-php-source-history.mjs";
 
 export const perlContractRepairBaseline = "20d95044ae6f1dcf2d156cd8043126a16bbd1b4e";
 export const perlContractRepairPath = "docs/evidence/perl-contract-repair-20260928.json";
@@ -27,6 +28,7 @@ export const perlContractRepairAddedPaths = [
 	, "tests/helpers/perl-contract-repair-history.mjs"
 	, "tests/perl-contract-repair-evidence.test.mjs"
 ].sort();
+export const perlContractRepairNormalizationPaths = [...new Set([...perlContractRepairChangedPaths, ...ownedPhpChangedPaths])].sort();
 let cached;
 
 /**
@@ -61,6 +63,7 @@ export const reversePerlContractRepair = (source, update) => {
  * @param expected - Optional exact identity at which normalization stops.
  */
 export const beforePerlContractRepair = (path, source, expected) => {
+	source = beforeOwnedPhpPackages(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !perlContractRepairChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(perlContractRepairPath, "utf8"));
@@ -80,5 +83,5 @@ export const beforePerlContractRepair = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional requested historical identity.
  */
-export const perlContractRepairBytes = (path, bytes, expected) => perlContractRepairChangedPaths.includes(path)
+export const perlContractRepairBytes = (path, bytes, expected) => perlContractRepairNormalizationPaths.includes(path)
 	? beforePerlContractRepair(path, bytes.toString("utf8"), expected) : bytes;

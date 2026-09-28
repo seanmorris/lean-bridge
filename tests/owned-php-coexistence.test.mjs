@@ -6,12 +6,10 @@
 import assert from "node:assert/strict";
 import { access, cp, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/native-component.mjs";
-import { projectOwnedPhp } from "../src/build/owned-php-projection.mjs";
-import { projectNativeCFamily } from "../src/build/native-c-projection.mjs";
+import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { installOwnedPhpArchive, ownedPhpInventory } from "./helpers/owned-php-installed.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -28,16 +26,15 @@ test("original owned and copied Composer packages coexist with reproducible nati
 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-owned-php-coexist-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
-	const environment = nativeFixtureEnvironment([]), leanPrefix = environment.LEAN_BRIDGE_LEAN_PREFIX;
-	const runtimeRoot = join(directory, "native-runtime"), handoff = join(directory, "handoff");
-	await buildNativeSharedRuntime({ outputRoot: runtimeRoot, leanPrefix }).catch(explain);
+	const environment = nativeFixtureEnvironment([]), cli = resolve("scripts/lean-bridge.mjs");
+	const handoff = join(directory, "handoff");
 	const releases = []; let reproduced;
 	for(const [index, spec] of specifications.entries())
 	for(let iteration = 0; iteration < (index === 0 ? 2 : 1); ++iteration)
 	{
 		const { name, module, owned, value } = spec;
 		const author = join(directory, `author-${index}-${iteration}`), project = join(author, "source"), working = join(author, "release");
-		const nativeRoot = join(working, "native/component"), settings = { name: `lean-bridge/${name}`, version: "1.0.0" };
+		const settings = { name: `lean-bridge/${name}`, version: "1.0.0" };
 		const source = `namespace ${module}
 ${owned ? `structure Ticket where
   serial : Nat
@@ -66,13 +63,14 @@ end ${module}
 			, targets: { "php-native": settings } }));
 		const before = await lakeInputState(project);
 		t.diagnostic(`building ${module}, independent producer ${iteration + 1}`);
-		await buildNativeComponent({ projectRoot: project, outputRoot: nativeRoot
-			, runtimeRoot, leanPrefix, targets: owned ? ["c"] : ["php-native"]
-			, ownedGraphs: owned, ownedHostCallbacks: owned
-			, copiedGraphs: !owned }).catch(explain);
-		const options = { working, nativeRoot, runtimeRoot, leanPrefix, settings, environment };
-		const built = owned ? await projectOwnedPhp(options).catch(explain)
-			: (await projectNativeCFamily({ ...options, targets: ["php-native"], settings: { "php-native": settings } }).catch(explain))[0];
+		const invocation = await processBuildRunner.capture({ command: process.execPath
+			, args: [cli, "build", "--project", project, "--output", working, "--target", "php-native", "--json"]
+			, cwd: directory, env: environment, timeoutMs: 600000 }).catch(explain);
+		const response = JSON.parse(invocation.stdout);
+		assert.equal(response.status, "ok");
+		assert.deepEqual(response.result.targets, ["php-native"]);
+		const built = JSON.parse(await readFile(join(working, "native-release.json"), "utf8"));
+		assert.equal(built.backend, owned ? "owned-php-cli-ffi-v1" : "ordinary-php-cli-ffi-v1");
 		assert.deepEqual(await lakeInputState(project), before);
 		const files = await ownedPhpInventory(join(working, "packages/php-native/composer"));
 		const pkg = built.packages[0];
@@ -81,18 +79,16 @@ end ${module}
 			assert.deepEqual(files, releases[0].files, "independent compiler builds changed installed bytes");
 			assert.deepEqual(built, releases[0].built);
 			assert.deepEqual(await readFile(join(working, "archives", pkg.archive)), await readFile(releases[0].archive));
-			reproduced = { independentNativeCompilation: true, sourceSha256: sha256(source), pkg };
+			reproduced = { independentNativeCompilation: true, sourceSha256: sha256(source), pkg, cliBuild: response };
 		}
 		else
 		{
 			await cp(join(working, "archives"), join(handoff, String(index)), { recursive: true });
-			releases.push({ owned, built, pkg, files, archive: join(handoff, String(index), pkg.archive) });
+			releases.push({ owned, built, pkg, files, archive: join(handoff, String(index), pkg.archive), cliBuild: response });
 		}
 		await rm(author, { recursive: true, force: true });
 		await assert.rejects(access(author), { code: "ENOENT" });
 	}
-	await rm(runtimeRoot, { recursive: true, force: true });
-	await assert.rejects(access(runtimeRoot), { code: "ENOENT" });
 	const installed = await installOwnedPhpArchive({ root: join(directory, "consumer")
 		, archive: releases[0].archive, pkg: releases[0].pkg
 		, additional: releases.slice(1), environment });
@@ -113,6 +109,7 @@ end ${module}
 	}
 	await saveLakeFile("build/owned-php-packaging", "coexistence.json", canonicalJson({ schemaVersion: 1
 		, planNode: 1219, compiledLean: true, installedPackage: true
+		, cliIntegrated: true
 		, sourceFreeInstallation: true, sourceFreeRelocatedExecution: true
 		, handoffRemoved: true, reproduced, releases, observations, inventory
 		, consumerSha256: sha256(source), installation: installed.evidence }));

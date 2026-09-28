@@ -9,15 +9,15 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
-import { buildNativeComponent, buildNativeSharedRuntime } from "../src/build/native-component.mjs";
+import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { ownedPhpEvidence } from "../src/build/owned-php-artifacts.mjs";
-import { projectOwnedPhp } from "../src/build/owned-php-projection.mjs";
 import { packageOwnedPhp } from "../src/release/owned-composer.mjs";
 import { verifyNativeFiles } from "../src/build/native-artifacts.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./helpers/owned-dotnet-callback-fixture.mjs";
 import { installOwnedPhpArchive, ownedPhpInventory } from "./helpers/owned-php-installed.mjs";
-import { nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
+import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const explain = error => { error.message += `: ${JSON.stringify(error.details ?? {})}`; throw error; };
@@ -41,14 +41,16 @@ for(const mode of ["ordinary", "reviewed"]) test(`owned PHP Composer archive ins
 	const leanPrefix = environment.LEAN_BRIDGE_LEAN_PREFIX;
 	const runtimeRoot = join(output, "native/runtime"), nativeRoot = join(output, "native/component");
 	const adapterRoot = join(output, "native/owned-php-binding");
-	t.diagnostic(`${mode}: fresh runtime and Lean component`);
-	await buildNativeSharedRuntime({ outputRoot: runtimeRoot, leanPrefix }).catch(explain);
-	await buildNativeComponent({ projectRoot: project, outputRoot: nativeRoot
-		, runtimeRoot, leanPrefix, targets: ["c"]
-		, ownedGraphs: true, ownedHostCallbacks: true }).catch(explain);
-	t.diagnostic(`${mode}: isolated GMP, native PHP adapter and Composer archive`);
+	const cli = resolve("scripts/lean-bridge.mjs");
+	t.diagnostic(`${mode}: CLI builds Lean, private GMP and the Composer archive`);
+	const invocation = await processBuildRunner.capture({ command: process.execPath
+		, args: [cli, "build", "--project", project, "--output", output, "--target", "php-native", "--json"]
+		, cwd: directory, env: environment, timeoutMs: 600000 }).catch(explain);
+	const response = JSON.parse(invocation.stdout);
+	assert.equal(response.status, "ok");
+	assert.deepEqual(response.result.targets, ["php-native"]);
+	const built = JSON.parse(await readFile(join(output, "native-release.json"), "utf8"));
 	const options = { working: output, nativeRoot, runtimeRoot, leanPrefix, settings, environment };
-	const built = await projectOwnedPhp(options).catch(explain);
 	assert.equal(built.backend, "owned-php-cli-ffi-v1");
 	assert.deepEqual(await lakeInputState(project), before);
 	const verified = await ownedPhpEvidence({ ...options, adapterRoot });
@@ -86,18 +88,25 @@ for(const mode of ["ordinary", "reviewed"]) test(`owned PHP Composer archive ins
 		await saveLakeFile(adapterRoot, "native-php-adapter.json", canonicalJson(verified.adapter));
 	}
 	const reassembled = join(directory, "reassembled"), rebuilt = await packageOwnedPhp({ ...repack, working: reassembled });
-	assert.deepEqual(rebuilt, built);
+	for(const [key, value] of Object.entries(rebuilt)) assert.deepEqual(built[key], value, key);
 	const pkg = built.packages[0];
 	assert.deepEqual(await readFile(join(reassembled, "archives", pkg.archive)), await readFile(join(output, "archives", pkg.archive)));
-	await cp(join(output, "archives"), handoff, { recursive: true });
+	const packageSet = await copyPackageSetHandoff(output, handoff);
+	assert.deepEqual(packageSet.packages.map(item => [item.target, item.ecosystem, item.role]), [["php-native", "composer", "component"]]);
 	const input = { metadata: await json(join(nativeRoot, "metadata.json")), sourceIdentity: verified.model.sourceIdentity, component: verified.model.component };
 	for(const path of [project, output, reassembled])
 	{
 		await rm(path, { recursive: true, force: true });
 		await assert.rejects(access(path), { code: "ENOENT" });
 	}
+	const verification = await processBuildRunner.capture({ command: process.execPath
+		, args: [cli, "verify", "--receipt", join(handoff, "package-set-receipt.json"), "--json"]
+		, cwd: directory, env: copiedCleanEnvironment }).catch(explain);
+	const verifiedSet = JSON.parse(verification.stdout);
+	assert.equal(verifiedSet.status, "ok");
+	assert.equal(verifiedSet.result.verificationType, "local-package-set");
 	t.diagnostic(`${mode}: offline Composer install after producer removal`);
-	const installed = await installOwnedPhpArchive({ root: join(directory, "consumer"), archive: join(handoff, pkg.archive), pkg, environment });
+	const installed = await installOwnedPhpArchive({ root: join(directory, "consumer"), archive: join(handoff, "archives", pkg.archive), pkg, environment });
 	await rm(handoff, { recursive: true, force: true });
 	await assert.rejects(access(handoff), { code: "ENOENT" });
 	const { deployment, php, runtimeOptions, environment: clean } = installed;
@@ -150,7 +159,9 @@ for(const mode of ["ordinary", "reviewed"]) test(`owned PHP Composer archive ins
 		, mode, compiledLean: true, installedPackage: true, sourceUnchanged: true
 		, sourceFreeInstallation: true, sourceFreeRelocatedExecution: true
 		, handoffRemoved: true
-		, deterministicReassembly: true, cliAdmission: false, needed: verified.needed
+		, deterministicReassembly: true, cliAdmission: true, needed: verified.needed
+		, cliBuild: response, packageSetReceipt: packageSet
+		, receiptVerifiedWithoutProducer: true, verification: verifiedSet
 		, tamperRejected: mutations
 		, loaderRejected: ["changed-library", "symlink-library", "missing-library", "foreign-runtime"]
 		, sourceSha256: sha256(source)

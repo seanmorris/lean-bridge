@@ -22,6 +22,7 @@ import { generateOwnedRubyPackage } from "../backends/ruby/owned-package.mjs";
 import { generateOwnedDotnetPackage } from "../backends/dotnet/owned-package.mjs";
 import { generateOwnedJvmPackage } from "../backends/jvm/owned-package.mjs";
 import { generateOwnedPerlXs } from "../backends/perl/owned-xs.mjs";
+import { generateOwnedPhpPackage } from "../backends/php/owned-package.mjs";
 import { compilePrimitiveCSurface } from "../backends/c/primitive-surface.mjs";
 import { compilePrimitiveCppModel } from "../backends/cpp/primitives.mjs";
 import { validateGmpSurface } from "../backends/c/gmp-projection.mjs";
@@ -54,7 +55,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 {
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target)))
 		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and cpan targets");
-	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan"].includes(target));
+	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target));
 	try
 	{ await readNativeReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal, ownedGraphs); }
 	catch(error)
@@ -109,6 +110,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					if(targets.includes("nuget")) generateOwnedDotnetPackage(model.bindingIr);
 					if(targets.includes("maven")) generateOwnedJvmPackage(model.bindingIr);
 					if(targets.includes("cpan")) generateOwnedPerlXs(model.bindingIr, ownedPerlNamespace(model.component, config.targets?.cpan));
+					if(targets.includes("php-native")) generateOwnedPhpPackage(model.bindingIr);
 					return;
 				}
 				if(model.copiedGraph)

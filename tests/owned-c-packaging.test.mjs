@@ -55,7 +55,7 @@ test("unsupported native targets reject owned source decisions before compiling"
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const project = join(directory, "source");
 	await cp(resolve("tests/fixtures/onboarding/owned-aggregates"), project, { recursive: true });
-	for(const targets of [["php-native"], ["wit-wasi"], ["c", "cpp", "php-native"], ["maven", "wit-wasi"]])
+	for(const targets of [["wit-wasi"], ["c", "cpp", "wit-wasi"], ["maven", "wit-wasi"], ["php-native", "wit-wasi"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), /ownedAggregates/);
@@ -63,13 +63,13 @@ test("unsupported native targets reject owned source decisions before compiling"
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), { code: "ENOENT" });
-	for(const targets of [["cpan"], ["c", "cpp", "cpan"], ["maven", "cpan"]])
+	for(const targets of [["cpan"], ["c", "cpp", "cpan"], ["maven", "cpan"], ["php-native"], ["c", "php-native"], ["cpan", "php-native"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), { code: "ENOENT" });
 	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Owned"] }));
 	await saveLakeFile(project, "api.binding-ir.json", canonicalJson(ownedAggregateReviewedIr()));
-	for(const targets of [["php-native"], ["wit-wasi"], ["cpan", "php-native"], ["maven", "wit-wasi"]])
+	for(const targets of [["wit-wasi"], ["cpan", "wit-wasi"], ["maven", "wit-wasi"], ["php-native", "wit-wasi"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), { code: "consumer-upgrade-required" });
@@ -79,7 +79,7 @@ test("unsupported native targets reject owned source decisions before compiling"
 	await assert.rejects(buildNativeProject({ projectRoot: project
 		, targets: ["nuget"], outputRoot: join(directory, "unused")
 		, environment: copiedCleanEnvironment }), { code: "ENOENT" });
-	for(const targets of [["cpan"], ["c", "cpp", "cpan"], ["maven", "cpan"]])
+	for(const targets of [["cpan"], ["c", "cpp", "cpan"], ["maven", "cpan"], ["php-native"], ["c", "php-native"], ["cpan", "php-native"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), { code: "ENOENT" });

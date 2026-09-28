@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePerlContractRepair, perlContractRepairChangedPaths } from "./perl-contract-repair-history.mjs";
+import { beforePerlContractRepair, perlContractRepairNormalizationPaths } from "./perl-contract-repair-history.mjs";
 
 export const ownedPerlBaseline = "84d157c351f20ae3a41f3926db17cc14e69a3989";
 export const ownedPerlHistoryPath = "docs/evidence/owned-perl-integration-20260928.json";
@@ -28,7 +28,7 @@ export const ownedPerlChangedPaths = [
 	, "tests/owned-c-packaging.test.mjs"
 	, "tests/owned-jvm-package-evidence.test.mjs"
 ].sort();
-export const ownedPerlNormalizationPaths = [...new Set([...ownedPerlChangedPaths, ...perlContractRepairChangedPaths])].sort();
+export const ownedPerlNormalizationPaths = [...new Set([...ownedPerlChangedPaths, ...perlContractRepairNormalizationPaths])].sort();
 export const ownedPerlAddedPaths = [
 	"docs/evidence/owned-perl-packages-20260927.md"
 	, "docs/evidence/owned-perl-runtime-20260927.md"

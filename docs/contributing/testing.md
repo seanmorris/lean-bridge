@@ -2103,6 +2103,47 @@ CI requires all nine suites and retains their `build/owned-perl-*` reports.
 Use `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` only when testing on an older local
 glibc, not when preparing production archives.
 
+### Owned native PHP values
+
+Run the value-model checks in native PHP, then compile and install the owned API:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_PHP_VALUES_TEST=1 node --test \
+  --test-name-pattern='^(?!.*32-bit PHP-Wasm)' tests/owned-php-values.test.mjs
+LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-php-runtime.test.mjs tests/owned-php-conversions.test.mjs \
+  tests/owned-php-calls.test.mjs tests/owned-php-package.test.mjs \
+  tests/owned-php-packaging.test.mjs tests/owned-php-coexistence.test.mjs \
+  tests/owned-php-documentation.test.mjs
+```
+
+These tests need PHP 8.2+ NTS CLI with FFI, Composer 2 with ZIP support, the
+pinned Lean toolchain and the C author tools. Set `LEAN_BRIDGE_PHP` and
+`LEAN_BRIDGE_COMPOSER` to select non-default executables. The value-only suite
+does not claim compiled transport support for its simulated integer widths.
+The separate PHP-Wasm value-model test uses its actual 32-bit interpreter.
+
+Runtime and conversion probes exercise scoped borrows, explicit retention,
+retirement, partial output cleanup, all nineteen primitives and injected PHP
+and native allocation failures. Public calls cover 51 exports, higher-order
+callbacks, preserved exceptions, Fiber rejection and normal shutdown.
+
+The package tests build ordinary and reviewed APIs through the CLI, verify
+relocated receipts without producer tools, then install real Composer ZIPs
+offline after deleting the source and producer directories. Strict and weak
+callers use ordinary autoloading. Separate observers inspect the loaded native
+libraries, private GMP resolution and zero live identities after shutdown.
+Independent builds reproduce every installed byte and archive; three owned and
+copied packages execute nested calls in four loading orders. The documentation
+test builds the published Lean example for C and PHP together, then runs the
+unmodified PHP example from the installed Composer package.
+
+CI requires all eight suites, checks their nonempty reports, and retains
+`build/owned/php-values.json`, `build/owned-php-runtime/`,
+`build/owned-php-conversions/`, `build/owned-php-calls/` and
+`build/owned-php-packaging/`. Existing copied and PHP-Wasm suites remain required.
+
 ### Recursive native PHP callbacks
 
 Run the Composer acceptance with 64-bit PHP 8.2 or newer, FFI, Composer, the

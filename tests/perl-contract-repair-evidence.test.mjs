@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedPhpPackages, ownedPhpHistoricalBytes } from "./helpers/owned-php-source-history.mjs";
 import { beforePerlContractRepair, perlContractRepairBaseline, perlContractRepairPath
 	, perlContractRepairPrevious, perlContractRepairChangedPaths
 	, perlContractRepairAddedPaths, perlContractRepairBytes
@@ -27,12 +28,12 @@ const verify = async record => {
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	assert.deepEqual(record.updates.map(update => update.path), perlContractRepairChangedPaths);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...perlContractRepairChangedPaths, ...perlContractRepairAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedPhpHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const source = await readFile(update.path, "utf8");
+		const source = beforeOwnedPhpPackages(update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reversePerlContractRepair(source, update)), update.previousSha256);
 	}
 	for(const [kind, code] of [["reproductions", 1], ["acceptance", 0]])
@@ -65,7 +66,8 @@ test("post-Perl contract repair preserves the frozen receipt and binds both repr
 test("post-Perl contract history rejects unknown bytes and forged predecessor edits", async () => {
 	for(const update of (await json(perlContractRepairPath)).updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = beforePerlContractRepair(update.path, source);
+		const source = beforeOwnedPhpPackages(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const previous = beforePerlContractRepair(update.path, source);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlContractRepair(update.path, source, update.currentSha256), source);
 		assert.equal(beforePerlContractRepair(update.path, previous), previous);
