@@ -30,6 +30,7 @@ const profileManifest = Object.freeze({
 		, "owned-php-ci", "owned-php-package-evidence"
 		, "owned-wasm32-evidence"
 		, "jvm-thread-exit-repair-evidence"
+		, "php-nix-boundary-repair-evidence"
 		, "perl-contract-repair-evidence"
 		, "native-fork-repair-evidence"
 		, "managed-ci-isolation", "managed-ci-isolation-evidence"

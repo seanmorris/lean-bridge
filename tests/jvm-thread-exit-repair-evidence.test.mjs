@@ -7,12 +7,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { phpNixBoundaryHistoricalBytes } from "./helpers/php-nix-boundary-repair-history.mjs";
 import { assertJvmThreadExitCi, assertJvmThreadExitExecution, jvmThreadExitRepairCommands } from "./helpers/jvm-thread-exit-repair-evidence.mjs";
 import { beforeJvmThreadExitRepair, jvmThreadExitHistoricalBytes, jvmThreadExitRepairAddedPaths
 	, jvmThreadExitRepairBaseline, jvmThreadExitRepairChangedPaths, jvmThreadExitRepairPath
 	, jvmThreadExitRepairPrevious, reverseJvmThreadExitUpdate } from "./helpers/jvm-thread-exit-repair-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+const source = async (path, expected) => phpNixBoundaryHistoricalBytes(path, await readFile(path), expected);
 
 test("JVM cleanup repair preserves exact wasm32, PHP and JVM source histories", async () => {
 	const record = await json(jvmThreadExitRepairPath);
@@ -26,13 +28,13 @@ test("JVM cleanup repair preserves exact wasm32, PHP and JVM source histories", 
 		...Object.keys(previous.sources), ...jvmThreadExitRepairChangedPaths
 		, ...jvmThreadExitRepairAddedPaths
 	])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await source(path, hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), jvmThreadExitRepairChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8");
+		const current = (await source(update.path, update.currentSha256)).toString();
 		const prior = beforeJvmThreadExitRepair(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeJvmThreadExitRepair(update.path, prior), prior);
@@ -46,9 +48,9 @@ test("JVM cleanup repair preserves exact wasm32, PHP and JVM source histories", 
 	}
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(jvmThreadExitHistoricalBytes("unknown.bin", binary), binary);
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = (await source("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"])).toString();
 	const prior = JSON.parse(beforeJvmThreadExitRepair("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await source(file.path, record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
