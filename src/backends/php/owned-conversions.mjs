@@ -24,6 +24,9 @@ const literal = value => value === null ? "null" : typeof value === "boolean" ||
 export const generateOwnedPhpConversions = ir => {
 	const model = generateOwnedPhpValues(ir, { integerBits: 64, wordBits: 64 });
 	const { c, namespace } = model, nodes = new Map(model.types.map(node => [node.id, node]));
+	for(const name of ["lb_php_integer", "lb_php_owned_bytes", "lb_php_owned_slot"
+		, ...["new", "free", "text"].map(suffix => `${c.prefix}_php_integer_${suffix}`)])
+		if(new RegExp(`\\b${name}\\b`, "u").test(c.header)) throw new TypeError(`Owned PHP native helper collides with ${name}`);
 	const finite = new Set();
 	for(let changed = true; changed;)
 	{

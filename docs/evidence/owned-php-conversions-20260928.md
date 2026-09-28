@@ -50,7 +50,8 @@ LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 \
 Reports are written under `build/owned-php-conversions/`. They bind generated
 sources, the native integer helper, runtime, probes and compiled source identity.
 
-The probe uses a private call harness. Generated public entry points, PHP host
-callbacks and typed recovery, authenticated Composer installation and the
-separate PHP-Wasm Zend ownership transport remain open. These tests do not
-promote support-table cells or admit prepared packages.
+The converter probe uses a private call harness. The subsequent
+[public-call evidence](owned-php-calls-20260928.md) covers generated namespace
+functions, PHP callbacks and typed recovery. Authenticated Composer installation
+and the separate PHP-Wasm Zend ownership transport remain open. These tests do
+not promote support-table cells or admit prepared packages.
