@@ -17,15 +17,17 @@ const suffix = name => ({ uint32: "_uint32", int32: "_uint32", char: "_uint32"
  * walkers to those exact signatures. Resource leaves never enter a copied ABI.
  * C callers must supply readable native objects for their stated spans.
  *
- * @param options - Fresh metadata, source identity and component coordinates.
+ * @param options - Fresh metadata, source identity, component coordinates and
+ * optional wordBits (32 or 64, default 64).
  */
 export const generateOwnedNativeValueAdapters = options => {
+	const { wordBits = 64 } = options;
 	const carriers = generateOwnedAggregateCarriers(options);
-	const layout = compileOwnedNativeValueLayout(carriers.model.bindingIr);
+	const layout = compileOwnedNativeValueLayout(carriers.model.bindingIr, { wordBits });
 	const table = new Map(layout.nodes.map(node => [node.id, node]));
 	const helper = node => carriers.symbols.types[node.id];
 	const lines = ['#include "owned-values.h"', '#include "carriers.h"'
-		, ownedNativeValueRuntime(layout.model.limits)];
+		, ownedNativeValueRuntime(layout.model.limits, wordBits)];
 	if(options.hostCallbacks) lines.push(`
 enum { OV_CALLBACK = 10 };
 typedef struct ov_callback_frame {
@@ -134,12 +136,16 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 				const bound = { unit: "0", bool: "1", uint8: "UINT8_MAX", int8: "UINT8_MAX"
 					, uint16: "UINT16_MAX", int16: "UINT16_MAX"
 					, uint32: "UINT32_MAX", int32: "UINT32_MAX", char: "0x10ffff" }[scalar];
-				const width = { uint64: 8, int64: 8, usize: 8, isize: 8, float32: 4, float64: 8 }[scalar];
-				if(bound) output.push(`if (!lean_is_scalar(child) || lean_unbox(child) > ${bound}) { lean_dec(child); return OV_RESULT; }`);
+				const width = wordBits === 32
+					? { uint32: 4, int32: 4, char: 4, uint64: 8, int64: 8, usize: 4, isize: 4, float32: 4, float64: 8 }[scalar]
+					: { uint64: 8, int64: 8, usize: 8, isize: 8, float32: 4, float64: 8 }[scalar];
+				if(bound && !width) output.push(`if (!lean_is_scalar(child) || lean_unbox(child) > ${bound}) { lean_dec(child); return OV_RESULT; }`);
 				if(width) output.push(`if (lean_is_scalar(child) || !lean_is_ctor(child) || lean_ptr_tag(child) != 0 || lean_ctor_num_objs(child) != 0 || lean_object_byte_size(child) < sizeof(lean_ctor_object) + ${width}) { lean_dec(child); return OV_RESULT; }`);
 				if(signed) output.push(`${scalar === "isize" ? "size_t" : `u${node.cName}`} bits = lean_unbox${suffix(scalar)}(child);`, "memcpy(out, &bits, sizeof(*out));");
 				else output.push(`*out = (${node.cName})lean_unbox${suffix(scalar)}(child);`);
-				if(scalar === "char") output.push("if (*out >= 0xd800 && *out <= 0xdfff) status = OV_RESULT;");
+				if(scalar === "char") output.push(wordBits === 32
+					? "if (*out > 0x10ffff || (*out >= 0xd800 && *out <= 0xdfff)) status = OV_RESULT;"
+					: "if (*out >= 0xd800 && *out <= 0xdfff) status = OV_RESULT;");
 			}
 			output.push("lean_dec(child); return status;");
 		}
