@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPhpPackages, ownedPhpChangedPaths } from "./owned-php-source-history.mjs";
+import { beforeOwnedPhpPackages, ownedPhpNormalizationPaths } from "./owned-php-source-history.mjs";
 
 export const perlContractRepairBaseline = "20d95044ae6f1dcf2d156cd8043126a16bbd1b4e";
 export const perlContractRepairPath = "docs/evidence/perl-contract-repair-20260928.json";
@@ -28,7 +28,7 @@ export const perlContractRepairAddedPaths = [
 	, "tests/helpers/perl-contract-repair-history.mjs"
 	, "tests/perl-contract-repair-evidence.test.mjs"
 ].sort();
-export const perlContractRepairNormalizationPaths = [...new Set([...perlContractRepairChangedPaths, ...ownedPhpChangedPaths])].sort();
+export const perlContractRepairNormalizationPaths = [...new Set([...perlContractRepairChangedPaths, ...ownedPhpNormalizationPaths])].sort();
 let cached;
 
 /**

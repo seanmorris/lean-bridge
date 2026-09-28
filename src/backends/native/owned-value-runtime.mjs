@@ -8,13 +8,16 @@
  * Emit the private transaction runtime for a checked descriptor.
  *
  * @param limits - Immutable model limits, not host-controlled overrides.
+ * @param wordBits - Lean and host pointer width, either 32 or 64.
  */
-export const ownedNativeValueRuntime = limits => `
+export const ownedNativeValueRuntime = (limits, wordBits = 64) => {
+	if(![32, 64].includes(wordBits)) throw new TypeError("Owned native values: machine-word width must be 32 or 64");
+	return `
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 #include "owned-leases.h"
-_Static_assert(sizeof(void *) == 8 && sizeof(size_t) == 8, "owned native values require 64-bit Lean");
+_Static_assert(sizeof(void *) == ${wordBits / 8} && sizeof(size_t) == ${wordBits / 8}, "owned native values require ${wordBits}-bit Lean");
 enum { OV_RESULT = 9 };
 typedef struct {
   size_t bytes, visits;
@@ -43,7 +46,10 @@ static inline void ov_release(ov_allocation *allocation) {
   }
 }
 static inline int ov_pointer(const void *value, size_t bytes, size_t alignment) {
-  return value && (uintptr_t)value % alignment == 0 && bytes <= UINTPTR_MAX - (uintptr_t)value;
+${wordBits === 32 ? `#ifdef __wasm__
+  if ((uint64_t)(uintptr_t)value + bytes > (uint64_t)__builtin_wasm_memory_size(0) * 65536) return 0;
+#endif
+` : ""}  return value && (uintptr_t)value % alignment == 0 && bytes <= UINTPTR_MAX - (uintptr_t)value;
 }
 static inline int ov_charge(ov_budget *budget, size_t count, size_t width) {
   if (!width || count > budget->bytes / width) return LB_OWNED_LIMIT;
@@ -178,3 +184,4 @@ static inline int ov_commit(ov_transaction *transaction, ov_result_owner *owner)
   transaction->allocations = NULL; return LB_OWNED_OK;
 }
 `;
+};

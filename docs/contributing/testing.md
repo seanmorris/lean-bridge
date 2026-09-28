@@ -2297,6 +2297,32 @@ The downstream WIT job requires both commands and uploads
 the existing copied-only packages, acyclic callback packages, callback-only
 aliases and their documentation examples.
 
+### Resource-containing wasm32 transport
+
+```sh
+LEAN_BRIDGE_OWNED_WASM32_TEST=1 \
+  node --test --test-concurrency=1 tests/owned-wasm32-transport.test.mjs
+```
+
+This gate compiles fresh Lean ownership carriers and executes them inside
+PHP-Wasm 8.4.1. It uses the pinned PHP-Wasm compiler, target runtime and PHP
+headers. `LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME` can select a verified existing
+runtime; otherwise the test builds one in its temporary workspace.
+
+The independent C probes cover all nineteen primitives, resource-containing
+records, variants, lists, arrays, nested options/results, aliases, recursive
+values and Lean closures. They check allocation failures, cumulative budgets,
+invalid tags, cycles, expired identities and cleanup. Wasm-specific checks cover
+32-bit machine words, boxed UInt32/Int32/Char, heap boundaries and resource
+identities wider than a machine word. Malformed results retire the runtime;
+already-held resources remain releasable afterward.
+
+Both corpora run in two fresh interpreters. CI requires and retains
+`build/owned-wasm32/owned-scalars.json` and
+`build/owned-wasm32/owned-aggregates.json`. This tests the private transport.
+Public PHP-Wasm resource wrappers, host callbacks and installed ownership-aware
+packages have separate acceptance work.
+
 ## Release tooling checks
 
 From the checkout with its Node dependencies installed, run the focused release tests:

@@ -19,8 +19,12 @@ const fail = message => { throw new TypeError(`Owned native values: ${message}`)
  * expand a C struct exponentially. Transparent aliases do not consume value depth.
  *
  * @param ir - Explicit version-4 ownership contract.
+ * @param options - Native storage selection, separate from the semantic model.
+ * @param options.wordBits - Lean and host pointer width, either 32 or 64.
  */
-export const compileOwnedNativeValueLayout = ir => {
+export const compileOwnedNativeValueLayout = (ir, { wordBits = 64 } = {}) => {
+	if(![32, 64].includes(wordBits)) fail("machine-word width must be 32 or 64");
+	const targetScalars = { ...scalars, usize: `uint${wordBits}_t`, isize: `int${wordBits}_t` };
 	const model = compileOwnedAggregateModel(ir);
 	const prefix = `lbov_${model.bindingIrSha256.slice(0, 20)}`;
 	const original = new Map(model.types.map(type => [type.id, type]));
@@ -38,7 +42,7 @@ export const compileOwnedNativeValueLayout = ir => {
 	};
 	const nodes = model.types.filter(type => type.kind !== "alias").map((type, index) => ({
 		...type, index
-		, cName: scalars[type.name] && type.kind === "primitive" ? scalars[type.name]
+		, cName: targetScalars[type.name] && type.kind === "primitive" ? targetScalars[type.name]
 			: `${prefix}_t${sha256(type.id).slice(0, 20)}`
 		, walker: `${prefix}_v${sha256(type.id).slice(0, 20)}`
 		, leaf: ["primitive", "resource", "callback"].includes(type.kind)
@@ -119,5 +123,7 @@ export const compileOwnedNativeValueLayout = ir => {
 		header.push("};");
 	}
 	for(const alias of aliases) header.push(`typedef ${table.get(alias.target).cName} ${alias.cName};`);
-	return { model, prefix, nodes, aliases, functions, callbacks, header: header.join("\n") + "\n" };
+	return { model, prefix, nodes, aliases, functions, callbacks
+		, ...wordBits === 32 ? { wordBits } : {}
+		, header: header.join("\n") + "\n" };
 };
