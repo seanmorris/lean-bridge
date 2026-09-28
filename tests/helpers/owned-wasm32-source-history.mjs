@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeJvmThreadExitRepair, jvmThreadExitRepairChangedPaths } from "./jvm-thread-exit-repair-history.mjs";
+import { beforeJvmThreadExitRepair, jvmThreadExitNormalizationPaths } from "./jvm-thread-exit-repair-history.mjs";
 
 export const ownedWasm32Baseline = "8261ccfbb22152dda4a4edef00aa161f3958ec78";
 export const ownedWasm32HistoryPath = "docs/evidence/owned-wasm32-transport-20260928.json";
@@ -35,7 +35,7 @@ export const ownedWasm32AddedPaths = [
 	, "tests/owned-wasm32-transport.test.mjs"
 ].sort();
 let cached;
-export const ownedWasm32NormalizationPaths = [...new Set([...ownedWasm32ChangedPaths, ...jvmThreadExitRepairChangedPaths])].sort();
+export const ownedWasm32NormalizationPaths = [...new Set([...ownedWasm32ChangedPaths, ...jvmThreadExitNormalizationPaths])].sort();
 
 /**
  * Reverse exact edits only after authenticating both complete file identities.

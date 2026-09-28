@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpNixBoundaryRepair, phpNixBoundaryChangedPaths } from "./php-nix-boundary-repair-history.mjs";
 
 export const jvmThreadExitRepairBaseline = "86ba0ad47469d0f13dd32d400d2a36b0d8288f95";
 export const jvmThreadExitRepairPath = "docs/evidence/jvm-thread-exit-repair-20260928.json";
@@ -33,6 +34,7 @@ export const jvmThreadExitRepairAddedPaths = [
 	, "tests/owned-jvm-thread-exit.test.mjs"
 ].sort();
 let cached;
+export const jvmThreadExitNormalizationPaths = [...new Set([...jvmThreadExitRepairChangedPaths, ...phpNixBoundaryChangedPaths])].sort();
 
 /**
  * Reverse only authenticated complete sources and ordered literal edits.
@@ -66,6 +68,7 @@ export const reverseJvmThreadExitUpdate = (source, update) => {
  * @param expected - Optional exact identity at which to stop.
  */
 export const beforeJvmThreadExitRepair = (path, source, expected) => {
+	source = beforePhpNixBoundaryRepair(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !jvmThreadExitRepairChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(jvmThreadExitRepairPath, "utf8"));
@@ -84,5 +87,5 @@ export const beforeJvmThreadExitRepair = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional exact predecessor identity.
  */
-export const jvmThreadExitHistoricalBytes = (path, bytes, expected) => jvmThreadExitRepairChangedPaths.includes(path)
+export const jvmThreadExitHistoricalBytes = (path, bytes, expected) => jvmThreadExitNormalizationPaths.includes(path)
 	? beforeJvmThreadExitRepair(path, bytes.toString("utf8"), expected) : bytes;
