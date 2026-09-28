@@ -173,6 +173,7 @@ export const reverseOwnedJavaScriptWasmUpdate = (source, update) => {
  */
 export const beforeOwnedJavaScriptWasm = (path, source, expected) => {
 	source = beforeOwnedJavaScriptNpm(path, source, expected);
+	if(typeof source === "string" && !ownedJavaScriptWasmChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedJavaScriptWasmChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptWasmHistoryPath, "utf8"));

@@ -74,6 +74,7 @@ export const reverseWitRecursiveCallableUpdate = (source, update) => {
  */
 export const beforeWitRecursiveCallables = (path, source, expected) => {
 	source = beforeOwnedAggregates(path, source, expected);
+	if(typeof source === "string" && !witRecursiveCallableChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !witRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(witRecursiveCallableHistoryPath, "utf8"));

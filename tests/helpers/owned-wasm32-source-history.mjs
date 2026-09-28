@@ -70,6 +70,7 @@ export const reverseOwnedWasm32Update = (source, update) => {
  */
 export const beforeOwnedWasm32 = (path, source, expected) => {
 	source = beforeJvmThreadExitRepair(path, source, expected);
+	if(typeof source === "string" && !ownedWasm32ChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedWasm32ChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedWasm32HistoryPath, "utf8"));

@@ -78,6 +78,7 @@ export const reverseOwnedPythonUpdate = (source, update) => {
  */
 export const beforeOwnedPython = (path, source, expected) => {
 	source = beforeOwnedRuby(path, source, expected);
+	if(typeof source === "string" && !ownedPythonChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedPythonChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedPythonHistoryPath, "utf8"));

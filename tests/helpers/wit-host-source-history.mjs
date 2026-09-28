@@ -86,6 +86,7 @@ export const reverseWitHostUpdate = (source, update) => {
  */
 export const beforeWitHostIntegration = (path, source, expected) => {
 	source = beforeWitCompositionIntegration(path, source, expected);
+	if(typeof source === "string" && !witHostChangedPaths.includes(path)) return source;
 	if(sha256(source) === expected || !witHostChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(witHostHistoryPath, "utf8"));
 	if(path === "docs/type-surface.v1.json") return reverseInventoryEntries(source, record.inventory);

@@ -48,9 +48,14 @@ export const reversePythonRecursiveCallableUpdate = (source, update) => {
 		assert.equal(source.slice(edit.start, edit.start + edit.current.length), edit.current);
 		end = edit.start + edit.current.length;
 	}
-	let previous = source;
-	for(const edit of update.edits.toReversed())
-		previous = previous.slice(0, edit.start) + edit.previous + previous.slice(edit.start + edit.current.length);
+	let cursor = 0; const parts = [];
+	for(const edit of update.edits)
+	{
+		parts.push(source.slice(cursor, edit.start), edit.previous);
+		cursor = edit.start + edit.current.length;
+	}
+	parts.push(source.slice(cursor));
+	const previous = parts.join("");
 	assert.equal(sha256(previous), update.previousSha256, update.path);
 	return previous;
 };
@@ -64,6 +69,7 @@ export const reversePythonRecursiveCallableUpdate = (source, update) => {
  */
 export const beforePythonRecursiveCallables = (path, source, expected) => {
 	source = beforeRustRecursiveCallables(path, source, expected);
+	if(typeof source === "string" && !pythonRecursiveCallableChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !pythonRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(pythonRecursiveCallableHistoryPath, "utf8"));

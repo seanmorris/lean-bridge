@@ -91,6 +91,7 @@ export const reverseOwnedAnalysisUpdate = (source, update) => {
  */
 export const beforeOwnedAnalysis = (path, source, expected) => {
 	source = beforeOwnedZendBailoutRepair(path, source, expected);
+	if(typeof source === "string" && !ownedAnalysisChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedAnalysisChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedAnalysisHistoryPath, "utf8"));

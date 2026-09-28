@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJavaScriptPublication, ownedJavaScriptPublicationChangedPaths } from "./owned-javascript-publication-history.mjs";
+import { beforeOwnedJavaScriptPublication, ownedJavaScriptPublicationNormalizationPaths } from "./owned-javascript-publication-history.mjs";
 
 export const ownedJavaScriptEngineBaseline = "2494d70ddb05f85245133c1ce5c7610dba918a8d";
 export const ownedJavaScriptEngineHistoryPath = "docs/evidence/owned-javascript-engine-integration-20260928.json";
@@ -65,7 +65,7 @@ export const ownedJavaScriptEngineAddedPaths = [
 	, "tests/owned-javascript-isolated-project.test.mjs"
 ].sort();
 let cached;
-export const ownedJavaScriptEngineNormalizationPaths = [...new Set([...ownedJavaScriptEngineChangedPaths, ...ownedJavaScriptPublicationChangedPaths])].sort();
+export const ownedJavaScriptEngineNormalizationPaths = [...new Set([...ownedJavaScriptEngineChangedPaths, ...ownedJavaScriptPublicationNormalizationPaths])].sort();
 
 /**
  * Undo only ordered literal edits authenticated by both complete source hashes.
@@ -99,6 +99,7 @@ export const reverseOwnedJavaScriptEngineUpdate = (source, update) => {
  */
 export const beforeOwnedJavaScriptEngine = (path, source, expected) => {
 	source = beforeOwnedJavaScriptPublication(path, source, expected);
+	if(typeof source === "string" && !ownedJavaScriptEngineChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedJavaScriptEngineChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptEngineHistoryPath, "utf8"));

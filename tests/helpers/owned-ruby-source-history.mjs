@@ -90,6 +90,7 @@ export const reverseOwnedRubyUpdate = (source, update) => {
  */
 export const beforeOwnedRuby = (path, source, expected) => {
 	source = beforeOwnedDotnet(path, source, expected);
+	if(typeof source === "string" && !ownedRubyChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedRubyChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedRubyHistoryPath, "utf8"));

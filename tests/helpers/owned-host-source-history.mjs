@@ -85,6 +85,7 @@ export const reverseOwnedHostUpdate = (source, update) => {
  */
 export const beforeOwnedHost = (path, source, expected) => {
 	source = beforeOwnedCi(path, source, expected);
+	if(typeof source === "string" && !ownedHostChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedHostChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedHostHistoryPath, "utf8"));

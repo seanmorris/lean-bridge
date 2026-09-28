@@ -104,6 +104,7 @@ export const reverseOwnedPerlUpdate = (source, update) => {
  */
 export const beforeOwnedPerlPackages = (path, source, expected) => {
 	source = beforePerlContractRepair(path, source, expected);
+	if(typeof source === "string" && !ownedPerlChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedPerlChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedPerlHistoryPath, "utf8"));

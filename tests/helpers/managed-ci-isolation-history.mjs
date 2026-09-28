@@ -65,6 +65,7 @@ export const reverseManagedCiIsolation = (source, update) => {
  */
 export const beforeManagedCiIsolation = (path, source, expected) => {
 	source = beforeOwnedJvmPackages(path, source, expected);
+	if(typeof source === "string" && !managedCiIsolationChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !managedCiIsolationChangedPaths.includes(path)) return source;
 	const update = record().updates.find(item => item.path === path);

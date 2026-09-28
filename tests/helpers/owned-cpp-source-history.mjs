@@ -78,6 +78,7 @@ export const reverseOwnedCppUpdate = (source, update) => {
  */
 export const beforeOwnedCpp = (path, source, expected) => {
 	source = beforeOwnedCppOrder(path, source, expected);
+	if(typeof source === "string" && !ownedCppChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedCppChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedCppHistoryPath, "utf8"));

@@ -63,6 +63,7 @@ export const reverseOwnedZendBailoutUpdate = (source, update) => {
  */
 export const beforeOwnedZendBailoutRepair = (path, source, expected) => {
 	source = beforeOwnedJavaScriptEngine(path, source, expected);
+	if(typeof source === "string" && !ownedZendBailoutChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedZendBailoutChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedZendBailoutHistoryPath, "utf8"));

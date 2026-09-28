@@ -119,6 +119,7 @@ export const reverseOwnedPhpUpdate = (source, update) => {
  */
 export const beforeOwnedPhpPackages = (path, source, expected) => {
 	source = beforeOwnedWasm32(path, source, expected);
+	if(typeof source === "string" && !ownedPhpChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedPhpChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedPhpHistoryPath, "utf8"));

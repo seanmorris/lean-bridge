@@ -171,6 +171,7 @@ export const reverseOwnedJvmUpdate = (source, update) => {
  */
 export const beforeOwnedJvmPackages = (path, source, expected) => {
 	source = beforeJvmProbeRepair(path, source, expected);
+	if(typeof source === "string" && !ownedJvmChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedJvmChangedPaths.includes(path)) return source;
 	const update = record().updates.find(item => item.path === path);
@@ -197,6 +198,7 @@ export const ownedJvmHistoricalBytes = (path, bytes, expected) => ownedJvmNormal
  * @param expected - Frozen predecessor SHA-256.
  */
 export const beforeOwnedJvmGenerated = (path, source, expected) => {
+	if(typeof source === "string" && !ownedJvmGeneratedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedJvmGeneratedPaths.includes(path)) return source;
 	const history = record();

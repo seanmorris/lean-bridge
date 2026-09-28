@@ -64,6 +64,7 @@ export const reverseNativeForkRepair = (source, update) => {
  */
 export const beforeNativeForkRepair = (path, source, expected) => {
 	source = beforeManagedCiIsolation(path, source, expected);
+	if(typeof source === "string" && !nativeForkRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !nativeForkRepairChangedPaths.includes(path)) return source;
 	const update = record().updates.find(item => item.path === path);

@@ -29,6 +29,7 @@ let history;
  */
 export const beforeOwnedCppOrder = (path, source, expected) => {
 	source = beforeOwnedRust(path, source, expected);
+	if(typeof source === "string" && !ownedCppOrderPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedCppOrderPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedCppOrderHistoryPath, "utf8"));

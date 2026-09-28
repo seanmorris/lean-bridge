@@ -63,6 +63,7 @@ export const reversePhpNixBoundaryUpdate = (source, update) => {
  */
 export const beforePhpNixBoundaryRepair = (path, source, expected) => {
 	source = beforeOwnedPhpWasmPackages(path, source, expected);
+	if(typeof source === "string" && !phpNixBoundaryChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !phpNixBoundaryChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(phpNixBoundaryHistoryPath, "utf8"));

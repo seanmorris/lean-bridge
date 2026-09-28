@@ -75,6 +75,7 @@ export const reverseOwnedPackageUpdate = (source, update) => {
  */
 export const beforeOwnedPackage = (path, source, expected) => {
 	source = beforeOwnedHost(path, source, expected);
+	if(typeof source === "string" && !ownedPackageChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedPackageChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedPackageHistoryPath, "utf8"));

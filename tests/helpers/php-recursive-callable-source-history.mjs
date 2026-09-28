@@ -54,18 +54,18 @@ export const reversePhpRecursiveCallableUpdate = (source, update) => {
 	assert.ok(phpRecursiveCallableChangedPaths.includes(update.path), update.path);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
-	let end = 0;
+	let end = 0; const parts = [];
 	for(const edit of update.edits)
 	{
 		assert.ok(Number.isSafeInteger(edit.start) && edit.start >= end);
 		assert.equal(typeof edit.previous, "string"); assert.equal(typeof edit.current, "string");
 		assert.notEqual(edit.previous, edit.current);
 		assert.equal(source.slice(edit.start, edit.start + edit.current.length), edit.current);
+		parts.push(source.slice(end, edit.start), edit.previous);
 		end = edit.start + edit.current.length;
 	}
-	let previous = source;
-	for(const edit of update.edits.toReversed())
-		previous = previous.slice(0, edit.start) + edit.previous + previous.slice(edit.start + edit.current.length);
+	parts.push(source.slice(end));
+	const previous = parts.join("");
 	assert.equal(sha256(previous), update.previousSha256, update.path);
 	return previous;
 };
@@ -79,6 +79,7 @@ export const reversePhpRecursiveCallableUpdate = (source, update) => {
  */
 export const beforePhpRecursiveCallables = (path, source, expected) => {
 	source = beforePhpWasmRecursiveCallables(path, source, expected);
+	if(typeof source === "string" && !phpRecursiveCallableChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !phpRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(phpRecursiveCallableHistoryPath, "utf8"));

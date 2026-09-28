@@ -77,6 +77,7 @@ export const reverseOwnedDotnetProcess = (source, update) => {
  */
 export const beforeOwnedDotnetProcess = (path, source, expected) => {
 	source = beforeNativeForkRepair(path, source, expected);
+	if(typeof source === "string" && !ownedDotnetProcessChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedDotnetProcessChangedPaths.includes(path)) return source;
 	const update = record().updates.find(item => item.path === path);

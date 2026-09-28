@@ -94,6 +94,7 @@ export const reverseOwnedDotnetUpdate = (source, update) => {
  */
 export const beforeOwnedDotnet = (path, source, expected) => {
 	source = beforeOwnedDotnetProcess(path, source, expected);
+	if(typeof source === "string" && !ownedDotnetChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedDotnetChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedDotnetHistoryPath, "utf8"));

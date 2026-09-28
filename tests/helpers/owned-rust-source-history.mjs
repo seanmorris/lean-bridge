@@ -75,6 +75,7 @@ export const reverseOwnedRustUpdate = (source, update) => {
  */
 export const beforeOwnedRust = (path, source, expected) => {
 	source = beforeOwnedPython(path, source, expected);
+	if(typeof source === "string" && !ownedRustChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedRustChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedRustHistoryPath, "utf8"));

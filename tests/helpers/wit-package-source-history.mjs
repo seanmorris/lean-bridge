@@ -83,6 +83,7 @@ export const reverseWitPackageUpdate = (source, update) => {
  */
 export const beforeWitPackageIntegration = (path, source, expected) => {
 	source = beforeWitHostIntegration(path, source, expected);
+	if(typeof source === "string" && !witPackageChangedPaths.includes(path)) return source;
 	if(sha256(source) === expected || !witPackageChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(witPackageHistoryPath, "utf8"));
 	for(const update of record.updates.filter(update => update.path === path).toReversed())

@@ -75,6 +75,7 @@ export const reverseOwnedCUpdate = (source, update) => {
  */
 export const beforeOwnedC = (path, source, expected) => {
 	source = beforeOwnedReviewed(path, source, expected);
+	if(typeof source === "string" && !ownedCChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedCChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedCHistoryPath, "utf8"));

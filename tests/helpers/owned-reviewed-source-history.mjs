@@ -68,6 +68,7 @@ export const reverseOwnedReviewedUpdate = (source, update) => {
  */
 export const beforeOwnedReviewed = (path, source, expected) => {
 	source = beforeOwnedPackage(path, source, expected);
+	if(typeof source === "string" && !ownedReviewedChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedReviewedChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(ownedReviewedHistoryPath, "utf8"));

@@ -30,13 +30,16 @@ export const rustStructuredCallableChangedPaths = [
 ].sort();
 let history;
 const reverse = (source, update) => {
-	let result = source;
-	for(const edit of update.edits.toReversed())
+	let end = 0; const parts = [];
+	for(const edit of update.edits)
 	{
-		if(result.slice(edit.start, edit.start + edit.current.length) !== edit.current) return source;
-		result = result.slice(0, edit.start) + edit.previous + result.slice(edit.start + edit.current.length);
+		if(!Number.isSafeInteger(edit.start) || edit.start < end
+			|| source.slice(edit.start, edit.start + edit.current.length) !== edit.current) return source;
+		parts.push(source.slice(end, edit.start), edit.previous);
+		end = edit.start + edit.current.length;
 	}
-	return result;
+	parts.push(source.slice(end));
+	return parts.join("");
 };
 
 /**
@@ -72,6 +75,7 @@ export const reverseRustStructuredCallableUpdate = (source, update) => {
  */
 export const beforeRustStructuredCallables = (path, source, expected) => {
 	source = beforePythonStructuredCallables(path, source, expected);
+	if(typeof source === "string" && !rustStructuredCallableChangedPaths.includes(path)) return source;
 	if(sha256(source) === expected || !rustStructuredCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(rustStructuredCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);

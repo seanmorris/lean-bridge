@@ -29,6 +29,7 @@ let cached;
  */
 export const beforeJvmProbeRepair = (path, source, expected) => {
 	source = beforeOwnedPerlPackages(path, source, expected);
+	if(typeof source === "string" && !jvmProbeRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !jvmProbeRepairChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(jvmProbeRepairPath, "utf8"));

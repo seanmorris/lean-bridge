@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeCoreHistoryPerformance, coreHistoryHistoricalBytes } from "./helpers/core-history-performance-history.mjs";
 import { assertOwnedJavaScriptPublicationExecution } from "./helpers/owned-javascript-publication-evidence.mjs";
 import { beforeOwnedJavaScriptPublication, ownedJavaScriptPublicationAddedPaths
 	, ownedJavaScriptPublicationBaseline, ownedJavaScriptPublicationBaselineSources
@@ -26,13 +27,13 @@ test("owned publication binds exact source changes without rewriting engine evid
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources)
 		, ...Object.keys(ownedJavaScriptPublicationBaselineSources)
 		, ...ownedJavaScriptPublicationAddedPaths])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(coreHistoryHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptPublicationChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedJavaScriptPublicationBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedJavaScriptPublication(update.path, current);
+		const current = beforeCoreHistoryPerformance(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedJavaScriptPublication(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJavaScriptPublication(update.path, prior), prior);
 		assert.equal(beforeOwnedJavaScriptPublication(update.path, current, update.currentSha256), current);
@@ -42,9 +43,9 @@ test("owned publication binds exact source changes without rewriting engine evid
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }, { ...update, path: "unknown.mjs" }, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedJavaScriptPublicationUpdate(current, changed));
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeCoreHistoryPerformance("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
 	const prior = JSON.parse(beforeOwnedJavaScriptPublication("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(coreHistoryHistoricalBytes(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), prior, "Publication must not promote unverified isolated or cross-language support");
 });
 

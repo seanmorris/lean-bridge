@@ -64,6 +64,7 @@ export const reversePerlContractRepair = (source, update) => {
  */
 export const beforePerlContractRepair = (path, source, expected) => {
 	source = beforeOwnedPhpPackages(path, source, expected);
+	if(typeof source === "string" && !perlContractRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !perlContractRepairChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(perlContractRepairPath, "utf8"));

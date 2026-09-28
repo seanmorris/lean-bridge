@@ -145,6 +145,8 @@ const profileManifest = Object.freeze({
 		, "python-copied-graph-conversions"
 		, "python-graph-package"
 		, "source-registration-history"
+		, "source-history-memo"
+		, "core-history-performance-evidence"
 		, "source-inventory-order"
 		, "php-wasm-shared-regressions"
 		, "native-shared-admission"

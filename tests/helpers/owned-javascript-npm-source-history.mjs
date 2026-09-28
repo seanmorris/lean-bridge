@@ -96,6 +96,7 @@ export const reverseOwnedJavaScriptNpmUpdate = (source, update) => {
  */
 export const beforeOwnedJavaScriptNpm = (path, source, expected) => {
 	source = beforeOwnedJavaScriptCoexistence(path, source, expected);
+	if(typeof source === "string" && !ownedJavaScriptNpmChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !ownedJavaScriptNpmChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptNpmHistoryPath, "utf8"));

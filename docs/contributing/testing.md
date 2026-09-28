@@ -17,6 +17,12 @@ Ubuntu, install `build-essential libgmp-dev` before running the contract suite.
 These tests use the host GMP library; prepared C package tests build the pinned
 GMP source bundled with the release.
 
+Historical verification reuses successful source normalization within one test
+process. Its cache compares the complete source text, path and requested
+predecessor, with a 64 MiB string budget and at most 1,024 entries. Changed text
+is checked again. Unknown text and failed checks are not cached. Verifiers still
+authenticate every recorded source transition and installed execution receipt.
+
 ## Build the example artifacts as a maintainer
 
 Build the universal Alpha bundle, then project its Python, Rust, C, and C++ packages:

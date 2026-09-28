@@ -69,6 +69,7 @@ export const reverseJvmThreadExitUpdate = (source, update) => {
  */
 export const beforeJvmThreadExitRepair = (path, source, expected) => {
 	source = beforePhpNixBoundaryRepair(path, source, expected);
+	if(typeof source === "string" && !jvmThreadExitRepairChangedPaths.includes(path)) return source;
 	const digest = sha256(source);
 	if(digest === expected || !jvmThreadExitRepairChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(jvmThreadExitRepairPath, "utf8"));
