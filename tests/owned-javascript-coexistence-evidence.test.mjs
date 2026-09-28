@@ -23,13 +23,14 @@ test("coexistence receipt binds every current source without rewriting installed
 	const previousBytes = await readFile(record.previous.path), previous = JSON.parse(previousBytes);
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedJavaScriptCoexistenceChangedPaths, ...ownedJavaScriptCoexistenceAddedPaths])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptCoexistenceHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptCoexistenceChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedJavaScriptCoexistence(update.path, current);
+		const current = beforeOwnedJavaScriptCoexistence(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedJavaScriptCoexistence(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJavaScriptCoexistence(update.path, prior), prior);
 		assert.equal(beforeOwnedJavaScriptCoexistence(update.path, current, update.currentSha256), current);

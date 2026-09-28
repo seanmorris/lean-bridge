@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJavaScriptCoexistence, ownedJavaScriptCoexistenceChangedPaths } from "./owned-javascript-coexistence-source-history.mjs";
+import { beforeOwnedJavaScriptCoexistence, ownedJavaScriptCoexistenceNormalizationPaths } from "./owned-javascript-coexistence-source-history.mjs";
 
 export const ownedJavaScriptNpmBaseline = "d265ed3abbe9f1d4d1d9bc290cd7f1e2a9464d5b";
 export const ownedJavaScriptNpmHistoryPath = "docs/evidence/owned-javascript-npm-integration-20260928.json";
@@ -60,7 +60,7 @@ export const ownedJavaScriptNpmAddedPaths = [
 	, "tests/owned-javascript-wasm-build.test.mjs"
 	, "tests/owned-javascript-wasm-model.test.mjs"
 ].sort();
-export const ownedJavaScriptNpmNormalizationPaths = [...new Set([...ownedJavaScriptNpmChangedPaths, ...ownedJavaScriptCoexistenceChangedPaths])].sort();
+export const ownedJavaScriptNpmNormalizationPaths = [...new Set([...ownedJavaScriptNpmChangedPaths, ...ownedJavaScriptCoexistenceNormalizationPaths])].sort();
 let cached;
 
 /**

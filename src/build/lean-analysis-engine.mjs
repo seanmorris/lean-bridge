@@ -31,7 +31,7 @@ export const executeLeanAnalysisEngine = async ({ verifiedRequest, inputs, outpu
 	const within = (parent, child) => { const path = relative(parent, child); return !isAbsolute(path) && path !== ".." && !path.startsWith(`..${sep}`); };
 	if(within(inputs, output) || within(engine, output)) throw new Error("Compiler analysis output must be outside its source and engine mounts");
 	const requested = verifiedRequest.document;
-	const intent = await readLakeEntryIntent({ inputRoot: inputs, expectedSha256: requested.component.sourceIntentSha256, purpose: "analysis", signal });
+	const intent = await readLakeEntryIntent({ inputRoot: inputs, expectedSha256: requested.component.sourceIntentSha256, purpose: "analysis", ownedGraphs: true, signal });
 	const reconstructed = await createEngineExecutionRequest({ engineRoot: engine
 		, inputRoot: inputs, entryIntent: intent
 		, purpose: "analysis"
@@ -52,7 +52,10 @@ export const executeLeanAnalysisEngine = async ({ verifiedRequest, inputs, outpu
 		const leanPrefix = prefix.stdout.trim();
 		workspace = await resolveLakeBuildWorkspace({ snapshot: intent.lakeSnapshot, modules: intent.document.modules.map(item => item.module), leanPrefix, signal });
 		if(workspace.resolution.leanCommit !== graph.runtime.leanCommit) throw new Error("Analysis compiler differs from the pinned engine toolchain");
-		const extracted = await elaborateLakeEntryModules({ inventory, entries: intent.document.modules, workspace, leanPrefix, engineRoot: engine, runner, signal });
+		const extracted = await elaborateLakeEntryModules({ inventory
+			, entries: intent.document.modules, workspace, leanPrefix
+			, engineRoot: engine, runner, signal
+			, reviewedBindingIr: intent.document.reviewedBindingIr, ownedGraphs: true });
 		const analysis = compilerProjectAnalysis(inventory, intent.document.modules, extracted.elaboration);
 		await workspace.verify();
 		if((await identifyBuildEngine(engine)).identitySha256 !== requested.engine.identitySha256) throw new Error("Analysis engine changed during execution");

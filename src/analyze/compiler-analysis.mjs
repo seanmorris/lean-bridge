@@ -77,11 +77,20 @@ export const analyzeCompilerProject = async (projectRoot, { targets = []
 	const inventory = await inspectLeanProject(root, { signal });
 	if(inventory.inputs.some(input => input.path.endsWith(".binding-ir.json")))
 	{
-		const report = await reviewedProjectAnalysis(root, inventory, signal);
-		if(!same(await inspectLeanProject(root, { signal }), inventory)) fail("Reviewed project inputs changed during analysis");
-		return report;
+		try
+		{
+			const report = await reviewedProjectAnalysis(root, inventory, signal);
+			if(!same(await inspectLeanProject(root, { signal }), inventory)) fail("Reviewed project inputs changed during analysis");
+			return report;
+		}
+		catch(error)
+		{
+			// The explicit v4 reader below checks owned reviews against Lean.
+			// Other review errors must not change the selected analysis path.
+			if(error.code !== "consumer-upgrade-required") throw error;
+		}
 	}
-	const intent = await prepareLakeEntryIntent({ projectRoot: root, purpose: "analysis", signal });
+	const intent = await prepareLakeEntryIntent({ projectRoot: root, purpose: "analysis", ownedGraphs: true, signal });
 	if(!same(intent.document.source.inputs, inventory.inputs)) fail("Project source changed before compiler analysis");
 	const cancellable = { capture: async request => {
 		try
@@ -115,7 +124,7 @@ export const analyzeCompilerProject = async (projectRoot, { targets = []
 		if((await identifyBuildEngine(engine)).identitySha256 !== request.document.engine.identitySha256
 			|| (await identifyComponentInputClosure(inputRoot)).identitySha256 !== request.document.component.inputClosureSha256) fail("Engine or transported source changed during analysis");
 		await verifyLakeSnapshotProject({ snapshot: intent.lakeSnapshot, projectRoot: root, signal });
-		const current = await prepareLakeEntryIntent({ projectRoot: root, purpose: "analysis", signal });
+		const current = await prepareLakeEntryIntent({ projectRoot: root, purpose: "analysis", ownedGraphs: true, signal });
 		if(current.sha256 !== intent.sha256) fail("Source or dependencies changed during analysis");
 		onProgress?.({ phase: "elaborate", state: "completed", message: "Compiler metadata and source identities verified" });
 		return analysis;

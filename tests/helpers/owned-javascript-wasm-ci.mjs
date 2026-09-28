@@ -20,11 +20,14 @@ export const ownedJavaScriptNpmCiTests = ["owned-javascript-wasm-model", "javasc
 export const ownedJavaScriptNpmTestCommand = "node --test --test-concurrency=1 " + ownedJavaScriptNpmCiTests.join(" ");
 export const ownedJavaScriptCoexistenceCiTests = ["component-runtime-package-identity", "owned-javascript-npm-coexistence"].map(name => `tests/${name}.test.mjs`);
 export const ownedJavaScriptCoexistenceTestCommand = "node --test --test-concurrency=1 " + ownedJavaScriptCoexistenceCiTests.join(" ");
+export const ownedAnalysisCiTests = ["owned-compiler-analysis", "owned-analysis-build-parity"].map(name => `tests/${name}.test.mjs`);
+export const ownedAnalysisTestCommand = "node --test --test-concurrency=1 " + ownedAnalysisCiTests.join(" ");
 export const ownedJavaScriptWasmCiLogs = [
 	"build/owned-javascript-wasm/runtime.log"
 	, "build/owned-javascript-wasm/execution.log"
 	, "build/owned-javascript-wasm/installed.log"
 	, "build/owned-javascript-wasm/coexistence.log"
+	, "build/owned-javascript-wasm/analysis.log"
 ];
 
 const requiredStep = (job, name) => {
@@ -55,6 +58,7 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST: "1"$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST: "1"$/mu);
+	assert.match(job, /^ {6}LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"$/mu);
 	assert.match(job, /^ {6}EMCC_CORES: "2"$/mu);
 	const prepare = requiredStep(job, "Install dependencies and pinned Lean and Wasm toolchains");
 	assert.doesNotMatch(prepare, /^ {8}if:/mu);
@@ -98,6 +102,15 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[3]
 		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[3]
 	].join("\n"));
+	const analysisName = "Compare ownership analysis with compiled APIs";
+	assert.ok(job.indexOf(coexistenceName) < job.indexOf(analysisName));
+	assert.equal(script(requiredStep(job, analysisName)), [
+		"set -euo pipefail", "source scripts/env.sh"
+		, ownedAnalysisTestCommand + " 2>&1 | tee " + ownedJavaScriptWasmCiLogs[4]
+		, "test -s " + ownedJavaScriptWasmCiLogs[4]
+		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[4]
+		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[4]
+	].join("\n"));
 	const upload = requiredStep(job, "Preserve owned JavaScript and runtime execution logs");
 	assert.match(upload, /^ {8}if: always\(\)$/mu);
 	assert.match(upload, /^ {8}uses: actions\/upload-artifact@v7$/mu);
@@ -110,6 +123,7 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	return { testFiles: ownedJavaScriptWasmCiTests.length
 		, installedTestFiles: ownedJavaScriptNpmCiTests.length
 		, coexistenceTestFiles: ownedJavaScriptCoexistenceCiTests.length
+		, analysisTestFiles: ownedAnalysisCiTests.length
 		, requiredLogs: ownedJavaScriptWasmCiLogs.length
 		, productionRuntimeRequired: true, skippedTestsRejected: true
 		, failurePropagated: true };

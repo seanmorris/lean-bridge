@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:lean-bridge:schema:lake-entry-intent:v2",
   "title": "Locked Lake public module intent",
-  "description": "Compiler-free original source identity and root module selection. This record carries no declarations, type claims or generated output bytes.",
+  "description": "Compiler-free original source identity and root module selection. Version 3 retains one authored review for comparison with fresh Lean metadata; it carries no generated output bytes or compiler evidence.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -14,7 +14,7 @@
   ],
   "properties": {
     "schemaVersion": {
-      "const": 2
+      "enum": [2, 3]
     },
     "kind": {
       "enum": [
@@ -24,6 +24,9 @@
     },
     "component": {
       "$ref": "component-compilation-plan.schema.json#/$defs/component"
+    },
+    "reviewedBindingIr": {
+      "$ref": "#/$defs/reviewedBindingIr"
     },
     "source": {
       "type": "object",
@@ -69,7 +72,26 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": { "properties": { "schemaVersion": { "const": 3 } } },
+      "then": { "required": ["reviewedBindingIr"] },
+      "else": { "not": { "required": ["reviewedBindingIr"] } }
+    }
+  ],
   "$defs": {
+    "reviewedBindingIr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "path", "source", "sourceSha256", "semanticSha256"],
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "path": { "$ref": "#/$defs/path" },
+        "source": { "type": "string", "minLength": 1 },
+        "sourceSha256": { "$ref": "#/$defs/sha256" },
+        "semanticSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
     "sha256": {
       "$ref": "lake-dependency-snapshot.schema.json#/$defs/digest"
     },

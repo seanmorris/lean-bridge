@@ -5,9 +5,10 @@
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateElaboratedMetadata } from "./elaborated-metadata.mjs";
-import { createElaboratedSemanticModel, elaboratedComponent } from "./semantic-model.mjs";
+import { createElaboratedSemanticModel, createOwnedElaboratedSemanticModel, elaboratedComponent } from "./semantic-model.mjs";
 import { reconcileReviewedElaboration, verifyReviewedSourceInputs } from "./reviewed-source.mjs";
-import { hashBindingIr } from "../binding-ir/canonical.mjs";
+import { reconcileReviewedOwnedElaboration, verifyReviewedOwnedSourceInputs } from "./reviewed-owned-source.mjs";
+import { canonicalizeJsonValue, hashBindingIr } from "../binding-ir/canonical.mjs";
 
 /**
  * Build a reviewable report using structural types supplied by Lean itself.
@@ -15,12 +16,17 @@ import { hashBindingIr } from "../binding-ir/canonical.mjs";
  * @param inventory - Captured project facts and source hashes.
  * @param entries - Public modules whose ownership Lake has checked.
  * @param elaboration - Fresh report and its authenticated invocation context.
+ * @param options - Capabilities of the receiving analysis consumer.
+ * @param options.ownedGraphs - Admit explicit aggregate ownership without opening copied builders.
  */
-export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
+export const projectElaboratedMetadata = (inventory, entries, elaboration, { ownedGraphs = false } = {}) => {
 	const { metadata, request } = elaboration;
-	if(metadata.profile !== "component-scalars-v1") throw new Error("Ordinary component projection requires the scalar metadata profile");
+	if(typeof ownedGraphs !== "boolean") throw new TypeError("Ownership-aware projection requires an explicit capability");
+	const owned = ownedGraphs && request?.ownedAggregates !== undefined;
+	if(metadata.profile !== (owned ? "native-library-v1" : "component-scalars-v1")) throw new Error(owned
+		? "Owned analysis requires the native metadata profile" : "Ordinary component projection requires the scalar metadata profile");
 	validateElaboratedMetadata(metadata, request);
-	verifyReviewedSourceInputs(elaboration, inventory.inputs);
+	(owned ? verifyReviewedOwnedSourceInputs : verifyReviewedSourceInputs)(elaboration, inventory.inputs);
 	const elaborationSha256 = sha256(canonicalJson(elaboration));
 	const all = metadata.modules.flatMap(module => module.declarations.map(declaration => ({ ...declaration, module: module.name })));
 	const byIdentity = new Map(all.map(item => [item.identity, item]));
@@ -61,14 +67,15 @@ export const projectElaboratedMetadata = (inventory, entries, elaboration) => {
 			, question: item.code === "unused-export-contract" ? `Which selected public export should contract ${item.declaration} describe?` : `Which existing public declaration should replace ${item.declaration}?`
 			, choices: ["correct-export-selection"] });
 	const facts = inventory.project;
-	const semantic = createElaboratedSemanticModel({
+	const semantic = (owned ? createOwnedElaboratedSemanticModel : createElaboratedSemanticModel)({
 		metadata, request, component: elaboratedComponent(facts), elaborationSha256
 		, include: candidates.filter(item => item.status === "exportable").map(item => item.declaration)
 	});
-	const document = adapterHints.length ? semantic.document : reconcileReviewedElaboration(inventory, elaboration, semantic.document);
+	const document = adapterHints.length ? semantic.document
+		: (owned ? reconcileReviewedOwnedElaboration : reconcileReviewedElaboration)(inventory, elaboration, semantic.document);
 	const declarations = document.declarations;
 	const bindingIr = declarations.length && !diagnostics.some(item => item.category === "extractor-failure" || item.category === "stale-metadata")
-		? { origin: "lean-elaborated", path: null, semanticSha256: hashBindingIr(document), document } : null;
+		? { origin: "lean-elaborated", path: null, semanticSha256: owned ? sha256(canonicalizeJsonValue(document)) : hashBindingIr(document), document } : null;
 	if(!bindingIr) diagnostics.push({ code: "binding-ir-unavailable", severity: "error", message: "No supported compiler-checked API is available", path: null, hint: "Resolve the compiler diagnostics or select a supported public API." });
 	for(const item of candidates.filter(item => item.documentation === null))
 		diagnostics.push({ code: "documentation-missing", severity: "warning", message: `${item.declaration} has no documentation comment`, path: item.path, hint: null });

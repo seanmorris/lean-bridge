@@ -132,26 +132,52 @@ test("npm word validation uses exact wasm32 number ranges without coercion", asy
 	}
 });
 
-test("word wire results require canonical width and flags and always release the frame", () => {
-	const live = new Set(); let next = 64, calls = 0, clears = 0;
+const wireFixture = () => {
+	const live = new Set(); let next = 64, calls = 0, clears = 0, poisoned = false;
 	const module = { HEAP8: new Uint8Array(32768)
 		, _malloc: bytes => { const p = next; next += (bytes + 7) & ~7; live.add(p); return p; }
 		, _free: p => assert.equal(live.delete(p), true)
 		, _bridge_scalar_frame_clear: () => { clears++; } };
-	const run = (name, value, bits, flags = 0) => callComponentScalar(module, frame => {
+	const lifecycle = { assertOpen: () => { if(poisoned) throw new Error("Word runtime is poisoned"); }
+		, poison: () => { poisoned = true; } };
+	const run = (name, value, bits, flags = 0, status = 0) => callComponentScalar(module, frame => {
 		calls++;
 		const view = new DataView(module.HEAP8.buffer), tag = componentScalarTypes.indexOf(name);
 		assert.equal(view.getUint32(frame + 32, true), tag);
 		assert.equal(view.getBigUint64(frame + 40, true), BigInt.asUintN(64, BigInt(value)));
+		view.setUint32(frame + 8, status, true);
 		view.setUint32(frame + 16, tag, true); view.setUint32(frame + 20, flags, true);
-		view.setBigUint64(frame + 24, BigInt.asUintN(64, bits), true); return 0;
-	}, { parameters: [scalar(name)], result: scalar(name), resultMode: "value" }, [value]);
+		view.setBigUint64(frame + 24, BigInt.asUintN(64, bits), true); return status;
+	}, { parameters: [scalar(name)], result: scalar(name), resultMode: "value" }, [value], lifecycle);
+	return { run, state: () => ({ live: live.size, calls, clears, poisoned }) };
+};
+
+test("word wire results clean valid replies and reject host inputs without retiring the runtime", () => {
+	const { run, state } = wireFixture();
 	for(const value of [0, 0x80000000, 0xffffffff]) assert.equal(run("usize", value, BigInt(value)), value);
 	for(const value of [-0x80000000, -1, 0, 0x7fffffff]) assert.equal(run("isize", value, BigInt(value)), value);
-	for(const [name, bits] of [["usize", -1n], ["usize", 0x100000000n], ["isize", 0x80000000n], ["isize", 0xffffffffn], ["isize", -0x80000001n]]) assert.throws(() => run(name, 0, bits));
-	for(const name of ["usize", "isize"]) assert.throws(() => run(name, 0, 0n, 1));
-	const before = calls; assert.throws(() => run("usize", -1, 0n)); assert.equal(calls, before);
-	assert.equal(live.size, 0); assert.equal(clears, calls + 1);
+	assert.throws(() => run("usize", -1, 0n));
+	assert.deepEqual(state(), { live: 0, calls: 7, clears: 8, poisoned: false });
+	assert.equal(run("usize", 1, 1n), 1);
+	assert.deepEqual(state(), { live: 0, calls: 8, clears: 9, poisoned: false });
+});
+
+test("word wire results quarantine malformed widths and flags before unsafe cleanup", () => {
+	const malformed = [["usize", -1n, 0], ["usize", 0x100000000n, 0]
+		, ["isize", 0x80000000n, 0], ["isize", 0xffffffffn, 0]
+		, ["isize", -0x80000001n, 0]
+		, ["usize", 0n, 1], ["isize", 0n, 1]];
+	for(const status of [0, 5]) for(const [name, bits, flags] of malformed)
+	{
+		const { run, state } = wireFixture();
+		assert.throws(() => run(name, 0, bits, flags, status), flags ? /Invalid component [ui]size flags/ : /32 is out of range/);
+		assert.deepEqual(state(), { live: 1, calls: 1, clears: 0, poisoned: true });
+		assert.throws(() => run(name, 0, 0n), /poisoned/);
+		assert.deepEqual(state(), { live: 1, calls: 1, clears: 0, poisoned: true }, "Retired heaps must not allocate, dispatch or clean up");
+	}
+});
+
+test("word adapters validate the frame and enforce the compiled width", () => {
 	const source = generateComponentScalarAdapters({ exports: [{ symbol: "word", parameters: [scalar("usize"), scalar("isize")], result: scalar("isize"), resultMode: "value" }] });
 	assert.match(source, /sizeof\(size_t\) == 4/); assert.match(source, /extern size_t word_lean\(size_t, size_t\)/);
 	assert.match(source, /bridge_scalar_word_bits\(\) != 32/);

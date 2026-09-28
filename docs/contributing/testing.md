@@ -2457,10 +2457,26 @@ EMCC_CORES=2 node --test --test-concurrency=1 \
   tests/owned-javascript-npm-coexistence.test.mjs
 ```
 
+Compiler-only ownership analysis checks all 51 exports through ordinary source
+and an independent schema-4 review. It rejects substituted selections, changed
+ownership policies and reordered reviewed fields. Relocated CLI packages use
+their own engine sources and produce the same source API as a separately
+compiled Wasm component. These local tests inject the Nix process transport and
+run the real pinned Lean compiler; they do not establish Nix or Docker isolation.
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_COMPILER_ANALYSIS_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 EMCC_CORES=2 \
+node --test --test-concurrency=1 \
+  tests/owned-compiler-analysis.test.mjs \
+  tests/owned-analysis-build-parity.test.mjs
+```
+
 The downstream workflow runs these checks in its required `owned-javascript-wasm`
 job. It builds the production runtime with the pinned toolchains, enables all
-four execution flags, rejects skipped tests and retains the runtime, execution,
-installed-package and coexistence logs
+five execution flags, rejects skipped tests and retains the runtime, execution,
+installed-package, coexistence and analysis logs
 as `owned-javascript-wasm-<commit>`. The support-summary job fails if this job
 does not succeed. Type-surface support classifications are not changed by adding
 the gate.

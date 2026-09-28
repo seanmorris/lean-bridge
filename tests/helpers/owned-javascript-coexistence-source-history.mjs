@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedAnalysis, ownedAnalysisChangedPaths } from "./owned-analysis-source-history.mjs";
 
 export const ownedJavaScriptCoexistenceBaseline = "239fd61ea7664dbfd8191207c6396975e6345726";
 export const ownedJavaScriptCoexistenceHistoryPath = "docs/evidence/owned-javascript-coexistence-integration-20260928.json";
@@ -33,6 +34,7 @@ export const ownedJavaScriptCoexistenceAddedPaths = [
 	, "tests/owned-javascript-coexistence-evidence.test.mjs"
 	, "tests/owned-javascript-npm-coexistence.test.mjs"
 ].sort();
+export const ownedJavaScriptCoexistenceNormalizationPaths = [...new Set([...ownedJavaScriptCoexistenceChangedPaths, ...ownedAnalysisChangedPaths])].sort();
 let cached;
 
 /**
@@ -65,6 +67,7 @@ export const reverseOwnedJavaScriptCoexistenceUpdate = (source, update) => {
  * @param expected - Optional stopping hash.
  */
 export const beforeOwnedJavaScriptCoexistence = (path, source, expected) => {
+	source = beforeOwnedAnalysis(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedJavaScriptCoexistenceChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptCoexistenceHistoryPath, "utf8"));
@@ -83,5 +86,5 @@ export const beforeOwnedJavaScriptCoexistence = (path, source, expected) => {
  * @param bytes - Complete file bytes.
  * @param expected - Optional historical identity.
  */
-export const ownedJavaScriptCoexistenceHistoricalBytes = (path, bytes, expected) => ownedJavaScriptCoexistenceChangedPaths.includes(path)
+export const ownedJavaScriptCoexistenceHistoricalBytes = (path, bytes, expected) => ownedJavaScriptCoexistenceNormalizationPaths.includes(path)
 	? beforeOwnedJavaScriptCoexistence(path, bytes.toString("utf8"), expected) : bytes;

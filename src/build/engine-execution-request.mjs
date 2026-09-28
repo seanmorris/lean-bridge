@@ -245,7 +245,7 @@ export const createEngineExecutionRequest = async ({ engineRoot, inputRoot, comp
 	{
 		const analysis = purpose === "analysis";
 		if(componentPlan || compilationPlan || (!analysis && targets.some(target => !["npm", "javascript"].includes(target)))) fail("invalid-engine-execution-request", "Source-only intent cannot carry host-authored signatures or unsupported targets");
-		const checked = await readLakeEntryIntent({ inputRoot, expectedSha256: entryIntent.sha256, purpose });
+		const checked = await readLakeEntryIntent({ inputRoot, expectedSha256: entryIntent.sha256, purpose, ownedGraphs: analysis });
 		if(canonicalJson(checked.document) !== canonicalJson(entryIntent.document)) fail("invalid-engine-execution-request", "Source-only intent changed before execution");
 		const generators = !analysis && (await readLakeGeneratorRecipes({ snapshot: checked.lakeSnapshot, snapshotRoot: join(resolve(inputRoot), "lake") })).recipes.length > 0;
 		const [engine, input] = await Promise.all([identifyBuildEngine(engineRoot), identifyComponentInputClosure(inputRoot)]);
@@ -358,7 +358,10 @@ export const readVerifiedEngineExecutionRequest = async ({ requestPath, engineRo
 		fail("invalid-engine-execution-request-json", "Engine execution request is not valid JSON", { cause: error.message });
 	}
 	validateEngineExecutionRequest(document);
-	if(document.schemaVersion >= 2) await readLakeEntryIntent({ inputRoot, expectedSha256: document.component.sourceIntentSha256, purpose: document.schemaVersion === 3 ? "analysis" : "build" });
+	if(document.schemaVersion >= 2) await readLakeEntryIntent({ inputRoot
+		, expectedSha256: document.component.sourceIntentSha256
+		, purpose: document.schemaVersion === 3 ? "analysis" : "build"
+		, ownedGraphs: document.schemaVersion === 3 });
 	const [engine, input] = await Promise.all([
 		identifyBuildEngine(engineRoot)
 		, identifyComponentInputClosure(inputRoot)

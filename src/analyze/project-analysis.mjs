@@ -10,7 +10,8 @@ import { hashBindingIr, parseBindingIr } from "../binding-ir/canonical.mjs";
 import { projectElaboratedMetadata } from "./project-elaborated.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
 import { compilerExportSelection } from "./export-configuration.mjs";
-import { assertReviewedSourceConfiguration, validateReviewedSource, reviewedSourceSelection } from "./reviewed-source.mjs";
+import { assertReviewedSourceConfiguration, reviewedSourceSelection } from "./reviewed-source.mjs";
+import { reviewedOwnedSourceSelection } from "./reviewed-owned-source.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-compiler-analysis" }); };
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
@@ -49,10 +50,11 @@ const versionWarning = inventory => inventory.project.version === "0.0.0-local" 
  */
 export const compilerProjectAnalysis = (inventory, entries, elaboration) => {
 	if(elaboration?.schemaVersion !== 3 || elaboration.kind !== "lean-bridge-lake-entry-elaboration") fail("Unsupported compiler analysis evidence");
-	const analysis = projectElaboratedMetadata(inventory, entries, elaboration);
+	const analysis = projectElaboratedMetadata(inventory, entries, elaboration, { ownedGraphs: true });
 	const report = { ...analysis };
 	delete report.entryModules;
-	const unsupported = ["resources"].filter(key => Object.keys(inventory.configurationRecord.configuration[key] ?? {}).length);
+	const unsupported = elaboration.request.ownedAggregates === undefined
+		? ["resources"].filter(key => Object.keys(inventory.configurationRecord.configuration[key] ?? {}).length) : [];
 	if(unsupported.length)
 	{
 		report.bindingIr = null;
@@ -141,19 +143,27 @@ export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => 
 	const elaboration = analysis?.elaboration;
 	closed(elaboration, ["schemaVersion", "kind", "snapshotSha256", "generatedSourcesSha256", "leanCompilerSha256", "extractorSha256", "request", "interfaces", "metadata", ...(elaboration.reviewedBindingIr === undefined ? [] : ["reviewedBindingIr"])]);
 	const { request } = elaboration;
-	const selectionFields = compilerExportSelection(inventory.configurationRecord.configuration);
-	closed(request, ["modules", "exportModules", "exports", "resources", "arities", "metadata", ...Object.keys(selectionFields)]);
+	const configuration = inventory.configurationRecord.configuration;
+	const review = intent.document.reviewedBindingIr;
+	const reviewedSelection = review ? (JSON.parse(review.source).schemaVersion === 4 ? reviewedOwnedSourceSelection : reviewedSourceSelection)(review) : null;
+	const selectionFields = { ...compilerExportSelection(configuration)
+		, ...(reviewedSelection?.ownedAggregates ? { ownedAggregates: reviewedSelection.ownedAggregates } : {}) };
+	const owned = selectionFields.ownedAggregates !== undefined;
+	closed(request, ["modules", "exportModules", "exports", "resources", "arities", "metadata", ...Object.keys(selectionFields), ...(owned ? ["profile"] : [])]);
 	closed(request.metadata, ["toolchain", "invocationIdentitySha256", "modules"]);
 	if(![elaboration.snapshotSha256, elaboration.leanCompilerSha256, elaboration.extractorSha256].every(digest)
 		|| (elaboration.generatedSourcesSha256 !== null && !digest(elaboration.generatedSourcesSha256))
 		|| !Array.isArray(request.modules) || !request.modules.length || !request.modules.every(moduleName)
 		|| new Set(request.modules).size !== request.modules.length || !Array.isArray(request.metadata.modules)
 		|| !Array.isArray(elaboration.interfaces) || elaboration.interfaces.length !== request.modules.length
-		|| !same(request.resources, []) || !same(request.arities, elaboration.reviewedBindingIr ? reviewedSourceSelection(elaboration.reviewedBindingIr).arities : Object.entries(inventory.configurationRecord.configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b)))) fail("Invalid compiler analysis invocation");
+		|| !same(request.resources, owned ? reviewedSelection?.resources ?? (configuration.resources ?? []).toSorted() : [])
+		|| !same(request.arities, reviewedSelection?.arities ?? Object.entries(configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b)))
+		|| (owned && request.profile !== "native-library-v1")) fail("Invalid compiler analysis invocation");
 	if(elaboration.snapshotSha256 !== intent.lakeSnapshot.sha256 || request.metadata.toolchain !== inventory.project.toolchain
 		|| !same(request.exportModules, intent.document.modules.map(item => item.module).sort())
-		|| !same(request.exports, elaboration.reviewedBindingIr ? validateReviewedSource(elaboration.reviewedBindingIr).declarations.map(item => item.source.declaration).sort() : inventory.configurationRecord.configuration.exports ?? [])
-		|| !same(elaboration.reviewedBindingIr ?? null, intent.document.reviewedBindingIr ?? null)
+		|| !same(request.exports, reviewedSelection?.exports ?? configuration.exports ?? [])
+		|| !same(elaboration.reviewedBindingIr ?? null, review ?? null)
+		|| !same(request.ownedAggregates ?? null, selectionFields.ownedAggregates ?? null)
 		|| !same(request.specializations ?? [], selectionFields.specializations ?? [])
 		|| !same(request.contracts ?? {}, selectionFields.contracts ?? {})
 		|| !request.exportModules.every(name => request.modules.includes(name)))

@@ -75,7 +75,7 @@ Exit codes:
   130                   Command was cancelled
 ```
 
-`analyze` compiles fresh Lean interfaces in the pinned Nix or Docker engine without changing the source checkout. A dependency-free Lake project needs no lockfile; dependencies and generators require a reviewed lock. Missing backends or extraction faults never select a source-scanning fallback. Explicit reviewed Binding IR can be validated without a compiler.
+`analyze` compiles fresh Lean interfaces in the pinned Nix or Docker engine without changing the source checkout. A dependency-free Lake project needs no lockfile; dependencies and generators require a reviewed lock. Missing backends or extraction faults never select a source-scanning fallback. Schema-3 reviewed Binding IR can be validated without a compiler. Schema-4 ownership reviews and ordinary `ownedAggregates` configuration require fresh compiler metadata; the report checks their resource identities, value shapes, callback signatures and lifetimes without building adapters.
 
 An explicit `--output` writes the version-2 analysis report, available Binding IR, and optional policy report. `requireCompiledExports` requires fresh compiler evidence. `build` creates local artifacts. `publish --dry-run` performs release preparation and verification without registry uploads; it can still build artifacts and invoke configured authorization providers.
 

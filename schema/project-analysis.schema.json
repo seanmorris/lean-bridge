@@ -281,9 +281,18 @@
               "$ref": "#/$defs/sha256"
             },
             "document": {
-              "$ref": "binding-ir.schema.json"
+              "oneOf": [
+                { "$ref": "binding-ir.schema.json" },
+                { "$ref": "binding-ir-owned.schema.json" }
+              ]
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "document": { "properties": { "schemaVersion": { "const": 4 } } } } },
+              "then": { "properties": { "origin": { "const": "lean-elaborated" } } }
+            }
+          ]
         }
       ]
     },

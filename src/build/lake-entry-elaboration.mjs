@@ -13,6 +13,7 @@ import { createMetadataRequest, identifyLeanInterface } from "../analyze/elabora
 import { projectElaboratedMetadata } from "../analyze/project-elaborated.mjs";
 import { compilerExportSelection } from "../analyze/export-configuration.mjs";
 import { reviewedSourceSelection, verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
+import { reviewedOwnedSourceSelection, verifyReviewedOwnedSourceInputs } from "../analyze/reviewed-owned-source.mjs";
 
 const fail = message => { throw Object.assign(new Error(message), { code: "invalid-lake-entry-elaboration" }); };
 
@@ -37,9 +38,12 @@ export const createLakeEntryAnalysis = (inventory, entries, elaboration) => proj
  * @param options.signal - Optional cancellation signal.
  * @param options.runner - Optional process runner for compiler and extractor fault checks.
  * @param options.reviewedBindingIr - Captured contract, checked against fresh compiler facts.
+ * @param options.ownedGraphs - Explicit capability of the compiler-only ownership analyzer.
  */
-export const elaborateLakeEntryModules = async ({ inventory, entries, workspace, leanPrefix, engineRoot, signal, runner = processBuildRunner, reviewedBindingIr }) => {
-	verifyReviewedSourceInputs({ reviewedBindingIr }, inventory.inputs);
+export const elaborateLakeEntryModules = async ({ inventory, entries, workspace, leanPrefix, engineRoot, signal, runner = processBuildRunner, reviewedBindingIr, ownedGraphs = false }) => {
+	if(typeof ownedGraphs !== "boolean") fail("Ownership-aware elaboration requires an explicit capability");
+	const ownedReview = ownedGraphs && reviewedBindingIr !== undefined && JSON.parse(reviewedBindingIr.source).schemaVersion === 4;
+	(ownedReview ? verifyReviewedOwnedSourceInputs : verifyReviewedSourceInputs)({ reviewedBindingIr }, inventory.inputs);
 	const roots = verifyLakeEntryModules(entries, workspace.resolution).map(entry => entry.origin.kind === "captured"
 		? { ...entry, origin: { kind: "captured", snapshotSha256: workspace.evidence.resolution.snapshotSha256 } } : entry);
 	if(!roots.length) fail("Entry elaboration requires an authenticated public root");
@@ -69,7 +73,12 @@ export const elaborateLakeEntryModules = async ({ inventory, entries, workspace,
 			, resources: []
 			, arities: Object.entries(configuration.arities ?? {}).sort(([a], [b]) => a.localeCompare(b))
 			, ...compilerExportSelection(configuration)
-			, ...(reviewedBindingIr ? reviewedSourceSelection(reviewedBindingIr) : {}) };
+			, ...(reviewedBindingIr ? (ownedReview ? reviewedOwnedSourceSelection : reviewedSourceSelection)(reviewedBindingIr) : {}) };
+		if(ownedGraphs && selection.ownedAggregates !== undefined)
+		{
+			selection.profile = "native-library-v1";
+			if(!reviewedBindingIr) selection.resources = (configuration.resources ?? []).toSorted();
+		}
 		const request = createMetadataRequest(selection, { toolchain: inventory.project.toolchain
 			, snapshotSha256: workspace.evidence.resolution.snapshotSha256
 			, generatedSourcesSha256: workspace.generatedSources?.sha256 ?? null
@@ -105,7 +114,7 @@ export const elaborateLakeEntryModules = async ({ inventory, entries, workspace,
 		for(const module of interfaces)
 			if((await identifyLeanInterface(join(working, "olean", `${module.module.replaceAll(".", "/")}.olean`), signal)).interfaceSha256 !== module.interfaceSha256) fail(`Interface changed during elaboration: ${module.module}`);
 		await workspace.verify();
-		return createLakeEntryAnalysis(inventory, roots, elaboration);
+		return projectElaboratedMetadata(inventory, roots, elaboration, { ownedGraphs });
 	} finally
 	{ await rm(working, { recursive: true, force: true }); }
 };

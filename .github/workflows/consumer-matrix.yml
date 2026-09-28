@@ -97,6 +97,7 @@ jobs:
       LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"
       LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST: "1"
       LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST: "1"
+      LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"
       EMCC_CORES: "2"
     steps:
       - name: Check out the exact revision
@@ -173,6 +174,18 @@ jobs:
           test -s build/owned-javascript-wasm/coexistence.log
           rg '^# fail 0$' build/owned-javascript-wasm/coexistence.log
           rg '^# skipped 0$' build/owned-javascript-wasm/coexistence.log
+      - name: Compare ownership analysis with compiled APIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            tests/owned-compiler-analysis.test.mjs \
+            tests/owned-analysis-build-parity.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/analysis.log
+          test -s build/owned-javascript-wasm/analysis.log
+          rg '^# fail 0$' build/owned-javascript-wasm/analysis.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/analysis.log
       - name: Preserve owned JavaScript and runtime execution logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -183,6 +196,7 @@ jobs:
             build/owned-javascript-wasm/execution.log
             build/owned-javascript-wasm/installed.log
             build/owned-javascript-wasm/coexistence.log
+            build/owned-javascript-wasm/analysis.log
           if-no-files-found: error
           retention-days: 30
 

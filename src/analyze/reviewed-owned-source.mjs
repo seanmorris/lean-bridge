@@ -11,6 +11,7 @@ import { canonicalizeJsonValue, BindingIrCanonicalError } from "../binding-ir/ca
 import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { compileOwnedAggregateModel } from "../abi/owned-aggregate-model.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
+import { createMetadataRequest } from "./elaborated-metadata.mjs";
 import { assertReviewedSourceConfiguration, validateReviewedSourceIdentity, reviewedContractDifference, readReviewedSource } from "./reviewed-source.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
@@ -253,4 +254,31 @@ export const reconcileReviewedOwnedSource = (review, compiled, sourceIdentity) =
 		, compiledSha256: hash(compiled)
 	});
 	return validateOwnedAggregateBindingIr(retainAnnotations(document, compiled));
+};
+
+/**
+ * Reconcile an owned review without compiling adapters or inventing build evidence.
+ *
+ * @param inventory - Independently captured source and author configuration.
+ * @param elaboration - Fresh interface metadata and its retained invocation.
+ * @param compiled - Language-neutral ownership projection from that metadata.
+ */
+export const reconcileReviewedOwnedElaboration = (inventory, elaboration, compiled) => {
+	const { reviewedBindingIr, request } = elaboration;
+	verifyReviewedOwnedSourceInputs(elaboration, inventory.inputs);
+	if(reviewedBindingIr === undefined) return compiled;
+	const { metadata, ...selection } = request;
+	const expected = createMetadataRequest(selection, { toolchain: inventory.project.toolchain
+		, snapshotSha256: elaboration.snapshotSha256
+		, generatedSourcesSha256: elaboration.generatedSourcesSha256
+		, leanCompilerSha256: elaboration.leanCompilerSha256
+		, extractorSha256: elaboration.extractorSha256
+		, reviewedBindingIrSha256: sha256(canonicalJson(reviewedBindingIr))
+		, modules: metadata.modules });
+	if(!same(request, expected)) mismatch("Reviewed owned invocation differs from retained compiler/source evidence");
+	return reconcileReviewedOwnedSource(reviewedBindingIr, compiled, {
+		request, reviewedBindingIr
+		, exportConfigurationSource: canonicalJson(inventory.configurationRecord.configuration)
+		, exportConfigurationSha256: inventory.configurationRecord.sha256
+	});
 };
