@@ -16,6 +16,12 @@ final class Values
     public static function check(int $type, mixed $value): void {
         foreach (self::walk($value, $type, new GraphBudget()) as $_) {}
     }
+    public static function checkMany(array $types, array $values): void {
+        if (!array_is_list($types) || !array_is_list($values) || count($types) !== count($values))
+            throw new \ArgumentCountError('Wrong owned validation arity');
+        $budget = new GraphBudget();
+        foreach ($types as $index => $type) foreach (self::walk($values[$index], $type, $budget) as $_) {}
+    }
     public static function checkFields(string $class, array $values): void {
         $fields = GraphTypes::CLASSES[$class]['fields'] ?? throw new \TypeError('Unknown owned constructor');
         if (count($fields) !== count($values)) throw new \ArgumentCountError('Wrong owned constructor arity');
