@@ -34,6 +34,46 @@ Optional [export contracts](../lean/existing-package.md#declare-export-contracts
 
 Missing pins, source drift, symlinks, package overrides, ambiguous modules, undeclared custom targets, prebuilt native libraries, precompiled modules, and extra compiler/linker flags fail explicitly. Reviewed foreign-function contracts still need builder support. See the [locked npm build evidence](../evidence/lake-wasm-workspace-20260911.md), [C-input acceptance](../evidence/lake-c-inputs-20260911.md), and [generated-package acceptance](../evidence/lake-generated-packages-20260912.md).
 
+## Build owned-value npm packages
+
+An explicit `ownedAggregates` policy selects the ownership-aware npm compiler.
+Version 4 reviewed contracts use the same compiler after validation against
+fresh Lean metadata. This path supports resources inside records, arrays,
+Lists, options, results, aliases, variants and finite recursive values, plus
+synchronous callbacks and returned functions. It preserves resource identity
+and requires explicit cleanup.
+
+Use a prepared CLI containing the shared runtime and
+[JavaScript-Wasm compiler headers](../contributing/author-toolchain.md#package-javascript-wasm-compiler-inputs).
+Set the two author SDK paths, then build through the standard command:
+
+```sh
+export LEAN_BRIDGE_LEAN_PREFIX=/absolute/path/to/lean-4.32.2
+export LEAN_BRIDGE_JS_EMSDK=/absolute/path/to/pinned-emsdk-6.0.6
+export LEAN_BRIDGE_BUILD_BACKEND=auto
+lean-bridge build --project /path/to/library --target npm --output /path/to/new-release
+lean-bridge verify --receipt /path/to/new-release/package-set-receipt.json
+```
+
+The release contains `javascript-wasm/component/`, its authenticated compiler
+inputs and metadata, and two archives in `packages/npm/`. The component archive
+includes generated JavaScript and TypeScript, the compiled Wasm side module,
+source notices and the exact shared-runtime dependency. It uses the same
+runtime package assembler as copied npm components. Consumers install the
+archives together or let their registry resolve that dependency.
+
+`targets.npm.name` and `targets.npm.version` still set the downstream package
+coordinate. Source package metadata supplies the license; an undeclared license
+remains `UNLICENSED`. Add a supported native target to compile the same captured
+API for both widths. The combined build checks source, compiler, review and
+semantic API agreement before exposing either release.
+
+This owned-value route currently builds local handoffs with the pinned host SDK.
+Nix/Docker compilation and the signed `publish` workflow still need integration
+for this profile. Transferred inputs and results borrowed from another object
+also remain unsupported. The copied-value publication workflow described on
+this page is unchanged.
+
 ## Export callbacks and returned functions
 
 Callback arguments and returned functions can use any of the nineteen supported primitives. Each callable accepts one to sixteen arguments. For example:

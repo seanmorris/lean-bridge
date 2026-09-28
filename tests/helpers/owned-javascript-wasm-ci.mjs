@@ -1,6 +1,6 @@
 /**
  * Require enabled ownership execution against freshly built production Wasm.
- * This job does not claim installed npm ownership support.
+ * Include offline-installed author, Node, TypeScript and browser consumers.
  *
  * @file
  */
@@ -16,9 +16,12 @@ export const ownedJavaScriptWasmCiTests = [
 	, "component-callable-runtime", "javascript-generator", "javascript-coverage"
 ].map(name => `tests/${name}.test.mjs`);
 export const ownedJavaScriptWasmTestCommand = "node --test --test-concurrency=2 " + ownedJavaScriptWasmCiTests.join(" ");
+export const ownedJavaScriptNpmCiTests = ["owned-javascript-wasm-model", "javascript-wasm-compiler-inputs", "owned-javascript-cli", "owned-javascript-wasm-build"].map(name => `tests/${name}.test.mjs`);
+export const ownedJavaScriptNpmTestCommand = "node --test --test-concurrency=1 " + ownedJavaScriptNpmCiTests.join(" ");
 export const ownedJavaScriptWasmCiLogs = [
 	"build/owned-javascript-wasm/runtime.log"
 	, "build/owned-javascript-wasm/execution.log"
+	, "build/owned-javascript-wasm/installed.log"
 ];
 
 const requiredStep = (job, name) => {
@@ -47,11 +50,16 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.match(job, /^ {4}runs-on: ubuntu-24\.04$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_TEST: "1"$/mu);
 	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"$/mu);
+	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST: "1"$/mu);
+	assert.match(job, /^ {6}LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST: "1"$/mu);
 	assert.match(job, /^ {6}EMCC_CORES: "2"$/mu);
 	const prepare = requiredStep(job, "Install dependencies and pinned Lean and Wasm toolchains");
 	assert.doesNotMatch(prepare, /^ {8}if:/mu);
 	assert.match(prepare, /^ {10}bash scripts\/bootstrap-toolchains\.sh$/mu);
 	assert.match(prepare, /^ {10}npm ci --ignore-scripts$/mu);
+	const browsers = requiredStep(job, "Install owned npm browser engines");
+	assert.doesNotMatch(browsers, /^ {8}(?:if|continue-on-error):/mu);
+	assert.equal(browsers.trim(), "run: npx playwright install --with-deps chromium firefox webkit");
 	for(const dependency of ["build-essential", "cmake", "jq", "libgmp-dev", "libuv1-dev", "ripgrep", "zstd"])
 		assert.ok(prepare.split("\n").some(line => line.includes("apt-get install") && line.split(" ").includes(dependency)), dependency);
 	const buildName = "Build the production runtime with the shared ownership broker";
@@ -61,6 +69,15 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 		"set -euo pipefail", "mkdir -p build/owned-javascript-wasm"
 		, "bash scripts/build-lean-link-spike.sh 2>&1 | tee " + ownedJavaScriptWasmCiLogs[0]
 		, ...["lazy", "startup", "final-static"].map(profile => `test -s build/lean-link-spike/${profile}/main.wasm`)
+	].join("\n"));
+	const installedName = "Build and install owned npm packages through the standalone CLI";
+	assert.ok(job.indexOf(executeName) < job.indexOf(installedName));
+	assert.equal(script(requiredStep(job, installedName)), [
+		"set -euo pipefail", "source scripts/env.sh"
+		, ownedJavaScriptNpmTestCommand + " 2>&1 | tee " + ownedJavaScriptWasmCiLogs[2]
+		, "test -s " + ownedJavaScriptWasmCiLogs[2]
+		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[2]
+		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[2]
 	].join("\n"));
 	assert.equal(script(requiredStep(job, executeName)), [
 		"set -euo pipefail"
@@ -79,6 +96,7 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	const enforce = requiredStep(summary, "Enforce owned JavaScript and Wasm execution");
 	assert.equal(enforce.trim(), "if: needs.owned-javascript-wasm.result != 'success'\n        run: exit 1");
 	return { testFiles: ownedJavaScriptWasmCiTests.length
+		, installedTestFiles: ownedJavaScriptNpmCiTests.length
 		, requiredLogs: ownedJavaScriptWasmCiLogs.length
 		, productionRuntimeRequired: true, skippedTestsRejected: true
 		, failurePropagated: true };

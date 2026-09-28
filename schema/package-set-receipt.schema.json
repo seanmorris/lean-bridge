@@ -33,7 +33,7 @@
     "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$(?![\\s\\S])" },
     "token": { "type": "string", "maxLength": 256, "pattern": "^[A-Za-z0-9@][A-Za-z0-9@._:/+-]*$(?![\\s\\S])" },
     "version": { "type": "string", "maxLength": 256, "pattern": "^[0-9][A-Za-z0-9._+-]*$(?![\\s\\S])" },
-    "profile": { "enum": ["component-scalars-v1", "native-library-v1", "php-wasm-copied-v1"] },
+    "profile": { "enum": ["component-scalars-v1", "native-library-v1", "php-wasm-copied-v1", "javascript-wasm-owned-v1"] },
     "ecosystem": { "enum": ["npm", "composer", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo"] },
     "dependency": {
       "type": "object", "additionalProperties": false, "required": ["ecosystem", "name", "version"],

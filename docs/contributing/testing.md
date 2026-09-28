@@ -2416,14 +2416,37 @@ checks cover input types, returned function leases and rejected consumer code.
 
 Set `LEAN_BRIDGE_LINK_OUTPUT_DIR` for an alternate build directory and
 `LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT` to the same path when testing it.
-These checks cover the generated API and runtime. Owned npm archive generation,
-the installed CLI route and installed browser consumers are still being added.
+The installed-package gate additionally compiles ordinary and reviewed sources,
+checks the generated sources against compiler metadata, and creates reproducible
+npm archives. It installs both an author CLI and downstream packages offline.
+Node and strict TypeScript checks run after producer removal. Chromium, Firefox
+and WebKit exercise pages, React StrictMode and module workers under a nested
+deployment path, with external requests blocked.
+
+```sh
+npx playwright install --with-deps chromium firefox webkit
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST=1 \
+EMCC_CORES=2 node --test --test-concurrency=1 \
+  tests/owned-javascript-wasm-model.test.mjs \
+  tests/javascript-wasm-compiler-inputs.test.mjs \
+  tests/owned-javascript-cli.test.mjs \
+  tests/owned-javascript-wasm-build.test.mjs
+```
+
+The author CLI includes [prepared compiler headers](author-toolchain.md#package-javascript-wasm-compiler-inputs)
+and the shared runtime. Its acceptance test removes the producer directories
+before compiling through the installed executable. The reviewed project also
+requests native C, requiring both compiled profiles to agree on one captured API.
+The npm consumers install their two archives after source and build-output removal.
 
 The downstream workflow runs these checks in its required `owned-javascript-wasm`
-job. It builds the production runtime with the pinned toolchains, enables both
-execution flags, rejects skipped tests and retains the build and execution logs
+job. It builds the production runtime with the pinned toolchains, enables all
+four execution flags, rejects skipped tests and retains the runtime, execution
+and installed-package logs
 as `owned-javascript-wasm-<commit>`. The support-summary job fails if this job
-does not succeed. This gate does not promote installed npm support claims.
+does not succeed. Type-surface support classifications are not changed by adding
+the gate.
 
 ## Release tooling checks
 

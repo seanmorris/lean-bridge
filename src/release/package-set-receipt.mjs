@@ -25,7 +25,7 @@ const token = value => typeof value === "string" && value.length <= 256 && /^[A-
 const componentId = /^[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9][a-z0-9._-]*)*@[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$(?![\s\S])/;
 const pathIsSafe = value => typeof value === "string" && value.length <= 1024 && /^[A-Za-z0-9_@.+/-]+$(?![\s\S])/.test(value)
 	&& value.split("/").every(part => part && part !== "." && part !== "..");
-const targetProfiles = { npm: "component-scalars-v1"
+const targetProfiles = { npm: ["component-scalars-v1", "javascript-wasm-owned-v1"]
 	, "php-wasm": "php-wasm-copied-v1"
 	, ...Object.fromEntries(["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].map(target => [target, "native-library-v1"])) };
 const ecosystemFor = target => target === "php-native" ? ["composer"] : target === "php-wasm" ? ["npm", "composer"] : [target];
@@ -58,14 +58,14 @@ export const validatePackageSetReceipt = receipt => {
 	for(const profile of receipt.profiles)
 	{
 		closed(profile, ["id", "bindingIrSha256", "runtimeIdentity"], "profile");
-		if(!Object.values(targetProfiles).includes(profile.id) || profiles.has(profile.id) || !hash(profile.bindingIrSha256) || !hash(profile.runtimeIdentity)) invalid("Invalid or duplicate compiled profile");
+		if(!Object.values(targetProfiles).flat().includes(profile.id) || profiles.has(profile.id) || !hash(profile.bindingIrSha256) || !hash(profile.runtimeIdentity)) invalid("Invalid or duplicate compiled profile");
 		profiles.set(profile.id, profile);
 	}
 	for(const pkg of receipt.packages)
 	{
 		closed(pkg, ["target", "ecosystem", "name", "version", "profile", "role", "runtimeIdentity", "runtimeDelivery", "requires", "artifacts"], "package");
 		identity(pkg);
-		if(!Object.hasOwn(targetProfiles, pkg.target) || targetProfiles[pkg.target] !== pkg.profile || !ecosystemFor(pkg.target).includes(pkg.ecosystem)) invalid("Package target, ecosystem and profile disagree");
+		if(!Object.hasOwn(targetProfiles, pkg.target) || ![targetProfiles[pkg.target]].flat().includes(pkg.profile) || !ecosystemFor(pkg.target).includes(pkg.ecosystem)) invalid("Package target, ecosystem and profile disagree");
 		if(pkg.runtimeIdentity !== profiles.get(pkg.profile)?.runtimeIdentity) fail("package-set-runtime-mismatch", "Package runtime differs from its compiled profile");
 		if(!["runtime", "component", "api"].includes(pkg.role) || !["provided", "embedded", "dependency"].includes(pkg.runtimeDelivery)) invalid("Invalid package role or runtime delivery");
 		const runtimeTarget = pkg.target === "npm" || pkg.target === "cpan" || pkg.target === "php-wasm";

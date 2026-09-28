@@ -16,6 +16,7 @@ import { prepareLakeEntryIntent, readLakeEntryIntent, writeLakeEntryInputs } fro
 import { assertCompiledProfileApiAgreement } from "../src/build/multi-profile-project.mjs";
 import { createCompiledNativeModel } from "../src/build/native-graph-model.mjs";
 import { createCompiledPhpWasmModel } from "../src/build/php-wasm-graph-model.mjs";
+import { createOwnedJavaScriptWasmModel } from "../src/build/javascript-wasm-owned-model.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./helpers/owned-dotnet-callback-fixture.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -50,11 +51,13 @@ test("ownership reviews round-trip only through explicitly capable analysis inte
 	assert.deepEqual(await lakeInputState(project), before);
 });
 
-for(const reviewed of [false, true]) test(`${reviewed ? "reviewed" : "ordinary"} ownership reaches the PHP-Wasm toolchain without opening npm or WIT`, async t => {
+for(const reviewed of [false, true]) test(`${reviewed ? "reviewed" : "ordinary"} ownership reaches independent PHP and JavaScript toolchains without opening WIT`, async t => {
 	const { directory, project } = await fixture(t, reviewed), before = await lakeInputState(project);
-	const output = join(directory, "release"), environment = { LEAN_BRIDGE_PHP_EMSDK: join(directory, "missing-sdk") };
+	const output = join(directory, "release"), environment = { LEAN_BRIDGE_PHP_EMSDK: join(directory, "missing-sdk"), LEAN_BRIDGE_JS_EMSDK: join(directory, "missing-js-sdk") };
 	await assert.rejects(buildCanonicalProject({ projectRoot: project, outputRoot: output, targets: ["php-wasm"], environment }), { code: "php-wasm-toolchain-unavailable" });
-	for(const targets of [["npm"], ["php-wasm", "npm"], ["php-wasm", "wit-wasi"]])
+	for(const targets of [["npm"], ["php-wasm", "npm"]])
+		await assert.rejects(buildCanonicalProject({ projectRoot: project, outputRoot: output, targets, environment }), { code: "javascript-wasm-toolchain-unavailable" });
+	for(const targets of [["php-wasm", "wit-wasi"]])
 		await assert.rejects(buildCanonicalProject({ projectRoot: project, outputRoot: output, targets, environment }),
 			error => error.code === (reviewed ? "consumer-upgrade-required" : "unsupported-export-configuration"));
 	assert.deepEqual(await readdir(directory), ["project"]);
@@ -72,7 +75,8 @@ test("ownership-aware ABI comparison preserves policies while copied readers sta
 		, source: { treeSha256: source.sourceTreeSha256
 			, toolchain: `leanprover/lean4:v${source.leanVersion}`
 			, lakeSnapshotSha256: snapshot } };
-	const options = { ownedGraphs: true, models: [native, wasm]
+	const options = { ownedGraphs: true
+		, models: [native, wasm, createOwnedJavaScriptWasmModel(input)]
 		, configurationSha256: source.exportConfigurationSha256
 		, intent: { document } };
 	assert.match(assertCompiledProfileApiAgreement(options), /^[a-f0-9]{64}$/u);

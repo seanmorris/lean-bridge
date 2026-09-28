@@ -81,7 +81,9 @@ export const buildElaboratedComponent = async ({ projectRoot
 	, compileComponent
 	, signal
 	, runner = processBuildRunner }) => {
-	const receipts = { "native-library-v1": "native-component.json", "php-wasm-copied-v1": "php-wasm-component.json" };
+	const receipts = { "native-library-v1": "native-component.json"
+		, "php-wasm-copied-v1": "php-wasm-component.json"
+		, "javascript-wasm-owned-v1": "javascript-wasm-component.json" };
 	if(!Object.hasOwn(receipts, profile) || receipts[profile] !== receiptName) throw new TypeError("Invalid compiled component profile or receipt path");
 	const run = (command, args, options = {}) => runner.capture({ command, args, cwd: engineRoot, ...options });
 	const output = resolve(outputRoot), project = resolve(projectRoot);

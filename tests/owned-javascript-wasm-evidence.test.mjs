@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedJavaScriptWasmExecution } from "./helpers/owned-javascript-wasm-evidence.mjs";
+import { beforeOwnedJavaScriptNpm, ownedJavaScriptNpmHistoricalBytes } from "./helpers/owned-javascript-npm-source-history.mjs";
 import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmAddedPaths
 	, ownedJavaScriptWasmAdditionalSources, ownedJavaScriptWasmBaseline
 	, ownedJavaScriptWasmBaselineSources, ownedJavaScriptWasmChangedPaths
@@ -29,13 +30,13 @@ test("JavaScript ownership authenticates every source change without rewriting P
 		...Object.keys(previous.sources), ...ownedJavaScriptWasmChangedPaths
 		, ...ownedJavaScriptWasmAddedPaths, ...ownedJavaScriptWasmAdditionalSources
 	])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptNpmHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptWasmChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedJavaScriptWasmBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedJavaScriptWasm(update.path, current);
+		const current = beforeOwnedJavaScriptNpm(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedJavaScriptWasm(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedJavaScriptWasm(update.path, prior), prior);
 		assert.equal(beforeOwnedJavaScriptWasm(update.path, current, update.currentSha256), current);

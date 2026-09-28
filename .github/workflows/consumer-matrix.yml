@@ -95,6 +95,8 @@ jobs:
     env:
       LEAN_BRIDGE_OWNED_JS_WASM_TEST: "1"
       LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"
+      LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST: "1"
+      LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST: "1"
       EMCC_CORES: "2"
     steps:
       - name: Check out the exact revision
@@ -112,6 +114,8 @@ jobs:
           sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep zstd
           npm ci --ignore-scripts
           bash scripts/bootstrap-toolchains.sh
+      - name: Install owned npm browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
       - name: Build the production runtime with the shared ownership broker
         shell: bash
         run: |
@@ -143,6 +147,20 @@ jobs:
           test -s build/owned-javascript-wasm/execution.log
           rg '^# fail 0$' build/owned-javascript-wasm/execution.log
           rg '^# skipped 0$' build/owned-javascript-wasm/execution.log
+      - name: Build and install owned npm packages through the standalone CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            tests/owned-javascript-wasm-model.test.mjs \
+            tests/javascript-wasm-compiler-inputs.test.mjs \
+            tests/owned-javascript-cli.test.mjs \
+            tests/owned-javascript-wasm-build.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/installed.log
+          test -s build/owned-javascript-wasm/installed.log
+          rg '^# fail 0$' build/owned-javascript-wasm/installed.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
       - name: Preserve owned JavaScript and runtime execution logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -151,6 +169,7 @@ jobs:
           path: |
             build/owned-javascript-wasm/runtime.log
             build/owned-javascript-wasm/execution.log
+            build/owned-javascript-wasm/installed.log
           if-no-files-found: error
           retention-days: 30
 

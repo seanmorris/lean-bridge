@@ -37,6 +37,7 @@ import { processBuildRunner } from "./process-runner.mjs";
 import { buildNativeProject } from "./native-project.mjs";
 import { buildMultiProfileProject } from "./multi-profile-project.mjs";
 import { buildPhpWasmProject } from "./php-wasm-project.mjs";
+import { buildOwnedJavaScriptProject, usesOwnedJavaScript } from "./javascript-wasm-owned-project.mjs";
 import { prepareLakeEntryIntent, writeLakeEntryInputs } from "./lake-entry-intent.mjs";
 
 export { CanonicalBuildError, processBuildRunner };
@@ -808,12 +809,14 @@ export const buildCanonicalProject = async ({
 		if(cache.directory !== null && cache.directory !== undefined) fail("cache-directory-unsupported", "PHP-Wasm builds do not implement --cache-directory; use a verified LEAN_BRIDGE_PHP_COPIED_RUNTIME input for shared runtime reuse");
 	}
 	const sourceC = root !== engine && targets.some(target => ["c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target));
-	if(phpWasm || sourceC || targets.includes("cpan") || targets.includes("perl"))
+	const mixed = phpWasm || sourceC || targets.includes("cpan") || targets.includes("perl");
+	if(mixed && normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
+		fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
+	const ownedNpm = root !== engine && (normalized.length === 0 || normalized.includes("npm")) && await usesOwnedJavaScript(root, signal);
+	if(mixed)
 	{
-		if(normalized.some(target => !["npm", "cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native", "php-wasm"].includes(target)))
-			fail("invalid-package-targets", "Combined ordinary builds support npm, cpan, c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and php-wasm targets");
 		if(normalized.includes("npm") || phpWasm)
-			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm"].includes(target)));
+			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm", ...(ownedNpm ? ["npm"] : [])].includes(target)));
 		if(normalized.length === 1 && phpWasm)
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
 		if(!normalized.includes("npm") && !phpWasm)
@@ -823,6 +826,11 @@ export const buildCanonicalProject = async ({
 			, nativeTargets: normalized.filter(target => !["npm", "php-wasm"].includes(target))
 			, wasmTargets: normalized.filter(target => ["npm", "php-wasm"].includes(target))
 			, buildWasm: buildCanonicalProject });
+	}
+	if(ownedNpm)
+	{
+		if(normalized.some(target => target !== "npm")) fail("invalid-package-targets", "Owned JavaScript compilation requires the npm target");
+		return buildOwnedJavaScriptProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, runner, cache, signal, onProgress, lakeSnapshot });
 	}
 	if(root !== engine) await preflightReview(root, signal);
 	if(cache === null || typeof cache !== "object" || !new Set(["use", "refresh", "off"]).has(cache.policy))

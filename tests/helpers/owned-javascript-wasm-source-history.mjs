@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptNpm, ownedJavaScriptNpmChangedPaths } from "./owned-javascript-npm-source-history.mjs";
 
 export const ownedJavaScriptWasmBaseline = "4c13a5ffdb133cfda841a965e0c858e20300e5ba";
 export const ownedJavaScriptWasmHistoryPath = "docs/evidence/owned-javascript-wasm-integration-20260928.json";
@@ -136,6 +137,7 @@ export const ownedJavaScriptWasmAdditionalSources = [
 	, "tests/helpers/source-registration-upgrade.mjs"
 	, "tests/helpers/variant-fixture.mjs"
 ].sort();
+export const ownedJavaScriptWasmNormalizationPaths = [...new Set([...ownedJavaScriptWasmChangedPaths, ...ownedJavaScriptNpmChangedPaths])].sort();
 let cached;
 
 /**
@@ -170,6 +172,7 @@ export const reverseOwnedJavaScriptWasmUpdate = (source, update) => {
  * @param expected - Optional complete identity at which to stop.
  */
 export const beforeOwnedJavaScriptWasm = (path, source, expected) => {
+	source = beforeOwnedJavaScriptNpm(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedJavaScriptWasmChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptWasmHistoryPath, "utf8"));
@@ -189,5 +192,5 @@ export const beforeOwnedJavaScriptWasm = (path, source, expected) => {
  * @param bytes - Complete current or predecessor bytes.
  * @param expected - Optional complete predecessor identity.
  */
-export const ownedJavaScriptWasmHistoricalBytes = (path, bytes, expected) => ownedJavaScriptWasmChangedPaths.includes(path)
+export const ownedJavaScriptWasmHistoricalBytes = (path, bytes, expected) => ownedJavaScriptWasmNormalizationPaths.includes(path)
 	? beforeOwnedJavaScriptWasm(path, bytes.toString("utf8"), expected) : bytes;

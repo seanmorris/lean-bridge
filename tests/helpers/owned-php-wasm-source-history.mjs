@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmChangedPaths } from "./owned-javascript-wasm-source-history.mjs";
+import { beforeOwnedJavaScriptWasm, ownedJavaScriptWasmNormalizationPaths } from "./owned-javascript-wasm-source-history.mjs";
 
 export const ownedPhpWasmBaseline = "560dac4edb67c5b7cdd8bb945b684c1f2eb64f53";
 export const ownedPhpWasmHistoryPath = "docs/evidence/owned-php-wasm-integration-20260928.json";
@@ -128,7 +128,7 @@ export const ownedPhpWasmAddedPaths = [
 	, "tests/owned-php-zend-ownership.test.mjs"
 ].sort();
 let cached;
-export const ownedPhpWasmNormalizationPaths = [...new Set([...ownedPhpWasmChangedPaths, ...ownedJavaScriptWasmChangedPaths])].sort();
+export const ownedPhpWasmNormalizationPaths = [...new Set([...ownedPhpWasmChangedPaths, ...ownedJavaScriptWasmNormalizationPaths])].sort();
 
 /**
  * Reverse only recorded literal edits with matching complete file identities.

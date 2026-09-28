@@ -103,6 +103,72 @@ export const runtime = await loadComponent(descriptor);
 `;
 
 /**
+ * Assemble one byte-identical runtime package for copied and owned components.
+ *
+ * @param options - Captured prepared runtime bytes and shared runtime requirement.
+ * @param options.mainModule - Prepared Emscripten JavaScript bytes.
+ * @param options.mainWasm - Prepared runtime WebAssembly bytes.
+ * @param options.runtimeRequirement - Compiler-selected shared runtime profile.
+ */
+export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtimeRequirement }) => {
+	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs").replaceAll("../abi/component-recursive.mjs", "./component-recursive.mjs").replaceAll("../abi/component-recursive-abi.mjs", "./component-recursive-abi.mjs").replaceAll("../abi/component-structured-callables.mjs", "./component-structured-callables.mjs")
+		.replaceAll("../abi/component-owned-wasm.mjs", "./component-owned-wasm.mjs")
+		.replaceAll("../abi/owned-wasm-control.mjs", "./owned-wasm-control.mjs")
+		.replaceAll("../binding-ir/", "./binding-ir/");
+	const runtimeSource = relocate(await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8"));
+	const scalarSource = await readFile(new URL("../abi/component-scalars.mjs", import.meta.url), "utf8");
+	const codecSource = (await readFile(new URL("./component-scalar-codec.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
+	const runtimeFiles = new Map([
+		["index.mjs", runtimeModule()]
+		, ["internal/main.mjs", mainModule]
+		, ["internal/main.wasm", mainWasm]
+		, ["internal/component-runtime.mjs", runtimeSource]
+		, ["internal/component-scalars.mjs", scalarSource]
+		, ["internal/component-scalar-codec.mjs", codecSource]
+		, ["internal/component-callables.mjs", await readFile(new URL("../abi/component-callables.mjs", import.meta.url))]
+		, ["internal/component-callable-runtime.mjs", relocate(await readFile(new URL("./component-callable-runtime.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-structured-callables.mjs", await readFile(new URL("../abi/component-structured-callables.mjs", import.meta.url))]
+		, ["internal/component-structured-callable-runtime.mjs", relocate(await readFile(new URL("./component-structured-callable-runtime.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-copied.mjs", await readFile(new URL("../abi/component-copied.mjs", import.meta.url))]
+		, ["internal/component-records.mjs", await readFile(new URL("../abi/component-records.mjs", import.meta.url))]
+		, ["internal/component-copied-codec.mjs", relocate(await readFile(new URL("./component-copied-codec.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-copied-runtime.mjs", relocate(await readFile(new URL("./component-copied-runtime.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-recursive.mjs", await readFile(new URL("../abi/component-recursive.mjs", import.meta.url))]
+		, ["internal/component-recursive-abi.mjs", await readFile(new URL("../abi/component-recursive-abi.mjs", import.meta.url))]
+		, ["internal/component-recursive-codec.mjs", relocate(await readFile(new URL("./component-recursive-codec.mjs", import.meta.url), "utf8"))]
+		, ["internal/component-recursive-ownership.mjs", relocate(await readFile(new URL("./component-recursive-ownership.mjs", import.meta.url), "utf8"))]
+		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
+	]);
+	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);
+	for(const name of ["bindings", "callbacks", "calls", "component-runtime", "registry", "scalars", "values"])
+		runtimeFiles.set(`internal/owned-wasm-${name}.mjs`, relocate(await readFile(new URL(`./owned-wasm-${name}.mjs`, import.meta.url), "utf8")));
+	for(const name of ["component-owned-wasm", "owned-wasm-control"])
+		runtimeFiles.set(`internal/${name}.mjs`, relocate(await readFile(new URL(`../abi/${name}.mjs`, import.meta.url), "utf8")));
+	for(const name of ["canonical", "contract", "sha256"])
+		runtimeFiles.set(`internal/binding-ir/${name}.mjs`, await readFile(new URL(`../binding-ir/${name}.mjs`, import.meta.url)));
+	for(const name of (await readdir(noticeRoot)).sort()) runtimeFiles.set(`notices/${name}`, await readFile(new URL(name, noticeRoot)));
+	const runtimeMetadata = {
+		name: "@lean-bridge/runtime"
+		, description: "Shared Lean WebAssembly runtime for generated Lean Bridge packages."
+		, license: "MIT", type: "module", sideEffects: true, engines: { node: ">=22" }
+		, exports: { ".": { browser: "./index.mjs", import: "./index.mjs", default: "./index.mjs" } }
+		, files: ["index.mjs", "internal", "LICENSE", "notices", "runtime-identity.json"]
+		, leanBridge: { sharedRuntime: true, ...runtimeRequirement, componentScalarAbi }
+	};
+	const identityBasis = {
+		schemaVersion: 1, metadata: runtimeMetadata
+		, packagingImplementationSha256: sha256(await readFile(new URL(import.meta.url)))
+		, packing: { archiveRoot: "package", sourceDateEpoch: 1, ...await tarGzipPackingIdentity() }
+		, files: [...runtimeFiles].map(([path, bytes]) => ({ path, mode: 0o644, sha256: sha256(bytes) })).sort((a, b) => a.path.localeCompare(b.path))
+	};
+	const runtimeIdentity = sha256(canonicalJson(identityBasis));
+	const version = `0.0.0-abi${componentScalarAbi}.${runtimeIdentity}`;
+	runtimeFiles.set("runtime-identity.json", canonicalJson(identityBasis));
+	runtimeFiles.set("package.json", json({ ...runtimeMetadata, version, leanBridge: { ...runtimeMetadata.leanBridge, runtimeIdentity } }));
+	return { files: runtimeFiles, runtimeIdentity, version };
+};
+
+/**
  * Builds component npm packages from validated inputs with deterministic output suitable for the deterministic release and independent-verification pipeline.
  *
  * @param root0 - Named inputs and dependency overrides used to build component npm packages.
@@ -146,13 +212,6 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 		for(const declaration of ir.declarations) assertComponentSignature(declaration);
 		for(const declaration of abi.exports) assertComponentSignature(declaration);
 	}
-	const relocate = source => source.replaceAll("../abi/component-scalars.mjs", "./component-scalars.mjs").replaceAll("../abi/component-callables.mjs", "./component-callables.mjs").replaceAll("../abi/component-copied.mjs", "./component-copied.mjs").replaceAll("../abi/component-records.mjs", "./component-records.mjs").replaceAll("../abi/component-recursive.mjs", "./component-recursive.mjs").replaceAll("../abi/component-recursive-abi.mjs", "./component-recursive-abi.mjs").replaceAll("../abi/component-structured-callables.mjs", "./component-structured-callables.mjs")
-		.replaceAll("../abi/component-owned-wasm.mjs", "./component-owned-wasm.mjs")
-		.replaceAll("../abi/owned-wasm-control.mjs", "./owned-wasm-control.mjs")
-		.replaceAll("../binding-ir/", "./binding-ir/");
-	const runtimeSource = relocate(await readFile(new URL("./component-runtime.mjs", import.meta.url), "utf8"));
-	const scalarSource = await readFile(new URL("../abi/component-scalars.mjs", import.meta.url), "utf8");
-	const codecSource = (await readFile(new URL("./component-scalar-codec.mjs", import.meta.url), "utf8")).replace("../abi/component-scalars.mjs", "./component-scalars.mjs");
 	if(!mainModule.includes(Buffer.from("bridge_scalar_call")) || !mainModule.includes(Buffer.from("bridge_scalar_frame_clear"))) throw new Error("Prepared runtime lacks scalar ABI 2; rebuild the shared runtime");
 	const runtimeExports = new Set(WebAssembly.Module.exports(new WebAssembly.Module(mainWasm)).map(item => `${item.kind}:${item.name}`));
 	if([3, 9].includes(abi.version) && ["bridge_callable_abi", "bridge_callable_invoke", "bridge_callable_release", "bridge_callable_store", "bridge_callable_dispatch", "bridge_callable_frame_clear"].some(name => !runtimeExports.has(`function:${name}`) || !mainModule.includes(Buffer.from(name)))) throw new Error("Prepared runtime lacks the component callable ABI; rebuild the shared runtime");
@@ -173,57 +232,13 @@ export const buildComponentNpmPackages = async ({ bundleRoot, runtimeRoot, outpu
 							: item.module === "env" && (["__memory_base", "__table_base", "__stack_pointer"].includes(item.name) || runtimeExports.has(`global:${item.name}`));
 		if(!provided) throw new Error(`Prepared runtime cannot resolve component import ${item.module}.${item.name}`);
 	}
-	const runtimeFiles = new Map([
-		["index.mjs", runtimeModule()]
-		, ["internal/main.mjs", mainModule]
-		, ["internal/main.wasm", mainWasm]
-		, ["internal/component-runtime.mjs", runtimeSource]
-		, ["internal/component-scalars.mjs", scalarSource]
-		, ["internal/component-scalar-codec.mjs", codecSource]
-		, ["internal/component-callables.mjs", await readFile(new URL("../abi/component-callables.mjs", import.meta.url))]
-		, ["internal/component-callable-runtime.mjs", relocate(await readFile(new URL("./component-callable-runtime.mjs", import.meta.url), "utf8"))]
-		, ["internal/component-structured-callables.mjs", await readFile(new URL("../abi/component-structured-callables.mjs", import.meta.url))]
-		, ["internal/component-structured-callable-runtime.mjs", relocate(await readFile(new URL("./component-structured-callable-runtime.mjs", import.meta.url), "utf8"))]
-		, ["internal/component-copied.mjs", await readFile(new URL("../abi/component-copied.mjs", import.meta.url))]
-		, ["internal/component-records.mjs", await readFile(new URL("../abi/component-records.mjs", import.meta.url))]
-		, ["internal/component-copied-codec.mjs", relocate(await readFile(new URL("./component-copied-codec.mjs", import.meta.url), "utf8"))]
-		, ["internal/component-copied-runtime.mjs", relocate(await readFile(new URL("./component-copied-runtime.mjs", import.meta.url), "utf8"))]
-		, ["internal/component-recursive.mjs", await readFile(new URL("../abi/component-recursive.mjs", import.meta.url))]
-		, ["internal/component-recursive-abi.mjs", await readFile(new URL("../abi/component-recursive-abi.mjs", import.meta.url))]
-		, ["internal/component-recursive-codec.mjs", relocate(await readFile(new URL("./component-recursive-codec.mjs", import.meta.url), "utf8"))]
-		, ["internal/component-recursive-ownership.mjs", relocate(await readFile(new URL("./component-recursive-ownership.mjs", import.meta.url), "utf8"))]
-		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
-	]);
-	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);
-	for(const name of ["bindings", "callbacks", "calls", "component-runtime", "registry", "scalars", "values"])
-		runtimeFiles.set(`internal/owned-wasm-${name}.mjs`, relocate(await readFile(new URL(`./owned-wasm-${name}.mjs`, import.meta.url), "utf8")));
-	for(const name of ["component-owned-wasm", "owned-wasm-control"])
-		runtimeFiles.set(`internal/${name}.mjs`, relocate(await readFile(new URL(`../abi/${name}.mjs`, import.meta.url), "utf8")));
-	for(const name of ["canonical", "contract", "sha256"])
-		runtimeFiles.set(`internal/binding-ir/${name}.mjs`, await readFile(new URL(`../binding-ir/${name}.mjs`, import.meta.url)));
-	for(const name of (await readdir(noticeRoot)).sort()) runtimeFiles.set(`notices/${name}`, await readFile(new URL(name, noticeRoot)));
-	const runtimeMetadata = {
-		name: "@lean-bridge/runtime"
-		, description: "Shared Lean WebAssembly runtime for generated Lean Bridge packages."
-		, license: "MIT", type: "module", sideEffects: true, engines: { node: ">=22" }
-		, exports: { ".": { browser: "./index.mjs", import: "./index.mjs", default: "./index.mjs" } }
-		, files: ["index.mjs", "internal", "LICENSE", "notices", "runtime-identity.json"]
-		, leanBridge: { sharedRuntime: true, ...bundle.manifest.runtime, componentScalarAbi }
-	};
-	const identityBasis = {
-		schemaVersion: 1, metadata: runtimeMetadata
-		, packagingImplementationSha256: sha256(await readFile(new URL(import.meta.url)))
-		, packing: { archiveRoot: "package", sourceDateEpoch: 1, ...await tarGzipPackingIdentity() }
-		, files: [...runtimeFiles].map(([path, bytes]) => ({ path, mode: 0o644, sha256: sha256(bytes) })).sort((a, b) => a.path.localeCompare(b.path))
-	};
-	const runtimeIdentity = sha256(canonicalJson(identityBasis));
-	const version = `0.0.0-abi${componentScalarAbi}.${runtimeIdentity}`;
+	const { files: runtimeFiles, runtimeIdentity, version } = await assembleComponentNpmRuntime({
+		mainModule, mainWasm
+		, runtimeRequirement: bundle.manifest.runtime });
 	const runtimePackage = join(output, "runtime", "package");
 	const componentPackage = join(output, "component", "package");
 	await ensureEmpty(output);
 	await mkdir(join(runtimePackage, "internal"), { recursive: true });
-	runtimeFiles.set("runtime-identity.json", canonicalJson(identityBasis));
-	runtimeFiles.set("package.json", json({ ...runtimeMetadata, version, leanBridge: { ...runtimeMetadata.leanBridge, runtimeIdentity } }));
 	for(const [path, bytes] of runtimeFiles)
 	{
 		await mkdir(dirname(join(runtimePackage, path)), { recursive: true });

@@ -78,29 +78,45 @@ test("typed Char adapters validate before calling Lean and check their result", 
 	assert.doesNotMatch(source, /lean_object \* result/);
 });
 
-test("Char wire decoding rejects invalid scalars and high bits, with cleanup", () => {
+const wireFixture = () => {
 	const live = new Set();
-	let next = 64, calls = 0, clears = 0;
+	let next = 64, calls = 0, clears = 0, poisoned = false;
 	const module = { HEAP8: new Uint8Array(32768)
 		, _malloc: bytes => { const pointer = next; next += (bytes + 7) & ~7; live.add(pointer); return pointer; }
 		, _free: pointer => assert.equal(live.delete(pointer), true)
 		, _bridge_scalar_frame_clear: () => { clears++; } };
-	const run = (input, result, flags = 0) => callComponentScalar(module, frame => {
+	const lifecycle = { assertOpen: () => { if(poisoned) throw new Error("Char runtime is poisoned"); }
+		, poison: () => { poisoned = true; } };
+	const run = (input, result, flags = 0, status = 0) => callComponentScalar(module, frame => {
 		calls++;
 		const view = new DataView(module.HEAP8.buffer);
 		assert.equal(view.getUint32(frame + 32, true), 16);
 		assert.equal(view.getBigUint64(frame + 40, true), BigInt(input.codePointAt(0)));
+		view.setUint32(frame + 8, status, true);
 		view.setUint32(frame + 16, 16, true);
 		view.setUint32(frame + 20, flags, true);
 		view.setBigUint64(frame + 24, result, true);
-		return 0;
-	}, signature, [input]);
+		return status;
+	}, signature, [input], lifecycle);
+	return { run, state: () => ({ live: live.size, calls, clears, poisoned }) };
+};
+
+test("Char wire decoding cleans valid replies and invalid host inputs", () => {
+	const { run, state } = wireFixture();
 	for(const point of charPoints) assert.equal(run(String.fromCodePoint(point), BigInt(point)), String.fromCodePoint(point));
-	for(const point of invalidCharPoints) assert.throws(() => run("a", point), /Invalid component Unicode scalar/);
-	assert.throws(() => run("a", 65n, 1), /Invalid component Unicode scalar/);
-	const before = calls;
 	for(const input of invalidChars) assert.throws(() => run(input, 65n), TypeError);
-	assert.equal(calls, before);
-	assert.equal(live.size, 0);
-	assert.equal(clears, charPoints.length + invalidCharPoints.length + 1 + invalidChars.length);
+	assert.deepEqual(state(), { live: 0, calls: charPoints.length, clears: charPoints.length + invalidChars.length, poisoned: false });
+	assert.equal(run("a", 65n), "A", "Invalid host inputs do not retire the runtime");
+});
+
+test("Char wire decoding quarantines malformed native replies without reentering cleanup", () => {
+	const malformed = [...invalidCharPoints.map(point => [point, 0]), [65n, 1], [512n, 2]];
+	for(const status of [0, 5]) for(const [point, flags] of malformed)
+	{
+		const { run, state } = wireFixture();
+		assert.throws(() => run("a", point, flags, status), /Invalid component Unicode scalar/);
+		assert.deepEqual(state(), { live: 1, calls: 1, clears: 0, poisoned: true });
+		assert.throws(() => run("a", 65n), /poisoned/);
+		assert.deepEqual(state(), { live: 1, calls: 1, clears: 0, poisoned: true }, "Retired heaps cannot allocate, dispatch or clean up");
+	}
 });

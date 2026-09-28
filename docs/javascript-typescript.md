@@ -237,6 +237,31 @@ cover both source paths in Node, strict TypeScript and three browser engines,
 including React and workers. The test executes the example above from the
 original installed archives after deleting the producer's source and build.
 
+### Owned resources inside structured values
+
+The `javascript-wasm-owned-v1` package profile supports identity-bearing values
+inside records, arrays, Lists, options, results and recursive values. Authors
+select this profile through an [explicit ownership policy](publish/npm.md#build-owned-value-npm-packages).
+It is separate from the copied-value mappings below; it does not reinterpret
+resources as plain copied objects.
+
+Import the generated API normally. Resource wrappers expose `dispose()`,
+`disposed` and `retain()`. Repeated references to the same live resource preserve
+JavaScript identity. Dispose each owned wrapper when finished. `retain()` gives
+you an independent lease that must also be disposed. Returned function leases
+follow the same cleanup rules.
+
+Callback resource arguments are borrowed for that call. They expire when the
+callback returns; call `retain()` inside the callback if you need a longer-lived
+reference. A disposed, expired or forged wrapper is rejected before calling
+Lean. Application exceptions retain their identity through callback cleanup.
+Resource wrappers belong to their runtime realm and cannot be sent between
+workers with structured cloning.
+
+The [installed-package checks](contributing/testing.md#javascript-ownership-transport-and-generated-apis)
+cover Node, strict TypeScript, Chromium, Firefox, WebKit, React and workers.
+Transferred inputs and results borrowed from another object remain unsupported.
+
 ### Type conversions
 
 Profiles: Node JavaScript, TypeScript, Browser, React, Worker. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.

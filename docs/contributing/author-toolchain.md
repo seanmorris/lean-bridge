@@ -80,6 +80,46 @@ test -f "$LEAN_BRIDGE_RUNTIME_ROOT/main.wasm"
 
 Both commands must succeed for the checkout-based setup. If either fails, finish the selected runtime build before running the package dry run. Continue with [your first component](../lean/first-component.md).
 
+## Package JavaScript-Wasm compiler inputs
+
+Owned npm exports use Lean 4.32.2 and Emscripten 6.0.6. After the checkout's
+bootstrap and shared-runtime build, package its configured Lean headers:
+
+```sh
+source scripts/env.sh
+source scripts/lean-runtime-config.sh
+node scripts/build-javascript-wasm-compiler-inputs.mjs \
+  --target-runtime "$LEAN_BRIDGE_CHECKOUT/build/lean-runtime/$LEAN_WASM_RUNTIME_BUILD_ID" \
+  --output build/javascript-wasm-inputs
+npm run build:cli-package -- \
+  --runtime build/lean-link-spike/lazy \
+  --javascript-wasm-inputs build/javascript-wasm-inputs/javascript-wasm-compiler-inputs \
+  --output build/cli-with-javascript-wasm
+```
+
+The header archive contains five target headers, the pinned source stamp, the
+Lean license and a closed file manifest. It contains no compiler executable or
+target static archives. Packaging uses Node only and produces identical bytes
+for identical inputs. Its hash sidecar detects drift; distribute the expected
+archive hash through the trusted release channel.
+
+The CLI inventory records `javascriptWasmInputsIncluded` separately from
+`runtimeIncluded`. An installed author sets `LEAN_BRIDGE_LEAN_PREFIX` and
+`LEAN_BRIDGE_JS_EMSDK` to the pinned compiler installations. The CLI finds its
+bundled headers and runtime automatically. A separate extracted header bundle
+can instead be selected with `LEAN_BRIDGE_JS_INPUTS`.
+
+For development against the full target tree, set `LEAN_BRIDGE_JS_TARGET_RUNTIME`
+instead of `LEAN_BRIDGE_JS_INPUTS`. Keep `LEAN_BRIDGE_RUNTIME_ROOT` for the
+prepared `main.mjs` and `main.wasm` directory. These are author inputs; the
+generated npm dependency handles runtime loading for application consumers.
+
+Owned npm builds currently use the pinned host SDK. Use the default backend or
+`LEAN_BRIDGE_BUILD_BACKEND=auto`. Explicit Nix/Docker selection and
+`--cache-directory` fail rather than being ignored. Each build compiles fresh
+Lean metadata and adapters. See [owned npm builds](../publish/npm.md#build-owned-value-npm-packages)
+and the [installed-package tests](testing.md#javascript-ownership-transport-and-generated-apis).
+
 ## PHP-Wasm
 
 Ordinary PHP-Wasm builds use Lean 4.32.2, Emscripten 3.1.68 and PHP 8.4.1 headers. Authors can use [prepared PHP-Wasm inputs](../publish/php.md#build-an-ordinary-php-wasm-package) without a Lean Bridge checkout. The steps below produce those inputs from source. The CLI's JavaScript runtime cannot substitute for this ABI.

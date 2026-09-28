@@ -21,6 +21,9 @@ import { resolveComponentRuntimeRoot } from "../release/component-runtime-root.m
 import { CanonicalBuildError } from "./build-error.mjs";
 import { buildPhpWasmProject } from "./php-wasm-project.mjs";
 import { readVerifiedPhpWasmCopiedComponent } from "./php-wasm-copied-artifacts.mjs";
+import { readVerifiedOwnedJavaScriptWasmComponent } from "./javascript-wasm-owned-artifacts.mjs";
+import { usesOwnedJavaScript } from "./javascript-wasm-owned-project.mjs";
+import { readVerifiedPackageSetReceipt } from "../release/package-set-receipt.mjs";
 import { writeCombinedPackageSet } from "../release/package-set-assembly.mjs";
 
 const fail = message => { throw new CanonicalBuildError("multi-profile-mismatch", message); };
@@ -34,7 +37,7 @@ const absent = async path => {
 };
 
 /**
- * Compare native and PHP-Wasm models against an independent source capture.
+ * Compare native and Wasm models against an independent source capture.
  * Pointer widths remain profile-specific; only source API meaning must match.
  *
  * @param options - Captured intent, author configuration and verified models.
@@ -49,7 +52,7 @@ export const assertCompiledProfileApiAgreement = options => {
 		const source = model.sourceIdentity;
 		if(canonicalJson(source.reviewedBindingIr ?? null) !== canonicalJson(intent.document.reviewedBindingIr ?? null))
 			fail("Compiled profiles do not retain the captured reviewed contract");
-		if(!["native-library-v1", "php-wasm-copied-v1"].includes(model.profile)
+		if(!["native-library-v1", "php-wasm-copied-v1", "javascript-wasm-owned-v1"].includes(model.profile)
 			|| model.pointerBits !== (model.profile === "native-library-v1" ? 64 : 32)
 			|| source.sourceTreeSha256 !== captured.treeSha256
 			|| source.lakeDependencies?.snapshotSha256 !== captured.lakeSnapshotSha256
@@ -139,7 +142,8 @@ export const buildMultiProfileProject = async ({
 		|| Number(nativeTargets.length > 0) + wasmTargets.length < 2)
 		throw new CanonicalBuildError("invalid-package-targets", "Combined builds require two distinct ABIs and unique supported targets");
 	const npmSelected = wasmTargets.includes("npm"), phpSelected = wasmTargets.includes("php-wasm");
-	const ownedGraphs = !npmSelected && !nativeTargets.includes("wit-wasi");
+	const ownedNpm = npmSelected && await usesOwnedJavaScript(projectRoot, signal);
+	const ownedGraphs = (!npmSelected || ownedNpm) && !nativeTargets.includes("wit-wasi");
 	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, "build/lean-bridge-release"));
 	if(output === project || project.startsWith(`${output}/`))
 		throw new CanonicalBuildError("invalid-output-root", "Build output cannot replace the source project");
@@ -149,8 +153,8 @@ export const buildMultiProfileProject = async ({
 	for(const target of nativeTargets)
 		assertExportConfigurationCapabilities(record.configuration, { target, fields, targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
 	if(phpSelected) assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields, targetFields: ["npm", "composer"] });
-	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: npmSelected ? "build" : "analysis", ownedGraphs });
-	const runtimeRoot = npmSelected ? await resolveComponentRuntimeRoot({ engineRoot, environment }) : null;
+	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: npmSelected && !ownedNpm ? "build" : "analysis", ownedGraphs });
+	const runtimeRoot = npmSelected && !ownedNpm ? await resolveComponentRuntimeRoot({ engineRoot, environment }) : null;
 	await mkdir(dirname(output), { recursive: true });
 	const staging = await mkdtemp(join(dirname(output), ".lean-bridge-multi-profile-"));
 	try
@@ -177,9 +181,17 @@ export const buildMultiProfileProject = async ({
 			models.push(nativeModel);
 		}
 		if(php) models.push((await readVerifiedPhpWasmCopiedComponent(join(phpRoot, "php-wasm/component"), php.runtimeIdentity)).model);
+		const ownedWasm = ownedNpm ? await readVerifiedOwnedJavaScriptWasmComponent(join(wasmRoot, "javascript-wasm/component")) : null;
+		if(ownedWasm) models.push(ownedWasm.model);
 		let sourceApiSha256 = assertCompiledProfileApiAgreement({ intent, configurationSha256: record.sha256, models, ownedGraphs });
 		let npm, wasmIr;
-		if(npmSelected)
+		if(ownedNpm)
+		{
+			const output = join(wasmRoot, "packages/npm");
+			const { receipt } = await readVerifiedPackageSetReceipt({ receiptPath: join(output, "package-set-receipt.json"), signal });
+			npm = { output, receipt };
+		}
+		else if(npmSelected)
 		{
 			const wasmPlan = await json(join(bundleRoot, "locks/component-build-plan.json"));
 			wasmIr = await json(join(bundleRoot, "binding/binding-ir.json"));
@@ -195,7 +207,12 @@ export const buildMultiProfileProject = async ({
 			return file;
 		}));
 		const profiles = [], packages = [];
-		if(npm)
+		if(ownedNpm)
+		{
+			profiles.push({ profile: "javascript-wasm-owned-v1", target: "npm", path: "profiles/wasm", bindingIrSha256: ownedWasm.model.bindingIrSha256, evidence: await identify("profiles/wasm/javascript-wasm/component/javascript-wasm-component.json") });
+			packages.push({ target: "npm", path: "profiles/wasm/packages/npm", receipt: await identify("profiles/wasm/packages/npm/package-set-receipt.json"), archives: await archives("profiles/wasm/packages/npm", npm.receipt.packages.flatMap(item => item.artifacts.map(file => ({ archive: file.path, sha256: file.sha256 })))) });
+		}
+		else if(npm)
 		{
 			profiles.push({ profile: "component-scalars-v1", target: "npm", path: "profiles/wasm", bindingIrSha256: hashBindingIr(wasmIr), evidence: await identify("profiles/wasm/engine-execution-report.json") });
 			packages.push({ target: "npm", path: "packages/npm", receipt: await identify("packages/npm/component-package-receipt.json"), archives: await archives("packages/npm", [npm.report.runtime, npm.report.package]) });
@@ -211,7 +228,7 @@ export const buildMultiProfileProject = async ({
 			packages.push({ target: "php-wasm", path: "profiles/php-wasm/packages/php-wasm", receipt: await identify("profiles/php-wasm/packages/php-wasm/php-wasm-package-set.json"), archives: await archives("profiles/php-wasm/packages/php-wasm/archives", php.packages) });
 		}
 		const manifest = {
-			schemaVersion: phpSelected ? 2 : 1
+			schemaVersion: phpSelected || ownedNpm ? 2 : 1
 			, kind: "lean-bridge-multi-profile-release"
 			, component: intent.document.component
 			, source: { treeSha256: intent.document.source.treeSha256
@@ -228,7 +245,7 @@ export const buildMultiProfileProject = async ({
 		if((await readExportConfiguration(project, { signal })).sha256 !== record.sha256)
 			fail("Export configuration changed during the multi-profile build");
 		await writeFile(join(staging, "multi-profile-release.json"), canonicalJson(manifest), { flag: "wx" });
-		await writeCombinedPackageSet({ root: staging, roots: [...(npm ? ["packages/npm"] : []), ...(built ? ["profiles/native"] : []), ...(php ? ["profiles/php-wasm"] : [])], component: manifest.component, source: { treeSha256: manifest.source.treeSha256 }, signal });
+		await writeCombinedPackageSet({ root: staging, roots: [...(npm ? [ownedNpm ? "profiles/wasm/packages/npm" : "packages/npm"] : []), ...(built ? ["profiles/native"] : []), ...(php ? ["profiles/php-wasm"] : [])], component: manifest.component, source: { treeSha256: manifest.source.treeSha256 }, signal });
 		signal?.throwIfAborted();
 		await absent(output);
 		await rename(staging, output);

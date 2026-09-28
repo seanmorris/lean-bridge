@@ -33,6 +33,23 @@ test("one closed receipt covers every ordinary package ecosystem and determinist
 	assert.deepEqual(await readFile(join(moved, packageSetReceiptName)), await readFile(handoff.receiptPath));
 });
 
+test("owned npm receipts select their checked compiled profile without changing other targets", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	const owned = structuredClone(receipt);
+	owned.profiles.find(item => item.id === "component-scalars-v1").id = "javascript-wasm-owned-v1";
+	for(const pkg of owned.packages.filter(item => item.target === "npm")) pkg.profile = "javascript-wasm-owned-v1";
+	assert.equal(validatePackageSetReceipt(owned), true);
+	await assertJsonSchema("package-set-receipt", owned);
+	for(const mutate of [
+		value => { value.packages.find(item => item.target === "npm").profile = "component-scalars-v1"; }
+		, value => { value.packages.find(item => item.target === "php-wasm").profile = "javascript-wasm-owned-v1"; }
+		, value => { value.packages.find(item => item.target === "c").profile = "javascript-wasm-owned-v1"; }
+	]) {
+		const changed = structuredClone(owned); mutate(changed);
+		assert.throws(() => validatePackageSetReceipt(changed));
+	}
+});
+
 test("receipt validation rejects metadata drift, incompatible runtimes, dependency cycles and coordinate collisions", async t => {
 	const { receipt } = await createPackageSetHandoff(t);
 	const npm = value => value.packages.find(pkg => pkg.target === "npm" && pkg.role === "component");
