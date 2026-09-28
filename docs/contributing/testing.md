@@ -2134,6 +2134,12 @@ pinned Lean toolchain and the C author tools. Set `LEAN_BRIDGE_PHP` and
 does not claim compiled transport support for its simulated integer widths.
 The separate PHP-Wasm value-model test uses its actual 32-bit interpreter.
 
+CI disables Xdebug in the host PHP CLI configuration and verifies that it stays
+disabled in a clean environment. The callback reentry test must reach Lean
+Bridge's own limit; Xdebug's stack limit can interrupt it first. Consumer probes
+strip inherited environment variables, so setting `XDEBUG_MODE` on the parent
+test command does not configure those child processes.
+
 Runtime and conversion probes exercise scoped borrows, explicit retention,
 retirement, partial output cleanup, all nineteen primitives and injected PHP
 and native allocation failures. Public calls cover 51 exports, higher-order
@@ -2331,7 +2337,48 @@ Both corpora run in two fresh interpreters. CI requires and retains
 `build/owned-wasm32/owned-scalars.json` and
 `build/owned-wasm32/owned-aggregates.json`. This tests the private transport.
 Public PHP-Wasm resource wrappers, host callbacks and installed ownership-aware
-packages have separate acceptance work.
+packages use the additional gates below.
+
+### Owned PHP-Wasm packages
+
+Use the pinned PHP-Wasm SDK, target Lean runtime and configured PHP headers.
+The native Fiber companion also requires matching PHP CLI and development
+headers. CI installs both. These tests build a verified runtime in each
+temporary workspace unless `LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME` selects an
+existing verified runtime.
+
+```sh
+LEAN_BRIDGE_OWNED_PHP_WASM_VALUES_TEST=1 \
+  node --test --test-name-pattern='32-bit PHP-Wasm' tests/owned-php-values.test.mjs
+LEAN_BRIDGE_OWNED_PHP_ZEND_TEST=1 LEAN_BRIDGE_OWNED_ZEND_FIBER_TEST=1 \
+  node --test --test-concurrency=1 \
+  tests/owned-php-zend-model.test.mjs tests/owned-php-zend-ownership.test.mjs \
+  tests/owned-php-zend-extension.test.mjs tests/owned-php-zend-generated.test.mjs
+LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST=1 \
+  node --test tests/owned-php-wasm-package.test.mjs
+LEAN_BRIDGE_OWNED_PHP_WASM_MULTI_PROFILE_TEST=1 \
+  node --test tests/owned-php-wasm-multi-profile.test.mjs
+LEAN_BRIDGE_OWNED_PHP_WASM_DOCUMENTATION_TEST=1 \
+  node --test tests/owned-php-wasm-documentation.test.mjs
+```
+
+The Zend checks execute resource leases, synchronous callbacks, recursive
+values, allocation failures, malformed results and request-abort cleanup.
+The pinned PHP-Wasm host cannot start Fibers, so the companion executes Fiber
+entry guards and deferred destruction in native PHP.
+
+The package gate installs the standalone CLI with its compiler inputs, then
+builds ordinary and reviewed projects. Independent relocated builds must produce
+identical archives. Node and Chromium execute the original offline-installed
+npm and Composer packages after producer removal. Mixed owned and copied
+packages exercise both load orders, startup and lazy loading, weak and strict
+PHP callers, cross-package callbacks, cleanup and request refresh. Chromium
+repeats every case in a fresh context and rejects off-origin network requests.
+
+The combined-release gate builds native PHP and PHP-Wasm from one captured
+API. The documentation gate compiles the author guide and executes the consumer
+example unchanged. CI requires all five commands, verifies eight report files,
+uploads them as `owned-php-wasm-<commit>`, and fails the PHP job if any gate fails.
 
 ## Release tooling checks
 

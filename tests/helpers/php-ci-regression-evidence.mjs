@@ -92,7 +92,9 @@ export const assertPhpCiExecution = async record => {
 	const { sources } = await phpWasmPreGraphSources();
 	const packagePath = "src/release/php-wasm-copied-package.mjs";
 	const packagingSource = await priorSource(packagePath);
-	for(const run of report.packages) await assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource });
+	const hostPath = "src/backends/php/php-wasm-copied-host.mjs", hostSource = await priorSource(hostPath);
+	assert.equal(report.sourceHashes[hostPath], sha256(hostSource));
+	for(const run of report.packages) await assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource, hostSource });
 	assert.equal(report.sourceHashes[packagePath], sha256(packagingSource));
 	assert.equal(report.sourceHashes["tests/helpers/php-wasm-legacy-comparison.mjs"], sha256(await priorSource("tests/helpers/php-wasm-legacy-comparison.mjs")));
 };

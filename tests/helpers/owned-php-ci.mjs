@@ -28,6 +28,13 @@ export const ownedPhpCiReports = ["build/owned/php-values.json"
  * @param workflow - Complete current workflow text.
  */
 export const assertOwnedPhpCi = workflow => {
+	const debuggerStep = workflow.match(/^ {6}- name: Disable host PHP debugging instrumentation\n([^]*?)(?=^ {6}- name: )/mu)?.[0];
+	assert.ok(debuggerStep);
+	assert.doesNotMatch(debuggerStep, /^ {8}(?:if:|continue-on-error:)/mu);
+	assert.ok(debuggerStep.includes('          if /usr/bin/php -r \'exit(extension_loaded("xdebug") ? 0 : 1);\'; then\n'));
+	assert.ok(debuggerStep.includes("            sudo phpdismod -s cli xdebug\n"));
+	assert.ok(debuggerStep.includes('          env -i PATH=/usr/bin:/bin /usr/bin/php -r \'if (extension_loaded("xdebug")) { fwrite(STDERR, "Consumer PHP must run without Xdebug.\\n"); exit(1); }\'\n'));
+	assert.ok(workflow.indexOf(debuggerStep) < workflow.indexOf("      - name: Build ordinary PHP packages and execute relocated Composer installations\n"));
 	const step = workflow.match(/^ {6}- name: Execute owned native PHP values and source-free Composer releases\n([^]*?)(?=^ {6}- name: )/mu)?.[0];
 	assert.ok(step);
 	assert.match(step, /^ {8}id: owned_php$/mu);

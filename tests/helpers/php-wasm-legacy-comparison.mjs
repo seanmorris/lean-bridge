@@ -76,10 +76,13 @@ export const phpWasmPreGraphSources = async () => {
  * @param sources - The six original implementation sources.
  * @param options - Explicit source context for a retained historical execution.
  * @param options.packagingSource - Authenticated historical packager, or current source by default.
+ * @param options.hostSource - Authenticated historical host, or current source by default.
  */
-export const assertPhpWasmLegacyPackageComparison = async (run, sources, { packagingSource } = {}) => {
+export const assertPhpWasmLegacyPackageComparison = async (run, sources, { packagingSource, hostSource } = {}) => {
 	packagingSource ??= await readFile(packagePath, "utf8");
+	hostSource ??= await readFile(hostPath, "utf8");
 	assert.equal(typeof packagingSource, "string");
+	assert.equal(typeof hostSource, "string");
 	const { previous, current } = run;
 	for(const key of ["schemaVersion", "kind", "profile", "component", "componentIdentity", "runtimeIdentity", "npmSettings", "composerSettings", "packing"])
 		assert.deepEqual(current[key], previous[key], key);
@@ -96,7 +99,7 @@ export const assertPhpWasmLegacyPackageComparison = async (run, sources, { packa
 		if(path === "runtime/package/host.mjs")
 		{
 			assert.equal(pair.previous, sources[hostPath].source);
-			assert.equal(pair.current, await readFile(hostPath, "utf8"));
+			assert.equal(pair.current, hostSource);
 		}
 		else if(path === "runtime/package/runtime-identity.json")
 		{
@@ -104,7 +107,7 @@ export const assertPhpWasmLegacyPackageComparison = async (run, sources, { packa
 			assert.equal(digest(before), previous.loaderIdentity); assert.equal(digest(after), current.loaderIdentity);
 			assert.deepEqual(before.host, identity(sources[hostPath].source));
 			assert.deepEqual(before.packaging, identity(sources[packagePath].source));
-			assert.deepEqual(after.host, identity(await readFile(hostPath)));
+			assert.deepEqual(after.host, identity(hostSource));
 			assert.deepEqual(after.packaging, identity(packagingSource));
 			assert.deepEqual({ ...before, host: after.host, packaging: after.packaging }, after);
 		}

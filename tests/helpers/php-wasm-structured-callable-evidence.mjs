@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
-import { generateCopiedPhpZendAdapter } from "../../src/backends/php/copied-zend.mjs";
+import { preOwnedPhpWasmGenerators } from "./pre-owned-php-wasm-generators.mjs";
 import { compileCopiedPhpModel } from "../../src/backends/php/copied-model.mjs";
 import { structuredCallableReviewedIr } from "./structured-callable-fixture.mjs";
 import { phpCallableSignatures } from "./php-callable-fixture.mjs";
@@ -93,6 +93,7 @@ const installation = run => {
  * @param record - Original terminal logs and unedited execution observations.
  */
 export const assertPhpWasmStructuredCallableExecution = async record => {
+	const { generateCopiedPhpZendAdapter } = await preOwnedPhpWasmGenerators();
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "php-wasm-structured-callable-execution");
 	assert.deepEqual(record.scope, phpWasmStructuredCallableScope);
@@ -191,7 +192,7 @@ export const assertPhpWasmStructuredCallableIntegration = async record => {
 	const previous = await authenticated(record.previous, phpStructuredCallableHistoryPath);
 	const execution = await authenticated(record.execution, phpWasmStructuredCallableExecutionPath);
 	await assertPhpWasmStructuredCallableExecution(execution);
-	const codegen = await authenticated(record.codegen, phpWasmStructuredCodegenPath); assertPhpWasmStructuredCodegenRegression(codegen);
+	const codegen = await authenticated(record.codegen, phpWasmStructuredCodegenPath); await assertPhpWasmStructuredCodegenRegression(codegen);
 	assert.deepEqual(record.updates.map(update => update.path).sort(), phpWasmStructuredCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), phpWasmStructuredCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpWasmStructuredCallableChangedPaths, ...phpWasmStructuredCallableAddedPaths])].sort();

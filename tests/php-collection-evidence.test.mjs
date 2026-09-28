@@ -10,7 +10,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
-import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
+import { preOwnedPhpWasmGenerators } from "./helpers/pre-owned-php-wasm-generators.mjs";
 import { copiedPhpDefinitions } from "../src/backends/php/copied-conversions.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
 import { phpCollectionConsumer, phpCollectionDocumentation, phpCollectionRequest } from "./helpers/php-collection-fixture.mjs";
@@ -111,6 +111,7 @@ test("native PHP collections retain original packages, exact public calls and ex
 });
 
 test("PHP preflight and regression evidence preserves each tested execution boundary", async () => {
+	const { generateCopiedPhpZendAdapter } = await preOwnedPhpWasmGenerators();
 	const { conversion, equality, regressions } = await receipt();
 	for(const preflight of [conversion, equality])
 	{ assert.equal(preflight.compiledLean, false); assert.equal(preflight.installedPackage, false); }

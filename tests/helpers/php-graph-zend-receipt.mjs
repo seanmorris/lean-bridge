@@ -7,13 +7,13 @@ import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validateElaboratedMetadata } from "../../src/analyze/elaborated-metadata.mjs";
 import { createElaboratedSemanticModel } from "../../src/analyze/semantic-model.mjs";
-import { generateCopiedPhpGraphZendAdapter } from "../../src/backends/php/copied-graph-zend.mjs";
 import { compileCopiedCGraphLayout } from "../../src/backends/c/copied-graph-layout.mjs";
 import { generateNativeCopiedGraphAdapters } from "../../src/backends/c/native-graph-adapters.mjs";
 import { phpWasmCopiedPins, phpWasmCopiedProfile } from "../../src/build/php-wasm-copied-artifacts.mjs";
 import { phpGraphConversionIr } from "./php-graph-conversion-fixture.mjs";
 import { recursiveCarrierAbi } from "./recursive-carriers.mjs";
 import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
+import { preOwnedPhpWasmGenerators } from "./pre-owned-php-wasm-generators.mjs";
 
 const sourceHashes = files => Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)]));
 
@@ -81,6 +81,7 @@ export const assertPhpGraphZendEvidence = async record => {
 		assert.equal(report.schemaVersion, 1); assert.equal(report.installedPackage, false);
 	}
 	assert.equal(isolated.compiledLean, false); assert.equal(lean.compiledLean, true);
+	const { generateCopiedPhpGraphZendAdapter } = await preOwnedPhpWasmGenerators();
 	assert.deepEqual(isolated.bindingIr, phpGraphConversionIr());
 	assert.deepEqual(isolated.generatedSources, sourceHashes(generateCopiedPhpGraphZendAdapter(isolated.bindingIr)));
 	assert.equal(isolated.observations.length, 14);

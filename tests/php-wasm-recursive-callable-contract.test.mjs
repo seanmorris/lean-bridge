@@ -13,7 +13,6 @@ import { generateNativeCallableGraphCalls } from "../src/backends/c/native-calla
 import { compileCopiedPhpGraphZendModel } from "../src/backends/php/copied-graph-zend.mjs";
 import { compileCallablePhpGraphZendModel } from "../src/backends/php/callable-graph-zend-model.mjs";
 import { generateCompiledPhpWasmGraph } from "../src/build/php-wasm-graph-component.mjs";
-import { generateCopiedPhpGraphZendAdapter } from "../src/backends/php/copied-graph-zend.mjs";
 import { nativeRecursiveReviewedIr } from "./helpers/native-recursive-reviewed.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
@@ -114,7 +113,9 @@ test("recursive PHP-Wasm source manifests bind callable descriptors and all gene
 	assert.doesNotMatch(source, /lgc_borrow \*borrow = context/);
 });
 
-test("exporting the shared Zend descriptors leaves copied-only source bytes unchanged", () => {
+test("exporting the shared Zend descriptors leaves copied-only source bytes unchanged", async () => {
+	const { preOwnedPhpWasmGenerators } = await import("./helpers/pre-owned-php-wasm-generators.mjs");
+	const { generateCopiedPhpGraphZendAdapter } = await preOwnedPhpWasmGenerators();
 	const files = generateCopiedPhpGraphZendAdapter(nativeRecursiveReviewedIr());
 	assert.equal(sha256(canonicalJson(files)), "968638820af650131303cd90d6d3495086b970faa4f32200cf8b610106bd11e9");
 });

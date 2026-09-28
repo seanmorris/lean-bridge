@@ -17,6 +17,7 @@ import { installPhpWasmGraphPackages } from "./helpers/php-wasm-graph-packages.m
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { prepareOwnedPhpWasmRuntime } from "./helpers/owned-php-wasm-runtime.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -26,8 +27,9 @@ test("installed CLI exposes both PHP ownership profiles atomically from ordinary
 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-owned-php-profiles-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
+	const runtime = await prepareOwnedPhpWasmRuntime(directory);
 	const cli = await installOwnedPhpWasmCli({ directory: join(directory, "cli")
-		, runtimeRoot: resolve(process.env.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME ?? "build/owned-wasm32-runtime")
+		, runtimeRoot: runtime.root
 		, phpSource: resolve(process.env.LEAN_BRIDGE_PHP_SOURCE ?? "build/php-wasm-sdk/php8.4-src")
 		, leanPrefix: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
 		, emsdkRoot: resolve(process.env.LEAN_BRIDGE_PHP_EMSDK ?? ".toolchains/emsdk-php-wasm") });
@@ -95,5 +97,5 @@ assert.equal(errors,'');console.log(output);
 			, sourceUnchanged: true, authorRemoved: true });
 		await rm(root, { recursive: true });
 	}
-	await saveLakeFile("build/owned-php-wasm", "multi-profile.json", canonicalJson({ schemaVersion: 1, installedCli: cli.identity, observations }));
+	await saveLakeFile("build/owned-php-wasm", "multi-profile.json", canonicalJson({ schemaVersion: 1, installedCli: cli.identity, runtimeSupplied: runtime.supplied, observations }));
 });

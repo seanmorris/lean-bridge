@@ -8,7 +8,7 @@ import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
-import { generateCompiledPhpWasmGraph } from "../../src/build/php-wasm-graph-component.mjs";
+import { preOwnedPhpWasmGenerators } from "./pre-owned-php-wasm-generators.mjs";
 import { phpWasmCopiedPins } from "../../src/build/php-wasm-copied-artifacts.mjs";
 import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
 
@@ -75,6 +75,7 @@ const observed = value => {
  * @param record - Frozen build observations, source hashes and passing test log.
  */
 export const assertPhpWasmGraphPackageEvidence = async record => {
+	const { generateCompiledPhpWasmGraph } = await preOwnedPhpWasmGenerators();
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "recursive-php-wasm-installed-packages");
 	assert.equal(record.installedPackage, true); assert.equal(record.finalAcceptance, false);

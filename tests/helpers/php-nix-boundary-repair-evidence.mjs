@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { reversePhpNixBoundaryUpdate } from "./php-nix-boundary-repair-history.mjs";
+import { ownedPhpWasmHistoricalBytes } from "./owned-php-wasm-source-history.mjs";
 
 export const phpNixBoundaryManifest = "nix/perl-engine-source-boundary.json";
 export const phpNixBoundaryModules = [
@@ -40,13 +41,14 @@ export const phpNixBoundaryScope = {
  * Check all declared imports instead of checking only the first missing module.
  *
  * @param boundary - Exact source filter used by the Nix engine.
+ * @param sourceFor - Current sources by default; exact recorded sources for history.
  */
-export const assertPhpNixImportClosure = async boundary => {
+export const assertPhpNixImportClosure = async (boundary, sourceFor = path => readFile(path, "utf8")) => {
 	const paths = new Set(boundary.includedFiles.map(path => resolve(path)));
 	assert.equal(paths.size, boundary.includedFiles.length);
 	for(const path of boundary.includedFiles)
 	{
-		const source = await readFile(path, "utf8");
+		const source = await sourceFor(path);
 		if(!path.endsWith(".mjs")) continue;
 		for(const match of source.matchAll(/from\s+["'](\.[^"']+)["']/gu))
 			assert.ok(paths.has(resolve(dirname(path), match[1])), `${path}: ${match[1]}`);
@@ -82,7 +84,8 @@ export const assertPhpNixBoundaryExecution = async record => {
 		}
 		else assert.doesNotMatch(run.text, /^not ok|# SKIP/mu);
 	}
-	const source = await readFile(phpNixBoundaryManifest, "utf8"), boundary = JSON.parse(source);
+	const sourceFor = async path => ownedPhpWasmHistoricalBytes(path, await readFile(path), record.sources[path]).toString();
+	const source = await sourceFor(phpNixBoundaryManifest), boundary = JSON.parse(source);
 	assert.equal(sha256(source), record.sources[phpNixBoundaryManifest]);
 	assert.deepEqual(record.boundary, boundary);
 	const update = record.updates.find(item => item.path === phpNixBoundaryManifest);
@@ -91,6 +94,6 @@ export const assertPhpNixBoundaryExecution = async record => {
 	assert.deepEqual({ ...boundary, includedFiles: prior.includedFiles }, prior);
 	assert.deepEqual(boundary.includedFiles.filter(path => !prior.includedFiles.includes(path)), phpNixBoundaryModules);
 	assert.deepEqual(boundary.includedFiles.filter(path => !phpNixBoundaryModules.includes(path)), prior.includedFiles);
-	for(const path of phpNixBoundaryModules) assert.equal(sha256(await readFile(path)), record.sources[path], path);
-	await assertPhpNixImportClosure(boundary);
+	for(const path of phpNixBoundaryModules) assert.equal(sha256(await sourceFor(path)), record.sources[path], path);
+	await assertPhpNixImportClosure(boundary, sourceFor);
 };

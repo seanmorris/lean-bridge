@@ -20,6 +20,7 @@ import { compileOwnedAggregateFixture } from "./owned-aggregate-native.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./owned-dotnet-callback-fixture.mjs";
 import { ownedZendGeneratedProbe } from "./owned-php-zend-generated-probe.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { prepareOwnedPhpWasmRuntime } from "./owned-php-wasm-runtime.mjs";
 
 /**
  * Cover all primitive callbacks and mixed ownership graphs with public types.
@@ -44,8 +45,7 @@ export const checkOwnedPhpZendGenerated = async (t, reviewed = false) => {
 	const emcc = join(sdk, "upstream/emscripten/emcc");
 	const phpSource = resolve(process.env.LEAN_BRIDGE_PHP_SOURCE ?? "build/php-wasm-sdk/php8.4-src");
 	const host = resolve(process.env.LEAN_BRIDGE_PHP_WASM_HOST ?? "build/php-wasm-host/node_modules/php-wasm");
-	const runtimeRoot = resolve(process.env.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME ?? "build/owned-wasm32-runtime");
-	const runtime = await readVerifiedPhpWasmCopiedRuntime(runtimeRoot);
+	const runtime = await prepareOwnedPhpWasmRuntime(directory), runtimeRoot = runtime.root;
 	const run = (command, args) => processBuildRunner.capture({ command, args
 		, cwd: directory, timeoutMs: 240000
 		, env: { ...process.env, EM_CONFIG: join(sdk, ".emscripten"), EMSDK: sdk }

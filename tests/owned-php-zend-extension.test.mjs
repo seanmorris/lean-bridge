@@ -13,6 +13,7 @@ import { ownedAggregateLeaseSource } from "../src/backends/native/owned-aggregat
 import { generateOwnedPhpZendExtension } from "../src/backends/php/owned-zend-extension.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import { prepareOwnedPhpWasmRuntime } from "./helpers/owned-php-wasm-runtime.mjs";
 
 const inputs = async () => JSON.parse(await readFile("docs/evidence/owned-aggregate-execution-20260926.json", "utf8")).inputs;
 
@@ -41,7 +42,7 @@ test("owned Zend scalar and recursive extensions compile every downcall and host
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const sdk = resolve(process.env.LEAN_BRIDGE_PHP_EMSDK ?? ".toolchains/emsdk-php-wasm");
 	const php = resolve(process.env.LEAN_BRIDGE_PHP_SOURCE ?? "build/php-wasm-sdk/php8.4-src");
-	const runtime = resolve(process.env.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME ?? "build/owned-wasm32-runtime");
+	const runtime = (await prepareOwnedPhpWasmRuntime(directory)).root;
 	for(const [name, input] of Object.entries(await inputs()))
 	{
 		const native = generateOwnedNativeValueAdapters({ ...input, wordBits: 32, hostCallbacks: true });

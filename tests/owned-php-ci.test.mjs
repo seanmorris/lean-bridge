@@ -28,6 +28,10 @@ test("owned PHP CI rejects skipped layers, missing reports and ignored failures"
 		, [' || [ "${{ steps.owned_php.outcome }}" != success ]', ""]
 		, [" || steps.owned_php.outcome != 'success'", ""]
 		, ["        id: owned_php\n", "        id: owned_php\n        if: false\n"]
+		, ["            sudo phpdismod -s cli xdebug\n", "            export XDEBUG_MODE=off\n"]
+		, ["          env -i PATH=/usr/bin:/bin /usr/bin/php", "          /usr/bin/php"]
+		, ["Consumer PHP must run without Xdebug.\\n\"); exit(1);", "Consumer PHP must run without Xdebug.\\n\"); exit(0);"]
+		, ["      - name: Disable host PHP debugging instrumentation\n", "      - name: Disable host PHP debugging instrumentation\n        if: false\n"]
 	]) {
 		const changed = source.replace(before, after); assert.notEqual(changed, source);
 		assert.throws(() => assertOwnedPhpCi(changed));

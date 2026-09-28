@@ -7,12 +7,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { ownedPhpWasmHistoricalBytes } from "./helpers/owned-php-wasm-source-history.mjs";
 import { assertPhpNixBoundaryExecution, assertPhpNixImportClosure, phpNixBoundaryManifest, phpNixBoundaryModules } from "./helpers/php-nix-boundary-repair-evidence.mjs";
 import { beforePhpNixBoundaryRepair, phpNixBoundaryAddedPaths, phpNixBoundaryBaseline
 	, phpNixBoundaryChangedPaths, phpNixBoundaryHistoricalBytes, phpNixBoundaryHistoryPath
 	, phpNixBoundaryPrevious, reversePhpNixBoundaryUpdate } from "./helpers/php-nix-boundary-repair-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+const source = async (path, expected) => ownedPhpWasmHistoricalBytes(path, await readFile(path), expected);
 
 test("PHP Nix boundary repair preserves the exact JVM and earlier receipts", async () => {
 	const record = await json(phpNixBoundaryHistoryPath);
@@ -26,13 +28,13 @@ test("PHP Nix boundary repair preserves the exact JVM and earlier receipts", asy
 		...Object.keys(previous.sources), ...phpNixBoundaryChangedPaths
 		, ...phpNixBoundaryAddedPaths
 	])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await source(path, hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), phpNixBoundaryChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8");
+		const current = (await source(update.path, update.currentSha256)).toString();
 		const prior = beforePhpNixBoundaryRepair(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforePhpNixBoundaryRepair(update.path, prior), prior);
@@ -46,9 +48,9 @@ test("PHP Nix boundary repair preserves the exact JVM and earlier receipts", asy
 	}
 	const binary = Buffer.from([0, 255, 192, 128]);
 	assert.equal(phpNixBoundaryHistoricalBytes("unknown.bin", binary), binary);
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = (await source("docs/type-surface.v1.json", record.sources["docs/type-surface.v1.json"])).toString();
 	const prior = JSON.parse(beforePhpNixBoundaryRepair("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await source(file.path, record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 

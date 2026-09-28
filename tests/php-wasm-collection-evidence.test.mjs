@@ -9,7 +9,7 @@ import { basename } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
+import { preOwnedPhpWasmGenerators } from "./helpers/pre-owned-php-wasm-generators.mjs";
 import { compileCopiedPhpModel } from "../src/backends/php/copied-model.mjs";
 import { collectionReviewedIr, collectionSignatures } from "./helpers/collection-fixture.mjs";
 import { primitiveFields } from "./helpers/record-fixture.mjs";
@@ -106,6 +106,7 @@ test("PHP-Wasm collections bind public values and executable docs to original in
 });
 
 test("PHP-Wasm collection reproduction and current Zend failure probes retain their scope", async () => {
+	const { generateCopiedPhpZendAdapter } = await preOwnedPhpWasmGenerators();
 	const record = await receipt(), faults = record.faultProbe;
 	assert.equal(record.faultReportSha256, sha256(canonicalJson(faults)));
 	const ir = zendCollectionFaultIr(), generated = generateCopiedPhpZendAdapter(ir);

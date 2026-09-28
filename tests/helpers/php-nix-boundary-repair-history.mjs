@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPhpWasmPackages, ownedPhpWasmChangedPaths } from "./owned-php-wasm-source-history.mjs";
 
 export const phpNixBoundaryBaseline = "f2e2c6a324bc52cb4c34efdcef120c1b3cce8fe6";
 export const phpNixBoundaryHistoryPath = "docs/evidence/php-nix-boundary-repair-20260928.json";
@@ -27,6 +28,7 @@ export const phpNixBoundaryAddedPaths = [
 	, "tests/php-nix-boundary-repair-evidence.test.mjs"
 ].sort();
 let cached;
+export const phpNixBoundaryNormalizationPaths = [...new Set([...phpNixBoundaryChangedPaths, ...ownedPhpWasmChangedPaths])].sort();
 
 /**
  * Reverse exact literal edits after checking both complete source identities.
@@ -60,6 +62,7 @@ export const reversePhpNixBoundaryUpdate = (source, update) => {
  * @param expected - Optional exact identity at which to stop.
  */
 export const beforePhpNixBoundaryRepair = (path, source, expected) => {
+	source = beforeOwnedPhpWasmPackages(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !phpNixBoundaryChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(phpNixBoundaryHistoryPath, "utf8"));
@@ -78,5 +81,5 @@ export const beforePhpNixBoundaryRepair = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional exact predecessor identity.
  */
-export const phpNixBoundaryHistoricalBytes = (path, bytes, expected) => phpNixBoundaryChangedPaths.includes(path)
+export const phpNixBoundaryHistoricalBytes = (path, bytes, expected) => phpNixBoundaryNormalizationPaths.includes(path)
 	? beforePhpNixBoundaryRepair(path, bytes.toString("utf8"), expected) : bytes;

@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePhpNixBoundaryRepair, phpNixBoundaryChangedPaths } from "./php-nix-boundary-repair-history.mjs";
+import { beforePhpNixBoundaryRepair, phpNixBoundaryNormalizationPaths } from "./php-nix-boundary-repair-history.mjs";
 
 export const jvmThreadExitRepairBaseline = "86ba0ad47469d0f13dd32d400d2a36b0d8288f95";
 export const jvmThreadExitRepairPath = "docs/evidence/jvm-thread-exit-repair-20260928.json";
@@ -34,7 +34,7 @@ export const jvmThreadExitRepairAddedPaths = [
 	, "tests/owned-jvm-thread-exit.test.mjs"
 ].sort();
 let cached;
-export const jvmThreadExitNormalizationPaths = [...new Set([...jvmThreadExitRepairChangedPaths, ...phpNixBoundaryChangedPaths])].sort();
+export const jvmThreadExitNormalizationPaths = [...new Set([...jvmThreadExitRepairChangedPaths, ...phpNixBoundaryNormalizationPaths])].sort();
 
 /**
  * Reverse only authenticated complete sources and ordered literal edits.

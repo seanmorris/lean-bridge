@@ -12,6 +12,7 @@ import { generateOwnedPhpPackage } from "../../src/backends/php/owned-package.mj
 import { ownedPhpAdapterSources } from "../../src/build/owned-php-artifacts.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
 import { assertOwnedPhpCi } from "./owned-php-ci.mjs";
+import { ownedPhpWasmHistoricalBytes } from "./owned-php-wasm-source-history.mjs";
 
 export const ownedPhpScope = {
 	profiles: ["php-native"], sourcePaths: ["ordinary-source", "reviewed-ir"]
@@ -215,7 +216,8 @@ export const assertOwnedPhpExecution = async record => {
 		, ["config", "publish/php", "### Export resource-containing values", "json"]
 		, ["example", "php", "### Resource-containing values", "php"]
 	]) {
-		const section = (await readFile("docs/" + path + ".md", "utf8")).split(heading + "\n")[1].split("\n### ")[0];
+		const file = "docs/" + path + ".md";
+		const section = ownedPhpWasmHistoricalBytes(file, await readFile(file), record.sources[file]).toString().split(heading + "\n")[1].split("\n### ")[0];
 		const source = section.match(new RegExp("```" + language + "\\n([^]*?)\\n```"))[1] + "\n";
 		assert.equal(docs.sourceHashes[name], sha256(source));
 	}

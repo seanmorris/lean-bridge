@@ -55,9 +55,13 @@ test("historical PHP-Wasm comparisons require the exact authenticated packager s
 	const { sources } = await phpWasmPreGraphSources();
 	const path = "src/release/php-wasm-copied-package.mjs";
 	const packagingSource = beforePhpWasmStructuredCallables(path, await readFile(path, "utf8"), record.report.sourceHashes[path]);
+	const hostPath = "src/backends/php/php-wasm-copied-host.mjs";
+	const hostSource = beforePhpWasmStructuredCallables(hostPath, await readFile(hostPath, "utf8"), record.report.sourceHashes[hostPath]);
 	for(const run of record.report.packages)
 	{
-		await assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource });
-		await assert.rejects(() => assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource: packagingSource + "\n" }));
+		await assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource, hostSource });
+		await assert.rejects(() => assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource: packagingSource + "\n", hostSource }));
+		await assert.rejects(() => assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource, hostSource: hostSource + "\n" }));
+		await assert.rejects(() => assertPhpWasmLegacyPackageComparison(run, sources, { packagingSource }));
 	}
 });

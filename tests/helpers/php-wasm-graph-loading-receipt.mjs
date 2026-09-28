@@ -8,8 +8,7 @@ import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
-import { generateCompiledPhpWasmGraph } from "../../src/build/php-wasm-graph-component.mjs";
-import { generateCopiedPhpZendAdapter } from "../../src/backends/php/copied-zend.mjs";
+import { preOwnedPhpWasmGenerators } from "./pre-owned-php-wasm-generators.mjs";
 import { assertAdministrativeSourceUpdate } from "./test-registration-history.mjs";
 import { assertPhpWasmGraphPackageEvidence, phpWasmGraphPackageEvidenceSources } from "./php-wasm-graph-receipt.mjs";
 import { comparePhpWasmGraphBuilds } from "./php-wasm-graph-reproduction.mjs";
@@ -41,7 +40,8 @@ const completeLog = (record, name) => {
 	assert.match(record.text, /# fail 0\n# cancelled 0\n# skipped 0/);
 };
 
-const assertInstalledLoading = report => {
+const assertInstalledLoading = async report => {
+	const { generateCompiledPhpWasmGraph, generateCopiedPhpZendAdapter } = await preOwnedPhpWasmGenerators();
 	assert.equal(report.schemaVersion, 1); assert.equal(report.producersRemoved, true); assert.equal(report.unchangedDeployment, true);
 	assert.equal(report.runtimeIdentity, sha256(canonicalJson(report.runtimeManifest)));
 	assert.equal(report.runtimeManifest.pointerBits, 32);
@@ -179,7 +179,7 @@ export const assertPhpWasmGraphLoadingEvidence = async record => {
 			assert.ok(hashes.has(reproduction.rebuilt.runtimeManifest.files[reproduction.rebuilt.runtimeManifest.library].sha256));
 		}
 	}
-	assertInstalledLoading(record.loading);
+	await assertInstalledLoading(record.loading);
 	for(const [path, hash] of Object.entries(record.loading.files)) assert.equal(hash, sha256(await readFile(`tests/fixtures/structured-types/${path}`)));
 	completeLog(record.logs.reproduction, "independent recursive PHP-Wasm builds reproduce the installed npm and Composer archives");
 	completeLog(record.logs.loading, "installed recursive and acyclic PHP-Wasm packages share initialization, loading and retirement");

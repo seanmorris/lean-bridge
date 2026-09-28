@@ -13,7 +13,7 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 test("installed CLI builds ordinary and reviewed owned PHP-Wasm archives for npm and Composer consumers", {
 	skip: process.env.LEAN_BRIDGE_OWNED_PHP_WASM_PACKAGE_TEST !== "1"
-	, timeout: 900000
+	, timeout: 1800000
 }, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-owned-php-wasm-packages-"));
 	t.after(() => rm(root, { recursive: true, force: true }));

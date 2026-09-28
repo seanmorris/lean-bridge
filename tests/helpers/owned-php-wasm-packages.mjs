@@ -14,11 +14,13 @@ import { installPhpWasmGraphPackages } from "./php-wasm-graph-packages.mjs";
 import { bundlePhpWasmGraph } from "./php-wasm-graph-browser.mjs";
 import { checkOwnedPhpWasmBrowser } from "./owned-php-wasm-browser.mjs";
 import { buildOwnedPhpWasmPeer, checkOwnedPhpWasmCoexistence } from "./owned-php-wasm-coexistence.mjs";
+import { checkOwnedPhpWasmCoexistenceBrowser } from "./owned-php-wasm-coexistence-browser.mjs";
 import { buildOwnedPhpWasmObserver } from "./owned-php-wasm-observer.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { installOwnedPhpWasmCli } from "./owned-php-wasm-cli.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
+import { prepareOwnedPhpWasmRuntime } from "./owned-php-wasm-runtime.mjs";
 
 const hostSource = name => `import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
@@ -97,11 +99,10 @@ const rejectDrift = async (root, runtimeIdentity) => {
  */
 export const checkOwnedPhpWasmPackages = async (directory, diagnostic) => {
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
-	const runtimeRoot = resolve(process.env.LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME ?? "build/owned-wasm32-runtime");
+	const runtime = await prepareOwnedPhpWasmRuntime(directory), runtimeRoot = runtime.root;
 	const emsdkRoot = resolve(process.env.LEAN_BRIDGE_PHP_EMSDK ?? ".toolchains/emsdk-php-wasm");
 	const phpSource = resolve(process.env.LEAN_BRIDGE_PHP_SOURCE ?? "build/php-wasm-sdk/php8.4-src");
 	const host = resolve(process.env.LEAN_BRIDGE_PHP_WASM_HOST ?? "build/php-wasm-host/node_modules/php-wasm");
-	const runtime = await readVerifiedPhpWasmCopiedRuntime(runtimeRoot);
 	diagnostic("Installing the standalone CLI with verified PHP-Wasm compiler inputs");
 	const cli = await installOwnedPhpWasmCli({ directory: join(directory, "cli"), runtimeRoot, phpSource, leanPrefix, emsdkRoot });
 	const consumer = await readFile("tests/fixtures/structured-types/owned-php-wasm-installed.php", "utf8");
@@ -173,12 +174,13 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic) => {
 		}
 		const browser = await checkOwnedPhpWasmBrowser(installed.deployment, diagnostic);
 		const coexistence = await checkOwnedPhpWasmCoexistence(installed.deployment, diagnostic);
+		const coexistenceBrowser = await checkOwnedPhpWasmCoexistenceBrowser(installed.deployment, diagnostic);
 		observations.push({ reviewed, inputs, model, receipt, rejected, browser
 			, cliBuild, repeatedCliBuild, packageSetReceipt, verification
 			, deterministicReassembly: true, receiptVerifiedWithoutProducer: true
 			, packageReceipt: release.report
 			, reproducedArchives: repeated.report.archives
-			, coexistence: { ...coexistence, peer: peer.component, sourceFiles: peer.sourceFiles }
+			, coexistence: { ...coexistence, browser: coexistenceBrowser, peer: peer.component, sourceFiles: peer.sourceFiles }
 			, observer: observer.identity
 			, independentlyRebuiltExactly: true, sourceUnchanged: true
 			, installed, authorRemoved: true
@@ -190,6 +192,7 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic) => {
 	return { schemaVersion: 1, profile: "installed-owned-php-wasm"
 		, compiledLean: true, installedPackage: true
 		, installedCli: cli.identity, cliAdmission: true
+		, runtimeSupplied: runtime.supplied
 		, runtimeIdentity: runtime.identity, runtimeManifest: runtime.manifest
 		, observations };
 };

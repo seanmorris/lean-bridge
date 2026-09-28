@@ -31,6 +31,8 @@ const profileManifest = Object.freeze({
 		, "owned-php-zend-model"
 		, "owned-php-wasm-model"
 		, "owned-php-wasm-cli"
+		, "owned-php-wasm-ci"
+		, "owned-php-wasm-evidence"
 		, "owned-php-zend-extension"
 		, "owned-wasm32-evidence"
 		, "jvm-thread-exit-repair-evidence"

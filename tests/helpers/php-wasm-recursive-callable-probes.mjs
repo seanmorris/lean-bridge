@@ -8,7 +8,7 @@ import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { createNativeCallableGraphDescriptor } from "../../src/build/native-callable-graph.mjs";
 import { generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
-import { generateCompiledPhpWasmGraph } from "../../src/build/php-wasm-graph-component.mjs";
+import { preOwnedPhpWasmGenerators } from "./pre-owned-php-wasm-generators.mjs";
 import { structuredCallableReviewedIr } from "./structured-callable-fixture.mjs";
 import { phpWasmRecursiveProbeSource } from "./php-wasm-recursive-callable-generated.mjs";
 import { phpWasmRecursiveOwnershipProbe } from "./php-wasm-recursive-callable-ownership.mjs";
@@ -31,6 +31,7 @@ const pairs = values => Object.fromEntries(phpWasmRecursiveShapes.map((shape, in
  * @param report - Unedited generated wasm32 execution report, not a package report.
  */
 export const assertPhpWasmRecursiveProbes = async report => {
+	const { generateCompiledPhpWasmGraph } = await preOwnedPhpWasmGenerators();
 	assert.equal(report.schemaVersion, 1); assert.equal(report.compiledLean, true);
 	assert.equal(report.installedPackage, false); assert.equal(report.independentIr, true);
 	assert.equal(report.functions, 29); assert.equal(report.callbacks, 16);

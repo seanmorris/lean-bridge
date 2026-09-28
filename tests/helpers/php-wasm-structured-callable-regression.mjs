@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { generateCopiedPhpZendAdapter } from "../../src/backends/php/copied-zend.mjs";
+import { preOwnedPhpWasmGenerators } from "./pre-owned-php-wasm-generators.mjs";
 import { phpStructuredRegressionFixtures } from "./php-structured-callable-regression.mjs";
 
 export const phpWasmStructuredCodegenSources = [
@@ -20,7 +20,8 @@ export const phpWasmStructuredCodegenSources = [
  *
  * @param record - Source-bound independent predecessor and current generations.
  */
-export const assertPhpWasmStructuredCodegenRegression = record => {
+export const assertPhpWasmStructuredCodegenRegression = async record => {
+	const { generateCopiedPhpZendAdapter } = await preOwnedPhpWasmGenerators();
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "php-wasm-structured-codegen-regression");
 	assert.equal(record.baselineRevision, "89c43a33eb639bc8a2ca19df697ba56e9cfacae9");
