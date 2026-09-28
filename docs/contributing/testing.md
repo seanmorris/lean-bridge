@@ -2440,10 +2440,27 @@ before compiling through the installed executable. The reviewed project also
 requests native C, requiring both compiled profiles to agree on one captured API.
 The npm consumers install their two archives after source and build-output removal.
 
+The coexistence gate builds a copied compound-value package and an owned package
+independently. Both must produce the same runtime archive byte for byte. It
+installs the archives offline, deletes producer files and tests owned-first,
+copied-first and concurrent imports in Node, pages, React StrictMode and workers.
+The probe observes one actual Wasm memory and one runtime initialization, calls
+the copied API from an owned callback, and verifies that closing the owned API
+leaves the copied API usable. Fault probes retire the shared heap and require
+both public APIs to reject further calls.
+
+```sh
+LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST=1 \
+EMCC_CORES=2 node --test --test-concurrency=1 \
+  tests/component-runtime-package-identity.test.mjs \
+  tests/owned-javascript-npm-coexistence.test.mjs
+```
+
 The downstream workflow runs these checks in its required `owned-javascript-wasm`
 job. It builds the production runtime with the pinned toolchains, enables all
-four execution flags, rejects skipped tests and retains the runtime, execution
-and installed-package logs
+four execution flags, rejects skipped tests and retains the runtime, execution,
+installed-package and coexistence logs
 as `owned-javascript-wasm-<commit>`. The support-summary job fails if this job
 does not succeed. Type-surface support classifications are not changed by adding
 the gate.

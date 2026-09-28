@@ -164,7 +164,7 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 	const runtimeIdentity = sha256(canonicalJson(identityBasis));
 	const version = `0.0.0-abi${componentScalarAbi}.${runtimeIdentity}`;
 	runtimeFiles.set("runtime-identity.json", canonicalJson(identityBasis));
-	runtimeFiles.set("package.json", json({ ...runtimeMetadata, version, leanBridge: { ...runtimeMetadata.leanBridge, runtimeIdentity } }));
+	runtimeFiles.set("package.json", canonicalJson({ ...runtimeMetadata, version, leanBridge: { ...runtimeMetadata.leanBridge, runtimeIdentity } }));
 	return { files: runtimeFiles, runtimeIdentity, version };
 };
 

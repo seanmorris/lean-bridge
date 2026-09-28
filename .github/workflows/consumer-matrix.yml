@@ -161,6 +161,18 @@ jobs:
           test -s build/owned-javascript-wasm/installed.log
           rg '^# fail 0$' build/owned-javascript-wasm/installed.log
           rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
+      - name: Verify installed copied and owned npm coexistence
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          node --test --test-concurrency=1 \
+            tests/component-runtime-package-identity.test.mjs \
+            tests/owned-javascript-npm-coexistence.test.mjs \
+            2>&1 | tee build/owned-javascript-wasm/coexistence.log
+          test -s build/owned-javascript-wasm/coexistence.log
+          rg '^# fail 0$' build/owned-javascript-wasm/coexistence.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/coexistence.log
       - name: Preserve owned JavaScript and runtime execution logs
         if: always()
         uses: actions/upload-artifact@v7
@@ -170,6 +182,7 @@ jobs:
             build/owned-javascript-wasm/runtime.log
             build/owned-javascript-wasm/execution.log
             build/owned-javascript-wasm/installed.log
+            build/owned-javascript-wasm/coexistence.log
           if-no-files-found: error
           retention-days: 30
 

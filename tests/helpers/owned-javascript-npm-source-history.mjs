@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptCoexistence, ownedJavaScriptCoexistenceChangedPaths } from "./owned-javascript-coexistence-source-history.mjs";
 
 export const ownedJavaScriptNpmBaseline = "d265ed3abbe9f1d4d1d9bc290cd7f1e2a9464d5b";
 export const ownedJavaScriptNpmHistoryPath = "docs/evidence/owned-javascript-npm-integration-20260928.json";
@@ -59,6 +60,7 @@ export const ownedJavaScriptNpmAddedPaths = [
 	, "tests/owned-javascript-wasm-build.test.mjs"
 	, "tests/owned-javascript-wasm-model.test.mjs"
 ].sort();
+export const ownedJavaScriptNpmNormalizationPaths = [...new Set([...ownedJavaScriptNpmChangedPaths, ...ownedJavaScriptCoexistenceChangedPaths])].sort();
 let cached;
 
 /**
@@ -93,6 +95,7 @@ export const reverseOwnedJavaScriptNpmUpdate = (source, update) => {
  * @param expected - Optional identity at which normalization must stop.
  */
 export const beforeOwnedJavaScriptNpm = (path, source, expected) => {
+	source = beforeOwnedJavaScriptCoexistence(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !ownedJavaScriptNpmChangedPaths.includes(path)) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptNpmHistoryPath, "utf8"));
@@ -112,5 +115,5 @@ export const beforeOwnedJavaScriptNpm = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional predecessor identity.
  */
-export const ownedJavaScriptNpmHistoricalBytes = (path, bytes, expected) => ownedJavaScriptNpmChangedPaths.includes(path)
+export const ownedJavaScriptNpmHistoricalBytes = (path, bytes, expected) => ownedJavaScriptNpmNormalizationPaths.includes(path)
 	? beforeOwnedJavaScriptNpm(path, bytes.toString("utf8"), expected) : bytes;

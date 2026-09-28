@@ -18,10 +18,13 @@ export const ownedJavaScriptWasmCiTests = [
 export const ownedJavaScriptWasmTestCommand = "node --test --test-concurrency=2 " + ownedJavaScriptWasmCiTests.join(" ");
 export const ownedJavaScriptNpmCiTests = ["owned-javascript-wasm-model", "javascript-wasm-compiler-inputs", "owned-javascript-cli", "owned-javascript-wasm-build"].map(name => `tests/${name}.test.mjs`);
 export const ownedJavaScriptNpmTestCommand = "node --test --test-concurrency=1 " + ownedJavaScriptNpmCiTests.join(" ");
+export const ownedJavaScriptCoexistenceCiTests = ["component-runtime-package-identity", "owned-javascript-npm-coexistence"].map(name => `tests/${name}.test.mjs`);
+export const ownedJavaScriptCoexistenceTestCommand = "node --test --test-concurrency=1 " + ownedJavaScriptCoexistenceCiTests.join(" ");
 export const ownedJavaScriptWasmCiLogs = [
 	"build/owned-javascript-wasm/runtime.log"
 	, "build/owned-javascript-wasm/execution.log"
 	, "build/owned-javascript-wasm/installed.log"
+	, "build/owned-javascript-wasm/coexistence.log"
 ];
 
 const requiredStep = (job, name) => {
@@ -86,6 +89,15 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[1]
 		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[1]
 	].join("\n"));
+	const coexistenceName = "Verify installed copied and owned npm coexistence";
+	assert.ok(job.indexOf(installedName) < job.indexOf(coexistenceName));
+	assert.equal(script(requiredStep(job, coexistenceName)), [
+		"set -euo pipefail", "source scripts/env.sh"
+		, ownedJavaScriptCoexistenceTestCommand + " 2>&1 | tee " + ownedJavaScriptWasmCiLogs[3]
+		, "test -s " + ownedJavaScriptWasmCiLogs[3]
+		, "rg '^# fail 0$' " + ownedJavaScriptWasmCiLogs[3]
+		, "rg '^# skipped 0$' " + ownedJavaScriptWasmCiLogs[3]
+	].join("\n"));
 	const upload = requiredStep(job, "Preserve owned JavaScript and runtime execution logs");
 	assert.match(upload, /^ {8}if: always\(\)$/mu);
 	assert.match(upload, /^ {8}uses: actions\/upload-artifact@v7$/mu);
@@ -97,6 +109,7 @@ export const assertOwnedJavaScriptWasmCi = workflow => {
 	assert.equal(enforce.trim(), "if: needs.owned-javascript-wasm.result != 'success'\n        run: exit 1");
 	return { testFiles: ownedJavaScriptWasmCiTests.length
 		, installedTestFiles: ownedJavaScriptNpmCiTests.length
+		, coexistenceTestFiles: ownedJavaScriptCoexistenceCiTests.length
 		, requiredLogs: ownedJavaScriptWasmCiLogs.length
 		, productionRuntimeRequired: true, skippedTestsRejected: true
 		, failurePropagated: true };

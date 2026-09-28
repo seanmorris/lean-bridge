@@ -260,6 +260,9 @@ workers with structured cloning.
 
 The [installed-package checks](contributing/testing.md#javascript-ownership-transport-and-generated-apis)
 cover Node, strict TypeScript, Chromium, Firefox, WebKit, React and workers.
+Copied and owned packages built against the same runtime share its dependency
+automatically. Import order does not require configuration. Closing an owned
+API releases that component's leases without closing other loaded packages.
 Transferred inputs and results borrowed from another object remain unsupported.
 
 ### Type conversions

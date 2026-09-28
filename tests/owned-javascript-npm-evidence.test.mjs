@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedJavaScriptNpmExecution } from "./helpers/owned-javascript-npm-evidence.mjs";
+import { beforeOwnedJavaScriptCoexistence, ownedJavaScriptCoexistenceHistoricalBytes } from "./helpers/owned-javascript-coexistence-source-history.mjs";
 import { beforeOwnedJavaScriptNpm, ownedJavaScriptNpmAddedPaths
 	, ownedJavaScriptNpmBaseline, ownedJavaScriptNpmBaselineSources
 	, ownedJavaScriptNpmChangedPaths, ownedJavaScriptNpmHistoryPath
@@ -24,13 +25,13 @@ test("installed owned npm evidence binds exact sources without rewriting runtime
 	const previousBytes = await readFile(record.previous.path), previous = JSON.parse(previousBytes);
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedJavaScriptNpmChangedPaths, ...ownedJavaScriptNpmAddedPaths])].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptCoexistenceHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptNpmChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedJavaScriptNpmBaselineSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedJavaScriptNpm(update.path, current);
+		const current = beforeOwnedJavaScriptCoexistence(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedJavaScriptNpm(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedJavaScriptNpm(update.path, prior), prior);
 		assert.equal(beforeOwnedJavaScriptNpm(update.path, current, update.currentSha256), current);

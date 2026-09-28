@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJavaScriptNpm, ownedJavaScriptNpmChangedPaths } from "./owned-javascript-npm-source-history.mjs";
+import { beforeOwnedJavaScriptNpm, ownedJavaScriptNpmNormalizationPaths } from "./owned-javascript-npm-source-history.mjs";
 
 export const ownedJavaScriptWasmBaseline = "4c13a5ffdb133cfda841a965e0c858e20300e5ba";
 export const ownedJavaScriptWasmHistoryPath = "docs/evidence/owned-javascript-wasm-integration-20260928.json";
@@ -137,7 +137,7 @@ export const ownedJavaScriptWasmAdditionalSources = [
 	, "tests/helpers/source-registration-upgrade.mjs"
 	, "tests/helpers/variant-fixture.mjs"
 ].sort();
-export const ownedJavaScriptWasmNormalizationPaths = [...new Set([...ownedJavaScriptWasmChangedPaths, ...ownedJavaScriptNpmChangedPaths])].sort();
+export const ownedJavaScriptWasmNormalizationPaths = [...new Set([...ownedJavaScriptWasmChangedPaths, ...ownedJavaScriptNpmNormalizationPaths])].sort();
 let cached;
 
 /**
