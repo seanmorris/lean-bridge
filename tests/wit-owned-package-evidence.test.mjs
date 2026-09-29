@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedWitBuildRepair, ownedWitBuildRepairHistoricalBytes } from "./helpers/wit-owned-build-repair-history.mjs";
 import { assertOwnedWitPackageCi, assertOwnedWitPackageExecution } from "./helpers/wit-owned-package-evidence.mjs";
 import { beforeOwnedWitPackage, ownedWitPackageAddedPaths
 	, ownedWitPackageBaseline, ownedWitPackageChangedPaths, ownedWitPackagePath
@@ -22,26 +23,26 @@ test("owned WIT installed successor authenticates source and preserves earlier s
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedWitPackageAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedWitBuildRepairHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedWitPackageChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8");
+		const current = beforeOwnedWitBuildRepair(update.path, await readFile(update.path, "utf8"));
 		assert.equal(sha256(beforeOwnedWitPackage(update.path, current)), update.previousSha256);
 		assert.equal(beforeOwnedWitPackage(update.path, current, update.currentSha256), current);
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeOwnedWitBuildRepair("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
 	const prior = JSON.parse(beforeOwnedWitPackage("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitBuildRepairHistoricalBytes(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), prior, "Final cross-language support cells are a separate acceptance step");
 });
 
 test("owned WIT installed history rejects unknown text, forged ancestors and overlapping edits", async () => {
 	for(const update of (await read()).updates)
 	{
-		const current = await readFile(update.path, "utf8"), unknown = current + "\n/* unrelated */\n";
+		const current = beforeOwnedWitBuildRepair(update.path, await readFile(update.path, "utf8")), unknown = current + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedWitPackage(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedWitPackageUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

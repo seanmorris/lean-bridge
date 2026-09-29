@@ -51,15 +51,17 @@ test("ownership reviews round-trip only through explicitly capable analysis inte
 	assert.deepEqual(await lakeInputState(project), before);
 });
 
-for(const reviewed of [false, true]) test(`${reviewed ? "reviewed" : "ordinary"} ownership reaches independent PHP and JavaScript toolchains without opening WIT`, async t => {
+for(const reviewed of [false, true]) test(`${reviewed ? "reviewed" : "ordinary"} ownership reaches PHP, JavaScript and WIT toolchains`, async t => {
 	const { directory, project } = await fixture(t, reviewed), before = await lakeInputState(project);
 	const output = join(directory, "release"), environment = { LEAN_BRIDGE_PHP_EMSDK: join(directory, "missing-sdk"), LEAN_BRIDGE_JS_EMSDK: join(directory, "missing-js-sdk") };
 	await assert.rejects(buildCanonicalProject({ projectRoot: project, outputRoot: output, targets: ["php-wasm"], environment }), { code: "php-wasm-toolchain-unavailable" });
 	for(const targets of [["npm"], ["php-wasm", "npm"]])
 		await assert.rejects(buildCanonicalProject({ projectRoot: project, outputRoot: output, targets, environment }), { code: "javascript-wasm-toolchain-unavailable" });
 	for(const targets of [["php-wasm", "wit-wasi"]])
-		await assert.rejects(buildCanonicalProject({ projectRoot: project, outputRoot: output, targets, environment }),
-			error => error.code === (reviewed ? "consumer-upgrade-required" : "unsupported-export-configuration"));
+		await assert.rejects(buildCanonicalProject({ projectRoot: project
+			, outputRoot: output, targets
+			, environment: { ...environment, PATH: join(directory, "missing-bin") } }),
+		{ code: "ENOENT", message: "spawn lean ENOENT" });
 	assert.deepEqual(await readdir(directory), ["project"]);
 	assert.deepEqual(await lakeInputState(project), before);
 });

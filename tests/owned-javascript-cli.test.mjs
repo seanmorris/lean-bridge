@@ -51,7 +51,7 @@ for(const reviewed of [false, true]) test(`${reviewed ? "reviewed" : "ordinary"}
 		await assert.rejects(buildCanonicalProject({ ...request, cache: { policy: "use", directory: 42 } }), { code: "invalid-cache-directory" });
 		await assert.rejects(buildCanonicalProject({ ...request, cache: { policy: "off", directory: join(root, "cache") } }), { code: "invalid-cache-policy" });
 	}
-	await assert.rejects(buildCanonicalProject({ ...options, targets: ["npm", "wit-wasi"] }), error => error.code === (reviewed ? "consumer-upgrade-required" : "unsupported-export-configuration"));
+	await assert.rejects(buildCanonicalProject({ ...options, targets: ["npm", "wit-wasi"] }), { code: "javascript-wasm-toolchain-unavailable" });
 	assert.deepEqual(await lakeInputState(project), before);
 	assert.deepEqual(await readdir(root), [reviewed ? "reviewed" : "ordinary"]);
 });

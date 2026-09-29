@@ -293,7 +293,7 @@ const profileManifest = Object.freeze({
 		, "wit-owned-native-evidence"
 		, "wit-owned-session", "wit-owned-session-evidence"
 		, "wit-owned-host-evidence", "wit-owned-packaging"
-		, "wit-owned-package-evidence"
+		, "wit-owned-package-evidence", "wit-owned-build-repair-evidence"
 		, "wit-recursive-callable-model"
 		, "wit-recursive-callable-host"
 		, "wit-recursive-callable-native"
