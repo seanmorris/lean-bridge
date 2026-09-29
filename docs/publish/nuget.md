@@ -265,8 +265,8 @@ the [closure example](#export-recursive-callbacks-and-closures).
 
 Resource and closure results have explicit leases. Borrowed callback values
 expire at callback return; `Retain` creates an independent owner. A retained
-resource does not retain a host callback. Transferred inputs, anchored results,
-retained host callbacks and asynchronous delivery remain unsupported.
+resource does not retain a host callback. Anchored results, retained host
+callbacks and asynchronous delivery remain unsupported.
 
 NuGet bundles the component, shared Lean runtime and a private GMP 6.3.0
 library, together with source and license notices. Its loader checks native
@@ -279,6 +279,33 @@ disposal, and drains native owners when the creator exits. Per-call conversion
 limits are depth 128, 262,144 values, 16 MiB native storage and a separate
 16 MiB accounted managed-storage budget, including callbacks and results.
 These limits do not bound Lean working memory or all CLR allocation overhead.
+
+### Transfer input ownership
+
+Select `ownership: "transfer"` through
+[export contracts](../lean/existing-package.md#declare-export-contracts).
+The [C author example](c.md#transfer-input-ownership) shows the configuration.
+Keep `resources` and `ownedAggregates`, and set the package coordinate under
+`targets.nuget`. Ordinary-source and independently reviewed APIs receive fresh
+Lean checks before generating consuming calls.
+
+Build with `lean-bridge build --project ./owned --target nuget --output ./release-owned`.
+Consumers pass ordinary C# values. Generated XML documentation names the
+consuming arguments. Validation precedes handoff; shared aliases close at the
+Lean call boundary, while independent `Retain()` owners survive. See the
+[consumer example](../consume/dotnet.md#consuming-inputs).
+
+Transfer-enabled packages use `owned-dotnet-v2` and ownership contract version 2.
+Their private native adapter, compiled managed receipt and NuGet package receipt
+use version 2; the native ownership description uses `ownedValues` version 3.
+Packaging reconstructs the expected sources and ownership rules from compiler
+metadata before accepting the artifacts. Borrow-only packages keep their
+existing versions and generated APIs.
+
+A combined transfer build can select C, C++, Cargo, PyPI, RubyGems and NuGet.
+C# keeps its private thread-exit adapter and GMP library while sharing the
+compiled Lean component. Other consumer bindings still reject transfer
+contracts. Building a package does not publish it.
 
 ## Build and inspect the package
 

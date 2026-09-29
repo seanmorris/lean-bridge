@@ -12,8 +12,9 @@ import { dotnetGraphException } from "./copied-graph-runtime.mjs";
  * @param prefix - Checked public C package identifier.
  * @param options - Generated assembly composition options.
  * @param options.includeException - Emit the standalone probe's exception type.
+ * @param options.transferredInputs - Observe consuming-input handoff slots.
  */
-export const ownedDotnetRuntime = (prefix, { includeException = true } = {}) => {
+export const ownedDotnetRuntime = (prefix, { includeException = true, transferredInputs = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned .NET prefix");
 	return `${includeException ? dotnetGraphException : ""}
 internal sealed unsafe partial class OwnedRuntime
@@ -157,11 +158,11 @@ internal sealed class OwnedLease
 {
     internal readonly OwnedState State;
     internal readonly OwnedSlot? Slot;
-    internal readonly OwnedBorrowScope? Scope;
+    internal readonly OwnedBorrowScope? Scope;${transferredInputs ? "\n    internal OwnedSlot? InputMove;" : ""}
     private int references, revoked;
     internal OwnedLease(OwnedState state, OwnedSlot? slot = null, OwnedBorrowScope? scope = null)
     { State = state; Slot = slot; Scope = scope; }
-    internal bool IsClosed => State.IsClosed || global::System.Threading.Volatile.Read(ref revoked) != 0
+    internal bool IsClosed => State.IsClosed || global::System.Threading.Volatile.Read(ref revoked) != 0${transferredInputs ? "\n        || (InputMove is not null && InputMove.Value == 0)" : ""}
         || (Scope is not null ? !Scope.Active : Slot is null || Slot.Value == 0
             || global::System.Threading.Volatile.Read(ref Slot.Pending) != 0 || Slot.Releasing);
     internal int References => global::System.Threading.Volatile.Read(ref references);
@@ -200,7 +201,7 @@ internal sealed class OwnedResult : global::System.IDisposable
     private OwnedSlot? slot;
     private OwnedLease? lease;
     private bool complete;
-    internal OwnedResult(OwnedState state) { State = state; slot = state.Register(); }
+    internal OwnedResult(OwnedState state) { State = state; slot = state.Register(); }${transferredInputs ? '\n    internal OwnedSlot TransferSlot => slot ?? throw new global::System.InvalidOperationException("Input owner was disposed");' : ""}
     internal ref nint Value
     {
         get

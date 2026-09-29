@@ -1294,6 +1294,31 @@ relocation. The reviewed build also installs C, C++, Cargo and PyPI companions.
 Reports go to `build/owned-ruby-transfers/` and
 `build/owned-ruby-transfer-packaging/`.
 
+#### Installed .NET transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-dotnet-transfers
+```
+
+Use .NET SDK 8.0.424 and the pinned Lean and native toolchains. The reviewed
+combined build also needs Rust, MRI Ruby 3.3 and Python with the pinned offline
+typing wheel. On a glibc 2.36 test host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`; production keeps its default 2.38 floor.
+
+The private gate checks managed and native allocation failures before and after
+single- and multiple-input handoffs. It retains exceptions while checking
+explicit cleanup, exercises callback GC over pinned owner slots, and checks
+foreign-thread rejection and interrupted-thread cleanup.
+
+Installed tests use the safe public C# API with unsafe code disabled. They
+remove producer sources before offline NuGet restore, execute the documented
+example, reject ill-typed consumers and altered ownership metadata, and rebuild
+byte-identical archives. Relocated execution has no SDK, source, package cache
+or handoff directory. The reviewed build also installs C, C++, Cargo, PyPI and
+RubyGems companions. Reports go to `build/owned-dotnet-transfers/` and
+`build/owned-dotnet-transfer-packaging/`.
+
 The remaining consumer bindings, owner-anchored borrowed results and owned
 Docker acceptance remain open.
 

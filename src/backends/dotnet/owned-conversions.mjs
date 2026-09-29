@@ -4,7 +4,7 @@
  * @file
  */
 import { generateOwnedDotnetValues } from "./owned-values.mjs";
-import { ownedDotnetConversionRuntime } from "./owned-conversion-runtime.mjs";
+import { ownedDotnetConversionSupport } from "./owned-conversion-runtime.mjs";
 import { ownedDotnetScalar } from "./owned-scalars.mjs";
 
 /**
@@ -12,9 +12,11 @@ import { ownedDotnetScalar } from "./owned-scalars.mjs";
  * verified resource factories and an owning result or expiring callback lease.
  *
  * @param ir - Concrete compiler-authenticated ownership contract.
+ * @param options - Explicit transport capabilities.
  */
-export const generateOwnedDotnetConversions = ir => {
-	const model = generateOwnedDotnetValues(ir);
+export const generateOwnedDotnetConversions = (ir, options = {}) => {
+	const model = generateOwnedDotnetValues(ir, options);
+	const runtime = ownedDotnetConversionSupport(model.c.functions.some(fn => fn.transfers?.length));
 	const nodes = new Map(model.types.map(node => [node.id, node])), names = new Map();
 	const type = id => {
 		if(names.has(id)) return names.get(id);
@@ -25,7 +27,7 @@ export const generateOwnedDotnetConversions = ir => {
 					: `_V.${node.kind === "option" ? "Option" : "Result"}<${node.fields.map(field => type(field.type)).join(", ")}>`;
 		names.set(id, name); return name;
 	};
-	let budget = 16 * 1024 * 1024 - model.source.length - model.layout.rawSource.length - ownedDotnetConversionRuntime.length;
+	let budget = 16 * 1024 * 1024 - model.source.length - model.layout.rawSource.length - runtime.length;
 	for(const node of nodes.values())
 	{
 		budget -= 4096 + type(node.id).length * 16;
@@ -174,7 +176,7 @@ ${identities.map(node => `        global::System.ArgumentNullException.ThrowIfNu
 namespace ${model.namespace}.Interop;
 ${model.layout.rawSource}
 ${factories}
-${ownedDotnetConversionRuntime}
+${runtime}
 internal static unsafe partial class OwnedConvert
 {
 ${methods.join("\n")}

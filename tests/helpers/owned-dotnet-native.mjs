@@ -19,16 +19,20 @@ import { runCopied } from "./copied-fixture-install.mjs";
  * @param options - Fresh Lean fixture and optional independent reviewed contract.
  */
 export const compileOwnedDotnetFixture = async (t, options = {}) => {
+	const transferredInputs = options.transferredInputs === true;
 	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
-	const model = generateOwnedDotnetCalls(compiled.model.bindingIr);
+	const model = generateOwnedDotnetCalls(compiled.model.bindingIr, { transferredInputs });
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
-		, component: compiled.model.component, hostCallbacks: true });
+		, component: compiled.model.component, hostCallbacks: true
+		, transferredInputs });
 	const cleanup = ownedDotnetThreadExit(c.values.prefix);
+	const handoff = "static inline void oc_transfer_consume(void *context) {";
+	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const implementation = `#include <stdlib.h>
 #include <stddef.h>
 #include <stdatomic.h>
-static _Atomic size_t live;
+static _Atomic size_t live;${transferredInputs ? "\nstatic _Atomic size_t handoffs;" : ""}
 static _Thread_local ptrdiff_t remaining = -1;
 static void *probe_alloc(size_t size) {
   if (remaining == 0) return NULL;
@@ -38,9 +42,9 @@ static void *probe_alloc(size_t size) {
 static void probe_free(void *value) { if (value) { atomic_fetch_sub(&live, 1); free(value); } }
 #define LB_OWNED_ALLOC probe_alloc
 #define LB_OWNED_FREE probe_free
-${c.source}
+${transferredInputs ? c.source.replace(handoff, handoff + "\n  atomic_fetch_add(&handoffs, 1);") : c.source}
 ${cleanup.source}
-size_t probe_live(void) { return atomic_load(&live); }
+size_t probe_live(void) { return atomic_load(&live); }${transferredInputs ? "\nsize_t probe_handoffs(void) { return atomic_load(&handoffs); }" : ""}
 size_t probe_identities(void) { lean_bridge_native_snapshot s; lean_bridge_native_snapshot_read(&s); return s.live_identities; }
 void probe_fail(ptrdiff_t value) { remaining = value; }
 void probe_retire(void) { lean_bridge_native_runtime_retire(); }

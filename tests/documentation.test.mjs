@@ -29,6 +29,31 @@ import {
 	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
+test("owned C# transfer docs and CI require offline packages and the combined consumer tools", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const step = workflow.split("- name: Compare installed NuGet corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
+	for(const marker of ["bootstrap-rust-ci.sh", "export LEAN_BRIDGE_PYTHON="
+		, "export LEAN_BRIDGE_RUBY=", "export LEAN_BRIDGE_GEM="
+		, "python3-venv pkg-config", "npm run test:owned-dotnet-transfers\n"])
+		assert.ok(step.includes(marker), marker);
+	assert.ok(workflow.includes("- name: Install Ruby for the combined NuGet transfer build\n"));
+	for(const directory of ["transfers", "transfer-packaging"])
+	{
+		assert.ok(workflow.includes(`build/owned-dotnet-${directory}/`));
+		for(const mode of ["ordinary", "reviewed"])
+			assert.ok(step.includes(`test -s build/owned-dotnet-${directory}/${mode}.json`));
+	}
+	const consumer = await readFile("docs/consume/dotnet.md", "utf8");
+	const transfer = consumer.split("#### Consuming inputs\n")[1];
+	assert.ok(transfer);
+	const example = transfer.split("```csharp file=dotnet/owned-transfers.cs\n")[1].split("\n```")[0] + "\n";
+	assert.equal(example, await readFile("tests/fixtures/documentation/consumers/dotnet/owned-transfers.cs", "utf8"));
+	assert.match(transfer, /Siblings?|Sibling resources/u);
+	const publisher = await readFile("docs/publish/nuget.md", "utf8");
+	assert.match(publisher, /ownership: "transfer"/u);
+	assert.match(publisher, /C, C\+\+, Cargo, PyPI, RubyGems and NuGet/u);
+});
+
 test("owned Ruby documentation and CI require installed gems, companions and runtime coexistence", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const step = workflow.split("- name: Compare installed Ruby corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
@@ -553,7 +578,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/equality\/dotnet\.json/);
   assert.match(workflow, /test -s build\/variants\/dotnet\.json/);
   assert.match(workflow, /test -s build\/aliases\/dotnet\.json/);
-  assert.match(workflow, /build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*build\/collections\/dotnet-conversions\.json\n\s*build\/collections\/dotnet\.json\n\s*build\/equality\/dotnet\.json\n\s*build\/recursive\/dotnet-values\.json\n\s*build\/recursive\/dotnet-conversions\.json\n\s*build\/recursive\/dotnet-native\.json\n\s*build\/recursive\/dotnet-packages\.json\n\s*build\/recursive\/dotnet-composition\.json\n\s*build\/recursive\/dotnet-reproducibility\.json\n\s*build\/recursive\/dotnet-conflicts\.json\n\s*build\/owned-dotnet-runtime\/\n\s*build\/owned-dotnet-layout\/\n\s*build\/owned-dotnet-values\/\n\s*build\/owned-dotnet-conversions\/\n\s*build\/owned-dotnet-callables\/\n\s*build\/owned-dotnet-callback-signatures\/\n\s*build\/owned-dotnet-loading\/\n\s*build\/owned-dotnet-packaging\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*build\/collections\/dotnet-conversions\.json\n\s*build\/collections\/dotnet\.json\n\s*build\/equality\/dotnet\.json\n\s*build\/recursive\/dotnet-values\.json\n\s*build\/recursive\/dotnet-conversions\.json\n\s*build\/recursive\/dotnet-native\.json\n\s*build\/recursive\/dotnet-packages\.json\n\s*build\/recursive\/dotnet-composition\.json\n\s*build\/recursive\/dotnet-reproducibility\.json\n\s*build\/recursive\/dotnet-conflicts\.json\n\s*build\/owned-dotnet-runtime\/\n\s*build\/owned-dotnet-layout\/\n\s*build\/owned-dotnet-values\/\n\s*build\/owned-dotnet-conversions\/\n\s*build\/owned-dotnet-callables\/\n\s*build\/owned-dotnet-callback-signatures\/\n\s*build\/owned-dotnet-loading\/\n\s*build\/owned-dotnet-packaging\/\n\s*build\/owned-dotnet-transfers\/\n\s*build\/owned-dotnet-transfer-packaging\/\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_CALLABLE_TEST=1 node --test tests/jvm-callables.test.mjs tests/jvm-callable-contract.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_JVM_STRUCTURED_CALLABLE_TEST=1 node --test tests/jvm-structured-callables.test.mjs"));
   assert.ok(workflow.includes("          npm run test:php-recursive-callables\n"));
@@ -730,7 +755,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_dotnet\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_dotnet\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-dotnet-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/dotnet\.json\n\s*build\/type-corpus\/reviewed-native-dotnet\.json\n\s*build\/char-native\/dotnet\.json\n\s*build\/word-native\/dotnet\.json\n\s*build\/callables\/dotnet\.json\n\s*build\/structured-callables\/dotnet\.json\n\s*build\/recursive-callables\/dotnet\.json\n\s*build\/compounds\/dotnet\.json\n\s*build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*build\/collections\/dotnet-conversions\.json\n\s*build\/collections\/dotnet\.json\n\s*build\/equality\/dotnet\.json\n\s*build\/recursive\/dotnet-values\.json\n\s*build\/recursive\/dotnet-conversions\.json\n\s*build\/recursive\/dotnet-native\.json\n\s*build\/recursive\/dotnet-packages\.json\n\s*build\/recursive\/dotnet-composition\.json\n\s*build\/recursive\/dotnet-reproducibility\.json\n\s*build\/recursive\/dotnet-conflicts\.json\n\s*build\/owned-dotnet-runtime\/\n\s*build\/owned-dotnet-layout\/\n\s*build\/owned-dotnet-values\/\n\s*build\/owned-dotnet-conversions\/\n\s*build\/owned-dotnet-callables\/\n\s*build\/owned-dotnet-callback-signatures\/\n\s*build\/owned-dotnet-loading\/\n\s*build\/owned-dotnet-packaging\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/dotnet\.json\n\s*build\/type-corpus\/reviewed-native-dotnet\.json\n\s*build\/char-native\/dotnet\.json\n\s*build\/word-native\/dotnet\.json\n\s*build\/callables\/dotnet\.json\n\s*build\/structured-callables\/dotnet\.json\n\s*build\/recursive-callables\/dotnet\.json\n\s*build\/compounds\/dotnet\.json\n\s*build\/lists\/dotnet\.json\n\s*build\/aliases\/dotnet\.json\n\s*build\/variants\/dotnet\.json\n\s*build\/collections\/dotnet-conversions\.json\n\s*build\/collections\/dotnet\.json\n\s*build\/equality\/dotnet\.json\n\s*build\/recursive\/dotnet-values\.json\n\s*build\/recursive\/dotnet-conversions\.json\n\s*build\/recursive\/dotnet-native\.json\n\s*build\/recursive\/dotnet-packages\.json\n\s*build\/recursive\/dotnet-composition\.json\n\s*build\/recursive\/dotnet-reproducibility\.json\n\s*build\/recursive\/dotnet-conflicts\.json\n\s*build\/owned-dotnet-runtime\/\n\s*build\/owned-dotnet-layout\/\n\s*build\/owned-dotnet-values\/\n\s*build\/owned-dotnet-conversions\/\n\s*build\/owned-dotnet-callables\/\n\s*build\/owned-dotnet-callback-signatures\/\n\s*build\/owned-dotnet-loading\/\n\s*build\/owned-dotnet-packaging\/\n\s*build\/owned-dotnet-transfers\/\n\s*build\/owned-dotnet-transfer-packaging\/\n\s*if-no-files-found: error/);
   assert.equal(packageDocument.scripts["test:type-corpus:c"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:cpp"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=cpp node --test tests/type-corpus.test.mjs");
   assert.equal(packageDocument.scripts["test:type-corpus:c-family"], "LEAN_BRIDGE_TYPE_CORPUS_PROFILES=c,cpp node --test tests/type-corpus.test.mjs");

@@ -173,8 +173,40 @@ accounted managed-storage limits across arguments, callbacks and results.
 The package automatically loads its verified Lean libraries and private GMP.
 Compatible owned and copied packages share one runtime. Calls in a forked child
 reject, including a package first used in that child. Execute a fresh program
-before calling Lean there. Transferred inputs, anchored results and asynchronous
-delivery require separate lifetime support.
+before calling Lean there. Anchored results and asynchronous delivery require
+separate lifetime support.
+
+#### Consuming inputs
+
+An author can mark an argument as transferred. The generated XML documentation
+names each consuming argument. Pass ordinary C# values; no move wrapper is
+required. For the transfer-enabled `Owned` fixture, save this as `Program.cs`:
+
+```csharp file=dotnet/owned-transfers.cs
+using System;
+using LeanBridge.OwnedAggregates;
+
+using var original = Api.NewTicket(42, "task");
+using var kept = original.Retain();
+using var received = Api.RetainTicket(original);
+if (!original.IsClosed || Api.Serial(received) != 42 || Api.Serial(kept) != 42)
+    throw new Exception("Transfer did not preserve the retained reference.");
+Console.WriteLine("transferred");
+```
+
+Validation and snapshot preparation finish before the Lean call. At handoff,
+every alias sharing the input's resource lease becomes closed. Sibling resources
+from the same returned aggregate share that lease, so transferring one closes
+the others. `Retain()` creates an independent owner that survives the transfer.
+Copied fields keep their values.
+
+Two consuming arguments cannot share a resource lease. Callback arguments are
+borrowed; retain a callback resource before passing it to a consuming argument.
+Validation failures preserve the input's ownership. A callback exception or
+result-conversion failure after handoff leaves the input consumed.
+
+The [installed transfer checks](../evidence/owned-dotnet-transfers-20260929.md)
+cover both authoring paths, offline installation and runtime-only relocation.
 
 ### Named aliases
 

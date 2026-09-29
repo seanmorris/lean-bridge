@@ -20,9 +20,11 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * Nat and Int use read-only GMP pointers and never share managed allocators.
  *
  * @param ir - Concrete compiler-authenticated ownership contract.
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Admit consuming input leases.
  */
-export const compileOwnedDotnetLayout = ir => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true });
+export const compileOwnedDotnetLayout = (ir, { transferredInputs = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, raw: node.identity || node.integer ? "nint" : node.scalar ? primitives[node.name][0] : `OwnedRaw${node.index}`

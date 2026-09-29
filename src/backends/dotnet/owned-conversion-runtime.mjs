@@ -5,8 +5,12 @@
  */
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
 
-/** No finalizer calls native code. The enclosing synchronous call owns storage. */
-export const ownedDotnetConversionRuntime = `internal sealed class OwnedInvalidNative : global::System.Exception
+/**
+ * No finalizer calls native code. The synchronous call owns temporary storage.
+ *
+ * @param transfers - Collect leases visited in consuming input conversions.
+ */
+export const ownedDotnetConversionSupport = (transfers = false) => `internal sealed class OwnedInvalidNative : global::System.Exception
 {
     internal OwnedInvalidNative(string message) : base(message) { }
 }
@@ -26,7 +30,7 @@ internal sealed unsafe class OwnedValueScope : global::System.IDisposable
 {
     internal readonly OwnedState State;
     internal readonly OwnedFactories Factories;
-    internal readonly bool CheckOnly;
+    internal readonly bool CheckOnly;${transfers ? "\n    internal OwnedInputTransfers? Moves;\n    internal int MoveGroup = -1;" : ""}
     private readonly global::System.Func<OwnedLease>? lease;
     internal readonly OwnedValueBudget Budget;
     internal int Nodes => Budget.Nodes;
@@ -70,7 +74,7 @@ internal sealed unsafe class OwnedValueScope : global::System.IDisposable
     internal nint Root(OwnedHandle handle)
     {
         var value = handle.Raw(State);
-        Storage((nuint)sizeof(nint)); OwnedRuntime.Checkpoint(); roots.Add(handle);
+        Storage((nuint)sizeof(nint)); OwnedRuntime.Checkpoint(); roots.Add(handle);${transfers ? "\n        if (Moves is not null && MoveGroup >= 0) Moves.Add(handle.Lease, MoveGroup, this);" : ""}
         return value;
     }
     internal nint Allocate<T>(nuint count) where T : unmanaged
@@ -93,7 +97,7 @@ internal sealed unsafe class OwnedValueScope : global::System.IDisposable
     public void Dispose()
     {
         foreach (var pointer in allocations) global::System.Runtime.InteropServices.NativeMemory.Free((void*)pointer);
-        allocations.Clear(); roots.Clear(); hosts.Clear(); outputs.Clear();
+        allocations.Clear(); roots.Clear(); hosts.Clear(); outputs.Clear();${transfers ? "\n        Moves = null;" : ""}
     }
 }
 
@@ -113,3 +117,6 @@ internal static unsafe partial class OwnedConvert
     }
 }
 `;
+
+/** Preserve the borrow-only converter's existing generated source. */
+export const ownedDotnetConversionRuntime = ownedDotnetConversionSupport();

@@ -22,11 +22,12 @@ import { packageOwnedNuget } from "../release/owned-nuget.mjs";
 export const projectOwnedDotnet = async options => {
 	const { working, nativeRoot, runtimeRoot, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 	if(!model.ownedGraph?.hostCallbacks) throw new TypeError("Owned C# requires authenticated callback/copy support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true });
-	const projection = generateOwnedDotnetPackage(model.bindingIr), prefix = c.values.prefix;
+	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs });
+	const projection = generateOwnedDotnetPackage(model.bindingIr, null, { transferredInputs }), prefix = c.values.prefix;
 	const adapterRoot = join(working, "native/owned-dotnet-binding"), gmpRoot = join(adapterRoot, "gmp");
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid C# native glibc floor");
@@ -72,18 +73,19 @@ export const projectOwnedDotnet = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(adapterRoot))
 	{ const bytes = await readFile(join(adapterRoot, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(adapterRoot, "native-dotnet-adapter.json"), canonicalJson({ schemaVersion: 1
+	await writeFile(join(adapterRoot, "native-dotnet-adapter.json"), canonicalJson({ schemaVersion: transferredInputs ? 2 : 1
 		, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity: identity, library
-		, ownedValues: { schemaVersion: 2
+		, ownedValues: { schemaVersion: transferredInputs ? 3 : 2
 			, hostCallbacks: model.ownedGraph.hostCallbacks
+			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, headerSha256: sha256(c.publicHeader), sourceSha256: sha256(c.source) }
 		, dotnetValues: projection.contract
 		, gmp: { version: "6.3.0", soname: gmpLibrary, binding: "local-symbols" }
 		, files }), { flag: "wx" });
 	const { evidence } = await ownedDotnetEvidence({ nativeRoot, runtimeRoot, adapterRoot });
-	const generated = generateOwnedDotnetPackage(model.bindingIr, evidence);
+	const generated = generateOwnedDotnetPackage(model.bindingIr, evidence, { transferredInputs });
 	const dotnetRoot = join(working, "native/dotnet"), scratch = join(working, "dotnet-managed-compiler");
 	for(const [path, contents] of Object.entries(generated.files))
 	{ await mkdir(dirname(join(dotnetRoot, path)), { recursive: true }); await writeFile(join(dotnetRoot, path), contents, { flag: "wx" }); }
@@ -111,7 +113,7 @@ export const projectOwnedDotnet = async options => {
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(dotnetRoot))
 	{ const bytes = await readFile(join(dotnetRoot, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(dotnetRoot, "native-dotnet.json"), canonicalJson({ schemaVersion: 1
+	await writeFile(join(dotnetRoot, "native-dotnet.json"), canonicalJson({ schemaVersion: transferredInputs ? 2 : 1
 		, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256
 		, evidence, sdk: version, assembly: projection.assembly
 		, ownedValues: projection.contract, files: inventory }), { flag: "wx" });

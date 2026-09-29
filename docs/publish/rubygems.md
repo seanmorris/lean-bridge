@@ -394,8 +394,8 @@ package receipt version 2. The private Ruby adapter uses version 2 with
 compiler metadata and rejects changed consumption or alias rules. Packages
 without transfers keep their existing versions and generated API.
 
-A combined transfer build can select C, C++, Cargo, PyPI and RubyGems. Ruby keeps
-its private pointer-call adapter and isolated GMP library while sharing the
+A combined transfer build can select C, C++, Cargo, PyPI, RubyGems and NuGet.
+Ruby keeps its private pointer-call adapter and isolated GMP library while sharing the
 compiled Lean component. Other consumer bindings still reject transfer
 contracts. Building a gem does not upload it.
 

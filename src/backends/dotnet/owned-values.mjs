@@ -26,9 +26,10 @@ const scalar = {
  * Invoke accepts host delegates. AsCallback bridges these two directions.
  *
  * @param ir - Concrete compiler-authenticated ownership contract.
+ * @param options - Explicit transport capabilities.
  */
-export const generateOwnedDotnetValues = ir => {
-	const layout = compileOwnedDotnetLayout(ir), c = layout.c;
+export const generateOwnedDotnetValues = (ir, options = {}) => {
+	const layout = compileOwnedDotnetLayout(ir, options), c = layout.c;
 	const component = pascal(c.prefix), names = new Map();
 	const occupied = new Set(reserved), fail = message => { throw new TypeError(`Invalid owned C# values: ${message}`); };
 	const claim = name => {

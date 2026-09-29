@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedRubyTransfer, ownedRubyTransferChangedPaths } from "./owned-ruby-transfer-history.mjs";
+import { beforeOwnedRubyTransfer, ownedRubyTransferNormalizationPaths } from "./owned-ruby-transfer-history.mjs";
 
 export const ownedPythonTransferBaseline = "008b0ae88d43beaa82c27b60d8ab65c8755a602a";
 export const ownedPythonTransferPath = "docs/evidence/owned-python-transfers-20260929.json";
@@ -62,7 +62,7 @@ export const ownedPythonTransferAddedPaths = [
 	, "tests/owned-python-transfers.test.mjs"
 ].sort();
 let cached;
-export const ownedPythonTransferNormalizationPaths = [...new Set([...ownedPythonTransferChangedPaths, ...ownedRubyTransferChangedPaths])].sort();
+export const ownedPythonTransferNormalizationPaths = [...new Set([...ownedPythonTransferChangedPaths, ...ownedRubyTransferNormalizationPaths])].sort();
 
 /**
  * Authenticate complete sources before reversing exact ordered edit spans.

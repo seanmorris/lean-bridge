@@ -14,16 +14,25 @@ import { verifiedDotnetAssets } from "./verified-assets.mjs";
  *
  * @param ir - Compiler-authenticated ownership model.
  * @param evidence - Exact compiled library identities, or null for inspection.
+ * @param options - Compiler-authenticated ownership capabilities.
+ * @param options.transferredInputs - Enable consuming input leases.
  */
-export const generateOwnedDotnetPackage = (ir, evidence = null) => {
-	const model = generateOwnedDotnetCalls(ir), prefix = model.c.prefix;
+export const generateOwnedDotnetPackage = (ir, evidence = null, { transferredInputs = false } = {}) => {
+	const model = generateOwnedDotnetCalls(ir, { transferredInputs }), prefix = model.c.prefix;
+	const transfers = model.c.functions.some(fn => fn.transfers?.length);
 	if(["gmp", "lean_bridge_native", "leanshared"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned C# component name collides with a dependency or exceeds its name limit");
 	if(evidence !== null && (evidence.componentId !== ir.component.id || evidence.library !== `lib${prefix}_dotnet.so`
 		|| !Object.hasOwn(evidence.libraries ?? {}, "libgmp-lean-bridge.so.10")))
 		throw new TypeError("Owned C# loading evidence differs from the component or private GMP dependency");
 	const cleanup = ownedDotnetThreadExit(prefix), path = `src/${model.assembly}`;
-	const contract = { schemaVersion: 1, backend: "owned-dotnet-v1"
+	const contract = { schemaVersion: transfers ? 2 : 1
+		, backend: transfers ? "owned-dotnet-v2" : "owned-dotnet-v1"
+		, ...transfers ? { inputTransfers: { schemaVersion: 1
+			, arguments: "ordinary-values", consumption: "before-lean-call"
+			, validation: "before-consumption", failure: "consumed-after-handoff"
+			, aliases: "shared-lease", borrowedInputs: "reject"
+			, independentRetains: "preserved" } } : {}
 		, bindingIrSha256: model.c.native.model.bindingIrSha256
 		, namespace: model.namespace, assembly: model.assembly
 		, loadingPolicy: "linux-x64-deepbind-v1", gmp: "libgmp-lean-bridge.so.10"
@@ -92,26 +101,31 @@ Records and variant cases are sealed C# records. Array and List use typed arrays
 
 Resource and returned-closure wrappers implement IDisposable. Use using or Dispose when finished. Retain creates an independent native owner. Resource leaves compare wrapper identity. A copied record or array does not implicitly retain its contained resource wrappers. Calls and retention require the creator thread. Dispose on another thread queues release for the creator's next call or thread exit; finalizers never invoke thread-bound native code. Creator-thread exit drains native owners even if the managed Thread object and wrappers remain reachable.
 
-Callbacks are synchronous typed delegates. Borrowed resources and closures expire when the callback returns; call Retain inside that callback to keep them. AsCallback passes a returned Lean closure back with its native identity. Multicast delegates keep every invocation. Async delegates reject before execution. If a callback result has no safe default, use OwnedCallbacks.WithRecovery(callback, recoveryValue). A callback exception returns through the native frame and is rethrown as the original managed exception with its stack. Recovery values clean up native execution; they do not replace the exception visible to the caller.
+${transfers ? `Transferred inputs use ordinary C# values. Generated XML documentation names consuming arguments. Validation and snapshot preparation precede the Lean call boundary. At handoff, shared aliases and sibling resources using the same result owner close together. Copied fields remain values; independent Retain owners survive. Retain callback borrows before transferring them. Two consuming arguments cannot share a resource lease. Pre-handoff errors preserve ownership; callback and conversion failures after handoff leave inputs consumed.
+
+` : ""}Callbacks are synchronous typed delegates. Borrowed resources and closures expire when the callback returns; call Retain inside that callback to keep them. AsCallback passes a returned Lean closure back with its native identity. Multicast delegates keep every invocation. Async delegates reject before execution. If a callback result has no safe default, use OwnedCallbacks.WithRecovery(callback, recoveryValue). A callback exception returns through the native frame and is rethrown as the original managed exception with its stack. Recovery values clean up native execution; they do not replace the exception visible to the caller.
 
 Conversions enforce depth 128, 262,144 visited values and separate 16 MiB native and accounted managed budgets. Callback input and reply conversions share their enclosing call's budget. These limits do not bound Lean working memory or every CLR allocation overhead. Malformed native outputs retire the runtime; failed or retired calls do not publish partial wrappers.
 
-The loader verifies every packaged native file before loading. It rejects conflicting runtime identities, conflicting builds, symbolic-link native assets and unverified preloads. Libraries remain loaded until process exit. Start a fresh process after fork. This projection does not yet admit transferred input ownership or anchored results.
+The loader verifies every packaged native file before loading. It rejects conflicting runtime identities, conflicting builds, symbolic-link native assets and unverified preloads. Libraries remain loaded until process exit. Start a fresh process after fork. This projection does not yet admit ${transfers ? "" : "transferred input ownership or "}anchored results.
 `;
 	const publicFiles = ["Values.cs", "Api.cs"].map(name => `${path}/${name}`);
 	const internalFiles = ["Conversions.cs", "Lifetime.cs", "Calls.cs", "Loader.cs"].map(name => `${path}/${name}`);
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1
-		, generator: "dotnet-owned-values-v1"
-		, backend: "owned-dotnet-v1", target: "dotnet"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: transfers ? 2 : 1
+		, generator: transfers ? "dotnet-owned-values-v2" : "dotnet-owned-values-v1"
+		, backend: transfers ? "owned-dotnet-v2" : "owned-dotnet-v1"
+		, target: "dotnet"
 		, component: ir.component.id
 		, bindingIrSha256: model.c.native.model.bindingIrSha256
 		, namespace: model.namespace, assembly: model.assembly
 		, files: Object.keys(files), publicFiles, internalFiles
 		, packageFiles: [`${path}/${model.assembly}.csproj`, "NuGet.Config"]
 		, aliases: model.aliases, ownedValues: contract
-		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", "callbacks", "closures", "deterministic-close"]
-		, capabilityGaps: [{ feature: "transferred-and-anchored-ownership", reason: "Transferred inputs and anchored results require their own lifetime projection." }
-			, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] });
+		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", "callbacks", "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : []]
+		, capabilityGaps: [transfers
+			? { feature: "anchored-ownership", reason: "Anchored results require their own lifetime projection." }
+			: { feature: "transferred-and-anchored-ownership", reason: "Transferred inputs and anchored results require their own lifetime projection." }
+		, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] });
 	if(Object.values(files).reduce((size, source) => size + Buffer.byteLength(source), 0) > 16 * 1024 * 1024)
 		throw new TypeError("Owned C# package sources exceed 16 MiB");
 	return { ...model, contract, files: Object.freeze(files), cleanup };
