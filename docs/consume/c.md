@@ -329,6 +329,43 @@ retained children, captured closures and cleanup. The
 [author recipe](../publish/c.md#resource-containing-c-values) explains the explicit
 resource and aggregate policy.
 
+### Transferred inputs
+
+An export can consume a result owner instead of borrowing its input. Its generated
+signature places a `<prefix>_result **` owner slot immediately after each
+transferred value. The package manifest records those parameters under
+`ownedValues.inputTransfers`.
+
+For an `echoRecord` export with this contract, pass the owner beside the value:
+
+```c
+owned_aggregates_status status = owned_aggregates_echo_record(
+    session, &input, &input_owner, &output, &output_owner);
+```
+
+Supply an owner from the same session that owns every resource in that argument.
+Each transferred argument needs a distinct owner. Passing a child consumes its
+entire owner, including siblings not passed to Lean. Use `_retain` or the generated
+aggregate `_copy` beforehand if those values must remain usable independently.
+Even an empty option or container needs its own result owner.
+
+The adapter validates all arguments before moving any owner. Just before Lean
+runs, it consumes all selected owners and sets their slots to `NULL`. A validation
+failure leaves them unchanged. A callback error or result-conversion failure
+after that point leaves them consumed, so check the owner slots even when the
+call returns an error. Output values and output owners change only on success.
+
+Old input views expire when the call returns. Callback reentry sees the owner
+slots already cleared, while the original copied input storage remains readable
+until the enclosing call returns. Independently retained owners remain usable.
+Owner slots must not overlap each other, output values or output-owner slots.
+
+The [installed transfer consumer](../../tests/fixtures/structured-types/owned-installed-transfers.c)
+exercises records, all variant branches, empty containers, nested values,
+recursive trees, transferred closures and callback failure. Transfer support is
+currently available in C packages. Other consumer bindings and owner-anchored
+borrowed results remain in development.
+
 ### Callbacks containing resources
 
 Set the generated `_host` descriptor's `call` and `context` fields for a C

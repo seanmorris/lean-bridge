@@ -93,20 +93,25 @@ export async function readVerifiedNativeRuntime(root)
  * @param options.copiedGraphs - The caller implements the finite graph carrier model.
  * @param options.ownedGraphs - The caller implements explicit aggregate ownership.
  * @param options.ownedHostCallbacks - The caller implements owned host callback lifetimes.
+ * @param options.ownedInputTransfers - The caller consumes validated input owners atomically.
  */
-export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false } = {})
+export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false } = {})
 {
 	const read = async path => JSON.parse(await readFile(join(root, path), "utf8"));
 	const inventory = await read("artifacts.json"), receipt = await read("native-component.json"), model = await read("model.json");
 	await verifyNativeFiles(root, inventory.files);
 	if((await nativeArtifactPaths(root)).some(path => path !== "artifacts.json" && !Object.hasOwn(inventory.files, path))) throw new Error("unrecorded native component artifact");
 	const metadata = await read("metadata.json");
-	const hostCallbacks = model.schemaVersion === 7;
+	const transferredInputs = model.schemaVersion === 8;
+	const hostCallbacks = model.schemaVersion === 7 || (transferredInputs && model.ownedGraph?.hostCallbacks !== undefined);
+	if(transferredInputs && (!ownedGraphs || !ownedInputTransfers))
+		throw Object.assign(new TypeError("This native component requires an owned input-transfer consumer adapter"), { code: "native-owned-transfers-unavailable" });
 	if(hostCallbacks && (!ownedGraphs || !ownedHostCallbacks))
 		throw Object.assign(new TypeError("This native component requires an owned host-callback consumer adapter"), { code: "native-owned-callbacks-unavailable" });
-	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks });
+	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: transferredInputs });
 	const adapters = generateCompiledNativeLeanAdapters(reconstructed);
-	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== (hostCallbacks ? 3 : 2)
+	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== (transferredInputs ? 4 : hostCallbacks ? 3 : 2)
+		|| canonicalJson(receipt.inputTransfers ?? null) !== canonicalJson(model.ownedGraph?.inputTransfers ?? null)
 		|| receipt.runtimeIdentity !== runtimeIdentity
 		|| canonicalJson(model) !== canonicalJson(reconstructed)
 		|| receipt.modelSha256 !== sha256(canonicalJson(model))

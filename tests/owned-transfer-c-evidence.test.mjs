@@ -7,12 +7,15 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { ownedTransferPackageHistoricalBytes } from "./helpers/owned-transfer-package-history.mjs";
 import { assertOwnedTransferCExecution, assertOwnedTransferCCi } from "./helpers/owned-transfer-c-evidence.mjs";
 import { beforeOwnedTransferC, ownedTransferCAddedPaths, ownedTransferCBaseline
 	, ownedTransferCChangedPaths, ownedTransferCHistoricalBytes, ownedTransferCPath
 	, ownedTransferCPrevious, ownedTransferCRegisteredSources, reverseOwnedTransferCUpdate } from "./helpers/owned-transfer-c-history.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedTransferCPath, "utf8"));
+const historical = async path => ownedTransferPackageHistoricalBytes(path, await readFile(path));
+const historicalText = async path => (await historical(path)).toString("utf8");
 
 test("staged C transfers authenticate every source and preserve installed support", async () => {
 	const record = await read();
@@ -25,27 +28,27 @@ test("staged C transfers authenticate every source and preserve installed suppor
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources)
 		, ...Object.keys(ownedTransferCRegisteredSources)
 		, ...ownedTransferCAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await historical(path)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedTransferCChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedTransferCRegisteredSources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedTransferC(update.path, current);
+		const current = await historicalText(update.path), prior = beforeOwnedTransferC(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedTransferC(update.path, prior), prior);
 		assert.equal(beforeOwnedTransferC(update.path, current, update.currentSha256), current);
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = await historicalText("docs/type-surface.v1.json");
 	const prior = JSON.parse(beforeOwnedTransferC("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await historical(file.path));
 	assert.deepEqual(JSON.parse(current), prior, "Staged C transfer execution does not promote installed support");
 });
 
 test("staged C transfer history rejects unknown edits and forged ancestors", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = await historicalText(update.path), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedTransferC(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedTransferCUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

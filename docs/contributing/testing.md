@@ -1180,9 +1180,29 @@ moved-state updates and cleanup. CI requires the enabled tests and retains
 `build/owned-transfers/`. Existing borrowed-input APIs must produce identical
 generated files when the transfer capability is enabled but unused.
 
-Production package builds still reject transferred inputs. Installed C
-acceptance, the other consumer bindings and owner-anchored borrowed results
-remain open. See the [transfer implementation record](../evidence/owned-transfer-c-20260929.md).
+The [transfer implementation record](../evidence/owned-transfer-c-20260929.md)
+captures the lower-level native/C checks.
+
+#### Installed C transfers
+
+Run the prepared-package gate with the native producer prerequisites:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_OWNED_TRANSFER_PACKAGE_TEST=1 node --test --test-concurrency=1 \
+  tests/owned-transfer-packaging.test.mjs
+```
+
+Both ordinary configuration and an independently reviewed API build real Lean
+archives. The test removes the author source and producer output before installing
+the archive. A public C consumer checks owner consumption, empty values, nested
+containers, recursive trees, callbacks and closures using pkg-config, then runs
+again with CMake after archive removal and package relocation. Readers without
+transfer support and forged move contracts must reject. Reassembly must reproduce
+the exact original archive. Reports go to `build/owned-transfer-packaging/`.
+
+Other consumer bindings, owner-anchored borrowed results and owned Docker
+acceptance remain open.
 
 ### Staged WIT owned graphs
 

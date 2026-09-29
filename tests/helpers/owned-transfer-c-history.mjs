@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedTransferPackage, ownedTransferPackageChangedPaths } from "./owned-transfer-package-history.mjs";
 
 export const ownedTransferCBaseline = "5ffbcd067e83927ac45f97b550330c07bd0c0e1f";
 export const ownedTransferCPath = "docs/evidence/owned-transfer-c-20260929.json";
@@ -55,6 +56,7 @@ export const ownedTransferCAddedPaths = [
 	, "tests/owned-transfer-c-evidence.test.mjs"
 ].sort();
 let cached;
+export const ownedTransferCNormalizationPaths = [...new Set([...ownedTransferCChangedPaths, ...ownedTransferPackageChangedPaths])].sort();
 
 /**
  * Reverse exact ordered spans after authenticating both complete file versions.
@@ -87,6 +89,7 @@ export const reverseOwnedTransferCUpdate = (source, update) => {
  * @param expected - Optional exact historical stopping identity.
  */
 export const beforeOwnedTransferC = (path, source, expected) => {
+	source = beforeOwnedTransferPackage(path, source, expected);
 	if(!ownedTransferCChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedTransferCPath, "utf8"));
@@ -106,5 +109,5 @@ export const beforeOwnedTransferC = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional exact historical stopping identity.
  */
-export const ownedTransferCHistoricalBytes = (path, bytes, expected) => ownedTransferCChangedPaths.includes(path)
+export const ownedTransferCHistoricalBytes = (path, bytes, expected) => ownedTransferCNormalizationPaths.includes(path)
 	? beforeOwnedTransferC(path, bytes.toString("utf8"), expected) : bytes;

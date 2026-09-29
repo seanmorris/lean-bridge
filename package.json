@@ -802,6 +802,7 @@
     "test:target-runtime-profiles": "node --test tests/target-runtime-profiles.test.mjs",
     "test:type-surface": "node --test tests/type-surface.test.mjs",
     "test:owned-transfers": "LEAN_BRIDGE_OWNED_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-transfers.test.mjs tests/owned-c-transfers.test.mjs",
+    "test:owned-transfer-packages": "LEAN_BRIDGE_OWNED_TRANSFER_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/owned-transfer-analysis.test.mjs tests/owned-transfer-packaging.test.mjs",
     "test:type-corpus": "node --test tests/type-corpus.test.mjs",
     "test:type-corpus:reviewed": "LEAN_BRIDGE_REVIEWED_CORPUS_TEST=1 node --test tests/type-corpus-reviewed.test.mjs",
     "test:type-corpus:reviewed-native": "LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp,dotnet,java,kotlin,perl,php-native,python,ruby,rust,wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs",

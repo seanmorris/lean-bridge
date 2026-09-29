@@ -93,7 +93,8 @@ const packageReport = async (report, mode) => {
 	assert.equal(model.exports.length, 51);
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), mode === "reviewed");
 	assert.equal(model.sourceIdentity.modules[0].source.sha256, sha256(await readFile("tests/fixtures/onboarding/owned-dotnet-callables/Owned.lean")));
-	assert.equal(model.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(model.sourceIdentity.extractorSha256, sha256(ownedPhpWasmHistoricalBytes(
+		"src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), model.sourceIdentity.extractorSha256)));
 	const native = generateCompiledNativeLeanAdapters(model), component = report.componentReceipt;
 	assert.equal(component.modelSha256, sha256(canonicalJson(model)));
 	assert.equal(component.metadataSha256, sha256(canonicalJson(report.input.metadata)));

@@ -147,7 +147,8 @@ export const validateCompilerProjectAnalysis = (analysis, inventory, intent) => 
 	const review = intent.document.reviewedBindingIr;
 	const reviewedSelection = review ? (JSON.parse(review.source).schemaVersion === 4 ? reviewedOwnedSourceSelection : reviewedSourceSelection)(review) : null;
 	const selectionFields = { ...compilerExportSelection(configuration)
-		, ...(reviewedSelection?.ownedAggregates ? { ownedAggregates: reviewedSelection.ownedAggregates } : {}) };
+		, ...(reviewedSelection?.ownedAggregates ? { ownedAggregates: reviewedSelection.ownedAggregates } : {})
+		, ...(reviewedSelection?.contracts ? { contracts: reviewedSelection.contracts } : {}) };
 	const owned = selectionFields.ownedAggregates !== undefined;
 	closed(request, ["modules", "exportModules", "exports", "resources", "arities", "metadata", ...Object.keys(selectionFields), ...(owned ? ["profile"] : [])]);
 	closed(request.metadata, ["toolchain", "invocationIdentitySha256", "modules"]);

@@ -110,8 +110,9 @@ test("export contract examples validate and distinguish implemented decisions fr
 	assert.equal(shared.contracts["Library.echoWord"].result.refinement, "reject");
 	assert.deepEqual(closure.contracts["Library.makeWordAdder"].result, { ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
 	assert.match(existing, /after specialization and configured closure arity/);
-	assert.match(existing, /Production package adapters reject those choices/);
-	assert.match(existing, /Ordinary and reviewed ownership analysis preserves input-transfer decisions/);
+	assert.match(existing, /C packages support \[explicit input transfers\]/);
+	assert.match(existing, /Other consumer bindings still reject transfer contracts/);
+	assert.match(existing, /Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis/);
 	assert.match(existing, /not memory allocation inside Lean/);
 	const diagnostics = await readFile("docs/lean/diagnostics.md", "utf8");
 	for(const code of ["export-contract-mismatch", "unused-export-contract", "contracts-require-elaboration"])

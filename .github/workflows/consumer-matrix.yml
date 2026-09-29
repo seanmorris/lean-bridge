@@ -935,6 +935,11 @@ jobs:
           test -s build/owned-transfers/native.json
           test -s build/owned-transfers/ordinary-c.json
           test -s build/owned-transfers/reviewed-c.json
+          npm run test:owned-transfer-packages
+          test -s build/owned-transfer-packaging/analysis-ordinary.json
+          test -s build/owned-transfer-packaging/analysis-reviewed.json
+          test -s build/owned-transfer-packaging/ordinary.json
+          test -s build/owned-transfer-packaging/reviewed.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs
           test -s build/owned-aggregate-native/reviewed-public-c.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs
@@ -983,6 +988,7 @@ jobs:
             build/owned-aggregate-native/public-c.json
             build/owned-aggregate-native/public-c-scalars.json
             build/owned-transfers/
+            build/owned-transfer-packaging/
             build/owned-aggregate-native/reviewed-public-c.json
             build/owned-c-packaging/
             build/owned-host-callbacks/ordinary.json
@@ -1216,6 +1222,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-values.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-transfers"
+              consumer_command="$consumer_command && npm run test:owned-transfer-packages"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-host-callbacks.test.mjs"

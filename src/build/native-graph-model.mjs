@@ -71,12 +71,14 @@ export const nativeGraphCarrierAbi = model => {
  * @param root0 - Explicit transport capabilities selected by the caller.
  * @param root0.ownedGraphs - Admit compiler-checked resource-containing aggregates.
  * @param root0.ownedHostCallbacks - Admit typed host callbacks for owned values.
+ * @param root0.ownedInputTransfers - Admit consumption of explicitly supplied input owners.
  */
-export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedHostCallbacks = false } = {}) => {
+export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false } = {}) => {
 	const { metadata, component, moduleName, sourceIdentity } = options;
 	if(ownedHostCallbacks && !ownedGraphs) throw new TypeError("Owned callbacks require an ownership-aware transport");
+	if(ownedInputTransfers && !ownedGraphs) throw new TypeError("Owned input transfers require an ownership-aware transport");
 	if(ownedGraphs && sourceIdentity.request.ownedAggregates !== undefined)
-		return createOwnedCompiledNativeModel({ ...options, hostCallbacks: ownedHostCallbacks });
+		return createOwnedCompiledNativeModel({ ...options, hostCallbacks: ownedHostCallbacks, transferredInputs: ownedInputTransfers });
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true });
 	if(!elaborated.declarations.some(containsGraph)) return createNativeModel(options);
 	const semantic = createElaboratedSemanticModel({ metadata

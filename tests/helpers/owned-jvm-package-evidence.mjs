@@ -136,7 +136,8 @@ export const assertOwnedJvmPackageReport = async (report, scalar, reviewed) => {
 		, "sourceRemovedBeforeInstallation"]);
 	const { input, componentReceipt: component, adapterReceipt: adapter, compiledProjection: compiled, manifest, package: pkg } = report;
 	assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), reviewed);
-	assert.equal(input.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(input.sourceIdentity.extractorSha256, sha256(jvmProbeRepairBytes(
+		"src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"), input.sourceIdentity.extractorSha256)));
 	assert.equal(input.sourceIdentity.modules[0].source.sha256, sha256(await readFile(
 		"tests/fixtures/onboarding/" + (scalar ? "owned-scalars" : "owned-dotnet-callables") + "/Owned.lean")));
 	const model = createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true });

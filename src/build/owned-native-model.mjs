@@ -5,6 +5,7 @@
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { projectNativeMetadata } from "../analyze/native-metadata.mjs";
+import { compileOwnedNativeValueLayout } from "../backends/native/owned-value-layout.mjs";
 import { generateOwnedAggregateCarriers, generateOwnedBindingCarriers } from "./owned-aggregate-carriers.mjs";
 
 const callbackSource = carriers => carriers.callbackSource.replace('#include "carriers.h"', '#include "component.h"');
@@ -12,6 +13,17 @@ const callbackCapability = carriers => ({ schemaVersion: 1
 	, lifetime: "call", recovery: "typed-value-v1"
 	, signatures: carriers.hostCallbacks
 	, trampolineSha256: sha256(callbackSource(carriers)) });
+
+const inputTransferCapability = (ir, enabled) => {
+	if(!ir.declarations.some(item => item.parameters.some(parameter => parameter.ownership === "transfer"))) return null;
+	if(!enabled) throw Object.assign(new TypeError("This native component requires an owned input-transfer consumer adapter"), { code: "native-owned-transfers-unavailable" });
+	const layout = compileOwnedNativeValueLayout(ir, { transferredInputs: true });
+	return { schemaVersion: 1, ownership: "whole-result-owner"
+		, validation: "before-consumption", consumption: "before-lean-call"
+		, failure: "consumed-after-handoff", viewLifetime: "until-call-returns"
+		, exports: layout.functions.filter(item => item.transfers?.length)
+			.map(item => ({ bindingId: item.id, parameters: item.transfers })) };
+};
 
 /**
  * Retain complete v4 semantics and measured compiler evidence for package readers.
@@ -23,9 +35,12 @@ export const createOwnedCompiledNativeModel = options => {
 	const { metadata, sourceIdentity, component } = options;
 	const hostCallbacks = options.hostCallbacks ?? false;
 	if(typeof hostCallbacks !== "boolean") throw new TypeError("Owned host callback capability must be explicit");
+	const transferredInputs = options.transferredInputs ?? false;
+	if(typeof transferredInputs !== "boolean") throw new TypeError("Owned input transfer capability must be explicit");
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, ownedGraphs: true });
 	const carriers = generateOwnedAggregateCarriers(options);
-	return Object.freeze({ schemaVersion: hostCallbacks ? 7 : 6
+	const inputTransfers = inputTransferCapability(carriers.model.bindingIr, transferredInputs);
+	return Object.freeze({ schemaVersion: inputTransfers ? 8 : hostCallbacks ? 7 : 6
 		, profile: "native-library-v1"
 		, pointerBits: 64, byteOrder: "little", component
 		, bindingIr: carriers.model.bindingIr
@@ -37,8 +52,10 @@ export const createOwnedCompiledNativeModel = options => {
 			if(!declaration) throw new TypeError("Owned native export lacks a compiler-selected declaration");
 			return { ...item, bindingId: declaration.id, symbol: carriers.symbols.exports[declaration.id] };
 		})
-		, ownedGraph: { schemaVersion: hostCallbacks ? 2 : 1, module: carriers.module
+		, ownedGraph: { schemaVersion: inputTransfers ? 3 : hostCallbacks ? 2 : 1
+			, module: carriers.module
 			, metadataSha256: elaborated.sha256, symbols: carriers.symbols
+			, ...(inputTransfers ? { inputTransfers } : {})
 			, ...(hostCallbacks ? { hostCallbacks: callbackCapability(carriers) } : {}) } });
 };
 
@@ -48,11 +65,16 @@ export const createOwnedCompiledNativeModel = options => {
  * @param model - Independently authenticated native model, never a copied graph.
  */
 export const generateOwnedNativeLeanAdapters = model => {
-	const hostCallbacks = model.schemaVersion === 7;
-	if(![6, 7].includes(model.schemaVersion) || model.profile !== "native-library-v1"
-		|| model.pointerBits !== 64 || model.byteOrder !== "little" || model.ownedGraph?.schemaVersion !== (hostCallbacks ? 2 : 1)
+	const transferredInputs = model.schemaVersion === 8;
+	const hostCallbacks = model.schemaVersion === 7 || (transferredInputs && model.ownedGraph?.hostCallbacks !== undefined);
+	if(![6, 7, 8].includes(model.schemaVersion) || model.profile !== "native-library-v1"
+		|| model.pointerBits !== 64 || model.byteOrder !== "little" || model.ownedGraph?.schemaVersion !== (transferredInputs ? 3 : hostCallbacks ? 2 : 1)
 		|| (!hostCallbacks && model.ownedGraph.hostCallbacks !== undefined))
 		throw new TypeError("Owned native component differs from the supported transport");
+	const inputTransfers = inputTransferCapability(model.bindingIr, transferredInputs);
+	if(Boolean(inputTransfers) !== transferredInputs
+		|| canonicalJson(inputTransfers) !== canonicalJson(model.ownedGraph.inputTransfers ?? null))
+		throw new TypeError("Owned native input transfers differ from the checked contract");
 	const generated = generateOwnedBindingCarriers({ document: model.bindingIr
 		, sourceIdentity: model.sourceIdentity, declarations: model.exports
 		, metadataSha256: model.ownedGraph.metadataSha256, hostCallbacks });

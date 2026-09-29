@@ -65,9 +65,9 @@ values. Select the resource types and their aggregate ownership policy explicitl
 
 These names come from the repository's
 [owned aggregate fixture](../../tests/fixtures/onboarding/owned-aggregates/Owned.lean).
-Build the project with `--target c`, or add [C++](cpp.md#resource-containing-values)
-with `--target cpp`. Do not add other targets until they implement
-this transport. A reviewed version-4 contract supplies the exports, resource
+Build the project with `--target c`, or add targets whose guides document
+resource-containing values, including [C++](cpp.md#resource-containing-values).
+A reviewed version-4 contract supplies the exports, resource
 selection and policy instead; its configuration retains only module authorization,
 package metadata and target coordinates. Lean checks the reviewed types and
 ownership decisions against fresh compiler output before generating the package.
@@ -79,7 +79,7 @@ Consumers need neither Lean nor the author project. The package manifest uses
 capability; its README describes the generated
 session/result API. Package names do not change the source-derived API prefix.
 
-Each call borrows inputs and returns a typed view with an explicit result owner.
+By default, each call borrows inputs and returns a typed view with an explicit result owner.
 Consumers release that owner, rather than walking fields or clearing nested GMP
 views. Returned Lean closures can capture these values and have typed call and
 retain operations. Synchronous host callbacks can receive and return these values;
@@ -92,10 +92,47 @@ callback build flag is required.
 Host callbacks borrow the enclosing call's lifetime. The generated header identifies
 signatures that require a typed recovery value if the host fails. The compiler
 derives other recovery values from arguments and constructors; it never fabricates
-a resource. Transferred inputs, anchored borrowed results, other host projections
-and Wasm lowering remain unfinished. See
+a resource. Owner-anchored borrowed results remain unfinished. See
 [C ownership and cleanup](../consume/c.md#resource-containing-values) and
 [callback lifetimes](../consume/c.md#callbacks-containing-resources).
+
+### Transfer input ownership
+
+For a C package, add an explicit contract when a function should consume its
+input owner. For example, add this `contracts` entry to the configuration above:
+
+```json
+{
+  "contracts": {
+    "Owned.echoRecord": {
+      "parameters": [
+        {
+          "ownership": "transfer",
+          "lifetime": { "scope": "call", "anchor": null }
+        }
+      ]
+    }
+  }
+}
+```
+
+Keep `resources` and `ownedAggregates`. The compiler preserves the transfer
+decision in the Binding IR. A reviewed version-4 API can state the same decision
+directly. Transfer applies to resource-containing inputs and returned Lean closure
+inputs; copied scalar inputs still use `copy`. Both `call` and `explicit` input
+lifetime scopes are accepted, with no anchor.
+
+Build with `--target c`. Other targets currently reject these transfer contracts,
+including a combined release that selects an unsupported target. A failed build
+leaves no partial release. This does not extend a host callback's lifetime or
+transfer the arguments that Lean passes into a host callback.
+
+The public function takes an owner slot beside each transferred argument. It
+validates every input before consuming all selected owners, clears their slots
+before calling Lean, and keeps them consumed on later failure. See
+[the consumer rules](../consume/c.md#transferred-inputs). These packages use
+manifest version 4 and `ownedValues` version 3. Borrow-only packages retain
+manifest version 3 and their existing signatures.
 
 ## Copied arrays and records
 
