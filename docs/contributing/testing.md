@@ -1319,6 +1319,32 @@ or handoff directory. The reviewed build also installs C, C++, Cargo, PyPI and
 RubyGems companions. Reports go to `build/owned-dotnet-transfers/` and
 `build/owned-dotnet-transfer-packaging/`.
 
+#### Installed Java and Kotlin transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-jvm-transfers
+```
+
+Use JDK 22, Kotlin 2.2.0, Maven and the pinned Lean/native toolchains. On a glibc
+2.36 test host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+The private gate exercises every selected aggregate and recursive shape in
+both Java and Kotlin. Managed and native allocation sweeps cover failures
+before and after single- and multiple-input handoffs. The probe retains
+exceptions while checking explicit cleanup, checks alias visibility during
+callback reentry and from other threads, and interrupts creator threads while
+native callbacks are active.
+
+The package gate compiles ordinary-source and independently reviewed APIs.
+It checks exact public signatures, rejects altered ownership metadata and
+ill-typed consumers, and reproduces the original JAR and POM bytes. Offline
+consumers run after producer removal. Relocated execution has only the
+installed JAR, resolved runtime dependencies and a `java.base` runtime image;
+consumer source, Maven caches, handoff archives and compilers are absent.
+Reports go to `build/owned-jvm-transfers/` and
+`build/owned-jvm-transfer-packaging/`.
+
 The remaining consumer bindings, owner-anchored borrowed results and owned
 Docker acceptance remain open.
 

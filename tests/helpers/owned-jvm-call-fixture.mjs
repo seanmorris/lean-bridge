@@ -34,9 +34,14 @@ extern "C" size_t probe_exit_errors(void) { return exit_errors.load(); }
  * Build the checked C adapter and creator-thread cleanup.
  *
  * @param compiled - Actual Lean fixture with callback carriers.
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Enable consuming input leases.
  */
-export const compileOwnedJvmCallNative = async compiled => {
-	const input = { metadata: compiled.metadata, sourceIdentity: compiled.sourceIdentity, component: compiled.model.component, hostCallbacks: true };
+export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false } = {}) => {
+	const input = { metadata: compiled.metadata
+		, sourceIdentity: compiled.sourceIdentity
+		, component: compiled.model.component, hostCallbacks: true
+		, ...transferredInputs ? { transferredInputs: true } : {} };
 	const generated = ownedJvmCallNative(input), { c, cleanup, implementation } = generated;
 	for(const [path, source] of Object.entries(c.files))
 		await saveLakeFile(compiled.directory, path.startsWith("src/") ? "api.c" : path.split("/").at(-1), path.startsWith("src/") ? implementation : source);

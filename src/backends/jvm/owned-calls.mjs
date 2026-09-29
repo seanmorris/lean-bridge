@@ -5,6 +5,7 @@
  */
 import { generateOwnedKotlinValues } from "./owned-kotlin.mjs";
 import { ownedJvmCallables, ownedJvmCallFrame } from "./owned-callables.mjs";
+import { ownedJvmTransfers } from "./owned-transfers.mjs";
 
 const boxes = { boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer", long: "Long", float: "Float", double: "Double" };
 const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
@@ -14,9 +15,11 @@ const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
  * Both nominal families share one lifetime and native conversion implementation.
  *
  * @param ir - Compiler-authenticated ownership contract.
+ * @param options - Explicit transport capabilities.
  */
-export const generateOwnedJvmCalls = ir => {
-	const kotlin = generateOwnedKotlinValues(ir), model = { ...kotlin.model, kotlin }, { c } = model;
+export const generateOwnedJvmCalls = (ir, options = {}) => {
+	const kotlin = generateOwnedKotlinValues(ir, options), model = { ...kotlin.model, kotlin }, { c } = model;
+	const transfers = c.functions.some(fn => fn.transfers?.length);
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const cache = new Map();
 	const type = (id, k) => {
@@ -40,9 +43,10 @@ export const generateOwnedJvmCalls = ir => {
 		: c.hostArgument(fn, i) ? `${model.namespace}${k ? ".kotlin" : ""}.${nodes.get(fn.parameters[i]).delegateType}` : type(fn.parameters[i], k);
 	const callbacks = ownedJvmCallables(model, calls, type), methods = [];
 	const signatures = calls.map(fn => {
-		const arguments_ = fn.parameters.map((id, i) => {
+		const arguments_ = fn.parameters.flatMap((id, i) => {
 			const node = nodes.get(id);
-			return c.hostArgument(fn, i) || !node.leaf ? "ADDRESS" : node.valueLayout ?? `_OwnedLayouts.${node.layoutName}`;
+			return [c.hostArgument(fn, i) || !node.leaf ? "ADDRESS" : node.valueLayout ?? `_OwnedLayouts.${node.layoutName}`
+				, ...fn.transfers?.includes(i) ? ["ADDRESS"] : []];
 		});
 		return ["ADDRESS", ...arguments_, "ADDRESS", "ADDRESS"];
 	});
@@ -51,26 +55,50 @@ export const generateOwnedJvmCalls = ir => {
 		const family = k ? "Kotlin" : "Java", catalog = k ? "_KotlinOwnedTypes.CATALOG" : "_OwnedTypes.CATALOG";
 		const factory = k ? "kotlinFactory" : "javaFactory";
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
+		const moving = fn.transfers ?? [];
 		const write = (node, i, scope, check) => fn.handle && i === 0
 			? `MemorySegment.ofAddress(${scope}.root(arg${i}))`
 			: c.hostArgument(fn, i) ? `host${family}${node.index}(arg${i}, ${scope}, ${check ? "null" : "frame"})`
 				: `_OwnedConvert.write(${catalog}, ${node.index}, arg${i}, ${scope})`;
+		const inputs = parameters.flatMap((node, i) => [
+			...moving.length ? [`            inputs.moveGroup = ${moving.indexOf(i)};`] : []
+			, `            var input${i} = ${write(node, i, "inputs", false)};`
+		]).join("\n");
+		const snapshots = moving.flatMap((i, group) => {
+			const node = parameters[i], copy = [...c.retains, ...c.copies].find(item => item.id === node.id);
+			if(!copy) throw new TypeError(`Missing owned JVM input snapshot for ${node.id}`);
+			const symbol = calls.findIndex(call => call.cName === copy.cName);
+			return [`            var moved${i} = inputs.allocate(${node.size}, ${node.alignment});`
+				, `            var inputOwner${i} = moves.owners[${group}].output();`
+				, `            _OwnedRuntime.check((int)symbols[${symbol}].invokeExact(MemorySegment.ofAddress(state.require()), ${node.aggregate ? `input${i}` : `input${i}.get(${node.valueLayout}, 0)`}, moved${i}, inputOwner${i}));`];
+		}).join("\n");
+		const arguments_ = [moving.length ? "session" : "MemorySegment.ofAddress(state.require())"
+			, ...parameters.flatMap((node, i) => moving.includes(i)
+				? [node.aggregate ? `moved${i}` : `moved${i}.get(${node.valueLayout}, 0)`, `inputOwner${i}`]
+				: [fn.handle && i === 0 || c.hostArgument(fn, i) || node.aggregate ? `input${i}` : `input${i}.get(${node.valueLayout}, 0)`])
+			, "output", moving.length ? "resultOwner" : "owner.output()"].join(", ");
+		const invoke = moving.length ? `            var session = MemorySegment.ofAddress(state.require());
+            var resultOwner = owner.output();
+            moves.arm();
+            int status;
+            try { status = (int)symbols[${index}].invokeExact(${arguments_}); }
+            finally { moves.finish(); }
+            frame.finish(status);` : `            frame.finish((int)symbols[${index}].invokeExact(${arguments_}));`;
 		methods.push(`    @SuppressWarnings("unchecked")
     ${type(result.id, k)} ${name(fn, family)}(${parameters.map((_, i) => `${parameterType(fn, i, k)} arg${i}`).join(", ")}) {
         var state = runtime.current(); ready();
         try (var check = new _OwnedConvert.Scope(state, true, null, null)) {
-${parameters.map((node, i) => `            ${write(node, i, "check", true)};`).join("\n")}
+${parameters.map((node, i) => `            ${write(node, i, "check", true)};`).join("\n") || "            check.require();"}
         }
         try (var inputs = new _OwnedConvert.Scope(state, false, null, null);
-             var frame = new _OwnedCallFrame(this, inputs);
+             var frame = new _OwnedCallFrame(this, inputs);${moving.length ? `
+             var moves = new _OwnedInputTransfers(state, ${moving.length}, inputs);` : ""}
              var owner = new _OwnedRuntime.Result(state);
              var outputs = new _OwnedConvert.Scope(state, false, ${factory}, owner::adopt, inputs.budget)) {
-${parameters.map((node, i) => `            var input${i} = ${write(node, i, "inputs", false)};`).join("\n")}
+${moving.length ? "            inputs.moves = moves;\n" : ""}${inputs}
+${moving.length ? `            inputs.moveGroup = -1;\n${snapshots}\n` : ""}\
             var output = outputs.allocate(${result.size}, ${result.alignment});
-            frame.finish((int)symbols[${index}].invokeExact(${["MemorySegment.ofAddress(state.require())"
-			, ...parameters.map((node, i) => fn.handle && i === 0 || c.hostArgument(fn, i) || node.aggregate
-				? `input${i}` : `input${i}.get(${node.valueLayout}, 0)`)
-			, "output", "owner.output()"].join(", ")}));
+${invoke}
             ready();
             var result = (${type(result.id, k)})_OwnedConvert.read(${catalog}, ${result.index}, output, outputs);
             _OwnedRuntime.checkpoint(); ready(); outputs.complete(); owner.complete(); return result;
@@ -146,6 +174,7 @@ ${identities.map(node => {
 	};
 	for(const [name, body] of Object.entries({ _OwnedBindings: source, _OwnedCallbacks: callbacks.wrappers, _OwnedCallFrame: ownedJvmCallFrame, OwnedCallbacks: callbacks.javaRecovery }))
 		add(`${java}/${name}.java`, `package ${model.namespace};\n\n${body}`, name === "OwnedCallbacks");
+	if(transfers) add(`${java}/_OwnedInputTransfers.java`, `package ${model.namespace};\n\n${ownedJvmTransfers}`);
 	add(`${kt}/_KotlinOwnedFactories.kt`, `package ${quoted(model.namespace)}\n\n${kotlinFactory}`);
 	add(`${kt}/_KotlinOwnedCallbackOps.kt`, `package ${quoted(model.namespace)}\n\n${callbacks.kotlinOps}`);
 	add(`${kt}/kotlin/OwnedCallbacks.kt`, `package ${quoted(kotlin.namespace)}\n\n${callbacks.kotlinRecovery}`, true);

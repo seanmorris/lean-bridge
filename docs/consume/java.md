@@ -424,8 +424,44 @@ wrappers. Virtual threads and use after fork reject.
 Conversions share a limit of 128 value levels, 262,144 visits, a 16 MiB
 native-copy budget and a separate 16 MiB accounted Java-storage budget per call.
 These limits do not measure Lean working memory or every JVM allocation.
-Transferred inputs, anchored results and asynchronous callbacks are separate
-work. A saved host callback does not remain callable after its enclosing call.
+Anchored results and asynchronous callbacks require separate lifetime support.
+A saved host callback does not remain callable after its enclosing call.
+
+#### Consuming inputs
+
+An author can mark an argument as transferred. The generated Javadoc names the
+consuming arguments. Pass ordinary Java values; no move wrapper is required.
+For the [transfer-enabled example](../publish/maven.md#transfer-input-ownership),
+save `OwnedTransferExample.java`:
+
+```java file=java/OwnedTransferExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.Api;
+
+public final class OwnedTransferExample {
+    public static void main(String[] args) {
+        try (var original = Api.newTicket(BigInteger.valueOf(42), "task");
+             var kept = original.retain();
+             var received = Api.retainTicket(original)) {
+            if (!original.isClosed() || Api.serial(received).intValueExact() != 42
+                || Api.serial(kept).intValueExact() != 42)
+                throw new IllegalStateException("Transfer lost a retained reference.");
+            System.out.println("transferred");
+        }
+    }
+}
+```
+
+Validation and snapshot preparation finish before Lean runs. At handoff, all
+aliases sharing the input's resource lease close. Sibling resources from the
+same returned aggregate share that lease, so transferring one closes the
+others. An independent `retain()` survives. Copied fields keep their values.
+
+Two consuming arguments cannot share a resource lease. Retain a callback borrow
+before passing it to a consuming argument. Pre-handoff errors preserve ownership;
+callback exceptions and result-conversion failures after handoff leave the input
+consumed. `isClosed()` reports consumption during callback reentry, including
+when another thread checks it. Calls still require the creating platform thread.
 
 ### Alpha interoperability example
 

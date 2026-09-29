@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJvmTransfer, ownedJvmTransferChangedPaths } from "./owned-jvm-transfer-history.mjs";
 
 export const ownedDotnetTransferBaseline = "ea7759886937d82bc6c8c2c90f867b99e8ea10e0";
 export const ownedDotnetTransferPath = "docs/evidence/owned-dotnet-transfers-20260929.json";
@@ -65,6 +66,7 @@ export const ownedDotnetTransferAddedPaths = [
 	, "tests/owned-dotnet-transfers.test.mjs"
 ].sort();
 let cached;
+export const ownedDotnetTransferNormalizationPaths = [...new Set([...ownedDotnetTransferChangedPaths, ...ownedJvmTransferChangedPaths])].sort();
 
 /**
  * Authenticate complete sources before reversing exact ordered edit spans.
@@ -97,6 +99,7 @@ export const reverseOwnedDotnetTransferUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedDotnetTransfer = (path, source, expected) => {
+	source = beforeOwnedJvmTransfer(path, source, expected);
 	if(!ownedDotnetTransferChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedDotnetTransferPath, "utf8"));
@@ -115,5 +118,5 @@ export const beforeOwnedDotnetTransfer = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedDotnetTransferHistoricalBytes = (path, bytes, expected) => ownedDotnetTransferChangedPaths.includes(path)
+export const ownedDotnetTransferHistoricalBytes = (path, bytes, expected) => ownedDotnetTransferNormalizationPaths.includes(path)
 	? beforeOwnedDotnetTransfer(path, bytes.toString("utf8"), expected) : bytes;

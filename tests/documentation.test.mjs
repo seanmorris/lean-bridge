@@ -29,6 +29,29 @@ import {
 	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
+test("owned JVM transfer docs and CI require installed Java and Kotlin consumers", async () => {
+	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const step = workflow.split("- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\n")[1].split("      - name:")[0];
+	assert.ok(step.includes("          npm run test:owned-jvm-transfers\n"));
+	for(const directory of ["transfers", "transfer-packaging"])
+	{
+		assert.ok(workflow.includes(`            build/owned-jvm-${directory}/\n`));
+		for(const mode of ["ordinary", "reviewed"])
+			assert.ok(step.includes(`test -s build/owned-jvm-${directory}/${mode}.json`));
+	}
+	for(const profile of ["java", "kotlin"])
+	{
+		const file = profile === "java" ? "OwnedTransferExample.java" : "OwnedTransferExample.kt";
+		const guide = await readFile(`docs/consume/${profile}.md`, "utf8");
+		const source = await readFile(`tests/fixtures/documentation/consumers/${profile}/${file}`, "utf8");
+		assert.ok(guide.includes("```" + profile + ` file=${profile}/${file}\n` + source + "```"));
+		assert.match(guide, /sibling resources|Sibling resources/u);
+	}
+	const publisher = await readFile("docs/publish/maven.md", "utf8");
+	assert.match(publisher, /"ownership": "transfer"/u);
+	assert.match(publisher, /version-2 JVM contract/u);
+});
+
 test("owned C# transfer docs and CI require offline packages and the combined consumer tools", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const step = workflow.split("- name: Compare installed NuGet corpus packages with fresh Lean results\n")[1].split("      - name:")[0];
@@ -51,7 +74,7 @@ test("owned C# transfer docs and CI require offline packages and the combined co
 	assert.match(transfer, /Siblings?|Sibling resources/u);
 	const publisher = await readFile("docs/publish/nuget.md", "utf8");
 	assert.match(publisher, /ownership: "transfer"/u);
-	assert.match(publisher, /C, C\+\+, Cargo, PyPI, RubyGems and NuGet/u);
+	assert.match(publisher, /C, C\+\+, Cargo, PyPI, RubyGems, NuGet and Maven/u);
 });
 
 test("owned Ruby documentation and CI require installed gems, companions and runtime coexistence", async () => {
@@ -612,7 +635,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
     , "build/callables/jvm.json", "build/structured-callables/jvm.json"
     , "build/recursive-callables/jvm-recursive.json"
     , "build/recursive-callables/jvm-mixed.json"
-    , ...["runtime", "values", "layout", "kotlin", "conversions", "calls", "thread-exit", "packaging"].map(name => `build/owned-jvm-${name}/`)
+    , ...["runtime", "values", "layout", "kotlin", "conversions", "calls", "thread-exit", "packaging", "transfers", "transfer-packaging"].map(name => `build/owned-jvm-${name}/`)
     , ...["compounds", "lists", "aliases", "variants", "equality"].map(name => `build/${name}/jvm.json`)
     , ...["jvm-values", "jvm-conversions", "jvm-native", "kotlin-values", "jvm-package-cold", "jvm-packages", "jvm-reproducibility", "jvm-composition", "jvm-conflicts"].map(name => `build/recursive/${name}.json`)
     , "build/collections/jvm-conversions.json", "build/collections/jvm.json"

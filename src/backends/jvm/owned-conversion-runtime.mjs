@@ -5,8 +5,13 @@
  */
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
 
-/** Call adapters provide authenticated factories and an owning or borrowed lease. */
-export const ownedJvmConversionRuntime = `final class _OwnedConvert {
+/**
+ * Call adapters provide authenticated factories and an owning or borrowed lease.
+ *
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Track consuming inputs during conversion.
+ */
+export const ownedJvmConversionSupport = ({ transferredInputs = false } = {}) => `final class _OwnedConvert {
     private _OwnedConvert() { }
     static void checkpoint() { _OwnedRuntime.checkpoint(); }
     static final class InvalidNative extends RuntimeException {
@@ -35,7 +40,9 @@ export const ownedJvmConversionRuntime = `final class _OwnedConvert {
         private final java.util.ArrayList<_OwnedRuntime.Handle> handles = new java.util.ArrayList<>();
         final java.util.IdentityHashMap<Object, Boolean> hosts = new java.util.IdentityHashMap<>();
         final java.util.HashSet<Address> outputs = new java.util.HashSet<>();
-        private boolean complete, closed;
+        private boolean complete, closed;${transferredInputs ? `
+        _OwnedInputTransfers moves;
+        int moveGroup = -1;` : ""}
         Scope(_OwnedRuntime.State state, boolean checkOnly, Factory factories,
             java.util.function.Supplier<_OwnedRuntime.Lease> lease) {
             this(state, checkOnly, factories, lease, new Budget());
@@ -78,6 +85,7 @@ export const ownedJvmConversionRuntime = `final class _OwnedConvert {
                 handle.lease.acquire();
                 try { checkpoint(); roots.add(handle.lease); }
                 catch (Throwable error) { handle.lease.release(false); throw error; }
+${transferredInputs ? "                if (moves != null && moveGroup >= 0) moves.add(handle.lease, moveGroup, this);\n" : ""}\
             }
             return raw;
         }
@@ -110,7 +118,7 @@ export const ownedJvmConversionRuntime = `final class _OwnedConvert {
                     catch (Throwable error) { if (failure == null) failure = error; else failure.addSuppressed(error); }
                 }
             } finally {
-                handles.clear(); roots.clear(); hosts.clear(); outputs.clear();
+                handles.clear(); roots.clear(); hosts.clear(); outputs.clear();${transferredInputs ? " moves = null;" : ""}
                 if (arena != null) arena.close();
             }
             if (failure != null) throw _OwnedRuntime.rethrow(failure);
@@ -271,3 +279,6 @@ export const ownedJvmConversionRuntime = `final class _OwnedConvert {
     }
 }
 `;
+
+/** Preserve the borrow-only conversion runtime for existing consumers. */
+export const ownedJvmConversionRuntime = ownedJvmConversionSupport();

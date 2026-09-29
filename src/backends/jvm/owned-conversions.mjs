@@ -4,7 +4,7 @@
  * @file
  */
 import { generateOwnedJvmValues } from "./owned-values.mjs";
-import { ownedJvmConversionRuntime } from "./owned-conversion-runtime.mjs";
+import { ownedJvmConversionRuntime, ownedJvmConversionSupport } from "./owned-conversion-runtime.mjs";
 import { ownedJvmScalars, ownedJvmScalarNames } from "./owned-scalars.mjs";
 import { ownedJvmRuntime, ownedJvmException } from "./owned-runtime.mjs";
 
@@ -148,14 +148,16 @@ ${descriptors.join(",\n")}
  * authenticated factories, native targets and owning or expiring leases.
  *
  * @param ir - Concrete compiler-authenticated ownership contract.
+ * @param options - Explicit transport capabilities.
  */
-export const generateOwnedJvmConversions = ir => {
-	const model = generateOwnedJvmValues(ir), typesSource = ownedJvmDescriptorSource(model);
+export const generateOwnedJvmConversions = (ir, options = {}) => {
+	const model = generateOwnedJvmValues(ir, options), typesSource = ownedJvmDescriptorSource(model);
+	const transferredInputs = model.c.functions.some(fn => fn.transfers?.length);
 	const prefix = `src/main/java/${model.namespace.replaceAll(".", "/")}`;
 	const internal = { _OwnedLayouts: model.layoutSource, _OwnedTypes: typesSource
-		, _OwnedConvert: `package ${model.namespace};\n\n${ownedJvmConversionRuntime}`
+		, _OwnedConvert: `package ${model.namespace};\n\n${ownedJvmConversionSupport({ transferredInputs })}`
 		, _OwnedScalars: `package ${model.namespace};\n\n${ownedJvmScalars}`
-		, _OwnedRuntime: `package ${model.namespace};\n\n${ownedJvmRuntime(model.c.prefix)}` };
+		, _OwnedRuntime: `package ${model.namespace};\n\n${ownedJvmRuntime(model.c.prefix, { transferredInputs })}` };
 	const exceptionPath = `${prefix}/LeanBridgeException.java`;
 	const files = { ...model.files
 		, [exceptionPath]: `package ${model.namespace};\n\n${ownedJvmException}`

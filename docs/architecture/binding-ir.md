@@ -56,7 +56,8 @@ supply layouts or proof evidence. C, C++ and Cargo package builds ship that tran
 with the shared runtime, GMP and relocatable build metadata. C++ adds named value
 types, standard containers, exact Boost integers and checked RAII resource leases.
 Installed ordinary
-and reviewed consumers execute without producer source or Lean. C, C++, Rust, Python, Ruby and C# packages
+and reviewed consumers execute without producer source or Lean. C, C++, Rust,
+Python, Ruby, C#, Java and Kotlin packages
 also admit explicit input transfers. The [native/C transfer implementation](../contributing/testing.md#staged-input-transfers)
 validates every input owner before consuming the whole set, nulls owner slots
 before Lean runs, and keeps copied storage alive through callback reentry.

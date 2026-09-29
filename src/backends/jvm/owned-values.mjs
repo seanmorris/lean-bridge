@@ -29,9 +29,10 @@ const boxes = { boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer"
  * accepts host callbacks. The asCallback method bridges those two directions.
  *
  * @param ir - Concrete compiler-authenticated ownership contract.
+ * @param options - Explicit transport capabilities.
  */
-export const generateOwnedJvmValues = ir => {
-	const layout = compileOwnedJvmLayout(ir), c = layout.c;
+export const generateOwnedJvmValues = (ir, options = {}) => {
+	const layout = compileOwnedJvmLayout(ir, options), c = layout.c;
 	const fail = message => { throw new TypeError("Invalid owned JVM values: " + message); };
 	if(keywords.has(c.prefix)) fail("Java package name is a reserved word");
 	const occupied = new Set(reserved), names = new Map();

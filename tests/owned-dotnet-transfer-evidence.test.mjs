@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedJvmTransfer, ownedJvmTransferHistoricalBytes } from "./helpers/owned-jvm-transfer-history.mjs";
 import { assertOwnedDotnetTransferExecution, assertOwnedDotnetTransferCi } from "./helpers/owned-dotnet-transfer-evidence.mjs";
 import { beforeOwnedDotnetTransfer, ownedDotnetTransferAddedPaths, ownedDotnetTransferBaseline
 	, ownedDotnetTransferChangedPaths, ownedDotnetTransferHistoricalBytes, ownedDotnetTransferPath
@@ -22,27 +23,31 @@ test("C# transfers bind current sources without promoting unrelated type cells",
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedDotnetTransferAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(ownedJvmTransferHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedDotnetTransferChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedDotnetTransfer(update.path, current);
+		const current = beforeOwnedJvmTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedDotnetTransfer(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedDotnetTransfer(update.path, prior), prior);
 		assert.equal(beforeOwnedDotnetTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeOwnedJvmTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
 	const previousIndex = JSON.parse(beforeOwnedDotnetTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of previousIndex.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(ownedJvmTransferHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), previousIndex);
 });
 
 test("C# transfer history rejects unrelated edits and invalid reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedJvmTransfer(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedDotnetTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedDotnetTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

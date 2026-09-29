@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { ownedJvmRuntime } from "../../src/backends/jvm/owned-runtime.mjs";
 import { ownedJvmRuntimeProbeSources } from "./owned-jvm-runtime-native.mjs";
+import { ownedJvmTransferHistoricalBytes } from "./owned-jvm-transfer-history.mjs";
 
 export const ownedJvmRuntimeReceipt = "docs/evidence/owned-jvm-runtime-20260927.json";
 export const ownedJvmRuntimeSources = [
@@ -37,7 +38,7 @@ export const assertOwnedJvmRuntime = async record => {
 	assert.deepEqual(record.scope, ownedJvmRuntimeScope);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedJvmRuntimeSources);
 	for(const [path, hash] of Object.entries(record.sources))
-		assert.equal(sha256(await readFile(path)), hash, path);
+		assert.equal(sha256(ownedJvmTransferHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.equal(record.run.command, "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-runtime.test.mjs");
 	assert.equal(record.run.exitCode, 0); assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [name, count] of Object.entries({ tests: 3, pass: 3, fail: 0, skipped: 0, cancelled: 0 }))

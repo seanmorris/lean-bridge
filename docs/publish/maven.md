@@ -280,8 +280,42 @@ runtimes and unverified preloads. Native libraries remain loaded until process
 exit; normal JVM shutdown removes their extracted files.
 
 Reviewed contracts use the same ownership-aware Maven projection. Borrowed
-inputs and explicitly owned results are supported. Transferred inputs,
-anchored results and asynchronous delivery need separate lifetime support.
+inputs, explicitly owned results and author-selected input transfers are
+supported. Anchored results and asynchronous delivery need separate lifetime
+support.
+
+### Transfer input ownership
+
+To consume a resource argument, add this function inside `namespace Owned` and
+include `Owned.retainTicket` in `exports`:
+
+```lean
+def retainTicket (ticket : Ticket) : Ticket := ticket
+```
+
+Add this entry to `contracts` in `lean-bridge.exports.json`:
+
+```json
+{
+  "Owned.retainTicket": {
+    "parameters": [
+      { "ownership": "transfer", "lifetime": { "scope": "call", "anchor": null } }
+    ]
+  }
+}
+```
+
+The compiler authenticates the decision for both ordinary source and reviewed
+APIs. The Maven JAR exposes the same typed values. Java Javadoc and Kotlin KDoc
+name each consuming argument. The version-2 JVM contract records the handoff and
+alias rules; packaging checks it against the compiled native transfer contract.
+
+At the Lean call boundary, resource aliases sharing the input's lease close
+together. Independent retains remain usable. Invalid inputs and failures during
+snapshot preparation preserve ownership. Failures after handoff leave the input
+consumed. Two consuming arguments cannot share a lease. Callback borrows require
+an explicit retain before transfer. See the [Java](../consume/java.md#consuming-inputs)
+and [Kotlin](../consume/kotlin.md#consuming-inputs) examples.
 
 ## Build the repository layout
 

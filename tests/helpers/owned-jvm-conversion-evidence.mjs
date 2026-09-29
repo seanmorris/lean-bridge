@@ -10,6 +10,7 @@ import { generateOwnedJvmConversions } from "../../src/backends/jvm/owned-conver
 import { ownedJvmConversionNative } from "./owned-jvm-conversion-native.mjs";
 import { ownedJvmConversionProbeSource } from "./owned-jvm-conversion-calls.mjs";
 import { assertOwnedJvmRuntime, ownedJvmRuntimeReceipt } from "./owned-jvm-runtime-evidence.mjs";
+import { ownedJvmTransferHistoricalBytes } from "./owned-jvm-transfer-history.mjs";
 
 export const ownedJvmConversionReceipt = "docs/evidence/owned-jvm-conversions-20260927.json";
 export const ownedJvmConversionCommand = "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-conversions.test.mjs";
@@ -51,7 +52,8 @@ export const assertOwnedJvmConversions = async record => {
 	const previousBytes = await readFile(record.previous.path);
 	assert.equal(sha256(previousBytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), ownedJvmConversionSources);
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources))
+		assert.equal(sha256(ownedJvmTransferHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.equal(record.run.command, ownedJvmConversionCommand);
 	assert.equal(record.run.exitCode, 0); assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [name, count] of Object.entries({ tests: 5, pass: 5, fail: 0, skipped: 0, cancelled: 0 }))

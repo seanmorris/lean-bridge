@@ -18,8 +18,10 @@ export const ownedJvmException = `public final class LeanBridgeException extends
  * reclaims abandoned sessions even if Java Thread objects remain reachable.
  *
  * @param prefix - Checked public C package identifier.
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Enable native handoff signals.
  */
-export const ownedJvmRuntime = prefix => {
+export const ownedJvmRuntime = (prefix, { transferredInputs = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned JVM prefix");
 	return `import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
@@ -165,11 +167,11 @@ final class _OwnedRuntime {
         final Slot slot;
         final BorrowScope scope;
         private final AtomicInteger references = new AtomicInteger();
-        private volatile boolean revoked;
+        private volatile boolean revoked;${transferredInputs ? "\n        volatile _OwnedInputTransfers.Signal inputMove;" : ""}
         Lease(State state, Slot slot, BorrowScope scope) { this.state = state; this.slot = slot; this.scope = scope; }
-        boolean isClosed() {
+        boolean isClosed() {${transferredInputs ? "\n            var move = inputMove;" : ""}
             return state.isClosed() || revoked || (scope != null ? !scope.active
-                : slot == null || slot.value == 0 || slot.pending.get() || slot.releasing);
+                : slot == null || slot.value == 0 || slot.pending.get() || slot.releasing)${transferredInputs ? "\n                || move != null && move.consumed()" : ""};
         }
         int references() { return references.get(); }
         void require() { state.require(); if (isClosed()) check(4); }
@@ -190,8 +192,9 @@ final class _OwnedRuntime {
         private Slot slot;
         private Lease lease;
         private boolean complete, captured;
-        Result(State state) {
-            this.state = state; state.require(); arena = Arena.ofConfined();
+        ${transferredInputs ? `Result(State state) { this(state, false); }
+        Result(State state, boolean shared) {` : "Result(State state) {"}
+            this.state = state; state.require(); arena = ${transferredInputs ? "shared ? Arena.ofShared() : " : ""}Arena.ofConfined();
             try { out = arena.allocate(JAVA_LONG); out.set(JAVA_LONG, 0, 0); slot = state.register(); }
             catch (Throwable error) { arena.close(); throw error; }
         }

@@ -302,7 +302,7 @@ Packaging reconstructs the expected sources and ownership rules from compiler
 metadata before accepting the artifacts. Borrow-only packages keep their
 existing versions and generated APIs.
 
-A combined transfer build can select C, C++, Cargo, PyPI, RubyGems and NuGet.
+A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet and Maven.
 C# keeps its private thread-exit adapter and GMP library while sharing the
 compiled Lean component. Other consumer bindings still reject transfer
 contracts. Building a package does not publish it.

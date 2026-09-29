@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedDotnetTransfer, ownedDotnetTransferChangedPaths } from "./owned-dotnet-transfer-history.mjs";
+import { beforeOwnedDotnetTransfer, ownedDotnetTransferNormalizationPaths } from "./owned-dotnet-transfer-history.mjs";
 
 export const ownedRubyTransferBaseline = "e038e5c6178e5495a0b1a7712b00b1b6998bfd59";
 export const ownedRubyTransferPath = "docs/evidence/owned-ruby-transfers-20260929.json";
@@ -65,7 +65,7 @@ export const ownedRubyTransferAddedPaths = [
 	, "tests/owned-ruby-transfers.test.mjs"
 ].sort();
 let cached;
-export const ownedRubyTransferNormalizationPaths = [...new Set([...ownedRubyTransferChangedPaths, ...ownedDotnetTransferChangedPaths])].sort();
+export const ownedRubyTransferNormalizationPaths = [...new Set([...ownedRubyTransferChangedPaths, ...ownedDotnetTransferNormalizationPaths])].sort();
 
 /**
  * Authenticate complete sources before reversing exact ordered edit spans.

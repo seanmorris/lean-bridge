@@ -19,11 +19,19 @@ import { saveLakeFile } from "./lake-workspace.mjs";
  */
 export const rejectOwnedJvmPackageMutations = async (options, verified, compiled) => {
 	const { adapterRoot, jvmRoot } = options;
-	const mutations = ["lifetime", "source", "guard", "gmp-receipt", "gmp-source", "library", "unrecorded"];
+	const transfers = Boolean(verified.model.ownedGraph.inputTransfers);
+	const mutations = [...transfers ? ["adapter-version", "contract-version", "consumption", "aliases", "native-transfers"] : []
+		, "lifetime", "source", "guard", "gmp-receipt", "gmp-source", "library"
+		, "unrecorded"];
 	for(const mutation of mutations)
 	{
 		const forged = structuredClone(verified.adapter); let path, original;
-		if(mutation === "lifetime") forged.jvmValues.guardSha256 = "0".repeat(64);
+		if(mutation === "adapter-version") forged.schemaVersion = 1;
+		else if(mutation === "contract-version") forged.jvmValues.schemaVersion = 1;
+		else if(mutation === "consumption") forged.jvmValues.inputTransfers.consumption = "after-lean-call";
+		else if(mutation === "aliases") forged.jvmValues.inputTransfers.aliases = "wrapper-only";
+		else if(mutation === "native-transfers") delete forged.ownedValues.inputTransfers;
+		else if(mutation === "lifetime") forged.jvmValues.guardSha256 = "0".repeat(64);
 		else
 		{
 			path = ({ source: `src/${verified.prefix}-jvm.c`
@@ -54,7 +62,7 @@ export const rejectOwnedJvmPackageMutations = async (options, verified, compiled
 	}
 	const api = `src/main/java/${verified.projection.namespace.replaceAll(".", "/")}/Api.java`;
 	const original = await readFile(join(jvmRoot, api));
-	for(const mutation of ["managed-source", "compiler-options", "managed-lifetime"])
+	for(const mutation of ["managed-source", "compiler-options", "managed-lifetime", ...transfers ? ["managed-version"] : []])
 	{
 		const forged = structuredClone(compiled);
 		if(mutation === "managed-source")
@@ -64,6 +72,7 @@ export const rejectOwnedJvmPackageMutations = async (options, verified, compiled
 			forged.files[api] = { bytes: changed.length, sha256: sha256(changed) };
 		} else if(mutation === "compiler-options")
 			forged.kotlin.options = forged.kotlin.options.filter(option => option !== "-Xuse-type-table");
+		else if(mutation === "managed-version") forged.schemaVersion = 1;
 		else forged.ownedValues.guardSha256 = "0".repeat(64);
 		try
 		{

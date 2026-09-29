@@ -30,9 +30,10 @@ export const kotlinOwnedDescriptors = model => {
  * and iterative conversion in the same Java implementation.
  *
  * @param ir - Compiler-authorized owned value contract.
+ * @param options - Explicit transport capabilities.
  */
-export const generateOwnedKotlinValues = ir => {
-	const model = generateOwnedJvmConversions(ir), namespace = `${model.namespace}.kotlin`;
+export const generateOwnedKotlinValues = (ir, options = {}) => {
+	const model = generateOwnedJvmConversions(ir, options), namespace = `${model.namespace}.kotlin`;
 	const nodes = new Map(model.types.map(node => [node.id, node])), names = new Map();
 	const type = id => {
 		if(names.has(id)) return names.get(id);

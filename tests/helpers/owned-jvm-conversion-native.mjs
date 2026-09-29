@@ -13,10 +13,12 @@ import { ownedJvmThreadExit } from "../../src/backends/jvm/owned-thread-exit.mjs
  */
 export const ownedJvmConversionNative = input => {
 	const c = generateOwnedCPackage(input), cleanup = ownedJvmThreadExit(c.values.prefix);
+	const handoff = "static inline void oc_transfer_consume(void *context) {";
+	if(input.transferredInputs && c.source.split(handoff).length !== 2) throw new TypeError("Missing native ownership handoff");
 	const implementation = `#include <stdlib.h>
 #include <stddef.h>
 #include <stdatomic.h>
-static _Atomic size_t live;
+static _Atomic size_t live;${input.transferredInputs ? "\nstatic _Atomic size_t handoffs;" : ""}
 static _Thread_local ptrdiff_t remaining = -1;
 static void *probe_alloc(size_t size) {
   if (remaining == 0) return NULL;
@@ -26,9 +28,9 @@ static void *probe_alloc(size_t size) {
 static void probe_free(void *value) { if (value) { atomic_fetch_sub(&live, 1); free(value); } }
 #define LB_OWNED_ALLOC probe_alloc
 #define LB_OWNED_FREE probe_free
-${c.source}
+${input.transferredInputs ? c.source.replace(handoff, handoff + "\n  atomic_fetch_add(&handoffs, 1);") : c.source}
 ${cleanup.source}
-size_t probe_live(void) { return atomic_load(&live); }
+size_t probe_live(void) { return atomic_load(&live); }${input.transferredInputs ? "\nsize_t probe_handoffs(void) { return atomic_load(&handoffs); }" : ""}
 size_t probe_identities(void) { lean_bridge_native_snapshot s; lean_bridge_native_snapshot_read(&s); return s.live_identities; }
 void probe_fail(ptrdiff_t value) { remaining = value; }
 `;

@@ -23,11 +23,12 @@ import { compileJvmSources } from "./compile-jvm-sources.mjs";
 export const projectOwnedJvm = async options => {
 	const { working, nativeRoot, runtimeRoot, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 	if(!model.ownedGraph?.hostCallbacks) throw new TypeError("Owned JVM requires authenticated callback/copy support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true });
-	const projection = generateOwnedJvmPackage(model.bindingIr), prefix = c.values.prefix;
+	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs });
+	const projection = generateOwnedJvmPackage(model.bindingIr, null, { transferredInputs }), prefix = c.values.prefix;
 	const adapterRoot = join(working, "native/owned-jvm-binding"), gmpRoot = join(adapterRoot, "gmp");
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid JVM native glibc floor");
@@ -73,18 +74,19 @@ export const projectOwnedJvm = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(adapterRoot))
 	{ const bytes = await readFile(join(adapterRoot, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(adapterRoot, "native-jvm-adapter.json"), canonicalJson({ schemaVersion: 1
+	await writeFile(join(adapterRoot, "native-jvm-adapter.json"), canonicalJson({ schemaVersion: transferredInputs ? 2 : 1
 		, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity: identity, library
-		, ownedValues: { schemaVersion: 2
+		, ownedValues: { schemaVersion: transferredInputs ? 3 : 2
 			, hostCallbacks: model.ownedGraph.hostCallbacks
+			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, headerSha256: sha256(c.publicHeader), sourceSha256: sha256(c.source) }
 		, jvmValues: projection.contract
 		, gmp: { version: "6.3.0", soname: gmpLibrary, binding: "local-symbols" }
 		, files }), { flag: "wx" });
 	const { evidence } = await ownedJvmEvidence({ nativeRoot, runtimeRoot, adapterRoot });
-	const generated = generateOwnedJvmPackage(model.bindingIr, evidence);
+	const generated = generateOwnedJvmPackage(model.bindingIr, evidence, { transferredInputs });
 	const jvmRoot = join(working, "native/jvm");
 	for(const [path, contents] of Object.entries(generated.files))
 	{ await mkdir(dirname(join(jvmRoot, path)), { recursive: true }); await writeFile(join(jvmRoot, path), contents, { flag: "wx" }); }
@@ -92,7 +94,7 @@ export const projectOwnedJvm = async options => {
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(jvmRoot))
 	{ const bytes = await readFile(join(jvmRoot, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(jvmRoot, "native-jvm.json"), canonicalJson({ schemaVersion: 1
+	await writeFile(join(jvmRoot, "native-jvm.json"), canonicalJson({ schemaVersion: transferredInputs ? 2 : 1
 		, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256
 		, evidence, ...compilers, namespace: projection.namespace
 		, ownedValues: projection.contract, files: inventory }), { flag: "wx" });

@@ -88,7 +88,7 @@ export const compileJvmSources = async ({ root, files, environment, signal }) =>
 		// Inline nested Type/Argument messages exceed Kotlin's metadata decoder
 		// limit at 32 container levels. Type-table references retain every level.
 		const copiedGraph = ["jvm-copied-graph-v1", "jvm-callable-graph-v1"].includes(metadata.generator);
-		const ownedValues = metadata.generator === "jvm-owned-values-v1";
+		const ownedValues = ["jvm-owned-values-v1", "jvm-owned-values-v2"].includes(metadata.generator);
 		const options = kotlinOptions(module, copiedGraph || ownedValues);
 		await run(java, [...launch, ...options, "-jdk-home", jdk, "-classpath", `${join(lib, "kotlin-stdlib.jar")}${delimiter}${join(lib, "annotations-13.0.jar")}`, "-d", "classes", ...kotlinSources, ...javaSources]);
 		classpath = `classes${delimiter}${join(lib, "kotlin-stdlib.jar")}`;

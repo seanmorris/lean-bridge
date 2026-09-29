@@ -80,9 +80,16 @@ const kotlin = type => {
  * @param namespace - Installed package namespace.
  * @param profile - Java or Kotlin.
  * @param functions - Names selected by the author, checked against this catalog.
+ * @param options - Select the consuming-input fixture.
+ * @param options.transferredInputs - Include the two closure transfers and mixed values.
  */
-export const ownedJvmInstalledSignatures = (scalar, namespace, profile, functions) => {
-	const signatures = scalar ? scalarFunctions : callbackFunctions, java = profile === "java";
+export const ownedJvmInstalledSignatures = (scalar, namespace, profile, functions, { transferredInputs = false } = {}) => {
+	const signatures = transferredInputs ? [
+			...callbackFunctions.slice(0, 22)
+			, ["newRecordCallback", "CallbackRecordArgument1Closure"]
+			, ["transferCallback", "CallbackRecordArgument1Closure", "CallbackRecordArgument1Closure"]
+			, ["echoChain", "Chain", "Chain"], ["echoMixed", "Mixed", "Mixed"]
+	] : scalar ? scalarFunctions : callbackFunctions, java = profile === "java";
 	assert.deepEqual([...functions].sort(), signatures.map(([name]) => name).sort());
 	const literal = type => {
 		if(java) return erase(type) + ".class";

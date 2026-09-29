@@ -391,6 +391,37 @@ apply to Kotlin. Keep an owner on its creating platform thread for calls and
 retains. Coroutine suspension or dispatcher changes do not transfer ownership.
 Do not mix Java values with the companion Kotlin API.
 
+#### Consuming inputs
+
+The generated KDoc names arguments that consume resource ownership. Pass the
+ordinary value. For the [transfer-enabled example](../publish/maven.md#transfer-input-ownership),
+save `OwnedTransferExample.kt`:
+
+```kotlin file=kotlin/OwnedTransferExample.kt
+import java.math.BigInteger
+import org.leanbridge.owned_aggregates.kotlin.Api
+
+fun main() {
+    Api.newTicket(BigInteger.valueOf(42), "task").use { original ->
+        original.retain().use { kept ->
+            Api.retainTicket(original).use { received ->
+                check(original.isClosed)
+                check(Api.serial(received).intValueExact() == 42)
+                check(Api.serial(kept).intValueExact() == 42)
+                println("transferred")
+            }
+        }
+    }
+}
+```
+
+Every alias sharing the consumed lease closes, including sibling resources from
+the same returned aggregate. Independent retains survive. Two consuming arguments
+cannot share a lease, and callback borrows must be retained before transfer.
+Validation failures preserve ownership; failures after the native handoff leave
+the input consumed. The [Java transfer rules](java.md#consuming-inputs) also apply
+to Kotlin. `use` can close an already consumed wrapper safely.
+
 ### Alpha interoperability example
 
 The remaining example uses the separate authenticated `org.leanbridge:lean-alpha:0.0.0` fixture API. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the Alpha release directory containing `repository/`.

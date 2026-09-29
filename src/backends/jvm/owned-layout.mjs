@@ -23,9 +23,11 @@ const memory = "java.lang.foreign.MemoryLayout", value = "java.lang.foreign.Valu
  * pointers. Aggregate children use indirection, keeping nominal recursion finite.
  *
  * @param ir - Concrete compiler-authenticated ownership contract.
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Enable consuming input leases.
  */
-export const compileOwnedJvmLayout = ir => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true });
+export const compileOwnedJvmLayout = (ir, { transferredInputs = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, layoutName: `O${node.index}`
