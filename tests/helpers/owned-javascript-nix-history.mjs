@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedWitNative, ownedWitNativeChangedPaths } from "./wit-owned-native-history.mjs";
 
 export const ownedJavaScriptNixBaseline = "f79432dac08bcaf4a7ff6d6c369956961ad2d391";
 export const ownedJavaScriptNixPath = "docs/evidence/owned-javascript-nix-20260928.json";
@@ -30,6 +31,7 @@ export const ownedJavaScriptNixAddedPaths = [
 	, "tests/owned-javascript-nix-installed.test.mjs"
 ].sort();
 let cached;
+export const ownedJavaScriptNixNormalizationPaths = [...new Set([...ownedJavaScriptNixChangedPaths, ...ownedWitNativeChangedPaths])].sort();
 
 /**
  * Reverse authenticated, nonoverlapping text spans to the exact prior source.
@@ -62,6 +64,7 @@ export const reverseOwnedJavaScriptNixUpdate = (source, update) => {
  * @param expected - Optional exact stopping identity.
  */
 export const beforeOwnedJavaScriptNix = (path, source, expected) => {
+	source = beforeOwnedWitNative(path, source, expected);
 	if(!ownedJavaScriptNixChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptNixPath, "utf8"));
@@ -80,5 +83,5 @@ export const beforeOwnedJavaScriptNix = (path, source, expected) => {
  * @param bytes - Complete file contents.
  * @param expected - Optional exact stopping identity.
  */
-export const ownedJavaScriptNixHistoricalBytes = (path, bytes, expected) => ownedJavaScriptNixChangedPaths.includes(path)
+export const ownedJavaScriptNixHistoricalBytes = (path, bytes, expected) => ownedJavaScriptNixNormalizationPaths.includes(path)
 	? beforeOwnedJavaScriptNix(path, bytes.toString("utf8"), expected) : bytes;

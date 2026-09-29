@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJavaScriptNix, ownedJavaScriptNixChangedPaths } from "./owned-javascript-nix-history.mjs";
+import { beforeOwnedJavaScriptNix, ownedJavaScriptNixNormalizationPaths } from "./owned-javascript-nix-history.mjs";
 
 export const ownedWitProjectionBaseline = "4103db9893bd8addb0715cd74f856b3c961bafe9";
 export const ownedWitProjectionPath = "docs/evidence/wit-owned-projection-20260928.json";
@@ -36,7 +36,7 @@ export const ownedWitProjectionAddedPaths = [
 	, "tests/wit-owned-projection-evidence.test.mjs"
 ].sort();
 let cached;
-export const ownedWitProjectionNormalizationPaths = [...new Set([...ownedWitProjectionChangedPaths, ...ownedJavaScriptNixChangedPaths])].sort();
+export const ownedWitProjectionNormalizationPaths = [...new Set([...ownedWitProjectionChangedPaths, ...ownedJavaScriptNixNormalizationPaths])].sort();
 
 /**
  * Reverse exact nonoverlapping spans, authenticating both complete file versions.

@@ -1175,6 +1175,37 @@ borrowed and transferred resources, empty branches, indirect arguments, and a
 and the original owner's continued validity. Removing nested borrow cleanup
 must reproduce the borrow-handle trap. The downstream WIT job requires these
 tests. They do not execute Lean or establish installed owned-graph support.
+
+Run the owned graph converters and private native host against fresh Lean builds:
+
+```sh
+source scripts/env.sh
+export LEAN_BRIDGE_WASMTIME_C_API=/absolute/path/to/wasmtime-c-api
+LEAN_BRIDGE_WIT_OWNED_CONVERSIONS_TEST=1 \
+LEAN_BRIDGE_WIT_OWNED_NATIVE_TEST=1 \
+  node --test --test-concurrency=1 \
+  tests/wit-owned-graph-conversions.test.mjs tests/wit-owned-native-host.test.mjs
+```
+
+This five-test gate requires Lean 4.32.2, wasm-tools 1.245.1, the pinned Wasmtime
+42.0.1 C API, and a C compiler with AddressSanitizer and UndefinedBehaviorSanitizer.
+The transport probe covers all 19 scalar types, nested resources, malformed
+graphs, allocation limits and rollback. The native probe builds both ordinary
+and independently reviewed Lean sources, links the generated Component Model
+imports, and executes records, containers, variants, aliases and recursive
+graphs. Returned resources and captured Lean closures remain usable after
+releasing their original inputs. Shared node references reuse the same checked
+borrow rather than consuming it twice.
+
+Native allocation failures must preserve the caller's output and release every
+partial lease. The sanitizer run must match the cold Lean startup leak baseline.
+Removing an output lease or pending-call rollback must make the probe fail.
+CI requires all five tests without skips and retains `build/wit-owned-native.log`.
+
+This gate verifies the private native host. The owned WIT session API, host
+callbacks, installed package generation, transferred inputs and owner-anchored
+borrowed results still need implementation and acceptance tests. Existing
+installed support classifications do not change.
 Native conversion, package integration, transferred Lean inputs and anchored
 borrowed results remain open.
 
