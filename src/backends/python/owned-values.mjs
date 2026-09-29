@@ -22,9 +22,11 @@ const primitive = {
  * constructors and aliases remain public; containers have finite alias bounds.
  *
  * @param ir - Validated concrete ownership contract.
+ * @param options - Explicit C transport capabilities.
+ * @param options.transferredInputs - Admit consuming resource-containing inputs.
  */
-export const generateOwnedPythonValues = ir => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true });
+export const generateOwnedPythonValues = (ir, { transferredInputs = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
 	const occupied = new Set(reserved), names = new Map();
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || occupied.has(name))
@@ -145,6 +147,12 @@ export const generateOwnedPythonValues = ir => {
 		}
 		for(const [index, fn] of functions.entries()) lines.push(""
 			, `def ${fn.publicName}(${fn.parameters.map((_, i) => `arg${i}: ${parameterType(fn, i)}`).join(", ")}) -> ${table.get(fn.result).publicType}:`
+			, ...fn.transfers?.length ? [`    """Consume resource leases in ${fn.transfers.map(i => `arg${i}`).join(", ")} at the Lean call boundary.
+
+    Shared aliases close at handoff; independently retained owners stay usable.
+    Validation and preparation failures preserve ownership. Failures after
+    handoff leave inputs consumed. Callback borrows must be retained first.
+    """`] : []
 			, stub ? "    ..." : `    from . import _native\n    return _native._call${index}(${fn.parameters.map((_, i) => `arg${i}`).join(", ")})`);
 		return lines.join("\n") + "\n";
 	};

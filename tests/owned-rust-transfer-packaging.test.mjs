@@ -12,10 +12,9 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedRustPackage } from "../src/backends/rust/owned-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { ownedRustEvidence } from "../src/build/owned-rust-artifacts.mjs";
-import { projectOwnedNativeCFamily } from "../src/build/owned-c-projection.mjs";
 import { packageOwnedCargo } from "../src/release/owned-cargo.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
-import { verifyNativeFiles } from "../src/build/native-artifacts.mjs";
+import { readVerifiedNativeComponent, verifyNativeFiles } from "../src/build/native-artifacts.mjs";
 import { ownedRustTransferReviewedIr, ownedRustTransferConfiguration, ownedRustTransferSource } from "./helpers/owned-rust-transfer-fixture.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
@@ -91,10 +90,8 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed Cargo inputs preserv
 		await saveLakeFile(rustRoot, "native-rust.json", canonicalJson(compiled));
 		await saveLakeFile(adapterRoot, "native-c-adapter.json", canonicalJson(verified.adapter));
 	}
-	await assert.rejects(projectOwnedNativeCFamily({
-		working: join(directory, "unsupported-python"), nativeRoot, runtimeRoot
-		, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
-		, targets: ["pypi"], environment })
+	await assert.rejects(readVerifiedNativeComponent(nativeRoot, verified.evidence.runtimeIdentity, {
+		ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: false })
 	, /requires an owned input-transfer consumer adapter/u);
 	const reassembled = join(directory, "reassembled"), rebuilt = await packageOwnedCargo({ ...options, working: reassembled });
 	assert.deepEqual(rebuilt.packages, projection.packages);
@@ -153,7 +150,7 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed Cargo inputs preserv
 		, handoffRemovedBeforeRelocatedExecution: true
 		, deterministicReassembly: true
 		, tamperRejected: ["compiled-version", "adapter-version", "compiled-consumption", "adapter-aliases"]
-		, unsupportedPythonRejected: true
+		, unsupportedAdapterRejected: true
 		, documentationSha256: sha256(documented), cppChecks: cpp.checks
 		, checks, relocatedChecks: checks, consumerSha256: sha256(source)
 		, linkerSha256: sha256(linker), dependencies

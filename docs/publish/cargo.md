@@ -283,7 +283,7 @@ uses version 4 and records its input-transfer contract. Packaging regenerates
 the expected signatures and ownership rules before accepting these receipts.
 Packages without transfers keep their existing versions and API.
 
-A combined transfer build can select C, C++ and Cargo. Other targets still reject
+A combined transfer build can select C, C++, Cargo and PyPI. Other targets still reject
 these contracts. No registry publication is part of the build command.
 
 ## Package identity and publisher prerequisites

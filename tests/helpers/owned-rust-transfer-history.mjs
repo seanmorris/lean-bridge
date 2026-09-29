@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedConsumerCi, ownedConsumerCiChangedPaths } from "./owned-consumer-ci-repair-history.mjs";
+import { beforeOwnedConsumerCi, ownedConsumerCiNormalizationPaths } from "./owned-consumer-ci-repair-history.mjs";
 
 export const ownedRustTransferBaseline = "5384a754d1bf356c6b6f3e587d80bb88767dbeb4";
 export const ownedRustTransferPath = "docs/evidence/owned-rust-transfers-20260929.json";
@@ -47,7 +47,7 @@ export const ownedRustTransferAddedPaths = [
 	, "tests/owned-rust-transfers.test.mjs"
 ].sort();
 let cached;
-export const ownedRustTransferNormalizationPaths = [...new Set([...ownedRustTransferChangedPaths, ...ownedConsumerCiChangedPaths])].sort();
+export const ownedRustTransferNormalizationPaths = [...new Set([...ownedRustTransferChangedPaths, ...ownedConsumerCiNormalizationPaths])].sort();
 
 /**
  * Reverse exact ordered edits only after authenticating complete file bytes.

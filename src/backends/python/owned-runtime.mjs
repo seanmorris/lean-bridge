@@ -9,8 +9,10 @@
  * This foundation alone does not admit resource-bearing Python wheels.
  *
  * @param prefix - Validated public C package identifier.
+ * @param options - Explicit ownership capabilities.
+ * @param options.transferredInputs - Observe the C consuming-input owner slots.
  */
-export const ownedPythonRuntime = prefix => {
+export const ownedPythonRuntime = (prefix, { transferredInputs = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Python prefix");
 	return `import ctypes as _c
 import os as _os
@@ -98,12 +100,12 @@ class _OwnedLease:
     def __init__(self, state, slot=None, scope=None):
         self.state = state
         self.slot = slot
-        self.scope = scope
+        self.scope = scope${transferredInputs ? "\n        self.input_move = None" : ""}
 
     @property
     def closed(self):
         return (self.state.closed or self.state.exited
-                or _os.getpid() != self.state.runtime.pid
+                or _os.getpid() != self.state.runtime.pid${transferredInputs ? "\n                or (self.input_move is not None and not self.input_move.value.value)" : ""}
                 or (not self.scope.active if self.scope is not None
                     else self.slot is None or self.slot.pending
                     or self.slot.releasing or not self.slot.value.value))

@@ -5,6 +5,7 @@
  */
 import { generateOwnedPythonValues } from "./owned-values.mjs";
 import { ownedPythonCallbacks } from "./owned-callables.mjs";
+import { ownedPythonTransfers } from "./owned-transfers.mjs";
 
 const primitive = {
 	unit: "c_uint8", bool: "c_uint8", char: "c_uint32"
@@ -13,7 +14,7 @@ const primitive = {
 	, usize: "c_uint64", isize: "c_int64", float32: "c_float", float64: "c_double"
 };
 
-const support = limits => `import ctypes as _c
+const support = (limits, transfers) => `import ctypes as _c
 import builtins as _b
 from . import _owned as _R
 from . import __name__ as _package_name
@@ -46,7 +47,7 @@ class _OwnedScope:
         self.check_only = check_only
         self.budget = _OwnedBudget() if budget is None else budget
         self.active = set()
-        self.owners = []
+        self.owners = []${transfers ? "\n        self.moves = None\n        self.move_group = None" : ""}
 
     @property
     def nodes(self):
@@ -98,12 +99,19 @@ class _OwnedScope:
         return result
 
     def pin(self, value):
-        self.charge("storage", 32)
+${transfers ? `        try:
+            self.charge("storage", 32)
+            if not self.check_only:
+                _R._owned_checkpoint()
+                self.owners.append(value)
+        finally:
+            # Retaining a traceback must not retain a private owning lease.
+            value = None` : `        self.charge("storage", 32)
         if not self.check_only:
             _R._owned_checkpoint()
-            self.owners.append(value)
+            self.owners.append(value)`}
 
-    def close(self):
+    def close(self):${transfers ? "\n        self.moves = None" : ""}
         self.owners.clear()
         self.active.clear()
 
@@ -164,9 +172,11 @@ def _owned_read(pointer, raw):
  * Installed wheel admission additionally requires authenticated assets.
  *
  * @param ir - Compiler-authenticated explicit ownership contract.
+ * @param options - Explicit C transport capabilities.
  */
-export const generateOwnedPythonConversions = ir => {
-	const values = generateOwnedPythonValues(ir), { c } = values;
+export const generateOwnedPythonConversions = (ir, options = {}) => {
+	const values = generateOwnedPythonValues(ir, options), { c } = values;
+	const transfers = c.functions.some(fn => fn.transfers?.length);
 	const nodes = new Map(values.types.map(node => [node.id, { ...node
 		, raw: node.identity || node.integer ? "_c.c_void_p" : node.scalar ? `_c.${primitive[node.name]}` : `_OwnedRaw${node.index}` }]));
 	const finite = new Set(); let changed = true;
@@ -225,7 +235,9 @@ export const generateOwnedPythonConversions = ir => {
 		else if(node.identity)
 		{
 			input.push(`if type(value) is not _V.${node.publicType}: raise TypeError("Expected ${node.publicType}")`
-				, "handle = value._raw(scope.state)", "scope.pin(value._lease)", "return handle");
+				, "handle = value._raw(scope.state)", "scope.pin(value._lease)"
+				, ...transfers ? ["if scope.moves is not None and scope.move_group is not None:", "    scope.moves.add(value._lease, scope.move_group, scope)"] : []
+				, "return handle");
 			output.push('if not value: raise _OwnedInvalidNative("Missing native resource")'
 				, 'scope.charge("storage", 256)', `return _V.${node.publicType}._from_lease(output.hold(), value)`);
 		}
@@ -343,9 +355,11 @@ export const generateOwnedPythonConversions = ir => {
 			, `    scope.enter(key, depth, ${node.raw}, True)`, "    try:", ...output.map(line => `        ${line}`), "    finally:", "        scope.leave(key)", "");
 	}
 	const calls = [], models = [], bindings = [];
+	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies];
 	for(const [group, functions] of [["call", c.functions], ["invoke", c.callbacks], ["retain", c.retains], ["copy", c.copies]]) for(const [index, fn] of functions.entries())
 	{
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
+		const moving = fn.transfers ?? [];
 		const host = parameters.map((_, i) => c.hostArgument(fn, i));
 		const input = (node, i, checking) => host[i]
 			? `_owned_host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})`
@@ -353,26 +367,41 @@ export const generateOwnedPythonConversions = ir => {
 		const name = `_${group}${group === "call" ? index : nodes.get(fn.id).index}`, native = `_fn${models.length}`;
 		models.push({ ...fn, group, name, native, parameters, result });
 		bindings.push(`    ${native} = runtime.library[${JSON.stringify(fn.cName)}]`
-			, `    ${native}.argtypes = [_c.c_void_p, ${parameters.map((node, i) => host[i] ? `_c.POINTER(_OwnedHost${node.index})` : node.leaf ? node.raw : `_c.POINTER(${node.raw})`).join(", ")}${parameters.length ? ", " : ""}_c.POINTER(${result.raw}), _c.POINTER(_c.c_void_p)]`
+			, `    ${native}.argtypes = [_c.c_void_p, ${parameters.flatMap((node, i) => [host[i] ? `_c.POINTER(_OwnedHost${node.index})` : node.leaf ? node.raw : `_c.POINTER(${node.raw})`, ...moving.includes(i) ? ["_c.POINTER(_c.c_void_p)"] : []]).join(", ")}${parameters.length ? ", " : ""}_c.POINTER(${result.raw}), _c.POINTER(_c.c_void_p)]`
 			, `    ${native}.restype = _c.c_uint32`);
 		calls.push(`def ${name}(${parameters.map((_, i) => `arg${i}`).join(", ")}):`, "    if _runtime is None: raise RuntimeError('Build the native adapter before calling this API')"
 			, "    state = _runtime.current_state()", "    checked = _OwnedScope(state, True)", "    try:"
 			, ...parameters.length ? parameters.map((node, i) => `        ${input(node, i, true)}`) : ["        pass"]
 			, "    finally:", "        checked.close()", "    scope = _OwnedScope(state)"
-			, "    frame = _OwnedCall(state, scope)", "    try:"
-			, ...parameters.map((node, i) => `        input${i} = ${input(node, i, false)}`)
+			, "    frame = _OwnedCall(state, scope)", ...moving.length ? ["    moves = None"] : [], "    try:"
+			, ...moving.length ? [`        moves = _OwnedInputTransfers(state, ${moving.length}, scope)`, "        scope.moves = moves"] : []
+			, ...parameters.flatMap((node, i) => [...moving.length ? [`        scope.move_group = ${moving.includes(i) ? moving.indexOf(i) : "None"}`] : [], `        input${i} = ${input(node, i, false)}`])
+			, ...moving.length ? ["        scope.move_group = None"
+				, ...moving.flatMap((parameter, group) => {
+					const node = parameters[parameter], copyIndex = all.findIndex(root => (root.retain || root.copy) && root.id === node.id);
+					if(copyIndex < 0) throw new TypeError(`Missing owned Python input snapshot for ${node.id}`);
+					return [`        moved${parameter} = scope.value(${node.raw})`
+						, `        _R._owned_checked(_fn${copyIndex}(state.require(), ${node.leaf ? `input${parameter}` : `_c.byref(input${parameter})`}, _c.byref(moved${parameter}), _c.byref(moves.owners[${group}].value)))`];
+				})
+			] : []
 			, `        raw = scope.value(${result.raw})`, "        with _R._OwnedNativeOwner(state) as owner:"
-			, `            status = ${native}(${["state.require()", ...parameters.map((node, i) => !host[i] && node.leaf ? `input${i}` : `_c.byref(input${i})`), "_c.byref(raw)", "_c.byref(owner.value)"].join(", ")})`
+			, ...moving.length ? ["            session = state.require()", "            moves.arm()", "            try:"] : []
+			, `            ${moving.length ? "    " : ""}status = ${native}(${[moving.length ? "session" : "state.require()", ...parameters.flatMap((node, i) => moving.includes(i) ? [node.leaf ? `moved${i}` : `_c.byref(moved${i})`, `_c.byref(moves.owners[${moving.indexOf(i)}].value)`] : [!host[i] && node.leaf ? `input${i}` : `_c.byref(input${i})`]), "_c.byref(raw)", "_c.byref(owner.value)"].join(", ")})`
+			, ...moving.length ? ["            finally:", "                moves.finish()"] : []
 			, "            frame.finish(status)"
 			, `            return _owned_output${result.index}(raw, scope, _OwnedOutput(owner))`
-			, "    except _OwnedInvalidNative:", "        _runtime.retire()", "        raise", "    finally:", "        frame.close()", "        scope.close()", "");
+			, "    except _OwnedInvalidNative:"
+			, "        _runtime.retire()", "        raise", "    finally:"
+			, ...moving.length ? ["        if moves is not None: moves.close()"] : []
+			, "        frame.close()", "        scope.close()", "");
 	}
 	const callbacks = ownedPythonCallbacks(c, nodes, models);
 	return { ...values, types: [...nodes.values()], valuesSource: values.source
 		, rawTypes: [...nodes.values()].map(node => ({ id: node.id, name: node.raw, index: node.index }))
 		, rawSource: raw.join("\n"), callModels: models
 		, callbackLayouts: callbacks.layouts
-		, source: [support(c.native.model.limits), ...raw, ...conversions
+		, source: [support(c.native.model.limits, transfers)
+			, ...transfers ? [ownedPythonTransfers] : [], ...raw, ...conversions
 			, callbacks.source
 			, "_runtime = None", "", "def _bind(runtime):"
 			, `    global _runtime${models.map(model => `, ${model.native}`).join("")}`

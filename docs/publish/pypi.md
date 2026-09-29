@@ -322,8 +322,8 @@ arrays, Lists, options, results, binary products and recursive values. All
 nineteen primitive fields keep their ordinary Python conversions. Synchronous
 host callbacks borrow resource leaves for one invocation; `retain()` explicitly
 extends ownership. Returned Lean closures can receive typed callbacks and serve
-as callback arguments themselves. Transfer and anchored-result lowering are
-not part of this ownership profile.
+as callback arguments themselves. Input transfer requires the explicit contract
+below. Owner-anchored borrowed results remain unimplemented.
 
 The wheel includes GMP and the shared Lean runtime with their licenses and
 source notices. Import verifies the bundled libraries, shares compatible loaded
@@ -338,6 +338,31 @@ against the original wheel before upload. The
 [owned-wheel checks](../evidence/owned-python-packages-20260927.md) cover source-free
 offline installs, relocation, typed consumers, ownership and loader isolation.
 Upload this wheel using the same Twine workflow below.
+
+## Transfer input ownership
+
+Use the [export-contract syntax](../lean/existing-package.md#declare-export-contracts)
+to select `ownership: "transfer"` for a resource-containing parameter. The
+[C author example](c.md#transfer-input-ownership) shows the full configuration.
+Keep `resources` and `ownedAggregates`, and put the Python coordinate under
+`targets.pypi`. Ordinary Lean analysis and independently reviewed contracts use
+the same compiler-checked ownership decisions.
+
+Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
+Python consumers pass ordinary values. The adapter validates all arguments,
+prepares native snapshots and consumes the represented resource leases together
+at the Lean call boundary. Shallow aliases and sibling resources sharing an
+owner close together; independent retains survive. Errors after handoff do not
+restore ownership. See the [consumer example](../consume/python.md#transferred-inputs).
+
+Transfer-enabled wheels use `owned-python-v2`, ownership contract version 2 and
+package receipt version 3. The shared C adapter uses version 4 with
+`ownedValues` version 3. Package verification reconstructs these contracts from
+compiler metadata and rejects changed consumption or alias rules. Packages
+without transfers retain their existing versions and generated API.
+
+A combined transfer build can select C, C++, Cargo and PyPI. Other consumer
+bindings still reject these contracts. Building a wheel does not upload it.
 
 ## Choose the package name and platform
 

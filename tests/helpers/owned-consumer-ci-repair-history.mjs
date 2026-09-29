@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPythonTransfer, ownedPythonTransferChangedPaths } from "./owned-python-transfer-history.mjs";
 
 export const ownedConsumerCiBaseline = "23dbfd68ae4a1e8593f99f97aa3d2717b4632ca9";
 export const ownedConsumerCiPath = "docs/evidence/owned-consumer-ci-repair-20260929.json";
@@ -28,6 +29,7 @@ export const ownedConsumerCiAddedPaths = [
 	, "tests/owned-consumer-ci-repair.test.mjs"
 ].sort();
 let cached;
+export const ownedConsumerCiNormalizationPaths = [...new Set([...ownedConsumerCiChangedPaths, ...ownedPythonTransferChangedPaths])].sort();
 
 /**
  * Authenticate complete sources before reversing exact ordered edit spans.
@@ -60,6 +62,7 @@ export const reverseOwnedConsumerCiUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedConsumerCi = (path, source, expected) => {
+	source = beforeOwnedPythonTransfer(path, source, expected);
 	if(!ownedConsumerCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedConsumerCiPath, "utf8"));
@@ -78,5 +81,5 @@ export const beforeOwnedConsumerCi = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedConsumerCiHistoricalBytes = (path, bytes, expected) => ownedConsumerCiChangedPaths.includes(path)
+export const ownedConsumerCiHistoricalBytes = (path, bytes, expected) => ownedConsumerCiNormalizationPaths.includes(path)
 	? beforeOwnedConsumerCi(path, bytes.toString("utf8"), expected) : bytes;

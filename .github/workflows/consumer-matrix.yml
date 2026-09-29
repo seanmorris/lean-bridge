@@ -1090,6 +1090,11 @@ jobs:
           export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs
+          npm run test:owned-python-transfers
+          test -s build/owned-python-transfers/ordinary.json
+          test -s build/owned-python-transfers/reviewed.json
+          test -s build/owned-python-transfer-packaging/ordinary.json
+          test -s build/owned-python-transfer-packaging/reviewed.json
           test -s build/owned-python-packaging/ordinary.json
           test -s build/owned-python-packaging/reviewed.json
           test -s build/owned-python-packaging/scalars-ordinary.json
@@ -1121,6 +1126,8 @@ jobs:
             build/recursive/python-packages.json
             build/owned-python-runtime/
             build/owned-python-values/
+            build/owned-python-transfers/
+            build/owned-python-transfer-packaging/
             build/owned-python-packaging/
           if-no-files-found: error
           overwrite: true
@@ -1274,6 +1281,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_PYTHON_GRAPH_PACKAGE_TEST=1 node --test tests/python-graph-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs"
+              consumer_command="$consumer_command && npm run test:owned-python-transfers"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false

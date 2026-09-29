@@ -1244,6 +1244,30 @@ the documentation example, then relocate the executable and delete the handoff
 and installed sources. Reports go to `build/owned-rust-transfers/` and
 `build/owned-rust-transfer-packaging/`.
 
+#### Installed Python transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-python-transfers
+```
+
+Use the Python setup and pinned offline typing wheels from the owned-wheel gate.
+On a glibc 2.36 test host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` for
+the command. The builder checks library symbol requirements against that floor;
+production builds retain the default glibc 2.38 floor.
+The transfer gate runs ordinary-source and independently reviewed APIs on
+Python 3.11 with minimum/current typing backports and Python 3.12. Native probes
+inject allocation failures before and after single- and multiple-input handoffs
+while retaining exception tracebacks. Inputs must remain usable before handoff;
+after handoff, shared aliases close and independent retains remain usable.
+
+Installed-wheel tests remove producer sources before offline pip installation,
+check generated stubs and the documentation example, exercise callback reentry,
+reject forged contracts, and move installed environments after deleting the
+handoff. The reviewed build also installs companion C, C++ and Cargo packages.
+Reports go to `build/owned-python-transfers/` and
+`build/owned-python-transfer-packaging/`.
+
 The remaining consumer bindings, owner-anchored borrowed results and owned
 Docker acceptance remain open.
 

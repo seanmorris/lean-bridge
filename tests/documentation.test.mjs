@@ -74,11 +74,22 @@ test("owned Python documentation and CI require installed wheels and typed lifet
 		assert.ok(step.includes(`test -s build/owned-python-packaging/${name}.json`));
 	for(const directory of ["runtime", "values", "packaging"])
 		assert.ok(workflow.includes(`build/owned-python-${directory}/`));
+	assert.ok(step.includes("npm run test:owned-python-transfers\n"));
+	for(const directory of ["transfers", "transfer-packaging"])
+	{
+		assert.ok(workflow.includes(`build/owned-python-${directory}/`));
+		for(const mode of ["ordinary", "reviewed"])
+			assert.ok(step.includes(`test -s build/owned-python-${directory}/${mode}.json`));
+	}
 	const consumer = await readFile("docs/consume/python.md", "utf8");
 	assert.match(consumer, /### Resource-containing values/u);
 	assert.match(consumer, /retain\(\)/u);
 	assert.match(consumer, /with_recovery/u);
 	assert.doesNotMatch(consumer, /Resources remain in the separate Alpha fixture/u);
+	const transfer = consumer.split("### Transferred inputs\n")[1];
+	assert.ok(transfer);
+	const example = transfer.split("```python\n")[1].split("\n```")[0] + "\n";
+	assert.equal(example, await readFile("tests/fixtures/documentation/consumers/python/owned-transfers.py", "utf8"));
 	const publisher = await readFile("docs/publish/pypi.md", "utf8");
 	const owned = publisher.split("## Export resource-containing values\n")[1].split("\n## ")[0];
 	const configuration = JSON.parse(owned.split("```json\n")[1].split("\n```\n")[0]);
@@ -591,7 +602,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   for(const version of ["3.11", "3.12"]) assert.ok(workflow.includes(`python-version: "${version}"`));
   assert.match(workflow, /LEAN_BRIDGE_COLLECTION_PYTHONS:.*steps\.collection_python311\.outputs\.python-path.*steps\.collection_python312\.outputs\.python-path/);
   assert.match(workflow, /python-collection-typecheck\/bin\/python -m pip install --no-cache-dir mypy==2\.3\.1/);
-  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*build\/owned-python-runtime\/\n\s*build\/owned-python-values\/\n\s*build\/owned-python-packaging\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*build\/owned-python-runtime\/\n\s*build\/owned-python-values\/\n\s*build\/owned-python-transfers\/\n\s*build\/owned-python-transfer-packaging\/\n\s*build\/owned-python-packaging\/\n\s*if-no-files-found: error/);
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_CALLABLE_TEST=1 node --test tests/ruby-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_STRUCTURED_CALLABLE_TEST=1 node --test tests/ruby-structured-callables.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs"));
@@ -771,7 +782,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_python\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_python\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-python-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*build\/owned-python-runtime\/\n\s*build\/owned-python-values\/\n\s*build\/owned-python-packaging\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/python\.json\n\s*build\/type-corpus\/reviewed-native-python\.json\n\s*build\/char-native\/python\.json\n\s*build\/word-native\/python\.json\n\s*build\/callables\/python\.json\n\s*build\/structured-callables\/python\.json\n\s*build\/recursive-callables\/python\.json\n\s*build\/compounds\/python\.json\n\s*build\/lists\/python\.json\n\s*build\/aliases\/python\.json\n\s*build\/variants\/python\.json\n\s*build\/collections\/python\.json\n\s*build\/collections\/python-docs\.json\n\s*build\/recursive\/python-values\.json\n\s*build\/recursive\/python-conversions\.json\n\s*build\/recursive\/python-native\.json\n\s*build\/recursive\/python-packages\.json\n\s*build\/owned-python-runtime\/\n\s*build\/owned-python-values\/\n\s*build\/owned-python-transfers\/\n\s*build\/owned-python-transfer-packaging\/\n\s*build\/owned-python-packaging\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_PYTHON_VARIANT_TEST=1 node --test tests\/python-variants\.test\.mjs/);
   assert.match(workflow, /test -s build\/variants\/python\.json/);
   assert.match(workflow, /id: type_corpus_ruby/);

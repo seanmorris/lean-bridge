@@ -429,6 +429,47 @@ limits do not bound Lean's working memory or every Python allocation overhead.
 See [owned-wheel acceptance](../evidence/owned-python-packages-20260927.md) and
 the [author configuration](../publish/pypi.md#export-resource-containing-values).
 
+### Transferred inputs
+
+A publisher can mark a resource-containing argument as transferred. Pass its
+ordinary Python value to the function. At the Lean call boundary, the argument's
+resource leases close, including shallow aliases and sibling resources sharing
+the same returned owner. Copied fields remain Python values. Call `retain()`
+before the transfer when another part of your application needs independent
+ownership.
+
+For the transfer acceptance wheel, save this as `owned-transfers.py`:
+
+```python
+import copy
+from lean_owned_aggregates import new_ticket, retain_ticket, serial
+
+original = new_ticket(42, "shipment")
+alias = copy.copy(original)
+independent = original.retain()
+
+with retain_ticket(original) as received:
+    assert original.is_closed and alias.is_closed
+    assert serial(received) == 42
+    assert serial(independent) == 42
+
+independent.close()
+print("transferred")
+```
+
+Run `./.venv/bin/python owned-transfers.py`. This fixture declares
+`retain_ticket`'s parameter as transferred; ownership follows the publisher's
+contract, not a function's name.
+Generated function docstrings identify the consuming arguments; inspect them
+with `help()` before passing resources that other code still uses.
+
+Validation and preparation failures leave the inputs usable. Once Lean receives
+them, callback exceptions and result-conversion failures leave them consumed.
+Reentrant callbacks observe caller aliases as closed while their callback-local
+borrows remain valid. Retain a callback borrow before transferring it. Two
+transferred arguments cannot share a resource lease; use independent retains.
+Borrow-only functions keep their existing behavior.
+
 ### Alpha resource example
 
 The remaining example uses the separate Alpha fixture and its fixed API.

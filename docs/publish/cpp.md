@@ -140,7 +140,7 @@ ownership. Owner-anchored borrowed results remain unimplemented.
 Select `ownership: "transfer"` for the consuming parameter through
 [export contracts](c.md#transfer-input-ownership). Ordinary configuration and an
 independently reviewed version-4 API support the same selection. Build with
-`--target cpp`, or combine `--target c --target cpp` for both consumer archives.
+`--target cpp`, or select a combination of C, C++, Cargo and PyPI.
 Other consumer targets still reject these transfer contracts.
 
 C++ projects transferred arguments as rvalue references. Consumers pass

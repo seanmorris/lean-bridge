@@ -56,7 +56,7 @@ supply layouts or proof evidence. C, C++ and Cargo package builds ship that tran
 with the shared runtime, GMP and relocatable build metadata. C++ adds named value
 types, standard containers, exact Boost integers and checked RAII resource leases.
 Installed ordinary
-and reviewed consumers execute without producer source or Lean. C, C++ and Rust packages
+and reviewed consumers execute without producer source or Lean. C, C++, Rust and Python packages
 also admit explicit input transfers. The [native/C transfer implementation](../contributing/testing.md#staged-input-transfers)
 validates every input owner before consuming the whole set, nulls owner slots
 before Lean runs, and keeps copied storage alive through callback reentry.
@@ -72,7 +72,12 @@ then observes the C owner slots at their exact handoff. Rust's ownership contrac
 version 2 records mutable-reference inputs with the same alias and failure rules.
 Its stable `Cell` owner slots let callback reentry observe the native handoff;
 `Rc` keeps resource wrappers confined to their creating thread. Transfer-enabled
-Rust projection and package receipts use version 3. Other consumer bindings and owner-anchored
+Rust projection and package receipts use version 3. Python's ownership contract
+version 2 records ordinary-value inputs with the same lease consumption rules.
+Conversion collects the leases it actually visits; it does not traverse mutable
+Python containers again to decide ownership. Native slots expose the handoff
+to reentrant callbacks. Transfer-enabled Python package receipts use version 3.
+Other consumer bindings and owner-anchored
 borrowed results remain unfinished.
 Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
 support is documented for [JavaScript](../consume/javascript.md),

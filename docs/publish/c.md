@@ -122,8 +122,9 @@ directly. Transfer applies to resource-containing inputs and returned Lean closu
 inputs; copied scalar inputs still use `copy`. Both `call` and `explicit` input
 lifetime scopes are accepted, with no anchor.
 
-Build with `--target c`. Other targets currently reject these transfer contracts,
-including a combined release that selects an unsupported target. A failed build
+Build with `--target c`, or select a combination of C, C++, Cargo and PyPI.
+Other targets reject these transfer contracts, including a combined release
+that selects an unsupported target. A failed build
 leaves no partial release. This does not extend a host callback's lifetime or
 transfer the arguments that Lean passes into a host callback.
 

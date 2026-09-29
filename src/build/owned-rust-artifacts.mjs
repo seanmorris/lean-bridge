@@ -30,7 +30,7 @@ export const ownedRustEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }
 	const rust = generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs }), prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs }) : null;
-	const python = adapter.pythonValues ? generateOwnedPythonPackage(model.bindingIr) : null;
+	const python = adapter.pythonValues ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs }) : null;
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== (transferredInputs ? 4 : 3) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
 		|| adapter.bindingIrSha256 !== model.bindingIrSha256 || adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt))
