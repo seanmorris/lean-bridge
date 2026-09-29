@@ -363,7 +363,7 @@ Owner slots must not overlap each other, output values or output-owner slots.
 The [installed transfer consumer](../../tests/fixtures/structured-types/owned-installed-transfers.c)
 exercises records, all variant branches, empty containers, nested values,
 recursive trees, transferred closures and callback failure. Transfer support is
-currently available in C packages. Other consumer bindings and owner-anchored
+available in C and [C++ packages](cpp.md#transferred-inputs). Other consumer bindings and owner-anchored
 borrowed results remain in development.
 
 ### Callbacks containing resources

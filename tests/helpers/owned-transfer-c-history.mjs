@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedTransferPackage, ownedTransferPackageChangedPaths } from "./owned-transfer-package-history.mjs";
+import { beforeOwnedTransferPackage, ownedTransferPackageNormalizationPaths } from "./owned-transfer-package-history.mjs";
 
 export const ownedTransferCBaseline = "5ffbcd067e83927ac45f97b550330c07bd0c0e1f";
 export const ownedTransferCPath = "docs/evidence/owned-transfer-c-20260929.json";
@@ -56,7 +56,7 @@ export const ownedTransferCAddedPaths = [
 	, "tests/owned-transfer-c-evidence.test.mjs"
 ].sort();
 let cached;
-export const ownedTransferCNormalizationPaths = [...new Set([...ownedTransferCChangedPaths, ...ownedTransferPackageChangedPaths])].sort();
+export const ownedTransferCNormalizationPaths = [...new Set([...ownedTransferCChangedPaths, ...ownedTransferPackageNormalizationPaths])].sort();
 
 /**
  * Reverse exact ordered spans after authenticating both complete file versions.

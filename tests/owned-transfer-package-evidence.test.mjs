@@ -7,12 +7,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { ownedCppTransferHistoricalBytes } from "./helpers/owned-cpp-transfer-history.mjs";
 import { assertOwnedTransferPackageExecution, assertOwnedTransferPackageCi } from "./helpers/owned-transfer-package-evidence.mjs";
 import { beforeOwnedTransferPackage, ownedTransferPackageAddedPaths, ownedTransferPackageBaseline
 	, ownedTransferPackageChangedPaths, ownedTransferPackageHistoricalBytes, ownedTransferPackagePath
 	, ownedTransferPackagePrevious, reverseOwnedTransferPackageUpdate } from "./helpers/owned-transfer-package-history.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedTransferPackagePath, "utf8"));
+const sourceAtMilestone = async path => ownedCppTransferHistoricalBytes(path, await readFile(path));
 
 test("installed C transfer evidence authenticates sources and preserves prior observations", async () => {
 	const record = await read();
@@ -22,27 +24,27 @@ test("installed C transfer evidence authenticates sources and preserves prior ob
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedTransferPackageAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await sourceAtMilestone(path)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedTransferPackageChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path], update.path);
 		assert.equal(update.currentSha256, record.sources[update.path], update.path);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedTransferPackage(update.path, current);
+		const current = (await sourceAtMilestone(update.path)).toString(), prior = beforeOwnedTransferPackage(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedTransferPackage(update.path, prior), prior);
 		assert.equal(beforeOwnedTransferPackage(update.path, current, update.currentSha256), current);
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = (await sourceAtMilestone("docs/type-surface.v1.json")).toString();
 	const prior = JSON.parse(beforeOwnedTransferPackage("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await sourceAtMilestone(file.path));
 	assert.deepEqual(JSON.parse(current), prior, "C transfer acceptance does not promote unrelated type-table cells");
 });
 
 test("installed C transfer history rejects unknown edits and forged ancestors", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = (await sourceAtMilestone(update.path)).toString(), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedTransferPackage(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedTransferPackageUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

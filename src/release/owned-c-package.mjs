@@ -32,14 +32,14 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	if(!["c", "cpp"].includes(target)) throw new TypeError("Owned native packaging requires c or cpp");
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: target === "c" });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 	if(!model.ownedGraph) throw new TypeError("Owned C packaging requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs });
 	const p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
-	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr) : null;
+	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs }) : null;
 	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
 		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
@@ -139,7 +139,18 @@ close() releases that wrapper; other owning copies remain usable. retain() makes
 an independently owned reference. Calls reject closed, foreign-thread and inherited
 post-fork resources. Foreign-thread destruction queues disposal for the creating
 thread. Thread exit closes its session and releases registered native owners.
-Copied container storage is independent; its resource leaves retain their leases.
+Copied container storage is independent; its resource leaves retain their leases.${transferredInputs ? `
+
+Transferred inputs take rvalue references. Pass std::move(value), or a temporary.
+The bridge validates every argument before consuming any resource lease. At the
+C handoff, all submitted leases and their aliases become closed, before Lean or
+a host callback runs. Each source lease can belong to only one transferred
+argument; host-assembled values may contain several distinct leases. The entire
+lease moves, including siblings omitted from the submitted value. Independent
+retain() references survive. Callback borrows cannot be transferred; retain them
+first. Failures before handoff preserve the input leases; failures after handoff
+leave them consumed. Copied fields remain ordinary C++ values.
+` : ""}
 
 Typed lambdas and function objects are call-scoped callbacks. Borrowed callback
 resource arguments expire on return, including copies of those wrappers. Call

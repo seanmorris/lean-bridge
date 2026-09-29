@@ -4,14 +4,17 @@
  *
  * @file
  */
+import { ownedCppTransferSignal } from "./owned-transfers.mjs";
 
 /**
  * Emit private RAII leases, owner-thread deferred cleanup and nominal resources.
  * This support layer does not itself admit exports or prepared C++ packages.
  *
  * @param prefix - Validated public C package identifier.
+ * @param options - Explicit input-consumption support for this projection.
+ * @param options.transferredInputs - Watch the C handoff before callback reentry.
  */
-export const ownedCppRuntime = prefix => {
+export const ownedCppRuntime = (prefix, { transferredInputs = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned C++ prefix");
 	const p = prefix, m = prefix.toUpperCase();
 	return `
@@ -29,7 +32,7 @@ struct NativeOwner {
   NativeOwner& operator=(const NativeOwner&) = delete;
   ~NativeOwner() { if (value) (void)${p}_result_release(&value); }
 };
-struct Slot {
+${transferredInputs ? ownedCppTransferSignal(p) + "\n" : ""}struct Slot {
   std::atomic<${p}_result *> owner{nullptr};
   bool pending = false;
 };
@@ -39,7 +42,7 @@ class Lease {
   std::shared_ptr<State> state_;
   std::shared_ptr<Slot> slot_;
   std::shared_ptr<BorrowScope> borrow_;
-  friend class State;
+  ${transferredInputs ? "std::atomic<std::shared_ptr<InputMoveSignal>> transfer_;\n  std::atomic<bool> transferred_{false};\n  " : ""}friend class State;
   Lease(std::shared_ptr<State> state, std::shared_ptr<Slot> slot) noexcept
     : state_(std::move(state)), slot_(std::move(slot)) {}
   Lease(std::shared_ptr<State> state, std::shared_ptr<BorrowScope> borrow) noexcept
@@ -50,7 +53,18 @@ public:
   ~Lease();
   const std::shared_ptr<State>& state() const noexcept { return state_; }
   void require() const;
-  bool closed() const noexcept;
+  bool closed() const noexcept;${transferredInputs ? `
+  bool transferred() const noexcept {
+    if (transferred_.load()) return true;
+    const auto pending = transfer_.load(); return pending && pending->consumed();
+  }
+  void require_transfer() const {
+    require();
+    if (!slot_ || transfer_.load()) throw Error(${m}_INVALID_ARGUMENT);
+  }
+  void begin_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept { transfer_.store(signal); }
+  void finish_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept;
+` : ""}
 };
 class State final : public std::enable_shared_from_this<State> {
   ${p}_session *session_ = nullptr;
@@ -143,13 +157,17 @@ public:
 };
 inline Lease::~Lease() { if (slot_) state_->release(slot_); }
 inline bool Lease::closed() const noexcept {
-  return state_->closed() || (borrow_ ? !borrow_->active.load() : !slot_->owner.load());
+  return state_->closed() || ${transferredInputs ? "transferred() || " : ""}(borrow_ ? !borrow_->active.load() : !slot_->owner.load());
 }
 inline void Lease::require() const {
   (void)state_->require();
-  if (borrow_ ? !borrow_->active.load() : !slot_->owner.load()) throw Error(${m}_CLOSED);
+  if (${transferredInputs ? "transferred() || (" : ""}borrow_ ? !borrow_->active.load() : !slot_->owner.load()${transferredInputs ? ")" : ""}) throw Error(${m}_CLOSED);
 }
-struct BorrowFrame {
+${transferredInputs ? `inline void Lease::finish_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept {
+  if (signal->consumed()) { transferred_.store(true); state_->release(slot_); }
+  transfer_.store(nullptr);
+}
+` : ""}struct BorrowFrame {
   std::shared_ptr<BorrowScope> scope = std::make_shared<BorrowScope>();
   std::shared_ptr<Lease> lease;
   explicit BorrowFrame(const std::shared_ptr<State>& state) : lease(state->borrow(scope)) {}
@@ -203,7 +221,13 @@ struct ResourceAccess {
     if (!lease || !handle) throw Error(${m}_INVALID_ARGUMENT);
     lease->require(); return Resource<Kind>(std::move(lease), handle);
   }
-  template<class Native, class Kind> static Native get(const Resource<Kind>& value, const std::shared_ptr<State>& state) {
+  ${transferredInputs ? `template<class Kind> static std::shared_ptr<Lease> lease(const Resource<Kind>& value, const std::shared_ptr<State>& state) {
+    if (!value.lease_ || !value.handle_) throw Error(${m}_CLOSED);
+    value.lease_->require_transfer();
+    if (value.lease_->state() != state) throw Error(${m}_INVALID_ARGUMENT);
+    return value.lease_;
+  }
+  ` : ""}template<class Native, class Kind> static Native get(const Resource<Kind>& value, const std::shared_ptr<State>& state) {
     if (!value.lease_ || !value.handle_) throw Error(${m}_CLOSED);
     value.lease_->require();
     if (value.lease_->state() != state) throw Error(${m}_INVALID_ARGUMENT);

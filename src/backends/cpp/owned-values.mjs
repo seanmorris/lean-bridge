@@ -25,9 +25,12 @@ const scalar = {
  * their executable wrappers are supplied by the conversion/package projection.
  *
  * @param ir - Validated explicit ownership contract with named resource identities.
+ * @param options - Consumer capabilities implemented by the caller.
+ * @param options.transferredInputs - Enable explicit rvalue input consumption.
  */
-export const generateOwnedCppValues = ir => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true });
+export const generateOwnedCppValues = (ir, { transferredInputs = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
+	const transfers = c.functions.some(item => item.transfers?.length);
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node
 		, aggregate: !node.leaf
 		, fields: node.fields.map(field => ({ ...field, storage: "value" }))
@@ -77,7 +80,7 @@ export const generateOwnedCppValues = ir => {
 		, "#include <vector>", "#include <unistd.h>"
 		, ...bigint ? ["#ifndef BOOST_MP_STANDALONE", "#define BOOST_MP_STANDALONE", "#endif", "#include <boost/multiprecision/cpp_int.hpp>"] : []
 		, `namespace lean_bridge::${c.prefix} {`
-		, ownedCppRuntime(c.prefix), cppValueBox
+		, ownedCppRuntime(c.prefix, { transferredInputs: transfers }), cppValueBox
 		, "template<class T> struct Ok { T value; friend bool operator==(const Ok&, const Ok&) = default; };"
 		, "template<class E> struct Err { E value; friend bool operator==(const Err&, const Err&) = default; };"
 		, "template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;"

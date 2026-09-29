@@ -96,9 +96,11 @@ struct OwnedIntegerView {
  * result lease, or a callback borrow that expires when its frame returns.
  *
  * @param ir - Compiler-authenticated explicit ownership contract.
+ * @param options - Consumer capabilities implemented by the caller.
+ * @param options.transferredInputs - Enable explicit rvalue input consumption.
  */
-export const generateOwnedCppConversions = ir => {
-	const values = generateOwnedCppValues(ir), { c } = values, p = c.prefix, m = p.toUpperCase();
+export const generateOwnedCppConversions = (ir, { transferredInputs = false } = {}) => {
+	const values = generateOwnedCppValues(ir, { transferredInputs }), { c } = values, p = c.prefix, m = p.toUpperCase();
 	const nodes = new Map(values.types.map(node => [node.id, node]));
 	const declarations = [], structures = [], implementations = [];
 	const finite = new Set(); let changed = true;

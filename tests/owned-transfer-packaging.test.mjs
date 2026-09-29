@@ -102,7 +102,7 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed ${mode} C transfers 
 	assert.deepEqual(rebuilt.packages, built.packages);
 	assert.deepEqual(await readFile(join(reassembled, "archives", rebuilt.packages[0].archive)), await readFile(join(output, "archives", built.packages[0].archive)));
 	await rm(reassembled, { recursive: true, force: true });
-	await assert.rejects(packageOwnedNativeC({ ...packaging, working: join(directory, "unsupported-cpp"), target: "cpp" }), { code: "native-owned-transfers-unavailable" });
+	await assert.rejects(packageOwnedNativeC({ ...packaging, working: join(directory, "missing-cpp-projection"), target: "cpp" }), /Owned C\+\+ adapter differs/u);
 	for(const mutate of [
 		value => { delete value.ownedValues.inputTransfers; }
 		, value => { value.ownedValues.inputTransfers.exports[0].parameters = []; }

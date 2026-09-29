@@ -395,6 +395,52 @@ a `status` member; C++ allocation failures throw `std::bad_alloc`. The
 paths, boxed recursion, nested options, retained resources and source-free installs.
 The inventory below retains its separately audited copied-value and Alpha cells.
 
+### Transferred inputs
+
+When the author [selects input transfer](../publish/cpp.md#transfer-input-ownership),
+the generated function takes an rvalue reference. Pass `std::move(value)` or a
+temporary. The bridge validates every argument before consuming any resource
+lease. Validation failures preserve the inputs. Once Lean starts, the submitted
+leases and their aliases are closed, even if the call later fails.
+
+For the transfer-enabled `Owned` example, save `owned-transfers.cpp`:
+
+```cpp file=cpp/owned-transfers.cpp
+#include "owned_aggregates.hpp"
+#include <cassert>
+#include <iostream>
+#include <utility>
+
+namespace api = lean_bridge::owned_aggregates;
+
+int main() {
+    auto input = api::new_ticket(41, "saved");
+    auto alias = input;
+    auto kept = input.retain();
+    auto output = api::retain_ticket(std::move(input));
+    assert(input.is_closed() && alias.is_closed());
+    assert(api::serial(kept) == 41);
+    assert(api::serial(output) == 41);
+    std::cout << "transferred\n";
+}
+```
+
+Compile it with the package's CMake target or pkg-config flags. `retain_ticket`
+is this example's transfer-enabled Lean export; the wrapper's `retain()` method
+always creates an independent owner without consuming its input.
+
+A host-assembled record or container may contain resources from several leases.
+The call consumes each submitted lease as a whole, including sibling resources
+outside the submitted value. Two transferred arguments cannot share a lease.
+Call `retain()` first when a sibling or another argument must remain usable.
+Copied fields remain ordinary C++ values.
+
+Callbacks observe consumed inputs as closed before their body runs. Their own
+resource arguments borrow the callback's lifetime and cannot be transferred;
+retain those resources before passing them to a consuming export. Returned Lean
+closures can be moved under the same rules. Moving does not change the creating
+thread or process. Owner-anchored borrowed results remain unimplemented.
+
 ### Type conversions
 
 Profiles: C++. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.

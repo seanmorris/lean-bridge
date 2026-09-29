@@ -132,8 +132,27 @@ contract and compares the pinned Boost files. Recomputed file hashes cannot
 authorize altered adapters. The
 [installed checks](../evidence/owned-cpp-values-20260927.md) build both source paths,
 delete producer inputs before installation, and run consumers through pkg-config,
-relocated CMake and sanitizers. Transfer and anchored-result lowering remain
-separate work; copied records still cannot conceal resource ownership.
+relocated CMake and sanitizers. Copied records still cannot conceal resource
+ownership. Owner-anchored borrowed results remain unimplemented.
+
+### Transfer input ownership
+
+Select `ownership: "transfer"` for the consuming parameter through
+[export contracts](c.md#transfer-input-ownership). Ordinary configuration and an
+independently reviewed version-4 API support the same selection. Build with
+`--target cpp`, or combine `--target c --target cpp` for both consumer archives.
+Other consumer targets still reject these transfer contracts.
+
+C++ projects transferred arguments as rvalue references. Consumers pass
+`std::move(value)`; resource aliases close at the native handoff, before a host
+callback can run. Independent `retain()` references survive. Validation failures
+preserve all inputs, while later failures leave them consumed. See
+[the C++ consumer rules](../consume/cpp.md#transferred-inputs).
+
+These packages use native model version 8, package manifest version 4,
+`ownedValues` version 3 and `cppValues` version 2. Packaging reconstructs both
+the native move contract and C++ alias/lifetime rules from compiler-authenticated
+metadata. Borrow-only packages keep their original versions and header bytes.
 
 ## Build the reviewed Alpha example
 

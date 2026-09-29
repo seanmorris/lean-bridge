@@ -6,6 +6,7 @@
  */
 import { generateOwnedCppConversions } from "./owned-conversions.mjs";
 import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
+import { ownedCppInputTransfers } from "./owned-transfers.mjs";
 
 /**
  * Generate ordinary exports, callable resource operations and host adapters.
@@ -13,9 +14,12 @@ import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
  * consumer evidence; this generator alone does not enable a target.
  *
  * @param ir - Compiler-authenticated explicit ownership contract.
+ * @param options - Consumer capabilities implemented by the caller.
+ * @param options.transferredInputs - Enable explicit rvalue input consumption.
  */
-export const generateOwnedCppCallables = ir => {
-	const conversions = generateOwnedCppConversions(ir), { c } = conversions;
+export const generateOwnedCppCallables = (ir, { transferredInputs = false } = {}) => {
+	const conversions = generateOwnedCppConversions(ir, { transferredInputs }), { c } = conversions;
+	const transfers = c.functions.some(item => item.transfers?.length);
 	const p = c.prefix, m = p.toUpperCase(), nodes = new Map(conversions.types.map(node => [node.id, node]));
 	const unit = node => node.kind === "primitive" && node.name === "unit";
 	const resultType = node => unit(node) ? "void" : node.hostName;
@@ -80,17 +84,30 @@ export const generateOwnedCppCallables = ir => {
 		return { params, host
 			, prefix: templates.length ? [`template<${templates.map(index => `class F${index}`).join(", ")}>`
 				, `requires (${templates.map(index => `${qualified}OwnedCallback${params[index].index}<F${index}>`).join(" && ")})`] : []
-			, parameters: params.slice(offset).map((node, index) => `${host[index + offset] ? `F${index + offset}&&` : `const ${node.hostName}&`} a${index + offset}`).join(", ")
-			, arguments: params.slice(offset).map((_, index) => host[index + offset] ? `std::forward<F${index + offset}>(a${index + offset})` : `a${index + offset}`).join(", ") };
+			, parameters: params.slice(offset).map((node, index) => `${host[index + offset] ? `F${index + offset}&&` : item.transfers?.includes(index + offset) ? `${node.hostName}&&` : `const ${node.hostName}&`} a${index + offset}`).join(", ")
+			, arguments: params.slice(offset).map((_, index) => host[index + offset] ? `std::forward<F${index + offset}>(a${index + offset})` : item.transfers?.includes(index + offset) ? `std::move(a${index + offset})` : `a${index + offset}`).join(", ") };
 	};
 	all.forEach((item, index) => {
 		const result = nodes.get(item.result), sig = signature(item);
+		const moving = item.transfers ?? [];
+		const prepare = moving.length ? [`  OwnedInputTransfers moves(call.state, ${moving.length});`
+			, ...moving.map((parameter, group) => `  owned_move_leases${sig.params[parameter].index}(a${parameter}, 0, moves, ${group});`)
+			, ...moving.flatMap((parameter, group) => {
+				const node = sig.params[parameter], copy = [...c.retains, ...c.copies].find(candidate => candidate.id === node.id);
+				return [`  ${node.cName} moved${parameter}{};`
+					, `  checked(${copy.cName}(call.state->require(), ${node.leaf ? "" : "&"}view${parameter}.value, &moved${parameter}, moves.owner(${group})));`];
+			})
+			, "  auto *session = call.state->require();", "  moves.arm();"] : [];
 		calls.push(...sig.prefix, `inline ${resultType(result)} owned_invoke${index}(${sig.parameters}) {`
 			, "  OwnedCall call(current_state());"
 			, ...sig.params.map((param, i) => `  ${sig.host[i] ? `owned_check_callback${param.index}(a${i}, call);` : `owned_check${param.index}(a${i}, 0, call.budget, call.state);`}`)
 			, ...sig.params.map((param, i) => `  ${sig.host[i] ? `OwnedCallbackView${param.index}<std::remove_reference_t<F${i}>> view${i}(a${i}, call);` : `OwnedView${param.index} view${i}(a${i}, call.state);`}`)
 			, `  ${result.cName} returned{}; OwnedOutput output(call.state);`
-			, `  const auto status = ${item.cName}(call.state->require()${sig.params.map((param, i) => `, ${sig.host[i] || !param.leaf ? "&" : ""}view${i}.value`).join("")}, &returned, &output.owner.value);`
+			, ...prepare
+			, `  const auto status = ${item.cName}(${moving.length ? "session" : "call.state->require()"}${sig.params.map((param, i) => moving.includes(i)
+				? `, ${param.leaf ? "" : "&"}moved${i}, moves.owner(${moving.indexOf(i)})`
+				: `, ${sig.host[i] || !param.leaf ? "&" : ""}view${i}.value`).join("")}, &returned, &output.owner.value);`
+			, ...moving.length ? ["  moves.finish();"] : []
 			, "  if (call.error) std::rethrow_exception(call.error);", "  checked(status);"
 			, `  ${unit(result) ? "(void)" : "return "}owned_from${result.index}(returned, 0, call.budget, output);`, "}");
 		if(c.functions.includes(item))
@@ -117,6 +134,7 @@ export const generateOwnedCppCallables = ir => {
 	}
 	const header = ["#pragma once", `#include "${p}-conversions.hpp"`
 		, "#include <concepts>", "#include <exception>", "#include <functional>"
+		, ...transfers ? ["#include <unordered_map>"] : []
 		, `namespace lean_bridge::${p} {`, "namespace detail {"
 		, "struct OwnedCall {"
 		, "  std::shared_ptr<State> state; OwnedBudget budget; std::exception_ptr error;"
@@ -130,6 +148,7 @@ export const generateOwnedCppCallables = ir => {
 		, "template<class F> inline F& owned_function(F& function) { return function; }"
 		, "template<class F, class R> inline F& owned_function(RecoveredCallback<F, R>& function) { return function.function; }"
 		, "template<class F, class R> inline const F& owned_function(const RecoveredCallback<F, R>& function) { return function.function; }"
+		, ...transfers ? [ownedCppInputTransfers(conversions)] : []
 		, ...callbacks, ...calls, ...operations, "}"
 		, "// Recovery supplies a typed failure-path value for Lean cleanup, never a successful host result."
 		, "template<class F, class R> inline auto with_recovery(F&& function, R&& recovery) {"

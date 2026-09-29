@@ -1201,8 +1201,29 @@ again with CMake after archive removal and package relocation. Readers without
 transfer support and forged move contracts must reject. Reassembly must reproduce
 the exact original archive. Reports go to `build/owned-transfer-packaging/`.
 
-Other consumer bindings, owner-anchored borrowed results and owned Docker
-acceptance remain open.
+#### Installed C++ transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-cpp-transfers
+```
+
+The enabled gate compiles ordinary-source and independently reviewed exports.
+It checks rvalue signatures, shared aliases, independent retains, empty and
+nested values, recursive trees, returned closures and callback reentry. Both
+the C++ allocator and the native bridge allocator fail at each observed site;
+inputs must remain usable before handoff and closed after it. The bridge must
+finish without additional live allocations or identities. Sanitizers compare
+against a separate Lean startup baseline.
+
+Package tests remove author sources and producer outputs before installation,
+then use public headers through pkg-config and relocated CMake. They also run
+the documentation example, reject forged move contracts, and require exact
+compiler-free archive reassembly. CI requires both authoring paths and retains
+`build/owned-cpp-transfers/` and `build/owned-cpp-transfer-packaging/`.
+
+The remaining consumer bindings, owner-anchored borrowed results and owned
+Docker acceptance remain open.
 
 ### Staged WIT owned graphs
 

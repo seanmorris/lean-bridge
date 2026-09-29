@@ -56,16 +56,19 @@ supply layouts or proof evidence. C, C++ and Cargo package builds ship that tran
 with the shared runtime, GMP and relocatable build metadata. C++ adds named value
 types, standard containers, exact Boost integers and checked RAII resource leases.
 Installed ordinary
-and reviewed consumers execute without producer source or Lean. C packages also
-admit explicit input transfers. The [native/C transfer implementation](../contributing/testing.md#staged-input-transfers)
+and reviewed consumers execute without producer source or Lean. C and C++ packages
+also admit explicit input transfers. The [native/C transfer implementation](../contributing/testing.md#staged-input-transfers)
 validates every input owner before consuming the whole set, nulls owner slots
 before Lean runs, and keeps copied storage alive through callback reentry.
 Later call or result-conversion failure does not restore consumed inputs.
 Native model version 8 records each consuming parameter and the move/failure
-contract. Native-component, public-adapter and C-package receipts use version 4;
+contract. Native-component, public-adapter and C/C++ package receipts use version 4;
 `ownedValues` uses version 3. Readers reconstruct the contract from compiler
 metadata and require explicit transfer capability. APIs without transferred
-inputs keep their previous versions. Other consumer bindings and owner-anchored
+inputs keep their previous versions. C++ `cppValues` version 2 records rvalue
+arguments, shared-lease alias consumption and independent-retain preservation.
+Its adapter validates host-assembled graphs before preparing input snapshots,
+then observes the C owner slots at their exact handoff. Other consumer bindings and owner-anchored
 borrowed results remain unfinished.
 Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
 support is documented for [JavaScript](../consume/javascript.md),

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedCppTransfer, ownedCppTransferChangedPaths } from "./owned-cpp-transfer-history.mjs";
 
 export const ownedTransferPackageBaseline = "27e0eac89682a498537f7a2c5861ac3a53f3b3f1";
 export const ownedTransferPackagePath = "docs/evidence/owned-transfer-packages-20260929.json";
@@ -41,6 +42,7 @@ export const ownedTransferPackageAddedPaths = [
 	, "tests/owned-transfer-packaging.test.mjs"
 ].sort();
 let cached;
+export const ownedTransferPackageNormalizationPaths = [...new Set([...ownedTransferPackageChangedPaths, ...ownedCppTransferChangedPaths])].sort();
 
 /**
  * Authenticate both complete file versions before reversing ordered spans.
@@ -73,6 +75,7 @@ export const reverseOwnedTransferPackageUpdate = (source, update) => {
  * @param expected - Optional exact historical stopping identity.
  */
 export const beforeOwnedTransferPackage = (path, source, expected) => {
+	source = beforeOwnedCppTransfer(path, source, expected);
 	if(!ownedTransferPackageChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedTransferPackagePath, "utf8"));
@@ -91,5 +94,5 @@ export const beforeOwnedTransferPackage = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional exact historical stopping identity.
  */
-export const ownedTransferPackageHistoricalBytes = (path, bytes, expected) => ownedTransferPackageChangedPaths.includes(path)
+export const ownedTransferPackageHistoricalBytes = (path, bytes, expected) => ownedTransferPackageNormalizationPaths.includes(path)
 	? beforeOwnedTransferPackage(path, bytes.toString("utf8"), expected) : bytes;
