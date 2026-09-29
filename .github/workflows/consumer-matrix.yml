@@ -250,6 +250,8 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Install documentation browser engines
         run: npx playwright install --with-deps chromium firefox webkit
+      - name: Install archive acceptance tools
+        run: sudo apt-get update && sudo apt-get install -y xz-utils zstd
       - name: Package and execute clean Node consumers
         id: consumer
         continue-on-error: true
@@ -270,6 +272,30 @@ jobs:
           node --test tests/lake-wasm.test.mjs
           node --test tests/unlocked-component.test.mjs
           node --test --test-name-pattern='npm releases|publication dry run' tests/lake-generated-packages.test.mjs
+      - name: Build and install owned npm exports through real Nix
+        shell: bash
+        env:
+          LEAN_BRIDGE_OWNED_JS_NIX_TEST: "1"
+          LEAN_BRIDGE_NIX_TOOLCHAIN_TEST: "1"
+          LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT: build/consumer-ci-runtime
+        run: |
+          set -euo pipefail
+          node --test --test-concurrency=1 \
+            tests/nix-toolchain-installation.test.mjs \
+            tests/owned-javascript-nix-installed.test.mjs \
+            2>&1 | tee build/owned-nix-installed.log
+          test -s build/owned-nix-installed.log
+          rg '^# pass 5$' build/owned-nix-installed.log
+          rg '^# fail 0$' build/owned-nix-installed.log
+          rg '^# skipped 0$' build/owned-nix-installed.log
+      - name: Preserve real Nix owned npm acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-nix-installed-${{ github.sha }}
+          path: build/owned-nix-installed.log
+          if-no-files-found: error
+          retention-days: 30
       - name: Compare installed Node, browser, React and worker corpus packages with fresh Lean
         id: type_corpus_npm
         continue-on-error: true
@@ -1998,4 +2024,7 @@ jobs:
           retention-days: 30
       - name: Enforce owned JavaScript and Wasm execution
         if: needs.owned-javascript-wasm.result != 'success'
+        run: exit 1
+      - name: Enforce real Nix owned npm acceptance
+        if: needs.node-consumers.result != 'success'
         run: exit 1

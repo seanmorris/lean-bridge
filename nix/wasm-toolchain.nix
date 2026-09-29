@@ -42,12 +42,12 @@ let
     buildInputs = [ pkgs.stdenv.cc.cc.lib ];
     dontConfigure = true;
     dontBuild = true;
-    unpackPhase = ''
-      tar --zstd -xf "$src"
-    '';
+    dontUnpack = true;
     installPhase = ''
+      # Extract into the final output. A separate unpacked tree duplicates the
+      # SDK even with mv when the build directory and store are different mounts.
       mkdir -p "$out"
-      cp -a lean-${leanVersion}-linux/. "$out/"
+      tar --zstd -xf "$src" --strip-components=1 -C "$out"
     '';
   };
 
@@ -71,12 +71,10 @@ let
     buildInputs = [ pkgs.stdenv.cc.cc.lib ];
     dontConfigure = true;
     dontBuild = true;
-    unpackPhase = ''
-      tar -xJf "$src"
-    '';
+    dontUnpack = true;
     installPhase = ''
       mkdir -p "$out"
-      cp -a node-v${nodeVersion}-linux-x64/. "$out/"
+      tar -xJf "$src" --strip-components=1 -C "$out"
     '';
   };
 
@@ -88,12 +86,10 @@ let
     buildInputs = [ pkgs.stdenv.cc.cc.lib pkgs.zlib ];
     dontConfigure = true;
     dontBuild = true;
-    unpackPhase = ''
-      tar -xJf "$src"
-    '';
+    dontUnpack = true;
     installPhase = ''
       mkdir -p "$out"
-      cp -a install/. "$out/"
+      tar -xJf "$src" --strip-components=1 -C "$out"
       # The emsdk installer normalizes the release archive's development
       # marker to the selected release version.  Reproduce that step so the
       # immutable Nix toolchain emits the same producer metadata as an

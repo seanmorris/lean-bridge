@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedWitProjection, ownedWitProjectionChangedPaths } from "./wit-owned-projection-history.mjs";
+import { beforeOwnedWitProjection, ownedWitProjectionNormalizationPaths } from "./wit-owned-projection-history.mjs";
 
 export const coreHistoryBaseline = "6307e03dec4453f3b13a1c58ce4c686f5592f637";
 export const coreHistoryPath = "docs/evidence/core-history-performance-20260928.json";
@@ -87,7 +87,7 @@ export const coreHistoryAddedPaths = [
 	, "tests/source-history-memo.test.mjs"
 ].sort();
 let cached;
-export const coreHistoryNormalizationPaths = [...new Set([...coreHistoryChangedPaths, ...ownedWitProjectionChangedPaths])].sort();
+export const coreHistoryNormalizationPaths = [...new Set([...coreHistoryChangedPaths, ...ownedWitProjectionNormalizationPaths])].sort();
 
 /**
  * Reverse exact literal edits while authenticating both complete file versions.

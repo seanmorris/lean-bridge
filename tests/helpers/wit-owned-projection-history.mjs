@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptNix, ownedJavaScriptNixChangedPaths } from "./owned-javascript-nix-history.mjs";
 
 export const ownedWitProjectionBaseline = "4103db9893bd8addb0715cd74f856b3c961bafe9";
 export const ownedWitProjectionPath = "docs/evidence/wit-owned-projection-20260928.json";
@@ -35,6 +36,7 @@ export const ownedWitProjectionAddedPaths = [
 	, "tests/wit-owned-projection-evidence.test.mjs"
 ].sort();
 let cached;
+export const ownedWitProjectionNormalizationPaths = [...new Set([...ownedWitProjectionChangedPaths, ...ownedJavaScriptNixChangedPaths])].sort();
 
 /**
  * Reverse exact nonoverlapping spans, authenticating both complete file versions.
@@ -67,6 +69,7 @@ export const reverseOwnedWitProjectionUpdate = (source, update) => {
  * @param expected - Optional exact stopping identity.
  */
 export const beforeOwnedWitProjection = (path, source, expected) => {
+	source = beforeOwnedJavaScriptNix(path, source, expected);
 	if(!ownedWitProjectionChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedWitProjectionPath, "utf8"));
@@ -85,5 +88,5 @@ export const beforeOwnedWitProjection = (path, source, expected) => {
  * @param bytes - Complete file contents.
  * @param expected - Optional exact stopping identity.
  */
-export const ownedWitProjectionHistoricalBytes = (path, bytes, expected) => ownedWitProjectionChangedPaths.includes(path)
+export const ownedWitProjectionHistoricalBytes = (path, bytes, expected) => ownedWitProjectionNormalizationPaths.includes(path)
 	? beforeOwnedWitProjection(path, bytes.toString("utf8"), expected) : bytes;

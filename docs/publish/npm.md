@@ -43,9 +43,18 @@ Lists, options, results, aliases, variants and finite recursive values, plus
 synchronous callbacks and returned functions. It preserves resource identity
 and requires explicit cleanup.
 
-Use a prepared CLI containing the shared runtime and
+Use a prepared CLI containing the shared runtime. Select Nix to supply the
+pinned Lean and Emscripten toolchain:
+
+```sh
+export LEAN_BRIDGE_BUILD_BACKEND=nix
+lean-bridge build --project /path/to/library --target npm --output /path/to/new-release
+lean-bridge verify --receipt /path/to/new-release/package-set-receipt.json
+```
+
+For a local SDK build, use a prepared CLI that also includes the
 [JavaScript-Wasm compiler headers](../contributing/author-toolchain.md#package-javascript-wasm-compiler-inputs).
-Set the two author SDK paths, then build through the standard command:
+Set the author SDK paths and select `auto`:
 
 ```sh
 export LEAN_BRIDGE_LEAN_PREFIX=/absolute/path/to/lean-4.32.2
@@ -68,12 +77,13 @@ remains `UNLICENSED`. Add a supported native target to compile the same captured
 API for both widths. The combined build checks source, compiler, review and
 semantic API agreement before exposing either release.
 
-The pinned host SDK is the validated local build route. Explicit `nix` and
-`docker` backend selections now use a source-only ownership request through the
-component engine. The engine verifies the captured source, generated inputs,
-export selection and output inventory. Full isolated installed-package
-acceptance remains open. Transferred inputs and results borrowed from another
-object also remain unsupported.
+Explicit `nix` and `docker` selections use a source-only ownership request
+through the component engine. The engine verifies the captured source,
+generated inputs, export selection and output inventory. Nix acceptance builds
+ordinary and reviewed packages with unusable host SDK paths, then installs and
+executes them offline after removing their producer directories. The
+owned-specific Docker installed-package check remains open. Transferred inputs
+and results borrowed from another object remain unsupported.
 
 Commit the author package and declare `package.license` with nonempty license
 terms before creating a publication candidate:

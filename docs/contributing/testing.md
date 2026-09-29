@@ -2522,6 +2522,33 @@ node --test --test-concurrency=1 \
   tests/owned-javascript-isolated-project.test.mjs
 ```
 
+The real Nix acceptance uses the default process runner without a transport
+substitute. Prepare the shared production runtime, then run:
+
+```sh
+LEAN_BRIDGE_OWNED_JS_NIX_TEST=1 \
+LEAN_BRIDGE_NIX_TOOLCHAIN_TEST=1 \
+LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT=build/lean-link-spike \
+node --test --test-concurrency=1 \
+  tests/nix-toolchain-installation.test.mjs \
+  tests/owned-javascript-nix-installed.test.mjs
+```
+
+This suite requires Nix, npm, Bash, tar, xz and zstd. It compiles ordinary and
+reviewed exports with deliberately unusable host SDK paths, preserves the
+author source, removes producer files, installs both archives offline, and
+checks resource-containing values, expired callback borrows, returned closures
+and callback exceptions. The three installation tests extract fixture archives
+using the Nix recipe's installation commands and check bytes, permissions,
+symlinks and the SDK release marker. Direct extraction avoids keeping a second
+unpacked toolchain, including when the build directory and store are on
+different mounts.
+
+The required Node consumer CI job runs all five cases against its prepared
+runtime and retains `owned-nix-installed-<commit>`. These checks establish the
+actual Nix build and package handoff; they do not establish Docker execution or
+OS sandbox isolation. Nix sandbox settings remain the build host's policy.
+
 Owned npm publication tests compile two clean checkouts for both ordinary and
 reviewed APIs, compare their complete release bytes, and exercise signed
 publication and retry through an in-memory registry adapter. They verify the

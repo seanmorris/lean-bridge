@@ -42,6 +42,8 @@ const profileManifest = Object.freeze({
 		, "owned-javascript-engine"
 		, "owned-javascript-engine-evidence"
 		, "owned-javascript-isolated-project"
+		, "owned-javascript-nix-installed", "nix-toolchain-installation"
+		, "owned-javascript-nix-evidence"
 		, "owned-javascript-publication"
 		, "owned-javascript-publication-evidence"
 		, "owned-javascript-cli"
