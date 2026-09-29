@@ -99,7 +99,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, targets
 			, ownedGraphs
 			, ownedHostCallbacks: ownedGraphs
-			, ownedInputTransfers: targets.every(target => ["c", "cpp"].includes(target))
+			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo"].includes(target))
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)
@@ -107,7 +107,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					generateOwnedCValues(model.bindingIr, { hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
 						, transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
 					if(targets.includes("cpp")) generateOwnedCppPackage(model.bindingIr, { transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
-					if(targets.includes("cargo")) generateOwnedRustPackage(model.bindingIr);
+					if(targets.includes("cargo")) generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
 					if(targets.includes("pypi")) generateOwnedPythonPackage(model.bindingIr);
 					if(targets.includes("rubygems")) generateOwnedRubyPackage(model.bindingIr);
 					if(targets.includes("nuget")) generateOwnedDotnetPackage(model.bindingIr);

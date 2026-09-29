@@ -253,14 +253,38 @@ Generated records and enums use native Rust containers, transparent aliases and
 callback arguments and returned closures. The Rust compiler rejects mismatched
 resource types, sending or sharing resource wrappers between threads, and
 callbacks missing required typed recovery. Runtime checks reject expired
-borrows and post-fork calls. Transfer, anchored results and asynchronous
-delivery are not enabled by this lease profile.
+borrows and post-fork calls. Input transfer requires the explicit contracts below.
+Owner-anchored borrowed results and asynchronous delivery remain unsupported.
 
 The adapter enforces depth 128, 262,144 visits and separate 16 MiB Rust/native
 accounting budgets. Each package binds its generated types, lifetime rules,
 C/GMP ABI assertions and native libraries to the compiler-derived contract.
 Packaging rechecks these inputs before creating the archive. Consumers need
 neither Lean nor GMP installed and supply no native linker configuration.
+
+## Transfer input ownership
+
+Use the [shared export-contract syntax](../lean/existing-package.md#declare-export-contracts)
+to select `ownership: "transfer"` for a resource-containing parameter. The
+[C author example](c.md#transfer-input-ownership) shows the full configuration.
+Keep `resources` and `ownedAggregates`, and set the Cargo coordinate under
+`targets.cargo`. Ordinary-source and independently reviewed APIs receive fresh
+Lean type checks before generating consuming calls.
+
+Rust consumers pass an explicit mutable reference. The bridge validates every
+input and prepares all native snapshots before handoff. It then consumes the
+represented resource leases together, so aliases observe closed inputs during
+callback reentry. Independent retains survive. Errors after handoff do not
+restore inputs. See the [complete consumer example](../consume/rust.md#transferred-inputs).
+
+Transfer-enabled crates use `owned-rust-v2`. Their Rust ownership contract is
+version 2; compiled Rust and package receipts use version 3. The shared C adapter
+uses version 4 and records its input-transfer contract. Packaging regenerates
+the expected signatures and ownership rules before accepting these receipts.
+Packages without transfers keep their existing versions and API.
+
+A combined transfer build can select C, C++ and Cargo. Other targets still reject
+these contracts. No registry publication is part of the build command.
 
 ## Package identity and publisher prerequisites
 

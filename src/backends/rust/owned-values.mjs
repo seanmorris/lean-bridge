@@ -26,7 +26,7 @@ const scalars = {
  * @param options - Prepared-package runtime policy.
  */
 export const generateOwnedRustValues = (ir, options = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true });
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs: options.transferredInputs ?? false });
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node
 		, aggregate: !node.leaf
 		, fields: node.fields.map(field => ({ ...field, storage: "value" }))
@@ -82,7 +82,7 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 		return [node.id, { fields: members(node.id, node.fields), cases }];
 	}));
 	const bigint = c.nodes.some(node => node.integer);
-	const lines = [ownedRustRuntime(c.prefix, options), ...bigint ? ["pub use num_bigint::{BigInt, BigUint};", ""] : []];
+	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length) }), ...bigint ? ["pub use num_bigint::{BigInt, BigUint};", ""] : []];
 	const fieldType = field => field.boxed ? `Box<${type(field.type)}>` : type(field.type);
 	for(const id of layout.order)
 	{

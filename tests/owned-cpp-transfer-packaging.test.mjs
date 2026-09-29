@@ -53,7 +53,7 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed C++ transfer package
 	assert.deepEqual(adapter.cppValues, generated.contract); assert.equal(adapter.schemaVersion, 4);
 	await assert.rejects(projectOwnedNativeCFamily({ working: join(directory, "unsupported-rust")
 		, nativeRoot, runtimeRoot, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
-		, targets: ["cargo"], environment })
+		, targets: ["pypi"], environment })
 	, { code: "native-owned-transfers-unavailable" });
 	const packaging = { adapterRoot, nativeRoot, runtimeRoot, target: "cpp"
 		, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
@@ -130,7 +130,7 @@ target_compile_options(consumer PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 		, installedPackage: true, sourceUnchanged: true
 		, sourceFreeInstallation: true, compilerFreeExecution: true
 		, handoffRemovedBeforeRelocatedExecution: true, deterministicReassembly: true
-		, unsupportedRustRejected: true, forgedMoveContractsRejected: true
+		, unsupportedPythonRejected: true, forgedMoveContractsRejected: true
 		, input: { component: model.component, sourceIdentity: model.sourceIdentity, metadata }
 		, model, componentReceipt, adapterReceipt: adapter
 		, packageSetReceipt: receipt, manifest, fixtureSha256: sha256(fixture)

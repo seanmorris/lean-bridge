@@ -287,15 +287,15 @@ export const generateOwnedRustConversions = (ir, options = {}) => {
 	}
 	for(const root of [...c.functions, ...c.retains, ...c.copies])
 	{
-		// Host callback descriptors are handled by the callable projection.
-		if(root.parameters.some((_, index) => c.hostArgument(root, index))) continue;
+		// Callback descriptors and input-owner transactions use the callable projection.
+		if(root.transfers?.length || root.parameters.some((_, index) => c.hostArgument(root, index))) continue;
 		const params = root.parameters.map(id => nodes.get(id)), result = nodes.get(root.result);
 		const name = root.cName.slice(c.prefix.length + 1);
 		const invoke = `unsafe extern "C" fn(${["*mut c_void", ...params.map(node => `${node.leaf ? "" : "*const "}${node.raw}`), `*mut ${result.raw}`, "*mut *mut c_void"].join(", ")}) -> u32`;
 		calls.push(`pub(crate) unsafe fn owned_call_${name}(invoke: ${invoke}${params.map((node, j) => `, arg${j}: &${node.input}`).join("")}) -> Result<${result.hostName}, Error> {`
-			, "    let state = current_state()?;", `    let ${params.length ? "mut " : ""}budget = OwnedBudget::new();`
+			, "    let state = current_state()?;", ...params.length ? ["    let mut budget = OwnedBudget::new();"] : []
 			, ...params.map((node, j) => `    owned_check${node.index}(arg${j}, 0, &mut budget, &state)?;`)
-			, "    let mut scope = OwnedScope::new(budget);"
+			, ...params.length ? ["    let mut scope = OwnedScope::new(budget);"] : []
 			, ...params.map((node, j) => `    let input${j} = owned_to${node.index}(arg${j}, &mut scope, &state)?;`)
 			, `    let mut raw: ${result.raw} = Default::default();`, "    let mut output = OwnedOutput::new(Rc::clone(&state));"
 			, `    checked(unsafe { invoke(${["state.require()?", ...params.map((node, j) => `${node.leaf ? "" : "&"}input${j}`), "&mut raw", "&mut output.owner.value"].join(", ")}) })?;`

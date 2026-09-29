@@ -49,9 +49,12 @@ ${entries.map(entry => `            ${entry.field}: symbol!("${entry.symbol}", $
  * @param ir - Compiler-authenticated explicit ownership contract.
  * @param evidence - Verified native library identities, or null for inspection.
  * @param settings - Cargo coordinates and package metadata.
+ * @param options - Compiler-authenticated ownership capabilities.
+ * @param options.transferredInputs - Enable explicit mutable input consumption.
  */
-export const generateOwnedRustPackage = (ir, evidence = null, settings = {}) => {
-	const generated = generateOwnedRustCallables(ir, { dynamic: true });
+export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false } = {}) => {
+	const generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs });
+	const transfers = generated.c.functions.some(item => item.transfers?.length);
 	const name = settings.name ?? `lean_bridge_${generated.c.prefix}`, version = settings.version ?? ir.component.version;
 	validateOrdinaryCargoSettings({ name, version });
 	const source = nativeSource(generated);
@@ -83,7 +86,16 @@ wrapper; other owning clones remain usable. retain() creates independent native
 ownership. Resources and returned Lean closures are neither Send nor Sync.
 Calls reject closed and inherited post-fork resources. Drop releases their owners
 on the creating thread; a fresh process is required after fork.
-
+${transfers ? `
+Transferred inputs take explicit &mut references. Validation and preparation
+finish before any input is consumed. At the Lean call boundary, every resource
+lease represented in a transferred input becomes closed, including cloned
+aliases and sibling resources sharing its original result owner. Copied fields
+remain ordinary Rust values. Independently retained resources stay usable.
+Callback-frame borrows cannot be transferred; retain them first. Two transferred
+arguments cannot consume the same lease. After handoff, errors and panics leave
+the inputs consumed; validation or preparation failures leave them usable.
+` : ""}
 Callbacks accept synchronous FnMut functions returning Result. Callback arguments
 own their copied storage, while resource leaves borrow the callback frame. Those
 borrows expire on return, including cloned wrappers. Call retain() inside the
@@ -102,14 +114,19 @@ These budgets do not bound Lean algorithm memory or every allocator overhead.
 Rust and GMP retain their normal fatal allocator-exhaustion policies.
 `
 	};
-	const contract = { schemaVersion: 1, language: "rust-1.90"
+	const contract = { schemaVersion: transfers ? 2 : 1, language: "rust-1.90"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "resume-after-native-return"
+		, ...transfers ? { inputTransfers: { schemaVersion: 1
+			, arguments: "mutable-references", consumption: "before-lean-call"
+			, validation: "before-consumption", failure: "consumed-after-handoff"
+			, aliases: "shared-lease", borrowedInputs: "reject"
+			, independentRetains: "preserved" } } : {}
 		, exactIntegers: "num-bigint-0.4.6", loader: "authenticated-embedded-native"
 		, apiSha256: sha256(generated.apiSource), conversionsSha256: sha256(source)
 		, limits: generated.c.native.model.limits };
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1
-		, backend: "owned-rust-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: transfers ? 2 : 1
+		, backend: transfers ? "owned-rust-v2" : "owned-rust-v1"
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, component: ir.component, contract, evidence
 		, publicModule: "src/lib.rs", files: Object.keys(files).sort()

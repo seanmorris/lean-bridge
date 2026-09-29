@@ -6,6 +6,7 @@
  */
 import { generateOwnedRustConversions } from "./owned-conversions.mjs";
 import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
+import { ownedRustInputTransfers } from "./owned-transfers.mjs";
 
 const support = `
 enum OwnedFailure { Error(Error), Panic(Box<dyn std::any::Any + Send>) }
@@ -38,9 +39,10 @@ impl OwnedCall {
  * @param ir - Compiler-authenticated explicit ownership contract.
  * @param options - Prepared-package runtime policy.
  * @param options.dynamic - Resolve the authenticated embedded library table.
+ * @param options.transferredInputs - Enable explicit mutable input consumption.
  */
-export const generateOwnedRustCallables = (ir, { dynamic = false } = {}) => {
-	const conversions = generateOwnedRustConversions(ir, { dynamic }), { c } = conversions;
+export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInputs = false } = {}) => {
+	const conversions = generateOwnedRustConversions(ir, { dynamic, transferredInputs }), { c } = conversions;
 	const nodes = new Map(conversions.types.map(node => [node.id, node]));
 	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies];
 	const raw = [], helpers = [], traits = [], publicCalls = [], nativeEntries = [];
@@ -51,14 +53,14 @@ export const generateOwnedRustCallables = (ir, { dynamic = false } = {}) => {
 		const generic = slots.filter(({ index }) => host[index]);
 		return { params, host
 			, generic: generic.length ? `<${generic.map(({ node, index }) => `F${index}: OwnedCallback${node.index}`).join(", ")}>` : ""
-			, publicParams: slots.map(({ node, index }) => `a${index}: ${host[index] ? `F${index}` : `${node.scalar ? "" : "&"}${node.input}`}`).join(", ")
-			, privateParams: slots.map(({ node, index }) => `${host[index] ? "mut " : ""}a${index}: ${host[index] ? `F${index}` : `&${node.input}`}`).join(", ")
+			, publicParams: slots.map(({ node, index }) => `a${index}: ${host[index] ? `F${index}` : `${item.transfers?.includes(index) ? "&mut " : node.scalar ? "" : "&"}${node.input}`}`).join(", ")
+			, privateParams: slots.map(({ node, index }) => `${host[index] ? "mut " : ""}a${index}: ${host[index] ? `F${index}` : `&${item.transfers?.includes(index) ? "mut " : ""}${node.input}`}`).join(", ")
 			, arguments: slots.map(({ node, index }) => `${!host[index] && node.scalar ? "&" : ""}a${index}`).join(", ") };
 	};
 	all.forEach((item, index) => {
 		const { params, host } = signature(item), result = nodes.get(item.result);
-		const types = ["*mut c_void", ...params.map((node, i) => host[i] ? `*const OwnedHost${node.index}` : `${node.leaf ? "" : "*const "}${node.raw}`), `*mut ${result.raw}`, "*mut *mut c_void"];
-		const names = ["session", ...params.map((_, i) => `a${i}`), "out", "owner"];
+		const types = ["*mut c_void", ...params.flatMap((node, i) => [host[i] ? `*const OwnedHost${node.index}` : `${node.leaf ? "" : "*const "}${node.raw}`, ...item.transfers?.includes(i) ? ["*mut *mut c_void"] : []]), `*mut ${result.raw}`, "*mut *mut c_void"];
+		const names = ["session", ...params.flatMap((_, i) => [`a${i}`, ...item.transfers?.includes(i) ? [`a${i}_owner`] : []]), "out", "owner"];
 		const arguments_ = names.join(", "), parameters = names.map((name, i) => `${name}: ${types[i]}`).join(", ");
 		nativeEntries.push({ field: `call${index}`, symbol: item.cName, type: `unsafe extern "C" fn(${types.join(", ")}) -> u32` });
 		if(dynamic) raw.push(`unsafe fn owned_native${index}(${parameters}) -> u32 {`
@@ -121,11 +123,12 @@ export const generateOwnedRustCallables = (ir, { dynamic = false } = {}) => {
 	}
 	all.forEach((item, index) => {
 		const sig = signature(item), result = nodes.get(item.result);
+		const moving = item.transfers ?? [];
 		helpers.push(`pub(crate) fn owned_invoke${index}${sig.generic}(${sig.privateParams}) -> Result<${result.hostName}, Error> {`
 			, "    let state = current_state()?;", `    let ${sig.params.length ? "mut " : ""}budget = OwnedBudget::new();`
 			, ...sig.params.map((param, i) => `    ${sig.host[i] ? `owned_check_callback${param.index}(&a${i}, &mut budget, &state)?;` : `owned_check${param.index}(a${i}, 0, &mut budget, &state)?;`}`)
 			, "    let call = OwnedCall::new(Rc::clone(&state), budget.clone());"
-			, "    let mut scope = OwnedScope::new(budget);");
+			, `    let ${sig.params.length ? "mut " : ""}scope = OwnedScope::new(budget);`);
 		sig.params.forEach((param, i) => {
 			if(!sig.host[i]) helpers.push(`    let view${i} = owned_to${param.index}(a${i}, &mut scope, &state)?;`);
 			else
@@ -141,9 +144,19 @@ export const generateOwnedRustCallables = (ir, { dynamic = false } = {}) => {
 					, `        closure: closure${i}.unwrap_or(std::ptr::null_mut()), recovery: recovery_view${i}.as_ref().map_or(std::ptr::null(), |value| value),`, "    };");
 			}
 		});
+		if(moving.length) helpers.push(`    let mut moves = OwnedInputTransfers::new(Rc::clone(&state), ${moving.length})?;`
+			, ...moving.map((parameter, group) => `    owned_move_leases${sig.params[parameter].index}(a${parameter}, 0, &mut moves, ${group})?;`)
+			, ...moving.flatMap((parameter, group) => {
+				const node = sig.params[parameter], copyIndex = all.findIndex(root => (root.retain || root.copy) && root.id === node.id);
+				if(copyIndex < 0) throw new TypeError(`Missing owned Rust input snapshot for ${node.id}`);
+				return [`    let mut moved${parameter}: ${node.raw} = Default::default();`
+					, `    checked(unsafe { owned_native${copyIndex}(state.require()?, ${node.leaf ? "" : "&"}view${parameter}, &mut moved${parameter}, moves.owner(${group})) })?;`];
+			})
+			, "    let session = state.require()?;", "    moves.arm()?;");
 		helpers.push("    call.budget.replace(scope.budget.clone());"
 			, `    let mut raw: ${result.raw} = Default::default(); let mut output = OwnedOutput::new(Rc::clone(&state));`
-			, `    let status = unsafe { owned_native${index}(state.require()?${sig.params.map((param, i) => `, ${sig.host[i] || !param.leaf ? "&" : ""}view${i}`).join("")}, &mut raw, &mut output.owner.value) };`
+			, `    let status = unsafe { owned_native${index}(${moving.length ? "session" : "state.require()?"}${sig.params.map((param, i) => moving.includes(i) ? `, ${param.leaf ? "" : "&"}moved${i}, moves.owner(${moving.indexOf(i)})` : `, ${sig.host[i] || !param.leaf ? "&" : ""}view${i}`).join("")}, &mut raw, &mut output.owner.value) };`
+			, ...moving.length ? ["    moves.finish();"] : []
 			, "    call.finish(status)?;", "    let mut result_scope = OwnedScope::new(call.budget.into_inner());"
 			, `    unsafe { owned_from${result.index}(&raw, 0, &mut result_scope, &mut output) }`, "}");
 		if(c.functions.includes(item)) publicCalls.push(`pub fn ${item.cName.slice(c.prefix.length + 1)}${sig.generic}(${sig.publicParams}) -> Result<${result.hostName}, Error> {`
@@ -169,5 +182,5 @@ export const generateOwnedRustCallables = (ir, { dynamic = false } = {}) => {
 		, "pub fn with_recovery<F, R>(function: F, recovery: R) -> WithRecovery<F, R> { WithRecovery { function, recovery } }"
 		, ...traits, ...publicCalls, ""].join("\n");
 	return { ...conversions, apiSource, nativeEntries
-		, source: [conversions.source, support, ...raw, ...helpers, ""].join("\n") };
+		, source: [conversions.source, support, ...c.functions.some(item => item.transfers?.length) ? [ownedRustInputTransfers(conversions)] : [], ...raw, ...helpers, ""].join("\n") };
 };

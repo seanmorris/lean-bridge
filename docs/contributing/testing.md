@@ -1222,6 +1222,28 @@ the documentation example, reject forged move contracts, and require exact
 compiler-free archive reassembly. CI requires both authoring paths and retains
 `build/owned-cpp-transfers/` and `build/owned-cpp-transfer-packaging/`.
 
+#### Installed Rust transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-rust-transfers
+```
+
+The enabled gate exercises ordinary-source and independently reviewed APIs.
+Rust rejects immutable transfer arguments and `Send`/`Sync` resource wrappers
+at compile time. Runtime probes check aliases, independent retains, all selected
+container and variant shapes, recursive trees, closures and callback reentry.
+Injected allocation errors and panics must preserve inputs before the native
+handoff and leave them consumed afterward, with no live allocation or identity
+increase. An independent native counter identifies the actual handoff.
+
+Installed tests remove producer sources, reject forged consumption contracts,
+and reproduce byte-identical Cargo archives without compilation. They install
+offline with an empty Cargo home and a linker that rejects C compilation, run
+the documentation example, then relocate the executable and delete the handoff
+and installed sources. Reports go to `build/owned-rust-transfers/` and
+`build/owned-rust-transfer-packaging/`.
+
 The remaining consumer bindings, owner-anchored borrowed results and owned
 Docker acceptance remain open.
 

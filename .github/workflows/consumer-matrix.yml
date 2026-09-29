@@ -1160,6 +1160,11 @@ jobs:
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-packaging.test.mjs
           test -s build/owned-rust-packaging/ordinary.json
           test -s build/owned-rust-packaging/reviewed.json
+          npm run test:owned-rust-transfers
+          test -s build/owned-rust-transfers/ordinary.json
+          test -s build/owned-rust-transfers/reviewed.json
+          test -s build/owned-rust-transfer-packaging/ordinary.json
+          test -s build/owned-rust-transfer-packaging/reviewed.json
           LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs
           test -s build/compounds/rust.json
           LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs
@@ -1196,6 +1201,8 @@ jobs:
             build/recursive-callables/rust.json
             build/owned-rust-runtime/
             build/owned-rust-values/
+            build/owned-rust-transfers/
+            build/owned-rust-transfer-packaging/
             build/owned-rust-packaging/ordinary.json
             build/owned-rust-packaging/reviewed.json
             build/compounds/rust.json
@@ -1280,6 +1287,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-runtime.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-packaging.test.mjs"
+              consumer_command="$consumer_command && npm run test:owned-rust-transfers"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"

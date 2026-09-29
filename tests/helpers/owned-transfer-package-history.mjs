@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedCppTransfer, ownedCppTransferChangedPaths } from "./owned-cpp-transfer-history.mjs";
+import { beforeOwnedCppTransfer, ownedCppTransferNormalizationPaths } from "./owned-cpp-transfer-history.mjs";
 
 export const ownedTransferPackageBaseline = "27e0eac89682a498537f7a2c5861ac3a53f3b3f1";
 export const ownedTransferPackagePath = "docs/evidence/owned-transfer-packages-20260929.json";
@@ -42,7 +42,7 @@ export const ownedTransferPackageAddedPaths = [
 	, "tests/owned-transfer-packaging.test.mjs"
 ].sort();
 let cached;
-export const ownedTransferPackageNormalizationPaths = [...new Set([...ownedTransferPackageChangedPaths, ...ownedCppTransferChangedPaths])].sort();
+export const ownedTransferPackageNormalizationPaths = [...new Set([...ownedTransferPackageChangedPaths, ...ownedCppTransferNormalizationPaths])].sort();
 
 /**
  * Authenticate both complete file versions before reversing ordered spans.

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedRustTransfer, ownedRustTransferChangedPaths } from "./owned-rust-transfer-history.mjs";
 
 export const ownedCppTransferBaseline = "2a0329ae6819dfa3c2387e1bdda628c21df8e62b";
 export const ownedCppTransferPath = "docs/evidence/owned-cpp-transfers-20260929.json";
@@ -44,6 +45,7 @@ export const ownedCppTransferAddedPaths = [
 	, "tests/owned-cpp-transfers.test.mjs"
 ].sort();
 let cached;
+export const ownedCppTransferNormalizationPaths = [...new Set([...ownedCppTransferChangedPaths, ...ownedRustTransferChangedPaths])].sort();
 
 /**
  * Authenticate complete file versions before reversing exact ordered edits.
@@ -76,6 +78,7 @@ export const reverseOwnedCppTransferUpdate = (source, update) => {
  * @param expected - Optional exact historical stopping identity.
  */
 export const beforeOwnedCppTransfer = (path, source, expected) => {
+	source = beforeOwnedRustTransfer(path, source, expected);
 	if(!ownedCppTransferChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedCppTransferPath, "utf8"));
@@ -94,5 +97,5 @@ export const beforeOwnedCppTransfer = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional exact historical stopping identity.
  */
-export const ownedCppTransferHistoricalBytes = (path, bytes, expected) => ownedCppTransferChangedPaths.includes(path)
+export const ownedCppTransferHistoricalBytes = (path, bytes, expected) => ownedCppTransferNormalizationPaths.includes(path)
 	? beforeOwnedCppTransfer(path, bytes.toString("utf8"), expected) : bytes;

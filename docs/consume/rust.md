@@ -442,6 +442,43 @@ depth 128, 262,144 visits and separate 16 MiB Rust/native accounting budgets.
 These limits do not bound Lean working memory or every allocator overhead.
 Rust and GMP retain their fatal allocator-exhaustion policies.
 
+### Transferred inputs
+
+When the author [selects input transfer](../publish/cargo.md#transfer-input-ownership),
+the generated function takes `&mut T` or `&mut [T]`. Validation and preparation
+finish before the bridge consumes any inputs. After Lean receives them, their
+resource wrappers report `is_closed()`, even if the call returns an error or
+resumes a callback panic. Failures before handoff leave the inputs usable.
+
+For the transfer-enabled `owned-transfers` example, save this as `src/main.rs`:
+
+```rust file=rust/owned-transfers.rs
+use owned_transfers::{new_ticket, retain_ticket, serial, BigUint};
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let mut ticket = new_ticket(&BigUint::from(17u32), "order")?;
+    let alias = ticket.clone();
+    let independent = ticket.retain()?;
+
+    let received = retain_ticket(&mut ticket)?;
+    assert!(ticket.is_closed() && alias.is_closed());
+    assert_eq!(serial(&received)?, BigUint::from(17u32));
+    assert_eq!(serial(&independent)?, BigUint::from(17u32));
+    println!("transferred");
+    Ok(())
+}
+```
+
+Run `cargo run --release`. `retain_ticket` is the example's consuming Lean export;
+the wrapper's `retain()` method creates independent ownership without consuming it.
+
+Consumption closes every alias sharing a submitted resource lease, including
+sibling resources from the same result owner. Copied fields remain normal Rust
+values. Host-assembled containers can combine resources from several owners;
+all represented owners move together. Two transferred arguments cannot consume
+the same lease. Callback-frame resource borrows cannot be transferred; call
+`retain()` inside the callback first if you need independent ownership.
+
 ### Alpha resource and callback example
 
 The remaining example uses the separate Alpha fixture and its older API. Its loader needs the installed native files to remain in place. New packages can use the explicit ownership profile above.
