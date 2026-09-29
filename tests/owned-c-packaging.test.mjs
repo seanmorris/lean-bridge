@@ -50,7 +50,7 @@ test("owned package models require explicit capability and preserve their carrie
 	assert.deepEqual(createCompiledNativeModel(primitive, { ownedGraphs: true }), createCompiledNativeModel(primitive));
 });
 
-test("unsupported native targets reject owned source decisions before compiling", async t => {
+test("owned native targets admit source decisions before requiring the compiler", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-owned-admission-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const project = join(directory, "source");
@@ -58,7 +58,7 @@ test("unsupported native targets reject owned source decisions before compiling"
 	for(const targets of [["wit-wasi"], ["c", "cpp", "wit-wasi"], ["maven", "wit-wasi"], ["php-native", "wit-wasi"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
-			, environment: copiedCleanEnvironment }), /ownedAggregates/);
+			, environment: copiedCleanEnvironment }), { code: "ENOENT" });
 	for(const targets of [["cargo"], ["c", "cargo"], ["cpp", "cargo"], ["c", "cpp", "cargo"], ["pypi"], ["c", "pypi"], ["cpp", "pypi"], ["c", "cpp", "cargo", "pypi"], ["rubygems"], ["c", "rubygems"], ["c", "cpp", "cargo", "pypi", "rubygems"], ["nuget"], ["c", "nuget"], ["cpp", "nuget"], ["c", "cpp", "cargo", "pypi", "rubygems", "nuget"], ["maven"], ["nuget", "maven"], ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
@@ -72,7 +72,7 @@ test("unsupported native targets reject owned source decisions before compiling"
 	for(const targets of [["wit-wasi"], ["cpan", "wit-wasi"], ["maven", "wit-wasi"], ["php-native", "wit-wasi"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
-			, environment: copiedCleanEnvironment }), { code: "consumer-upgrade-required" });
+			, environment: copiedCleanEnvironment }), { code: "ENOENT" });
 	await assert.rejects(buildNativeProject({ projectRoot: project
 		, targets: ["maven"], outputRoot: join(directory, "unused")
 		, environment: copiedCleanEnvironment }), { code: "ENOENT" });

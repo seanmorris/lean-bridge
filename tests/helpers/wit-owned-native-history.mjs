@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedWitSession, ownedWitSessionChangedPaths } from "./wit-owned-session-history.mjs";
+import { beforeOwnedWitSession, ownedWitSessionNormalizationPaths } from "./wit-owned-session-history.mjs";
 
 export const ownedWitNativeBaseline = "9a2ab9091d501e6d4aac5d668496de2bd6a40579";
 export const ownedWitNativePath = "docs/evidence/wit-owned-native-20260929.json";
@@ -37,7 +37,7 @@ export const ownedWitNativeAddedPaths = [
 	, "tests/wit-owned-native-host.test.mjs"
 ].sort();
 let cached;
-export const ownedWitNativeNormalizationPaths = [...new Set([...ownedWitNativeChangedPaths, ...ownedWitSessionChangedPaths])].sort();
+export const ownedWitNativeNormalizationPaths = [...new Set([...ownedWitNativeChangedPaths, ...ownedWitSessionNormalizationPaths])].sort();
 
 /**
  * Reverse exact ordered spans after authenticating both full file versions.

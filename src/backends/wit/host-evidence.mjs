@@ -49,7 +49,15 @@ export const guardWitHostSource = (source, prefix, dependencies) => {
 	if(!names.has("lb_call_0")) throw new Error("Missing guarded WIT import");
 	const close = `void ${prefix}_wasmtime_close(${prefix}_wasmtime *session) {`;
 	if(guarded.split(close).length !== 2) throw new Error("Missing unique WIT host close entry");
-	return `#ifndef _GNU_SOURCE
+	return witHostDependencyPrelude(dependencies) + `${guarded.replace(close, `${close}\n  if (getpid() != lb_package_pid) return;`)}\n`;
+};
+
+/**
+ * Verify loaded dependency files and reject inherited Wasmtime hosts after fork.
+ *
+ * @param dependencies - Validated library basenames, byte lengths and SHA-256 hashes.
+ */
+export const witHostDependencyPrelude = dependencies => `#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
 #include <dlfcn.h>
@@ -127,6 +135,4 @@ static const char *lb_package_failure(void) {
   if (getpid() != lb_package_pid) return "WIT hosts cannot be used after fork; exec a fresh process";
   return lb_package_problem;
 }
-${guarded.replace(close, `${close}\n  if (getpid() != lb_package_pid) return;`)}
 `;
-};

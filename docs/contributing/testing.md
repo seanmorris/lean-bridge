@@ -1224,9 +1224,27 @@ against independent Lean leak baselines. Removing store cleanup or independent
 result ownership must make the public consumer fail. CI requires all seven
 tests without skips and preserves `build/wit-owned-session.log`.
 
-These gates do not establish installed owned-WIT support. Production package
-admission, relocated installed acceptance, transferred Lean inputs and
-owner-anchored borrowed results remain open.
+Run the production owned WIT package gate separately:
+
+```sh
+LEAN_BRIDGE_WIT_OWNED_PACKAGE_TEST=1 \
+  node --test --test-concurrency=1 tests/wit-owned-packaging.test.mjs
+```
+
+These six tests build ordinary and independently reviewed packages for nested
+values, host callbacks and all 19 scalars. They reassemble byte-identical archives
+without compiling, remove the producer sources and release directory, install
+offline, and compile independent consumers against the shipped public header.
+Each consumer runs through pkg-config and again through CMake after relocating
+the installation and deleting the archive handoff. Header changes with rewritten
+receipt hashes and unrecorded files must fail package verification.
+
+The archive bundles the generated Component Model binary, guarded native host,
+Lean runtime, Wasmtime and GMP with its corresponding source and notices. The
+public host uses semantic C values and opaque owners. It does not expose raw
+Wasmtime resources or a custom-linker API. CI requires all six tests without
+skips and retains `build/wit-owned-packaging.log` and the installed reports.
+Transferred Lean inputs and owner-anchored borrowed results remain open.
 
 ### Staged WIT callable projection
 

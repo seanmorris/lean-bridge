@@ -8,7 +8,7 @@ For ordinary-source builds, declare the library's [description, authors and URLs
 
 The `wit-wasi` target accepts copied primitives, arrays, Lists, records, options, results, binary products, aliases and concrete tagged variants, including finite recursive values and synchronous callbacks and returned Lean functions carrying them. Consumers receive the compiled component, a generated Wasmtime embedding library, headers, shared native runtime, compiler evidence and dependency licenses. The target builds for Linux x86-64 with glibc 2.38 or newer.
 
-Callable signatures support all nineteen primitives, copied containers and one through sixteen arguments. Use an [arity decision](../lean/export-decisions.md) when an export returns a partially applied function. Host callbacks are call-borrowed; returned Lean functions have explicit leases. Nested functions, identity-bearing copied fields, retained host borrows and asynchronous results remain unsupported. The [consumer guide](../consume/wit-wasi.md#callbacks-and-returned-lean-functions) describes the owning session API and cleanup.
+Callable signatures support all nineteen primitives, copied containers and one through sixteen arguments. Use an [arity decision](../lean/export-decisions.md) when an export returns a partially applied function. Host callbacks are call-borrowed; returned Lean functions have explicit leases. Resource-containing values require the [explicit ownership configuration](#export-resource-containing-values) below. Retained host borrows and asynchronous results remain unsupported. The [consumer guide](../consume/wit-wasi.md#callbacks-and-returned-lean-functions) describes the copied-value session API and cleanup.
 
 List parameters, results and record fields use canonical WIT `list<T>` values.
 Typed Lean helpers preserve the List semantics without inspecting cons-cell
@@ -42,9 +42,53 @@ lean-bridge build --project /absolute/path/to/cobalt \
 
 The archive is `archives/cobalt-api-2.0.0-rc.1-wit-wasi.tar.gz`. Its WIT world imports `lean-bridge:cobalt-api/native@2.0.0-rc.1` and exports `lean-bridge:cobalt-api/api@2.0.0-rc.1`. The supplied host implements the native import with compiled Lean code. The component is not a standalone WASI command.
 
-Repeat `--target` to add C, C++, CPAN, NuGet, Maven, RubyGems or npm. Native targets reuse one Lean compilation; npm adds one Wasm compilation. No release directory appears unless every selected target succeeds. Unsupported signatures fail with the source declaration instead of being omitted.
+Repeat `--target` to add C, C++, Cargo, PyPI, CPAN, NuGet, Maven, RubyGems, native PHP, PHP-Wasm or npm. Native targets reuse one Lean compilation; npm and PHP-Wasm add their Wasm compilation. No release directory appears unless every selected target succeeds. Unsupported signatures fail with the source declaration instead of being omitted.
 
 Run `lean-bridge verify --receipt /absolute/path/to/cobalt-release/package-set-receipt.json`, then the [ordinary prepared-package example](../consume/wit-wasi.md#ordinary-project-packages) against the original archive. Distribute the receipt, its `.json.sha256` sidecar and the original `archives/` paths for [Node-only verification](../consume/receive-package.md#verify-a-local-package-set). The receipt checks unsigned local consistency, not publisher identity. The [acceptance evidence](../evidence/native-wit-20260914.md) records relocated builds, installed calls and cleanup checks.
+
+## Export resource-containing values
+
+Declare resource types and opt into aggregate ownership when records, variants,
+containers or recursive values contain resource identities:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "exports": ["Owned.newTicket", "Owned.serial", "Owned.echoRecord"],
+  "targets": {
+    "wit-wasi": { "name": "owned-values", "version": "1.2.3" }
+  }
+}
+```
+
+Use the same `lean-bridge build --target wit-wasi` command. The builder compiles
+the selected Lean implementation, generates the owned Component Model and typed
+public C API, builds the pinned GMP source, and bundles GMP, Wasmtime and the
+shared Lean runtime. The archive includes pkg-config and CMake metadata,
+compiler receipts, generated sources, dependency licenses and GMP's corresponding
+source. Reassembling the archive from verified build artifacts requires no
+compiler and preserves its bytes.
+
+Ordinary source extraction and independently reviewed version-4 binding IR use
+the same ownership-aware build path. Inputs borrow resource-containing values;
+results own independent leases and copied storage. Typed synchronous callbacks
+support resource arguments and replies, reentry and returned Lean closures.
+The [consumer API](../consume/wit-wasi.md#packages-containing-resources) keeps
+Wasmtime handles private. Retained host callbacks, transferred inputs,
+owner-anchored borrowed results and asynchronous callbacks remain unsupported.
+
+Ship the original archive and package-set receipt together. Consumers need a C11
+compiler, not Lean, Wasmtime headers from another installation, or a system GMP
+package. Keep the bundled shared libraries unchanged; the host rejects loaded
+dependencies whose bytes differ from its compiler receipts.
 
 ## Export structured callbacks
 

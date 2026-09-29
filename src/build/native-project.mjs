@@ -33,6 +33,7 @@ import { compileCopiedDotnetModel, validateOrdinaryNugetSettings } from "../back
 import { compileCopiedJvmModel, validateOrdinaryMavenSettings } from "../backends/jvm/copied-model.mjs";
 import { compileCopiedRubyModel, validateOrdinaryRubySettings } from "../backends/ruby/copied-model.mjs";
 import { compileCopiedWitModel, validateOrdinaryWasiSettings } from "../backends/wit/copied-model.mjs";
+import { compileOwnedWitGraphModel } from "../backends/wit/owned-graph-model.mjs";
 import { compileCopiedPythonModel, validateOrdinaryPythonSettings } from "../backends/python/copied-model.mjs";
 import { compileCopiedRustModel, validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs";
 import { compileCopiedPhpModel, validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
@@ -55,7 +56,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 {
 	if(!Array.isArray(targets) || !targets.length || new Set(targets).size !== targets.length || targets.some(target => !["cpan", "c", "cpp", "nuget", "maven", "rubygems", "wit-wasi", "pypi", "cargo", "php-native"].includes(target)))
 		throw new CanonicalBuildError("unsupported-native-targets", "Ordinary native builds support c, cpp, nuget, maven, rubygems, wit-wasi, pypi, cargo, php-native, and cpan targets");
-	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target));
+	const ownedGraphs = targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target));
 	try
 	{ await readNativeReviewedSource(projectRoot, await inspectLeanProject(projectRoot, { signal }), signal, ownedGraphs); }
 	catch(error)
@@ -111,6 +112,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					if(targets.includes("maven")) generateOwnedJvmPackage(model.bindingIr);
 					if(targets.includes("cpan")) generateOwnedPerlXs(model.bindingIr, ownedPerlNamespace(model.component, config.targets?.cpan));
 					if(targets.includes("php-native")) generateOwnedPhpPackage(model.bindingIr);
+					if(targets.includes("wit-wasi")) compileOwnedWitGraphModel(model.bindingIr, config.targets?.["wit-wasi"]);
 					return;
 				}
 				if(model.copiedGraph)

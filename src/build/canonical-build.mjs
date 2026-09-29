@@ -816,7 +816,7 @@ export const buildCanonicalProject = async ({
 	if(mixed)
 	{
 		if(normalized.includes("npm") || phpWasm)
-			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm", ...(ownedNpm ? ["npm"] : [])].includes(target)));
+			await preflightReview(root, signal, normalized.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "php-wasm", "wit-wasi", ...(ownedNpm ? ["npm"] : [])].includes(target)));
 		if(normalized.length === 1 && phpWasm)
 			return buildPhpWasmProject({ projectRoot: root, engineRoot: engine, outputRoot, environment, signal, onProgress, lakeSnapshot });
 		if(!normalized.includes("npm") && !phpWasm)

@@ -6,6 +6,9 @@
 
 An ordinary `wit-wasi` release includes generated WIT, a Component Model binary, a Wasmtime 42.0.1 embedding library and the compiled native Lean runtime. Use it on Linux x86-64 with glibc 2.38 or newer. You do not install Lean or Wasmtime separately.
 
+Packages containing resources use the [typed ownership-aware API](#packages-containing-resources).
+The copied-value Cobalt example below uses Wasmtime's public value types.
+
 For the Cobalt example, [authenticate the release](receive-package.md), then extract its original archive:
 
 ```sh
@@ -77,6 +80,81 @@ See the [installed library-isolation checks](../evidence/wit-host-isolation-2026
 `Unit` uses a single-case WIT enum in all positions. `Nat` uses least-significant-first `u32` limbs, with an empty list for zero. `Int` adds a `negative` flag. Trailing zero limbs and negative zero are rejected. Arrays and records copy recursively; strings preserve UTF-8 and embedded NUL. Empty records use a single-case enum. The adapter caps conversion work at 16 MiB, and canonical-ABI scratch memory at 64 MiB. The session helper resets successful calls and replaces trapped stores before reuse. Custom embeddings must discard trapped instances. These limits do not bound the Lean algorithm's working memory.
 
 See the [ordinary installed acceptance](../evidence/native-wit-20260914.md) for the exercised types and failure paths.
+
+### Packages containing resources
+
+An ownership-aware package ships named C records, variants, sequences and opaque
+resource handles in its `<package>_wasmtime.h` header. Call those typed functions;
+you do not construct Wasmtime values. Every exported call and returned Lean
+closure invocation still crosses the bundled Component Model binary.
+
+The `owned-values` example contains the `owned_aggregates_wasmtime` API. After
+authenticating and extracting `owned-values-1.2.3-wit-wasi.tar.gz`, save this as
+`main.c`:
+
+```c
+#include "owned_aggregates_wasmtime.h"
+#include <stdio.h>
+
+int main(void)
+{
+    owned_aggregates_wasmtime_session *session = NULL;
+    owned_aggregates_wasmtime_result *ticket_owner = NULL, *number_owner = NULL;
+    owned_aggregates_wasmtime_ticket_t ticket = NULL;
+    mpz_t input;
+    mpz_init_set_ui(input, 42);
+    mpz_srcptr output = NULL;
+    int status = owned_aggregates_wasmtime_session_open(&session);
+    if (!status) status = owned_aggregates_wasmtime_new_ticket(
+        session, input,
+        (owned_aggregates_wasmtime_scalar_string_t){"ticket", 6},
+        &ticket, &ticket_owner);
+    if (!status) status = owned_aggregates_wasmtime_serial(
+        session, ticket, &output, &number_owner);
+    if (!status) gmp_printf("%Zd\n", output);
+    owned_aggregates_wasmtime_result_release(&number_owner);
+    owned_aggregates_wasmtime_result_release(&ticket_owner);
+    owned_aggregates_wasmtime_session_close(&session);
+    mpz_clear(input);
+    return status ? 1 : 0;
+}
+```
+
+Compile using the package's metadata:
+
+```sh
+export PKG_CONFIG_PATH=/absolute/path/to/owned-values-1.2.3-wit-wasi/lib/pkgconfig
+cc main.c $(pkg-config --cflags --libs owned-values-wit) -o owned-example
+./owned-example
+```
+
+The program prints `42`. pkg-config supplies the host and bundled GMP; the host
+loads Lean and Wasmtime automatically. CMake consumers can use the package and
+target named in `lean-bridge-package.json`. Both methods support relocation.
+
+Inputs borrow their values for one call. Each returned value has a result owner
+that owns its copied storage and resource leases. Initialize owner slots to
+`NULL`, release each owner once, and use generated retain/copy helpers when a
+value must outlive its original owner. Failure leaves output slots unchanged.
+Copied storage survives session close until its result owner is released;
+resource operations require an open session on the creating thread.
+
+Callbacks use typed descriptors from the header. Their arguments expire when
+the callback returns. Retain a resource inside the callback to keep it. Reply
+owners transfer to the adapter and are released after conversion, including on
+failure. Reentrant calls use separate Wasmtime stores. Closing a session during
+a callback defers destruction until the active calls unwind.
+
+The archive includes GMP 6.3.0 headers, its shared library, corresponding source
+and licenses. `Nat` and `Int` use exact GMP integers. The host verifies the loaded
+component, both Lean runtime libraries, GMP and Wasmtime against its receipt.
+Conflicting dependencies reject before calls. After `fork`, inherited calls and
+cleanup return a process error; start a fresh consumer with `exec`.
+
+This API does not expose raw Wasmtime handles or custom caller-owned stores.
+The supplied component requires its native host, not a standalone WASI runtime.
+Transferred inputs, owner-anchored borrowed results, retained host callbacks and
+asynchronous callbacks remain unsupported.
 
 ### Arrays and copied records
 

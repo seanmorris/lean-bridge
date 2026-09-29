@@ -143,7 +143,7 @@ export const buildMultiProfileProject = async ({
 		throw new CanonicalBuildError("invalid-package-targets", "Combined builds require two distinct ABIs and unique supported targets");
 	const npmSelected = wasmTargets.includes("npm"), phpSelected = wasmTargets.includes("php-wasm");
 	const ownedNpm = npmSelected && await usesOwnedJavaScript(projectRoot, signal);
-	const ownedGraphs = (!npmSelected || ownedNpm) && !nativeTargets.includes("wit-wasi");
+	const ownedGraphs = !npmSelected || ownedNpm;
 	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, "build/lean-bridge-release"));
 	if(output === project || project.startsWith(`${output}/`))
 		throw new CanonicalBuildError("invalid-output-root", "Build output cannot replace the source project");
