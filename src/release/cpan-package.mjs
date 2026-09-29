@@ -14,6 +14,7 @@ import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { cpanPackageMetadata, verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 import { generateOwnedPerlPackage } from "../backends/perl/owned-package.mjs";
 import { readOwnedPerlGmp } from "../build/owned-perl-artifacts.mjs";
+import { verifyOwnedCpanTransfers } from "./owned-cpan-contract.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const templates = join(root, "src/backends/perl");
@@ -92,6 +93,7 @@ export const readVerifiedCpanPackage = async packageRoot => {
 			throw new Error("CPAN runtime package coordinate differs from payload");
 	} else
 	{
+		verifyOwnedCpanTransfers(manifest, files);
 		const metadata = JSON.parse(files.get("META.json"));
 		const pin = `== ${manifest.runtimeVersion}`;
 		const pm = files.get(`lib/${manifest.module.replaceAll("::", "/")}.pm`)?.toString("utf8");
@@ -171,7 +173,7 @@ export const stageCpanPackage = async ({ outputRoot
 	{
 		const isOwned = ownedGmpRoot !== null;
 		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity
-			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned });
+			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned });
 		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
 		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
 		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");
@@ -200,6 +202,7 @@ export const stageCpanPackage = async ({ outputRoot
 		await copy(join(componentRoot, receipt.library), join(directory, `lib/${relative}/native/${receipt.library}`));
 		for(const path of ["component.h", "model.json", "binding-ir.json", "native-component.json", "metadata.json", "generated.lean", "allocation-guard.h", "artifacts.json"])
       await copy(join(componentRoot, path), join(directory, path));
+		if(model.ownedGraph?.inputTransfers) await copy(join(componentRoot, "callbacks.c"), join(directory, "callbacks.c"));
 		const generatedDigest = receipt.sourceIdentity?.lakeDependencies?.generatedSourcesSha256;
 		if(generatedDigest !== undefined)
 		{

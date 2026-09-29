@@ -89,9 +89,10 @@ sub new {
  *
  * @param ir - Compiler-authenticated explicit ownership contract.
  * @param moduleName - Validated public CPAN namespace.
+ * @param options - Explicit transport capabilities.
  */
-export const generateOwnedPerlXs = (ir, moduleName) => {
-	const model = generateOwnedPerlConversions(ir, moduleName), p = model.c.prefix;
+export const generateOwnedPerlXs = (ir, moduleName, options = {}) => {
+	const model = generateOwnedPerlConversions(ir, moduleName, options), p = model.c.prefix;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const declarations = [model.source, callbackRuntime(p)];
 	const xs = [`MODULE = ${moduleName} PACKAGE = ${moduleName}
@@ -169,6 +170,15 @@ ${invoker}(...)
 	}
 	const render = (name, fn) => {
 		const inputs = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
+		const moving = fn.transfers ?? [];
+		const snapshots = moving.map((index, group) => {
+			const node = inputs[index], copy = [...model.c.copies, ...model.c.retains].find(fn => fn.result === node.id);
+			if(!copy) throw new TypeError(`Missing Perl transfer snapshot for ${node.id}`);
+			return `${node.cName} moved${index} = {0};\n    lpo_status(aTHX_ ${copy.cName}(lpo_state.session, ${node.leaf ? "" : "&"}input${index}, &moved${index}, &moves->groups[${group}].result));`;
+		}).join("\n    ");
+		const arguments_ = inputs.flatMap((node, index) => moving.includes(index)
+			? [`${node.leaf ? "" : "&"}moved${index}`, `&moves->groups[${moving.indexOf(index)}].result`]
+			: [`${model.c.hostArgument(fn, index) || !node.leaf ? "&" : ""}input${index}`]);
 		return `void
 ${name}(...)
   PPCODE:
@@ -179,13 +189,14 @@ ${name}(...)
     lpo_frame *frame = lpo_begin_frame(aTHX_ scope);
     lpo_owner *owner = lpo_begin_owner(aTHX_ 0);
     ${inputs.map((_, index) => `SV *argument${index} = lpg_pin(aTHX_ ST(${index}));`).join("\n    ")}
-    ${inputs.map((node, index) => model.c.hostArgument(fn, index)
+    ${moving.length ? `lpo_input_scope *moves = lpo_begin_inputs(aTHX_ scope, ${moving.length});\n    ` : ""}${inputs.map((node, index) => (moving.length ? `moves->selected = ${moving.includes(index) ? moving.indexOf(index) : "SIZE_MAX"};\n    ` : "") + (model.c.hostArgument(fn, index)
 		? `${node.cName}_host input${index} = lpo_host${node.index}(aTHX_ frame, argument${index});`
-		: `${node.cName} input${index} = {0}; lpo_read${node.index}(aTHX_ scope, argument${index}, &input${index}, 0, 1);`).join("\n    ")}
+		: `${node.cName} input${index} = {0}; lpo_read${node.index}(aTHX_ scope, argument${index}, &input${index}, 0, 1);`)).join("\n    ")}
     lpo_context(aTHX);
     if (lpo_state.closed) croak("Lean ownership session is closed");
     ${result.cName} returned = {0};
-    uint32_t status = ${fn.cName}(lpo_state.session, ${inputs.map((node, index) => `${model.c.hostArgument(fn, index) || !node.leaf ? "&" : ""}input${index}`).concat(["&returned", "&owner->result"]).join(", ")});
+    ${moving.length ? `moves->selected = SIZE_MAX;\n    ${snapshots}\n    lpo_arm_inputs(aTHX_ moves);\n    ` : ""}uint32_t status = ${fn.cName}(lpo_state.session, ${arguments_.concat(["&returned", "&owner->result"]).join(", ")});
+${moving.length ? "    lpo_finish_inputs(aTHX_ moves);\n" : ""}\
     lpo_finish_frame(aTHX_ frame, status);
     SV *out = lpo_write${result.index}(aTHX_ scope, owner, &returned, 0, 1);
     lpo_publish(aTHX_ owner);

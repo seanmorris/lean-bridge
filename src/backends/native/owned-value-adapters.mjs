@@ -246,7 +246,7 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 			, "  status = ov_charge(&transaction.budget, 1, sizeof(*out));"
 			, "  if (status) return ov_abort(&transaction, status);"
 			, ...transfers.length ? [
-				`  lb_owned_batch *batches[${transfers.length}]; size_t batch_count = 0;`
+				`  lb_owned_batch *batches[${transfers.length}] = {0}; size_t batch_count = 0;`
 				, `  status = ov_transfers_prepare(&transaction, transfer, ${transfers.length}, batches, &batch_count);`
 				, "  if (status) return ov_abort(&transaction, status);"
 			] : []

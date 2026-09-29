@@ -1345,6 +1345,33 @@ consumer source, Maven caches, handoff archives and compilers are absent.
 Reports go to `build/owned-jvm-transfers/` and
 `build/owned-jvm-transfer-packaging/`.
 
+#### Installed Perl transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-perl-transfers
+```
+
+Use the pinned Lean and native toolchains and the four configured Perl ABIs:
+5.36.3 and 5.38.2, each threaded and unthreaded. On a glibc 2.36 test host, set
+both `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` and
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+The private tests exercise shared aliases, independent retains, host-assembled
+graphs, recursive values and call-scoped callbacks. Single- and multiple-input
+allocation sweeps check failures before and after handoff while exceptions stay
+reachable. Tied scalars check single evaluation and reentrant preparation.
+Fork and interpreter-thread checks preserve the parent's owners.
+
+The installed tests build ordinary-source and independently reviewed CPAN
+packages, reject altered transfer metadata and generated sources, and reproduce
+both archive files. Each ABI installs with `prebuilt-only` and `build-xs`, then
+runs twice after removing the producer, handoff archives and build tools and
+relocating the installation. Cold and warm loaders reject changed native assets.
+The exact author and consumer examples run in combined C/CPAN releases for both
+borrowed and consuming inputs. Reports go to `build/owned-perl-transfers/` and
+`build/owned-perl-transfer-packaging/`.
+
 The remaining consumer bindings, owner-anchored borrowed results and owned
 Docker acceptance remain open.
 

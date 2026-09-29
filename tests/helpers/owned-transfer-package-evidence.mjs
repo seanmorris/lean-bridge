@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
+import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { ownedTransferConfiguration, ownedTransferSource } from "./owned-transfer-fixture.mjs";
 
@@ -67,7 +68,7 @@ export const assertOwnedTransferPackageExecution = async record => {
 		const model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 		assert.deepEqual(item.model, model); assert.equal(model.schemaVersion, 8);
 		assert.equal(model.ownedGraph.inputTransfers.exports.length, 18);
-		const generated = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });
+		const generated = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), item.adapterReceipt.ownedValues.sourceSha256);
 		const adapters = generateCompiledNativeLeanAdapters(model);
 		const { componentReceipt: component, adapterReceipt: adapter, manifest, packageSetReceipt: packages } = item;
 		assert.equal(component.schemaVersion, 4); assert.equal(adapter.schemaVersion, 4);

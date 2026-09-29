@@ -100,7 +100,9 @@ test("real Nix CI rejects disabled tests, swallowed failures and missing observa
 		, ['          LEAN_BRIDGE_OWNED_JS_NIX_TEST: "1"', '          LEAN_BRIDGE_OWNED_JS_NIX_TEST: "0"']
 		, ['          LEAN_BRIDGE_NIX_TOOLCHAIN_TEST: "1"', '          LEAN_BRIDGE_NIX_TOOLCHAIN_TEST: "0"']
 		, ["tee build/owned-nix-installed.log\n", "tee build/owned-nix-installed.log || true\n"]
-		, ...["pass 5", "fail 0", "skipped 0"].map(value => [`          rg '^# ${value}$' build/owned-nix-installed.log\n`, ""])
+		, ...["pass 7", "fail 0", "skipped 0"].map(value => [`          rg '^# ${value}$' build/owned-nix-installed.log\n`, ""])
+		, ["xz-utils zstd ripgrep", "xz-utils zstd"]
+		, ["rg '^# pass 7$' build/owned-nix-installed.log", "rg '^# pass 5$' build/owned-nix-installed.log"]
 		, ["          path: build/owned-nix-installed.log\n", ""]
 		, ["      - name: Preserve real Nix owned npm acceptance\n        if: always()", "      - name: Preserve real Nix owned npm acceptance\n        if: false"]
 		, ["      - name: Install archive acceptance tools\n", "      - name: Install archive acceptance tools\n        if: false\n"]

@@ -43,9 +43,11 @@ ${fields.map(field => `# ${field.publicName}: ${field.contractType}\nsub ${field
  *
  * @param ir - Compiler-authenticated explicit ownership contract.
  * @param moduleName - Validated public CPAN namespace.
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Enable consuming parameters.
  */
-export const generateOwnedPerlValues = (ir, moduleName) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true });
+export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
 	const definitions = new Map(ir.types.map(type => [type.id, type]));
 	const projected = projectPerlNames(moduleName, ir.declarations.map(declaration => ({
 		...declaration, name: declaration.source.declaration

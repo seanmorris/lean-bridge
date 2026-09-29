@@ -4,14 +4,17 @@
  * @file
  */
 import { perlGraphRuntime } from "./copied-graph-runtime.mjs";
+import { ownedPerlTransfers } from "./owned-transfers.mjs";
 
 /**
  * Keep resource leaves alive independently of temporary aggregate storage.
  * Native result ownership moves only after a complete Perl result is published.
  *
  * @param prefix - Validated public C component prefix.
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Track aliases of consuming inputs.
  */
-export const ownedPerlRuntime = prefix => {
+export const ownedPerlRuntime = (prefix, { transferredInputs = false } = {}) => {
 	if(typeof prefix !== "string" || !/^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/u.test(prefix))
 		throw new TypeError("Invalid owned Perl component prefix");
 	return `${perlGraphRuntime}
@@ -33,8 +36,9 @@ struct lpo_owner {
   lpo_owner *previous, *next;
   ${prefix}_result *result;
   size_t references;
-  int published, borrowed, valid;
+  int published, borrowed, valid;${transferredInputs ? "\n  struct lpo_input_group *input_move;" : ""}
 };
+${transferredInputs ? "static int lpo_input_consumed(lpo_owner *owner);\n" : ""}\
 typedef struct {
   lpo_owner *owner;
   void *handle;
@@ -167,8 +171,8 @@ static SV *lpo_wrap(pTHX_ lpg_scope *scope, lpo_owner *owner,
   wrapper->type = type; wrapper->package = package;
   return value;
 }
-static lpo_wrapper *lpo_get(pTHX_ SV *value, size_t type) {
-  SvGETMAGIC(value); lpo_context(aTHX);
+static lpo_wrapper *lpo_get${transferredInputs ? "_fetched" : ""}(pTHX_ SV *value, size_t type) {
+  ${transferredInputs ? "" : "SvGETMAGIC(value); "}lpo_context(aTHX);
   if (!SvROK(value) || SvTYPE(SvRV(value)) != SVt_PVHV || !SvOBJECT(SvRV(value)))
     croak("Expected a generated Lean resource or closure");
   MAGIC *magic = mg_findext(SvRV(value), PERL_MAGIC_ext, &lpo_wrapper_magic);
@@ -180,9 +184,14 @@ static lpo_wrapper *lpo_get(pTHX_ SV *value, size_t type) {
     croak("Wrong Lean identity type");
   return wrapper;
 }
+${transferredInputs ? `static lpo_wrapper *lpo_get(pTHX_ SV *value, size_t type) {
+  SvGETMAGIC(value);
+  return lpo_get_fetched(aTHX_ value, type);
+}
+` : ""}\
 static int lpo_closed(lpo_wrapper *wrapper) {
   return lpo_state.closed || !wrapper->handle || !wrapper->owner
-    || !wrapper->owner->valid
+    || !wrapper->owner->valid${transferredInputs ? " || lpo_input_consumed(wrapper->owner)" : ""}
     || (!wrapper->owner->published && !wrapper->owner->borrowed);
 }
 static void lpo_unpin(pTHX_ void *data) { lpo_release(aTHX_ data); }
@@ -230,5 +239,6 @@ static void lpo_boot(pTHX) {
   lpo_status(aTHX_ ${prefix}_session_open(&lpo_state.session));
   lpo_state.closed = 0;
 }
+${transferredInputs ? ownedPerlTransfers(prefix) : ""}\
 `;
 };

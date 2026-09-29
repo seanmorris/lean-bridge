@@ -98,6 +98,7 @@ test("owned WIT installed CI rejects hidden failures and disabled or missing che
 	for(const [before, after] of [
 		['          LEAN_BRIDGE_WIT_OWNED_PACKAGE_TEST: "1"', '          LEAN_BRIDGE_WIT_OWNED_PACKAGE_TEST: "0"']
 		, ["tests/wit-owned-packaging.test.mjs", ""]
+		, ["build-essential cmake pkg-config zstd ripgrep", "build-essential pkg-config zstd ripgrep"]
 		, ["  wasi-consumer:\n", "  wasi-consumer:\n    if: false\n"]
 		, [execute, execute + "        if: false\n"]
 		, [execute, execute + "        continue-on-error: true\n"]

@@ -29,6 +29,36 @@ import {
 	createConsumerPerformance,
 } from "../src/adoption/consumer-performance.mjs";
 
+test("the Alpha C# documentation project compiles only its own entrypoint", async () => {
+	const project = await readFile("tests/fixtures/documentation/consumers/dotnet/Consumer.csproj", "utf8");
+	assert.match(project, /<EnableDefaultCompileItems>false<\/EnableDefaultCompileItems>/u);
+	assert.deepEqual([...project.matchAll(/<Compile Include="([^"]+)"/gu)].map(match => match[1]), ["Program.cs"]);
+});
+
+test("owned Perl transfer docs and CI require installed CPAN consumers", async () => {
+	const workflow = await readFile(".github/workflows/perl-consumer.yml", "utf8");
+	const step = workflow.split("- name: Verify owned Perl values and installed CPAN archives\n")[1].split("      - name:")[0];
+	assert.ok(step.includes("          npm run test:owned-perl-transfers\n"));
+	assert.ok(step.includes("CORPUS_PERL_CONFIGURATION: ${{ matrix.configuration }}"));
+	for(const directory of ["transfers", "transfer-packaging"])
+	{
+		assert.ok(workflow.includes(`            build/owned-perl-${directory}/\n`));
+		for(const mode of ["ordinary", "reviewed"])
+			assert.ok(step.includes(`test -s build/owned-perl-${directory}/${mode}.json`));
+	}
+	assert.ok(step.includes("test -s build/owned-perl-transfer-packaging/documentation.json"));
+	const publisher = await readFile("docs/publish/cpan.md", "utf8");
+	assert.match(publisher, /"ownership": "transfer"/u);
+	assert.match(publisher, /version-2\nCPAN ownership contract/u);
+	const consumer = await readFile("docs/consume/perl.md", "utf8");
+	assert.match(consumer, /### Consuming inputs\n/u);
+	assert.match(consumer, /die "Input still open at handoff/u);
+	assert.match(consumer, /siblings\. Retain any resource you need independently/u);
+	const pkg = JSON.parse(await readFile("package.json", "utf8"));
+	assert.ok(pkg.scripts["test:owned-perl-transfers"].includes("LEAN_BRIDGE_OWNED_NATIVE_TEST=1"));
+	assert.ok(pkg.scripts["test:owned-perl-transfers"].includes("tests/owned-perl-documentation.test.mjs"));
+});
+
 test("owned JVM transfer docs and CI require installed Java and Kotlin consumers", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	const step = workflow.split("- name: Compare isolated Java and Kotlin corpus consumers with fresh Lean\n")[1].split("      - name:")[0];
@@ -74,7 +104,7 @@ test("owned C# transfer docs and CI require offline packages and the combined co
 	assert.match(transfer, /Siblings?|Sibling resources/u);
 	const publisher = await readFile("docs/publish/nuget.md", "utf8");
 	assert.match(publisher, /ownership: "transfer"/u);
-	assert.match(publisher, /C, C\+\+, Cargo, PyPI, RubyGems, NuGet and Maven/u);
+	assert.match(publisher, /C, C\+\+, Cargo, PyPI, RubyGems, NuGet, Maven and CPAN/u);
 });
 
 test("owned Ruby documentation and CI require installed gems, companions and runtime coexistence", async () => {
@@ -882,10 +912,12 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /npm run test:type-corpus:perl/);
   assert.match(perlWorkflow, /LEAN_BRIDGE_CORPUS_PERL="\$PWD\/\.toolchains\/perl\/\$CORPUS_PERL_CONFIGURATION\/bin\/perl"/);
   assert.match(perlWorkflow, /name: type-corpus-perl-\$\{\{ matrix\.configuration \}\}-\$\{\{ github\.sha \}\}/);
-  assert.match(perlWorkflow, /path: \|\n\s*build\/type-corpus\/perl\.json\n\s*build\/type-corpus\/reviewed-native-perl\.json\n\s*build\/char-native\/perl\.json\n\s*build\/word-native\/perl\.json\n\s*build\/callables\/perl\.json\n\s*build\/structured-callables\/perl\.json\n\s*build\/recursive-callables\/perl\.json\n\s*build\/compounds\/perl\.json\n\s*build\/lists\/perl\.json\n\s*build\/collections\/perl\.json\n\s*build\/aliases\/perl\.json\n\s*build\/variants\/perl\.json\n\s*build\/recursive\/perl-values\.json\n\s*build\/recursive\/perl-conversions\.json\n\s*build\/recursive\/perl-native\.json\n\s*build\/recursive\/perl-packages\.json\n\s*build\/recursive\/perl-component-collision\.json\n\s*build\/recursive\/perl-composition\.json\n\s*build\/recursive\/perl-documentation\.json\n\s*build\/owned-perl-runtime\/\n\s*build\/owned-perl-conversions\/\n\s*build\/owned-perl-calls\/\n\s*build\/owned-perl-scalars\/\n\s*build\/owned-perl-loader\/\n\s*build\/owned-perl-package\/\n\s*if-no-files-found: error/);
+  assert.match(perlWorkflow, /path: \|\n\s*build\/type-corpus\/perl\.json\n\s*build\/type-corpus\/reviewed-native-perl\.json\n\s*build\/char-native\/perl\.json\n\s*build\/word-native\/perl\.json\n\s*build\/callables\/perl\.json\n\s*build\/structured-callables\/perl\.json\n\s*build\/recursive-callables\/perl\.json\n\s*build\/compounds\/perl\.json\n\s*build\/lists\/perl\.json\n\s*build\/collections\/perl\.json\n\s*build\/aliases\/perl\.json\n\s*build\/variants\/perl\.json\n\s*build\/recursive\/perl-values\.json\n\s*build\/recursive\/perl-conversions\.json\n\s*build\/recursive\/perl-native\.json\n\s*build\/recursive\/perl-packages\.json\n\s*build\/recursive\/perl-component-collision\.json\n\s*build\/recursive\/perl-composition\.json\n\s*build\/recursive\/perl-documentation\.json\n\s*build\/owned-perl-runtime\/\n\s*build\/owned-perl-conversions\/\n\s*build\/owned-perl-calls\/\n\s*build\/owned-perl-scalars\/\n\s*build\/owned-perl-loader\/\n\s*build\/owned-perl-package\/\n\s*build\/owned-perl-transfers\/\n\s*build\/owned-perl-transfer-packaging\/\n\s*if-no-files-found: error/);
   assert.match(perlWorkflow, /export LEAN_BRIDGE_OWNED_NATIVE_TEST=1/);
-  for(const name of ["runtime", "values", "conversions", "xs", "scalars", "loader", "package", "coexistence", "documentation"])
+  for(const name of ["runtime", "values", "conversions", "xs", "scalars", "loader", "package", "coexistence"])
     assert.ok(perlWorkflow.includes("tests/owned-perl-" + name + ".test.mjs"), name);
+  assert.ok(perlWorkflow.includes("npm run test:owned-perl-transfers"));
+  assert.ok(packageDocument.scripts["test:owned-perl-transfers"].includes("tests/owned-perl-documentation.test.mjs"));
   for(const report of ["ordinary", "reviewed", "callbacks-ordinary", "callbacks-reviewed", "coexistence", "documentation"])
     assert.ok(perlWorkflow.includes("test -s build/owned-perl-package/" + report + ".json"), report);
   assert.ok(perlWorkflow.includes("LEAN_BRIDGE_PERL_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/perl-recursive-callables.test.mjs tests/perl-recursive-callable-contract.test.mjs"));

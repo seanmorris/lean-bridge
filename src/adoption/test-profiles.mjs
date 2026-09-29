@@ -394,6 +394,7 @@ const profileManifest = Object.freeze({
 		, "owned-jvm-runtime", "owned-jvm-layout", "owned-jvm-values"
 		, "owned-jvm-kotlin", "owned-jvm-conversions", "owned-jvm-calls"
 		, "owned-jvm-transfers", "owned-jvm-transfer-packaging"
+		, "owned-perl-transfers", "owned-perl-transfer-packaging"
 		, "owned-jvm-thread-exit"
 		, "owned-jvm-package", "owned-jvm-packaging", "owned-jvm-coexistence"
 		, "owned-jvm-documentation"

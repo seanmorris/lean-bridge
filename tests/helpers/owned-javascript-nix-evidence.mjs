@@ -59,7 +59,7 @@ export const assertOwnedJavaScriptNixCi = workflow => {
 	const job = workflow.match(/^ {2}node-consumers:\n([^]*?)(?=^ {2}[a-z][a-z-]*:)/mu)?.[0];
 	assert.ok(job); assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
 	assert.equal(step(job, "Install Nix").trim(), "uses: cachix/install-nix-action@v31");
-	assert.equal(step(job, "Install archive acceptance tools").trim(), "run: sudo apt-get update && sudo apt-get install -y xz-utils zstd");
+	assert.equal(step(job, "Install archive acceptance tools").trim(), "run: sudo apt-get update && sudo apt-get install -y xz-utils zstd ripgrep");
 	const name = "Build and install owned npm exports through real Nix";
 	const execute = step(job, name), log = "build/owned-nix-installed.log";
 	assert.match(execute, /^ {10}LEAN_BRIDGE_OWNED_JS_NIX_TEST: "1"$/mu);
@@ -69,7 +69,7 @@ export const assertOwnedJavaScriptNixCi = workflow => {
 	assert.match(step(job, "Package and execute clean Node consumers"), /^ {8}run: npm run test:consumer:node$/mu);
 	assert.equal(script(execute), ["set -euo pipefail"
 		, ownedJavaScriptNixCommand + " 2>&1 | tee " + log, "test -s " + log
-		, "rg '^# pass 5$' " + log, "rg '^# fail 0$' " + log
+		, "rg '^# pass 7$' " + log, "rg '^# fail 0$' " + log
 		, "rg '^# skipped 0$' " + log].join("\n"));
 	const upload = step(job, "Preserve real Nix owned npm acceptance");
 	assert.match(upload, /^ {8}if: always\(\)$/mu);

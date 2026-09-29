@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
+import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
@@ -53,7 +54,7 @@ export const assertOwnedCppTransferExecution = async record => {
 		assert.equal(model.schemaVersion, 8); assert.equal(model.ownedGraph.inputTransfers.exports.length, 18);
 		const cpp = generateOwnedCppPackage(model.bindingIr, { transferredInputs: true });
 		assert.equal(cpp.contract.schemaVersion, 2);
-		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });
+		const c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), item.sourceSha256 ?? item.adapterReceipt?.ownedValues.sourceSha256);
 		if(record.runtime.includes(item))
 		{
 			assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);

@@ -467,8 +467,8 @@ inside these values and callback signatures.
 
 Host callbacks borrow for the call. A consumer can retain a resource from a
 callback using `retain`; that does not retain the host callback itself.
-Transferred inputs, anchored results and asynchronous callbacks remain
-unsupported.
+Input transfers require the export contract below. Anchored results and
+asynchronous callbacks remain unsupported.
 
 The CPAN component bundles a private GMP 6.3.0 library and its source and license
 notices. Each XS variant includes the generated ownership adapter. Both
@@ -482,6 +482,35 @@ Conversions allow depth 128, 262,144 visits and 16 MiB of native conversion data
 plus a separate 16 MiB conversion-storage budget. Calls belong to their creating
 Perl interpreter, thread and process. See the
 [installed package checks](../evidence/owned-perl-packages-20260927.md).
+
+## Transfer input ownership
+
+For the `Owned.lean` example above, add this `contracts` entry to
+`lean-bridge.exports.json`:
+
+```json
+{
+  "Owned.callbackRecord": {
+    "parameters": [
+      { "ownership": "transfer", "lifetime": { "scope": "call", "anchor": null } },
+      { "ownership": "borrow", "lifetime": { "scope": "call", "anchor": null } }
+    ]
+  }
+}
+```
+
+Build with `--target cpan`, or combine it with other native targets that support
+input transfers. The generated POD names each consuming argument. The version-2
+CPAN ownership contract records the same selected arguments as the checked
+native model; package verification rejects altered handoff policies and generated
+sources.
+
+Callers pass ordinary Perl values. Validation and snapshot preparation precede
+handoff. At the Lean call boundary, resource aliases sharing a result owner close
+together. Retained owners remain independent. Callback or result-conversion
+errors after handoff do not restore the inputs. A callback borrow must be retained
+before a consuming call. Two consuming arguments cannot share one resource lease.
+See [the consuming Perl example](../consume/perl.md#consuming-inputs).
 
 ## Verify the release candidate
 

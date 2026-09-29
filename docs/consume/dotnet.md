@@ -482,8 +482,10 @@ Create an empty directory and save these two files inside it.
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Program.cs" />
     <PackageReference Include="LeanBridge.Alpha" Version="0.0.0" />
   </ItemGroup>
 </Project>

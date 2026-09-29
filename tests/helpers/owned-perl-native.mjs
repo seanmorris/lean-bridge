@@ -48,15 +48,19 @@ __attribute__((destructor)) static void probe_final(void) {
  */
 export const prepareOwnedPerlNative = async (t, options) => {
 	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
+	const transferredInputs = Boolean(options.transferredInputs);
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
-		, component: compiled.model.component, hostCallbacks: true });
-	const model = generateOwnedPerlXs(c.layout.model.bindingIr, "LeanBridge::OwnedProbe");
+		, component: compiled.model.component, hostCallbacks: true
+		, transferredInputs });
+	const model = generateOwnedPerlXs(c.layout.model.bindingIr, "LeanBridge::OwnedProbe", { transferredInputs });
+	const handoff = "static inline void oc_transfer_consume(void *context) {";
+	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const native = `#include <stdlib.h>
 #include <stdio.h>
 #include <stddef.h>
 #include <unistd.h>
-static size_t live = 0; static ptrdiff_t fail_after = -1;
+static size_t live = 0; static ptrdiff_t fail_after = -1;${transferredInputs ? "\nstatic size_t handoffs = 0;" : ""}
 static void *allocate(size_t size) {
   if (fail_after == 0) return NULL;
   if (fail_after > 0) --fail_after;
@@ -65,8 +69,8 @@ static void *allocate(size_t size) {
 static void deallocate(void *value) { if (value) { --live; free(value); } }
 #define LB_OWNED_ALLOC allocate
 #define LB_OWNED_FREE deallocate
-${c.source}
-size_t owned_test_live(void) { return live; }
+${transferredInputs ? c.source.replace(handoff, handoff + "\n  ++handoffs;") : c.source}
+size_t owned_test_live(void) { return live; }${transferredInputs ? "\nsize_t owned_test_handoffs(void) { return handoffs; }" : ""}
 void owned_test_fail_after(ptrdiff_t value) { fail_after = value; }
 size_t owned_test_identities(void) {
   lean_bridge_native_snapshot snapshot; lean_bridge_native_snapshot_read(&snapshot); return snapshot.live_identities;
@@ -96,10 +100,12 @@ __attribute__((destructor)) static void owned_test_final(void) {
 size_t owned_test_live(void);
 size_t owned_test_identities(void);
 void owned_test_fail_after(ptrdiff_t);
+${transferredInputs ? "size_t owned_test_handoffs(void);\n" : ""}\
 ${model.declarations}
 ${model.xs}
 MODULE = LeanBridge::OwnedProbe PACKAGE = LeanBridge::OwnedProbe
 ${template.slice(index)}
+${transferredInputs ? `\nUV\nhandoffs()\n  CODE:\n    RETVAL = owned_test_handoffs();\n  OUTPUT:\n    RETVAL\n` : ""}\
 `;
 	await saveLakeFile(compiled.directory, "instrumentation.h", ownedPerlProbeInstrumentation);
 	await saveLakeFile(compiled.directory, "Probe.xs", xs);

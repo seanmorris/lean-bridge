@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPerlTransfer, ownedPerlTransferChangedPaths } from "./owned-perl-transfer-history.mjs";
 
 export const ownedJvmTransferBaseline = "7dd8a21aa6a245693fbd27fbadb3895b10b8d174";
 export const ownedJvmTransferPath = "docs/evidence/owned-jvm-transfers-20260929.json";
@@ -60,6 +61,7 @@ export const ownedJvmTransferChangedPaths = [
 	, "tests/lean-author-documentation.test.mjs"
 	, "tests/owned-dotnet-transfer-evidence.test.mjs"
 ].sort();
+export const ownedJvmTransferNormalizationPaths = [...new Set([...ownedJvmTransferChangedPaths, ...ownedPerlTransferChangedPaths])].sort();
 export const ownedJvmTransferAddedPaths = [
 	"docs/evidence/owned-jvm-transfers-20260929.md"
 	, "src/backends/jvm/owned-transfers.mjs"
@@ -107,6 +109,7 @@ export const reverseOwnedJvmTransferUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedJvmTransfer = (path, source, expected) => {
+	source = beforeOwnedPerlTransfer(path, source, expected);
 	if(!ownedJvmTransferChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJvmTransferPath, "utf8"));
@@ -125,5 +128,5 @@ export const beforeOwnedJvmTransfer = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedJvmTransferHistoricalBytes = (path, bytes, expected) => ownedJvmTransferChangedPaths.includes(path)
+export const ownedJvmTransferHistoricalBytes = (path, bytes, expected) => ownedJvmTransferNormalizationPaths.includes(path)
 	? beforeOwnedJvmTransfer(path, bytes.toString("utf8"), expected) : bytes;

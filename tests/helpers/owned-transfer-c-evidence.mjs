@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { ownedAggregateTransferLeaseSource } from "../../src/backends/native/owned-aggregate-transfers.mjs";
 import { ownedTransferSource } from "./owned-transfer-fixture.mjs";
+import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 
 export const ownedTransferCCommand = "npm run test:owned-transfers";
 export const ownedTransferCScope = Object.freeze({
@@ -51,7 +52,7 @@ export const assertOwnedTransferCExecution = async record => {
 		assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), consumer.path === "reviewed");
 		assert.equal(report.sourceIdentitySha256, sha256(canonicalJson(input.sourceIdentity)));
 		assert.equal(report.probeSha256, sha256(await readFile("tests/fixtures/structured-types/owned-public-transfers.c")));
-		const generated = generateOwnedCPackage({ ...input, hostCallbacks: true, transferredInputs: true });
+		const generated = historicalOwnedTransferPackage(generateOwnedCPackage({ ...input, hostCallbacks: true, transferredInputs: true }), report.sourceSha256);
 		assert.equal(report.bindingIrSha256, generated.layout.model.bindingIrSha256);
 		assert.equal(report.headerSha256, sha256(generated.publicHeader));
 		assert.equal(report.sourceSha256, sha256(generated.source));

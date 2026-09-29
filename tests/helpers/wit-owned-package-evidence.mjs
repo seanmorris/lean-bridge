@@ -86,6 +86,8 @@ const step = (job, name) => {
 export const assertOwnedWitPackageCi = workflow => {
 	const job = workflow.split("  wasi-consumer:\n")[1]?.split("  docker-engine:\n")[0];
 	assert.ok(job); assert.doesNotMatch(job, /^ {4}(?:if|continue-on-error):/mu);
+	const setup = step(job, "Compile ordinary Lean APIs and consume relocated WIT packages");
+	assert.match(setup, /sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep/u);
 	const execute = step(job, "Install owned WIT packages without producer sources");
 	assert.doesNotMatch(execute, /^ {8}(?:if|continue-on-error):/mu);
 	assert.match(execute, /^ {8}id: owned_wit_package$/mu);

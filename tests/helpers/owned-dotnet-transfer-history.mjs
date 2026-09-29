@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJvmTransfer, ownedJvmTransferChangedPaths } from "./owned-jvm-transfer-history.mjs";
+import { beforeOwnedJvmTransfer, ownedJvmTransferNormalizationPaths } from "./owned-jvm-transfer-history.mjs";
 
 export const ownedDotnetTransferBaseline = "ea7759886937d82bc6c8c2c90f867b99e8ea10e0";
 export const ownedDotnetTransferPath = "docs/evidence/owned-dotnet-transfers-20260929.json";
@@ -66,7 +66,7 @@ export const ownedDotnetTransferAddedPaths = [
 	, "tests/owned-dotnet-transfers.test.mjs"
 ].sort();
 let cached;
-export const ownedDotnetTransferNormalizationPaths = [...new Set([...ownedDotnetTransferChangedPaths, ...ownedJvmTransferChangedPaths])].sort();
+export const ownedDotnetTransferNormalizationPaths = [...new Set([...ownedDotnetTransferChangedPaths, ...ownedJvmTransferNormalizationPaths])].sort();
 
 /**
  * Authenticate complete sources before reversing exact ordered edit spans.

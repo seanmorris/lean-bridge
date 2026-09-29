@@ -23,16 +23,18 @@ export const ownedPerlXsSeal = "__LEAN_BRIDGE_OWNED_XS_SHA256__";
 export const generateOwnedPerlPackage = ({ model, receipt, metadata, moduleName, gmpSha256 }) => {
 	if(!model.ownedGraph?.hostCallbacks || !/^[0-9a-f]{64}$/u.test(gmpSha256))
 		throw new TypeError("Owned Perl requires authenticated callbacks and private GMP");
+	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const c = generateOwnedCPackage({ metadata
 		, sourceIdentity: model.sourceIdentity, component: model.component
-		, hostCallbacks: true });
+		, hostCallbacks: true, transferredInputs });
 	if(canonicalJson(c.layout.model.bindingIr) !== canonicalJson(model.bindingIr))
 		throw new TypeError("Perl ownership types differ from the compiled component");
-	const generated = generateOwnedPerlXs(model.bindingIr, moduleName);
+	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs });
 	if(generated.c.prefix !== c.values.prefix) throw new TypeError("Perl and C ownership prefixes differ");
 	const prefix = c.values.prefix, relative = moduleName.replaceAll("::", "/"), stem = moduleName.split("::").at(-1);
 	const gmpLibrary = "libgmp-lean-bridge.so.10", q = perlStringLiteral;
 	const declarations = new Map(model.bindingIr.declarations.map(declaration => [declaration.id, declaration.source.declaration]));
+	const parameters = new Map(model.bindingIr.declarations.map(declaration => [declaration.id, declaration.parameters.map(site => site.name)]));
 	const sources = model.sourceIdentity.modules.map(item => `${q(item.module)} => ${q(item.source.sha256)}`).join(", ");
 	const identityArgs = `${q(receipt.runtimeIdentity)}, { ${sources} }, ${q(model.component.id)}, ${q(receipt.nativeLibrary.sha256)}`;
 	const pm = `${generated.valuesSource}
@@ -77,7 +79,7 @@ ${moduleName} - Generated owned Lean values and synchronous callbacks
 
 =head1 API
 
-${generated.functions.map(fn => `=head2 ${fn.publicName}\n\nCalls C<${declarations.get(fn.id)}> in the compiled Lean component.\n`).join("\n")}
+${generated.functions.map(fn => `=head2 ${fn.publicName}\n\nCalls C<${declarations.get(fn.id)}> in the compiled Lean component.\n${fn.transfers?.length ? `\nConsumes resource leases in ${fn.transfers.map(index => `C<${parameters.get(fn.id)[index]}>`).join(", ")} at the Lean call boundary.\n` : ""}`).join("\n")}
 =head1 VALUES AND OWNERSHIP
 
 Records and variants use generated named-field classes. Arrays, Lists and
@@ -90,7 +92,14 @@ own independent native references. Close is idempotent; finalization releases
 unclosed owners. Closing an input during a call does not invalidate its active
 borrow. Callback arguments expire on return unless explicitly retained.
 
-Pass CODE references for synchronous callbacks. Signatures that require a typed
+${transferredInputs ? `Consuming arguments use ordinary Perl values. Validation and native snapshot
+preparation happen before handoff. At the Lean call boundary, shared aliases and
+sibling resources using the same result owner close together. Independent
+retains survive. Retain callback borrows before transferring them. Two consuming
+arguments cannot share a resource lease. Pre-handoff errors preserve ownership;
+callback and result-conversion failures after handoff leave inputs consumed.
+
+` : ""}Pass CODE references for synchronous callbacks. Signatures that require a typed
 recovery value accept Runtime::Callback->new(code => ..., recovery => ...).
 Perl exceptions retain their identity after native cleanup. Host callbacks
 cannot escape their initiating call. Owners cannot be serialized or used by a
@@ -104,7 +113,11 @@ adapter with local Perl headers. Lean, Lake and Node are not required.
 
 =cut
 `;
-	const owned = { schemaVersion: 1, prefix, gmpLibrary
+	const owned = { schemaVersion: transferredInputs ? 2 : 1, prefix, gmpLibrary
+		, ...transferredInputs ? { inputTransfers: { ...model.ownedGraph.inputTransfers
+			, arguments: "ordinary-values", aliases: "shared-lease"
+			, borrowedInputs: "reject"
+			, independentRetains: "preserved" } } : {}
 		, componentLibrary: receipt.library
 		, bindingIrSha256: model.bindingIrSha256
 		, publicHeaderSha256: sha256(c.publicHeader)
@@ -112,7 +125,8 @@ adapter with local Perl headers. Lean, Lake and Node are not required.
 	const files = { ...Object.fromEntries(Object.entries(c.files).map(([path, source]) => [`owned/${path}`, source]))
 		, "Component.xs": `#include "owned/src/${prefix}.c"\n#include "runtime.h"\n${generated.declarations}\n${generated.xs}`
 		, [`lib/${relative}.pm`]: pm
-		, "binding-manifest.json": canonicalJson({ schemaVersion: 1, backend: "perl"
+		, "binding-manifest.json": canonicalJson({
+			schemaVersion: transferredInputs ? 2 : 1, backend: "perl"
 			, profile: "native-library-v1", owned
 			, runtimeIdentity: receipt.runtimeIdentity
 			, publicModule: `lib/${relative}.pm` }) };

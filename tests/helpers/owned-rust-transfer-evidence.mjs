@@ -9,6 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedRustCallables } from "../../src/backends/rust/owned-callables.mjs";
 import { generateOwnedRustPackage } from "../../src/backends/rust/owned-package.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
+import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
@@ -50,7 +51,7 @@ export const assertOwnedRustTransferExecution = async record => {
 		const model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 		assert.equal(model.schemaVersion, 8); assert.equal(model.exports.length, 26);
 		assert.equal(model.ownedGraph.inputTransfers.exports.length, 20);
-		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });
+		const c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), item.adapterReceipt?.ownedValues.sourceSha256);
 		if(record.runtime.includes(item))
 		{
 			assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);

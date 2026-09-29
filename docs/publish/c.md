@@ -123,7 +123,7 @@ inputs; copied scalar inputs still use `copy`. Both `call` and `explicit` input
 lifetime scopes are accepted, with no anchor.
 
 Build with `--target c`, or select a combination of C, C++, Cargo, PyPI, RubyGems,
-NuGet and Maven.
+NuGet, Maven and CPAN.
 Other targets reject these transfer contracts, including a combined release
 that selects an unsupported target. A failed build
 leaves no partial release. This does not extend a host callback's lifetime or

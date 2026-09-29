@@ -41,9 +41,11 @@ static SV *lpo_write_integer(pTHX_ lpg_scope *scope, mpz_srcptr value, int natur
  *
  * @param ir - Compiler-authenticated explicit ownership contract.
  * @param moduleName - Validated public CPAN namespace.
+ * @param options - Explicit transport capabilities.
  */
-export const generateOwnedPerlConversions = (ir, moduleName) => {
-	const model = generateOwnedPerlValues(ir, moduleName), nodes = new Map(model.types.map(node => [node.id, node]));
+export const generateOwnedPerlConversions = (ir, moduleName, options = {}) => {
+	const model = generateOwnedPerlValues(ir, moduleName, options), nodes = new Map(model.types.map(node => [node.id, node]));
+	const transferredInputs = model.functions.some(fn => fn.transfers?.length);
 	const finite = new Set();
 	let changed = true;
 	while(changed)
@@ -58,7 +60,7 @@ export const generateOwnedPerlConversions = (ir, moduleName) => {
 			{ finite.add(node.id); changed = true; }
 		}
 	}
-	const lines = [`#include "${model.c.prefix}.h"`, ownedPerlRuntime(model.c.prefix), integers];
+	const lines = [`#include "${model.c.prefix}.h"`, ownedPerlRuntime(model.c.prefix, { transferredInputs }), integers];
 	for(const node of nodes.values()) lines.push(`static void lpo_read${node.index}(pTHX_ lpg_scope *, SV *, ${node.cName} *, size_t, int);`
 		, `static SV *lpo_write${node.index}(pTHX_ lpg_scope *, lpo_owner *, ${node.cName} const *, size_t, int);`);
 	for(const node of nodes.values())
@@ -86,7 +88,7 @@ export const generateOwnedPerlConversions = (ir, moduleName) => {
 		}
 		else if(node.identity)
 		{
-			input.push(`*out = (${node.cName})lpo_borrow(aTHX_ value, ${node.index});`);
+			input.push(`*out = (${node.cName})${transferredInputs ? "lpo_input_borrow(aTHX_ scope, " : "lpo_borrow(aTHX_ "}value, ${node.index});`);
 			output.push(`return lpo_wrap(aTHX_ scope, owner, (void *)*value, ${node.index}, ${JSON.stringify(node.publicType)});`);
 		}
 		else if(node.kind === "primitive")

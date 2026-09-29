@@ -463,8 +463,57 @@ into a successful result.
 
 Input, callback and result conversions share depth 128, 262,144 visits and a
 16 MiB native data budget, with a separate 16 MiB conversion-storage budget.
-Native reentry permits 64 active calls. Transferred inputs, anchored results,
-retained host callbacks and asynchronous delivery remain unsupported.
+Native reentry permits 64 active calls. Anchored results, retained host callbacks
+and asynchronous delivery remain unsupported.
+
+### Consuming inputs
+
+An author can mark an argument as consuming. Its generated POD names that
+argument. Use the same Perl values; no ownership wrapper or native handle is
+required. Validation errors preserve inputs. Once Lean takes ownership, shared
+aliases close even if a callback throws or converting the result fails.
+An independent `retain` survives that handoff.
+
+For the [author's transfer example](../publish/cpan.md#transfer-input-ownership),
+save `consume-owned.pl`:
+
+```perl
+use strict;
+use warnings;
+use Math::BigInt;
+use LeanBridge::OwnedValues;
+
+my ($ticket, $retained, $result);
+my $ok = eval {
+  $ticket = LeanBridge::OwnedValues::new_ticket(Math::BigInt->new(42), 'receipt');
+  my $alias = $ticket;
+  $retained = $ticket->retain;
+  my $bundle = LeanBridge::OwnedValues::Bundle->new(
+    primary => $ticket, spare => undef, peers => [], history => [],
+    payload => LeanBridge::OwnedValues::Payload->new(
+      count => Math::BigInt->new(-7), bytes => "\0\xff"
+    )
+  );
+  $result = LeanBridge::OwnedValues::callback_record($bundle, sub {
+    die "Input still open at handoff\n" unless $alias->closed;
+    return $_[0];
+  });
+  print $alias->closed ? "consumed\n" : "open\n";
+  print LeanBridge::OwnedValues::serial($result->primary)->bstr, "\n";
+  print LeanBridge::OwnedValues::serial($retained)->bstr, "\n";
+  1;
+};
+my $error = $@;
+$result->primary->close if defined $result;
+$ticket->close if defined $ticket;
+$retained->close if defined $retained;
+die $error unless $ok;
+```
+
+Run `perl consume-owned.pl`. It prints `consumed`, `42`, and `42`. Resource leaves
+from one returned aggregate can share an owner, so consuming one can close its
+siblings. Retain any resource you need independently. Callback arguments are
+borrowed and need an explicit `retain` before a consuming call.
 
 ## Values and cleanup
 

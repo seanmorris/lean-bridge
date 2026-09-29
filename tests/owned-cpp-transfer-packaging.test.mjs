@@ -12,7 +12,6 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedCppPackage } from "../src/backends/cpp/owned-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from "../src/build/native-artifacts.mjs";
-import { projectOwnedNativeCFamily } from "../src/build/owned-c-projection.mjs";
 import { packageOwnedNativeC } from "../src/release/owned-c-package.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { ownedTransferReviewedIr, ownedTransferConfiguration, ownedTransferSource } from "./helpers/owned-transfer-fixture.mjs";
@@ -51,9 +50,9 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed C++ transfer package
 	const adapter = await json(join(adapterRoot, "native-c-adapter.json"));
 	const generated = generateOwnedCppPackage(model.bindingIr, { transferredInputs: true });
 	assert.deepEqual(adapter.cppValues, generated.contract); assert.equal(adapter.schemaVersion, 4);
-	await assert.rejects(projectOwnedNativeCFamily({ working: join(directory, "unsupported-rust")
-		, nativeRoot, runtimeRoot, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
-		, targets: ["pypi"], environment })
+	await assert.rejects(readVerifiedNativeComponent(nativeRoot, identity, {
+		ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: false
+	})
 	, { code: "native-owned-transfers-unavailable" });
 	const packaging = { adapterRoot, nativeRoot, runtimeRoot, target: "cpp"
 		, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
@@ -130,7 +129,7 @@ target_compile_options(consumer PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 		, installedPackage: true, sourceUnchanged: true
 		, sourceFreeInstallation: true, compilerFreeExecution: true
 		, handoffRemovedBeforeRelocatedExecution: true, deterministicReassembly: true
-		, unsupportedPythonRejected: true, forgedMoveContractsRejected: true
+		, transferIncapableReaderRejected: true, forgedMoveContractsRejected: true
 		, input: { component: model.component, sourceIdentity: model.sourceIdentity, metadata }
 		, model, componentReceipt, adapterReceipt: adapter
 		, packageSetReceipt: receipt, manifest, fixtureSha256: sha256(fixture)

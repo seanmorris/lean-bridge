@@ -317,6 +317,9 @@ consumed. Two consuming arguments cannot share a lease. Callback borrows require
 an explicit retain before transfer. See the [Java](../consume/java.md#consuming-inputs)
 and [Kotlin](../consume/kotlin.md#consuming-inputs) examples.
 
+A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet,
+Maven and CPAN. Every selected target must admit the complete API.
+
 ## Build the repository layout
 
 The separate Alpha interoperability fixture retains its resource and callback examples.

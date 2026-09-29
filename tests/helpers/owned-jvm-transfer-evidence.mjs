@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
+import { beforeOwnedTransferBatchInitialization, historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 import { generateOwnedJvmCalls } from "../../src/backends/jvm/owned-calls.mjs";
 import { generateOwnedJvmPackage } from "../../src/backends/jvm/owned-package.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
@@ -86,7 +87,7 @@ export const assertOwnedJvmTransferExecution = async record => {
 				assert.equal(item[field], sha256(source.replace("/* METHODS */", () => ownedJvmCallProbeMethods(generated, kotlin))));
 			}
 			const native = ownedJvmCallNative(item.input);
-			assert.equal(item.nativeProbeSha256, sha256(native.implementation));
+			assert.equal(item.nativeProbeSha256, sha256(beforeOwnedTransferBatchInitialization(native.implementation, item.nativeProbeSha256)));
 			assert.equal(item.guardSha256, sha256(native.cleanup.guardSource));
 			const observed = item.observed;
 			assert.ok(observed.javaChecks >= 1200); assert.ok(observed.kotlinChecks >= 1200);
@@ -113,7 +114,7 @@ export const assertOwnedJvmTransferExecution = async record => {
 			, runtimeReceipt: runtime
 			, compiledProjection: compiled, manifest, package: pkg } = item;
 		const native = generateCompiledNativeLeanAdapters(model);
-		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });
+		const c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), adapter.ownedValues.sourceSha256);
 		const projection = generateOwnedJvmPackage(model.bindingIr, null, { transferredInputs: true });
 		assert.equal(component.schemaVersion, 4); assert.equal(component.modelSha256, sha256(canonicalJson(model)));
 		assert.equal(component.metadataSha256, sha256(canonicalJson(item.input.metadata)));

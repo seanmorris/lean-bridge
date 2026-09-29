@@ -53,10 +53,28 @@ sub owned_values {
   return unless exists $manifest->{ownedValues};
   my $owned = $manifest->{ownedValues};
   die "Invalid owned Perl package contract\n" unless ref($owned) eq 'HASH'
-    && $manifest->{module} ne 'LeanBridge::Runtime' && $owned->{schemaVersion} == 1
+    && $manifest->{module} ne 'LeanBridge::Runtime' && ($owned->{schemaVersion} == 1 || $owned->{schemaVersion} == 2)
     && $owned->{prefix} =~ /\A[A-Za-z_][A-Za-z0-9_]*\z/
     && $owned->{gmpLibrary} eq 'libgmp-lean-bridge.so.10'
     && $owned->{componentLibrary} =~ /\A[A-Za-z0-9_][A-Za-z0-9_.+-]*\.so\z/;
+  my $model = read_json('model.json');
+  if ($owned->{schemaVersion} == 2 || $model->{schemaVersion} == 8) {
+    my $binding = read_json('binding-manifest.json');
+    my $native = $model->{ownedGraph}{inputTransfers};
+    my $moves = $owned->{inputTransfers};
+    my $json = JSON::PP->new->canonical;
+    die "Invalid owned Perl input-transfer contract\n"
+      unless $owned->{schemaVersion} == 2 && $model->{schemaVersion} == 8 && $binding->{schemaVersion} == 2
+        && ref($native) eq 'HASH' && ref($moves) eq 'HASH'
+        && $json->encode($binding->{owned}) eq $json->encode($owned)
+        && $owned->{bindingIrSha256} eq $model->{bindingIrSha256}
+        && $moves->{arguments} eq 'ordinary-values' && $moves->{aliases} eq 'shared-lease'
+        && $moves->{borrowedInputs} eq 'reject' && $moves->{independentRetains} eq 'preserved';
+    my %expected = (%$native, arguments => 'ordinary-values', aliases => 'shared-lease',
+      borrowedInputs => 'reject', independentRetains => 'preserved');
+    die "Owned Perl input transfers differ from the native model\n"
+      unless $json->encode($moves) eq $json->encode(\%expected);
+  }
   return $owned;
 }
 sub compile_xs {

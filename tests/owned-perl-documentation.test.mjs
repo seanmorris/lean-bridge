@@ -22,7 +22,7 @@ const block = (section, language) => {
 	assert.ok(match, language + " documentation block"); return match[1] + "\n";
 };
 
-test("owned CPAN author and consumer guides work in a combined C/Perl release", {
+for(const transferredInputs of [false, true]) test(`owned CPAN ${transferredInputs ? "consuming examples" : "author and consumer guides"} work in a combined C/Perl release`, {
 	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1200000
 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-owned-perl-docs-"));
@@ -30,8 +30,14 @@ test("owned CPAN author and consumer guides work in a combined C/Perl release", 
 	const authorGuide = await readFile("docs/publish/cpan.md", "utf8");
 	const consumerGuide = await readFile("docs/consume/perl.md", "utf8");
 	const authorSection = authorGuide.split("## Export resource-containing values\n")[1].split("\n## ")[0];
-	const consumerSection = consumerGuide.split("### Resource-containing values\n")[1].split("\n## ")[0];
-	const lean = block(authorSection, "lean"), config = block(authorSection, "json");
+	const consumerSection = consumerGuide.split(transferredInputs ? "### Consuming inputs\n" : "### Resource-containing values\n")[1].split("\n## ")[0];
+	const lean = block(authorSection, "lean");
+	let config = block(authorSection, "json");
+	if(transferredInputs)
+	{
+		const contractSection = authorGuide.split("## Transfer input ownership\n")[1].split("\n## ")[0];
+		config = canonicalJson({ ...JSON.parse(config), contracts: JSON.parse(block(contractSection, "json")) });
+	}
 	const example = block(consumerSection, "perl");
 	const author = join(directory, "author"), project = join(author, "project");
 	const producer = join(author, "release"), handoff = join(directory, "handoff");
@@ -52,6 +58,7 @@ test("owned CPAN author and consumer guides work in a combined C/Perl release", 
 	assert.deepEqual(await lakeInputState(project), before);
 	const model = JSON.parse(await readFile(join(producer, "native/component/model.json"), "utf8"));
 	assert.ok(model.ownedGraph.hostCallbacks); assert.equal("moduleName" in model, false);
+	assert.equal(Boolean(model.ownedGraph.inputTransfers), transferredInputs);
 	const cpan = response.result.projections.find(projection => projection.ecosystem === "cpan");
 	assert.ok(cpan);
 	const receipt = await copyPackageSetHandoff(producer, handoff);
@@ -83,13 +90,13 @@ test("owned CPAN author and consumer guides work in a combined C/Perl release", 
 		await saveLakeFile(consumer, "owned.pl", example);
 		const observed = await runCopied(perl, ["owned.pl"], consumer
 			, { ...copiedCleanEnvironment, PERL5LIB: join(relocated, "lib/perl5") });
-		assert.equal(observed.stderr, ""); assert.equal(observed.stdout, "42\n42\n");
+		assert.equal(observed.stderr, ""); assert.equal(observed.stdout, transferredInputs ? "consumed\n42\n42\n" : "42\n42\n");
 		observations.push({ perl, mode, stdout: observed.stdout, stderr: observed.stderr });
 		await rm(consumer, { recursive: true, force: true });
 	}
-	await saveLakeFile("build/owned-perl-package", "documentation.json", canonicalJson({
+	await saveLakeFile(transferredInputs ? "build/owned-perl-transfer-packaging" : "build/owned-perl-package", "documentation.json", canonicalJson({
 		schemaVersion: 1, planNode: 1219, cliIntegrated: true
-		, mixedTargets: ["c", "cpan"]
+		, mixedTargets: ["c", "cpan"], transferredInputs
 		, producerRemoved: true, sourceUnchanged: true, relocated: true
 		, sourceHashes: { lean: sha256(lean), config: sha256(config), example: sha256(example) }
 		, cliBuild: response, packageSetReceipt: receipt, observations

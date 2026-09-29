@@ -10,6 +10,7 @@ import { generateOwnedRubyConversions } from "../../src/backends/ruby/owned-conv
 import { generateOwnedRubyPackage } from "../../src/backends/ruby/owned-package.mjs";
 import { ownedRubyRuntime } from "../../src/backends/ruby/owned-runtime.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
+import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
@@ -93,7 +94,7 @@ export const assertOwnedRubyTransferExecution = async record => {
 		const { componentReceipt: component, adapterReceipt: adapter
 			, runtimeReceipt: runtime, packageSetReceipt: packages } = item;
 		const native = generateCompiledNativeLeanAdapters(model);
-		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });
+		const c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), adapter.ownedValues.sourceSha256);
 		const ruby = generateOwnedRubyPackage(model.bindingIr, null, { transferredInputs: true });
 		assert.equal(component.schemaVersion, 4); assert.equal(adapter.schemaVersion, 2);
 		assert.equal(adapter.ownedValues.schemaVersion, 3); assert.deepEqual(adapter.rubyValues, ruby.contract);

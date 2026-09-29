@@ -10,6 +10,7 @@ import { generateOwnedPythonConversions } from "../../src/backends/python/owned-
 import { generateOwnedPythonPackage } from "../../src/backends/python/owned-package.mjs";
 import { ownedPythonRuntime } from "../../src/backends/python/owned-runtime.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
+import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
 import { generateOwnedRustPackage } from "../../src/backends/rust/owned-package.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
@@ -90,7 +91,7 @@ export const assertOwnedPythonTransferExecution = async record => {
 		const { componentReceipt: component, adapterReceipt: adapter
 			, runtimeReceipt: runtime, packageSetReceipt: packages } = item;
 		const native = generateCompiledNativeLeanAdapters(model);
-		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true });
+		const c = historicalOwnedTransferPackage(generateOwnedCPackage({ ...item.input, hostCallbacks: true, transferredInputs: true }), adapter.ownedValues.sourceSha256);
 		const python = generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs: true });
 		assert.equal(component.schemaVersion, 4); assert.equal(adapter.schemaVersion, 4);
 		assert.equal(adapter.ownedValues.schemaVersion, 3); assert.deepEqual(adapter.pythonValues, python.contract);

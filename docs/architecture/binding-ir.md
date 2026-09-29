@@ -57,7 +57,7 @@ with the shared runtime, GMP and relocatable build metadata. C++ adds named valu
 types, standard containers, exact Boost integers and checked RAII resource leases.
 Installed ordinary
 and reviewed consumers execute without producer source or Lean. C, C++, Rust,
-Python, Ruby, C#, Java and Kotlin packages
+Python, Ruby, C#, Java, Kotlin and Perl packages
 also admit explicit input transfers. The [native/C transfer implementation](../contributing/testing.md#staged-input-transfers)
 validates every input owner before consuming the whole set, nulls owner slots
 before Lean runs, and keeps copied storage alive through callback reentry.
@@ -82,7 +82,12 @@ Ruby collects the leases visited during conversion and observes the same native
 handoff. Its ordinary-value inputs consume shared `dup` and `clone` aliases;
 independently retained owners survive. Ruby's ownership contract, private adapter
 and package receipt use version 2 for transfers. Its isolated GMP and loading
-policy remain unchanged. Other consumer bindings and owner-anchored
+policy remain unchanged. Perl's version-2 ownership and binding contracts record
+the same consuming arguments and shared-lease alias rules. Its converter reserves
+the resource leases it visits, rejects overlapping consuming arguments, and
+observes the native handoff during callback reentry. Perl save-stack cleanup
+preserves pre-handoff inputs and releases consumed owners after exceptions.
+Other consumer bindings and owner-anchored
 borrowed results remain unfinished.
 Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
 support is documented for [JavaScript](../consume/javascript.md),

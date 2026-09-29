@@ -178,7 +178,8 @@ jobs:
           export LEAN_BRIDGE_OWNED_NATIVE_TEST=1
           node --test --test-concurrency=1 tests/owned-perl-runtime.test.mjs tests/owned-perl-values.test.mjs tests/owned-perl-conversions.test.mjs
           node --test --test-concurrency=1 tests/owned-perl-xs.test.mjs tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs
-          node --test --test-concurrency=1 tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs tests/owned-perl-documentation.test.mjs
+          node --test --test-concurrency=1 tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs
+          npm run test:owned-perl-transfers
           for report in ordinary reviewed complete-ordinary complete-reviewed; do
             test -s "build/owned-perl-runtime/$report.json"
             test -s "build/owned-perl-conversions/$report.json"
@@ -193,6 +194,11 @@ jobs:
           test -s build/owned-perl-package/callbacks-reviewed.json
           test -s build/owned-perl-package/coexistence.json
           test -s build/owned-perl-package/documentation.json
+          test -s build/owned-perl-transfers/ordinary.json
+          test -s build/owned-perl-transfers/reviewed.json
+          test -s build/owned-perl-transfer-packaging/ordinary.json
+          test -s build/owned-perl-transfer-packaging/reviewed.json
+          test -s build/owned-perl-transfer-packaging/documentation.json
       - name: Upload this configuration's real-Lean corpus report
         if: always()
         uses: actions/upload-artifact@v7
@@ -224,6 +230,8 @@ jobs:
             build/owned-perl-scalars/
             build/owned-perl-loader/
             build/owned-perl-package/
+            build/owned-perl-transfers/
+            build/owned-perl-transfer-packaging/
           if-no-files-found: error
           overwrite: true
           retention-days: 30
