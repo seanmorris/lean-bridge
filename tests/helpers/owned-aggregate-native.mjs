@@ -35,8 +35,9 @@ export const compileOwnedAggregateFixture = async (t, options = {}) => {
 	const lean = join(prefix, "bin/lean"), extractor = join(root, "src/analyze/NativeExports.lean");
 	const capture = args => run(lean, args, { LEAN_PATH: directory, PATH: `${join(prefix, "bin")}:${process.env.PATH}` });
 	const fixture = join(root, "tests/fixtures/onboarding", options.fixture ?? "owned-aggregates");
-	const source = await readFile(join(fixture, "Owned.lean"), "utf8");
-	const config = JSON.parse(await readFile(join(fixture, "lean-bridge.exports.json"), "utf8"));
+	const source = (await readFile(join(fixture, "Owned.lean"), "utf8")) + (options.sourceSuffix ?? "");
+	const config = options.configuration ?? JSON.parse(await readFile(join(fixture, "lean-bridge.exports.json"), "utf8"));
+	if(options.configuration) await saveLakeFile(directory, "lean-bridge.exports.json", canonicalJson(config));
 	let reviewedBindingIr;
 	const reviewedConfiguration = { schemaVersion: 1, modules: ["Owned"] };
 	const captureReview = async document => {
@@ -68,10 +69,13 @@ export const compileOwnedAggregateFixture = async (t, options = {}) => {
 	await saveLakeFile(directory, "request.json", canonicalJson(request));
 	const metadata = JSON.parse((await capture(["--run", extractor, "--metadata", "request.json"])).stdout);
 	assert.deepEqual(metadata.diagnostics, []);
+	const capturedConfiguration = reviewedBindingIr ? reviewedConfiguration : options.configuration ? config : null;
 	const sourceIdentity = { request, leanVersion: "4.32.2"
-		, ...(reviewedBindingIr ? { reviewedBindingIr
-			, exportConfigurationSource: canonicalJson(reviewedConfiguration)
-			, exportConfigurationSha256: sha256(canonicalJson(reviewedConfiguration)) } : {})
+		, ...(reviewedBindingIr ? { reviewedBindingIr } : {})
+		, ...(capturedConfiguration ? {
+			exportConfigurationSource: canonicalJson(capturedConfiguration)
+			, exportConfigurationSha256: sha256(canonicalJson(capturedConfiguration))
+		} : {})
 		, leanCommit: (await capture(["--githash"])).stdout.trim()
 		, leanCompilerSha256: context.leanCompilerSha256
 		, extractorSha256: context.extractorSha256
@@ -80,7 +84,7 @@ export const compileOwnedAggregateFixture = async (t, options = {}) => {
 			, source: { path: "Owned.lean", sha256: sha256(source) }
 			, interface: { sha256: identity.oleanSha256, interfaceSha256: identity.interfaceSha256 } }] };
 	const generated = generateOwnedAggregateCarriers({ metadata, sourceIdentity, component: ownedAggregateReviewedIr().component, hostCallbacks: options.hostCallbacks });
-	await saveLakeFile(resolve("build/owned-aggregate-native"), `${options.fixture ?? "owned-aggregates"}${reviewedBindingIr ? "-reviewed" : ""}${options.hostCallbacks ? "-callbacks" : ""}-inputs.json`
+	await saveLakeFile(resolve("build/owned-aggregate-native"), options.evidenceName ?? `${options.fixture ?? "owned-aggregates"}${reviewedBindingIr ? "-reviewed" : ""}${options.hostCallbacks ? "-callbacks" : ""}-inputs.json`
 		, canonicalJson({ metadata, sourceIdentity, component: generated.model.component }));
 	await saveLakeFile(directory, generated.module + ".lean", generated.leanSource);
 	await saveLakeFile(directory, "carriers.h", generated.header);

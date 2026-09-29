@@ -56,9 +56,15 @@ supply layouts or proof evidence. C, C++ and Cargo package builds ship that tran
 with the shared runtime, GMP and relocatable build metadata. C++ adds named value
 types, standard containers, exact Boost integers and checked RAII resource leases.
 Installed ordinary
-and reviewed consumers execute without producer source or Lean. Transferred inputs,
-anchored results and Wasm ownership adapters remain unfinished. Existing
-version-3 backends reject this contract.
+and reviewed consumers execute without producer source or Lean. Transferred inputs
+and anchored borrowed results are not admitted by prepared-package builds.
+The [staged native/C transfer implementation](../contributing/testing.md#staged-input-transfers)
+validates every input owner before consuming the whole set, nulls owner slots
+before Lean runs, and keeps copied storage alive through callback reentry.
+Later call or result-conversion failure does not restore consumed inputs.
+Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
+support is documented for [JavaScript](../consume/javascript.md),
+[PHP-Wasm](../php.md) and [WIT/WASI](../consume/wit-wasi.md).
 
 The [owned host callback projection](../evidence/owned-host-callbacks-20260926.md)
 executes typed recovery and call-scoped C borrows for resource-containing

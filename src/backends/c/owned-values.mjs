@@ -25,9 +25,10 @@ const nominal = name => {
  * @param options - Explicit transport capabilities.
  * @param options.hostCallbacks - Admit call-scoped host descriptors and copies.
  * @param options.publicPrefix - Internal backend namespace, independent of Lean identity.
+ * @param options.transferredInputs - Admit explicit consumption of input owners.
  */
-export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix } = {}) => {
-	const native = compileOwnedNativeValueLayout(ir);
+export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false } = {}) => {
+	const native = compileOwnedNativeValueLayout(ir, { transferredInputs });
 	const p = publicPrefix ?? cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");
 	const names = new Map();
@@ -131,6 +132,15 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix }
 		, `${p}_status ${p}_session_open(${p}_session **out);`
 		, `${p}_status ${p}_session_close(${p}_session **value);`
 		, `${p}_status ${p}_result_release(${p}_result **value);`];
+	if(functions.some(item => item.transfers?.length)) header.push(
+		"/* Transferred arguments take an additional input-owner slot. All arguments"
+		, "   and owners are validated before consumption. Each owner must be distinct"
+		, "   and belong to this session; owner slots must not overlap output slots."
+		, "   Immediately before Lean runs, each entire input owner is consumed and"
+		, "   its slot becomes NULL. A later failure does not restore consumed owners."
+		, "   Old views expire when this call returns. Independently retained owners"
+		, "   remain valid. Failure before consumption leaves input owners unchanged. */"
+	);
 	for(const node of nodes)
 	{
 		if(node.identity) header.push(`typedef struct ${node.cName}_handle *${node.cName};`);
@@ -187,10 +197,14 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix }
 		}
 	}
 	const hostArgument = (item, index) => hostCallbacks && !item.retain && !item.copy
+		&& !item.transfers?.includes(index)
 		&& table.get(item.parameters[index]).kind === "callback"
 		&& !(callbacks.some(callback => callback.id === item.id) && index === 0);
 	const signature = item => `${p}_status ${item.cName}(${p}_session *session, ${[
-		...item.parameters.map((id, i) => `${hostArgument(item, i) ? `${table.get(id).cName}_host const *` : input(id)} a${i}`)
+		...item.parameters.flatMap((id, i) => [
+			`${hostArgument(item, i) ? `${table.get(id).cName}_host const *` : input(id)} a${i}`
+			, ...item.transfers?.includes(i) ? [`${p}_result **a${i}_owner`] : []
+		])
 		, `${table.get(item.result).cName} *out`, `${p}_result **owner`
 	].join(", ")})`;
 	for(const item of [...functions, ...callbacks]) header.push(signature(item) + ";");

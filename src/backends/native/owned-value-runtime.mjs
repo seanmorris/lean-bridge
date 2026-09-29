@@ -9,8 +9,9 @@
  *
  * @param limits - Immutable model limits, not host-controlled overrides.
  * @param wordBits - Lean and host pointer width, either 32 or 64.
+ * @param transferredInputs - Include owner-specific input conversion state.
  */
-export const ownedNativeValueRuntime = (limits, wordBits = 64) => {
+export const ownedNativeValueRuntime = (limits, wordBits = 64, transferredInputs = false) => {
 	if(![32, 64].includes(wordBits)) throw new TypeError("Owned native values: machine-word width must be 32 or 64");
 	return `
 #include <stddef.h>
@@ -30,7 +31,7 @@ typedef struct ov_allocation {
 } ov_allocation;
 typedef struct {
   lb_owned_scope scope;
-  ov_budget budget;
+${transferredInputs ? "  lb_owned_batch *input_owner;\n  int input_transfer;\n" : ""}  ov_budget budget;
   ov_allocation *allocations;
 } ov_transaction;
 typedef struct ov_result_owner {

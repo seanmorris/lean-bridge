@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedWitBuildRepair, ownedWitBuildRepairChangedPaths } from "./wit-owned-build-repair-history.mjs";
+import { beforeOwnedWitBuildRepair, ownedWitBuildRepairNormalizationPaths } from "./wit-owned-build-repair-history.mjs";
 
 export const ownedWitPackageBaseline = "2ae8ff5cb06fc2b56adc20aa33b10a170b81d3f1";
 export const ownedWitPackagePath = "docs/evidence/wit-owned-packages-20260929.json";
@@ -41,7 +41,7 @@ export const ownedWitPackageAddedPaths = [
 	, "tests/wit-owned-packaging.test.mjs"
 ].sort();
 let cached;
-export const ownedWitPackageNormalizationPaths = [...new Set([...ownedWitPackageChangedPaths, ...ownedWitBuildRepairChangedPaths])].sort();
+export const ownedWitPackageNormalizationPaths = [...new Set([...ownedWitPackageChangedPaths, ...ownedWitBuildRepairNormalizationPaths])].sort();
 
 /**
  * Reverse exact ordered spans after authenticating both complete file versions.

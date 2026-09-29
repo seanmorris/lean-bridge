@@ -7,6 +7,7 @@
 import { generateOwnedAggregateCarriers } from "../../build/owned-aggregate-carriers.mjs";
 import { compileOwnedNativeValueLayout } from "./owned-value-layout.mjs";
 import { ownedNativeValueRuntime } from "./owned-value-runtime.mjs";
+import { ownedNativeInputTransferRuntime } from "./owned-value-transfers.mjs";
 
 const suffix = name => ({ uint32: "_uint32", int32: "_uint32", char: "_uint32"
 	, uint64: "_uint64", int64: "_uint64", usize: "_usize", isize: "_usize"
@@ -21,13 +22,15 @@ const suffix = name => ({ uint32: "_uint32", int32: "_uint32", char: "_uint32"
  * optional wordBits (32 or 64, default 64).
  */
 export const generateOwnedNativeValueAdapters = options => {
-	const { wordBits = 64 } = options;
+	const { wordBits = 64, transferredInputs = false } = options;
 	const carriers = generateOwnedAggregateCarriers(options);
-	const layout = compileOwnedNativeValueLayout(carriers.model.bindingIr, { wordBits });
+	const layout = compileOwnedNativeValueLayout(carriers.model.bindingIr, { wordBits, transferredInputs });
+	const hasTransfers = layout.functions.some(item => item.transfers?.length);
 	const table = new Map(layout.nodes.map(node => [node.id, node]));
 	const helper = node => carriers.symbols.types[node.id];
 	const lines = ['#include "owned-values.h"', '#include "carriers.h"'
-		, ownedNativeValueRuntime(layout.model.limits, wordBits)];
+		, ownedNativeValueRuntime(layout.model.limits, wordBits, hasTransfers)
+		, ...hasTransfers ? [ownedNativeInputTransferRuntime] : []];
 	if(options.hostCallbacks) lines.push(`
 enum { OV_CALLBACK = 10 };
 typedef struct ov_callback_frame {
@@ -152,7 +155,10 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 		else if(node.kind === "resource" || node.kind === "callback")
 		{
 			input.push("lean_object *child = NULL;"
-				, `status = lb_owned_scope_borrow(&transaction->scope, ${JSON.stringify(node.identityKind)}, value->token, &child);`
+				, hasTransfers ? `status = transaction->input_transfer
+  ? lb_owned_scope_transfer_borrow(&transaction->scope, transaction->input_owner, ${JSON.stringify(node.identityKind)}, value->token, &child)
+  : lb_owned_scope_borrow(&transaction->scope, ${JSON.stringify(node.identityKind)}, value->token, &child);`
+					: `status = lb_owned_scope_borrow(&transaction->scope, ${JSON.stringify(node.identityKind)}, value->token, &child);`
 				, "if (status) return status;", "lean_inc(child); return ov_finish(ov_carry(child), out);");
 			output.push("lean_object *child = lean_array_get_core(value, 0);"
 				, "if (lean_is_scalar(child)) { lean_dec(value); return OV_RESULT; }"
@@ -229,21 +235,37 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 	for(const declaration of [...layout.functions, ...layout.callbacks])
 	{
 		const result = table.get(declaration.result), parameters = declaration.parameters.map((type, i) => `const ${table.get(type).cName} *a${i}`);
+		const transfers = declaration.transfers ?? [];
 		const callback = !carriers.symbols.exports[declaration.id];
 		const symbol = callback ? `${carriers.symbols.types[declaration.id]}_apply` : carriers.symbols.exports[declaration.id];
-		lines.push(`static inline int ${declaration.symbol}(lb_owned_context *context, ${[...parameters, `${result.cName} *out`, "ov_result_owner *owner"].join(", ")}) {`
+		lines.push(`static inline int ${declaration.symbol}(lb_owned_context *context, ${[...parameters, ...transfers.length ? ["ov_input_transfers *transfer"] : [], `${result.cName} *out`, "ov_result_owner *owner"].join(", ")}) {`
 			, `  if (!ov_pointer(out, sizeof(*out), _Alignof(${result.cName})) || !ov_pointer(owner, sizeof(*owner), _Alignof(ov_result_owner))) return LB_OWNED_INVALID;`
 			, "  ov_transaction transaction = {0};"
 			, `  int status = ov_begin(&transaction, context, owner, ${JSON.stringify(layout.model.component.id)});`
 			, "  if (status) return status;"
 			, "  status = ov_charge(&transaction.budget, 1, sizeof(*out));"
 			, "  if (status) return ov_abort(&transaction, status);"
+			, ...transfers.length ? [
+				`  lb_owned_batch *batches[${transfers.length}]; size_t batch_count = 0;`
+				, `  status = ov_transfers_prepare(&transaction, transfer, ${transfers.length}, batches, &batch_count);`
+				, "  if (status) return ov_abort(&transaction, status);"
+			] : []
 			, `  lean_object *arguments = lean_alloc_array(0, ${declaration.parameters.length});`
 			, ...declaration.parameters.flatMap((type, i) => ["  {"
 				, "    lean_object *child = NULL;"
+				, ...transfers.length ? [
+					`    transaction.input_transfer = ${transfers.includes(i) ? 1 : 0};`
+					, `    transaction.input_owner = ${transfers.includes(i) ? `&transfer->owners[${transfers.indexOf(i)}]->batch` : "NULL"};`
+				] : []
 				, `    status = ${table.get(type).walker}_in(a${i}, 0, 1, &transaction, &child);`
 				, "    if (status) { lean_dec(arguments); return ov_abort(&transaction, status); }"
 				, "    arguments = lean_array_push(arguments, child);", "  }"])
+			, ...transfers.length ? [
+				"  transaction.input_transfer = 0; transaction.input_owner = NULL;"
+				, "  status = lb_owned_scope_transfer_many(&transaction.scope, batches, batch_count);"
+				, "  if (status) { lean_dec(arguments); return ov_abort(&transaction, status); }"
+				, "  transfer->consumed = 1; transfer->consume(transfer->context);"
+			] : []
 			, ...declaration.parameters.map((_, i) => `  lean_object *v${i} = lean_array_get_core(arguments, ${i}); lean_inc(v${i});`)
 			, "  lean_dec(arguments);"
 			, ...options.hostCallbacks ? [

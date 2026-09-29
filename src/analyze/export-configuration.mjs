@@ -292,6 +292,9 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 	for(const { site, type, result, label } of sites)
 	{
 		if(site.refinement !== undefined && site.refinement !== "reject") return `${label}: checked refinement constructors are not implemented by this profile`;
+		if(ownedAggregates && !result && site.ownership === "transfer"
+			&& exportContractOwnership(type).ownership !== "copy"
+			&& ["call", "explicit"].includes(site.lifetime?.scope) && site.lifetime.anchor === null) continue;
 		if(canonicalJson({ ownership: site.ownership, lifetime: site.lifetime }) !== canonicalJson(exportContractOwnership(type, result)))
 			return `${label}: ownership or lifetime differs from the implemented adapter`;
 	}

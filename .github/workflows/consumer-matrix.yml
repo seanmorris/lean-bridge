@@ -488,7 +488,9 @@ jobs:
   php-consumers:
     name: Native PHP and PHP-Wasm
     runs-on: ubuntu-24.04
-    timeout-minutes: 300
+    # Installed acceptance plus the final cold mixed-profile Nix build exceeded
+    # five hours. Keep every gate enabled and allow the runner's six-hour limit.
+    timeout-minutes: 360
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -929,6 +931,10 @@ jobs:
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-values.test.mjs
           test -s build/owned-aggregate-native/public-c.json
           test -s build/owned-aggregate-native/public-c-scalars.json
+          npm run test:owned-transfers
+          test -s build/owned-transfers/native.json
+          test -s build/owned-transfers/ordinary-c.json
+          test -s build/owned-transfers/reviewed-c.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs
           test -s build/owned-aggregate-native/reviewed-public-c.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs
@@ -976,6 +982,7 @@ jobs:
             build/owned-aggregate-native/scalars.json
             build/owned-aggregate-native/public-c.json
             build/owned-aggregate-native/public-c-scalars.json
+            build/owned-transfers/
             build/owned-aggregate-native/reviewed-public-c.json
             build/owned-c-packaging/
             build/owned-host-callbacks/ordinary.json
@@ -1208,6 +1215,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-aggregate-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-native-values.test.mjs tests/owned-native-scalars.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-values.test.mjs"
+              consumer_command="$consumer_command && npm run test:owned-transfers"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-host-callbacks.test.mjs"

@@ -114,7 +114,7 @@ for(const [label, mutate] of Object.entries({
 	, "claimed layout": ir => { ir.types[0].source.extensions["example.org/layout"] = { tag: 17 }; }
 	, "producer evidence": ir => { ir.producers[0].extensions["example.org/compiler"] = true; }
 	, "optional parameter": ir => { ir.declarations[0].parameters[0].optional = true; ir.declarations[0].parameters[0].default = { kind: "integer", value: "1" }; }
-	, "transfer": ir => { ir.declarations.find(item => item.name === "echoRecord").parameters[0].ownership = "transfer"; }
+	, "host callback parameter transfer": ir => { ir.types.find(item => item.kind === "callback").callable.parameters[0].ownership = "transfer"; }
 	, "promise": ir => { ir.declarations[0].resultMode = "promise"; ir.declarations[0].effects.push("async"); }
 	, "silenced callback failure": ir => { ir.types.find(item => item.kind === "callback").callable.failure = { mode: "none", errors: [], unexpected: "poison-runtime" }; }
 })) test(`owned review rejects unsupported ${label} before compilation`, () => {

@@ -1154,6 +1154,36 @@ exception, not terminate with a fatal signal. All installed files must remain
 unchanged, and the public consumer runs again after the probes. Each ABI job
 requires and uploads `build/recursive-callables/perl.json`.
 
+### Staged input transfers
+
+With the pinned Lean compiler, a C/C++ compiler, GMP headers and sanitizers, run:
+
+```sh
+source scripts/env.sh
+npm run test:owned-transfers
+```
+
+The native ledger moves complete input-owner batches without allocating or
+dropping references during the commit. Public C probes compile ordinary export
+contracts and independently reviewed APIs against fresh Lean metadata. They
+cover resource-containing records, variants, containers, recursive values,
+transferred Lean closures and callback reentry. Failed validation preserves
+every input owner. At the handoff, all input owner slots become null; later
+allocation failures, callback errors, session closure and malformed replies
+must clean up without restoring those owners or publishing partial outputs.
+Independent retains remain usable. Duplicate, foreign, stale, wrong-thread
+and post-fork owners reject.
+
+AddressSanitizer and UndefinedBehaviorSanitizer runs compare against a separate
+Lean startup leak baseline. Mutation probes remove owner-membership checks,
+moved-state updates and cleanup. CI requires the enabled tests and retains
+`build/owned-transfers/`. Existing borrowed-input APIs must produce identical
+generated files when the transfer capability is enabled but unused.
+
+Production package builds still reject transferred inputs. Installed C
+acceptance, the other consumer bindings and owner-anchored borrowed results
+remain open. See the [transfer implementation record](../evidence/owned-transfer-c-20260929.md).
+
 ### Staged WIT owned graphs
 
 Run the ownership projection and canonical-ABI lifetime checks with the pinned

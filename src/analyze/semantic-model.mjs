@@ -149,11 +149,14 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 	};
 	const declarations = included.map(item => {
 		const { projection } = item;
+		const contract = exportContractFor(request.contracts, item.identity);
 		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
 		return { id: `lean:${item.identity}`, name: item.identity.split(".").at(-1)
 			, kind: "function", owner: null, overloadKey: item.identity
 			, typeParameters: [], receiver: null
-			, parameters: projection.parameters.map((p, i) => parameter(p.type, i))
+			, parameters: projection.parameters.map((p, i) => ({ ...parameter(p.type, i)
+				, ...contract?.parameters ? { ownership: contract.parameters[i].ownership
+					, lifetime: structuredClone(contract.parameters[i].lifetime) } : {} }))
 			, result: site(projection.result, true), mutability: "immutable"
 			, effects: exportContractEffects(projection, ownedAggregates)
 			, failure: hasCallback ? callbackFailure : { mode: "none", errors: [], unexpected: "poison-runtime" }

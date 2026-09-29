@@ -21,8 +21,9 @@ const fail = message => { throw new TypeError(`Owned native values: ${message}`)
  * @param ir - Explicit version-4 ownership contract.
  * @param options - Native storage selection, separate from the semantic model.
  * @param options.wordBits - Lean and host pointer width, either 32 or 64.
+ * @param options.transferredInputs - Caller implements atomic input-owner consumption.
  */
-export const compileOwnedNativeValueLayout = (ir, { wordBits = 64 } = {}) => {
+export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false } = {}) => {
 	if(![32, 64].includes(wordBits)) fail("machine-word width must be 32 or 64");
 	const targetScalars = { ...scalars, usize: `uint${wordBits}_t`, isize: `int${wordBits}_t` };
 	const model = compileOwnedAggregateModel(ir);
@@ -66,8 +67,11 @@ export const compileOwnedNativeValueLayout = (ir, { wordBits = 64 } = {}) => {
 		else if(node.kind === "resource") node.identityKind = type.resource.kindId;
 		else if(node.kind === "callback") node.identityKind = `callable:${model.component.id}:${type.id}`;
 	}
-	const site = (value, result = false) => {
+	const site = (value, result = false, transfers = false) => {
 		const copied = value.representation === "copied";
+		if(transferredInputs && transfers && !copied && !result && value.ownership === "transfer"
+			&& !value.optional && value.default == null
+			&& ["call", "explicit"].includes(value.lifetime?.scope) && value.lifetime.anchor === null) return resolve(value.type);
 		if(value.optional || value.default != null || value.ownership !== (copied ? "copy" : result ? "lease" : "borrow")
 			|| (copied ? value.lifetime !== null : value.lifetime?.scope !== (result ? "explicit" : "call") || value.lifetime?.anchor !== null))
 			fail("this transport requires copied values, call-scoped input borrows and explicit output leases");
@@ -76,9 +80,11 @@ export const compileOwnedNativeValueLayout = (ir, { wordBits = 64 } = {}) => {
 	const functions = model.declarations.map(declaration => {
 		if(declaration.kind !== "function" || declaration.receiver || declaration.resultMode !== "value")
 			fail("only synchronous function exports are supported");
+		const transfers = declaration.parameters.flatMap((value, index) => value.ownership === "transfer" ? [index] : []);
 		return { id: declaration.id, name: declaration.name
 			, symbol: `${prefix}_f${sha256(declaration.id).slice(0, 20)}`
-			, parameters: declaration.parameters.map(value => site(value))
+			, parameters: declaration.parameters.map(value => site(value, false, true))
+			, ...(transfers.length ? { transfers } : {})
 			, result: site(declaration.result, true) };
 	});
 	const callbacks = nodes.filter(node => node.kind === "callback").map(node => ({

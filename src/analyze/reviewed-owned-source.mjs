@@ -62,15 +62,17 @@ const checkReview = document => {
 		reject(type.kind !== "apply" || !arity || type.arguments.length !== arity, path);
 		type.arguments.forEach((item, index) => reference(item, `${path}.arguments[${index}]`, true));
 	};
-	const site = (value, path, result = false) => {
+	const site = (value, path, result = false, transfers = false) => {
 		reference(value.type, `${path}.type`);
 		const copy = copied(value.type);
+		if(transfers && !copy && !result && value.ownership === "transfer"
+			&& ["call", "explicit"].includes(value.lifetime?.scope) && value.lifetime.anchor === null) return;
 		reject(value.ownership !== (copy ? "copy" : result ? "lease" : "borrow")
 			|| !same(value.lifetime, copy ? null : { scope: result ? "explicit" : "call", anchor: null }), path);
 	};
-	const parameter = (value, path) => {
+	const parameter = (value, path, transfers = false) => {
 		reject(value.optional || value.default !== null || value.mutability !== "immutable", path);
-		site(value, path);
+		site(value, path, false, transfers);
 	};
 	for(const definition of document.types)
 	{
@@ -111,7 +113,7 @@ const checkReview = document => {
 			|| declaration.typeParameters.length || declaration.capabilities.length || declaration.mutability !== "immutable"
 			|| declaration.resultMode !== "value" || !same(declaration.effects.toSorted(), effects)
 			|| !same(declaration.failure, hasCallback ? callbackFailure : pureFailure), declaration.id);
-		declaration.parameters.forEach((value, index) => parameter(value, `${declaration.id}.parameters[${index}]`));
+		declaration.parameters.forEach((value, index) => parameter(value, `${declaration.id}.parameters[${index}]`, true));
 		site(declaration.result, `${declaration.id}.result`, true);
 	}
 	return document;
@@ -137,11 +139,15 @@ export const validateReviewedOwnedSource = review => {
 export const reviewedOwnedSourceSelection = review => {
 	const document = validateReviewedOwnedSource(review);
 	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
+	const contracts = Object.fromEntries(document.declarations.filter(item => item.parameters.some(value => value.ownership === "transfer"))
+		.map(item => [item.source.declaration, { parameters: item.parameters.map(({ ownership, lifetime }) => ({ ownership, lifetime: structuredClone(lifetime) })) }])
+		.sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0));
 	return { exports: document.declarations.map(item => item.source.declaration).sort()
 		, resources: document.types.filter(type => type.kind === "resource").map(item => item.source.declaration).sort()
 		, arities: document.declarations.filter(item => item.result.type.kind === "named" && callbacks.has(item.result.type.id))
 			.map(item => [item.source.declaration, item.parameters.length]).sort(([a], [b]) => a.localeCompare(b))
-		, ownedAggregates: structuredClone(document.aggregatePolicy) };
+		, ownedAggregates: structuredClone(document.aggregatePolicy)
+		, ...(Object.keys(contracts).length ? { contracts } : {}) };
 };
 
 /**
@@ -246,7 +252,7 @@ export const reconcileReviewedOwnedSource = (review, compiled, sourceIdentity) =
 		|| !same(config.modules.toSorted(), request.exportModules.toSorted())
 		|| !same(request.exports.toSorted(), selection.exports) || !same(request.resources.toSorted(), selection.resources)
 		|| !same(request.arities, selection.arities) || !same(request.ownedAggregates, selection.ownedAggregates)
-		|| request.specializations !== undefined || request.contracts !== undefined)
+		|| request.specializations !== undefined || !same(request.contracts ?? null, selection.contracts ?? null))
 		mismatch("Reviewed contract differs from the authorized compiler selection");
 	const field = reviewedContractDifference(normalizeEffects(document), normalizeEffects(compiled));
 	if(field) mismatch("Reviewed contract does not match the freshly compiled Lean API", {

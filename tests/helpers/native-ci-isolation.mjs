@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { runInNewContext } from "node:vm";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedTransferC } from "./owned-transfer-c-history.mjs";
 
 export const nativeCiProfiles = {
 	"c-family": {
@@ -85,6 +86,9 @@ export const nativeCiRecordScript = (workflow, profile, overrides = {}) => nativ
  * @param baseline - Captured command/step hashes from the pre-split revision.
  */
 export const assertNativeCiIsolation = (workflow, baseline) => {
+	// The transfer receipt authenticates its added gates separately. Rewind only
+	// that exact full-file transition when checking the original shard commands.
+	workflow = beforeOwnedTransferC(".github/workflows/consumer-matrix.yml", workflow);
 	assert.equal(baseline.schemaVersion, 1);
 	assert.equal(baseline.baselineRevision, "4ae2450fd9dfd164486970993d0923e667c18bbf");
 	const body = nativeCiJob(workflow), steps = nativeCiSteps(workflow);

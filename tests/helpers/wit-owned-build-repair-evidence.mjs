@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { assertPhpNixImportClosure } from "./php-nix-boundary-repair-evidence.mjs";
 import { reverseOwnedWitBuildRepairUpdate } from "./wit-owned-build-repair-history.mjs";
+import { beforeOwnedTransferC } from "./owned-transfer-c-history.mjs";
 
 export const ownedWitBuildRepairManifest = "nix/perl-engine-source-boundary.json";
 export const ownedWitBuildRepairModules = [
@@ -70,7 +71,8 @@ export const assertOwnedWitBuildRepairExecution = async record => {
 			assert.match(skipped[0], /installed CLI builds ordinary and reviewed owned npm packages from bundled headers/u);
 		}
 	}
-	const source = await readFile(ownedWitBuildRepairManifest, "utf8"), boundary = JSON.parse(source);
+	const current = await readFile(ownedWitBuildRepairManifest, "utf8");
+	const source = beforeOwnedTransferC(ownedWitBuildRepairManifest, current), boundary = JSON.parse(source);
 	assert.equal(sha256(source), record.sources[ownedWitBuildRepairManifest]);
 	assert.deepEqual(boundary, record.boundary);
 	const update = record.updates.find(item => item.path === ownedWitBuildRepairManifest);
@@ -79,5 +81,5 @@ export const assertOwnedWitBuildRepairExecution = async record => {
 	assert.deepEqual(boundary.includedFiles.filter(path => !previous.includedFiles.includes(path)), ownedWitBuildRepairModules);
 	assert.deepEqual(boundary.includedFiles.filter(path => !ownedWitBuildRepairModules.includes(path)), previous.includedFiles);
 	for(const path of ownedWitBuildRepairModules) assert.equal(sha256(await readFile(path)), record.sources[path], path);
-	await assertPhpNixImportClosure(boundary);
+	await assertPhpNixImportClosure(JSON.parse(current));
 };

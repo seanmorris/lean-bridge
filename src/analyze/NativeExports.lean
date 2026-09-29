@@ -498,15 +498,21 @@ def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Jso
       ("result", runtimeResult)])
 
 /- Contracts constrain the adapter; they never supply a type or authorize erasure. -/
-def contractSiteProblem (site type : Json) (result : Bool) (label : String) : Option String := Id.run do
+def contractSiteProblem (site type : Json) (result : Bool) (label : String)
+    (owned : Bool := false) : Option String := Id.run do
   if let .ok refinement := site.getObjVal? "refinement" then
     if refinement != str "reject" then
       return some s!"{label}: checked refinement constructors are not implemented by this profile"
   let identity := ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")
+  let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null
+  if owned && !result && identity &&
+      (site.getObjValAs? String "ownership").toOption == some "transfer" &&
+      ["call", "explicit"].contains ((lifetime.getObjValAs? String "scope").toOption.getD "") &&
+      (lifetime.getObjVal? "anchor").toOption == some Json.null then
+    return none
   let ownership := if identity then (if result then "lease" else "borrow") else "copy"
   if (site.getObjValAs? String "ownership").toOption != some ownership then
     return some s!"{label}: ownership or lifetime differs from the implemented adapter"
-  let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null
   if identity then
     if (lifetime.getObjValAs? String "scope").toOption != some (if result then "explicit" else "call") ||
         (lifetime.getObjVal? "anchor").toOption != some Json.null then
@@ -535,7 +541,7 @@ def contractProblem (contract projection : Json) (owned : Bool := false) : Optio
       return some "parameter decisions must cover the exact runtime argument count"
     for index in [:sites.size] do
       let type := (parameters[index]!.getObjVal? "type").toOption.getD Json.null
-      if let some problem := contractSiteProblem sites[index]! type false s!"arg{index}" then
+      if let some problem := contractSiteProblem sites[index]! type false s!"arg{index}" owned then
         return some problem
   if let .ok site := contract.getObjVal? "result" then
     let type := (projection.getObjVal? "result").toOption.getD Json.null
