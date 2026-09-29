@@ -12,8 +12,10 @@ import { renderOwnedWitNativeResources } from "./owned-native-resources.mjs";
  * invocation. Host callback registration is a separate session responsibility.
  *
  * @param model - Owned WIT projection of the same IR as owned-values-codec.h.
+ * @param options - Internal embedding options.
+ * @param options.inlineNative - The embedding already emitted native adapters.
  */
-export const renderOwnedWitNativeHost = model => {
+export const renderOwnedWitNativeHost = (model, { inlineNative = false } = {}) => {
 	const table = new Map(model.layout.nodes.map(node => [node.id, node]));
 	const bodies = model.functions.map((fn, index) => {
 		const native = fn.resource ? model.layout.callbacks.find(item => item.id === fn.resource.id)
@@ -37,14 +39,17 @@ static wasmtime_error_t *ow_native_import_${index}(void *data, wasmtime_context_
   int status = 0;
 ${native.parameters.map((id, i) => `  ${table.get(id).cName} arg${i} = {0};`).join("\n")}
 ${native.parameters.map((id, i) => `  if (!ow_decode_${table.get(id).index}_input(&args[${i}], &input.scope, &arg${i})) {
+    (void)ow_native_status(host, input.scope.memory.failure ? (int)input.scope.memory.failure : LB_OWNED_INVALID);
     failure = wasmtime_error_new("Invalid owned WIT input, expired resource or conversion limit"); goto done;
   }`).join("\n")}
   status = ${native.symbol}(host->native, ${native.parameters.map((_, i) => `&arg${i}`).concat("&value", "&owner").join(", ")});
   if (status) {
+    (void)ow_native_status(host, status);
     if (status == OV_RESULT) lean_bridge_native_runtime_retire();
     failure = wasmtime_error_new("Owned Lean call failed"); goto done;
   }
   if (!ow_encode_${result.index}_output(&value, &output.scope, &converted)) {
+    (void)ow_native_status(host, output.scope.memory.failure ? (int)output.scope.memory.failure : OV_RESULT);
     failure = wasmtime_error_new("Owned WIT result conversion or resource acquisition failed"); goto done;
   }
   if (!ow_native_ready(host) || host->failure) { failure = wasmtime_error_new("Owned WIT session became unavailable"); goto done; }
@@ -52,7 +57,10 @@ ${native.parameters.map((id, i) => `  if (!ow_decode_${table.get(id).index}_inpu
 done:
   ow_value_delete(&output.scope, &converted);
   status = ov_owner_clear(&owner);
-  if (status && !failure) failure = wasmtime_error_new("Owned Lean result release failed");
+  if (status) {
+    (void)ow_native_status(host, status);
+    if (!failure) failure = wasmtime_error_new("Owned Lean result release failed");
+  }
   ow_native_conversion_close(&output); ow_native_conversion_close(&input);
   return failure;
 }
@@ -60,7 +68,7 @@ done:
 	});
 	return `#include <wasmtime.h>
 #include <wasmtime/component.h>
-#include "owned-values-codec.h"
+${inlineNative ? "" : '#include "owned-values-codec.h"\n'}\
 ${renderOwnedWitGraphConversions(model)}
 ${renderOwnedWitNativeResources(model)}
 ${bodies.join("\n")}

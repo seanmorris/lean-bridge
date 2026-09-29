@@ -12,11 +12,20 @@ const prelude = () => {
 		, ["if (count && width > scope->remaining / count) return false;", "if (count && width > scope->remaining / count) { scope->failure = 2; return false; }"]
 		, ["if (width > (SIZE_MAX - sizeof(lb_allocation)) / count) return NULL;", "if (width > (SIZE_MAX - sizeof(lb_allocation)) / count) { scope->failure = 2; return NULL; }"]
 		, ["if (!allocation) return NULL;", "if (!allocation) { scope->failure = 3; return NULL; }"]
+		, ["lb_allocation *allocation = calloc(1, sizeof(*allocation) + count * width);", "lb_allocation *allocation = OW_GRAPH_ALLOC(sizeof(*allocation) + count * width);"]
+		, ["allocation->next = scope->allocations;", "memset(allocation, 0, sizeof(*allocation) + count * width);\n  allocation->next = scope->allocations;"]
+		, ["free(scope->allocations);", "OW_GRAPH_FREE(scope->allocations);"]
 	]) {
 		if(text.split(before).length !== 2) throw new Error("Review the shared WIT allocation prelude before changing owned conversions");
 		text = text.replace(before, after);
 	}
-	return text;
+	return `#ifndef OW_GRAPH_ALLOC
+#define OW_GRAPH_ALLOC(bytes) calloc(1, bytes)
+#endif
+#ifndef OW_GRAPH_FREE
+#define OW_GRAPH_FREE(pointer) free(pointer)
+#endif
+${text}`;
 };
 
 /**

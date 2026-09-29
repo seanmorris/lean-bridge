@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedWitSession, ownedWitSessionChangedPaths } from "./wit-owned-session-history.mjs";
 
 export const ownedWitNativeBaseline = "9a2ab9091d501e6d4aac5d668496de2bd6a40579";
 export const ownedWitNativePath = "docs/evidence/wit-owned-native-20260929.json";
@@ -36,6 +37,7 @@ export const ownedWitNativeAddedPaths = [
 	, "tests/wit-owned-native-host.test.mjs"
 ].sort();
 let cached;
+export const ownedWitNativeNormalizationPaths = [...new Set([...ownedWitNativeChangedPaths, ...ownedWitSessionChangedPaths])].sort();
 
 /**
  * Reverse exact ordered spans after authenticating both full file versions.
@@ -68,6 +70,7 @@ export const reverseOwnedWitNativeUpdate = (source, update) => {
  * @param expected - Optional exact historical stopping identity.
  */
 export const beforeOwnedWitNative = (path, source, expected) => {
+	source = beforeOwnedWitSession(path, source, expected);
 	if(!ownedWitNativeChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedWitNativePath, "utf8"));
@@ -86,5 +89,5 @@ export const beforeOwnedWitNative = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional exact historical stopping identity.
  */
-export const ownedWitNativeHistoricalBytes = (path, bytes, expected) => ownedWitNativeChangedPaths.includes(path)
+export const ownedWitNativeHistoricalBytes = (path, bytes, expected) => ownedWitNativeNormalizationPaths.includes(path)
 	? beforeOwnedWitNative(path, bytes.toString("utf8"), expected) : bytes;

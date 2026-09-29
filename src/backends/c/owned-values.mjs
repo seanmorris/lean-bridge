@@ -24,10 +24,11 @@ const nominal = name => {
  * @param ir - Explicit v4 ownership contract.
  * @param options - Explicit transport capabilities.
  * @param options.hostCallbacks - Admit call-scoped host descriptors and copies.
+ * @param options.publicPrefix - Internal backend namespace, independent of Lean identity.
  */
-export const generateOwnedCValues = (ir, { hostCallbacks = false } = {}) => {
+export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix } = {}) => {
 	const native = compileOwnedNativeValueLayout(ir);
-	const p = cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
+	const p = publicPrefix ?? cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");
 	const names = new Map();
 	const claim = (name, id) => {

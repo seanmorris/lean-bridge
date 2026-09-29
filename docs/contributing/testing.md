@@ -1202,12 +1202,31 @@ partial lease. The sanitizer run must match the cold Lean startup leak baseline.
 Removing an output lease or pending-call rollback must make the probe fail.
 CI requires all five tests without skips and retains `build/wit-owned-native.log`.
 
-This gate verifies the private native host. The owned WIT session API, host
-callbacks, installed package generation, transferred inputs and owner-anchored
-borrowed results still need implementation and acceptance tests. Existing
-installed support classifications do not change.
-Native conversion, package integration, transferred Lean inputs and anchored
-borrowed results remain open.
+Run the public owned WIT session and host-callback tests with the same tools:
+
+```sh
+LEAN_BRIDGE_WIT_OWNED_SESSION_TEST=1 \
+  node --test --test-concurrency=1 tests/wit-owned-session.test.mjs
+```
+
+This seven-test gate compiles independent public C consumers against ordinary
+and independently reviewed Lean sources. It covers nested resources, all 19
+scalar types, optional units, recursive values, returned closures, and typed
+host callbacks. Exported calls cross the generated WIT component; local retain
+and copy helpers only manage ownership. The public header exposes semantic
+values and opaque owners, not Wasmtime handles or Lean object layouts.
+
+Callback tests reenter the API, create resources, release an input owner, close
+a session during a call, and invoke an expired callback borrow. Native and WIT
+scratch-allocation failures must leave output slots unchanged and release all
+partial owners. AddressSanitizer and UndefinedBehaviorSanitizer runs compare
+against independent Lean leak baselines. Removing store cleanup or independent
+result ownership must make the public consumer fail. CI requires all seven
+tests without skips and preserves `build/wit-owned-session.log`.
+
+These gates do not establish installed owned-WIT support. Production package
+admission, relocated installed acceptance, transferred Lean inputs and
+owner-anchored borrowed results remain open.
 
 ### Staged WIT callable projection
 

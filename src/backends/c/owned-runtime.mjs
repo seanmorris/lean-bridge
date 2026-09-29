@@ -12,8 +12,9 @@
  *
  * @param values - Validated public C layout.
  * @param carriers - Freshly compiler-authenticated typed Lean carrier symbols.
+ * @param transport - Optional internal transport session lifecycle.
  */
-export const ownedCRuntime = (values, carriers) => {
+export const ownedCRuntime = (values, carriers, transport = null) => {
 	const p = values.prefix, limits = values.native.model.limits;
 	const component = JSON.stringify(values.native.model.component.id);
 	const sessionKind = JSON.stringify(`owned-c-session:${values.native.model.component.id}`);
@@ -40,7 +41,7 @@ struct oc_session {
   oc_session *next;
   uint64_t key;
   lb_owned_context native;
-  size_t results, calls;
+${transport ? `  ${transport.type} *transport;\n` : ""}  size_t results, calls;
   int closed;
 };
 static _Thread_local oc_session *oc_sessions;
@@ -99,7 +100,10 @@ static inline int oc_session_get(const ${p}_session *key, oc_session **out) {
   return status;
 }
 static inline void oc_session_collect(oc_session *session) {
-  if (!session->closed || session->results || session->calls) return;
+${transport ? `  if (!session->closed || session->calls) return;
+  if (session->transport) { ${transport.destroy}(session->transport); session->transport = NULL; }
+  if (session->native.initialized) (void)lb_owned_context_close(&session->native);
+  if (session->results) return;` : "  if (!session->closed || session->results || session->calls) return;"}
   oc_session **slot = &oc_sessions;
   while (*slot != session) slot = &(*slot)->next;
   *slot = session->next;
@@ -115,8 +119,11 @@ ${p}_status ${p}_session_open(${p}_session **out) {
   memset(session, 0, sizeof(*session));
   int status = lb_owned_context_init(&session->native, ${component});
   if (status) { LB_OWNED_FREE(session); return (${p}_status)status; }
+${transport ? `  status = ${transport.open}(&session->native, &session->transport);
+  if (status) { lb_owned_context_close(&session->native); LB_OWNED_FREE(session); return (${p}_status)status; }
+` : ""}\
   session->key = lean_bridge_native_identity_acquire(${sessionKind}, session);
-  if (!session->key) { lb_owned_context_close(&session->native); LB_OWNED_FREE(session); return (${p}_status)LB_OWNED_LIMIT; }
+  if (!session->key) { ${transport ? `${transport.destroy}(session->transport); ` : ""}lb_owned_context_close(&session->native); LB_OWNED_FREE(session); return (${p}_status)LB_OWNED_LIMIT; }
   session->next = oc_sessions; oc_sessions = session;
   *out = (${p}_session *)(uintptr_t)session->key;
   return (${p}_status)LB_OWNED_OK;
@@ -128,9 +135,10 @@ ${p}_status ${p}_session_close(${p}_session **value) {
   oc_session *session = oc_session_find(*value);
   if (!session) return (${p}_status)LB_OWNED_INVALID;
   if (session->closed) return (${p}_status)LB_OWNED_CLOSED;
-  int status = lb_owned_context_close(&session->native);
+  int status = ${transport ? "lb_owned_affinity" : "lb_owned_context_close"}(&session->native);
   if (status) return (${p}_status)status;
   session->closed = 1; *value = NULL;
+${transport ? `  ${transport.requestClose}(session->transport);\n` : ""}\
   oc_session_collect(session); return (${p}_status)LB_OWNED_OK;
 }
 ${p}_status ${p}_result_release(${p}_result **value) {
@@ -160,6 +168,7 @@ static inline int oc_result_begin(oc_session *session, ov_budget *budget, oc_res
 static inline int oc_result_finish(oc_result *result, oc_arena *output, int status, ${p}_result **owner) {
   oc_session *session = result->session;
   if (status == OV_RESULT) lean_bridge_native_runtime_retire();
+${transport ? "  if (!status && session->closed) status = LB_OWNED_CLOSED;\n" : ""}\
   if (!status) status = lb_owned_ready(&session->native);
   if (!status) {
     result->key = lean_bridge_native_identity_acquire(${resultKind}, result);

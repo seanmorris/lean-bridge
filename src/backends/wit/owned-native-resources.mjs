@@ -32,6 +32,7 @@ struct ow_native_host {
   ow_native_entry *entries;
   uint32_t tags[OW_TYPES], next_rep;
   size_t live, depth;
+  int status;
   ow_native_call *call;
   bool closing;
   wasmtime_error_t *failure;
@@ -55,8 +56,13 @@ static inline bool ow_native_ready(ow_native_host *host) {
 static inline bool ow_native_affinity(ow_native_host *host) {
   return host && host->self == host && host->native && !lb_owned_affinity(host->native);
 }
+static inline int ow_native_status(ow_native_host *host, int status) {
+  if (status && !host->status) host->status = status;
+  return host->status;
+}
 static inline void ow_native_error(ow_native_host *host, wasmtime_error_t *error) {
   if (!error) return;
+  (void)ow_native_status(host, LB_OWNED_RUNTIME);
   if (!host->failure) host->failure = error; else wasmtime_error_delete(error);
 }
 static inline ow_native_entry *ow_native_find(ow_native_host *host, uint32_t rep) {
@@ -75,13 +81,13 @@ static inline bool ow_native_release(ow_native_host *host, ow_native_entry *entr
 static inline bool ow_native_host_init(ow_native_host *host, lb_owned_context *native, wasmtime_context_t *context) {
   if (!host || host->self || host->entries || !context || lb_owned_ready(native)) return false;
   ow_native_entry *entries = LB_OWNED_ALLOC(OW_RESOURCE_CAPACITY * sizeof(*entries));
-  if (!entries) return false;
+  if (!entries) { host->status = LB_OWNED_ALLOC_FAILED; return false; }
   memset(entries, 0, OW_RESOURCE_CAPACITY * sizeof(*entries));
   *host = (ow_native_host){.self = host, .native = native, .context = context, .entries = entries};
   for (size_t i = 0; i < OW_TYPES; ++i) if (ow_native_kinds[i]) {
     uint32_t previous = atomic_load(&ow_native_next_tag);
     do {
-      if (previous == UINT32_MAX) { LB_OWNED_FREE(entries); *host = (ow_native_host){0}; return false; }
+      if (previous == UINT32_MAX) { LB_OWNED_FREE(entries); *host = (ow_native_host){.status = LB_OWNED_LIMIT}; return false; }
     } while (!atomic_compare_exchange_weak(&ow_native_next_tag, &previous, previous + 1));
     host->tags[i] = previous + 1;
   }
@@ -90,12 +96,15 @@ static inline bool ow_native_host_init(ow_native_host *host, lb_owned_context *n
 static inline bool ow_native_call_begin(ow_native_host *host, ow_native_call *call) {
   if (!ow_native_ready(host) || !call || call->host || call->parent || host->depth == LB_OWNED_SCOPE_LIMIT) return false;
   if (!host->call && host->failure) { wasmtime_error_delete(host->failure); host->failure = NULL; }
+  if (!host->call) host->status = LB_OWNED_OK;
   if (host->failure) return false;
   *call = (ow_native_call){.host = host, .parent = host->call}; host->call = call; ++host->depth; return true;
 }
 static inline bool ow_native_call_end(ow_native_call *call, bool success) {
   if (!call || !ow_native_affinity(call->host) || call->host->call != call) return false;
   ow_native_host *host = call->host;
+  /* Conversion status reports an atomic, recoverable failure. The caller can
+   * still commit unrelated work; Wasmtime errors and close prevent commit. */
   success = success && !host->failure && !host->closing;
   /* Finish fallible temporary cleanup before publishing any pending owner. */
   if (success) for (size_t i = 0; i < OW_RESOURCE_CAPACITY; ++i) {
@@ -164,8 +173,10 @@ static bool ow_native_read_identity(void *data, size_t type, bool borrowed,
 static bool ow_native_write_identity(void *data, size_t type, bool borrowed,
     uint64_t token, wasmtime_component_val_t *out) {
   ow_native_conversion *conversion = data; ow_native_host *host = conversion->host;
-  if (!ow_native_ready(host) || !host->call || host->failure || type >= OW_TYPES || !host->tags[type]
-      || host->live == OW_RESOURCE_CAPACITY || host->next_rep == UINT32_MAX || !token) return false;
+  if (!ow_native_ready(host) || !host->call || host->failure || type >= OW_TYPES || !host->tags[type] || !token) return false;
+  if (host->live == OW_RESOURCE_CAPACITY || host->next_rep == UINT32_MAX) {
+    (void)ow_native_status(host, LB_OWNED_LIMIT); return false;
+  }
   ow_native_entry *entry = NULL;
   for (size_t i = 0; i < OW_RESOURCE_CAPACITY; ++i) if (!host->entries[i].rep) { entry = &host->entries[i]; break; }
   if (!entry) return false;
@@ -176,6 +187,7 @@ static bool ow_native_write_identity(void *data, size_t type, bool borrowed,
   if (!status) status = lb_owned_scope_commit(&scope, &entry->lease);
   if (scope.context) (void)lb_owned_scope_abort(&scope);
   if (status) {
+    (void)ow_native_status(host, status);
     if (entry->lease.context) (void)lb_owned_batch_release(host->native, &entry->lease);
     return false;
   }

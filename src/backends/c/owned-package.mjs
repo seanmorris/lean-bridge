@@ -18,13 +18,16 @@ import { ownedCCallbacks } from "./owned-callbacks.mjs";
  * the explicit capability recorded in the authenticated native component model.
  *
  * @param options - Authenticated fresh compiler metadata and component identity.
+ * @param backend - Internal transport implementation over the same native layout.
  */
-export const generateOwnedCPackage = options => {
+export const generateOwnedCPackage = (options, backend = null) => {
 	const generated = generateOwnedNativeValueAdapters(options);
-	const values = generateOwnedCValues(generated.layout.model.bindingIr, { hostCallbacks: options.hostCallbacks }), p = values.prefix;
+	const publicPrefix = backend ? backend.publicPrefix(generated.layout.model.bindingIr) : options.publicPrefix;
+	const values = generateOwnedCValues(generated.layout.model.bindingIr, { hostCallbacks: options.hostCallbacks, publicPrefix }), p = values.prefix;
+	const transport = backend?.render({ generated, values });
 	const nodes = new Map(values.nodes.map(node => [node.id, node]));
 	const walker = node => `oc_v${node.index}`;
-	const source = [`#include "${p}.h"`, generated.source, ownedCRuntime(values, generated.carriers)];
+	const source = [`#include "${p}.h"`, generated.source, ...transport ? [transport.source] : [], ownedCRuntime(values, generated.carriers, transport?.session)];
 	for(const node of nodes.values()) source.push(
 		`static inline int ${walker(node)}_to(${node.cName} const *, ${node.nativeName} *, size_t, oc_arena *);`
 		, `static inline int ${walker(node)}_from(const ${node.nativeName} *, ${node.cName} *, size_t, oc_arena *);`
@@ -133,7 +136,10 @@ export const generateOwnedCPackage = options => {
 	for(const item of [...values.functions, ...values.callbacks, ...values.retains, ...values.copies ?? []])
 	{
 		const result = nodes.get(item.result), params = item.parameters.map(id => nodes.get(id));
-		const symbol = item.retain || item.copy ? `${nodes.get(item.id).walker}_retain` : item.symbol;
+		const local = item.retain || item.copy;
+		const symbol = local ? `${nodes.get(item.id).walker}_retain` : transport ? transport.symbols.get(item.id) : item.symbol;
+		if(!symbol) throw new TypeError(`Missing owned transport function: ${item.id}`);
+		const context = !local && transport ? "active->transport" : "&active->native";
 		const borrows = options.hostCallbacks ? params.flatMap((node, i) => values.hostArgument(item, i) ? [{ node, index: i }] : []) : [];
 		source.push(values.signature(item) + " {"
 			, `  if (!oc_outputs(out, sizeof(*out), _Alignof(${result.cName}), owner) || *owner) return (${p}_status)LB_OWNED_INVALID;`
@@ -149,7 +155,7 @@ export const generateOwnedCPackage = options => {
 			, ...params.map((node, i) => borrows.some(borrow => borrow.index === i)
 				? `  if (!status) status = oc_host_v${node.index}_begin(&borrow${i}, a${i}, active, &budget, &raw${i});`
 				: `  if (!status) status = ${walker(node)}_to(${node.leaf ? "&" : ""}a${i}, &raw${i}, 0, &input);`)
-			, `  if (!status) status = ${symbol}(&active->native, ${[...params.map((_, i) => `&raw${i}`), "&returned", "&result_owner->native"].join(", ")});`
+			, `  if (!status) status = ${symbol}(${context}, ${[...params.map((_, i) => `&raw${i}`), "&returned", "&result_owner->native"].join(", ")});`
 			, ...borrows.map(({ node, index }) => `  { int cleanup = oc_host_v${node.index}_end(&borrow${index}); if (!status) status = cleanup; }`)
 			, "  if (!status) {"
 			, `    status = ${walker(result)}_from(&returned, &converted, 0, &output);`
