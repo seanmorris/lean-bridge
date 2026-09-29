@@ -361,7 +361,7 @@ package receipt version 3. The shared C adapter uses version 4 with
 compiler metadata and rejects changed consumption or alias rules. Packages
 without transfers retain their existing versions and generated API.
 
-A combined transfer build can select C, C++, Cargo and PyPI. Other consumer
+A combined transfer build can select C, C++, Cargo, PyPI and RubyGems. Other consumer
 bindings still reject these contracts. Building a wheel does not upload it.
 
 ## Choose the package name and platform

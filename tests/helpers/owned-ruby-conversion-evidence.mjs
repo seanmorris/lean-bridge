@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedRubyConversions } from "../../src/backends/ruby/owned-conversions.mjs";
 import { ownedRubyRuntime } from "../../src/backends/ruby/owned-runtime.mjs";
+import { beforeOwnedRubyTransfer, ownedRubyTransferHistoricalBytes } from "./owned-ruby-transfer-history.mjs";
 
 export const ownedRubyConversionSources = [
 	"src/backends/ruby/owned-runtime.mjs"
@@ -42,8 +43,8 @@ export const assertOwnedRubyConversions = async record => {
 	assert.deepEqual(record.sources.map(item => item.path), ownedRubyConversionSources);
 	for(const item of record.sources)
 	{
-		const bytes = await readFile(item.path);
-		assert.equal(item.bytes, bytes.length, item.path);
+		const bytes = ownedRubyTransferHistoricalBytes(item.path, await readFile(item.path), item.sha256);
+		assert.equal(item.bytes, Buffer.byteLength(bytes), item.path);
 		assert.equal(item.sha256, sha256(bytes), item.path);
 	}
 	const [execution, lint] = record.commands;
@@ -89,12 +90,12 @@ export const assertOwnedRubyConversions = async record => {
 	assert.deepEqual(record.compilerInputs, foundation.compilerInputs);
 	const update = record.foundation.runtimeUpdate;
 	assert.equal(update.path, "src/backends/ruby/owned-runtime.mjs");
-	const current = await readFile(update.path, "utf8");
+	const current = beforeOwnedRubyTransfer(update.path, await readFile(update.path, "utf8"), update.afterSha256);
 	assert.equal(current.split(update.after).length, 2);
 	assert.equal(update.afterSha256, sha256(current));
 	const original = current.replace(update.after, () => update.before);
 	assert.equal(update.beforeSha256, sha256(original));
 	assert.equal(update.beforeSha256, foundation.sources.find(item => item.path === update.path).sha256);
 	for(const source of foundation.sources.filter(item => item.path !== update.path))
-		assert.equal(source.sha256, sha256(await readFile(source.path)));
+		assert.equal(source.sha256, sha256(ownedRubyTransferHistoricalBytes(source.path, await readFile(source.path), source.sha256)));
 };

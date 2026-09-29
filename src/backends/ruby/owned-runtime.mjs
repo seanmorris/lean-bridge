@@ -9,8 +9,10 @@
  * The caller nests this support inside its generated component namespace.
  *
  * @param prefix - Validated public C package identifier.
+ * @param options - Explicit ownership capabilities.
+ * @param options.transferredInputs - Observe the C consuming-input owner slots.
  */
-export const ownedRubyRuntime = prefix => {
+export const ownedRubyRuntime = (prefix, { transferredInputs = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Ruby prefix");
 	return `require "fiddle"
 raise LoadError, "Owned Lean values require MRI Ruby 3.3 on Linux x86-64" unless RUBY_ENGINE == "ruby" && RUBY_VERSION.start_with?("3.3.") && RUBY_PLATFORM.include?("x86_64-linux") && Fiddle::SIZEOF_VOIDP == 8 && [1].pack("I") == [1].pack("L<")
@@ -65,13 +67,13 @@ module Owned
     end
   end
   class Lease
-    attr_reader :state, :slot, :scope
+    attr_reader :state, :slot, :scope${transferredInputs ? "\n    attr_accessor :input_move" : ""}
     def initialize(state, slot = nil, scope = nil)
       @state, @slot, @scope = state, slot, scope
-      @references = 0
+      @references = 0${transferredInputs ? "\n      @input_move = nil" : ""}
     end
     def closed?
-      @state.closed? || @state.exited? || ::Process.pid != @state.runtime.pid ||
+      @state.closed? || @state.exited? || ::Process.pid != @state.runtime.pid ||${transferredInputs ? "\n        (@input_move && @input_move.value.zero?) ||" : ""}
         (@scope ? !@scope.active : !@slot || @slot.pending || @slot.releasing || @slot.value.zero?)
     end
     def require_open

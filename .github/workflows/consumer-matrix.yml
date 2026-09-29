@@ -1648,6 +1648,11 @@ jobs:
           test -s build/owned-ruby-packaging/scalars-ordinary.json
           test -s build/owned-ruby-packaging/scalars-reviewed.json
           test -s build/owned-ruby-packaging/coexistence.json
+          npm run test:owned-ruby-transfers
+          test -s build/owned-ruby-transfers/ordinary.json
+          test -s build/owned-ruby-transfers/reviewed.json
+          test -s build/owned-ruby-transfer-packaging/ordinary.json
+          test -s build/owned-ruby-transfer-packaging/reviewed.json
           LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs
           LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs
           LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs
@@ -1698,6 +1703,8 @@ jobs:
             build/owned-ruby-conversions/
             build/owned-ruby-gmp/
             build/owned-ruby-loading/
+            build/owned-ruby-transfers/
+            build/owned-ruby-transfer-packaging/
             build/owned-ruby-packaging/
           if-no-files-found: error
           overwrite: true
@@ -1769,6 +1776,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_RECURSIVE_CALLABLE_TEST=1 node --test --test-concurrency=1 tests/ruby-recursive-callables.test.mjs tests/ruby-recursive-callable-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-runtime.test.mjs tests/owned-ruby-values.test.mjs tests/owned-ruby-layout.test.mjs tests/owned-ruby-conversions.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-gmp.test.mjs tests/owned-ruby-package.test.mjs tests/owned-ruby-packaging.test.mjs tests/owned-ruby-coexistence.test.mjs"
+              consumer_command="$consumer_command && npm run test:owned-ruby-transfers"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_COMPOUND_TEST=1 node --test tests/ruby-compounds.test.mjs tests/ruby-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_LIST_TEST=1 node --test tests/ruby-lists.test.mjs tests/ruby-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUBY_ALIAS_TEST=1 node --test tests/ruby-aliases.test.mjs"

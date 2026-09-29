@@ -440,7 +440,7 @@ ownership.
 
 For the transfer acceptance wheel, save this as `owned-transfers.py`:
 
-```python
+```python file=python/owned-transfers.py
 import copy
 from lean_owned_aggregates import new_ticket, retain_ticket, serial
 

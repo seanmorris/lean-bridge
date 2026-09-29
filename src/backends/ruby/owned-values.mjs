@@ -45,9 +45,11 @@ ${fields.map(field => `        @${field.publicName} = ${field.publicName}`).join
  * containers. These declarations do not enable transport or package admission.
  *
  * @param ir - Concrete ownership-aware Binding IR.
+ * @param options - Explicit C transport capabilities.
+ * @param options.transferredInputs - Admit consuming resource-containing inputs.
  */
-export const generateOwnedRubyValues = ir => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true });
+export const generateOwnedRubyValues = (ir, { transferredInputs = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
 	const componentName = constant(c.prefix), occupied = new Set(reservedConstants), names = new Map();
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || occupied.has(name))
@@ -119,7 +121,10 @@ ${callback ? `      def call(${args.join(", ")}); Native.invoke${node.index}(${[
 	});
 	const methods = functions.map((fn, index) => {
 		const args = fn.parameters.map((_, i) => `arg${i}`).join(", ");
-		return `    def self.${fn.publicName}(${args}); Native.call${index}(${args}); end`;
+		return `${fn.transfers?.length ? `    # Consumes resource leases in ${fn.transfers.map(i => `arg${i}`).join(", ")} at the Lean call boundary.
+    # Shared aliases close together; independently retained owners stay usable.
+    # Validation failures preserve ownership; post-handoff failures consume it.
+` : ""}    def self.${fn.publicName}(${args}); Native.call${index}(${args}); end`;
 	});
 	const source = `# frozen_string_literal: true
 module LeanBridge

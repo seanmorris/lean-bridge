@@ -16,11 +16,14 @@ import { ownedRubyAbiHeader } from "./owned-abi.mjs";
  *
  * @param ir - Compiler-authenticated explicit ownership contract.
  * @param evidence - Verified native library identities, or null for inspection.
+ * @param options - Compiler-authenticated ownership capabilities.
+ * @param options.transferredInputs - Enable explicitly consuming input leases.
  */
-export const generateOwnedRubyPackage = (ir, evidence = null) => {
-	const generated = generateOwnedRubyConversions(ir), prefix = generated.c.prefix;
+export const generateOwnedRubyPackage = (ir, evidence = null, { transferredInputs = false } = {}) => {
+	const generated = generateOwnedRubyConversions(ir, { transferredInputs }), prefix = generated.c.prefix;
+	const transfers = generated.c.functions.some(fn => fn.transfers?.length);
 	const { requirePath, componentName, namespace } = generated;
-	const entry = `lib/${requirePath}.rb`, runtime = ownedRubyRuntime(prefix);
+	const entry = `lib/${requirePath}.rb`, runtime = ownedRubyRuntime(prefix, { transferredInputs: transfers });
 	const native = `${generated.source}
 require "digest"
 require "digest/sha2"
@@ -37,9 +40,14 @@ ${verifiedRubyAssets(evidence)}
 end
 `;
 	const abiHeader = ownedRubyAbiHeader(generated);
-	const contract = { schemaVersion: 1, language: "ruby-3.3"
+	const contract = { schemaVersion: transfers ? 2 : 1, language: "ruby-3.3"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
+		, ...transfers ? { inputTransfers: { schemaVersion: 1
+			, arguments: "ordinary-values", consumption: "before-lean-call"
+			, validation: "before-consumption", failure: "consumed-after-handoff"
+			, aliases: "shared-lease", borrowedInputs: "reject"
+			, independentRetains: "preserved" } } : {}
 		, exactIntegers: "ruby-integer", loader: "authenticated-bundled-native"
 		, loadingPolicy: "linux-x64-deepbind-v1"
 		, gmp: "libgmp-lean-bridge.so.10"
@@ -75,7 +83,16 @@ close guards; retain creates an independent native owner. Use with { |value| }
 or close for deterministic release. Finalization queues fallback cleanup on the
 creating thread. Resource calls reject after that thread exits, after fork or
 from another thread. Serialization of resource identities is rejected.
-
+${transfers ? `
+Transferred inputs use ordinary Ruby values. Generated function comments name
+the consuming arguments. All validation and snapshot preparation precede the
+Lean call boundary. At handoff, resource leases close together with their dup
+and clone aliases and sibling resources sharing that result owner. Copied fields
+remain ordinary values; independently retained resources stay open. Callback
+borrows must be retained before transfer. Two transferred arguments cannot share
+a resource lease. Errors before handoff preserve ownership; errors after handoff
+leave inputs consumed, including callback exceptions and conversion failures.
+` : ""}
 Pass synchronous Ruby callables to callback parameters. Resource leaves in
 callback arguments borrow the callback frame and expire on return, including
 duplicates. Call retain inside the callback to keep a resource. Replies are
@@ -95,8 +112,9 @@ These limits do not bound Lean algorithm memory or every Ruby allocator cost.
 Malformed native values retire the runtime. Ordinary input and allocation
 failures leave it usable. Partial output wrappers are revoked on failure.
 ` };
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1
-		, backend: "owned-ruby-v1", target: "ruby", component: ir.component.id
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: transfers ? 2 : 1
+		, backend: transfers ? "owned-ruby-v2" : "owned-ruby-v1"
+		, target: "ruby", component: ir.component.id
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, namespace, requirePath, publicFiles: [entry]
 		, exports: generated.exports, aliases: generated.aliases, contract, evidence

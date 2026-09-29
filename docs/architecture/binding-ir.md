@@ -56,7 +56,7 @@ supply layouts or proof evidence. C, C++ and Cargo package builds ship that tran
 with the shared runtime, GMP and relocatable build metadata. C++ adds named value
 types, standard containers, exact Boost integers and checked RAII resource leases.
 Installed ordinary
-and reviewed consumers execute without producer source or Lean. C, C++, Rust and Python packages
+and reviewed consumers execute without producer source or Lean. C, C++, Rust, Python and Ruby packages
 also admit explicit input transfers. The [native/C transfer implementation](../contributing/testing.md#staged-input-transfers)
 validates every input owner before consuming the whole set, nulls owner slots
 before Lean runs, and keeps copied storage alive through callback reentry.
@@ -77,7 +77,11 @@ version 2 records ordinary-value inputs with the same lease consumption rules.
 Conversion collects the leases it actually visits; it does not traverse mutable
 Python containers again to decide ownership. Native slots expose the handoff
 to reentrant callbacks. Transfer-enabled Python package receipts use version 3.
-Other consumer bindings and owner-anchored
+Ruby collects the leases visited during conversion and observes the same native
+handoff. Its ordinary-value inputs consume shared `dup` and `clone` aliases;
+independently retained owners survive. Ruby's ownership contract, private adapter
+and package receipt use version 2 for transfers. Its isolated GMP and loading
+policy remain unchanged. Other consumer bindings and owner-anchored
 borrowed results remain unfinished.
 Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
 support is documented for [JavaScript](../consume/javascript.md),

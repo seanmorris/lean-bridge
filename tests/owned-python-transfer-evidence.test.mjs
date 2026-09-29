@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedRubyTransfer, ownedRubyTransferHistoricalBytes } from "./helpers/owned-ruby-transfer-history.mjs";
 import { assertOwnedPythonTransferExecution, assertOwnedPythonTransferCi } from "./helpers/owned-python-transfer-evidence.mjs";
 import { beforeOwnedPythonTransfer, ownedPythonTransferAddedPaths, ownedPythonTransferBaseline
 	, ownedPythonTransferChangedPaths, ownedPythonTransferHistoricalBytes, ownedPythonTransferPath
@@ -22,27 +23,27 @@ test("Python transfers bind current sources without promoting unrelated type cel
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...new Set([...Object.keys(previous.sources), ...ownedPythonTransferAddedPaths])].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedRubyTransferHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPythonTransferChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedPythonTransfer(update.path, current);
+		const current = beforeOwnedRubyTransfer(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedPythonTransfer(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedPythonTransfer(update.path, prior), prior);
 		assert.equal(beforeOwnedPythonTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeOwnedRubyTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
 	const previousIndex = JSON.parse(beforeOwnedPythonTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of previousIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRubyTransferHistoricalBytes(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), previousIndex);
 });
 
 test("Python transfer history rejects unrelated edits and invalid reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedRubyTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedPythonTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedPythonTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

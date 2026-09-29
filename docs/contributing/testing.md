@@ -1268,6 +1268,32 @@ handoff. The reviewed build also installs companion C, C++ and Cargo packages.
 Reports go to `build/owned-python-transfers/` and
 `build/owned-python-transfer-packaging/`.
 
+#### Installed Ruby transfers
+
+```sh
+source scripts/env.sh
+npm run test:owned-ruby-transfers
+```
+
+Use MRI Ruby 3.3, the pinned Lean toolchain, a C compiler and the isolated GMP
+build dependencies from the owned-gem gate. The reviewed combined build also
+needs Rust and Python with the pinned offline typing wheel. On a glibc 2.36 test
+host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`; library symbol checks still
+apply, and production builds retain the default glibc 2.38 floor.
+
+The private gate executes ordinary-source and independently reviewed APIs.
+It injects Ruby and native allocation failures before and after single- and
+multiple-input handoffs, retaining exceptions while checking explicit cleanup.
+It covers shared aliases, independent retains, recursive values, callback
+reentry, nonlocal exits, and returned closures.
+
+Installed tests remove producer sources before offline gem installation, run
+the documented public API, reject changed contracts and native libraries, and
+rebuild byte-identical archives. They delete the handoff and gem cache before
+relocation. The reviewed build also installs C, C++, Cargo and PyPI companions.
+Reports go to `build/owned-ruby-transfers/` and
+`build/owned-ruby-transfer-packaging/`.
+
 The remaining consumer bindings, owner-anchored borrowed results and owned
 Docker acceptance remain open.
 

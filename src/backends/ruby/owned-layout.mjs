@@ -20,9 +20,10 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * Independent C compiler probes must verify these Fiddle storage assumptions.
  *
  * @param ir - Concrete ownership-aware Binding IR.
+ * @param options - Explicit C transport capabilities.
  */
-export const compileOwnedRubyLayout = ir => {
-	const values = generateOwnedRubyValues(ir);
+export const compileOwnedRubyLayout = (ir, options = {}) => {
+	const values = generateOwnedRubyValues(ir, options);
 	const types = values.types.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, fields: node.fields.map(field => ({ ...field }))

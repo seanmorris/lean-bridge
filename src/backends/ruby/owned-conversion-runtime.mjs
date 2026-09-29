@@ -8,8 +8,9 @@
  * Emit private conversion support inside the generated Native module.
  *
  * @param limits - Authenticated native conversion limits.
+ * @param transfers - Whether calls collect explicitly transferred leases.
  */
-export const ownedRubyConversionSupport = limits => `
+export const ownedRubyConversionSupport = (limits, transfers = false) => `
       EXACT = ::Object.instance_method(:instance_of?)
       SAME = ::BasicObject.instance_method(:equal?)
       IDENTIFY = ::BasicObject.instance_method(:__id__)
@@ -38,10 +39,10 @@ export const ownedRubyConversionSupport = limits => `
         end
       end
       class ValueScope
-        attr_reader :state, :check_only, :budget
+        attr_reader :state, :check_only, :budget${transfers ? "\n        attr_accessor :moves, :move_group" : ""}
         def initialize(state, check_only = false, budget = nil)
           @state, @check_only, @budget = state, check_only, budget || Budget.new
-          @active, @buffers, @leases, @closures = {}, [], [], []
+          @active, @buffers, @leases, @closures = {}, [], [], []${transfers ? "\n          @moves = @move_group = nil" : ""}
         end
         def nodes; @budget.nodes; end
         def charge(field, count, width = 1)
@@ -109,7 +110,7 @@ export const ownedRubyConversionSupport = limits => `
             begin; lease.release; rescue ::Exception => error; failure ||= error; end
           end
           @buffers.reverse_each { |pointer| pointer.call_free unless pointer.freed? }
-          @closures.clear; @leases.clear; @buffers.clear; @active.clear
+          @closures.clear; @leases.clear; @buffers.clear; @active.clear${transfers ? "\n          @moves = nil" : ""}
           raise failure if failure
         end
       end

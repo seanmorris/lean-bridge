@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPythonTransfer, ownedPythonTransferChangedPaths } from "./owned-python-transfer-history.mjs";
+import { beforeOwnedPythonTransfer, ownedPythonTransferNormalizationPaths } from "./owned-python-transfer-history.mjs";
 
 export const ownedConsumerCiBaseline = "23dbfd68ae4a1e8593f99f97aa3d2717b4632ca9";
 export const ownedConsumerCiPath = "docs/evidence/owned-consumer-ci-repair-20260929.json";
@@ -29,7 +29,7 @@ export const ownedConsumerCiAddedPaths = [
 	, "tests/owned-consumer-ci-repair.test.mjs"
 ].sort();
 let cached;
-export const ownedConsumerCiNormalizationPaths = [...new Set([...ownedConsumerCiChangedPaths, ...ownedPythonTransferChangedPaths])].sort();
+export const ownedConsumerCiNormalizationPaths = [...new Set([...ownedConsumerCiChangedPaths, ...ownedPythonTransferNormalizationPaths])].sort();
 
 /**
  * Authenticate complete sources before reversing exact ordered edit spans.

@@ -357,8 +357,8 @@ values and synchronous callback payloads. All nineteen primitive fields retain
 their normal Ruby meaning. Ordinary source and independently reviewed Binding
 IR use the same compiler-checked C layouts and lifetime rules. Host callbacks
 borrow for one call; retaining a callback argument retains its resource, not
-the host callback itself. Transferred inputs, anchored results and asynchronous
-delivery remain unsupported.
+the host callback itself. Anchored results and asynchronous delivery remain
+unsupported.
 
 The gem bundles an isolated GMP 6.3.0 library and its source and license notices.
 Its loader authenticates native files and shares compatible Lean libraries
@@ -372,6 +372,32 @@ Limits are depth 128, 262,144 visits, 16 MiB of native conversion data and a
 separate 16 MiB of accounted Ruby conversion storage per call, including
 callbacks and results. Resource use belongs to the creating Ruby thread and
 process. MRI Ruby 3.3 on Linux x86-64 with 1:1 threads is required.
+
+## Transfer input ownership
+
+Use the [export-contract syntax](../lean/existing-package.md#declare-export-contracts)
+to select `ownership: "transfer"` for a resource-containing parameter. The
+[C author example](c.md#transfer-input-ownership) includes the full configuration.
+Keep `resources` and `ownedAggregates`, and set the gem coordinate under
+`targets.rubygems`. Ordinary Lean analysis and independently reviewed contracts
+use the same compiler-checked ownership decisions.
+
+Build with `lean-bridge build --project ./owned --target rubygems --output ./release-owned`.
+The Ruby adapter validates all arguments and prepares native snapshots before
+consuming their resource leases at the Lean call boundary. Shared aliases close
+together; independent retains survive. Errors after handoff do not restore
+ownership. See the [Ruby example](../consume/ruby.md#transferred-inputs).
+
+Transfer-enabled gems use `owned-ruby-v2`, ownership contract version 2 and
+package receipt version 2. The private Ruby adapter uses version 2 with
+`ownedValues` version 3. Package verification reconstructs these contracts from
+compiler metadata and rejects changed consumption or alias rules. Packages
+without transfers keep their existing versions and generated API.
+
+A combined transfer build can select C, C++, Cargo, PyPI and RubyGems. Ruby keeps
+its private pointer-call adapter and isolated GMP library while sharing the
+compiled Lean component. Other consumer bindings still reject transfer
+contracts. Building a gem does not upload it.
 
 ## Build the gem
 

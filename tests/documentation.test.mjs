@@ -42,9 +42,20 @@ test("owned Ruby documentation and CI require installed gems, companions and run
 		assert.ok(step.includes(`test -s build/owned-ruby-packaging/${name}.json`));
 	for(const directory of ["runtime", "values", "layout", "conversions", "gmp", "loading", "packaging"])
 		assert.ok(workflow.includes(`build/owned-ruby-${directory}/`));
+	assert.ok(step.includes("npm run test:owned-ruby-transfers\n"));
+	for(const directory of ["transfers", "transfer-packaging"])
+	{
+		assert.ok(workflow.includes(`build/owned-ruby-${directory}/`));
+		for(const mode of ["ordinary", "reviewed"])
+			assert.ok(step.includes(`test -s build/owned-ruby-${directory}/${mode}.json`));
+	}
 	const consumer = await readFile("docs/consume/ruby.md", "utf8");
 	assert.match(consumer, /### Resource-containing values/u);
 	assert.match(consumer, /\.retain/u); assert.match(consumer, /with_recovery/u);
+	const transfer = consumer.split("### Transferred inputs\n")[1];
+	assert.ok(transfer);
+	const example = transfer.split("```ruby file=ruby/owned-transfers.rb\n")[1].split("\n```")[0] + "\n";
+	assert.equal(example, await readFile("tests/fixtures/documentation/consumers/ruby/owned-transfers.rb", "utf8"));
 	const publisher = await readFile("docs/publish/rubygems.md", "utf8");
 	const owned = publisher.split("## Export resource-containing values\n")[1].split("\n## ")[0];
 	const configuration = JSON.parse(owned.split("```json\n")[1].split("\n```")[0]);
@@ -88,7 +99,7 @@ test("owned Python documentation and CI require installed wheels and typed lifet
 	assert.doesNotMatch(consumer, /Resources remain in the separate Alpha fixture/u);
 	const transfer = consumer.split("### Transferred inputs\n")[1];
 	assert.ok(transfer);
-	const example = transfer.split("```python\n")[1].split("\n```")[0] + "\n";
+	const example = transfer.split("```python file=python/owned-transfers.py\n")[1].split("\n```")[0] + "\n";
 	assert.equal(example, await readFile("tests/fixtures/documentation/consumers/python/owned-transfers.py", "utf8"));
 	const publisher = await readFile("docs/publish/pypi.md", "utf8");
 	const owned = publisher.split("## Export resource-containing values\n")[1].split("\n## ")[0];
@@ -616,7 +627,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_VARIANT_TEST=1 node --test tests/ruby-variants.test.mjs"));
   assert.ok(workflow.includes("LEAN_BRIDGE_RUBY_COLLECTION_TEST=1 node --test tests/ruby-collections.test.mjs tests/ruby-collection-contract.test.mjs"));
   assert.match(workflow, /test -s build\/collections\/ruby\.json/);
-  assert.match(workflow, /build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*build\/recursive\/ruby-values\.json\n\s*build\/recursive\/ruby-conversions\.json\n\s*build\/recursive\/ruby-native\.json\n\s*build\/recursive\/ruby-packages\.json\n\s*build\/owned-ruby-runtime\/\n\s*build\/owned-ruby-values\/\n\s*build\/owned-ruby-layout\/\n\s*build\/owned-ruby-conversions\/\n\s*build\/owned-ruby-gmp\/\n\s*build\/owned-ruby-loading\/\n\s*build\/owned-ruby-packaging\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*build\/recursive\/ruby-values\.json\n\s*build\/recursive\/ruby-conversions\.json\n\s*build\/recursive\/ruby-native\.json\n\s*build\/recursive\/ruby-packages\.json\n\s*build\/owned-ruby-runtime\/\n\s*build\/owned-ruby-values\/\n\s*build\/owned-ruby-layout\/\n\s*build\/owned-ruby-conversions\/\n\s*build\/owned-ruby-gmp\/\n\s*build\/owned-ruby-loading\/\n\s*build\/owned-ruby-transfers\/\n\s*build\/owned-ruby-transfer-packaging\/\n\s*build\/owned-ruby-packaging\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /test -s build\/variants\/ruby\.json/);
   assert.match(workflow, /test -s build\/aliases\/ruby\.json/);
   assert.match(workflow, /test -s build\/compounds\/ruby\.json/);
@@ -637,7 +648,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /test -s build\/variants\/rust\.json/);
   assert.match(workflow, /test -s build\/aliases\/rust\.json/);
   assert.match(workflow, /build\/word-native\/rust\.json\n\s*build\/callables\/rust\.json\n\s*build\/structured-callables\/rust\.json\n\s*build\/recursive-callables\/rust\.json\n\s*build\/owned-rust-runtime\/\n\s*build\/owned-rust-values\/\n\s*build\/owned-rust-transfers\/\n\s*build\/owned-rust-transfer-packaging\/\n\s*build\/owned-rust-packaging\/ordinary\.json\n\s*build\/owned-rust-packaging\/reviewed\.json\n\s*build\/compounds\/rust\.json\n\s*build\/lists\/rust\.json\n\s*build\/aliases\/rust\.json\n\s*build\/variants\/rust\.json\n\s*build\/collections\/rust-conversions\.json\n\s*build\/recursive\/rust-values\.json\n\s*build\/recursive\/rust-conversions\.json\n\s*build\/recursive\/rust-native\.json\n\s*build\/recursive\/rust-packages\.json\n\s*build\/collections\/rust\.json\n\s*if-no-files-found: error/);
-  assert.match(workflow, /build\/word-native\/ruby\.json\n\s*build\/callables\/ruby\.json\n\s*build\/structured-callables\/ruby\.json\n\s*build\/recursive-callables\/ruby\.json\n\s*build\/compounds\/ruby\.json\n\s*build\/lists\/ruby\.json\n\s*build\/aliases\/ruby\.json\n\s*build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*build\/recursive\/ruby-values\.json\n\s*build\/recursive\/ruby-conversions\.json\n\s*build\/recursive\/ruby-native\.json\n\s*build\/recursive\/ruby-packages\.json\n\s*build\/owned-ruby-runtime\/\n\s*build\/owned-ruby-values\/\n\s*build\/owned-ruby-layout\/\n\s*build\/owned-ruby-conversions\/\n\s*build\/owned-ruby-gmp\/\n\s*build\/owned-ruby-loading\/\n\s*build\/owned-ruby-packaging\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /build\/word-native\/ruby\.json\n\s*build\/callables\/ruby\.json\n\s*build\/structured-callables\/ruby\.json\n\s*build\/recursive-callables\/ruby\.json\n\s*build\/compounds\/ruby\.json\n\s*build\/lists\/ruby\.json\n\s*build\/aliases\/ruby\.json\n\s*build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*build\/recursive\/ruby-values\.json\n\s*build\/recursive\/ruby-conversions\.json\n\s*build\/recursive\/ruby-native\.json\n\s*build\/recursive\/ruby-packages\.json\n\s*build\/owned-ruby-runtime\/\n\s*build\/owned-ruby-values\/\n\s*build\/owned-ruby-layout\/\n\s*build\/owned-ruby-conversions\/\n\s*build\/owned-ruby-gmp\/\n\s*build\/owned-ruby-loading\/\n\s*build\/owned-ruby-transfers\/\n\s*build\/owned-ruby-transfer-packaging\/\n\s*build\/owned-ruby-packaging\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
   for(const target of ["npm", "php-wasm"])
   {
@@ -790,7 +801,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_ruby\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_ruby\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-ruby-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/ruby\.json\n\s*build\/type-corpus\/reviewed-native-ruby\.json\n\s*build\/char-native\/ruby\.json\n\s*build\/word-native\/ruby\.json\n\s*build\/callables\/ruby\.json\n\s*build\/structured-callables\/ruby\.json\n\s*build\/recursive-callables\/ruby\.json\n\s*build\/compounds\/ruby\.json\n\s*build\/lists\/ruby\.json\n\s*build\/aliases\/ruby\.json\n\s*build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*build\/recursive\/ruby-values\.json\n\s*build\/recursive\/ruby-conversions\.json\n\s*build\/recursive\/ruby-native\.json\n\s*build\/recursive\/ruby-packages\.json\n\s*build\/owned-ruby-runtime\/\n\s*build\/owned-ruby-values\/\n\s*build\/owned-ruby-layout\/\n\s*build\/owned-ruby-conversions\/\n\s*build\/owned-ruby-gmp\/\n\s*build\/owned-ruby-loading\/\n\s*build\/owned-ruby-packaging\/\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/ruby\.json\n\s*build\/type-corpus\/reviewed-native-ruby\.json\n\s*build\/char-native\/ruby\.json\n\s*build\/word-native\/ruby\.json\n\s*build\/callables\/ruby\.json\n\s*build\/structured-callables\/ruby\.json\n\s*build\/recursive-callables\/ruby\.json\n\s*build\/compounds\/ruby\.json\n\s*build\/lists\/ruby\.json\n\s*build\/aliases\/ruby\.json\n\s*build\/variants\/ruby\.json\n\s*build\/collections\/ruby\.json\n\s*build\/recursive\/ruby-values\.json\n\s*build\/recursive\/ruby-conversions\.json\n\s*build\/recursive\/ruby-native\.json\n\s*build\/recursive\/ruby-packages\.json\n\s*build\/owned-ruby-runtime\/\n\s*build\/owned-ruby-values\/\n\s*build\/owned-ruby-layout\/\n\s*build\/owned-ruby-conversions\/\n\s*build\/owned-ruby-gmp\/\n\s*build\/owned-ruby-loading\/\n\s*build\/owned-ruby-transfers\/\n\s*build\/owned-ruby-transfer-packaging\/\n\s*build\/owned-ruby-packaging\/\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_PHP_TEST: "1"/);
   assert.match(workflow, /id: ordinary_php/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_WASM_ZEND_TEST: "1"/);

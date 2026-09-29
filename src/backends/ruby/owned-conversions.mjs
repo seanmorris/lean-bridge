@@ -7,15 +7,18 @@ import { compileOwnedRubyLayout } from "./owned-layout.mjs";
 import { ownedRubyConversionSupport } from "./owned-conversion-runtime.mjs";
 import { ownedRubyCallBoundary } from "./owned-call-boundary.mjs";
 import { ownedRubyCallbacks } from "./owned-callables.mjs";
+import { ownedRubyTransfers } from "./owned-transfers.mjs";
 
 /**
  * Generate resource-aware snapshots, typed function wrappers and callback frames.
  * Installed admission additionally requires authenticated native assets.
  *
  * @param ir - Concrete ownership-aware Binding IR.
+ * @param options - Explicit C transport capabilities.
  */
-export const generateOwnedRubyConversions = ir => {
-	const model = compileOwnedRubyLayout(ir), boundary = ownedRubyCallBoundary(model);
+export const generateOwnedRubyConversions = (ir, options = {}) => {
+	const model = compileOwnedRubyLayout(ir, options), boundary = ownedRubyCallBoundary(model);
+	const transfers = model.c.functions.some(fn => fn.transfers?.length);
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const publicName = name => `::${model.namespace}::${name}`;
 	const read = (node, value, offset = 0) => node.aggregate ? `(${value} + ${offset})` : `${value}[${offset}, ${node.size}].unpack1("${node.pack}")`;
@@ -52,7 +55,9 @@ export const generateOwnedRubyConversions = ir => {
 		else if(node.identity)
 		{
 			input.push(`raise TypeError, "Expected exact ${node.publicType}" unless exact?(value, ${publicName(node.publicType)})`
-				, "handle = RESOURCE_RAW.bind_call(value, scope.state)", "scope.pin_lease(FIELD.bind_call(value, :@guard).lease)", "handle");
+				, "handle = RESOURCE_RAW.bind_call(value, scope.state)", "scope.pin_lease(FIELD.bind_call(value, :@guard).lease)"
+				, ...transfers ? ["scope.moves.add(FIELD.bind_call(value, :@guard).lease, scope.move_group, scope) if scope.moves && !scope.move_group.nil?"] : []
+				, "handle");
 			output.push('raise Invalid, "Missing native resource" if value.zero?', "scope.charge(:storage, 256)"
 				, `${publicName(node.publicType)}.from_lease(output.hold, value)`);
 		}
@@ -194,11 +199,27 @@ ${output.map(line => `          ${line}`).join("\n")}
 	for(const fn of boundary.calls)
 	{
 		const { parameters, result, hosts } = fn, args = parameters.map((_, i) => `arg${i}`);
+		const moving = fn.transfers ?? [];
 		const input = (node, i, checking) => hosts[i] ? `host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})` : `input${node.index}(arg${i}, ${checking ? "checked" : "scope"})`;
-		bindings.push(`        functions[:${fn.name}] = ::Fiddle::Function.new(runtime.library[${JSON.stringify(fn.symbol)}], [${Array(parameters.length + 3).fill("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)`);
-		const inputs = parameters.flatMap((node, i) => hosts[i] || node.aggregate
-			? [`            input${i} = ${input(node, i, false)}`]
-			: [`            raw${i} = ${input(node, i, false)}`, `            input${i} = scope.allocate(${node.size})`, `            ${write(node, `input${i}`, 0, `raw${i}`)}`]);
+		bindings.push(`        functions[:${fn.name}] = ::Fiddle::Function.new(runtime.library[${JSON.stringify(fn.symbol)}], [${Array(parameters.length + moving.length + 3).fill("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)`);
+		const inputs = parameters.flatMap((node, i) => [
+			...moving.length ? [`            scope.move_group = ${moving.includes(i) ? moving.indexOf(i) : "nil"}`] : []
+			, ...hosts[i] || node.aggregate
+				? [`            input${i} = ${input(node, i, false)}`]
+				: [`            raw${i} = ${input(node, i, false)}`, `            input${i} = scope.allocate(${node.size})`, `            ${write(node, `input${i}`, 0, `raw${i}`)}`]
+		]);
+		const snapshots = moving.flatMap((i, group) => {
+			const node = parameters[i], copy = boundary.calls.find(item => ["copy", "retain"].includes(item.group) && item.id === node.id);
+			if(!copy) throw new TypeError(`Missing owned Ruby input snapshot for ${node.id}`);
+			return [`            moved${i} = scope.allocate(${node.size})`
+				, `            Owned.check(@functions[:${copy.name}].call(state.require_open, input${i}, moved${i}, moves.owners.fetch(${group}).pointer))`];
+		});
+		const arguments_ = [moving.length ? "session" : "state.require_open"
+			, ...args.flatMap((_, i) => moving.includes(i)
+				? [`moved${i}`, `moves.owners.fetch(${moving.indexOf(i)}).pointer`] : [`input${i}`])
+			, "raw", "owner.pointer"];
+		const cleanup = ["begin", "  frame&.close", "ensure", "  scope&.close", "end"]
+			.map(line => `${moving.length ? "              " : "            "}${line}`).join("\n");
 		methods.push(`      def ${fn.name}(${args.join(", ")})
         raise RuntimeError, "Build the native adapter before calling this API" unless @runtime
         Owned.atomic do
@@ -209,14 +230,25 @@ ${parameters.map((node, i) => `            ${input(node, i, true)}`).join("\n")}
           ensure
             checked.close
           end
-          scope, frame = nil, nil
+          scope, frame${moving.length ? ", moves" : ""} = nil, nil${moving.length ? ", nil" : ""}
           begin
             scope = ValueScope.new(state)
-            frame = CallFrame.new(state, scope)
+            frame = CallFrame.new(state, scope)${moving.length ? `
+            moves = InputTransfers.new(state, ${moving.length}, scope)
+            scope.moves = moves` : ""}
 ${inputs.join("\n")}
+${moving.length ? `            scope.move_group = nil\n${snapshots.join("\n")}\n` : ""}\
             raw = scope.allocate(${result.size})
             state.with_result do |owner|
-              status = @functions[:${fn.name}].call(${["state.require_open", ...args.map((_, i) => `input${i}`), "raw", "owner.pointer"].join(", ")})
+${moving.length ? `              session = state.require_open
+              moves.arm
+              begin
+` : ""}\
+              ${moving.length ? "  " : ""}status = @functions[:${fn.name}].call(${arguments_.join(", ")})
+${moving.length ? `              ensure
+                moves.finish
+              end
+` : ""}\
               frame.finish(status)
               output${result.index}(${read(result, "raw")}, scope, Output.new(owner))
             end
@@ -224,11 +256,12 @@ ${inputs.join("\n")}
             @runtime.retire
             raise
           ensure
-            begin
-              frame&.close
+${moving.length ? `            begin
+              moves&.close
             ensure
-              scope&.close
-            end
+` : ""}\
+${cleanup}
+${moving.length ? "            end\n" : ""}\
           end
         end
       end`);
@@ -239,7 +272,7 @@ module LeanBridge
   module ${model.componentName}
     module Native
       extend self
-${ownedRubyConversionSupport(model.c.native.model.limits)}
+${ownedRubyConversionSupport(model.c.native.model.limits, transfers)}${transfers ? ownedRubyTransfers : ""}
 ${callbacks}
 ${methods.join("\n")}
       def bind(runtime)

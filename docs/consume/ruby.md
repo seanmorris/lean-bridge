@@ -427,7 +427,48 @@ threads. Resource calls belong to their creating Ruby thread and process. Thread
 exit closes remaining owners; Ractors, M:N threads and calls after fork reject.
 Inputs, callbacks and results share depth 128, 262,144 visits and a 16 MiB native
 conversion budget, with a separate 16 MiB Ruby conversion-storage budget.
-Transferred inputs, anchored results and asynchronous callbacks are not enabled.
+Anchored results and asynchronous callbacks are not enabled.
+
+### Transferred inputs
+
+An author can declare a parameter as consuming its resource ownership. Pass the
+ordinary Ruby value to that function. At the Lean call boundary, its resource
+leases close, including `dup`, `clone` and sibling resources sharing the same
+result owner. Copied fields remain Ruby values. Call `retain` first when another
+part of the application needs independent ownership.
+
+For the transfer acceptance gem, save `owned-transfers.rb`:
+
+```ruby file=ruby/owned-transfers.rb
+require "lean_bridge/owned_aggregates"
+
+api = LeanBridge::OwnedAggregates
+original = api.new_ticket(42, "shipment")
+duplicate = original.dup
+independent = original.retain
+
+begin
+  api.retain_ticket(original).with do |received|
+    raise "Alias stayed open" unless original.closed? && duplicate.closed?
+    raise "Changed value" unless api.serial(received) == 42
+    raise "Independent owner closed" unless api.serial(independent) == 42
+  end
+ensure
+  independent.close
+end
+puts "transferred"
+```
+
+Run `ruby owned-transfers.rb`. This fixture declares `retain_ticket`'s parameter
+as transferred. Ownership follows the publisher's contract, not the function's
+name. Generated function comments name the consuming arguments.
+
+Validation and preparation failures preserve the inputs. After handoff, callback
+exceptions and result-conversion failures leave them consumed. Reentrant
+callbacks see caller aliases as closed while callback-local borrows remain
+usable. Retain a callback borrow before transferring it. Two consuming arguments
+cannot share a resource lease; use independent retains. Borrow-only functions
+keep their existing behavior.
 
 ### Alpha interoperability example
 

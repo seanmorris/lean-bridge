@@ -26,7 +26,8 @@ export const packageOwnedRuby = async options => {
 	validateOrdinaryRubySettings(settings);
 	if(!/^2\.\d+$/u.test(glibcMinimumVersion)) throw new TypeError("Invalid Ruby native glibc floor");
 	const { model, evidence, adapter, receipt, libraryPaths } = await ownedRubyEvidence(options);
-	const generated = generateOwnedRubyPackage(model.bindingIr, evidence), prefix = generated.c.prefix;
+	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const generated = generateOwnedRubyPackage(model.bindingIr, evidence, { transferredInputs }), prefix = generated.c.prefix;
 	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version.replace("-", ".pre.");
 	validateOrdinaryRubySettings({ name, version });
 	const root = join(working, "packages/rubygems/package");
@@ -56,7 +57,7 @@ export const packageOwnedRuby = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: 1
+	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: transferredInputs ? 2 : 1
 		, kind: "lean-bridge-owned-rubygems-package"
 		, ecosystem: "rubygems", name, version, component: model.component
 		, namespace: generated.namespace, requirePath: generated.requirePath
@@ -91,7 +92,8 @@ end
 	const bytes = await readFile(join(root, archive));
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
-	return { ecosystem: "rubygems", backend: "owned-ruby-v1"
+	return { ecosystem: "rubygems"
+		, backend: transferredInputs ? "owned-ruby-v2" : "owned-ruby-v1"
 		, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion
 		, namespace: generated.namespace, requirePath: generated.requirePath
 		, packages: [{ archive, name, version, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };

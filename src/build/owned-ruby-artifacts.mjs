@@ -31,11 +31,12 @@ export const ownedRubyAdapterSources = (c, ruby) => ({ ...c.files
  */
 export const ownedRubyEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 	if(!model.ownedGraph?.hostCallbacks) throw new TypeError("Owned Ruby requires authenticated callback/copy support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true });
-	const ruby = generateOwnedRubyPackage(model.bindingIr), prefix = c.values.prefix;
+	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs });
+	const ruby = generateOwnedRubyPackage(model.bindingIr, null, { transferredInputs }), prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-ruby-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	const sources = ownedRubyAdapterSources(c, ruby), gmpLibrary = "libgmp-lean-bridge.so.10";
@@ -44,9 +45,10 @@ export const ownedRubyEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }
 		, "share/lean-bridge/sources/gmp-6.3.0.tar.xz"
 		, ...["COPYING", "COPYING.LESSERv3", "COPYINGv2", "COPYINGv3"].map(name => `share/lean-bridge/licenses/GMP-${name}`)];
 	const expectedPaths = [...Object.keys(sources), `lib/lib${prefix}_ruby.so`, ...gmpFiles.map(path => `gmp/${path}`)].sort();
-	if(adapter.schemaVersion !== 1 || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
+	if(adapter.schemaVersion !== (transferredInputs ? 2 : 1) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
 		|| adapter.bindingIrSha256 !== model.bindingIrSha256 || adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt))
-		|| adapter.library !== `lib${prefix}_ruby.so` || adapter.ownedValues?.schemaVersion !== 2
+		|| adapter.library !== `lib${prefix}_ruby.so` || adapter.ownedValues?.schemaVersion !== (transferredInputs ? 3 : 2)
+		|| canonicalJson(adapter.ownedValues.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)
 		|| canonicalJson(adapter.ownedValues.hostCallbacks) !== canonicalJson(model.ownedGraph.hostCallbacks)
 		|| adapter.ownedValues.headerSha256 !== sha256(c.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(c.source)
 		|| canonicalJson(adapter.rubyValues ?? null) !== canonicalJson(ruby.contract)

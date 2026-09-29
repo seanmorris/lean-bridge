@@ -110,7 +110,7 @@ test("export contract examples validate and distinguish implemented decisions fr
 	assert.equal(shared.contracts["Library.echoWord"].result.refinement, "reject");
 	assert.deepEqual(closure.contracts["Library.makeWordAdder"].result, { ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
 	assert.match(existing, /after specialization and configured closure arity/);
-	assert.match(existing, /C, C\+\+, Rust and Python packages support \[explicit input transfers\]/);
+	assert.match(existing, /C, C\+\+, Rust, Python and Ruby packages support \[explicit input transfers\]/);
 	assert.match(existing, /Other consumer bindings still reject transfer contracts/);
 	assert.match(existing, /Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis/);
 	assert.match(existing, /not memory allocation inside Lean/);
