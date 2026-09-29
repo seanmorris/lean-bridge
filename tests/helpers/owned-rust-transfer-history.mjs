@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedConsumerCi, ownedConsumerCiChangedPaths } from "./owned-consumer-ci-repair-history.mjs";
 
 export const ownedRustTransferBaseline = "5384a754d1bf356c6b6f3e587d80bb88767dbeb4";
 export const ownedRustTransferPath = "docs/evidence/owned-rust-transfers-20260929.json";
@@ -46,6 +47,7 @@ export const ownedRustTransferAddedPaths = [
 	, "tests/owned-rust-transfers.test.mjs"
 ].sort();
 let cached;
+export const ownedRustTransferNormalizationPaths = [...new Set([...ownedRustTransferChangedPaths, ...ownedConsumerCiChangedPaths])].sort();
 
 /**
  * Reverse exact ordered edits only after authenticating complete file bytes.
@@ -78,6 +80,7 @@ export const reverseOwnedRustTransferUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedRustTransfer = (path, source, expected) => {
+	source = beforeOwnedConsumerCi(path, source, expected);
 	if(!ownedRustTransferChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedRustTransferPath, "utf8"));
@@ -96,5 +99,5 @@ export const beforeOwnedRustTransfer = (path, source, expected) => {
  * @param bytes - Complete file bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedRustTransferHistoricalBytes = (path, bytes, expected) => ownedRustTransferChangedPaths.includes(path)
+export const ownedRustTransferHistoricalBytes = (path, bytes, expected) => ownedRustTransferNormalizationPaths.includes(path)
 	? beforeOwnedRustTransfer(path, bytes.toString("utf8"), expected) : bytes;

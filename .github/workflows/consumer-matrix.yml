@@ -1817,7 +1817,7 @@ jobs:
         env:
           LEAN_BRIDGE_NATIVE_WIT_TEST: "1"
         run: |
-          sudo apt-get update && sudo apt-get install -y build-essential pkg-config zstd
+          sudo apt-get update && sudo apt-get install -y build-essential pkg-config zstd ripgrep
           bash scripts/bootstrap-toolchains.sh --lean-only
           bash scripts/bootstrap-toolchains.sh --wasm-tools-only
           nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
