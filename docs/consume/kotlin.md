@@ -356,7 +356,7 @@ Import the companion `.kotlin` API and value types from the prepared owned-value
 JAR. Records expose non-null `val` properties; resources and returned functions
 implement `AutoCloseable` and work with `use`.
 
-Save `OwnedExample.kt`:
+For a package without borrowed-result declarations, save `OwnedExample.kt`:
 
 ```kotlin
 import java.math.BigInteger
@@ -421,6 +421,42 @@ cannot share a lease, and callback borrows must be retained before transfer.
 Validation failures preserve ownership; failures after the native handoff leave
 the input consumed. The [Java transfer rules](java.md#consuming-inputs) also apply
 to Kotlin. `use` can close an already consumed wrapper safely.
+
+#### Borrowed results and whole owners
+
+Packages with parameter-anchored results return `Value<T>` for resource-bearing
+values. `get()` checks the owner; `share()` adds a guard on the same owner;
+`retain()` creates an independent owner. Closing the last shared guard or
+transferring that owner expires its borrowed descendants, including empty values.
+
+For the owned-aggregates package with `retainTicket` anchored to its input, save
+`OwnedBorrowExample.kt`:
+
+```kotlin file=kotlin/OwnedBorrowExample.kt
+import java.math.BigInteger
+import org.leanbridge.owned_aggregates.kotlin.Api
+
+fun main() {
+    Api.newTicket(BigInteger.valueOf(42), "order").use { owner ->
+        Api.retainTicket(owner).use { view ->
+            view.retain().use { kept ->
+                owner.close()
+                check(view.isClosed)
+                println(Api.serial(kept.get()))
+            }
+        }
+    }
+}
+```
+
+Use `Api.copyValue(raw)` where the erased JVM type selects one Lean type, or a
+declaration-specific factory such as `Api.copyEchoArrayResult(raw)` or
+`Api.copyEchoListResult(raw)`. In these packages, consuming arguments accept
+whole owners. Borrowed results cannot be consumed; call `retain()` first when
+independent ownership is needed. Raw resource views do not keep their whole
+owner alive. Resource equality uses native identity and rejects expired views;
+owners and resources cannot be hash keys. The [Java lifetime rules](java.md#borrowed-results-and-whole-owners)
+also apply to Kotlin. Receiver and callback-result anchors remain separate work.
 
 ### Alpha interoperability example
 

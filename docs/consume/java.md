@@ -379,7 +379,7 @@ options, results, products and recursive variants. Its JAR contains the Java API
 the Kotlin API and their native dependencies. Consumers do not install Lean or
 configure a shared-runtime path.
 
-For the owned aggregate example, save `OwnedExample.java`:
+For a package without borrowed-result declarations, save `OwnedExample.java`:
 
 ```java
 import java.math.BigInteger;
@@ -424,7 +424,8 @@ wrappers. Virtual threads and use after fork reject.
 Conversions share a limit of 128 value levels, 262,144 visits, a 16 MiB
 native-copy budget and a separate 16 MiB accounted Java-storage budget per call.
 These limits do not measure Lean working memory or every JVM allocation.
-Anchored results and asynchronous callbacks require separate lifetime support.
+For parameter-anchored results, use the [whole-owner API](#borrowed-results-and-whole-owners).
+Asynchronous callbacks require separate lifetime support.
 A saved host callback does not remain callable after its enclosing call.
 
 #### Consuming inputs
@@ -462,6 +463,51 @@ before passing it to a consuming argument. Pre-handoff errors preserve ownership
 callback exceptions and result-conversion failures after handoff leave the input
 consumed. `isClosed()` reports consumption during callback reentry, including
 when another thread checks it. Calls still require the creating platform thread.
+
+#### Borrowed results and whole owners
+
+Packages with parameter-anchored results return `Value<T>` for resource-bearing
+values. `get()` checks the owner before exposing its contents. A borrowed result
+expires when its original owner closes or transfers, including empty arrays and
+absent options. `share()` keeps another guard on that same owner; `retain()`
+creates an independent owner.
+
+For the owned-aggregates package with `retainTicket` anchored to its input, save
+`OwnedBorrowExample.java`:
+
+```java file=java/OwnedBorrowExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.Api;
+
+@SuppressWarnings("try")
+public final class OwnedBorrowExample {
+    public static void main(String[] args) {
+        try (var owner = Api.newTicket(BigInteger.valueOf(42), "order");
+             var view = Api.retainTicket(owner);
+             var kept = view.retain()) {
+            owner.close();
+            if (!view.isClosed()) throw new AssertionError("Borrowed view is still open");
+            System.out.println(Api.serial(kept.get()));
+        }
+    }
+}
+```
+
+`Api.copyValue(raw)` creates a whole owner where the erased JVM type identifies
+one Lean type. Otherwise use a declaration-specific factory, such as
+`Api.copyEchoArrayResult(raw)` or `Api.copyEchoListResult(raw)`. Both Lean types
+use Java arrays, so their factories preserve the intended Lean representation.
+
+In these packages, consuming arguments also accept `Value<T>`. They consume the
+original owner, not a snapshot. Shared guards and borrowed descendants expire
+together. Borrowed results, duplicate consuming owners, and conflicts between
+an anchor and its consuming ancestor reject before handoff. Independent retains
+survive. Raw views from `get()` do not keep the whole owner alive; retain a
+resource explicitly when it must outlive that owner. Resource `equals` and
+`sameIdentity` compare native identity and reject expired views. Whole owners
+and resources do not support hashing.
+
+Receiver anchors and callback-result anchors need separate lifetime support.
 
 ### Alpha interoperability example
 

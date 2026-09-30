@@ -44,6 +44,7 @@ export const ownedJvmCallFrame = `final class _OwnedCallFrame implements AutoClo
  */
 export const ownedJvmCallables = (model, calls, type) => {
 	const nodes = new Map(model.types.map(node => [node.id, node]));
+	const anchored = model.c.functions.some(fn => fn.anchor !== undefined);
 	const methods = [], wrappers = [], javaRecovery = [], kotlinRecovery = [], kotlinOps = [];
 	const delegate = (node, kotlin) => `${model.namespace}${kotlin ? ".kotlin" : ""}.${node.delegateType}`;
 	const layout = node => node.leaf ? node.valueLayout ?? `_OwnedLayouts.${node.layoutName}` : "ADDRESS";
@@ -74,12 +75,13 @@ export const ownedJvmCallables = (model, calls, type) => {
     }
     static final class Native${name} implements ${cbType} {
         final ${valueType} value;
-        Native${name}(${valueType} value) { this.value = java.util.Objects.requireNonNull(value); }
+${anchored ? `        final ${cbType} function;\n` : ""}\
+        Native${name}(${valueType} value${anchored ? `, ${cbType} function` : ""}) { this.value = java.util.Objects.requireNonNull(value);${anchored ? " this.function = java.util.Objects.requireNonNull(function);" : ""} }
         @Override public ${returnType} invoke(${signature}) {
-            ${unit ? "" : "return "}value.invoke(${parameters.map((param, i) => `arg${i}${param.kind === "callback" ? ".asCallback()" : ""}`).join(", ")});
+            ${unit ? "" : "return "}${anchored ? `function.invoke(${arguments_})` : `value.invoke(${parameters.map((param, i) => `arg${i}${param.kind === "callback" ? ".asCallback()" : ""}`).join(", ")})`};
         }
     }
-    static ${cbType} native${name}(${valueType} value) { return new Native${name}(value); }
+    static ${cbType} native${name}(${valueType} value${anchored ? `, ${cbType} function` : ""}) { return new Native${name}(value${anchored ? ", function" : ""}); }
     static ${cbType} recover${name}(${cbType} function, ${resultType} recovery) { return new Recovery${name}(function, recovery); }`);
 		if(!kotlin) javaRecovery.push(`    public static ${cbType} withRecovery(${cbType} function, ${resultType} recovery) {
         return _OwnedCallbacks.recover${name}(function, recovery);

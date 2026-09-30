@@ -29,7 +29,15 @@ export const inspectOwnedJvmInstalledAssets = async ({ project, extracted, insta
 	const root = join(project, "owned-asset-inspection"), classes = join(root, "classes");
 	const temp = join(root, "native-temp"), runtime = join(root, "runtime-only");
 	await mkdir(temp, { recursive: true });
-	const probe = await readFile("tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java", "utf8");
+	let probe = await readFile("tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java", "utf8");
+	if(receipt.ownedValues?.resultAnchors)
+	{
+		const before = '        var ticketType = create.getReturnType();\n        Object ticket = create.invoke(null, BigInteger.valueOf(42), "installed");';
+		assert.equal(probe.split(before).length, 2);
+		probe = probe.replace(before, '        Object owner = create.invoke(null, BigInteger.valueOf(42), "installed");\n        Object ticket = owner.getClass().getMethod("get").invoke(owner);\n        var ticketType = ticket.getClass();');
+		assert.equal(probe.split("((AutoCloseable) ticket).close();").length, 2);
+		probe = probe.replace("((AutoCloseable) ticket).close();", "((AutoCloseable) owner).close();");
+	}
 	await saveLakeFile(root, "OwnedInstalledAssetsProbe.java", probe);
 	await saveLakeFile(root, "Wire.java", await readFile("tests/fixtures/type-corpus/consumers/Wire.java"));
 	await runCopied(tools.javac, [...javaCompilerOptions, "-d", classes, "OwnedInstalledAssetsProbe.java", "Wire.java"], root);

@@ -4,6 +4,8 @@
  * @file
  */
 
+import { ownedJvmWholeGuard } from "./owned-borrows.mjs";
+
 export const ownedJvmException = `public final class LeanBridgeException extends RuntimeException {
     private static final long serialVersionUID = 1L;
     private final int status;
@@ -20,8 +22,9 @@ export const ownedJvmException = `public final class LeanBridgeException extends
  * @param prefix - Checked public C package identifier.
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Enable native handoff signals.
+ * @param options.anchoredResults - Preserve original-owner borrowed results.
  */
-export const ownedJvmRuntime = (prefix, { transferredInputs = false } = {}) => {
+export const ownedJvmRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned JVM prefix");
 	return `import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
@@ -37,7 +40,7 @@ import static java.lang.foreign.ValueLayout.*;
 
 final class _OwnedRuntime {
     private static final Cleaner CLEANER = Cleaner.create();
-    final MethodHandle open, close, release;
+    final MethodHandle open, close, release;${anchoredResults ? "\n    private final MethodHandle validate;" : ""}
     private final MethodHandle processValid;
     private final Runnable before;
     private final ThreadLocal<State> states = new ThreadLocal<>();
@@ -52,6 +55,7 @@ final class _OwnedRuntime {
         open = linker.downcallHandle(symbols.find("${prefix}_jvm_session_open").orElseThrow(), pointer);
         close = linker.downcallHandle(symbols.find("${prefix}_session_close").orElseThrow(), pointer);
         release = linker.downcallHandle(symbols.find("${prefix}_result_release").orElseThrow(), pointer);
+${anchoredResults ? `        validate = linker.downcallHandle(symbols.find("${prefix}_result_validate").orElseThrow(), FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));\n` : ""}\
         processValid = linker.downcallHandle(symbols.find("lean_bridge_native_process_valid").orElseThrow(), FunctionDescriptor.of(JAVA_INT));
         this.before = java.util.Objects.requireNonNull(before);
     }
@@ -161,6 +165,7 @@ final class _OwnedRuntime {
             drain();
         }
     }
+${anchoredResults ? ownedJvmWholeGuard : ""}\
     static final class BorrowScope { volatile boolean active = true; }
     static final class Lease {
         final State state;
@@ -168,10 +173,25 @@ final class _OwnedRuntime {
         final BorrowScope scope;
         private final AtomicInteger references = new AtomicInteger();
         private volatile boolean revoked;${transferredInputs ? "\n        volatile _OwnedInputTransfers.Signal inputMove;" : ""}
-        Lease(State state, Slot slot, BorrowScope scope) { this.state = state; this.slot = slot; this.scope = scope; }
+${anchoredResults ? `        final boolean borrowedResult, whole;
+        Lease(State state, Slot slot, BorrowScope scope) { this(state, slot, scope, false, false); }
+        Lease(State state, Slot slot, BorrowScope scope, boolean borrowedResult, boolean whole) {
+            this.state = state; this.slot = slot; this.scope = scope;
+            this.borrowedResult = borrowedResult; this.whole = whole;
+        }
+        long owner(State state) {
+            require(); if (this.state != state || scope != null || slot == null) check(1);
+            return slot.value;
+        }` : "        Lease(State state, Slot slot, BorrowScope scope) { this.state = state; this.slot = slot; this.scope = scope; }"}
         boolean isClosed() {${transferredInputs ? "\n            var move = inputMove;" : ""}
-            return state.isClosed() || revoked || (scope != null ? !scope.active
-                : slot == null || slot.value == 0 || slot.pending.get() || slot.releasing)${transferredInputs ? "\n                || move != null && move.consumed()" : ""};
+            ${anchoredResults ? "boolean closed =" : "return"} state.isClosed() || revoked || (scope != null ? !scope.active
+                : slot == null || slot.value == 0 || slot.pending.get() || slot.releasing)${transferredInputs ? "\n                || move != null && move.consumed()" : ""};${anchoredResults ? `
+            if (closed || !borrowedResult) return closed;
+            var session = MemorySegment.ofAddress(state.require());
+            try {
+                int status = (int)state.runtime.validate.invokeExact(session, MemorySegment.ofAddress(slot.value));
+                if (status == 4) return true; check(status); return false;
+            } catch (Throwable error) { throw rethrow(error); }` : ""}
         }
         int references() { return references.get(); }
         void require() { state.require(); if (isClosed()) check(4); }
@@ -199,11 +219,11 @@ final class _OwnedRuntime {
             catch (Throwable error) { arena.close(); throw error; }
         }
         MemorySegment output() { state.require(); if (slot == null) check(4); if (captured) check(8); return out; }
-        Lease adopt() {
+${anchoredResults ? "        Lease adopt() { return adopt(false, false); }\n        Lease adopt(boolean borrowedResult, boolean whole) {" : "        Lease adopt() {"}
             state.require(); if (slot == null) check(4);
             if (!captured) { slot.value = out.get(JAVA_LONG, 0); out.set(JAVA_LONG, 0, 0); captured = true; }
             if (slot.value == 0) check(9);
-            if (lease == null) { checkpoint(); lease = new Lease(state, slot, null); }
+            if (lease == null) { checkpoint(); lease = new Lease(state, slot, null${anchoredResults ? ", borrowedResult, whole" : ""}); }
             return lease;
         }
         void complete() { state.require(); complete = true; }
@@ -228,7 +248,7 @@ final class _OwnedRuntime {
         final Lease lease;
         final AtomicBoolean closed = new AtomicBoolean();
         Drop(Lease lease) { this.lease = lease; }
-        void close(boolean cleaning) { if (closed.compareAndSet(false, true)) lease.release(cleaning); }
+        void close(boolean cleaning) { if (closed.compareAndSet(false, true)${anchoredResults ? " && !lease.whole" : ""}) lease.release(cleaning); }
         @Override public void run() { close(true); }
     }
     static final class Handle implements AutoCloseable {
@@ -239,7 +259,7 @@ final class _OwnedRuntime {
         Handle(Lease lease, long value) {
             if (value == 0) check(9);
             this.lease = lease; this.value = value; checkpoint(); drop = new Drop(lease);
-            lease.acquire();
+            ${anchoredResults ? "if (!lease.whole) " : ""}lease.acquire();
             try { checkpoint(); cleanable = CLEANER.register(this, drop); }
             catch (Throwable error) { drop.close(false); throw error; }
         }

@@ -20,7 +20,9 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 export const rejectOwnedJvmPackageMutations = async (options, verified, compiled) => {
 	const { adapterRoot, jvmRoot } = options;
 	const transfers = Boolean(verified.model.ownedGraph.inputTransfers);
+	const anchors = Boolean(verified.model.ownedGraph.resultAnchors);
 	const mutations = [...transfers ? ["adapter-version", "contract-version", "consumption", "aliases", "native-transfers"] : []
+		, ...anchors ? ["native-anchors", "owned-version", "original-anchor", "borrow-expiry", "empty-owner", "canonical-equality", "raw-views", "copy-type", ...transfers ? ["whole-inputs"] : []] : []
 		, "lifetime", "source", "guard", "gmp-receipt", "gmp-source", "library"
 		, "unrecorded"];
 	for(const mutation of mutations)
@@ -31,6 +33,15 @@ export const rejectOwnedJvmPackageMutations = async (options, verified, compiled
 		else if(mutation === "consumption") forged.jvmValues.inputTransfers.consumption = "after-lean-call";
 		else if(mutation === "aliases") forged.jvmValues.inputTransfers.aliases = "wrapper-only";
 		else if(mutation === "native-transfers") delete forged.ownedValues.inputTransfers;
+		else if(mutation === "native-anchors") delete forged.ownedValues.resultAnchors;
+		else if(mutation === "owned-version") forged.ownedValues.schemaVersion = 3;
+		else if(mutation === "original-anchor") forged.jvmValues.resultAnchors.anchor = "fresh-snapshot";
+		else if(mutation === "borrow-expiry") forged.jvmValues.resultAnchors.expiration = "wrapper-close";
+		else if(mutation === "empty-owner") forged.jvmValues.resultAnchors.emptyValues = "no-owner";
+		else if(mutation === "canonical-equality") forged.jvmValues.resultAnchors.resourceEquality = "wrapper-identity";
+		else if(mutation === "raw-views") forged.jvmValues.resultAnchors.rawViews = "independent-owner";
+		else if(mutation === "copy-type") forged.jvmValues.resultAnchors.copyType = "first-matching-overload";
+		else if(mutation === "whole-inputs") forged.jvmValues.inputTransfers.arguments = "ordinary-values";
 		else if(mutation === "lifetime") forged.jvmValues.guardSha256 = "0".repeat(64);
 		else
 		{

@@ -34,6 +34,7 @@ export const kotlinOwnedDescriptors = model => {
  */
 export const generateOwnedKotlinValues = (ir, options = {}) => {
 	const model = generateOwnedJvmConversions(ir, options), namespace = `${model.namespace}.kotlin`;
+	const anchors = model.c.functions.some(fn => fn.anchor !== undefined);
 	const nodes = new Map(model.types.map(node => [node.id, node])), names = new Map();
 	const type = id => {
 		if(names.has(id)) return names.get(id);
@@ -63,6 +64,7 @@ export const generateOwnedKotlinValues = (ir, options = {}) => {
     override fun hashCode(): kotlin.Int = ${operations}.hash(this)
     override fun toString(): kotlin.String = ${operations}.format(this)`;
 	add("Unit", `typealias Unit = ${quoted(model.namespace)}.Unit\n`);
+	if(anchors) add("Value", `typealias Value<T> = ${quoted(model.namespace)}.Value<T>\n`);
 	add("LeanBridgeException", `typealias LeanBridgeException = ${quoted(model.namespace)}.LeanBridgeException\n`);
 	for(const node of model.types.filter(node => node.kind === "variant"))
 		add(node.publicType, `sealed interface ${quoted(node.publicType)}\n`);
@@ -144,31 +146,34 @@ ${equality}
 	{
 		const name = identityName(node), callback = model.callbacks.find(fn => fn.id === node.id);
 		const returnType = callback ? nodes.get(callback.result).name === "unit" ? "kotlin.Unit" : type(callback.result) : null;
+		const publicReturn = callback && anchors && nodes.get(callback.result).representation !== "copied" ? `${quoted(model.namespace)}.Value<${returnType}>` : returnType;
 		const invokeTypes = callback?.parameters.slice(1).map(id => {
 			const child = nodes.get(id);
 			return child.kind === "callback" ? quoted(`${namespace}.${child.delegateType}`) : type(id);
 		});
 		const parameters = invokeTypes?.map((name, index) => `arg${index}: ${name}`).join(", ");
-		const functionType = callback ? `(${invokeTypes.join(", ")}) -> ${returnType}` : null;
+		const functionType = callback ? `(${invokeTypes.join(", ")}) -> ${publicReturn}` : null;
+		const rawFunction = callback ? `(${invokeTypes.join(", ")}) -> ${returnType}` : null;
 		add(node.publicType, `typealias ${quoted(node.publicType)} = ${quoted(model.namespace)}.${name}\n`);
 		const path = `${kotlin}/${name}.kt`;
 		files[path] = `package ${quoted(model.namespace)}
 
 class ${name} private constructor(
     handle: _OwnedRuntime.Handle,
-    private val retainValue: (_OwnedRuntime.Handle) -> ${name}${callback ? `,\n    private val invocation: ${functionType}` : ""}
-) : _OwnedKotlinValue(handle) {
+    private val retainValue: (_OwnedRuntime.Handle) -> ${name}${callback ? `,\n    private val invocation: ${functionType}` : ""}${anchors ? `,\n    equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>${callback ? `,\n    private val rawInvocation: ${rawFunction}` : ""}` : ""}
+) : _OwnedKotlinValue(handle${anchors ? ", equal" : ""}) {
     fun retain(): ${name} = try { retainValue(handle) }
         finally { java.lang.ref.Reference.reachabilityFence(this) }
-${callback ? `    fun invoke(${parameters}): ${returnType} = try { invocation(${invokeTypes.map((_, i) => `arg${i}`).join(", ")}) }
+${anchors ? `    fun sameIdentity(other: ${name}): kotlin.Boolean = equals(other)\n` : ""}\
+${callback ? `    fun invoke(${parameters}): ${publicReturn} = try { invocation(${invokeTypes.map((_, i) => `arg${i}`).join(", ")}) }
         finally { java.lang.ref.Reference.reachabilityFence(this) }
     fun asCallback(): ${quoted(`${namespace}.${node.delegateType}`)} =
-        ${quoted(`${namespace}.${node.delegateType}`)} { ${callback.parameters.slice(1).map((_, i) => `arg${i}`).join(", ")}${callback.parameters.length > 1 ? " -> " : ""}invoke(${callback.parameters.slice(1).map((id, i) => `arg${i}${nodes.get(id).kind === "callback" ? ".asCallback()" : ""}`).join(", ")}) }
+        ${quoted(`${namespace}.${node.delegateType}`)} { ${callback.parameters.slice(1).map((_, i) => `arg${i}`).join(", ")}${callback.parameters.length > 1 ? " -> " : ""}${anchors ? "rawInvocation" : "invoke"}(${callback.parameters.slice(1).map((id, i) => `arg${i}${nodes.get(id).kind === "callback" ? ".asCallback()" : ""}`).join(", ")}) }
 ` : ""}    companion object {
         @kotlin.jvm.JvmSynthetic internal fun create(
             handle: _OwnedRuntime.Handle,
-            retain: (_OwnedRuntime.Handle) -> ${name}${callback ? `,\n            invoke: ${functionType}` : ""}
-        ): ${name} = ${name}(handle, retain${callback ? ", invoke" : ""})
+            retain: (_OwnedRuntime.Handle) -> ${name}${callback ? `,\n            invoke: ${functionType}` : ""}${anchors ? `,\n            equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>${callback ? `,\n            invokeRaw: ${rawFunction}` : ""}` : ""}
+        ): ${name} = ${name}(handle, retain${callback ? ", invoke" : ""}${anchors ? `, equal${callback ? ", invokeRaw" : ""}` : ""})
     }
 }
 `;
@@ -187,17 +192,27 @@ fun interface ${quoted(callback.delegateType)} {
 
 /** Shared lifetime behavior. Construction and handle access remain package-private. */
 public abstract class _OwnedKotlinValue implements AutoCloseable, _OwnedValue {
-    final _OwnedRuntime.Handle handle;
-    _OwnedKotlinValue(_OwnedRuntime.Handle handle) {
-        this.handle = java.util.Objects.requireNonNull(handle);
+    final _OwnedRuntime.Handle handle;${anchors ? "\n    private final java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal;" : ""}
+    _OwnedKotlinValue(_OwnedRuntime.Handle handle${anchors ? ", java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal" : ""}) {
+        this.handle = java.util.Objects.requireNonNull(handle);${anchors ? "\n        this.equal = java.util.Objects.requireNonNull(equal);" : ""}
     }
     public final boolean isClosed() { return handle.isClosed(); }
     @Override public final void close() { handle.close(); }
+${anchors ? `    @Override public final boolean equals(Object other) {
+        try {
+            handle.raw(handle.lease.state);
+            return other != null && getClass() == other.getClass() && equal.test(handle, ((_OwnedKotlinValue)other).handle);
+        } finally { java.lang.ref.Reference.reachabilityFence(this); java.lang.ref.Reference.reachabilityFence(other); }
+    }
+    @Override public final int hashCode() { throw new UnsupportedOperationException("Lean resources cannot be dictionary keys"); }
+    @Override public final String toString() { return getClass().getSimpleName() + "[" + (isClosed() ? "closed" : "live") + "]"; }
+` : ""}\
 }
 `;
 	internalFiles.push(`${java}/_OwnedKotlinValue.java`);
-	const ownedEquality = jvmGraphEquality(model.records, namespace, { className: "_KotlinOwnedValues", compoundsNamespace: namespace, accessors: true })
+	let ownedEquality = jvmGraphEquality(model.records, namespace, { className: "_KotlinOwnedValues", compoundsNamespace: namespace, accessors: true })
 		.replace("if (value == null || value instanceof Unit", "if (value instanceof _OwnedValue || value == null || value instanceof Unit");
+	if(anchors) ownedEquality = ownedEquality.replace("else equal &= java.util.Objects.equals(x.value(), y.value());", "else if (x.value() instanceof _OwnedValue resource) equal &= resource.equals(y.value());\n            else equal &= java.util.Objects.equals(x.value(), y.value());");
 	files[`${java}/_KotlinOwnedValues.java`] = `package ${model.namespace};\n\n${ownedEquality}`;
 	files[`${java}/_KotlinOwnedTypes.java`] = kotlinOwnedDescriptors(model);
 	files[`${kotlin}/_KotlinOwnedValueOps.kt`] = `package ${quoted(model.namespace)}

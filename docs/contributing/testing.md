@@ -1497,6 +1497,33 @@ consumer source, Maven caches, handoff archives and compilers are absent.
 Reports go to `build/owned-jvm-transfers/` and
 `build/owned-jvm-transfer-packaging/`.
 
+#### Installed Java and Kotlin borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-jvm-borrows
+```
+
+Use JDK 22, Kotlin 2.2.0, Maven and the pinned Lean/native toolchains. On a glibc
+2.36 test host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+The runtime gate checks original-owner expiration, transitive descendants,
+empty values, shared guards, independent retains, canonical identity equality,
+callback escape, closure calls, consuming inputs, garbage collection and
+creator-thread exit. Java and Kotlin allocation sweeps cover failures before
+and after the actual native handoff while retaining exceptions. Executable
+mutants disable whole-owner checks, empty-owner checks, callback-frame and view
+cleanup, or canonical equality; the independent consumers must reject them.
+Both ordinary configuration and reviewed IR execute against compiled Lean,
+including packages with no consuming inputs.
+
+The package gate checks exact public signatures, ill-typed consumers, altered
+lifetime contracts and native assets, plus reproducible JAR/POM bytes. It
+removes producer sources before offline Maven installation. Both language
+consumers and documentation examples run from relocated JARs with only a
+`java.base` runtime image. Source, handoff archives, Maven caches and compilers
+are absent during that execution. Reports go to `build/owned-jvm-borrows/`.
+
 #### Installed Perl transfers
 
 ```sh

@@ -36,12 +36,14 @@ extern "C" size_t probe_exit_errors(void) { return exit_errors.load(); }
  * @param compiled - Actual Lean fixture with callback carriers.
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Enable consuming input leases.
+ * @param options.anchoredResults - Preserve original-owner borrowed results.
  */
-export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false } = {}) => {
+export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false, anchoredResults = false } = {}) => {
 	const input = { metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component, hostCallbacks: true
-		, ...transferredInputs ? { transferredInputs: true } : {} };
+		, ...transferredInputs ? { transferredInputs: true } : {}
+		, ...anchoredResults ? { anchoredResults: true } : {} };
 	const generated = ownedJvmCallNative(input), { c, cleanup, implementation } = generated;
 	for(const [path, source] of Object.entries(c.files))
 		await saveLakeFile(compiled.directory, path.startsWith("src/") ? "api.c" : path.split("/").at(-1), path.startsWith("src/") ? implementation : source);
@@ -93,17 +95,21 @@ export const compileOwnedJvmCallSources = async (root, files) => {
  */
 export const ownedJvmCallProbeMethods = (model, kotlin = false) => model.functions.map((fn, index) => {
 	const nodes = new Map(model.types.map(node => [node.id, node]));
+	const anchored = model.c.functions.some(fn => fn.anchor !== undefined);
 	const family = kotlin ? "Kotlin" : "Java", unit = nodes.get(fn.result).name === "unit";
 	if(!kotlin)
 	{
-		const types = fn.parameters.map((id, i) => model.c.hostArgument(fn, i) ? nodes.get(id).delegateType : model.type(id, false));
-		return `    static ${model.type(fn.result, false)} ${fn.publicName}(${types.map((type, i) => `${type} arg${i}`).join(", ")}) {
+		const types = fn.parameters.map((id, i) => anchored ? model.parameterType(fn, i, false) : model.c.hostArgument(fn, i) ? nodes.get(id).delegateType : model.type(id, false));
+		return `    static ${anchored ? model.returnType(fn, false) : model.type(fn.result, false)} ${fn.publicName}(${types.map((type, i) => `${type} arg${i}`).join(", ")}) {
         return bindings.callJava${index}(${types.map((_, i) => `arg${i}`).join(", ")});
     }`;
 	}
 	const types = fn.parameters.map((id, i) => model.c.hostArgument(fn, i)
-		? model.namespace + ".kotlin." + nodes.get(id).delegateType : model.kotlin.publicTypes[id]);
-	return `    private fun ${fn.publicName}(${types.map((type, i) => `arg${i}: ${type}`).join(", ")}): ${unit ? "kotlin.Unit" : model.kotlin.publicTypes[fn.result]} {
+		? model.namespace + ".kotlin." + nodes.get(id).delegateType : anchored && (fn.anchor === i || fn.transfers?.includes(i)) ? `${model.namespace}.Value<${model.kotlin.publicTypes[id]}>` : model.kotlin.publicTypes[id]);
+	const result = anchored && nodes.get(fn.result).representation !== "copied" ? `${model.namespace}.Value<${model.kotlin.publicTypes[fn.result]}>` : model.kotlin.publicTypes[fn.result];
+	return `    private fun ${fn.publicName}(${types.map((type, i) => `arg${i}: ${type}`).join(", ")}): ${unit ? "kotlin.Unit" : result} {
         ${unit ? "" : "return "}bindings.call${family}${index}(${types.map((_, i) => `arg${i}`).join(", ")})
     }`;
-}).join("\n");
+}).concat((model.wholeCopies ?? []).map(copy => kotlin
+	? `    private fun ${copy.publicName}(value: ${model.kotlin.publicTypes[copy.id]}): ${model.namespace}.Value<${model.kotlin.publicTypes[copy.id]}> = bindings.${model.methodName(copy.call, "Kotlin")}(value)`
+	: `    static ${model.namespace}.Value<${model.type(copy.id, false)}> ${copy.publicName}(${model.type(copy.id, false)} value) { return bindings.${model.methodName(copy.call, "Java")}(value); }`)).join("\n");

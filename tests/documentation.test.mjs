@@ -82,6 +82,22 @@ test("owned JVM transfer docs and CI require installed Java and Kotlin consumers
 	assert.match(publisher, /version-2 JVM contract/u);
 });
 
+test("JVM borrow guides include executable Java/Kotlin examples and whole-owner Maven contracts", async () => {
+	for(const profile of ["java", "kotlin"])
+	{
+		const file = profile === "java" ? "OwnedBorrowExample.java" : "OwnedBorrowExample.kt";
+		const guide = await readFile(`docs/consume/${profile}.md`, "utf8");
+		const source = await readFile(`tests/fixtures/documentation/consumers/${profile}/${file}`, "utf8");
+		assert.ok(guide.includes("```" + profile + ` file=${profile}/${file}\n` + source + "```"));
+		assert.match(guide, /Borrowed results and whole owners/u);
+		assert.match(guide, /copyEchoArrayResult/u);
+	}
+	const publisher = await readFile("docs/publish/maven.md", "utf8");
+	assert.match(publisher, /"scope": "parameter"/u);
+	assert.match(publisher, /"anchor": "arg0"/u);
+	assert.match(publisher, /version-3/u);
+});
+
 test("native and managed borrow gates install ripgrep before inspecting TAP logs", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	for(const name of ["native-consumers", "managed-consumers"])
@@ -693,7 +709,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
     , "build/callables/jvm.json", "build/structured-callables/jvm.json"
     , "build/recursive-callables/jvm-recursive.json"
     , "build/recursive-callables/jvm-mixed.json"
-    , ...["runtime", "values", "layout", "kotlin", "conversions", "calls", "thread-exit", "packaging", "transfers", "transfer-packaging"].map(name => `build/owned-jvm-${name}/`)
+    , ...["runtime", "values", "layout", "kotlin", "conversions", "calls", "thread-exit", "packaging", "transfers", "transfer-packaging", "borrows"].map(name => `build/owned-jvm-${name}/`)
+    , "build/owned-jvm-borrows.log"
     , ...["compounds", "lists", "aliases", "variants", "equality"].map(name => `build/${name}/jvm.json`)
     , ...["jvm-values", "jvm-conversions", "jvm-native", "kotlin-values", "jvm-package-cold", "jvm-packages", "jvm-reproducibility", "jvm-composition", "jvm-conflicts"].map(name => `build/recursive/${name}.json`)
     , "build/collections/jvm-conversions.json", "build/collections/jvm.json"

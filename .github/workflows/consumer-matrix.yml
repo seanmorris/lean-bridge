@@ -1640,6 +1640,16 @@ jobs:
           test -s build/owned-jvm-transfers/reviewed.json
           test -s build/owned-jvm-transfer-packaging/ordinary.json
           test -s build/owned-jvm-transfer-packaging/reviewed.json
+          npm run test:owned-jvm-borrows > build/owned-jvm-borrows.log 2>&1
+          cat build/owned-jvm-borrows.log
+          rg '^# pass 8$' build/owned-jvm-borrows.log
+          rg '^# fail 0$' build/owned-jvm-borrows.log
+          rg '^# skipped 0$' build/owned-jvm-borrows.log
+          test -s build/owned-jvm-borrows/ordinary.json
+          test -s build/owned-jvm-borrows/reviewed.json
+          test -s build/owned-jvm-borrows/borrow-only.json
+          test -s build/owned-jvm-borrows/ordinary-installed.json
+          test -s build/owned-jvm-borrows/reviewed-installed.json
           test -s build/owned-jvm-thread-exit/ordinary.json
           test -s build/owned-jvm-thread-exit/reviewed.json
           test -s build/owned-jvm-runtime/ordinary.json
@@ -1722,6 +1732,8 @@ jobs:
             build/owned-jvm-packaging/
             build/owned-jvm-transfers/
             build/owned-jvm-transfer-packaging/
+            build/owned-jvm-borrows/
+            build/owned-jvm-borrows.log
             build/compounds/jvm.json
             build/lists/jvm.json
             build/aliases/jvm.json
@@ -1902,6 +1914,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-thread-exit.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-jvm-transfers"
+              consumer_command="$consumer_command && npm run test:owned-jvm-borrows"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"

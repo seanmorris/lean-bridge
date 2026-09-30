@@ -19,10 +19,12 @@ const keywords = new Set("_ abstract assert boolean break byte case catch char c
  * @param evidence - Exact native library identities, or null for inspection.
  * @param options - Compiler-authenticated ownership capabilities.
  * @param options.transferredInputs - Enable consuming input leases.
+ * @param options.anchoredResults - Preserve original whole-result owners.
  */
-export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs = false } = {}) => {
-	const model = generateOwnedJvmCalls(ir, { transferredInputs }), prefix = model.c.prefix;
+export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const model = generateOwnedJvmCalls(ir, { transferredInputs, anchoredResults }), prefix = model.c.prefix;
 	const transfers = model.c.functions.some(fn => fn.transfers?.length);
+	const anchors = model.c.functions.some(fn => fn.anchor !== undefined);
 	if(["gmp", "lean_bridge_native", "leanshared"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned JVM component name collides with a dependency or exceeds its name limit");
 	if(evidence !== null && (evidence.componentId !== ir.component.id || evidence.library !== `lib${prefix}_jvm.so`
@@ -36,13 +38,24 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 		return { ...fn, parameterNames: names };
 	});
 	const cleanup = ownedJvmThreadExit(prefix);
-	const contract = { schemaVersion: transfers ? 2 : 1
-		, backend: transfers ? "owned-jvm-v2" : "owned-jvm-v1"
+	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
+		, backend: anchors ? "owned-jvm-v3" : transfers ? "owned-jvm-v2" : "owned-jvm-v1"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
-			, arguments: "ordinary-values", consumption: "before-lean-call"
+			, arguments: anchors ? "whole-values" : "ordinary-values"
+			, consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"
 			, aliases: "shared-lease", borrowedInputs: "reject"
 			, independentRetains: "preserved" } } : {}
+		, ...anchors ? { resultAnchors: {
+			schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-result-owner"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved", aliases: "shared-owner"
+			, independentOwnership: "retain-or-copyValue"
+			, copyType: "unique-erased-type-or-declaration-selected"
+			, rawViews: "borrowed-from-whole-owner"
+			, resourceEquality: "canonical-identity", invalidEquality: "throw"
+			, transfers: "original-owner" } } : {}
 		, bindingIrSha256: model.c.native.model.bindingIrSha256
 		, namespace: model.namespace, kotlinNamespace: model.kotlin.namespace
 		, loadingPolicy: "linux-x64-deepbind-v1", gmp: "libgmp-lean-bridge.so.10"
@@ -57,34 +70,41 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 	};
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const unit = id => nodes.get(id).name === "unit";
-	const javaType = (fn, id, i) => model.c.hostArgument(fn, i)
+	const javaType = (fn, id, i) => anchors ? model.parameterType(fn, i, false) : model.c.hostArgument(fn, i)
 		? nodes.get(id).delegateType : model.type(id, false);
 	const kotlinType = (fn, id, i) => model.c.hostArgument(fn, i)
-		? quoted(model.kotlin.namespace + "." + nodes.get(id).delegateType) : model.kotlin.publicTypes[id];
+		? quoted(model.kotlin.namespace + "." + nodes.get(id).delegateType)
+		: anchors && (fn.anchor === i || fn.transfers?.includes(i)) ? `${quoted(model.namespace)}.Value<${model.kotlin.publicTypes[id]}>` : model.kotlin.publicTypes[id];
+	const kotlinResult = fn => unit(fn.result) ? "kotlin.Unit" : anchors && nodes.get(fn.result).representation !== "copied"
+		? `${quoted(model.namespace)}.Value<${model.kotlin.publicTypes[fn.result]}>` : model.kotlin.publicTypes[fn.result];
 	add(`${java}/Api.java`, `package ${model.namespace};
 
 /** The functions selected by the Lean package author. */
 public final class Api {
     private Api() { }
-${functions.map((fn, index) => `${fn.transfers?.length ? `    /** Consumes resource leases in ${fn.transfers.map(i => fn.parameterNames[i]).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership. */\n` : ""}    public static ${unit(fn.result) ? "void" : model.type(fn.result, false)} ${fn.publicName}(${fn.parameters.map((id, i) => `${javaType(fn, id, i)} ${fn.parameterNames[i]}`).join(", ")}) {
+${functions.map((fn, index) => `${fn.transfers?.length ? `    /** Consumes resource leases in ${fn.transfers.map(i => fn.parameterNames[i]).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership. */\n` : ""}    public static ${unit(fn.result) ? "void" : anchors ? model.returnType(fn, false) : model.type(fn.result, false)} ${fn.publicName}(${fn.parameters.map((id, i) => `${javaType(fn, id, i)} ${fn.parameterNames[i]}`).join(", ")}) {
         ${unit(fn.result) ? "" : "return "}_OwnedLoader.bindings().callJava${index}(${fn.parameterNames.join(", ")});
-    }`).join("\n")}
+    }`).join("\n")}${anchors ? "\n" + model.wholeCopies.map(copy => `    public static Value<${model.type(copy.id, false)}> ${copy.publicName}(${model.type(copy.id, false)} value) {
+        return _OwnedLoader.bindings().${model.methodName(copy.call, "Java")}(value);
+    }`).join("\n") : ""}
 }
 `, true);
 	add(`${kotlin}/_KotlinOwnedApiCalls.kt`, `package ${quoted(model.namespace)}
 
 internal object _KotlinOwnedApiCalls {
-${functions.map((fn, index) => `    @kotlin.jvm.JvmSynthetic fun call${index}(${fn.parameters.map((id, i) => `arg${i}: ${kotlinType(fn, id, i)}`).join(", ")}): ${unit(fn.result) ? "kotlin.Unit" : model.kotlin.publicTypes[fn.result]} {
+${functions.map((fn, index) => `    @kotlin.jvm.JvmSynthetic fun call${index}(${fn.parameters.map((id, i) => `arg${i}: ${kotlinType(fn, id, i)}`).join(", ")}): ${kotlinResult(fn)} {
         ${unit(fn.result) ? "" : "return "}_OwnedLoader.bindings().callKotlin${index}(${fn.parameterNames.map((_, i) => `arg${i}`).join(", ")})
-    }`).join("\n")}
+    }`).join("\n")}${anchors ? "\n" + model.wholeCopies.map((copy, index) => `    @kotlin.jvm.JvmSynthetic fun copy${index}(value: ${model.kotlin.publicTypes[copy.id]}): ${quoted(model.namespace)}.Value<${model.kotlin.publicTypes[copy.id]}> =
+        _OwnedLoader.bindings().${model.methodName(copy.call, "Kotlin")}(value)`).join("\n") : ""}
 }
 `);
 	add(`${kotlin}/kotlin/Api.kt`, `package ${quoted(model.kotlin.namespace)}
 
 class Api private constructor() {
     companion object {
-${functions.map((fn, index) => `${fn.transfers?.length ? `        /** Consumes resource leases in ${fn.transfers.map(i => fn.parameterNames[i]).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership. */\n` : ""}        @kotlin.jvm.JvmStatic fun ${quoted(fn.publicName)}(${fn.parameters.map((id, i) => `${quoted(fn.parameterNames[i])}: ${kotlinType(fn, id, i)}`).join(", ")}): ${unit(fn.result) ? "kotlin.Unit" : model.kotlin.publicTypes[fn.result]} =
-            ${quoted(model.namespace)}._KotlinOwnedApiCalls.call${index}(${fn.parameterNames.map(quoted).join(", ")})`).join("\n")}
+${functions.map((fn, index) => `${fn.transfers?.length ? `        /** Consumes resource leases in ${fn.transfers.map(i => fn.parameterNames[i]).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership. */\n` : ""}        @kotlin.jvm.JvmStatic fun ${quoted(fn.publicName)}(${fn.parameters.map((id, i) => `${quoted(fn.parameterNames[i])}: ${kotlinType(fn, id, i)}`).join(", ")}): ${kotlinResult(fn)} =
+            ${quoted(model.namespace)}._KotlinOwnedApiCalls.call${index}(${fn.parameterNames.map(quoted).join(", ")})`).join("\n")}${anchors ? "\n" + model.wholeCopies.map((copy, index) => `        @kotlin.jvm.JvmStatic fun ${quoted(copy.publicName)}(value: ${model.kotlin.publicTypes[copy.id]}): ${quoted(model.namespace)}.Value<${model.kotlin.publicTypes[copy.id]}> =
+            ${quoted(model.namespace)}._KotlinOwnedApiCalls.copy${index}(value)`).join("\n") : ""}
     }
 }
 `, true);
@@ -135,15 +155,37 @@ its success or error branch. Pair retains binary nesting. Aliases retain their
 metadata without adding JVM wrappers. Null payloads, negative Nat, malformed
 Unicode, cycles and invalid branches reject.
 
-Resources and returned closures implement AutoCloseable. Use try-with-resources
+${anchors ? `Resource-bearing results use Value<T>, including empty arrays, absent options and
+payload-free constructors. Use get() to inspect a value, share() for another
+guard on the same owner, and retain() for an independent copy. The last shared
+guard's close expires borrowed descendants. Raw resource views from get() do
+not keep the whole owner alive. Resource retain() creates an independent owner.
+Resource equality compares canonical native identity; expired comparisons throw.
+Whole values and resources cannot be hash keys. Api.copyValue(raw) constructs an
+owner where the erased JVM type is unique. For ambiguous types, use the generated
+copy<Function>Result or copy<Function>ArgN method to select the Lean declaration.
+
+Whole values, resources and returned closures implement AutoCloseable. Use
+try-with-resources in Java or use in Kotlin. Calls, closure invocation and retain
+require their creating platform thread. Cross-thread close and Cleaner cleanup
+queue releases; native cleanup runs on the creating thread or at its exit, even
+when Thread objects and wrappers remain reachable. Virtual threads cannot own
+Lean sessions.` : `Resources and returned closures implement AutoCloseable. Use try-with-resources
 in Java or use in Kotlin. Retain creates an independent owner. Copying a record
 or array shares its existing wrappers and does not retain them. Resource leaves
 compare wrapper identity. Calls, closure invocation and retain require their
 creating platform thread. Cross-thread close and Cleaner cleanup queue releases;
 native cleanup runs on the creating thread or at its exit, even when Thread
-objects and wrappers remain reachable. Virtual threads cannot own Lean sessions.
+objects and wrappers remain reachable. Virtual threads cannot own Lean sessions.`}
 
-${transfers ? `Transferred inputs use ordinary Java or Kotlin values. Generated Javadoc and
+${transfers ? anchors ? `Transferred inputs accept Value<T>. Generated Javadoc and KDoc name consuming
+arguments. Validation precedes the Lean call boundary. At handoff, the original
+owner is consumed, including empty values. Shared guards and borrowed descendants
+expire together; independent retains survive. Borrowed results cannot be consumed.
+Duplicate consuming owners and ancestor/anchor conflicts reject before handoff.
+Callback and conversion failures after handoff leave the original input consumed.
+
+` : `Transferred inputs use ordinary Java or Kotlin values. Generated Javadoc and
 KDoc name consuming arguments. Validation and snapshot preparation precede the
 Lean call boundary. At handoff, shared aliases and sibling resources using the
 same result owner close together. Copied fields remain values; independent
@@ -170,20 +212,21 @@ runtime identities, conflicting library builds and unverified preloads.
 Compatible packages share loaded dependencies. Native libraries stay loaded
 until process exit so native thread destructors remain valid. Extracted files
 are removed at normal JVM shutdown. Start a fresh process after fork.
-${transfers ? "Anchored results" : "Transferred inputs, anchored results"} and asynchronous delivery require separate
+${anchors ? "Receiver anchors, callback-result anchors" : transfers ? "Anchored results" : "Transferred inputs, anchored results"} and asynchronous delivery require separate
 lifetime support.
 `;
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: transfers ? 2 : 1
-		, generator: transfers ? "jvm-owned-values-v2" : "jvm-owned-values-v1"
-		, backend: transfers ? "owned-jvm-v2" : "owned-jvm-v1", target: "jvm"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : transfers ? 2 : 1
+		, generator: anchors ? "jvm-owned-values-v3" : transfers ? "jvm-owned-values-v2" : "jvm-owned-values-v1"
+		, backend: anchors ? "owned-jvm-v3" : transfers ? "owned-jvm-v2" : "owned-jvm-v1"
+		, target: "jvm"
 		, component: ir.component.id
 		, bindingIrSha256: model.c.native.model.bindingIrSha256
 		, namespace: model.namespace, files: Object.keys(files)
 		, publicFiles, internalFiles, packageFiles: [], aliases: model.aliases
 		, ownedValues: contract
 		, kotlin: { namespace: model.kotlin.namespace, metadataVersion: "2.2.0" }
-		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", "callbacks", "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : []]
-		, capabilityGaps: [transfers
+		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", "callbacks", "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : [], ...anchors ? ["parameter-anchored-results", "whole-value-owners", "canonical-resource-equality"] : []]
+		, capabilityGaps: [anchors ? { feature: "receiver-and-callback-result-anchors", reason: "These anchors require separate lifetime contracts." } : transfers
 			? { feature: "anchored-ownership", reason: "Anchored results require their own lifetime projection." }
 			: { feature: "transferred-and-anchored-ownership", reason: "Transferred inputs and anchored results require their own lifetime projection." }
 		, { feature: "additional-platforms", reason: "Compiled releases target Java 22 on Linux x86-64 with glibc." }] });

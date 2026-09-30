@@ -281,8 +281,9 @@ exit; normal JVM shutdown removes their extracted files.
 
 Reviewed contracts use the same ownership-aware Maven projection. Borrowed
 inputs, explicitly owned results and author-selected input transfers are
-supported. Anchored results and asynchronous delivery need separate lifetime
-support.
+supported. [Parameter-anchored results](#anchor-a-result-to-an-input-owner) use
+whole-value owners. Receiver anchors, callback-result anchors and asynchronous
+delivery need separate lifetime support.
 
 ### Transfer input ownership
 
@@ -319,6 +320,54 @@ and [Kotlin](../consume/kotlin.md#consuming-inputs) examples.
 
 A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet,
 Maven and CPAN. Every selected target must admit the complete API.
+
+### Anchor a result to an input owner
+
+Declare a borrowed result in `lean-bridge.exports.json`. For example, given
+`Owned.retainTicket (ticket : Ticket) : Ticket`:
+
+```json
+{
+  "schemaVersion": 1,
+  "modules": ["Owned"],
+  "exports": ["Owned.retainTicket"],
+  "resources": ["Owned.Ticket"],
+  "arities": { "Owned.retainTicket": 1 },
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "contracts": {
+    "Owned.retainTicket": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg0" }
+      }
+    }
+  }
+}
+```
+
+Use the parameter identifier reported by analysis. Reviewed Binding IR can
+declare the same ownership and lifetime on its result site. Fresh compiler
+metadata must agree with the selected declarations before packaging.
+
+Packages with these declarations use `owned-jvm-v3`. Java and Kotlin APIs
+expose `Value<T>` for resource-bearing results, anchor inputs and consuming
+inputs. The version-3 JVM receipt records original-owner expiration, transitive
+descendants, empty-value owners, raw views, canonical identity comparison and
+typed copy factories. Packaging checks those rules against the version-4 native
+ownership contract. Altering outer file hashes does not bypass that comparison.
+
+Build with `lean-bridge build --project . --target maven`. The prepared JAR
+contains both APIs and their native dependencies. Consumers need no Lean tools
+or explicit runtime setup. See the [Java](../consume/java.md#borrowed-results-and-whole-owners)
+and [Kotlin](../consume/kotlin.md#borrowed-results-and-whole-owners) examples.
+
+A combined anchored-result build can select C, C++, Cargo, PyPI, RubyGems,
+NuGet and Maven. Receiver anchors and callback-result anchors are not yet admitted.
 
 ## Build the repository layout
 

@@ -4,14 +4,16 @@
  * @file
  */
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
+import { ownedJvmWholeScope } from "./owned-borrows.mjs";
 
 /**
  * Call adapters provide authenticated factories and an owning or borrowed lease.
  *
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Track consuming inputs during conversion.
+ * @param options.anchoredResults - Pin whole owners, including empty values.
  */
-export const ownedJvmConversionSupport = ({ transferredInputs = false } = {}) => `final class _OwnedConvert {
+export const ownedJvmConversionSupport = ({ transferredInputs = false, anchoredResults = false } = {}) => `final class _OwnedConvert {
     private _OwnedConvert() { }
     static void checkpoint() { _OwnedRuntime.checkpoint(); }
     static final class InvalidNative extends RuntimeException {
@@ -79,13 +81,14 @@ export const ownedJvmConversionSupport = ({ transferredInputs = false } = {}) =>
             checkpoint(); var result = arena.allocate(size, alignment);
             result.fill((byte)0); checkpoint(); return result;
         }
+${anchoredResults ? ownedJvmWholeScope : ""}\
         long root(_OwnedRuntime.Handle handle) {
             long raw = handle.raw(state); storage(32, 1);
-            if (!checkOnly) {
+            if (${anchoredResults ? "true" : "!checkOnly"}) {
                 handle.lease.acquire();
                 try { checkpoint(); roots.add(handle.lease); }
                 catch (Throwable error) { handle.lease.release(false); throw error; }
-${transferredInputs ? "                if (moves != null && moveGroup >= 0) moves.add(handle.lease, moveGroup, this);\n" : ""}\
+${transferredInputs && !anchoredResults ? "                if (moves != null && moveGroup >= 0) moves.add(handle.lease, moveGroup, this);\n" : ""}\
             }
             return raw;
         }

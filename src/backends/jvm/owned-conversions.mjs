@@ -153,11 +153,12 @@ ${descriptors.join(",\n")}
 export const generateOwnedJvmConversions = (ir, options = {}) => {
 	const model = generateOwnedJvmValues(ir, options), typesSource = ownedJvmDescriptorSource(model);
 	const transferredInputs = model.c.functions.some(fn => fn.transfers?.length);
+	const anchoredResults = model.c.functions.some(fn => fn.anchor !== undefined);
 	const prefix = `src/main/java/${model.namespace.replaceAll(".", "/")}`;
 	const internal = { _OwnedLayouts: model.layoutSource, _OwnedTypes: typesSource
-		, _OwnedConvert: `package ${model.namespace};\n\n${ownedJvmConversionSupport({ transferredInputs })}`
+		, _OwnedConvert: `package ${model.namespace};\n\n${ownedJvmConversionSupport({ transferredInputs, anchoredResults })}`
 		, _OwnedScalars: `package ${model.namespace};\n\n${ownedJvmScalars}`
-		, _OwnedRuntime: `package ${model.namespace};\n\n${ownedJvmRuntime(model.c.prefix, { transferredInputs })}` };
+		, _OwnedRuntime: `package ${model.namespace};\n\n${ownedJvmRuntime(model.c.prefix, { transferredInputs, anchoredResults })}` };
 	const exceptionPath = `${prefix}/LeanBridgeException.java`;
 	const files = { ...model.files
 		, [exceptionPath]: `package ${model.namespace};\n\n${ownedJvmException}`

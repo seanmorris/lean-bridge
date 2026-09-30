@@ -25,9 +25,10 @@ const memory = "java.lang.foreign.MemoryLayout", value = "java.lang.foreign.Valu
  * @param ir - Concrete compiler-authenticated ownership contract.
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Enable consuming input leases.
+ * @param options.anchoredResults - Enable original-owner borrowed results.
  */
-export const compileOwnedJvmLayout = (ir, { transferredInputs = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
+export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, layoutName: `O${node.index}`

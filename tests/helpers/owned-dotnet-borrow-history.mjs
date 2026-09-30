@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJvmBorrow, ownedJvmBorrowNormalizationPaths } from "./owned-jvm-borrow-history.mjs";
 
 export const ownedDotnetBorrowPath = "docs/evidence/owned-dotnet-borrows-20260930.json";
 export const ownedDotnetBorrowBaseline = "1211baf52e92dd4012d075948ca6bf95bda81282";
@@ -57,7 +58,7 @@ export const ownedDotnetBorrowAddedPaths = [
 	, "tests/owned-dotnet-borrows.test.mjs"
 ].sort();
 let cached;
-export const ownedDotnetBorrowNormalizationPaths = ownedDotnetBorrowChangedPaths;
+export const ownedDotnetBorrowNormalizationPaths = [...new Set([...ownedDotnetBorrowChangedPaths, ...ownedJvmBorrowNormalizationPaths])].sort();
 
 /**
  * Restore an authenticated complete source through exact ordered edits.
@@ -90,6 +91,7 @@ export const reverseOwnedDotnetBorrowUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedDotnetBorrow = (path, source, expected) => {
+	source = beforeOwnedJvmBorrow(path, source, expected);
 	if(!ownedDotnetBorrowChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedDotnetBorrowPath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-dotnet-borrows");
