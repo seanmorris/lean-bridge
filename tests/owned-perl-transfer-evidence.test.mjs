@@ -7,6 +7,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { beforeOwnedPerlProfile, ownedPerlProfileAddedPaths, ownedPerlProfileBaseline
+	, ownedPerlProfileChangedPaths, ownedPerlProfileHistoricalBytes, ownedPerlProfilePath
+	, ownedPerlProfilePrevious, reverseOwnedPerlProfileUpdate } from "./helpers/owned-perl-profile-history.mjs";
 import { assertOwnedPerlTransferExecution, assertOwnedPerlTransferCi } from "./helpers/owned-perl-transfer-evidence.mjs";
 import { beforeOwnedPerlTransfer, ownedPerlTransferAddedPaths, ownedPerlTransferBaseline
 	, ownedPerlTransferChangedPaths, ownedPerlTransferHistoricalBytes, ownedPerlTransferPath
@@ -33,27 +37,27 @@ test("Perl transfers bind current sources without promoting unrelated type cells
 		assert.ok(ownedPerlTransferChangedPaths.includes(path));
 		assert.equal(previous.sources[path], undefined);
 	}
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedPerlProfileHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPerlTransferChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path] ?? ownedPerlTransferRegisteredSources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = await readFile(update.path, "utf8"), prior = beforeOwnedPerlTransfer(update.path, current);
+		const current = beforeOwnedPerlProfile(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedPerlTransfer(update.path, current);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedPerlTransfer(update.path, prior), prior);
 		assert.equal(beforeOwnedPerlTransfer(update.path, current, update.currentSha256), current);
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeOwnedPerlProfile("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
 	const prior = JSON.parse(beforeOwnedPerlTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPerlProfileHistoricalBytes(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
 test("Perl transfer history rejects unrelated edits and invalid reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedPerlProfile(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedPerlTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedPerlTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }
@@ -137,4 +141,44 @@ test("Perl transfer CI rejects disabled gates and missing reports", async () => 
 	const step = "      - name: Verify owned Perl values and installed CPAN archives\n";
 	for(const weakened of ["        if: false\n", "        continue-on-error: true\n"])
 		assert.throws(() => assertOwnedPerlTransferCi(workflow.replace(step, step + weakened)));
+});
+
+test("Perl transfer profile repair changes only checked registration bookkeeping", async () => {
+	const record = JSON.parse(await readFile(ownedPerlProfilePath, "utf8"));
+	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-perl-profile-repair");
+	assert.equal(record.planNode, 1219); assert.equal(record.baselineRevision, ownedPerlProfileBaseline);
+	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.previous, ownedPerlProfilePrevious);
+	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
+	assert.equal(sha256(bytes), record.previous.sha256);
+	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPerlProfileAddedPaths].sort());
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	assert.deepEqual(record.updates.map(update => update.path), ownedPerlProfileChangedPaths);
+	for(const update of record.updates)
+	{
+		assert.equal(update.previousSha256, previous.sources[update.path]);
+		assert.equal(update.currentSha256, record.sources[update.path]);
+		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		assert.equal(sha256(beforeOwnedPerlProfile(update.path, source)), update.previousSha256);
+		assert.equal(beforeOwnedPerlProfile(update.path, source, update.currentSha256), source);
+		assert.equal(beforeOwnedPerlProfile(update.path, unknown), unknown);
+		assert.throws(() => reverseOwnedPerlProfileUpdate(unknown, update));
+		assert.throws(() => reverseOwnedPerlProfileUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
+	}
+	const manifest = await readFile("src/adoption/test-profiles.mjs", "utf8");
+	const registration = '\t\t, "owned-perl-transfer-evidence"\n';
+	assert.equal(manifest.split(registration).length, 2);
+	assert.equal(sha256(manifest.replace(registration, "")), previous.sources["src/adoption/test-profiles.mjs"]);
+	assert.equal(classifyRepositoryTest("tests/owned-perl-transfer-evidence.test.mjs"), "contract");
+	for(const name of ["transfers", "transfer-packaging"])
+		assert.equal(classifyRepositoryTest(`tests/owned-perl-${name}.test.mjs`), "contract");
+	for(const [name, exitCode] of [["before", 1], ["after", 0]])
+	{
+		const run = record.runs[name];
+		assert.equal(run.command, "node --test tests/test-profiles.test.mjs");
+		assert.equal(run.exitCode, exitCode); assert.equal(run.sha256, sha256(run.text));
+		assert.match(run.text, /^# tests 4$/mu);
+		assert.match(run.text, new RegExp(`^# fail ${exitCode}$`, "mu"));
+	}
+	assert.match(record.runs.before.text, /Unclassified repository test: tests\/owned-perl-transfer-evidence\.test\.mjs/u);
+	assert.match(record.runs.after.text, /^# pass 4$/mu); assert.match(record.runs.after.text, /^# skipped 0$/mu);
 });

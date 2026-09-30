@@ -20,6 +20,7 @@ const profileManifest = Object.freeze({
 		, "owned-ruby-transfer-evidence"
 		, "owned-dotnet-transfer-evidence"
 		, "owned-jvm-transfer-evidence"
+		, "owned-perl-transfer-evidence"
 		, "owned-c-evidence"
 		, "owned-reviewed-evidence"
 		, "owned-package-evidence"

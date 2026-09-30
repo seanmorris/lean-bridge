@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPerlProfile, ownedPerlProfileChangedPaths } from "./owned-perl-profile-history.mjs";
 
 export const ownedPerlTransferBaseline = "9591a41dd71d74db92a614cbfa352a712359945c";
 export const ownedPerlTransferPath = "docs/evidence/owned-perl-transfers-20260929.json";
@@ -73,6 +74,7 @@ export const ownedPerlTransferChangedPaths = [
 	, "tests/owned-perl-documentation.test.mjs"
 	, "tests/wit-owned-package-evidence.test.mjs"
 ].sort();
+export const ownedPerlTransferNormalizationPaths = [...new Set([...ownedPerlTransferChangedPaths, ...ownedPerlProfileChangedPaths])].sort();
 export const ownedPerlTransferAddedPaths = [
 	"docs/evidence/owned-perl-transfers-20260929.md"
 	, "src/backends/perl/owned-transfers.mjs"
@@ -118,6 +120,7 @@ export const reverseOwnedPerlTransferUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedPerlTransfer = (path, source, expected) => {
+	source = beforeOwnedPerlProfile(path, source, expected);
 	if(!ownedPerlTransferChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedPerlTransferPath, "utf8"));
@@ -136,5 +139,5 @@ export const beforeOwnedPerlTransfer = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedPerlTransferHistoricalBytes = (path, bytes, expected) => ownedPerlTransferChangedPaths.includes(path)
+export const ownedPerlTransferHistoricalBytes = (path, bytes, expected) => ownedPerlTransferNormalizationPaths.includes(path)
 	? beforeOwnedPerlTransfer(path, bytes.toString("utf8"), expected) : bytes;

@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPerlTransfer, ownedPerlTransferChangedPaths } from "./owned-perl-transfer-history.mjs";
+import { beforeOwnedPerlTransfer, ownedPerlTransferNormalizationPaths } from "./owned-perl-transfer-history.mjs";
 
 export const ownedJvmTransferBaseline = "7dd8a21aa6a245693fbd27fbadb3895b10b8d174";
 export const ownedJvmTransferPath = "docs/evidence/owned-jvm-transfers-20260929.json";
@@ -61,7 +61,7 @@ export const ownedJvmTransferChangedPaths = [
 	, "tests/lean-author-documentation.test.mjs"
 	, "tests/owned-dotnet-transfer-evidence.test.mjs"
 ].sort();
-export const ownedJvmTransferNormalizationPaths = [...new Set([...ownedJvmTransferChangedPaths, ...ownedPerlTransferChangedPaths])].sort();
+export const ownedJvmTransferNormalizationPaths = [...new Set([...ownedJvmTransferChangedPaths, ...ownedPerlTransferNormalizationPaths])].sort();
 export const ownedJvmTransferAddedPaths = [
 	"docs/evidence/owned-jvm-transfers-20260929.md"
 	, "src/backends/jvm/owned-transfers.mjs"
