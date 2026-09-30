@@ -13,6 +13,9 @@ const nativeSource = generated => {
 	const runtime = ["session_open", "session_close", "result_release"].map(field => ({ field
 		, symbol: `${generated.c.prefix}_${field}`
 		, type: 'unsafe extern "C" fn(*mut *mut c_void) -> u32' }));
+	if(generated.c.anchoredResults) runtime.push({ field: "result_validate"
+		, symbol: `${generated.c.prefix}_result_validate`
+		, type: 'unsafe extern "C" fn(*mut c_void, *mut c_void) -> u32' });
 	const entries = [...runtime, ...generated.nativeEntries];
 	return `${generated.source}
 #[path = "assets.rs"] mod assets;
@@ -51,10 +54,12 @@ ${entries.map(entry => `            ${entry.field}: symbol!("${entry.symbol}", $
  * @param settings - Cargo coordinates and package metadata.
  * @param options - Compiler-authenticated ownership capabilities.
  * @param options.transferredInputs - Enable explicit mutable input consumption.
+ * @param options.anchoredResults - Keep whole original owners for borrowed results.
  */
-export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false } = {}) => {
-	const generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs });
+export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs, anchoredResults });
 	const transfers = generated.c.functions.some(item => item.transfers?.length);
+	const anchors = Boolean(generated.c.anchoredResults);
 	const name = settings.name ?? `lean_bridge_${generated.c.prefix}`, version = settings.version ?? ir.component.version;
 	validateOrdinaryCargoSettings({ name, version });
 	const source = nativeSource(generated);
@@ -86,7 +91,24 @@ wrapper; other owning clones remain usable. retain() creates independent native
 ownership. Resources and returned Lean closures are neither Send nor Sync.
 Calls reject closed and inherited post-fork resources. Drop releases their owners
 on the creating thread; a fresh process is required after fork.
-${transfers ? `
+${anchors ? `
+This package has input-anchored borrowed results. Resource-containing results use
+Value<T>, including empty containers and constructors. get() checks the whole
+owner and returns Result<&T, Error>. Clones share immutable storage and ownership;
+close() releases this clone. Borrowed results do not keep their anchor alive.
+Their descendants expire when the original owner is released or transferred.
+retain() on Value and copy_value(&host_value) create independent owners.
+Previously extracted references do not revalidate ordinary copied field reads;
+resource operations still validate their own lifetime. try_equal() and resource
+same_identity() return errors for expired values. PartialEq returns false on an
+invalid lifetime and compares canonical resource identity for valid values.
+` : ""}${transfers && anchors ? `
+Transferred inputs take &mut Value<T> and consume the original owner, including
+empty values. Validation and preparation failures preserve the owner. Handoff
+closes aliases and borrowed descendants before callbacks can reenter. Subsequent
+errors and panics leave the input consumed. Borrowed roots cannot transfer; retain
+them first. A call cannot consume its result anchor or that anchor's ancestor.
+` : transfers ? `
 Transferred inputs take explicit &mut references. Validation and preparation
 finish before any input is consumed. At the Lean call boundary, every resource
 lease represented in a transferred input becomes closed, including cloned
@@ -114,7 +136,8 @@ These budgets do not bound Lean algorithm memory or every allocator overhead.
 Rust and GMP retain their normal fatal allocator-exhaustion policies.
 `
 	};
-	const contract = { schemaVersion: transfers ? 2 : 1, language: "rust-1.90"
+	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
+		, language: "rust-1.90"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "resume-after-native-return"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
@@ -122,11 +145,19 @@ Rust and GMP retain their normal fatal allocator-exhaustion policies.
 			, validation: "before-consumption", failure: "consumed-after-handoff"
 			, aliases: "shared-lease", borrowedInputs: "reject"
 			, independentRetains: "preserved" } } : {}
+		, ...anchors ? { resultAnchors: { schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-result-owner"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved", aliases: "shared-owner"
+			, independentOwnership: "retain-or-copy_value"
+			, resourceEquality: "canonical-identity", invalidEquality: "false"
+			, fallibleEquality: "try_equal-or-same_identity"
+			, transfers: "original-owner" } } : {}
 		, exactIntegers: "num-bigint-0.4.6", loader: "authenticated-embedded-native"
 		, apiSha256: sha256(generated.apiSource), conversionsSha256: sha256(source)
 		, limits: generated.c.native.model.limits };
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: transfers ? 2 : 1
-		, backend: transfers ? "owned-rust-v2" : "owned-rust-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : transfers ? 2 : 1
+		, backend: anchors ? "owned-rust-v3" : transfers ? "owned-rust-v2" : "owned-rust-v1"
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, component: ir.component, contract, evidence
 		, publicModule: "src/lib.rs", files: Object.keys(files).sort()

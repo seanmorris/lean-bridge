@@ -88,7 +88,7 @@ the resource leases it visits, rejects overlapping consuming arguments, and
 observes the native handoff during callback reentry. Perl save-stack cleanup
 preserves pre-handoff inputs and releases consumed owners after exceptions.
 The remaining consumer profiles also implement explicit transfers; each consumer
-page describes its handoff and alias rules. C and C++ additionally implement
+page describes its handoff and alias rules. C, C++ and Rust additionally implement
 parameter-anchored function results. A borrowed result depends on the exact
 input-owner generation, including when it contains no resources. Releasing or
 transferring the owner expires all descendants; an independent retained alias
@@ -98,8 +98,12 @@ and package manifest version 5 authenticate `resultAnchors` separately from
 `inputTransfers`. C++ uses a checked `Value<T>` for complete result ownership,
 including empty constructors. Copies share an owner; explicit retain/copy makes
 independent ownership. Its version-3 `cppValues` contract records original-owner
-transfers and canonical resource equality. Other consumer projections of result
-anchors remain unfinished.
+transfers and canonical resource equality. Rust's version-3 `rustValues` contract
+uses `Value<T>` with checked `get()`, shared clones, independent retain/copy and
+`&mut Value<T>` original-owner transfers. Its compiled projection and Cargo
+package receipts use version 4. Fallible equality reports expired owners;
+`PartialEq` returns false for expired values. Other consumer projections of
+result anchors remain unfinished.
 Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
 support is documented for [JavaScript](../consume/javascript.md),
 [PHP-Wasm](../php.md) and [WIT/WASI](../consume/wit-wasi.md).

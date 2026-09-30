@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedRustBorrow } from "./helpers/owned-rust-borrow-history.mjs";
 import { assertOwnedCppBorrowCiRepair } from "./helpers/owned-cpp-borrow-ci-evidence.mjs";
 import { beforeOwnedCppBorrowCi, ownedCppBorrowCiHistoricalBytes, ownedCppBorrowCiPath
 	, reverseOwnedCppBorrowCiUpdate } from "./helpers/owned-cpp-borrow-ci-history.mjs";
@@ -57,7 +58,7 @@ test("C++ borrow inventory repair rejects unknown changes and forged identities"
 	const record = JSON.parse(await readFile(ownedCppBorrowCiPath, "utf8"));
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrecorded */\n";
+		const source = beforeOwnedRustBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedCppBorrowCi(update.path, unknown), unknown);
 		assert.equal(beforeOwnedCppBorrowCi(update.path, source, update.currentSha256), source);
 		assert.throws(() => reverseOwnedCppBorrowCiUpdate(unknown, update));

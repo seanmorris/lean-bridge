@@ -27,9 +27,10 @@ export const packageOwnedCargo = async options => {
 	const compiled = JSON.parse(await readFile(join(rustRoot, "native-rust.json"), "utf8"));
 	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version;
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
-	const generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs });
+	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
+	const generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults });
 	await verifyNativeFiles(rustRoot, compiled.files);
-	if(compiled.schemaVersion !== (transferredInputs ? 3 : 2) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
+	if(compiled.schemaVersion !== (anchoredResults ? 4 : transferredInputs ? 3 : 2) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.name !== name || compiled.version !== version || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| canonicalJson(compiled.ownedValues) !== canonicalJson(generated.contract)
 		|| !/^rustc 1\.(?:9\d|[1-9]\d{2,})\.\d+ /u.test(compiled.rustc)
@@ -65,7 +66,7 @@ export const packageOwnedCargo = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: transferredInputs ? 3 : 2
+	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: anchoredResults ? 4 : transferredInputs ? 3 : 2
 		, kind: "lean-bridge-owned-cargo-package"
 		, ecosystem: "cargo", name, version, component: model.component
 		, bindingIrSha256: model.bindingIrSha256
@@ -77,7 +78,7 @@ export const packageOwnedCargo = async options => {
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: "cargo"
-		, backend: transferredInputs ? "owned-rust-v2" : "owned-rust-v1"
+		, backend: anchoredResults ? "owned-rust-v3" : transferredInputs ? "owned-rust-v2" : "owned-rust-v1"
 		, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion
 		, packages: [{ archive, name, version, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };
 };

@@ -479,6 +479,48 @@ all represented owners move together. Two transferred arguments cannot consume
 the same lease. Callback-frame resource borrows cannot be transferred; call
 `retain()` inside the callback first if you need independent ownership.
 
+### Borrowed results
+
+When a package declares a result whose lifetime follows an input, its
+resource-containing results use `Value<T>`. `get()` returns `Result<&T, Error>`
+after checking the original owner. This includes empty vectors, `None`, and empty
+variant constructors. Borrowed results expire when their anchor is released or
+transferred; they do not retain it.
+
+For the `owned-borrows` example, save this as `src/main.rs`:
+
+```rust file=rust/owned-borrows.rs
+use owned_borrows::{new_ticket, retain_ticket, serial, BigUint, Error};
+
+fn main() -> Result<(), Error> {
+    let mut owner = new_ticket(&BigUint::from(42u32), "order")?;
+    let borrowed = retain_ticket(&owner)?;
+    let independent = borrowed.retain()?;
+    assert!(borrowed.try_equal(&owner)?);
+
+    owner.close();
+    assert_eq!(borrowed.get(), Err(Error::Closed));
+    println!("{}", serial(independent.get()?)?);
+    Ok(())
+}
+```
+
+`clone()` shares immutable storage and its owner. `close()` releases one clone;
+the others keep that owner alive. `retain()` and `copy_value(&host_value)` create
+independent owners. A reference previously returned by `get()` does not recheck
+ordinary copied field reads. Resource operations still check their own lifetime.
+
+`try_equal()` and resource `same_identity()` report invalid lifetimes as errors.
+`PartialEq` returns false for invalid lifetimes and compares canonical resource
+identity for valid values. Resources and whole values remain neither `Send` nor
+`Sync`.
+
+In a package with these result contracts, consuming functions take
+`&mut Value<T>`. They transfer the original owner, including for empty values.
+Aliases and borrowed descendants expire before callback reentry. A call cannot
+consume its result anchor or an ancestor of it. Packages without anchored results
+keep the APIs described above. See the [author contract](../publish/cargo.md#anchor-a-result-to-an-input).
+
 ### Alpha resource and callback example
 
 The remaining example uses the separate Alpha fixture and its older API. Its loader needs the installed native files to remain in place. New packages can use the explicit ownership profile above.

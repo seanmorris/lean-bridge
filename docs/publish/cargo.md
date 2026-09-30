@@ -254,7 +254,8 @@ callback arguments and returned closures. The Rust compiler rejects mismatched
 resource types, sending or sharing resource wrappers between threads, and
 callbacks missing required typed recovery. Runtime checks reject expired
 borrows and post-fork calls. Input transfer requires the explicit contracts below.
-Owner-anchored borrowed results and asynchronous delivery remain unsupported.
+Borrowed results use the [input-anchor contract](#anchor-a-result-to-an-input).
+Asynchronous delivery remains unsupported.
 
 The adapter enforces depth 128, 262,144 visits and separate 16 MiB Rust/native
 accounting budgets. Each package binds its generated types, lifetime rules,
@@ -286,6 +287,26 @@ Packages without transfers keep their existing versions and API.
 A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet, Maven and CPAN.
 Other targets still reject these contracts. No registry publication is part of
 the build command.
+
+## Anchor a result to an input
+
+Declare `ownership: "borrow"` and a parameter lifetime in the
+[shared export contracts](../lean/existing-package.md#declare-export-contracts).
+The [C author example](c.md#anchor-a-result-to-an-input) shows the result declaration.
+Keep `resources`, `ownedAggregates`, and the Cargo package coordinate. The compiler
+checks the selected parameter against the Lean signature on both source paths.
+
+Cargo packages with anchored results return resource-containing values as
+`Value<T>`. They keep original owners for empty constructors as well as populated
+values. Consumers use checked `get()` access and explicit `retain()` or
+`copy_value()` for independent ownership. Consuming calls take `&mut Value<T>`
+and expire that owner's borrowed descendants. See the [consumer example](../consume/rust.md#borrowed-results).
+
+These crates use `owned-rust-v3`, Rust ownership contract version 3, and compiled
+Rust/package receipts version 4. The shared C adapter uses version 5 and binds
+the compiler-derived result-anchor contract. Packaging regenerates the native
+and Rust sources before accepting an archive. Combined builds may select C, C++
+and Cargo; the other consumer adapters still reject these result contracts.
 
 ## Package identity and publisher prerequisites
 

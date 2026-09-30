@@ -12,7 +12,7 @@ const primitives = {
 	, uint64: "u64", int8: "i8", int16: "i16", int32: "i32", int64: "i64"
 };
 
-const support = limits => `use crate::*;
+const support = (limits, anchors = false) => `use crate::*;
 use std::rc::Rc;
 use std::ffi::c_void;
 use crate::owned_runtime::{State, Lease, NativeOwner, checked, current_state};
@@ -88,18 +88,18 @@ impl OwnedScope {
     }
 }
 pub(crate) struct OwnedOutput {
-    pub(crate) owner: NativeOwner, state: Rc<State>, lease: Option<Rc<Lease>>,
+    pub(crate) owner: NativeOwner, state: Rc<State>, lease: Option<Rc<Lease>>,${anchors ? "\n    anchored_result: bool," : ""}
 }
 impl OwnedOutput {
-    pub(crate) fn new(state: Rc<State>) -> Self { Self { owner: NativeOwner::new(), state, lease: None } }
+    pub(crate) fn new(state: Rc<State>) -> Self { Self { owner: NativeOwner::new(), state, lease: None${anchors ? ", anchored_result: false" : ""} } }
     pub(crate) fn borrowed(state: Rc<State>, lease: Rc<Lease>) -> Self {
-        Self { owner: NativeOwner::new(), state, lease: Some(lease) }
+        Self { owner: NativeOwner::new(), state, lease: Some(lease)${anchors ? ", anchored_result: true" : ""} }
     }
     fn hold(&mut self) -> Result<Rc<Lease>, Error> {
         if self.lease.is_none() {
             if self.owner.value.is_null() { return Err(Error::MalformedResult); }
             owned_checkpoint()?;
-            self.lease = Some(self.state.adopt(&mut self.owner)?);
+            self.lease = Some(self.state.adopt(&mut self.owner${anchors ? ", self.anchored_result" : ""})?);
         }
         let lease = self.lease.as_ref().ok_or(Error::MalformedResult)?;
         lease.require()?; Ok(Rc::clone(lease))
@@ -288,7 +288,7 @@ export const generateOwnedRustConversions = (ir, options = {}) => {
 	for(const root of [...c.functions, ...c.retains, ...c.copies])
 	{
 		// Callback descriptors and input-owner transactions use the callable projection.
-		if(root.transfers?.length || root.parameters.some((_, index) => c.hostArgument(root, index))) continue;
+		if(c.anchoredResults || root.transfers?.length || root.parameters.some((_, index) => c.hostArgument(root, index))) continue;
 		const params = root.parameters.map(id => nodes.get(id)), result = nodes.get(root.result);
 		const name = root.cName.slice(c.prefix.length + 1);
 		const invoke = `unsafe extern "C" fn(${["*mut c_void", ...params.map(node => `${node.leaf ? "" : "*const "}${node.raw}`), `*mut ${result.raw}`, "*mut *mut c_void"].join(", ")}) -> u32`;
@@ -306,5 +306,5 @@ export const generateOwnedRustConversions = (ir, options = {}) => {
 	return { ...values, valuesSource: values.source
 		, types: [...nodes.values()], calls: callModels
 		, rawSource: raw.join("\n")
-		, source: ["#![allow(dead_code, unused_imports)]", support(c.native.model.limits), ...raw, ...functions, ...calls, ""].join("\n") };
+		, source: ["#![allow(dead_code, unused_imports)]", support(c.native.model.limits, Boolean(c.anchoredResults)), ...raw, ...functions, ...calls, ""].join("\n") };
 };

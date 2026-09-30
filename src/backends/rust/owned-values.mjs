@@ -8,6 +8,7 @@ import { sha256 } from "../../capsule/node.mjs";
 import { generateOwnedCValues } from "../c/owned-values.mjs";
 import { planNativeGraphStorage } from "../c/copied-graph-layout.mjs";
 import { ownedRustRuntime } from "./owned-runtime.mjs";
+import { ownedRustAnchoredValues } from "./owned-borrows.mjs";
 
 const keywords = new Set("as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while abstract become box do final gen macro override priv typeof unsized virtual yield try union".split(" "));
 const reserved = new Set([...keywords, ..."std num_bigint owned_runtime owned_values Error Resource Result Ok Err Vec String BigUint BigInt Sign Option Some None Box Drop Copy Clone Send Sync Default WithRecovery with_recovery bool u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64 str usize isize char".split(" ")]);
@@ -26,13 +27,15 @@ const scalars = {
  * @param options - Prepared-package runtime policy.
  */
 export const generateOwnedRustValues = (ir, options = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs: options.transferredInputs ?? false });
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs: options.transferredInputs ?? false, anchoredResults: options.anchoredResults ?? false });
+	const anchors = c.functions.some(item => item.anchor !== undefined);
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node
 		, aggregate: !node.leaf
 		, fields: node.fields.map(field => ({ ...field, storage: "value" }))
 		, cases: node.cases.map(branch => ({ ...branch, fields: branch.fields.map(field => ({ ...field, storage: "value" })) }))
 	}]));
 	const layout = planNativeGraphStorage(nodes), occupied = new Set(reserved);
+	if(anchors) for(const name of ["Value", "ValueType", "OwnedValueStorage", "copy_value"]) occupied.add(name);
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || occupied.has(name)
 			|| /^Owned(?:Identity|Raw|Union|Case|Callback)/u.test(name)) throw new TypeError(`Owned Rust name is reserved or duplicated: ${name}`);
@@ -82,7 +85,9 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 		return [node.id, { fields: members(node.id, node.fields), cases }];
 	}));
 	const bigint = c.nodes.some(node => node.integer);
-	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length) }), ...bigint ? ["pub use num_bigint::{BigInt, BigUint};", ""] : []];
+	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length), anchoredResults: anchors })
+		, ...anchors ? [ownedRustAnchoredValues] : []
+		, ...bigint ? ["pub use num_bigint::{BigInt, BigUint};", ""] : []];
 	const fieldType = field => field.boxed ? `Box<${type(field.type)}>` : type(field.type);
 	for(const id of layout.order)
 	{
@@ -96,6 +101,15 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 			, ...model.cases.map(branch => `    ${branch.publicName}${branch.fields.length ? ` { ${branch.fields.map(field => `${field.publicName}: ${fieldType(field)}`).join(", ")} }` : ""},`), "}", "");
 	}
 	for(const alias of c.native.aliases) lines.push(`pub type ${definitions.get(alias.id).name} = ${type(alias.target)};`);
+	const canonical = id => {
+		const node = nodes.get(id);
+		if(names.has(id) || node.kind === "primitive") return type(id);
+		if(node.element) return `Vec<${canonical(node.element)}>`;
+		const args = node.fields.map(field => boxed(id, field) ? `Box<${canonical(field.type)}>` : canonical(field.type));
+		return node.kind === "tuple" ? `(${args.join(", ")})` : `${{ option: "Option", result: "Result" }[node.kind]}<${args.join(", ")}>`;
+	};
 	return { c, layout, source: lines.join("\n") + "\n", bigint
-		, types: [...nodes.values()].map(node => ({ ...node, hostName: type(node.id), identityTag: identities.get(node.id), ...models.get(node.id) })) };
+		, types: [...nodes.values()].map(node => ({ ...node, hostName: type(node.id)
+			, identityTag: identities.get(node.id), ...models.get(node.id)
+			, ...anchors ? { canonicalHostName: canonical(node.id) } : {} })) };
 };

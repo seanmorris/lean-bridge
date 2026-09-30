@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedCppBorrowCi, ownedCppBorrowCiChangedPaths } from "./owned-cpp-borrow-ci-history.mjs";
+import { beforeOwnedCppBorrowCi, ownedCppBorrowCiNormalizationPaths } from "./owned-cpp-borrow-ci-history.mjs";
 
 export const ownedCppBorrowBaseline = "2e422bde5449fd6578af0d4c27256e7110ec3c48";
 export const ownedCppBorrowPath = "docs/evidence/owned-cpp-borrows-20260930.json";
@@ -42,7 +42,7 @@ export const ownedCppBorrowAddedPaths = [
 	, "tests/owned-cpp-borrows.test.mjs"
 ].sort();
 let cached;
-export const ownedCppBorrowNormalizationPaths = [...new Set([...ownedCppBorrowChangedPaths, ...ownedCppBorrowCiChangedPaths])].sort();
+export const ownedCppBorrowNormalizationPaths = [...new Set([...ownedCppBorrowChangedPaths, ...ownedCppBorrowCiNormalizationPaths])].sort();
 
 /**
  * Reverse only recorded, ordered edits with matching complete source identities.

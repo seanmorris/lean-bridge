@@ -4,6 +4,7 @@
  * @file
  */
 import { ownedRustTransferRuntime } from "./owned-transfers.mjs";
+import { ownedRustAnchoredTransferRuntime } from "./owned-borrows.mjs";
 
 /**
  * Emit nominal resources, scoped borrows and thread-confined result ownership.
@@ -13,8 +14,9 @@ import { ownedRustTransferRuntime } from "./owned-transfers.mjs";
  * @param options - Prepared-package native loading policy.
  * @param options.dynamic - Resolve the authenticated embedded library table.
  * @param options.transferredInputs - Observe input consumption during callbacks.
+ * @param options.anchoredResults - Validate whole-value result owners.
  */
-export const ownedRustRuntime = (prefix, { dynamic = false, transferredInputs = false } = {}) => {
+export const ownedRustRuntime = (prefix, { dynamic = false, transferredInputs = false, anchoredResults = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Rust prefix");
 	return `
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -45,7 +47,15 @@ pub(crate) mod owned_runtime {
         #[link_name = "${prefix}_session_open"] fn session_open(out: *mut *mut c_void) -> u32;
         #[link_name = "${prefix}_session_close"] fn session_close(value: *mut *mut c_void) -> u32;
         #[link_name = "${prefix}_result_release"] fn result_release(value: *mut *mut c_void) -> u32;
-    }`}
+    }`}${anchoredResults ? dynamic ? `
+    unsafe fn result_validate(session: *mut c_void, owner: *mut c_void) -> u32 {
+        match crate::owned_values::owned_native_api() {
+            Ok(api) => unsafe { (api.result_validate)(session, owner) }, Err(_) => 7,
+        }
+    }` : `
+    unsafe extern "C" {
+        #[link_name = "${prefix}_result_validate"] fn result_validate(session: *mut c_void, owner: *mut c_void) -> u32;
+    }` : ""}
     pub(crate) fn checked(status: u32) -> Result<(), Error> {
         match status {
             0 => Ok(()), 1 => Err(Error::InvalidArgument), 2 => Err(Error::Limit),
@@ -129,7 +139,7 @@ pub(crate) mod owned_runtime {
             }
             Ok(())
         }
-        pub(crate) fn adopt(self: &Rc<Self>, owner: &mut NativeOwner) -> Result<Rc<Lease>, Error> {
+        pub(crate) fn adopt(self: &Rc<Self>, owner: &mut NativeOwner${anchoredResults ? ", borrowed_result: bool" : ""}) -> Result<Rc<Lease>, Error> {
             self.require()?;
             if owner.process != self.process { return Err(Error::WrongProcess); }
             if owner.thread != self.thread { return Err(Error::WrongThread); }
@@ -138,7 +148,7 @@ pub(crate) mod owned_runtime {
             owners.retain(|weak| weak.strong_count() != 0);
             owners.try_reserve(1).map_err(|_| Error::Allocation)?;
             let slot = Rc::new(Slot { owner: Cell::new(std::ptr::null_mut()), state: Rc::clone(self) });
-            let lease = Rc::new(Lease { state: Rc::clone(self), kind: LeaseKind::Owned(Rc::clone(&slot))${transferredInputs ? ", input_move: RefCell::new(None)" : ""} });
+            let lease = Rc::new(Lease { state: Rc::clone(self), kind: LeaseKind::Owned(Rc::clone(&slot))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${anchoredResults ? ", borrowed_result" : ""} });
             owners.push(Rc::downgrade(&slot));
             slot.owner.set(std::mem::replace(&mut owner.value, std::ptr::null_mut()));
             Ok(lease)
@@ -156,23 +166,35 @@ pub(crate) mod owned_runtime {
     }
 
     enum LeaseKind { Owned(Rc<Slot>), Borrowed(Rc<Cell<bool>>) }
-    pub(crate) struct Lease { pub(crate) state: Rc<State>, kind: LeaseKind${transferredInputs ? ", input_move: RefCell<Option<Rc<InputMoveSignal>>>" : ""} }
+    pub(crate) struct Lease { pub(crate) state: Rc<State>, kind: LeaseKind${transferredInputs ? ", input_move: RefCell<Option<Rc<InputMoveSignal>>>" : ""}${anchoredResults ? ", borrowed_result: bool" : ""} }
     impl Lease {
         pub(crate) fn require(&self) -> Result<(), Error> {
             self.state.require()?;${transferredInputs ? "\n            if self.input_move.borrow().as_ref().is_some_and(|signal| signal.consumed()) { return Err(Error::Closed); }" : ""}
             let active = match &self.kind {
-                LeaseKind::Owned(slot) => !slot.owner.get().is_null(),
+                LeaseKind::Owned(slot) => ${anchoredResults ? `{
+                    let owner = ${transferredInputs ? "self.input_move.borrow().as_ref().map_or(slot.owner.get(), |signal| signal.owner.get())" : "slot.owner.get()"};
+                    if owner.is_null() { return Err(Error::Closed); }
+                    checked(unsafe { result_validate(self.state.require()?, owner) })?; true
+                }` : "!slot.owner.get().is_null()"},
                 LeaseKind::Borrowed(active) => active.get(),
             };
             if active { Ok(()) } else { Err(Error::Closed) }
-        }
+        }${anchoredResults ? `
+        pub(crate) fn owner(&self, state: &Rc<State>) -> Result<*mut c_void, Error> {
+            self.require()?;
+            if !Rc::ptr_eq(&self.state, state) { return Err(Error::InvalidArgument); }
+            match &self.kind {
+                LeaseKind::Owned(slot) => Ok(${transferredInputs ? "self.input_move.borrow().as_ref().map_or(slot.owner.get(), |signal| signal.owner.get())" : "slot.owner.get()"}),
+                LeaseKind::Borrowed(_) => Err(Error::InvalidArgument),
+            }
+        }` : ""}
     }
-${transferredInputs ? ownedRustTransferRuntime : ""}    pub(crate) struct BorrowFrame { active: Rc<Cell<bool>>, pub(crate) lease: Rc<Lease> }
+${transferredInputs ? anchoredResults ? ownedRustAnchoredTransferRuntime : ownedRustTransferRuntime : ""}    pub(crate) struct BorrowFrame { active: Rc<Cell<bool>>, pub(crate) lease: Rc<Lease> }
     impl BorrowFrame {
         pub(crate) fn new(state: &Rc<State>) -> Result<Self, Error> {
             state.require()?;
             let active = Rc::new(Cell::new(true));
-            let lease = Rc::new(Lease { state: Rc::clone(state), kind: LeaseKind::Borrowed(Rc::clone(&active))${transferredInputs ? ", input_move: RefCell::new(None)" : ""} });
+            let lease = Rc::new(Lease { state: Rc::clone(state), kind: LeaseKind::Borrowed(Rc::clone(&active))${transferredInputs ? ", input_move: RefCell::new(None)" : ""}${anchoredResults ? ", borrowed_result: true" : ""} });
             Ok(Self { active, lease })
         }
     }
@@ -197,7 +219,7 @@ impl<Kind> Resource<Kind> {
         if !std::rc::Rc::ptr_eq(&lease.state, state) { return Err(Error::InvalidArgument); }
         Ok(self.handle)
     }
-${transferredInputs ? `    pub(crate) fn transfer_lease(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<std::rc::Rc<owned_runtime::Lease>, Error> {
+${transferredInputs && !anchoredResults ? `    pub(crate) fn transfer_lease(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<std::rc::Rc<owned_runtime::Lease>, Error> {
         self.raw(state)?;
         self.lease.as_ref().cloned().ok_or(Error::Closed)
     }
@@ -212,7 +234,7 @@ impl<Kind> Default for Resource<Kind> {
 impl<Kind> Clone for Resource<Kind> {
     fn clone(&self) -> Self { Self { lease: self.lease.clone(), handle: self.handle, kind: std::marker::PhantomData } }
 }
-impl<Kind> PartialEq for Resource<Kind> {
+${anchoredResults ? "" : `impl<Kind> PartialEq for Resource<Kind> {
     fn eq(&self, other: &Self) -> bool {
         self.handle == other.handle && match (&self.lease, &other.lease) {
             (None, None) => true,
@@ -221,7 +243,7 @@ impl<Kind> PartialEq for Resource<Kind> {
         }
     }
 }
-impl<Kind> Eq for Resource<Kind> {}
+impl<Kind> Eq for Resource<Kind> {}`}
 impl<Kind> std::fmt::Debug for Resource<Kind> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Resource").field("closed", &self.is_closed()).finish_non_exhaustive()

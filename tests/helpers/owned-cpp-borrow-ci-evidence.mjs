@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedRustBorrow, ownedRustBorrowHistoricalBytes } from "./owned-rust-borrow-history.mjs";
 import { assertOwnedCppBorrowExecution } from "./owned-cpp-borrow-evidence.mjs";
 import { ownedCppBorrowCiBaseline, ownedCppBorrowCiPrevious, ownedCppBorrowCiChangedPaths
 	, ownedCppBorrowCiAddedPaths, reverseOwnedCppBorrowCiUpdate } from "./owned-cpp-borrow-ci-history.mjs";
@@ -26,13 +27,14 @@ export const assertOwnedCppBorrowCiRepair = async record => {
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedCppBorrowCiAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedRustBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedCppBorrowCiChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		assert.equal(sha256(reverseOwnedCppBorrowCiUpdate(await readFile(update.path, "utf8"), update)), update.previousSha256);
+		const source = beforeOwnedRustBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		assert.equal(sha256(reverseOwnedCppBorrowCiUpdate(source, update)), update.previousSha256);
 	}
 	const module = "src/backends/cpp/owned-borrows.mjs";
 	const packageDocument = JSON.parse(await readFile("package.json", "utf8"));
@@ -41,9 +43,9 @@ export const assertOwnedCppBorrowCiRepair = async record => {
 	assert.equal(configuration.files.filter(path => path === module).length, 1);
 	const disposition = JSON.parse(await readFile("config/checked-javascript.json", "utf8"));
 	assert.equal(disposition.deferred.filter(item => item.path === module && item.classification === "strict-migration-backlog").length, 1);
-	const index = "docs/type-surface.v1.json", current = JSON.parse(await readFile(index, "utf8"));
-	const prior = JSON.parse(reverseOwnedCppBorrowCiUpdate(await readFile(index, "utf8"), record.updates.find(item => item.path === index)));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	const index = "docs/type-surface.v1.json", source = beforeOwnedRustBorrow(index, await readFile(index, "utf8")), current = JSON.parse(source);
+	const prior = JSON.parse(reverseOwnedCppBorrowCiUpdate(source, record.updates.find(item => item.path === index)));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRustBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(current, prior);
 	await assertOwnedCppBorrowExecution(previous);
 };

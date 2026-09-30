@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedRustBorrow, ownedRustBorrowChangedPaths } from "./owned-rust-borrow-history.mjs";
 
 export const ownedCppBorrowCiPath = "docs/evidence/owned-cpp-borrow-ci-repair-20260930.json";
 export const ownedCppBorrowCiBaseline = "dec8d558423d1b1c2ec4b95999ea8779adb60091";
@@ -26,6 +27,7 @@ export const ownedCppBorrowCiAddedPaths = [
 	, "tests/helpers/owned-cpp-borrow-ci-history.mjs"
 ].sort();
 let cached;
+export const ownedCppBorrowCiNormalizationPaths = [...new Set([...ownedCppBorrowCiChangedPaths, ...ownedRustBorrowChangedPaths])].sort();
 
 /**
  * Reverse authenticated complete-file versions through exact ordered edits.
@@ -58,6 +60,7 @@ export const reverseOwnedCppBorrowCiUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedCppBorrowCi = (path, source, expected) => {
+	source = beforeOwnedRustBorrow(path, source, expected);
 	if(!ownedCppBorrowCiChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedCppBorrowCiPath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-cpp-borrow-ci-repair");
@@ -75,5 +78,5 @@ export const beforeOwnedCppBorrowCi = (path, source, expected) => {
  * @param bytes - Complete current source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedCppBorrowCiHistoricalBytes = (path, bytes, expected) => ownedCppBorrowCiChangedPaths.includes(path)
+export const ownedCppBorrowCiHistoricalBytes = (path, bytes, expected) => ownedCppBorrowCiNormalizationPaths.includes(path)
 	? beforeOwnedCppBorrowCi(path, bytes.toString("utf8"), expected) : bytes;

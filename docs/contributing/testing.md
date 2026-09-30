@@ -1198,6 +1198,30 @@ documentation example and reject altered anchor contracts. CI requires all five
 tests without skips and retains `build/owned-cpp-borrows/`,
 `build/owned-cpp-borrow-packaging/`, and `build/owned-cpp-borrows.log`.
 
+### Owner-anchored Rust results
+
+```sh
+source scripts/env.sh
+npm run test:owned-rust-borrows
+```
+
+The enabled gate compiles ordinary and reviewed Lean APIs. Its Rust consumer
+checks complete owners, empty constructors, nested and recursive values,
+canonical identity, explicit retain/copy, callback escape and original-owner
+transfers. Allocation failures and panic unwinding must release temporary
+owners, preserve inputs before handoff and expire descendants after handoff.
+Compile-negative consumers reject raw anchors, immutable transfers, `Send` and
+`Sync`. A borrow-only API compiles separately. Four compiled mutations must fail
+the lifetime and equality checks.
+
+Installed tests remove author sources and producer output before building an
+offline Cargo consumer with an empty Cargo home and no Lean or C compiler. They
+execute the documentation example, reject forged anchor contracts and relocate
+the executable after removing the package and handoff. Shared C++ consumers
+check the same native adapter. CI requires all six tests without skips and
+retains `build/owned-rust-borrows/`, `build/owned-rust-borrow-packaging/` and
+`build/owned-rust-borrows.log`.
+
 ### Staged input transfers
 
 With the pinned Lean compiler, a C/C++ compiler, GMP headers and sanitizers, run:
