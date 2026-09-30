@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { beforeOwnedDotnetLifetime, ownedDotnetLifetimeHistoricalBytes } from "./helpers/owned-dotnet-lifetime-history.mjs";
 import { assertOwnedJvmBorrowExecution, assertOwnedJvmBorrowCi } from "./helpers/owned-jvm-borrow-evidence.mjs";
 import { ownedJvmBorrowPath, ownedJvmBorrowBaseline, ownedJvmBorrowPrevious
 	, ownedJvmBorrowAddedPaths, ownedJvmBorrowChangedPaths
@@ -23,13 +24,14 @@ test("JVM borrow evidence authenticates complete source changes without rewritin
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedJvmBorrowAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedDotnetLifetimeHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJvmBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedJvmBorrow(update.path, source);
+		const source = beforeOwnedDotnetLifetime(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedJvmBorrow(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJvmBorrow(update.path, prior), prior);
 		assert.equal(beforeOwnedJvmBorrow(update.path, source, update.currentSha256), source);
@@ -41,9 +43,10 @@ test("JVM borrow evidence authenticates complete source changes without rewritin
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedJvmBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedDotnetLifetime(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedJvmBorrow(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(ownedDotnetLifetimeHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	const module = "src/backends/jvm/owned-borrows.mjs";
 	const files = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files;

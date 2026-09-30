@@ -215,6 +215,10 @@ values, including empty arrays and variants. `Get()` checks the complete owner
 before exposing its value. Keep the `Value<T>` alive while using resource views
 returned by `Get()`.
 
+`Get()`, `Share()`, `Retain()` and equality keep their whole owners alive until
+the operation returns or throws, including temporary receiver expressions.
+This does not extend the lifetime of resource views after the operation.
+
 For the borrowed-result `Owned` fixture, save this as `Program.cs`:
 
 ```csharp file=dotnet/owned-borrows.cs

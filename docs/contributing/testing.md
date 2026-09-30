@@ -1454,13 +1454,21 @@ Use the .NET 8 SDK and native toolchains above. On a glibc 2.36 test host, set
 `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`. The enabled gate requires seven tests
 with no skips on ordinary and reviewed authoring paths.
 
+Prepare the pinned offline `typing_extensions` wheels from the Python collection
+checks for the shared Python 3.11 consumer. Set
+`LEAN_BRIDGE_PYTHON_TYPING_WHEELS` to the absolute feed directory if it lives
+outside `build/python-typing-wheels` in this worktree.
+
 Runtime checks cover whole owners, empty and recursive values, original-slot
 consumption, callback reentry, returned closures, canonical equality and
 independent retention. Managed and native allocation sweeps retain exceptions
 and require zero residual allocations or identities after cleanup. GC,
-foreign-thread disposal and creator-thread exit exercise expiration. Four
-compiled mutations must fail independent assertions. Borrow-only packages also
-compile and run separately without consuming-input support.
+foreign-thread disposal and creator-thread exit exercise expiration. Optimized
+C# code runs 21 forced-GC schedules during temporary `Get`, `Share`, `Retain` and
+equality operations. Deterministic concurrent-close schedules cover empty arrays
+and nested value-type payloads. Six compiled mutations must fail independent
+assertions. Borrow-only packages also compile and run separately without
+consuming-input support.
 
 NuGet tests delete producer sources before offline installation. Safe public
 C# callers run with unsafe code disabled. The tests reject ill-typed clients,

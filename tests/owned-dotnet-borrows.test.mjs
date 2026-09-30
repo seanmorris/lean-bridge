@@ -16,6 +16,7 @@ import { ownedRustBorrowConfiguration, ownedRustBorrowReviewedIr, ownedRustBorro
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const options = { transferredInputs: true, anchoredResults: true };
+const optimizedProject = '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors><Optimize>true</Optimize><TieredCompilation>false</TieredCompilation></PropertyGroup></Project>';
 
 test("C# whole owners require capability and preserve unanchored generated APIs", () => {
 	const ir = ownedRustBorrowReviewedIr(), original = structuredClone(ir);
@@ -40,10 +41,18 @@ for(const mode of ["ordinary", "reviewed"]) test(`C# borrowed results expire wit
 		, evidenceName: `dotnet-borrows-${mode}-inputs.json`
 	});
 	const source = await readFile("tests/fixtures/structured-types/owned-dotnet-borrows.cs", "utf8");
+	const instrument = source => {
+		const checkpoint = "internal static void Checkpoint() { }";
+		const validated = "if (global::System.Threading.Volatile.Read(ref closed) != 0) OwnedRuntime.Check(4);";
+		assert.equal(source.split(checkpoint).length, 2);
+		assert.equal(source.split(validated).length, 2);
+		return source.replace(checkpoint, "internal static void Checkpoint() { global::Program.Allocation(); }")
+			.replace(validated, validated + "\n        global::Program.AfterWholeReadCheck();");
+	};
 	let observed;
 	try
 	{
-		const execute = await compiled.compile({ "Program.cs": source });
+		const execute = await compiled.compile({ "Program.cs": source, "Lifetime.cs": instrument(compiled.model.files["Lifetime.cs"]), "Calls.csproj": optimizedProject });
 		const result = await execute("borrows"); assert.equal(result.stderr, "");
 		observed = JSON.parse(result.stdout);
 	}
@@ -55,9 +64,11 @@ for(const mode of ["ordinary", "reviewed"]) test(`C# borrowed results expire wit
 		assert.ok(observed[key] > 0, key);
 	const mutations = [
 		["unchecked-whole-value", "Lifetime.cs", "        Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)", "        if (global::System.Threading.Volatile.Read(ref closed)"]
-		, ["unchecked-empty-value", "Lifetime.cs", "        Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)", "        if (value is not global::System.Array { Length: 0 }) Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)"]
+		, ["unchecked-empty-value", "Lifetime.cs", "        Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)", "        if (snapshot is null || snapshot.Value is not global::System.Array { Length: 0 }) Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)"]
 		, ["escaped-callback-frame", "Lifetime.cs", "    public void Dispose() { scope.Active = false; }", "    public void Dispose() { scope.Active = true; }"]
 		, ["wrapper-equality", "Values.cs", "        return equal(Handle, other.Handle);", "        return global::System.Object.ReferenceEquals(this, other);"]
+		, ["late-whole-value-read", "Lifetime.cs", "        return snapshot!.Value;", "        return global::System.Threading.Volatile.Read(ref payload) is { } late ? late.Value : default!;"]
+		, ["unrooted-whole-receiver", "Values.cs", "global::System.GC.KeepAlive(this);", ";"]
 	];
 	const rejectedMutations = [];
 	for(const [name, path, before, after] of mutations)
@@ -65,10 +76,10 @@ for(const mode of ["ordinary", "reviewed"]) test(`C# borrowed results expire wit
 		const original = compiled.model.files[path]; assert.ok(original.includes(before), name);
 		const changed = original.replaceAll(before, after);
 		const files = { ...compiled.model.files, [path]: changed, "Program.cs": source };
-		files["Lifetime.cs"] = files["Lifetime.cs"].replace("internal static void Checkpoint() { }", "internal static void Checkpoint() { global::Program.Allocation(); }");
+		files["Lifetime.cs"] = instrument(files["Lifetime.cs"]);
 		const execute = await compiled.compile(files);
 		await assert.rejects(execute("borrows"), error => {
-			assert.match(error.details.stderr, /Expected LeanBridgeException|callback borrow is closed|resource equality uses native identity/u);
+			assert.match(error.details.stderr, /Expected LeanBridgeException|callback borrow is closed|resource equality uses native identity|whole read remains a snapshot|temporary whole owner remains alive/u);
 			return true;
 		});
 		rejectedMutations.push({ name, compiled: true, sourceSha256: sha256(changed) });
@@ -80,6 +91,7 @@ for(const mode of ["ordinary", "reviewed"]) test(`C# borrowed results expire wit
 		, generated: Object.fromEntries(Object.entries(compiled.model.files).map(([path, text]) => [path, sha256(text)]))
 		, nativeProbeSha256: sha256(compiled.implementation)
 		, loaderSha256: sha256(compiled.loader), probeSha256: sha256(source)
+		, optimizedProject, optimizedProjectSha256: sha256(optimizedProject)
 	}));
 });
 

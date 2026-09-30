@@ -11,20 +11,40 @@ public sealed class Value<T> : global::System.IDisposable, global::System.IEquat
     private readonly global::System.Func<T, Value<T>> retain;
     internal Value(Interop.OwnedLease lease, T value, global::System.Func<T, Value<T>> retain)
     { this.retain = retain; Guard = new(lease, value); }
-    public T Get() => Guard.Get();
+    public T Get()
+    {
+        try { return Guard.Get(); }
+        finally { global::System.GC.KeepAlive(this); }
+    }
     public bool IsClosed => Guard.IsClosed;
     public void Dispose() => Guard.Dispose();
-    public Value<T> Share() => new(Guard.Lease, Get(), retain);
-    public Value<T> Retain() => retain(Get());
+    public Value<T> Share()
+    {
+        try { return new(Guard.Lease, Get(), retain); }
+        finally { global::System.GC.KeepAlive(this); }
+    }
+    public Value<T> Retain()
+    {
+        try { return retain(Get()); }
+        finally { global::System.GC.KeepAlive(this); }
+    }
     public bool Equals(Value<T>? other)
     {
-        var value = Get();
-        return other is not null && GraphValues.Equal(value, other.Get());
+        try
+        {
+            var value = Get();
+            return other is not null && GraphValues.Equal(value, other.Get());
+        }
+        finally { global::System.GC.KeepAlive(this); global::System.GC.KeepAlive(other); }
     }
     public override bool Equals(object? other)
     {
-        Get();
-        return other is Value<T> value && Equals(value);
+        try
+        {
+            Get();
+            return other is Value<T> value && Equals(value);
+        }
+        finally { global::System.GC.KeepAlive(this); global::System.GC.KeepAlive(other); }
     }
     public override int GetHashCode() => throw new global::System.NotSupportedException("Lean owners cannot be dictionary keys");
 }
@@ -34,20 +54,27 @@ export const ownedDotnetWholeGuard = `
 internal sealed class OwnedWholeGuard<T> : global::System.IDisposable
 {
     internal readonly OwnedLease Lease;
-    private T value;
+    private sealed class Payload
+    {
+        internal readonly T Value;
+        internal Payload(T value) { Value = value; }
+    }
+    private Payload? payload;
     private bool acquired;
     private int closed;
     internal OwnedWholeGuard(OwnedLease lease, T value)
     {
-        Lease = lease; this.value = value;
+        Lease = lease;
+        OwnedRuntime.Checkpoint(); payload = new(value);
         OwnedRuntime.Checkpoint(); lease.Acquire(); acquired = true;
     }
     internal bool IsClosed => global::System.Threading.Volatile.Read(ref closed) != 0 || Lease.IsClosed;
     internal T Get()
     {
+        var snapshot = global::System.Threading.Volatile.Read(ref payload);
         Lease.Require();
         if (global::System.Threading.Volatile.Read(ref closed) != 0) OwnedRuntime.Check(4);
-        return value;
+        return snapshot!.Value;
     }
     internal OwnedLease Require(OwnedState state)
     {
@@ -58,7 +85,7 @@ internal sealed class OwnedWholeGuard<T> : global::System.IDisposable
     private void Close(bool finalizing)
     {
         if (global::System.Threading.Interlocked.Exchange(ref closed, 1) != 0) return;
-        value = default!;
+        global::System.Threading.Volatile.Write(ref payload, null);
         if (acquired) Lease.Release(finalizing);
     }
     public void Dispose()

@@ -14,9 +14,17 @@ internal static unsafe class Program
     private static delegate* unmanaged[Cdecl]<nuint> Live, Identities, Handoffs;
     private static delegate* unmanaged[Cdecl]<nint, void> Fail;
     private static readonly List<Exception> retainedFailures = new();
+    private static Action? wholeReadHook, allocationHook;
+    private static WeakReference? temporaryGuard;
+    private static int receiverCollections;
+    internal static void AfterWholeReadCheck()
+    {
+        var hook = wholeReadHook; wholeReadHook = null; hook?.Invoke();
+    }
     private static OwnedRuntime Runtime => OwnedLoader.Bindings.Runtime;
     internal static void Allocation()
     {
+        var hook = allocationHook; allocationHook = null; hook?.Invoke();
         if (remaining == 0) throw new OutOfMemoryException("injected managed failure");
         if (remaining > 0) --remaining;
     }
@@ -203,6 +211,64 @@ internal static unsafe class Program
         var cycle = new Tree[1]; cycle[0] = new TreeBranch(cycle);
         Reject<ArgumentException>(() => Api.CopyValue(cycle[0]));
     }
+    private static void CloseDuringWholeRead<T>(Value<T> owner, Func<T, bool> valid)
+    {
+        using (owner)
+        {
+            wholeReadHook = () => {
+                var closer = new Thread(owner.Dispose); closer.Start();
+                Check(closer.Join(TimeSpan.FromSeconds(10)), "whole close thread finished");
+            };
+            try
+            {
+                var snapshot = owner.Get();
+                Check(valid(snapshot), "whole read remains a snapshot during foreign-thread close");
+                Reject<LeanBridgeException>(() => owner.Get(), 4);
+                Runtime.Current.Require();
+            }
+            finally { wholeReadHook = null; }
+        }
+    }
+    private static void ConcurrentReads()
+    {
+        CloseDuringWholeRead(Api.CopyEchoArrayResult(Array.Empty<Ticket>()), value => value is not null && value.Length == 0);
+        using var seed = Api.NewTicket(42, "whole value-type snapshot");
+        CloseDuringWholeRead(Api.CopyValue((seed.Get(), (Option<Ticket>.None, new Payload(17, new byte[] { 9 })))),
+            value => value.Item1 is not null && value.Item2.Item2.Count == 17 && value.Item2.Item2.Bytes[0] == 9);
+    }
+    private static void CollectDuringOperation()
+    {
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect();
+        receiverCollections++;
+        Check(temporaryGuard is not null && temporaryGuard.IsAlive, "temporary whole owner remains alive during operation");
+    }
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static Value<Ticket> Temporary(bool reading = false)
+    {
+        var owner = Api.NewTicket(42, "temporary receiver");
+        temporaryGuard = new WeakReference(owner.Guard);
+        if (reading) wholeReadHook = CollectDuringOperation;
+        else allocationHook = CollectDuringOperation;
+        return owner;
+    }
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void TemporaryReceivers()
+    {
+        using var comparison = Api.NewTicket(42, "separate identity");
+        for (int index = 0; index < 3; ++index)
+        {
+            Temporary(true).Get();
+            using var retained = Temporary().Retain();
+            Check(Api.Serial(retained.Get()) == 42, "temporary owner retain");
+            using var shared = Temporary().Share();
+            Check(Api.Serial(shared.Get()) == 42, "temporary owner share");
+            Check(!Temporary().Equals(comparison), "temporary typed equality receiver");
+            Check(!Temporary().Equals((object)comparison), "temporary object equality receiver");
+            Check(!comparison.Equals(Temporary()), "temporary typed equality argument");
+            Check(!comparison.Equals((object)Temporary()), "temporary object equality argument");
+        }
+        Check(receiverCollections == 21, "all optimized receiver GC schedules executed");
+    }
     private static void Main(string[] args)
     {
         var library = NativeLibrary.Load(args[0]); OwnedLoader.Bindings = new OwnedBindings(library);
@@ -211,10 +277,11 @@ internal static unsafe class Program
         Handoffs = (delegate* unmanaged[Cdecl]<nuint>)NativeLibrary.GetExport(library, "probe_handoffs");
         Fail = (delegate* unmanaged[Cdecl]<nint, void>)NativeLibrary.GetExport(library, "probe_fail");
         Runtime.Current.Require(); Shapes(); Callbacks(); Transfers();
-        Faults(false); Faults(true); Threads(); Collection();
+        Faults(false); Faults(true); Threads(); Collection(); ConcurrentReads(); TemporaryReceivers();
+        GC.Collect(); GC.WaitForPendingFinalizers(); GC.Collect();
         Runtime.Current.Require(); Runtime.Current.Dispose();
         Check(Live() == 0 && Identities() == 0, "all owners released");
         GC.KeepAlive(retainedFailures);
-        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { checks, managedBefore, managedAfter, nativeBefore, nativeAfter, live = (ulong)Live(), identities = (ulong)Identities() }));
+        Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(new { checks, managedBefore, managedAfter, nativeBefore, nativeAfter, receiverCollections, live = (ulong)Live(), identities = (ulong)Identities() }));
     }
 }

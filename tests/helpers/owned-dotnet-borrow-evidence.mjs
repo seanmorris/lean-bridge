@@ -15,6 +15,8 @@ import { validatePackageSetReceipt } from "../../src/release/package-set-receipt
 import { ownedDotnetNativeProbe, ownedDotnetProbeLoader } from "./owned-dotnet-native.mjs";
 import { ownedDotnetBorrowInvalidPrograms } from "./owned-dotnet-borrow-installed.mjs";
 import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
+import { beforeOwnedDotnetLifetime } from "./owned-dotnet-lifetime-history.mjs";
+import { historicalDotnetReadRaceCalls, historicalDotnetReadRacePackage } from "./owned-dotnet-read-race-generated.mjs";
 
 export const ownedDotnetBorrowScript = "LEAN_BRIDGE_OWNED_DOTNET_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-borrows.test.mjs tests/owned-dotnet-borrow-packaging.test.mjs";
 export const ownedDotnetBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-dotnet-borrows";
@@ -39,6 +41,9 @@ export const ownedDotnetBorrowScope = Object.freeze({
 	, receiverAnchors: false, callbackResultAnchors: false
 	, sanitizers: [], docker: false, installedSupportPromotions: 0
 });
+export const ownedDotnetLifetimeScope = Object.freeze({ ...ownedDotnetBorrowScope
+	, atomicWholeRead: true, optimizedReceiverGc: true });
+export const ownedDotnetLifetimeCommand = "LEAN_BRIDGE_PYTHON_TYPING_WHEELS=/app/build/python-typing-wheels " + ownedDotnetBorrowCommand;
 const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
 	, ownedInputTransfers: true, ownedAnchoredResults: true };
 const options = { transferredInputs: true, anchoredResults: true };
@@ -52,15 +57,20 @@ const fields = ["values", "anchor", "expiration", "descendants", "emptyValues"
  * @param record - Source-bound private and installed transfer observations.
  */
 export const assertOwnedDotnetBorrowExecution = async record => {
-	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedDotnetBorrowScope);
-	assert.equal(record.run.command, ownedDotnetBorrowCommand); assert.equal(record.run.exitCode, 0);
+	const repaired = record.kind === "owned-dotnet-lifetime-repair";
+	assert.equal(record.kind, repaired ? "owned-dotnet-lifetime-repair" : "owned-dotnet-borrows");
+	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, repaired ? ownedDotnetLifetimeScope : ownedDotnetBorrowScope);
+	assert.equal(record.run.command, repaired ? ownedDotnetLifetimeCommand : ownedDotnetBorrowCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, count] of Object.entries({ tests: 7, pass: 7, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp("^# " + key + " " + count + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
-	const probe = await readFile("tests/fixtures/structured-types/owned-dotnet-borrows.cs");
+	const probePath = "tests/fixtures/structured-types/owned-dotnet-borrows.cs";
+	let probe = await readFile(probePath, "utf8");
+	if(!repaired) probe = beforeOwnedDotnetLifetime(probePath, probe, record.sources[probePath]);
+	const testSource = await readFile("tests/owned-dotnet-borrows.test.mjs", "utf8");
 	const fixture = await readFile("tests/fixtures/structured-types/owned-installed-dotnet-borrows.cs");
 	const documentation = await readFile("tests/fixtures/documentation/consumers/dotnet/owned-borrows.cs");
 	const baseLean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
@@ -80,7 +90,8 @@ export const assertOwnedDotnetBorrowExecution = async record => {
 		assert.equal(model.exports.length, 22); assert.equal(model.ownedGraph.inputTransfers, undefined);
 		assert.equal(model.ownedGraph.resultAnchors.exports.length, 18);
 		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, anchoredResults: true });
-		const generated = generateOwnedDotnetCalls(model.bindingIr, { anchoredResults: true });
+		let generated = generateOwnedDotnetCalls(model.bindingIr, { anchoredResults: true });
+		if(!repaired) generated = historicalDotnetReadRaceCalls(generated, item.generated);
 		assert.deepEqual(item.generated, Object.fromEntries(Object.entries(generated.files).map(([path, source]) => [path, sha256(source)])));
 		assert.equal(item.nativeProbeSha256, sha256(ownedDotnetNativeProbe(c, false)));
 		assert.equal(item.loaderSha256, sha256(ownedDotnetProbeLoader(generated.namespace)));
@@ -99,24 +110,38 @@ export const assertOwnedDotnetBorrowExecution = async record => {
 		{
 			assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
 			assert.equal(item.probeSha256, sha256(probe));
-			const generated = generateOwnedDotnetCalls(model.bindingIr, options);
+			let generated = generateOwnedDotnetCalls(model.bindingIr, options);
+			if(!repaired) generated = historicalDotnetReadRaceCalls(generated, item.generated);
 			assert.deepEqual(item.generated, Object.fromEntries(Object.entries(generated.files).map(([path, source]) => [path, sha256(source)])));
 			const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...options });
 			assert.equal(item.nativeProbeSha256, sha256(ownedDotnetNativeProbe(c, true)));
 			assert.equal(item.loaderSha256, sha256(ownedDotnetProbeLoader(generated.namespace)));
 			const mutations = [
 				["unchecked-whole-value", "Lifetime.cs", "        Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)", "        if (global::System.Threading.Volatile.Read(ref closed)"]
-				, ["unchecked-empty-value", "Lifetime.cs", "        Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)", "        if (value is not global::System.Array { Length: 0 }) Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)"]
+				, ["unchecked-empty-value", "Lifetime.cs", "        Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)", `        if (${repaired ? "snapshot is null || snapshot.Value" : "value"} is not global::System.Array { Length: 0 }) Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)`]
 				, ["escaped-callback-frame", "Lifetime.cs", "    public void Dispose() { scope.Active = false; }", "    public void Dispose() { scope.Active = true; }"]
 				, ["wrapper-equality", "Values.cs", "        return equal(Handle, other.Handle);", "        return global::System.Object.ReferenceEquals(this, other);"]
+				, ...repaired ? [
+					["late-whole-value-read", "Lifetime.cs", "        return snapshot!.Value;", "        return global::System.Threading.Volatile.Read(ref payload) is { } late ? late.Value : default!;"]
+					, ["unrooted-whole-receiver", "Values.cs", "global::System.GC.KeepAlive(this);", ";"]
+				] : []
 			];
 			assert.deepEqual(item.rejectedMutations, mutations.map(([name, path, before, after]) => {
 				assert.ok(generated.files[path].includes(before));
 				return { name, compiled: true, sourceSha256: sha256(generated.files[path].replaceAll(before, after)) };
 			}));
-			assert.deepEqual(item.observed, { checks: 499, managedBefore: 36
-				, managedAfter: 61, nativeBefore: 10, nativeAfter: 68
+			assert.deepEqual(item.observed, { checks: repaired ? 547 : 499
+				, managedBefore: 36, managedAfter: repaired ? 62 : 61
+				, nativeBefore: 10, nativeAfter: 68
+				, ...repaired ? { receiverCollections: 21 } : {}
 				, live: 0, identities: 0 });
+			if(repaired)
+			{
+				const project = testSource.match(/^const optimizedProject = '([^']+)';$/mu)?.[1];
+				assert.ok(project?.includes("<Optimize>true</Optimize><TieredCompilation>false</TieredCompilation>"));
+				assert.equal(item.optimizedProject, project);
+				assert.equal(item.optimizedProjectSha256, sha256(project));
+			}
 			continue;
 		}
 		for(const key of ["compiledLean", "installedPackage", "installedNuget"
@@ -157,7 +182,8 @@ export const assertOwnedDotnetBorrowExecution = async record => {
 		assert.equal(manifest.name, "Owned.Borrows"); assert.equal(manifest.version, "1.2.3");
 		const native = generateCompiledNativeLeanAdapters(model);
 		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...options });
-		const dotnet = generateOwnedDotnetPackage(model.bindingIr, null, options);
+		let dotnet = generateOwnedDotnetPackage(model.bindingIr, null, options);
+		if(!repaired) dotnet = historicalDotnetReadRacePackage(dotnet, manifest.ownedValues);
 		assert.equal(manifest.namespace, dotnet.namespace); assert.equal(manifest.assembly, dotnet.assembly);
 		assert.deepEqual(item.rejectedConsumers, ownedDotnetBorrowInvalidPrograms.map(([name, body, diagnostic]) => {
 			const external = body.startsWith("class ");
@@ -194,7 +220,8 @@ export const assertOwnedDotnetBorrowExecution = async record => {
 		assert.equal(compiled.schemaVersion, 3); assert.equal(compiled.profile, "native-library-v1");
 		assert.equal(compiled.bindingIrSha256, model.bindingIrSha256); assert.equal(compiled.assembly, dotnet.assembly);
 		assert.match(compiled.sdk, /^8\.0\.\d+$/u);
-		const packaged = generateOwnedDotnetPackage(model.bindingIr, evidence, options);
+		let packaged = generateOwnedDotnetPackage(model.bindingIr, evidence, options);
+		if(!repaired) packaged = historicalDotnetReadRacePackage(packaged, manifest.ownedValues);
 		assert.equal(manifest.schemaVersion, 3); assert.deepEqual(manifest.ownedValues, dotnet.contract);
 		assert.equal(manifest.compiledProjectionSha256, sha256(canonicalJson(compiled)));
 		assert.equal(manifest.glibcMinimumVersion, "2.36");
