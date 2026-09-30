@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedRubyBorrowCi, ownedRubyBorrowCiNormalizationPaths } from "./owned-ruby-borrow-ci-history.mjs";
 
 export const ownedRubyBorrowPath = "docs/evidence/owned-ruby-borrows-20260930.json";
 export const ownedRubyBorrowBaseline = "62cadd853a10cdd366f0fe79044739f64e5c17da";
@@ -56,6 +57,7 @@ export const ownedRubyBorrowAddedPaths = [
 	, "tests/owned-ruby-borrows.test.mjs"
 ].sort();
 let cached;
+export const ownedRubyBorrowNormalizationPaths = [...new Set([...ownedRubyBorrowChangedPaths, ...ownedRubyBorrowCiNormalizationPaths])].sort();
 
 /**
  * Restore an authenticated complete source through exact ordered edits.
@@ -88,6 +90,7 @@ export const reverseOwnedRubyBorrowUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedRubyBorrow = (path, source, expected) => {
+	source = beforeOwnedRubyBorrowCi(path, source, expected);
 	if(!ownedRubyBorrowChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedRubyBorrowPath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-ruby-borrows");
@@ -105,5 +108,5 @@ export const beforeOwnedRubyBorrow = (path, source, expected) => {
  * @param bytes - Complete current bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedRubyBorrowHistoricalBytes = (path, bytes, expected) => ownedRubyBorrowChangedPaths.includes(path)
+export const ownedRubyBorrowHistoricalBytes = (path, bytes, expected) => ownedRubyBorrowNormalizationPaths.includes(path)
 	? beforeOwnedRubyBorrow(path, bytes.toString("utf8"), expected) : bytes;
