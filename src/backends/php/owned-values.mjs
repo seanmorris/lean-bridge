@@ -26,10 +26,11 @@ const bigint = "\\Brick\\Math\\BigInteger";
  * @param options - Checked PHP and Lean integer widths.
  * @param options.integerBits - PHP integer width.
  * @param options.wordBits - Lean machine-word width.
+ * @param options.transferredInputs - Admit explicitly consuming arguments.
  */
-export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits } = {}) => {
+export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false } = {}) => {
 	if(![32, 64].includes(integerBits) || ![32, 64].includes(wordBits)) throw new TypeError("PHP and Lean integer widths must be 32 or 64");
-	const c = generateOwnedCValues(ir, { hostCallbacks: true }), namespace = `Lean${pascal(c.prefix)}`;
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs }), namespace = `Lean${pascal(c.prefix)}`;
 	const fail = message => { throw new TypeError(`Invalid owned PHP values: ${message}`); };
 	const occupied = new Set([...reservedPhpNames, "some", "ok", "err", "withrecovery"]), names = new Map();
 	const claim = source => {

@@ -22,11 +22,12 @@ import { packageOwnedPhp } from "../release/owned-composer.mjs";
 export const projectOwnedPhp = async options => {
 	const { working, nativeRoot, runtimeRoot, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 	if(!model.ownedGraph?.hostCallbacks) throw new TypeError("Owned PHP requires authenticated callback/copy support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true });
-	const php = generateOwnedPhpPackage(model.bindingIr), prefix = c.values.prefix;
+	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs });
+	const php = generateOwnedPhpPackage(model.bindingIr, null, { transferredInputs }), prefix = c.values.prefix;
 	const root = join(working, "native/owned-php-binding"), gmpRoot = join(root, "gmp");
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid PHP native glibc floor");
@@ -66,12 +67,13 @@ export const projectOwnedPhp = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(root, "native-php-adapter.json"), canonicalJson({ schemaVersion: 1
+	await writeFile(join(root, "native-php-adapter.json"), canonicalJson({ schemaVersion: transferredInputs ? 2 : 1
 		, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity: identity, library
-		, ownedValues: { schemaVersion: 2
+		, ownedValues: { schemaVersion: transferredInputs ? 3 : 2
 			, hostCallbacks: model.ownedGraph.hostCallbacks
+			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, headerSha256: sha256(c.publicHeader), sourceSha256: sha256(c.source) }
 		, phpValues: php.contract
 		, gmp: { version: "6.3.0", soname: gmpLibrary, binding: "local-symbols" }

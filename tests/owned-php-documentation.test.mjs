@@ -21,16 +21,23 @@ const block = (section, language) => {
 	assert.ok(match, language + " documentation block"); return match[1] + "\n";
 };
 
-test("owned PHP author and consumer guides work in a combined C/Composer release", {
-	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1200000
+const modes = process.env.LEAN_BRIDGE_OWNED_PHP_TRANSFER_TEST === "1" ? [true] : [false];
+for(const transferred of modes) test(`owned PHP ${transferred ? "consuming " : ""}author and consumer guides work in a combined C/Composer release`, {
+	skip: process.env.LEAN_BRIDGE_OWNED_NATIVE_TEST !== "1", timeout: 1800000
 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-owned-php-docs-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const authorGuide = await readFile("docs/publish/php.md", "utf8");
 	const consumerGuide = await readFile("docs/php.md", "utf8");
 	const authorSection = authorGuide.split("### Export resource-containing values\n")[1].split("\n### ")[0];
-	const consumerSection = consumerGuide.split("### Resource-containing values\n")[1].split("\n### ")[0];
-	const lean = block(authorSection, "lean"), config = block(authorSection, "json");
+	const consumerSection = consumerGuide.split(transferred ? "### Consuming inputs\n" : "### Resource-containing values\n")[1].split("\n### ")[0];
+	const lean = block(authorSection, "lean");
+	let config = block(authorSection, "json");
+	if(transferred)
+	{
+		const decisions = JSON.parse(block(authorGuide.split("### Export consuming inputs\n")[1].split("\n### ")[0], "json"));
+		config = canonicalJson({ ...JSON.parse(config), ...decisions });
+	}
 	const example = block(consumerSection, "php");
 	const author = join(directory, "author"), project = join(author, "project");
 	const producer = join(author, "release"), handoff = join(directory, "handoff");
@@ -42,13 +49,14 @@ test("owned PHP author and consumer guides work in a combined C/Composer release
 	const cli = resolve("scripts/lean-bridge.mjs");
 	const invocation = await processBuildRunner.capture({ command: process.execPath
 		, args: [cli, "build", "--project", project, "--output", producer, "--target", "c", "--target", "php-native", "--json"]
-		, cwd: directory, env: environment, timeoutMs: 600000 }).catch(explain);
+		, cwd: directory, env: environment, timeoutMs: 1200000 }).catch(explain);
 	const response = JSON.parse(invocation.stdout);
 	assert.equal(response.status, "ok");
 	assert.deepEqual(response.result.targets, ["c", "php-native"]);
 	assert.deepEqual(await lakeInputState(project), before);
 	const model = JSON.parse(await readFile(join(producer, "native/component/model.json"), "utf8"));
 	assert.ok(model.ownedGraph.hostCallbacks);
+	if(transferred) assert.deepEqual(model.ownedGraph.inputTransfers.exports, [{ bindingId: "lean:Owned.callbackRecord", parameters: [0] }]);
 	const phpProjection = response.result.projections.find(projection => projection.ecosystem === "php-native");
 	assert.equal(phpProjection.backend, "owned-php-cli-ffi-v1");
 	const receipt = await copyPackageSetHandoff(producer, handoff);
@@ -70,10 +78,10 @@ test("owned PHP author and consumer guides work in a combined C/Composer release
 	await saveLakeFile(installed.deployment, "owned.php", example);
 	const inventory = await ownedPhpInventory(installed.deployment);
 	const observed = await runCopied(installed.php, [...installed.runtimeOptions, "owned.php"], installed.deployment, installed.environment);
-	assert.equal(observed.stderr, ""); assert.equal(observed.stdout, "42\n42\n");
+	assert.equal(observed.stderr, ""); assert.equal(observed.stdout, transferred ? "42\n42\nclosed\n" : "42\n42\n");
 	assert.deepEqual(await runCopied(installed.php, [...installed.runtimeOptions, "owned.php"], installed.deployment, installed.environment), observed);
 	assert.deepEqual(await ownedPhpInventory(installed.deployment), inventory);
-	await saveLakeFile("build/owned-php-packaging", "documentation.json", canonicalJson({
+	await saveLakeFile(transferred ? "build/owned-php-transfer-packaging" : "build/owned-php-packaging", "documentation.json", canonicalJson({
 		schemaVersion: 1, planNode: 1219, cliIntegrated: true
 		, mixedTargets: ["c", "php-native"]
 		, producerRemoved: true, handoffRemoved: true

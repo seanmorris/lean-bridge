@@ -99,7 +99,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, targets
 			, ownedGraphs
 			, ownedHostCallbacks: ownedGraphs
-			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan"].includes(target))
+			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target))
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)
@@ -113,7 +113,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					if(targets.includes("nuget")) generateOwnedDotnetPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
 					if(targets.includes("maven")) generateOwnedJvmPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
 					if(targets.includes("cpan")) generateOwnedPerlXs(model.bindingIr, ownedPerlNamespace(model.component, config.targets?.cpan), { transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
-					if(targets.includes("php-native")) generateOwnedPhpPackage(model.bindingIr);
+					if(targets.includes("php-native")) generateOwnedPhpPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
 					if(targets.includes("wit-wasi")) compileOwnedWitGraphModel(model.bindingIr, config.targets?.["wit-wasi"]);
 					return;
 				}

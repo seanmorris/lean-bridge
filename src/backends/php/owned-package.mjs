@@ -36,12 +36,21 @@ const checkEvidence = (model, contract, evidence) => {
  *
  * @param ir - Compiler-authenticated explicit ownership contract.
  * @param evidence - Closed native identities, or null for source inspection.
+ * @param options - Authenticated ownership capabilities.
+ * @param options.transferredInputs - Enable consuming input leases.
  */
-export const generateOwnedPhpPackage = (ir, evidence = null) => {
-	const model = generateOwnedPhpCalls(ir), { namespace } = model, prefix = model.c.prefix;
+export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs = false } = {}) => {
+	const model = generateOwnedPhpCalls(ir, { transferredInputs }), { namespace } = model, prefix = model.c.prefix;
+	const transfers = model.functions.some(fn => fn.transfers?.length);
 	if(["gmp", "leanshared", "lean_bridge_native"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned PHP component name collides with a dependency or exceeds its name limit");
-	const contract = { schemaVersion: 1, language: "php-8.2-nts-cli"
+	const contract = { schemaVersion: transfers ? 2 : 1
+		, language: "php-8.2-nts-cli"
+		, ...transfers ? { inputTransfers: { schemaVersion: 1
+			, arguments: "ordinary-values", consumption: "before-lean-call"
+			, validation: "before-consumption", failure: "consumed-after-handoff"
+			, aliases: "shared-lease", borrowedInputs: "reject"
+			, independentRetains: "preserved" } } : {}
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
 		, exactIntegers: "brick-math", integerDecimalDigits: 16384
@@ -103,6 +112,15 @@ them in a finally block. Destruction provides fallback cleanup. Calls from
 Fibers reject; cleanup deferred by Fiber destruction runs in the main context.
 Resource identities cannot be cloned or serialized.
 
+${transfers ? `Consuming parameters accept ordinary PHP values. Validation and snapshot
+failures before Lean runs preserve their owners. At the native handoff, each
+consumed result owner closes all its resource and closure aliases, including
+sibling fields. Later callback or result-conversion failures do not restore
+ownership. Independent retain() results remain usable. Callback borrows cannot
+be consumed; retain them first. Two consuming arguments cannot share one owner.
+Generated function documentation names the consuming parameters.
+
+` : ""}\
 Pass synchronous PHP callables to callback parameters. Borrowed resources in
 callback arguments expire on return. Call retain() inside the callback to keep
 one. Callback replies are copied before native borrowed storage expires.
@@ -142,10 +160,11 @@ and invalid calls reject before loading native code.
  *
  * @param ir - Compiler-authenticated contract.
  * @param files - Complete generated package source inventory.
+ * @param options - Explicit authenticated transport capabilities.
  */
-export const auditOwnedPhpPackage = (ir, files) => {
+export const auditOwnedPhpPackage = (ir, files, options = {}) => {
 	const manifest = JSON.parse(files["binding-manifest.json"]);
-	const expected = generateOwnedPhpPackage(ir, manifest.nativeEvidence).files;
+	const expected = generateOwnedPhpPackage(ir, manifest.nativeEvidence, options).files;
 	if(canonicalJson(Object.keys(files).sort()) !== canonicalJson(Object.keys(expected).sort())
 		|| Object.entries(expected).some(([path, source]) => files[path] !== source))
 		throw new TypeError("Owned PHP package differs from its complete generated sources");

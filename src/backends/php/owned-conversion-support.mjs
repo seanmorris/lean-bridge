@@ -4,8 +4,13 @@
  * @file
  */
 
-/** Private generated support. Every FFI binding comes from the pinned loader. */
-export const ownedPhpConversionSupport = String.raw`
+/**
+ * Every FFI binding comes from the pinned loader.
+ *
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Reserve identities during consuming conversion.
+ */
+export const ownedPhpConversionSupport = ({ transferredInputs = false } = {}) => String.raw`
 final class OwnedInvalidNative extends \RuntimeException
 {
     public function __construct(string $message) { parent::__construct($message, 9); }
@@ -61,7 +66,7 @@ final class OwnedConversionScope
     private array $memory = [];
     private array $integers = [];
     private array $leases = [];
-    private bool $closed = false;
+    private bool $closed = false;${transferredInputs ? "\n    public ?OwnedInputGroup $inputGroup = null;" : ""}
     public readonly GraphBudget $storage;
     public readonly GraphBudget $native;
     public function __construct(public readonly OwnedSchema $schema, public readonly OwnedState $state) {
@@ -90,7 +95,7 @@ final class OwnedConversionScope
     }
     public function pin(NativeBinding $binding): \FFI\CData {
         $this->storage->charge(32); $this->checkpoint();
-        $this->leases[] = $binding->pin($this->state);
+        $this->leases[] = ${transferredInputs ? "$lease = " : ""}$binding->pin($this->state);${transferredInputs ? "\n        $this->inputGroup?->reserve($lease);" : ""}
         return $binding->raw($this->state);
     }
     public function close(): void {

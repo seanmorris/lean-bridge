@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedCiFollowup, ownedCiFollowupChangedPaths } from "./owned-ci-followup-history.mjs";
+import { beforeOwnedCiFollowup, ownedCiFollowupNormalizationPaths } from "./owned-ci-followup-history.mjs";
 
 export const ownedPerlCiBaseline = "29b8e25a1609031a6e8af1113a31ceb1458fe493";
 export const ownedPerlCiPath = "docs/evidence/owned-perl-ci-repair-20260930.json";
@@ -22,7 +22,7 @@ export const ownedPerlCiChangedPaths = [
 	, "tests/owned-perl-transfer-evidence.test.mjs"
 ];
 export const ownedPerlCiAddedPaths = ["tests/helpers/owned-perl-ci-history.mjs"];
-export const ownedPerlCiNormalizationPaths = [...new Set([...ownedPerlCiChangedPaths, ...ownedCiFollowupChangedPaths])].sort();
+export const ownedPerlCiNormalizationPaths = [...new Set([...ownedPerlCiChangedPaths, ...ownedCiFollowupNormalizationPaths])].sort();
 let cached;
 
 /**

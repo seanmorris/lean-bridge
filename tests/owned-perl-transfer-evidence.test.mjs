@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { beforeOwnedPhpTransfer, ownedPhpTransferHistoricalBytes } from "./helpers/owned-php-transfer-history.mjs";
 import { beforeOwnedCiFollowup, ownedCiFollowupAddedPaths, ownedCiFollowupBaseline
 	, ownedCiFollowupChangedPaths, ownedCiFollowupHistoricalBytes, ownedCiFollowupPath
 	, ownedCiFollowupPrevious, reverseOwnedCiFollowupUpdate } from "./helpers/owned-ci-followup-history.mjs";
@@ -170,7 +171,7 @@ test("Perl transfer profile repair changes only checked registration bookkeeping
 		assert.throws(() => reverseOwnedPerlProfileUpdate(unknown, update));
 		assert.throws(() => reverseOwnedPerlProfileUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
 	}
-	const manifest = await readFile("src/adoption/test-profiles.mjs", "utf8");
+	const manifest = beforeOwnedPhpTransfer("src/adoption/test-profiles.mjs", await readFile("src/adoption/test-profiles.mjs", "utf8"));
 	const registration = '\t\t, "owned-perl-transfer-evidence"\n';
 	assert.equal(manifest.split(registration).length, 2);
 	assert.equal(sha256(manifest.replace(registration, "")), previous.sources["src/adoption/test-profiles.mjs"]);
@@ -230,13 +231,13 @@ test("CI follow-up keeps dependency checks and original Nix source identities au
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedCiFollowupAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedPhpTransferHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedCiFollowupChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedPhpTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
 		assert.equal(sha256(beforeOwnedCiFollowup(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedCiFollowup(update.path, source, update.currentSha256), source);
 		assert.equal(beforeOwnedCiFollowup(update.path, unknown), unknown);

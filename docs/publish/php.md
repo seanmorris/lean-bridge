@@ -145,8 +145,8 @@ Callback resource borrows expire when the callback returns. PHP consumers call
 borrowed PHP callback does not extend its lifetime. Conversions allow 128 value
 levels, 262,144 visits and separate 16 MiB storage budgets. Calls run in the main
 NTS CLI context, with checked process identity and deferred cleanup during active
-calls. Transferred inputs, anchored results and asynchronous callbacks remain
-unsupported. The
+calls. Native packages also support [consuming inputs](#export-consuming-inputs).
+Owner-anchored borrowed results and asynchronous callbacks remain unsupported. The
 [installed package checks](../evidence/owned-php-packages-20260928.md) cover native
 package loading, relocation, independent builds and mixed packages.
 
@@ -181,6 +181,38 @@ Callbacks remain synchronous. Initialize lazy peer packages before entering a
 callback, including after interpreter refresh, or select startup descriptors.
 The loader rejects first-use loading inside a callback without poisoning the
 package. See the [consumer lifetime rules](../php.md#resource-containing-values).
+
+### Export consuming inputs
+
+For a native Composer release, add this `contracts` map to the
+[resource example's configuration](#export-resource-containing-values):
+
+```json
+{
+  "contracts": {
+    "Owned.callbackRecord": {
+      "parameters": [
+        { "ownership": "transfer", "lifetime": { "scope": "call", "anchor": null } },
+        { "ownership": "borrow", "lifetime": { "scope": "call", "anchor": null } }
+      ]
+    }
+  }
+}
+```
+
+Build with `--target php-native`. This changes the ownership of the first
+argument without changing the Lean function or its PHP value type. The generated
+PHPDoc names the consuming argument. Source analysis, compiled receipts and the
+Composer adapter retain that decision. A compiler-checked reviewed contract can
+select the same transfer policy.
+
+Use the [installed consumer example](../php.md#consuming-inputs). Inputs remain
+usable after validation failures before the native handoff. After the handoff,
+shared aliases close, including when a callback throws. Independent `retain()`
+results survive. Callback borrows must be retained before they can be consumed.
+
+A combined release may select other transfer-capable native targets such as C.
+PHP-Wasm still rejects this contract; do not select `--target php-wasm` for it.
 
 ### Export named copied aliases
 

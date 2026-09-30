@@ -3,14 +3,17 @@
  *
  * @file
  */
+import { ownedPhpInputTransfers } from "./owned-input-transfers.mjs";
 
 /**
  * The caller supplies authenticated FFI bindings. This runtime alone does not
  * admit Composer packages or claim the separate PHP-Wasm Zend transport.
  *
  * @param prefix - Validated public C component identifier.
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Observe native consumption through shared leases.
  */
-export const ownedPhpRuntime = prefix => {
+export const ownedPhpRuntime = (prefix, { transferredInputs = false } = {}) => {
 	if(typeof prefix !== "string" || !/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned PHP prefix");
 	const namespace = "Lean" + prefix.split("_").filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("") + (prefix.match(/_+$/u)?.[0] ?? "");
 	return String.raw`
@@ -152,7 +155,7 @@ final class OwnedOwner
     }
     public function publish(): void {
         if ($this->lease === null) { $this->close(); return; }
-        $this->lease->requireOpen();
+        $this->lease->requireOpen();${transferredInputs ? "\n        $this->lease->published = true;" : ""}
         $this->slot = null; $this->lease = null;
     }
     public function close(): void {
@@ -167,14 +170,14 @@ final class OwnedBorrowScope { public bool $active = true; }
 
 final class OwnedLease
 {
-    public ?OwnedSlot $slot = null;
+    public ?OwnedSlot $slot = null;${transferredInputs ? "\n    public ?OwnedInputGroup $inputMove = null;\n    public bool $published = false;" : ""}
     public function __construct(public readonly OwnedState $state, private ?OwnedBorrowScope $scope = null) {}
     public function requireOpen(): void {
-        $this->state->requireOpen();
+        $this->state->requireOpen();${transferredInputs ? "\n        if ($this->inputMove?->consumed()) OwnedRuntime::checked(4);" : ""}
         if ($this->scope !== null) { if (!$this->scope->active) OwnedRuntime::checked(4); return; }
         if ($this->slot === null || $this->slot->pending || $this->slot->releasing || \FFI::isNull($this->slot->value)) OwnedRuntime::checked(4);
     }
-    public function __destruct() {
+${transferredInputs ? "    public function transferable(): bool { return $this->scope === null && $this->published; }\n" : ""}    public function __destruct() {
         if ($this->slot !== null) { try { $this->state->release($this->slot); } catch (\Throwable) {} }
     }
 }
@@ -225,5 +228,5 @@ final class NativeBinding implements ResourceBinding
         $this->handle = null; $this->lease = null; $this->retainCall = null; $this->invokeCall = null;
     }
 }
-`.replaceAll("@PREFIX@", prefix).replaceAll("@NAMESPACE@", namespace);
+${transferredInputs ? ownedPhpInputTransfers : ""}`.replaceAll("@PREFIX@", prefix).replaceAll("@NAMESPACE@", namespace);
 };

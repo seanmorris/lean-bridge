@@ -453,7 +453,60 @@ startup descriptor. First-use loading inside a synchronous Lean callback throws
 before downloading an extension; the peer remains usable from a normal call.
 After `php.refresh()`, require the autoloader again and initialize lazy peers
 outside callbacks. Do not reuse resource wrappers from an earlier request.
-Transferred inputs, anchored results and asynchronous callbacks remain unsupported.
+PHP-Wasm does not yet accept transferred inputs. Owner-anchored borrowed results
+and asynchronous callbacks remain unsupported in both PHP transports.
+
+### Consuming inputs
+
+Native Composer packages can expose functions that consume resource-containing
+arguments. The generated function documentation names those arguments. Pass the
+same PHP values you use for borrowed arguments; no transfer wrapper is needed.
+
+With the [consuming author configuration](publish/php.md#export-consuming-inputs),
+save this as `consume.php`:
+
+```php
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Brick\Math\BigInteger;
+use LeanOwnedAggregates\{Bundle, Bytes, LeanBridgeError, Payload};
+use function LeanOwnedAggregates\{callback_record, new_ticket, serial};
+
+$ticket = new_ticket(BigInteger::of(42), 'order');
+$alias = $ticket;
+$kept = $ticket->retain();
+$result = null;
+try {
+    $bundle = new Bundle($ticket, null, [], [],
+        new Payload(BigInteger::of(7), Bytes::fromString('payload')));
+    $result = callback_record($bundle, static fn(Bundle $value): Bundle => $value);
+    echo serial($result->primary), PHP_EOL;
+    echo serial($kept), PHP_EOL;
+    try {
+        serial($alias);
+    } catch (LeanBridgeError $error) {
+        if ($error->getCode() !== 4) throw $error;
+        echo 'closed', PHP_EOL;
+    }
+} finally {
+    $result?->primary->close();
+    $kept->close();
+    $ticket->close();
+}
+```
+
+Run `php consume.php`. It prints `42`, `42`, then `closed`. The native call
+consumes `$ticket` and its alias; the independent `retain()` result stays open.
+
+Validation and snapshot failures before the Lean call preserve the inputs.
+Once Lean receives them, their shared result owners close even if a callback
+throws or result conversion fails. This also closes sibling fields that share
+an owner. Two consuming parameters cannot share one owner. Resources borrowed
+inside a callback cannot be consumed; call `retain()` first. Records and arrays
+remain PHP values, but their consumed resource fields are no longer usable.
 
 ### Native callbacks and returned functions
 

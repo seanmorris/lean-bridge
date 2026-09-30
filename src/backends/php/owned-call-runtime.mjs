@@ -4,8 +4,13 @@
  * @file
  */
 
-/** Private native engine. No PHP exception can cross a C callback frame. */
-export const ownedPhpCallRuntime = String.raw`
+/**
+ * Keep PHP exceptions inside the host callback frame.
+ *
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Prepare and finish consuming input groups.
+ */
+export const ownedPhpCallRuntime = ({ transferredInputs = false } = {}) => String.raw`
 final class OwnedCallFrame
 {
     public bool $active = true;
@@ -157,19 +162,27 @@ final class OwnedCalls
     private function execute(int $index, array $arguments): mixed {
         $this->context(); $fn = OwnedCallTypes::CALLS[$index]; $prepared = self::validate($fn, $arguments);
         if ($this->depth >= 64) throw new \OverflowException('Lean callback reentry exceeds 64 levels');
-        $this->depth++; $scope = null; $frame = null; $owner = null;
+        $this->depth++; $scope = null; $frame = null; $owner = null;${transferredInputs ? " $moves = [];" : ""}
         try {
             $runtime = $this->load(); $state = $runtime->current(); $schema = $this->schema; $ffi = $runtime->ffi;
             $scope = new OwnedConversionScope($schema, $state); $frame = new OwnedCallFrame($scope); $inputs = [];
-            foreach ($fn['parameters'] as $index => $parameter) {
+            foreach ($fn['parameters'] as $index => $parameter) {${transferredInputs ? "\n                $scope->inputGroup = isset($parameter['transfer']) ? ($moves[$index] = new OwnedInputGroup($state)) : null;" : ""}
                 if ($parameter['host']) { $inputs[] = $this->host($parameter['type'], $prepared[$index], $frame); continue; }
                 $node = $schema->nodes[$parameter['type']];
                 $input = OwnedConversions::write($parameter['type'], $arguments[$index], $scope);
                 $view = $ffi->cast($node['pointerType'], $input); $inputs[] = $node['leaf'] ? $view[0] : $view;
             }
-            $node = $schema->nodes[$fn['result']]; $output = $scope->allocate($node['size']); $owner = new OwnedOwner($state);
-            $status = $ffi->{$fn['symbol']}($state->requireOpen(), ...[...$inputs, $ffi->cast($node['pointerType'], $output), \FFI::addr($owner->value())]);
-            if ($frame->failure !== null) throw $frame->failure;
+${transferredInputs ? String.raw`            $scope->inputGroup = null;
+            foreach ($moves as $index => $move) $inputs[$index] = $move->prepare($fn['parameters'][$index], $schema, $inputs[$index]);
+            $arguments = [];
+            foreach ($inputs as $index => $input) {
+                $arguments[] = $input;
+                if (isset($moves[$index])) $arguments[] = $moves[$index]->owner();
+            }
+            $inputs = $arguments;
+` : ""}            $node = $schema->nodes[$fn['result']]; $output = $scope->allocate($node['size']); $owner = new OwnedOwner($state);
+${transferredInputs ? "            OwnedInputGroup::armAll($moves);\n" : ""}            $status = $ffi->{$fn['symbol']}($state->requireOpen(), ...[...$inputs, $ffi->cast($node['pointerType'], $output), \FFI::addr($owner->value())]);
+${transferredInputs ? "            OwnedInputGroup::finishAll($moves); $moves = [];\n" : ""}            if ($frame->failure !== null) throw $frame->failure;
             // The public C API labels nonzero host replies as callback failure.
             // Preserve native snapshot failures recorded by our typed shim.
             foreach ($frame->descriptors as $descriptor) OwnedRuntime::checked($descriptor->native_status);
@@ -187,9 +200,9 @@ final class OwnedCalls
                 foreach ($frame->ids as $id) unset($this->contexts[$id]);
                 $frame->ids = []; $frame->descriptors = [];
             }
-            try { $owner?->close(); }
+${transferredInputs ? "            try { OwnedInputGroup::finishAll($moves); } finally {\n" : ""}            try { $owner?->close(); }
             finally { try { $scope?->close(); } finally { $this->depth--; } }
-        }
+${transferredInputs ? "            }\n" : ""}        }
     }
 }
 

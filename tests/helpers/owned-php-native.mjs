@@ -23,13 +23,17 @@ import { runCopied } from "./copied-fixture-install.mjs";
  */
 export const compileOwnedPhpFixture = async (t, options = {}) => {
 	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
+	const transferredInputs = Boolean(options.transferredInputs);
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
-		, component: compiled.model.component, hostCallbacks: true });
-	const model = generateOwnedPhpCalls(c.values.native.model.bindingIr);
+		, component: compiled.model.component
+		, hostCallbacks: true, transferredInputs });
+	const model = generateOwnedPhpCalls(c.values.native.model.bindingIr, { transferredInputs });
+	const handoff = "static inline void oc_transfer_consume(void *context) {";
+	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const implementation = `#include <stdlib.h>
 #include <stddef.h>
-static size_t live = 0; static ptrdiff_t fail_after = -1;
+static size_t live = 0; static ptrdiff_t fail_after = -1;${transferredInputs ? "\nstatic size_t handoffs = 0;" : ""}
 static void *allocate(size_t size) {
   if (fail_after == 0) return NULL;
   if (fail_after > 0) --fail_after;
@@ -38,9 +42,10 @@ static void *allocate(size_t size) {
 static void deallocate(void *value) { if (value) { --live; free(value); } }
 #define LB_OWNED_ALLOC allocate
 #define LB_OWNED_FREE deallocate
-${c.source}
+${transferredInputs ? c.source.replace(handoff, handoff + "\n  ++handoffs;") : c.source}
 ${model.nativeSource}
 size_t owned_test_live(void) { return live; }
+${transferredInputs ? "size_t owned_test_handoffs(void) { return handoffs; }\n" : ""}\
 void owned_test_fail_after(ptrdiff_t value) { fail_after = value; }
 size_t owned_test_identities(void) {
   lean_bridge_native_snapshot snapshot; lean_bridge_native_snapshot_read(&snapshot); return snapshot.live_identities;
@@ -67,7 +72,10 @@ size_t owned_test_identities(void) {
 		, componentId: compiled.model.component.id
 		, runtimeIdentity: sha256(canonicalJson(loadOrder.slice(0, 2).map(name => libraries[name])))
 		, identity: sha256(implementation) }));
-	const helpers = await readFile("tests/fixtures/structured-types/owned-php-calls-probe.php", "utf8");
+	const originalHelpers = await readFile("tests/fixtures/structured-types/owned-php-calls-probe.php", "utf8");
+	const helpers = transferredInputs ? originalHelpers
+		.replace("size_t owned_test_live(void);", "size_t owned_test_live(void);\\nsize_t owned_test_handoffs(void);")
+		.replace("global $model;", "global $model, $visited; $visited[$name] = true;") : originalHelpers;
 	await saveLakeFile(compiled.directory, "probe.php", helpers);
 	const execute = async (source, mode = "normal") => {
 		await saveLakeFile(compiled.directory, "consumer.php", source);

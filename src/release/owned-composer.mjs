@@ -26,8 +26,9 @@ export const packageOwnedPhp = async options => {
 	validateOrdinaryPhpSettings(settings);
 	if(!/^2\.\d+$/u.test(glibcMinimumVersion)) throw new TypeError("Invalid PHP native glibc floor");
 	const { model, receipt, evidence, adapter, libraryPaths } = await ownedPhpEvidence(options);
-	const generated = generateOwnedPhpPackage(model.bindingIr, evidence), prefix = generated.c.prefix;
-	auditOwnedPhpPackage(model.bindingIr, generated.files);
+	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const generated = generateOwnedPhpPackage(model.bindingIr, evidence, { transferredInputs }), prefix = generated.c.prefix;
+	auditOwnedPhpPackage(model.bindingIr, generated.files, { transferredInputs });
 	const name = settings.name ?? `lean-bridge/${prefix.replaceAll("_", "-")}`;
 	const version = settings.version ?? (model.component.version === "0.0.0-local" ? "0.0.0" : model.component.version);
 	validateOrdinaryPhpSettings({ name, version });
