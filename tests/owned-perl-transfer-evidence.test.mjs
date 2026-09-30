@@ -8,6 +8,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { beforeOwnedPerlCi, ownedPerlCiAddedPaths, ownedPerlCiBaseline
+	, ownedPerlCiChangedPaths, ownedPerlCiHistoricalBytes, ownedPerlCiPath
+	, ownedPerlCiPrevious, reverseOwnedPerlCiUpdate } from "./helpers/owned-perl-ci-history.mjs";
 import { beforeOwnedPerlProfile, ownedPerlProfileAddedPaths, ownedPerlProfileBaseline
 	, ownedPerlProfileChangedPaths, ownedPerlProfileHistoricalBytes, ownedPerlProfilePath
 	, ownedPerlProfilePrevious, reverseOwnedPerlProfileUpdate } from "./helpers/owned-perl-profile-history.mjs";
@@ -151,13 +154,13 @@ test("Perl transfer profile repair changes only checked registration bookkeeping
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPerlProfileAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedPerlCiHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPerlProfileChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedPerlCi(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
 		assert.equal(sha256(beforeOwnedPerlProfile(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedPerlProfile(update.path, source, update.currentSha256), source);
 		assert.equal(beforeOwnedPerlProfile(update.path, unknown), unknown);
@@ -181,4 +184,37 @@ test("Perl transfer profile repair changes only checked registration bookkeeping
 	}
 	assert.match(record.runs.before.text, /Unclassified repository test: tests\/owned-perl-transfer-evidence\.test\.mjs/u);
 	assert.match(record.runs.after.text, /^# pass 4$/mu); assert.match(record.runs.after.text, /^# skipped 0$/mu);
+});
+
+test("Perl CI repair follows npm scripts without changing frozen execution receipts", async () => {
+	const record = JSON.parse(await readFile(ownedPerlCiPath, "utf8"));
+	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-perl-ci-repair");
+	assert.equal(record.planNode, 1219); assert.equal(record.baselineRevision, ownedPerlCiBaseline);
+	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.previous, ownedPerlCiPrevious);
+	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
+	assert.equal(sha256(bytes), record.previous.sha256);
+	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPerlCiAddedPaths].sort());
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	assert.deepEqual(record.updates.map(update => update.path), ownedPerlCiChangedPaths);
+	for(const update of record.updates)
+	{
+		assert.equal(update.previousSha256, previous.sources[update.path]);
+		assert.equal(update.currentSha256, record.sources[update.path]);
+		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		assert.equal(sha256(beforeOwnedPerlCi(update.path, source)), update.previousSha256);
+		assert.equal(beforeOwnedPerlCi(update.path, source, update.currentSha256), source);
+		assert.equal(beforeOwnedPerlCi(update.path, unknown), unknown);
+		assert.throws(() => reverseOwnedPerlCiUpdate(unknown, update));
+		assert.throws(() => reverseOwnedPerlCiUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
+	}
+	for(const [name, exitCode] of [["before", 1], ["after", 0]])
+	{
+		const run = record.runs[name];
+		assert.equal(run.command, "node --test --test-name-pattern='^CI requires recursive C#' tests/dotnet-recursive-callable-evidence.test.mjs");
+		assert.equal(run.exitCode, exitCode); assert.equal(run.sha256, sha256(run.text));
+		assert.match(run.text, /^# tests 1$/mu);
+		assert.match(run.text, new RegExp(`^# fail ${exitCode}$`, "mu"));
+	}
+	assert.match(record.runs.before.text, /assert\.ok\(perl\.includes/u);
+	assert.match(record.runs.after.text, /^# pass 1$/mu); assert.match(record.runs.after.text, /^# skipped 0$/mu);
 });
