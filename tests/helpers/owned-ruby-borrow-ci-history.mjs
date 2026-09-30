@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedDotnetBorrow, ownedDotnetBorrowNormalizationPaths } from "./owned-dotnet-borrow-history.mjs";
 
 export const ownedRubyBorrowCiPath = "docs/evidence/owned-ruby-borrow-ci-repair-20260930.json";
 export const ownedRubyBorrowCiBaseline = "fbdcc20287f8491dbe6435be003a08733fa717c4";
@@ -24,7 +25,7 @@ export const ownedRubyBorrowCiAddedPaths = [
 	, "tests/helpers/owned-ruby-borrow-ci-history.mjs"
 ].sort();
 let cached;
-export const ownedRubyBorrowCiNormalizationPaths = ownedRubyBorrowCiChangedPaths;
+export const ownedRubyBorrowCiNormalizationPaths = [...new Set([...ownedRubyBorrowCiChangedPaths, ...ownedDotnetBorrowNormalizationPaths])].sort();
 
 /**
  * Reverse authenticated complete-file versions through exact ordered edits.
@@ -57,6 +58,7 @@ export const reverseOwnedRubyBorrowCiUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedRubyBorrowCi = (path, source, expected) => {
+	source = beforeOwnedDotnetBorrow(path, source, expected);
 	if(!ownedRubyBorrowCiChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedRubyBorrowCiPath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-ruby-borrow-ci-repair");

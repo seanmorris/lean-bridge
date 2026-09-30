@@ -4,13 +4,15 @@
  * @file
  */
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
+import { ownedDotnetWholeScope } from "./owned-borrows.mjs";
 
 /**
  * No finalizer calls native code. The synchronous call owns temporary storage.
  *
  * @param transfers - Collect leases visited in consuming input conversions.
+ * @param anchored - Pin complete owners and consume original slots.
  */
-export const ownedDotnetConversionSupport = (transfers = false) => `internal sealed class OwnedInvalidNative : global::System.Exception
+export const ownedDotnetConversionSupport = (transfers = false, anchored = false) => `internal sealed class OwnedInvalidNative : global::System.Exception
 {
     internal OwnedInvalidNative(string message) : base(message) { }
 }
@@ -74,7 +76,7 @@ internal sealed unsafe class OwnedValueScope : global::System.IDisposable
     internal nint Root(OwnedHandle handle)
     {
         var value = handle.Raw(State);
-        Storage((nuint)sizeof(nint)); OwnedRuntime.Checkpoint(); roots.Add(handle);${transfers ? "\n        if (Moves is not null && MoveGroup >= 0) Moves.Add(handle.Lease, MoveGroup, this);" : ""}
+        Storage((nuint)sizeof(nint)); OwnedRuntime.Checkpoint(); roots.Add(handle);${anchored ? "\n        Pin(handle.Lease);" : transfers ? "\n        if (Moves is not null && MoveGroup >= 0) Moves.Add(handle.Lease, MoveGroup, this);" : ""}
         return value;
     }
     internal nint Allocate<T>(nuint count) where T : unmanaged
@@ -97,8 +99,9 @@ internal sealed unsafe class OwnedValueScope : global::System.IDisposable
     public void Dispose()
     {
         foreach (var pointer in allocations) global::System.Runtime.InteropServices.NativeMemory.Free((void*)pointer);
-        allocations.Clear(); roots.Clear(); hosts.Clear(); outputs.Clear();${transfers ? "\n        Moves = null;" : ""}
+        allocations.Clear(); roots.Clear(); hosts.Clear(); outputs.Clear();${anchored ? "\n        Unpin();" : transfers ? "\n        Moves = null;" : ""}
     }
+${anchored ? ownedDotnetWholeScope(transfers) : ""}\
 }
 
 internal static unsafe partial class OwnedConvert

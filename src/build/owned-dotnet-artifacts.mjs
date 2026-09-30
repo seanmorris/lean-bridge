@@ -31,12 +31,13 @@ export const ownedDotnetAdapterSources = (c, dotnet) => ({ ...c.files
  */
 export const ownedDotnetEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true });
 	if(!model.ownedGraph?.hostCallbacks) throw new TypeError("Owned C# requires authenticated callback/copy support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs });
-	const projection = generateOwnedDotnetPackage(model.bindingIr, null, { transferredInputs }), prefix = c.values.prefix;
+	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs, anchoredResults });
+	const projection = generateOwnedDotnetPackage(model.bindingIr, null, { transferredInputs, anchoredResults }), prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-dotnet-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	const sources = ownedDotnetAdapterSources(c, projection), gmpLibrary = "libgmp-lean-bridge.so.10";
@@ -44,9 +45,10 @@ export const ownedDotnetEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot
 		, "share/lean-bridge/gmp.json", "share/lean-bridge/sources/gmp-6.3.0.tar.xz"
 		, ...["COPYING", "COPYING.LESSERv3", "COPYINGv2", "COPYINGv3"].map(name => `share/lean-bridge/licenses/GMP-${name}`)];
 	const expectedPaths = [...Object.keys(sources), `lib/lib${prefix}_dotnet.so`, ...gmpFiles.map(path => `gmp/${path}`)].sort();
-	if(adapter.schemaVersion !== (transferredInputs ? 2 : 1) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
+	if(adapter.schemaVersion !== (anchoredResults ? 3 : transferredInputs ? 2 : 1) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
 		|| adapter.bindingIrSha256 !== model.bindingIrSha256 || adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt))
-		|| adapter.library !== `lib${prefix}_dotnet.so` || adapter.ownedValues?.schemaVersion !== (transferredInputs ? 3 : 2)
+		|| adapter.library !== `lib${prefix}_dotnet.so` || adapter.ownedValues?.schemaVersion !== (anchoredResults ? 4 : transferredInputs ? 3 : 2)
+		|| canonicalJson(adapter.ownedValues.resultAnchors ?? null) !== canonicalJson(model.ownedGraph.resultAnchors ?? null)
 		|| canonicalJson(adapter.ownedValues.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)
 		|| canonicalJson(adapter.ownedValues.hostCallbacks) !== canonicalJson(model.ownedGraph.hostCallbacks)
 		|| adapter.ownedValues.headerSha256 !== sha256(c.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(c.source)

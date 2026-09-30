@@ -265,8 +265,9 @@ the [closure example](#export-recursive-callbacks-and-closures).
 
 Resource and closure results have explicit leases. Borrowed callback values
 expire at callback return; `Retain` creates an independent owner. A retained
-resource does not retain a host callback. Anchored results, retained host
-callbacks and asynchronous delivery remain unsupported.
+resource does not retain a host callback. Input-anchored function results use
+the whole-owner projection below. Retained host callbacks and asynchronous
+delivery remain unsupported.
 
 NuGet bundles the component, shared Lean runtime and a private GMP 6.3.0
 library, together with source and license notices. Its loader checks native
@@ -290,7 +291,7 @@ Keep `resources` and `ownedAggregates`, and set the package coordinate under
 Lean checks before generating consuming calls.
 
 Build with `lean-bridge build --project ./owned --target nuget --output ./release-owned`.
-Consumers pass ordinary C# values. Generated XML documentation names the
+Packages without result anchors accept ordinary C# values. Generated XML documentation names the
 consuming arguments. Validation precedes handoff; shared aliases close at the
 Lean call boundary, while independent `Retain()` owners survive. See the
 [consumer example](../consume/dotnet.md#consuming-inputs).
@@ -306,6 +307,31 @@ A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet, Maven
 C# keeps its private thread-exit adapter and GMP library while sharing the
 compiled Lean component. Other consumer bindings still reject transfer
 contracts. Building a package does not publish it.
+
+### Borrow a result from an input
+
+Use an input anchor in the result's export contract, as shown in the
+[C author example](c.md#anchor-a-result-to-an-input), and select `nuget`.
+Ordinary source and reviewed Binding IR both pass through the Lean compiler.
+The anchor names the original input owner; a copied argument snapshot cannot
+replace that owner.
+
+This projection uses `owned-dotnet-v3` and contract version 3. The private
+adapter, compiled managed receipt and NuGet receipt use version 3, while the
+native owned-value description uses version 4. Packaging reconstructs
+`resultAnchors`, generated C# sources and native artifacts before accepting
+them. Unanchored packages keep their existing APIs and receipt versions.
+
+Resource-containing results use `Value<T>`, including empty values. Anchor and
+consuming parameters require that wrapper. `Get()` checks its lifetime;
+`Share()` shares the original owner and `Retain()` creates independent ownership.
+See the [consumer example](../consume/dotnet.md#results-borrowed-from-an-input)
+for disposal and declaration-selected copy factories.
+
+Combined anchored builds can select C, C++, Cargo, PyPI, RubyGems and NuGet.
+C# retains its private thread-exit adapter and GMP while sharing the compiled
+Lean component and runtime. Receiver anchors and callback-result anchors remain
+separate work. Building the archive does not publish it.
 
 ## Build and inspect the package
 

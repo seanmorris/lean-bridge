@@ -1443,6 +1443,34 @@ or handoff directory. The reviewed build also installs C, C++, Cargo, PyPI and
 RubyGems companions. Reports go to `build/owned-dotnet-transfers/` and
 `build/owned-dotnet-transfer-packaging/`.
 
+#### Installed .NET borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-dotnet-borrows
+```
+
+Use the .NET 8 SDK and native toolchains above. On a glibc 2.36 test host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`. The enabled gate requires seven tests
+with no skips on ordinary and reviewed authoring paths.
+
+Runtime checks cover whole owners, empty and recursive values, original-slot
+consumption, callback reentry, returned closures, canonical equality and
+independent retention. Managed and native allocation sweeps retain exceptions
+and require zero residual allocations or identities after cleanup. GC,
+foreign-thread disposal and creator-thread exit exercise expiration. Four
+compiled mutations must fail independent assertions. Borrow-only packages also
+compile and run separately without consuming-input support.
+
+NuGet tests delete producer sources before offline installation. Safe public
+C# callers run with unsafe code disabled. The tests reject ill-typed clients,
+changed lifetime contracts and altered native assets; reassembled archives
+must match byte for byte. Consumers run again after removing the handoff,
+package cache and consumer source, using a runtime without the SDK. The reviewed
+build also installs C++, Cargo, PyPI and RubyGems consumers of the shared
+component. Reports go to `build/owned-dotnet-borrows/` and
+`build/owned-dotnet-borrow-packaging/`.
+
 #### Installed Java and Kotlin transfers
 
 ```sh

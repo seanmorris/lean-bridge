@@ -13,8 +13,9 @@ import { dotnetGraphException } from "./copied-graph-runtime.mjs";
  * @param options - Generated assembly composition options.
  * @param options.includeException - Emit the standalone probe's exception type.
  * @param options.transferredInputs - Observe consuming-input handoff slots.
+ * @param options.anchoredResults - Validate whole values and their original owners.
  */
-export const ownedDotnetRuntime = (prefix, { includeException = true, transferredInputs = false } = {}) => {
+export const ownedDotnetRuntime = (prefix, { includeException = true, transferredInputs = false, anchoredResults = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned .NET prefix");
 	return `${includeException ? dotnetGraphException : ""}
 internal sealed unsafe partial class OwnedRuntime
@@ -23,7 +24,7 @@ internal sealed unsafe partial class OwnedRuntime
     internal bool IsProcessValid => processValid() != 0;
     internal readonly delegate* unmanaged[Cdecl]<nint*, uint> Open;
     internal readonly delegate* unmanaged[Cdecl]<nint*, uint> Close;
-    internal readonly delegate* unmanaged[Cdecl]<nint*, uint> Release;
+    internal readonly delegate* unmanaged[Cdecl]<nint*, uint> Release;${anchoredResults ? "\n    internal readonly delegate* unmanaged[Cdecl]<nint, nint, uint> Validate;" : ""}
     private readonly global::System.Action? before;
     private readonly global::System.Threading.ThreadLocal<OwnedState> states;
     internal OwnedRuntime(nint library, global::System.Action? before = null)
@@ -34,7 +35,7 @@ internal sealed unsafe partial class OwnedRuntime
             throw new global::System.PlatformNotSupportedException("This Lean package requires Linux x86-64");
         Open = (delegate* unmanaged[Cdecl]<nint*, uint>)global::System.Runtime.InteropServices.NativeLibrary.GetExport(library, "${prefix}_dotnet_session_open");
         Close = (delegate* unmanaged[Cdecl]<nint*, uint>)global::System.Runtime.InteropServices.NativeLibrary.GetExport(library, "${prefix}_session_close");
-        Release = (delegate* unmanaged[Cdecl]<nint*, uint>)global::System.Runtime.InteropServices.NativeLibrary.GetExport(library, "${prefix}_result_release");
+        Release = (delegate* unmanaged[Cdecl]<nint*, uint>)global::System.Runtime.InteropServices.NativeLibrary.GetExport(library, "${prefix}_result_release");${anchoredResults ? `\n        Validate = (delegate* unmanaged[Cdecl]<nint, nint, uint>)global::System.Runtime.InteropServices.NativeLibrary.GetExport(library, "${prefix}_result_validate");` : ""}
         processValid = (delegate* unmanaged[Cdecl]<int>)global::System.Runtime.InteropServices.NativeLibrary.GetExport(library, "lean_bridge_native_process_valid");
         this.before = before;
         states = new(() => new OwnedState(this));
@@ -154,18 +155,25 @@ internal sealed unsafe class OwnedState : global::System.IDisposable
 }
 
 internal sealed class OwnedBorrowScope { internal bool Active = true; }
-internal sealed class OwnedLease
+internal sealed ${anchoredResults ? "unsafe " : ""}class OwnedLease
 {
     internal readonly OwnedState State;
     internal readonly OwnedSlot? Slot;
-    internal readonly OwnedBorrowScope? Scope;${transferredInputs ? "\n    internal OwnedSlot? InputMove;" : ""}
+    internal readonly OwnedBorrowScope? Scope;${transferredInputs ? "\n    internal OwnedSlot? InputMove;" : ""}${anchoredResults ? "\n    internal readonly bool BorrowedResult, Whole;" : ""}
     private int references, revoked;
-    internal OwnedLease(OwnedState state, OwnedSlot? slot = null, OwnedBorrowScope? scope = null)
-    { State = state; Slot = slot; Scope = scope; }
+    internal OwnedLease(OwnedState state, OwnedSlot? slot = null, OwnedBorrowScope? scope = null${anchoredResults ? ", bool borrowedResult = false, bool whole = false" : ""})
+    { State = state; Slot = slot; Scope = scope;${anchoredResults ? " BorrowedResult = borrowedResult; Whole = whole;" : ""} }
     internal bool IsClosed => State.IsClosed || global::System.Threading.Volatile.Read(ref revoked) != 0${transferredInputs ? "\n        || (InputMove is not null && InputMove.Value == 0)" : ""}
         || (Scope is not null ? !Scope.Active : Slot is null || Slot.Value == 0
-            || global::System.Threading.Volatile.Read(ref Slot.Pending) != 0 || Slot.Releasing);
+            || global::System.Threading.Volatile.Read(ref Slot.Pending) != 0 || Slot.Releasing${anchoredResults ? "\n            || State.Runtime.Validate(State.Require(), Slot.Value) != 0" : ""});
     internal int References => global::System.Threading.Volatile.Read(ref references);
+${anchoredResults ? `    internal nint Owner(OwnedState state)
+    {
+        Require();
+        if (!global::System.Object.ReferenceEquals(State, state) || Slot is null) OwnedRuntime.Check(1);
+        return Slot!.Value;
+    }
+` : ""}\
     internal void Require()
     {
         State.Require();
@@ -210,13 +218,13 @@ internal sealed class OwnedResult : global::System.IDisposable
             return ref slot!.Value;
         }
     }
-    internal OwnedLease Adopt()
+    internal OwnedLease Adopt(${anchoredResults ? "bool borrowedResult = false, bool whole = false" : ""})
     {
         State.Require();
         if (slot is null || slot.Value == 0) OwnedRuntime.Check(9);
         if (lease is not null) return lease;
         OwnedRuntime.Checkpoint();
-        lease = new OwnedLease(State, slot);
+        lease = new OwnedLease(State, slot${anchoredResults ? ", borrowedResult: borrowedResult, whole: whole" : ""});
         return lease;
     }
     internal void Complete() { State.Require(); complete = true; }
@@ -255,7 +263,7 @@ internal sealed class OwnedHandle : global::System.IDisposable
     {
         if (value == 0) OwnedRuntime.Check(9);
         Lease = lease; this.value = value;
-        OwnedRuntime.Checkpoint(); lease.Acquire(); acquired = true;
+        OwnedRuntime.Checkpoint();${anchoredResults ? "\n        if (!lease.Whole) { lease.Acquire(); acquired = true; }\n        else lease.Require();" : " lease.Acquire(); acquired = true;"}
     }
     internal bool IsClosed => global::System.Threading.Volatile.Read(ref closed) != 0 || Lease.IsClosed;
     internal nint Raw(OwnedState state)

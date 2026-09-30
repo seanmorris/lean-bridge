@@ -88,7 +88,7 @@ the resource leases it visits, rejects overlapping consuming arguments, and
 observes the native handoff during callback reentry. Perl save-stack cleanup
 preserves pre-handoff inputs and releases consumed owners after exceptions.
 The remaining consumer profiles also implement explicit transfers; each consumer
-page describes its handoff and alias rules. C, C++, Rust, Python and Ruby additionally implement
+page describes its handoff and alias rules. C, C++, Rust, Python, Ruby and C# additionally implement
 parameter-anchored function results. A borrowed result depends on the exact
 input-owner generation, including when it contains no resources. Releasing or
 transferring the owner expires all descendants; an independent retained alias
@@ -111,8 +111,12 @@ type without guessing from an empty value. Ruby's version-3 `rubyValues` contrac
 uses whole `Value` roots, shared `dup`/`clone` guards, independent retention,
 symbol-selected copy factories and canonical equality. Raw resources obtained
 through `get` borrow the whole owner. Ruby adapter and package receipts use
-version 3; their `ownedValues` transport uses version 4. Other consumer projections
-of result anchors remain unfinished.
+version 3; their `ownedValues` transport uses version 4. C# uses typed `Value<T>`
+owners, checked `Get`, shared-owner `Share`, independent `Retain`, and
+`Api.CopyValue` or declaration-selected copy factories. Raw resource views borrow
+the whole owner; transfers pass its original native slot. NuGet packages preserve
+those contracts in version-3 adapter, assembly and package receipts. Other
+consumer projections of result anchors remain unfinished.
 Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
 support is documented for [JavaScript](../consume/javascript.md),
 [PHP-Wasm](../php.md) and [WIT/WASI](../consume/wit-wasi.md).

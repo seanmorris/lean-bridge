@@ -913,6 +913,8 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y build-essential cmake pkg-config zstd m4 libgmp-dev
           bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Install the TAP log verifier
+        run: sudo apt-get install -y ripgrep
       - name: Compile ordinary Lean APIs once for relocated C and C++ consumers
         id: ordinary_c
         if: matrix.profile == 'c-family'
@@ -1447,6 +1449,8 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y build-essential zstd m4
           bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Install the TAP log verifier
+        run: sudo apt-get install -y ripgrep
       - name: Install the ordinary C# compiler
         if: matrix.profile == 'dotnet'
         uses: actions/setup-dotnet@v6
@@ -1498,6 +1502,16 @@ jobs:
           test -s build/owned-dotnet-packaging/scalars-reviewed.json
           test -s build/owned-dotnet-packaging/coexistence.json
           npm run test:owned-dotnet-transfers
+          npm run test:owned-dotnet-borrows > build/owned-dotnet-borrows.log 2>&1
+          cat build/owned-dotnet-borrows.log
+          rg '^# pass 7$' build/owned-dotnet-borrows.log
+          rg '^# fail 0$' build/owned-dotnet-borrows.log
+          rg '^# skipped 0$' build/owned-dotnet-borrows.log
+          test -s build/owned-dotnet-borrows/ordinary.json
+          test -s build/owned-dotnet-borrows/reviewed.json
+          test -s build/owned-dotnet-borrows/borrow-only.json
+          test -s build/owned-dotnet-borrow-packaging/ordinary.json
+          test -s build/owned-dotnet-borrow-packaging/reviewed.json
           test -s build/owned-dotnet-transfers/ordinary.json
           test -s build/owned-dotnet-transfers/reviewed.json
           test -s build/owned-dotnet-transfer-packaging/ordinary.json
@@ -1568,6 +1582,9 @@ jobs:
             build/owned-dotnet-packaging/
             build/owned-dotnet-transfers/
             build/owned-dotnet-transfer-packaging/
+            build/owned-dotnet-borrows/
+            build/owned-dotnet-borrow-packaging/
+            build/owned-dotnet-borrows.log
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -1856,6 +1873,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-callables.test.mjs tests/owned-dotnet-callback-signatures.test.mjs tests/owned-dotnet-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-packaging.test.mjs tests/owned-dotnet-coexistence.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-dotnet-transfers"
+              consumer_command="$consumer_command && npm run test:owned-dotnet-borrows"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs"

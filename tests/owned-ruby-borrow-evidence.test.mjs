@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedDotnetBorrow, ownedDotnetBorrowHistoricalBytes } from "./helpers/owned-dotnet-borrow-history.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeOwnedRubyBorrowCi, ownedRubyBorrowCiHistoricalBytes
 	, ownedRubyBorrowCiPath, ownedRubyBorrowCiBaseline, ownedRubyBorrowCiPrevious
@@ -69,21 +70,21 @@ test("Ruby borrow profile repair authenticates the registration without changing
 		assert.match(record.run.text, new RegExp(`^# ${name} ${count}$`, "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedRubyBorrowCiAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedDotnetBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedRubyBorrowCiChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		assert.equal(sha256(reverseOwnedRubyBorrowCiUpdate(await readFile(update.path, "utf8"), update)), update.previousSha256);
+		assert.equal(sha256(reverseOwnedRubyBorrowCiUpdate(beforeOwnedDotnetBorrow(update.path, await readFile(update.path, "utf8")), update)), update.previousSha256);
 	}
-	const path = "src/adoption/test-profiles.mjs", source = await readFile(path, "utf8");
+	const path = "src/adoption/test-profiles.mjs", source = beforeOwnedDotnetBorrow(path, await readFile(path, "utf8"));
 	const prior = reverseOwnedRubyBorrowCiUpdate(source, record.updates.find(update => update.path === path));
 	assert.equal(source, prior.replace('\t\t, "owned-ruby-transfer-evidence"', '\t\t, "owned-ruby-transfer-evidence"\n\t\t, "owned-ruby-borrow-evidence"'));
 	assert.equal(classifyRepositoryTest("tests/owned-ruby-borrow-evidence.test.mjs"), "contract");
-	const indexPath = "docs/type-surface.v1.json", current = await readFile(indexPath, "utf8");
+	const indexPath = "docs/type-surface.v1.json", current = beforeOwnedDotnetBorrow(indexPath, await readFile(indexPath, "utf8"));
 	const oldIndex = JSON.parse(reverseOwnedRubyBorrowCiUpdate(current, record.updates.find(update => update.path === indexPath)));
-	for(const evidence of oldIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of oldIndex.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), oldIndex);
 });
 
@@ -91,7 +92,7 @@ test("Ruby borrow profile repair rejects unknown changes and forged reversal spa
 	const record = JSON.parse(await readFile(ownedRubyBorrowCiPath, "utf8"));
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrecorded */\n";
+		const source = beforeOwnedDotnetBorrow(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedRubyBorrowCi(update.path, unknown), unknown);
 		assert.equal(beforeOwnedRubyBorrowCi(update.path, source, update.currentSha256), source);
 		assert.throws(() => reverseOwnedRubyBorrowCiUpdate(unknown, update));

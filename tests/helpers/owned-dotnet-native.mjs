@@ -13,23 +13,16 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 
 /**
- * Test-only loader resolves one caller-supplied library; not package admission.
+ * Render the exact native allocation and original-owner handoff probe.
  *
- * @param t - Test context that owns and removes its native fixture directory.
- * @param options - Fresh Lean fixture and optional independent reviewed contract.
+ * @param c - Generated private C package.
+ * @param transferredInputs - Include the handoff counter for consuming APIs.
  */
-export const compileOwnedDotnetFixture = async (t, options = {}) => {
-	const transferredInputs = options.transferredInputs === true;
-	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
-	const model = generateOwnedDotnetCalls(compiled.model.bindingIr, { transferredInputs });
-	const c = generateOwnedCPackage({ metadata: compiled.metadata
-		, sourceIdentity: compiled.sourceIdentity
-		, component: compiled.model.component, hostCallbacks: true
-		, transferredInputs });
+export const ownedDotnetNativeProbe = (c, transferredInputs) => {
 	const cleanup = ownedDotnetThreadExit(c.values.prefix);
 	const handoff = "static inline void oc_transfer_consume(void *context) {";
 	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
-	const implementation = `#include <stdlib.h>
+	return `#include <stdlib.h>
 #include <stddef.h>
 #include <stdatomic.h>
 static _Atomic size_t live;${transferredInputs ? "\nstatic _Atomic size_t handoffs;" : ""}
@@ -49,6 +42,37 @@ size_t probe_identities(void) { lean_bridge_native_snapshot s; lean_bridge_nativ
 void probe_fail(ptrdiff_t value) { remaining = value; }
 void probe_retire(void) { lean_bridge_native_runtime_retire(); }
 `;
+};
+
+/**
+ * Render the isolated runtime probe loader, without package admission.
+ *
+ * @param namespace - Generated CLR namespace.
+ */
+export const ownedDotnetProbeLoader = namespace => `namespace ${namespace}.Interop;
+internal static class OwnedLoader
+{
+    internal static OwnedBindings Bindings = null!;
+}
+`;
+
+/**
+ * Test-only loader resolves one caller-supplied library; not package admission.
+ *
+ * @param t - Test context that owns and removes its native fixture directory.
+ * @param options - Fresh Lean fixture and optional independent reviewed contract.
+ */
+export const compileOwnedDotnetFixture = async (t, options = {}) => {
+	const transferredInputs = options.transferredInputs === true;
+	const anchoredResults = options.anchoredResults === true;
+	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
+	const model = generateOwnedDotnetCalls(compiled.model.bindingIr, { transferredInputs, anchoredResults });
+	const c = generateOwnedCPackage({ metadata: compiled.metadata
+		, sourceIdentity: compiled.sourceIdentity
+		, component: compiled.model.component, hostCallbacks: true
+		, transferredInputs, anchoredResults });
+	const cleanup = ownedDotnetThreadExit(c.values.prefix);
+	const implementation = ownedDotnetNativeProbe(c, transferredInputs);
 	for(const [path, content] of Object.entries(c.files))
 		await saveLakeFile(compiled.directory, path.startsWith("src/") ? "api.c" : path.split("/").at(-1), path.startsWith("src/") ? implementation : content);
 	await saveLakeFile(compiled.directory, "guard.cpp", cleanup.guardSource);
@@ -66,12 +90,7 @@ void probe_retire(void) { lean_bridge_native_runtime_retire(); }
 	const checkpoint = "internal static void Checkpoint() { }";
 	assert.equal(model.files["Lifetime.cs"].split(checkpoint).length, 2);
 	const files = { ...model.files, "Lifetime.cs": model.files["Lifetime.cs"].replace(checkpoint, "internal static void Checkpoint() { global::Program.Allocation(); }") };
-	const loader = `namespace ${model.namespace}.Interop;
-internal static class OwnedLoader
-{
-    internal static OwnedBindings Bindings = null!;
-}
-`;
+	const loader = ownedDotnetProbeLoader(model.namespace);
 	for(const [path, content] of Object.entries({ ...files, "Loader.cs": loader
 		, "Calls.csproj": '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks><UseAppHost>false</UseAppHost><NuGetAudit>false</NuGetAudit><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup></Project>'
 		, "NuGet.Config": '<configuration><packageSources><clear/></packageSources></configuration>'

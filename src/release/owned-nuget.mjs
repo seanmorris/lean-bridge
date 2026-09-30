@@ -25,15 +25,16 @@ export const packageOwnedNuget = async options => {
 	if(!/^2\.\d+$/u.test(glibcMinimumVersion)) throw new TypeError("Invalid owned NuGet glibc floor");
 	const { model, projection, evidence, receipt, libraryPaths, adapter } = await ownedDotnetEvidence(options);
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const compiled = JSON.parse(await readFile(join(dotnetRoot, "native-dotnet.json"), "utf8"));
 	await verifyNativeFiles(dotnetRoot, compiled.files);
-	if(compiled.schemaVersion !== (transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
+	if(compiled.schemaVersion !== (anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.assembly !== projection.assembly || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| canonicalJson(compiled.ownedValues ?? null) !== canonicalJson(projection.contract)
 		|| !/^8\.0\.\d+$/u.test(compiled.sdk)
 		|| (await nativeArtifactPaths(dotnetRoot)).some(path => path !== "native-dotnet.json" && !Object.hasOwn(compiled.files, path)))
 		throw new Error("Compiled owned C# projection differs from compiler-authenticated types or native evidence");
-	for(const [path, contents] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence, { transferredInputs }).files))
+	for(const [path, contents] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults }).files))
 		if(await readFile(join(dotnetRoot, path), "utf8") !== contents) throw new Error(`Generated owned C# source differs: ${path}`);
 	if(await readFile(join(dotnetRoot, "global.json"), "utf8") !== canonicalJson({ sdk: { version: compiled.sdk, rollForward: "disable", allowPrerelease: false } }))
 		throw new Error("Owned C# SDK selection differs from the compiled projection");
@@ -73,7 +74,7 @@ export const packageOwnedNuget = async options => {
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: transferredInputs ? 2 : 1
+	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, kind: "lean-bridge-owned-nuget-package", ecosystem: "nuget", name, version
 		, component: model.component, bindingIrSha256: model.bindingIrSha256
 		, runtimeIdentity: evidence.runtimeIdentity
@@ -85,7 +86,7 @@ export const packageOwnedNuget = async options => {
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: "nuget"
-		, backend: transferredInputs ? "owned-dotnet-v2" : "owned-dotnet-v1"
+		, backend: anchoredResults ? "owned-dotnet-v3" : transferredInputs ? "owned-dotnet-v2" : "owned-dotnet-v1"
 		, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion
 		, namespace: projection.namespace, assembly: projection.assembly
 		, packages: [{ archive, name, version, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };

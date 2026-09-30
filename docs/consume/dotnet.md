@@ -173,14 +173,14 @@ accounted managed-storage limits across arguments, callbacks and results.
 The package automatically loads its verified Lean libraries and private GMP.
 Compatible owned and copied packages share one runtime. Calls in a forked child
 reject, including a package first used in that child. Execute a fresh program
-before calling Lean there. Anchored results and asynchronous delivery require
-separate lifetime support.
+before calling Lean there. Function results can borrow a declared input owner;
+see the whole-value API below. Asynchronous delivery requires separate support.
 
 #### Consuming inputs
 
 An author can mark an argument as transferred. The generated XML documentation
-names each consuming argument. Pass ordinary C# values; no move wrapper is
-required. For the transfer-enabled `Owned` fixture, save this as `Program.cs`:
+names each consuming argument. Packages without result anchors accept ordinary
+C# values. For that transfer-enabled `Owned` fixture, save this as `Program.cs`:
 
 ```csharp file=dotnet/owned-transfers.cs
 using System;
@@ -207,6 +207,46 @@ result-conversion failure after handoff leaves the input consumed.
 
 The [installed transfer checks](../evidence/owned-dotnet-transfers-20260929.md)
 cover both authoring paths, offline installation and runtime-only relocation.
+
+#### Results borrowed from an input
+
+Packages with input-anchored results return `Value<T>` for resource-containing
+values, including empty arrays and variants. `Get()` checks the complete owner
+before exposing its value. Keep the `Value<T>` alive while using resource views
+returned by `Get()`.
+
+For the borrowed-result `Owned` fixture, save this as `Program.cs`:
+
+```csharp file=dotnet/owned-borrows.cs
+using System;
+using LeanBridge.OwnedAggregates;
+
+using var original = Api.NewTicket(42, "task");
+using var borrowed = Api.RetainTicket(original);
+using var kept = borrowed.Retain();
+original.Dispose();
+if (!borrowed.IsClosed)
+    throw new Exception("The borrowed result outlived its original owner.");
+Console.WriteLine(Api.Serial(kept.Get()));
+```
+
+`Share()` adds a disposal guard for the same owner. Disposing its last guard
+expires borrowed results and their descendants. `Retain()` creates independent
+ownership. Raw resource views have their own `Retain()` method for an independent
+resource. Their `Equals()` and `SameIdentity()` methods compare native identity
+and reject expired views. Whole values and resources cannot be dictionary keys.
+
+`Api.CopyValue(value)` creates an owner when the managed type identifies one Lean
+shape. Array and List can share the same C# array type, so use a declaration-
+selected factory for those shapes: `Api.CopyEchoArrayResult(values)` or
+`Api.CopyBundleArg2(values)`. These factories copy values without calling the
+named Lean function.
+
+Anchor and consuming parameters require `Value<T>`. Consuming calls hand off the
+original owner, including an empty value's owner. They close shared aliases and
+borrowed descendants before a reentrant callback runs. Borrowed results cannot
+be consumed directly; use `Retain()` first. Validation failures preserve inputs;
+failures after handoff leave them consumed.
 
 ### Named aliases
 
