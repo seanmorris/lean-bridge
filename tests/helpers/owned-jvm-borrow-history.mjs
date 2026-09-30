@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedDotnetLifetime, ownedDotnetLifetimeChangedPaths } from "./owned-dotnet-lifetime-history.mjs";
+import { beforeOwnedDotnetLifetime, ownedDotnetLifetimeNormalizationPaths } from "./owned-dotnet-lifetime-history.mjs";
 
 export const ownedJvmBorrowPath = "docs/evidence/owned-jvm-borrows-20260930.json";
 export const ownedJvmBorrowBaseline = "444cace8fed766606caf7bb70e68a9a0badf3ec1";
@@ -53,7 +53,7 @@ export const ownedJvmBorrowAddedPaths = [
 	, "tests/owned-jvm-borrows.test.mjs"
 ].sort();
 let cached;
-export const ownedJvmBorrowNormalizationPaths = [...new Set([...ownedJvmBorrowChangedPaths, ...ownedDotnetLifetimeChangedPaths])];
+export const ownedJvmBorrowNormalizationPaths = [...new Set([...ownedJvmBorrowChangedPaths, ...ownedDotnetLifetimeNormalizationPaths])];
 
 /**
  * Restore an authenticated complete source through exact ordered edits.

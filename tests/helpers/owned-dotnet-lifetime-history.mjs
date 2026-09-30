@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeStructuredDocsCi, structuredDocsCiChangedPaths } from "./structured-docs-ci-history.mjs";
 
 export const ownedDotnetLifetimePath = "docs/evidence/owned-dotnet-lifetime-repair-20260930.json";
 export const ownedDotnetLifetimeBaseline = "f5cde9256639f3989464822f8cf711015d518b31";
@@ -30,6 +31,7 @@ export const ownedDotnetLifetimeAddedPaths = [
 	, "tests/owned-dotnet-lifetime-evidence.test.mjs"
 ].sort();
 let cached;
+export const ownedDotnetLifetimeNormalizationPaths = [...new Set([...ownedDotnetLifetimeChangedPaths, ...structuredDocsCiChangedPaths])].sort();
 
 /**
  * Reverse only recorded spans whose complete before/after identities match.
@@ -62,6 +64,7 @@ export const reverseOwnedDotnetLifetimeUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedDotnetLifetime = (path, source, expected) => {
+	source = beforeStructuredDocsCi(path, source, expected);
 	if(!ownedDotnetLifetimeChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedDotnetLifetimePath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-dotnet-lifetime-repair");
@@ -79,5 +82,5 @@ export const beforeOwnedDotnetLifetime = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedDotnetLifetimeHistoricalBytes = (path, bytes, expected) => ownedDotnetLifetimeChangedPaths.includes(path)
+export const ownedDotnetLifetimeHistoricalBytes = (path, bytes, expected) => ownedDotnetLifetimeNormalizationPaths.includes(path)
 	? beforeOwnedDotnetLifetime(path, bytes.toString("utf8"), expected) : bytes;

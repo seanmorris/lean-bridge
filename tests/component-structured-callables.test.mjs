@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { checkInstalledScalars } from "./helpers/component-scalar-install.mjs";
 import { npmStructuredCallableReviewedIr, npmStructuredCallableArities } from "./helpers/npm-structured-callable-install-fixture.mjs";
+import { npmStructuredCallableDocumentation } from "./helpers/npm-structured-callable-documentation.mjs";
 
 const shape = ir => {
 	const abi = createComponentPrivateAbi(ir);
@@ -33,10 +34,7 @@ test("installed npm structured callbacks preserve all nine shapes in Node, stric
 	, requiredRuntimeSymbol: "bridge_recursive_abi"
 	, documentation: async () => {
 		const path = "docs/javascript-typescript.md";
-		const section = (await readFile(path, "utf8")).split("### Structured callbacks\n")[1].split("### Type conversions\n")[0];
-		const blocks = [...section.matchAll(/```js\n([\s\S]*?)```/g)];
-		assert.equal(blocks.length, 1);
-		return { path, source: blocks[0][1], stdout: "copied\n2\nleaf\n" };
+		return { path, source: npmStructuredCallableDocumentation(await readFile(path, "utf8")), stdout: "copied\n2\nleaf\n" };
 	}
 	, assertIr: ir => assert.deepEqual(shape(ir), shape(npmStructuredCallableReviewedIr()))
 	, assertResult: result => { assert.equal(result.shapes, 9); assert.ok(result.checks > 100000); assert.ok(result.rejections > 40); assert.equal(result.primitive.primitives, 19); assert.ok(result.primitive.checks > 8000); }

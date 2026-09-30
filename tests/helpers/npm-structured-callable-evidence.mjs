@@ -12,6 +12,7 @@ import { assertPerlStructuredCallableIntegration } from "./perl-structured-calla
 import { perlStructuredCallableHistoryPath } from "./perl-structured-callable-source-history.mjs";
 import { npmStructuredCallableChangedPaths, reverseNpmStructuredCallableUpdate } from "./npm-structured-callable-source-history.mjs";
 import { beforePhpStructuredCallables } from "./php-structured-callable-source-history.mjs";
+import { npmStructuredCallableDocumentation } from "./npm-structured-callable-documentation.mjs";
 
 const priorSource = async path => beforePhpStructuredCallables(path, await readFile(path, "utf8"));
 
@@ -92,7 +93,7 @@ export const assertNpmStructuredCallableExecution = async record => {
 	assert.deepEqual(record.report.runs.map(run => run.path), npmStructuredCallableScope.paths);
 	const consumer = (await Promise.all(["callable-consumers/npm.mjs", "structured-callable-consumers/npm.mjs"].map(path => readFile(`tests/fixtures/${path}`, "utf8")))).join("\n");
 	const source = `${await readFile("tests/fixtures/onboarding/structured-callables/Structured.lean", "utf8")}\n${await readFile("tests/fixtures/structured-callable-consumers/Npm.lean", "utf8")}`;
-	const documented = (await readFile("docs/javascript-typescript.md", "utf8")).split("### Structured callbacks\n")[1].split("### Type conversions\n")[0].match(/```js\n([\s\S]*?)```/u)[1];
+	const documented = npmStructuredCallableDocumentation(await readFile("docs/javascript-typescript.md", "utf8"));
 	for(const run of record.report.runs)
 	{
 		receipt(run); publicResult(run.result); browserContexts(run, publicResult);

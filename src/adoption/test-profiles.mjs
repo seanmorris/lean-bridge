@@ -125,6 +125,8 @@ const profileManifest = Object.freeze({
 		, "component-structured-codec"
 		, "component-structured-callable-abi"
 		, "component-structured-callable-contract"
+		, "component-structured-callable-documentation"
+		, "structured-docs-ci-evidence"
 		, "component-structured-callable-defaults"
 		, "component-structured-callable-evidence"
 		, "component-structured-callable-lean"
