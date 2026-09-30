@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedCiFollowup, ownedCiFollowupChangedPaths } from "./owned-ci-followup-history.mjs";
 
 export const ownedPerlCiBaseline = "29b8e25a1609031a6e8af1113a31ceb1458fe493";
 export const ownedPerlCiPath = "docs/evidence/owned-perl-ci-repair-20260930.json";
@@ -21,6 +22,7 @@ export const ownedPerlCiChangedPaths = [
 	, "tests/owned-perl-transfer-evidence.test.mjs"
 ];
 export const ownedPerlCiAddedPaths = ["tests/helpers/owned-perl-ci-history.mjs"];
+export const ownedPerlCiNormalizationPaths = [...new Set([...ownedPerlCiChangedPaths, ...ownedCiFollowupChangedPaths])].sort();
 let cached;
 
 /**
@@ -54,6 +56,7 @@ export const reverseOwnedPerlCiUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedPerlCi = (path, source, expected) => {
+	source = beforeOwnedCiFollowup(path, source, expected);
 	if(!ownedPerlCiChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedPerlCiPath, "utf8"));
@@ -72,6 +75,5 @@ export const beforeOwnedPerlCi = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedPerlCiHistoricalBytes = (path, bytes, expected) => ownedPerlCiChangedPaths.includes(path)
+export const ownedPerlCiHistoricalBytes = (path, bytes, expected) => ownedPerlCiNormalizationPaths.includes(path)
 	? beforeOwnedPerlCi(path, bytes.toString("utf8"), expected) : bytes;
-

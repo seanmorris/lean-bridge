@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPerlCi, ownedPerlCiChangedPaths } from "./owned-perl-ci-history.mjs";
+import { beforeOwnedPerlCi, ownedPerlCiNormalizationPaths } from "./owned-perl-ci-history.mjs";
 
 export const ownedPerlProfileBaseline = "cb7ac24d2134c813561fd8369414935c962d0b43";
 export const ownedPerlProfilePath = "docs/evidence/owned-perl-profile-repair-20260930.json";
@@ -22,7 +22,7 @@ export const ownedPerlProfileChangedPaths = [
 	, "tests/owned-perl-transfer-evidence.test.mjs"
 ];
 export const ownedPerlProfileAddedPaths = ["tests/helpers/owned-perl-profile-history.mjs"];
-export const ownedPerlProfileNormalizationPaths = [...new Set([...ownedPerlProfileChangedPaths, ...ownedPerlCiChangedPaths])].sort();
+export const ownedPerlProfileNormalizationPaths = [...new Set([...ownedPerlProfileChangedPaths, ...ownedPerlCiNormalizationPaths])].sort();
 let cached;
 
 /**

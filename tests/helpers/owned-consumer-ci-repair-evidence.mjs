@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { ownedPythonTransferHistoricalBytes } from "./owned-python-transfer-history.mjs";
 
 export const ownedConsumerCiModule = "src/backends/native/owned-value-transfers.mjs";
 export const ownedConsumerCiCommands = {
@@ -29,7 +30,7 @@ export const ownedConsumerCiScope = Object.freeze({
 export const assertOwnedWitLogTooling = workflow => {
 	const job = workflow.split("\n  wasi-consumer:\n")[1]?.split(/\n {2}[a-z][a-z-]+:\n/u)[0];
 	assert.ok(job);
-	const setup = job.indexOf("sudo apt-get install -y build-essential pkg-config zstd ripgrep");
+	const setup = job.search(/sudo apt-get install -y(?: [a-z0-9+.-]+)* ripgrep(?:\s|$)/u);
 	const native = job.indexOf("      - name: Execute owned WIT conversions and compiled Lean imports\n");
 	assert.ok(setup >= 0 && setup < native, "WIT must install ripgrep before checking its TAP logs");
 	for(const log of ["native", "session", "packaging"])
@@ -59,7 +60,7 @@ export const assertOwnedConsumerCiExecution = async record => {
 	assert.ok(boundary.includedFiles.includes(ownedConsumerCiModule));
 	const paths = [...new Set([...core.includedFiles, ...boundary.includedFiles, ...boundary.identityFiles])].sort();
 	assert.deepEqual(Object.keys(record.nixSource.files).sort(), paths);
-	for(const [path, hash] of Object.entries(record.nixSource.files)) assert.equal(hash, sha256(await readFile(path)), path);
+	for(const [path, hash] of Object.entries(record.nixSource.files)) assert.equal(hash, sha256(ownedPythonTransferHistoricalBytes(path, await readFile(path), hash)), path);
 	assert.equal(record.nixSource.modules, paths.filter(path => path.startsWith("src/") && path.endsWith(".mjs")).length);
 	assert.equal(record.nixSource.stdout, "nix-filtered-component-ready\n");
 	assert.equal(record.nixSource.allFilesMatch, true);

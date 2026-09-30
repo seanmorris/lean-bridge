@@ -8,6 +8,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { beforeOwnedCiFollowup, ownedCiFollowupAddedPaths, ownedCiFollowupBaseline
+	, ownedCiFollowupChangedPaths, ownedCiFollowupHistoricalBytes, ownedCiFollowupPath
+	, ownedCiFollowupPrevious, reverseOwnedCiFollowupUpdate } from "./helpers/owned-ci-followup-history.mjs";
 import { beforeOwnedPerlCi, ownedPerlCiAddedPaths, ownedPerlCiBaseline
 	, ownedPerlCiChangedPaths, ownedPerlCiHistoricalBytes, ownedPerlCiPath
 	, ownedPerlCiPrevious, reverseOwnedPerlCiUpdate } from "./helpers/owned-perl-ci-history.mjs";
@@ -194,13 +197,13 @@ test("Perl CI repair follows npm scripts without changing frozen execution recei
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPerlCiAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedCiFollowupHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPerlCiChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedCiFollowup(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
 		assert.equal(sha256(beforeOwnedPerlCi(update.path, source)), update.previousSha256);
 		assert.equal(beforeOwnedPerlCi(update.path, source, update.currentSha256), source);
 		assert.equal(beforeOwnedPerlCi(update.path, unknown), unknown);
@@ -217,4 +220,38 @@ test("Perl CI repair follows npm scripts without changing frozen execution recei
 	}
 	assert.match(record.runs.before.text, /assert\.ok\(perl\.includes/u);
 	assert.match(record.runs.after.text, /^# pass 1$/mu); assert.match(record.runs.after.text, /^# skipped 0$/mu);
+});
+
+test("CI follow-up keeps dependency checks and original Nix source identities authenticated", async () => {
+	const record = JSON.parse(await readFile(ownedCiFollowupPath, "utf8"));
+	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-ci-followup");
+	assert.equal(record.planNode, 1219); assert.equal(record.baselineRevision, ownedCiFollowupBaseline);
+	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.previous, ownedCiFollowupPrevious);
+	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
+	assert.equal(sha256(bytes), record.previous.sha256);
+	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedCiFollowupAddedPaths].sort());
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	assert.deepEqual(record.updates.map(update => update.path), ownedCiFollowupChangedPaths);
+	for(const update of record.updates)
+	{
+		assert.equal(update.previousSha256, previous.sources[update.path]);
+		assert.equal(update.currentSha256, record.sources[update.path]);
+		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		assert.equal(sha256(beforeOwnedCiFollowup(update.path, source)), update.previousSha256);
+		assert.equal(beforeOwnedCiFollowup(update.path, source, update.currentSha256), source);
+		assert.equal(beforeOwnedCiFollowup(update.path, unknown), unknown);
+		assert.throws(() => reverseOwnedCiFollowupUpdate(unknown, update));
+		assert.throws(() => reverseOwnedCiFollowupUpdate(source, { ...update, previousSha256: "0".repeat(64) }));
+	}
+	for(const [name, exitCode] of [["before", 1], ["after", 0]])
+	{
+		const run = record.runs[name];
+		assert.equal(run.command, "node --test --test-name-pattern='WIT log checks declare|owned consumer CI receipt binds' tests/owned-consumer-ci-repair.test.mjs");
+		assert.equal(run.exitCode, exitCode); assert.equal(run.sha256, sha256(run.text));
+		assert.match(run.text, /^# tests 2$/mu);
+		assert.match(run.text, new RegExp(`^# fail ${exitCode * 2}$`, "mu"));
+	}
+	assert.match(record.runs.before.text, /WIT must install ripgrep/u);
+	assert.match(record.runs.before.text, /owned-value-adapters\.mjs/u);
+	assert.match(record.runs.after.text, /^# pass 2$/mu); assert.match(record.runs.after.text, /^# skipped 0$/mu);
 });
