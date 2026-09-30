@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { ownedPythonAnchoredValues } from "./owned-borrows.mjs";
 
 /**
  * Emit scoped borrows, shared leases and creator-thread native cleanup.
@@ -11,8 +12,9 @@
  * @param prefix - Validated public C package identifier.
  * @param options - Explicit ownership capabilities.
  * @param options.transferredInputs - Observe the C consuming-input owner slots.
+ * @param options.anchoredResults - Check whole owners and borrowed descendants.
  */
-export const ownedPythonRuntime = (prefix, { transferredInputs = false } = {}) => {
+export const ownedPythonRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Python prefix");
 	return `import ctypes as _c
 import os as _os
@@ -97,23 +99,39 @@ class _OwnedScope:
         self.active = True
 
 class _OwnedLease:
-    def __init__(self, state, slot=None, scope=None):
+    def __init__(self, state, slot=None, scope=None${anchoredResults ? ", borrowed_result=False" : ""}):
         self.state = state
         self.slot = slot
-        self.scope = scope${transferredInputs ? "\n        self.input_move = None" : ""}
+        self.scope = scope${transferredInputs ? "\n        self.input_move = None" : ""}${anchoredResults ? "\n        self.borrowed_result = borrowed_result" : ""}
 
     @property
     def closed(self):
-        return (self.state.closed or self.state.exited
+        ${anchoredResults ? "closed =" : "return"} (self.state.closed or self.state.exited
                 or _os.getpid() != self.state.runtime.pid${transferredInputs ? "\n                or (self.input_move is not None and not self.input_move.value.value)" : ""}
                 or (not self.scope.active if self.scope is not None
                     else self.slot is None or self.slot.pending
-                    or self.slot.releasing or not self.slot.value.value))
+                    or self.slot.releasing or not self.slot.value.value))${anchoredResults ? `
+        if closed or self.scope is not None:
+            return closed
+        return self.state.runtime.result_validate(self.state.session, self.slot.value) != 0` : ""}
 
     def require(self):
-        self.state.require()
+${anchoredResults ? `        try:
+            self.state.require()
+            if self.closed:
+                raise LeanBridgeError(4)
+        finally:
+            self = None` : `        self.state.require()
         if self.closed:
-            raise LeanBridgeError(4)
+            raise LeanBridgeError(4)`}${anchoredResults ? `
+    def owner(self, state):
+        try:
+            self.require()
+            if self.state is not state or self.scope is not None or self.slot is None:
+                raise LeanBridgeError(1)
+            return self.slot.value
+        finally:
+            self = None` : ""}
 
     def __del__(self):
         try:
@@ -174,13 +192,13 @@ class _OwnedState:
         self.drain()
         return self.session
 
-    def adopt(self, owner):
+    def adopt(self, owner${anchoredResults ? ", borrowed_result=False" : ""}):
         self.require()
         if (owner.state is not self or owner.slot is None
                 or owner.lease is not None or not owner.value.value):
             raise LeanBridgeError(1)
         _owned_checkpoint()
-        lease = _OwnedLease(self)
+        lease = _OwnedLease(self${anchoredResults ? ", borrowed_result=borrowed_result" : ""})
         _owned_checkpoint()
         lease.slot = owner.slot
         owner.lease = lease
@@ -264,7 +282,10 @@ class _OwnedRuntime:
             function = library["${prefix}_" + name]
             function.argtypes = [_c.POINTER(_c.c_void_p)]
             function.restype = _c.c_uint32
-            setattr(self, name, function)
+            setattr(self, name, function)${anchoredResults ? `
+        self.result_validate = library["${prefix}_result_validate"]
+        self.result_validate.argtypes = [_c.c_void_p, _c.c_void_p]
+        self.result_validate.restype = _c.c_uint32` : ""}
 
     def ensure_process(self):
         if self.pid != _os.getpid():
@@ -311,12 +332,20 @@ class _OwnedResource:
         return result
 
     def _raw(self, state):
-        if self._lease is None or not self._handle:
+${anchoredResults ? `        try:
+            if self._lease is None or not self._handle:
+                raise LeanBridgeError(4)
+            self._lease.require()
+            if self._lease.state is not state:
+                raise LeanBridgeError(1)
+            return self._handle
+        finally:
+            self = None` : `        if self._lease is None or not self._handle:
             raise LeanBridgeError(4)
         self._lease.require()
         if self._lease.state is not state:
             raise LeanBridgeError(1)
-        return self._handle
+        return self._handle`}
 
     @property
     def is_closed(self):
@@ -353,5 +382,5 @@ class _OwnedResource:
         return (type(self) is type(other) and self._handle == other._handle
                 and (self._lease is other._lease or (self._lease is not None
                      and other._lease is not None and self._lease.state is other._lease.state)))
-`;
+${anchoredResults ? ownedPythonAnchoredValues : ""}`;
 };

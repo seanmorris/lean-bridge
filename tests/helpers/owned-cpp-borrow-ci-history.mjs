@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedRustBorrow, ownedRustBorrowChangedPaths } from "./owned-rust-borrow-history.mjs";
+import { beforeOwnedRustBorrow, ownedRustBorrowNormalizationPaths } from "./owned-rust-borrow-history.mjs";
 
 export const ownedCppBorrowCiPath = "docs/evidence/owned-cpp-borrow-ci-repair-20260930.json";
 export const ownedCppBorrowCiBaseline = "dec8d558423d1b1c2ec4b95999ea8779adb60091";
@@ -27,7 +27,7 @@ export const ownedCppBorrowCiAddedPaths = [
 	, "tests/helpers/owned-cpp-borrow-ci-history.mjs"
 ].sort();
 let cached;
-export const ownedCppBorrowCiNormalizationPaths = [...new Set([...ownedCppBorrowCiChangedPaths, ...ownedRustBorrowChangedPaths])].sort();
+export const ownedCppBorrowCiNormalizationPaths = [...new Set([...ownedCppBorrowCiChangedPaths, ...ownedRustBorrowNormalizationPaths])].sort();
 
 /**
  * Reverse authenticated complete-file versions through exact ordered edits.

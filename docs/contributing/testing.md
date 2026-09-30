@@ -1222,6 +1222,35 @@ check the same native adapter. CI requires all six tests without skips and
 retains `build/owned-rust-borrows/`, `build/owned-rust-borrow-packaging/` and
 `build/owned-rust-borrows.log`.
 
+### Owner-anchored Python results
+
+```sh
+source scripts/env.sh
+npm run test:owned-python-borrows
+```
+
+Use the owned-wheel Python setup, pinned typing wheels and mypy 2.3.1. For a
+glibc 2.36 test host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`; the builder
+still checks library symbol requirements. Production defaults remain glibc 2.38.
+The gate runs Python 3.11 with minimum/current typing backports and Python 3.12.
+Both authoring paths compile real Lean code. Runtime probes check whole owners,
+empty containers, all fixture constructors, recursive values, canonical equality,
+callback expiry, original-owner transfers, thread/process affinity and transitive
+anchor limits. Allocation failures retain exception tracebacks while checking
+that temporary owners release. Four compiled mutations must fail those checks.
+Strict typing rejects seven malformed consumers on each interpreter configuration.
+A separate borrow-only API compiles and executes on both source paths without
+input-transfer support.
+
+Installed tests remove author source and producer output before offline pip
+installation. They execute public-only consumers, strict-checked documentation,
+compatible/concurrent imports, loader identity conflicts and post-fork rejection.
+They reject forged lifetime contracts, reproduce the original wheel exactly,
+then relocate installed environments after deleting the handoff. The reviewed
+combined build also exercises C++ and Cargo consumers. CI requires eight tests
+without skips and uploads `build/owned-python-borrows/`,
+`build/owned-python-borrow-packaging/` and `build/owned-python-borrows.log`.
+
 ### Staged input transfers
 
 With the pinned Lean compiler, a C/C++ compiler, GMP headers and sanitizers, run:

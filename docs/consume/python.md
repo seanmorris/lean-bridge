@@ -470,6 +470,61 @@ borrows remain valid. Retain a callback borrow before transferring it. Two
 transferred arguments cannot share a resource lease; use independent retains.
 Borrow-only functions keep their existing behavior.
 
+### Results borrowed from an input
+
+A publisher can tie a returned value to one input owner. Those packages expose
+resource-containing results as `Value[T]`, including empty arrays, `None` and
+empty constructors. Call `get()` to access the checked value. Pass the `Value`
+itself to an anchored or consuming parameter; other parameters use ordinary
+Python values.
+
+For the borrowed-result acceptance wheel, save this as `owned-borrows.py`:
+
+```python file=python/owned-borrows.py
+import lean_owned_aggregates as api
+
+with api.new_ticket(42, "example") as owner:
+    view = api.retain_ticket(owner)
+    independent = view.retain()
+    assert view == owner
+
+assert view.is_closed
+with independent:
+    print(api.serial(independent.get()))
+
+with api.copy_value([], result_of=api.echo_array) as empty:
+    borrowed_empty = api.echo_array(empty)
+    assert borrowed_empty.get() == ()
+assert borrowed_empty.is_closed
+```
+
+Run `./.venv/bin/python owned-borrows.py`. This fixture declares `retain_ticket`'s
+result as borrowed from its argument. The method `Value.retain()` instead creates
+independent ownership.
+
+`copy.copy(value)` shares its original owner and immutable storage. `close()`
+releases that wrapper. Resource wrappers extracted by `get()` can also share an
+owning lease. Releasing the last owning alias expires borrowed results and their
+descendants. A borrow does not keep its anchor alive. Checked access, resource
+operations and equality raise `LeanBridgeError` for expired owners. Equality
+compares canonical resource identity; independently retained aliases compare
+equal. Already extracted ordinary fields remain Python data.
+
+Use `copy_value(record)` for generated records, variants and resources. For
+containers, `result_of=api.function` selects the function's exact result type,
+including when the value is empty. `parameter_of=(api.function, "arg2")` selects
+an argument type. Neither selector calls the function. `Value.retain()` already
+knows its type and needs no selector. Returned Lean closures are callable
+`Value` objects. Callback payloads remain ordinary Python values whose resource
+leaves expire at callback return unless explicitly retained.
+
+In these packages, transferred parameters consume the original `Value` owner,
+including empty values. Aliases and borrowed descendants become closed before
+callback reentry. Validation failures preserve inputs; errors after handoff
+leave them consumed. A borrowed root cannot transfer, and a call cannot consume
+its result anchor or that anchor's ancestor. Retain a borrow first when independent
+ownership is needed. Packages without result anchors keep the API above.
+
 ### Alpha resource example
 
 The remaining example uses the separate Alpha fixture and its fixed API.

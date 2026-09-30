@@ -1157,6 +1157,17 @@ jobs:
           test -s build/owned-python-transfers/reviewed.json
           test -s build/owned-python-transfer-packaging/ordinary.json
           test -s build/owned-python-transfer-packaging/reviewed.json
+          npm run test:owned-python-borrows > build/owned-python-borrows.log 2>&1
+          cat build/owned-python-borrows.log
+          rg '^# pass 8$' build/owned-python-borrows.log
+          rg '^# fail 0$' build/owned-python-borrows.log
+          rg '^# skipped 0$' build/owned-python-borrows.log
+          test -s build/owned-python-borrows/ordinary.json
+          test -s build/owned-python-borrows/reviewed.json
+          test -s build/owned-python-borrows/typing.json
+          test -s build/owned-python-borrows/borrow-only.json
+          test -s build/owned-python-borrow-packaging/ordinary.json
+          test -s build/owned-python-borrow-packaging/reviewed.json
           test -s build/owned-python-packaging/ordinary.json
           test -s build/owned-python-packaging/reviewed.json
           test -s build/owned-python-packaging/scalars-ordinary.json
@@ -1190,6 +1201,9 @@ jobs:
             build/owned-python-values/
             build/owned-python-transfers/
             build/owned-python-transfer-packaging/
+            build/owned-python-borrows/
+            build/owned-python-borrow-packaging/
+            build/owned-python-borrows.log
             build/owned-python-packaging/
           if-no-files-found: error
           overwrite: true
@@ -1357,6 +1371,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-runtime.test.mjs tests/owned-python-values.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-python-transfers"
+              consumer_command="$consumer_command && npm run test:owned-python-borrows"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false

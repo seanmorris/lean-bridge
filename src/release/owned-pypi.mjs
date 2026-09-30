@@ -29,7 +29,8 @@ export const packageOwnedPython = async options => {
 	const version = settings.version ?? (model.component.version === "0.0.0-local" ? "0.0.0+local" : model.component.version);
 	validateOrdinaryPythonSettings({ name, version });
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
-	const generated = generateOwnedPythonPackage(model.bindingIr, evidence, { transferredInputs }), moduleName = generated.packageDir;
+	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
+	const generated = generateOwnedPythonPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults }), moduleName = generated.packageDir;
 	const root = join(working, "packages/pypi/wheel"), metadataRoot = `${moduleName}/lean_bridge`;
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (source, path) => save(path, await readFile(source));
@@ -62,7 +63,7 @@ export const packageOwnedPython = async options => {
 	const licenseFiles = (await nativeArtifactPaths(root)).filter(path => path.startsWith(`${distInfo}/licenses/`)).map(path => path.slice(`${distInfo}/licenses/`.length)).sort();
 	const typing = generated.requiresTypeAliases ? 'Requires-Dist: typing_extensions (<5,>=4.6); python_version < "3.12"\n' : "";
 	await save(`${distInfo}/METADATA`, `Metadata-Version: 2.4\nName: ${name}\nVersion: ${version}\n${pythonPackageMetadata(metadata)}\n${licenseFiles.map(path => `License-File: ${path}\n`).join("")}Requires-Python: >=3.11\n${typing}Description-Content-Type: text/markdown\n\n${generated.files["README.md"]}`);
-	await save(`${distInfo}/WHEEL`, `Wheel-Version: 1.0\nGenerator: lean-bridge-python-owned/${transferredInputs ? 2 : 1}\nRoot-Is-Purelib: false\nTag: ${tag}\n`);
+	await save(`${distInfo}/WHEEL`, `Wheel-Version: 1.0\nGenerator: lean-bridge-python-owned/${anchoredResults ? 3 : transferredInputs ? 2 : 1}\nRoot-Is-Purelib: false\nTag: ${tag}\n`);
 	await save(`${distInfo}/top_level.txt`, `${moduleName}\n`);
 	const pythonFiles = (await nativeArtifactPaths(root)).filter(path => /\.pyi?$/u.test(path));
 	await processBuildRunner.capture({ command: environment.LEAN_BRIDGE_PYTHON ?? "python3"
@@ -71,7 +72,7 @@ export const packageOwnedPython = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save(`${metadataRoot}/package-receipt.json`, canonicalJson({ schemaVersion: transferredInputs ? 3 : 2
+	await save(`${metadataRoot}/package-receipt.json`, canonicalJson({ schemaVersion: anchoredResults ? 4 : transferredInputs ? 3 : 2
 		, kind: "lean-bridge-owned-python-package", ecosystem: "pypi"
 		, name, version, moduleName, tag, component: model.component
 		, bindingIrSha256: model.bindingIrSha256
@@ -87,7 +88,7 @@ export const packageOwnedPython = async options => {
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: "pypi"
-		, backend: transferredInputs ? "owned-python-v2" : "owned-python-v1"
+		, backend: anchoredResults ? "owned-python-v3" : transferredInputs ? "owned-python-v2" : "owned-python-v1"
 		, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion, moduleName
 		, packages: [{ archive, name, version, tag, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };
 };

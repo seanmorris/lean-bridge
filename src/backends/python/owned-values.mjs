@@ -24,10 +24,13 @@ const primitive = {
  * @param ir - Validated concrete ownership contract.
  * @param options - Explicit C transport capabilities.
  * @param options.transferredInputs - Admit consuming resource-containing inputs.
+ * @param options.anchoredResults - Preserve whole original result owners.
  */
-export const generateOwnedPythonValues = (ir, { transferredInputs = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
+export const generateOwnedPythonValues = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
+	const anchors = Boolean(c.anchoredResults);
 	const occupied = new Set(reserved), names = new Map();
+	if(anchors) for(const name of ["Value", "copy_value"]) occupied.add(name);
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || occupied.has(name))
 			throw new TypeError(`Owned Python name is reserved or duplicated: ${name}`);
@@ -67,10 +70,14 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false } = {}
 	const exports = [...pythonCompoundNames(compoundModel)
 		, ...types.filter(node => names.has(node.id)).flatMap(node => [node.publicType, ...node.cases.map(branch => branch.publicName)])
 		, ...c.native.aliases.map(alias => names.get(alias.id)), "LeanBridgeError"
+		, ...anchors ? ["Value", "copy_value"] : []
 		, ...c.callbacks.length ? ["WithRecovery", "with_recovery"] : []
 		, ...functions.map(fn => fn.publicName)];
 	const parameterType = (fn, i) => c.hostArgument(fn, i)
-		? `_CallbackInput${table.get(fn.parameters[i]).index}` : table.get(fn.parameters[i]).inputType;
+		? `_CallbackInput${table.get(fn.parameters[i]).index}` : anchors && (fn.anchor === i || fn.transfers?.includes(i))
+			? `Value[${table.get(fn.parameters[i]).publicType}]` : table.get(fn.parameters[i]).inputType;
+	const resultType = fn => anchors && table.get(fn.result).representation !== "copied"
+		? `Value[${table.get(fn.result).publicType}]` : table.get(fn.result).publicType;
 	const annotation = (field, original) => original?.type.kind === "named" && names.has(original.type.id)
 		? names.get(original.type.id) : table.get(field.type).inputType;
 	const fields = (node, branch) => {
@@ -87,7 +94,8 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false } = {}
 		const lines = ["from __future__ import annotations"
 			, "from dataclasses import dataclass as _dataclass"
 			, "from typing import ClassVar as _ClassVar, Literal as _Literal, TypeAlias as _TypeAlias, Never as _Never"
-			, ...stub ? [] : ["from ._owned import _OwnedResource, LeanBridgeError", ""
+			, ...stub ? [] : [`from ._owned import _OwnedResource, LeanBridgeError${anchors ? ", Value" : ""}`
+				, ""
 				, ...containers.length ? ["try:", "    from typing import TypeAliasType as _TypeAliasType", "except ImportError:", "    from typing_extensions import TypeAliasType as _TypeAliasType"] : []]
 			, ""
 			, `__all__ = (${exports.map(name => JSON.stringify(name)).join(", ")}${exports.length ? "," : ""})`
@@ -95,6 +103,35 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false } = {}
 			, pythonCompoundPublic(compoundModel)];
 		if(stub) lines.push("class LeanBridgeError(RuntimeError):", "    status: int"
 			, "    def __init__(self, status: int, message: str | None = None) -> None: ...", "");
+		if(anchors)
+		{
+			lines.push("from typing import Any as _Any, Callable as _CopyCallable, Generic as _ValueGeneric, TypeVar as _ValueTypeVar, overload as _overload"
+				, '_ValueT = _ValueTypeVar("_ValueT")', "");
+			if(stub)
+			{
+				lines.push("class Value(_ValueGeneric[_ValueT]):"
+					, "    def __init__(self, _forbidden: _Never) -> None: ..."
+					, "    def get(self) -> _ValueT: ...", "    def retain(self) -> Value[_ValueT]: ..."
+					, "    def close(self) -> None: ...", "    @property", "    def is_closed(self) -> bool: ..."
+					, "    def __enter__(self) -> Value[_ValueT]: ..."
+					, "    def __exit__(self, *args: object) -> None: ..."
+					, "    def __copy__(self) -> Value[_ValueT]: ...");
+				for(const callback of c.callbacks)
+				{
+					if(c.callbacks.length > 1) lines.push("    @_overload");
+					const node = table.get(callback.id);
+					lines.push(`    def __call__(self: Value[${node.publicType}]${callback.parameters.slice(1).map((_, i) => `, arg${i}: ${parameterType(callback, i + 1)}`).join("")}) -> ${resultType(callback)}: ...`);
+				}
+				lines.push("");
+			}
+			lines.push("@_overload"
+				, "def copy_value(value: object, *, result_of: _CopyCallable[..., Value[_ValueT]]) -> Value[_ValueT]: ..."
+				, "@_overload", "def copy_value(value: _ValueT) -> Value[_ValueT]: ..."
+				, "@_overload", "def copy_value(value: object, *, parameter_of: tuple[_CopyCallable[..., object], str]) -> Value[_Any]: ...");
+			if(!stub) lines.push("def copy_value(value, *, result_of=None, parameter_of=None):"
+				, "    from . import _native"
+				, "    return _native._copy_value(value, result_of=result_of, parameter_of=parameter_of)", "");
+		}
 		if(c.callbacks.length) lines.push("from typing import Callable as _Callable, Generic as _Generic, ParamSpec as _ParamSpec, TypeVar as _TypeVar"
 			, '_CallbackArgs = _ParamSpec("_CallbackArgs")', '_CallbackReturn = _TypeVar("_CallbackReturn")', ""
 			, "@_dataclass(frozen=True, slots=True)"
@@ -115,10 +152,14 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false } = {}
 						, "    def __exit__(self, *args: object) -> None: ..."] : []
 					, `    def retain(self) -> ${node.publicType}:`
 					, stub ? "        ..." : `        from . import _native\n        return _native._retain${node.index}(self)`);
+				if(anchors) lines.push(`    def same_identity(self, other: ${node.publicType}) -> bool:`
+					, stub ? "        ..." : `        from . import _native\n        return _native._equal${node.index}(self, other)`
+					, "    def __eq__(self, other: object) -> bool:"
+					, stub ? "        ..." : `        if type(other) is not type(self): return NotImplemented\n        return self.same_identity(other)`);
 				if(node.kind === "callback")
 				{
 					const fn = c.callbacks.find(fn => fn.id === node.id), parameters = fn.parameters.slice(1).map(id => table.get(id));
-					lines.push(`    def __call__(self${parameters.map((_, i) => `, arg${i}: ${parameterType(fn, i + 1)}`).join("")}) -> ${table.get(fn.result).publicType}:`
+					lines.push(`    def __call__(self${parameters.map((_, i) => `, arg${i}: ${parameterType(fn, i + 1)}`).join("")}) -> ${resultType(fn)}:`
 						, stub ? "        ..." : `        from . import _native\n        return _native._invoke${node.index}(self${parameters.map((_, i) => `, arg${i}`).join("")})`);
 				}
 				lines.push("");
@@ -143,10 +184,10 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false } = {}
 			const node = table.get(callback.id), result = table.get(callback.result);
 			const parameters = callback.parameters.slice(1).map((_, i) => JSON.stringify(parameterType(callback, i + 1))).join(", ");
 			const automatic = ownedCallbackRecovery(c.native.model, node, id => id) !== null;
-			lines.push(`_CallbackInput${node.index}: _TypeAlias = ${node.publicType}${automatic ? ` | _Callable[[${parameters}], ${result.publicType}]` : ""} | WithRecovery[[${parameters}], ${result.publicType}]`);
+			lines.push(`_CallbackInput${node.index}: _TypeAlias = ${node.publicType}${anchors ? ` | Value[${node.publicType}]` : ""}${automatic ? ` | _Callable[[${parameters}], ${result.publicType}]` : ""} | WithRecovery[[${parameters}], ${result.publicType}]`);
 		}
 		for(const [index, fn] of functions.entries()) lines.push(""
-			, `def ${fn.publicName}(${fn.parameters.map((_, i) => `arg${i}: ${parameterType(fn, i)}`).join(", ")}) -> ${table.get(fn.result).publicType}:`
+			, `def ${fn.publicName}(${fn.parameters.map((_, i) => `arg${i}: ${parameterType(fn, i)}`).join(", ")}) -> ${resultType(fn)}:`
 			, ...fn.transfers?.length ? [`    """Consume resource leases in ${fn.transfers.map(i => `arg${i}`).join(", ")} at the Lean call boundary.
 
     Shared aliases close at handoff; independently retained owners stay usable.

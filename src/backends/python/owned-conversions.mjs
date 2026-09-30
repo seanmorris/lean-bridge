@@ -6,6 +6,7 @@
 import { generateOwnedPythonValues } from "./owned-values.mjs";
 import { ownedPythonCallbacks } from "./owned-callables.mjs";
 import { ownedPythonTransfers } from "./owned-transfers.mjs";
+import { ownedPythonAnchoredCall, ownedPythonAnchoredTransfers, ownedPythonValueCopies } from "./owned-borrows.mjs";
 
 const primitive = {
 	unit: "c_uint8", bool: "c_uint8", char: "c_uint32"
@@ -14,7 +15,7 @@ const primitive = {
 	, usize: "c_uint64", isize: "c_int64", float32: "c_float", float64: "c_double"
 };
 
-const support = (limits, transfers) => `import ctypes as _c
+const support = (limits, transfers, anchors) => `import ctypes as _c
 import builtins as _b
 from . import _owned as _R
 from . import __name__ as _package_name
@@ -99,7 +100,7 @@ class _OwnedScope:
         return result
 
     def pin(self, value):
-${transfers ? `        try:
+${transfers || anchors ? `        try:
             self.charge("storage", 32)
             if not self.check_only:
                 _R._owned_checkpoint()
@@ -116,15 +117,15 @@ ${transfers ? `        try:
         self.active.clear()
 
 class _OwnedOutput:
-    def __init__(self, owner, lease=None):
+    def __init__(self, owner, lease=None${anchors ? ", anchored=False" : ""}):
         self.owner = owner
-        self.lease = lease
+        self.lease = lease${anchors ? "\n        self.anchored = anchored" : ""}
 
     def hold(self):
         if self.lease is None:
             if not self.owner.value.value:
                 raise _OwnedInvalidNative("Missing native result owner")
-            self.lease = self.owner.state.adopt(self.owner)
+            self.lease = self.owner.state.adopt(self.owner${anchors ? ", self.anchored" : ""})
         self.lease.require()
         return self.lease
 
@@ -177,6 +178,7 @@ def _owned_read(pointer, raw):
 export const generateOwnedPythonConversions = (ir, options = {}) => {
 	const values = generateOwnedPythonValues(ir, options), { c } = values;
 	const transfers = c.functions.some(fn => fn.transfers?.length);
+	const anchors = Boolean(c.anchoredResults);
 	const nodes = new Map(values.types.map(node => [node.id, { ...node
 		, raw: node.identity || node.integer ? "_c.c_void_p" : node.scalar ? `_c.${primitive[node.name]}` : `_OwnedRaw${node.index}` }]));
 	const finite = new Set(); let changed = true;
@@ -236,7 +238,7 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		{
 			input.push(`if type(value) is not _V.${node.publicType}: raise TypeError("Expected ${node.publicType}")`
 				, "handle = value._raw(scope.state)", "scope.pin(value._lease)"
-				, ...transfers ? ["if scope.moves is not None and scope.move_group is not None:", "    scope.moves.add(value._lease, scope.move_group, scope)"] : []
+				, ...transfers && !anchors ? ["if scope.moves is not None and scope.move_group is not None:", "    scope.moves.add(value._lease, scope.move_group, scope)"] : []
 				, "return handle");
 			output.push('if not value: raise _OwnedInvalidNative("Missing native resource")'
 				, 'scope.charge("storage", 256)', `return _V.${node.publicType}._from_lease(output.hold(), value)`);
@@ -348,7 +350,8 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		}
 		const track = !node.leaf;
 		conversions.push(`def _owned_input${i}(value, scope, depth=0):`, `    key = ${track ? "_b.id(value)" : "None"}`
-			, `    scope.enter(key, depth, ${node.raw})`, "    try:", ...input.map(line => `        ${line}`), "    finally:", "        scope.leave(key)", ""
+			, `    scope.enter(key, depth, ${node.raw})`, "    try:", ...input.map(line => `        ${line}`), "    finally:", "        scope.leave(key)"
+			, ...anchors ? ["        value = child = memory = out = None"] : [], ""
 			, `def _owned_output${i}(value, scope, output, depth=0):`
 			, ...node.identity || node.integer || node.scalar ? [`    if type(value) is ${node.raw}: value = value.value`] : []
 			, `    key = ${track ? `(${i}, _c.addressof(value))` : "None"}`
@@ -367,9 +370,10 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		const name = `_${group}${group === "call" ? index : nodes.get(fn.id).index}`, native = `_fn${models.length}`;
 		models.push({ ...fn, group, name, native, parameters, result });
 		bindings.push(`    ${native} = runtime.library[${JSON.stringify(fn.cName)}]`
-			, `    ${native}.argtypes = [_c.c_void_p, ${parameters.flatMap((node, i) => [host[i] ? `_c.POINTER(_OwnedHost${node.index})` : node.leaf ? node.raw : `_c.POINTER(${node.raw})`, ...moving.includes(i) ? ["_c.POINTER(_c.c_void_p)"] : []]).join(", ")}${parameters.length ? ", " : ""}_c.POINTER(${result.raw}), _c.POINTER(_c.c_void_p)]`
+			, `    ${native}.argtypes = [_c.c_void_p, ${parameters.flatMap((node, i) => [host[i] ? `_c.POINTER(_OwnedHost${node.index})` : node.leaf ? node.raw : `_c.POINTER(${node.raw})`, ...moving.includes(i) ? ["_c.POINTER(_c.c_void_p)"] : [], ...fn.anchor === i ? ["_c.c_void_p"] : []]).join(", ")}${parameters.length ? ", " : ""}_c.POINTER(${result.raw}), _c.POINTER(_c.c_void_p)]`
 			, `    ${native}.restype = _c.c_uint32`);
-		calls.push(`def ${name}(${parameters.map((_, i) => `arg${i}`).join(", ")}):`, "    if _runtime is None: raise RuntimeError('Build the native adapter before calling this API')"
+		if(anchors) calls.push(...ownedPythonAnchoredCall(models.at(-1), all, c));
+		else calls.push(`def ${name}(${parameters.map((_, i) => `arg${i}`).join(", ")}):`, "    if _runtime is None: raise RuntimeError('Build the native adapter before calling this API')"
 			, "    state = _runtime.current_state()", "    checked = _OwnedScope(state, True)", "    try:"
 			, ...parameters.length ? parameters.map((node, i) => `        ${input(node, i, true)}`) : ["        pass"]
 			, "    finally:", "        checked.close()", "    scope = _OwnedScope(state)"
@@ -396,15 +400,31 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 			, "        frame.close()", "        scope.close()", "");
 	}
 	const callbacks = ownedPythonCallbacks(c, nodes, models);
+	const equalityNames = [];
+	if(anchors) for(const node of nodes.values()) if(node.identity)
+	{
+		const native = `_equal_native${node.index}`; equalityNames.push(native);
+		bindings.push(`    ${native} = runtime.library["${node.cName}_equal"]`
+			, `    ${native}.argtypes = [_c.c_void_p, _c.c_void_p, _c.c_void_p, _c.POINTER(_c.c_bool)]`
+			, `    ${native}.restype = _c.c_uint32`);
+		calls.push(`def _equal${node.index}(left, right):`, "    try:"
+			, `        if type(left) is not _V.${node.publicType} or type(right) is not _V.${node.publicType}: raise TypeError("Expected ${node.publicType}")`
+			, "        state = _runtime.current_state()", "        _R._owned_checkpoint()"
+			, "        equal = _c.c_bool()"
+			, `        _R._owned_checked(${native}(state.require(), left._raw(state), right._raw(state), _c.byref(equal)))`
+			, "        return equal.value", "    finally:", "        left = right = None", "");
+	}
 	return { ...values, types: [...nodes.values()], valuesSource: values.source
 		, rawTypes: [...nodes.values()].map(node => ({ id: node.id, name: node.raw, index: node.index }))
 		, rawSource: raw.join("\n"), callModels: models
 		, callbackLayouts: callbacks.layouts
-		, source: [support(c.native.model.limits, transfers)
-			, ...transfers ? [ownedPythonTransfers] : [], ...raw, ...conversions
+		, source: [support(c.native.model.limits, transfers, anchors)
+			, ...transfers ? [anchors ? ownedPythonAnchoredTransfers : ownedPythonTransfers] : []
+			, ...raw, ...conversions
 			, callbacks.source
 			, "_runtime = None", "", "def _bind(runtime):"
-			, `    global _runtime${models.map(model => `, ${model.native}`).join("")}`
+			, `    global _runtime${models.map(model => `, ${model.native}`).join("")}${equalityNames.map(name => `, ${name}`).join("")}`
 			, "    if _runtime is not None: raise RuntimeError('Native adapter is already bound')"
-			, ...bindings, "    _runtime = runtime", "", ...calls].join("\n") };
+			, ...bindings, "    _runtime = runtime", "", ...calls
+			, ...anchors ? [ownedPythonValueCopies(values, models)] : []].join("\n") };
 };

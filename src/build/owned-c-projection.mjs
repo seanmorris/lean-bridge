@@ -34,7 +34,7 @@ export const projectOwnedNativeCFamily = async ({ working, nativeRoot, runtimeRo
 	if(!Array.isArray(targets) || !targets.length || targets.some(target => !["c", "cpp", "cargo", "pypi"].includes(target)) || new Set(targets).size !== targets.length)
 		throw new TypeError("Owned C-family projections require distinct c/cpp/cargo/pypi targets");
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi"].includes(target)), ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo"].includes(target)) });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi"].includes(target)), ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo", "pypi"].includes(target)) });
 	if(!model.ownedGraph) throw new TypeError("Owned C projection requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
@@ -45,7 +45,7 @@ export const projectOwnedNativeCFamily = async ({ working, nativeRoot, runtimeRo
 	const cpp = targets.includes("cpp") ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults }) : null;
 	const rust = targets.includes("cargo") ? generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults }) : null;
 	if(rust && !hostCallbacks) throw new TypeError("Owned Rust projection requires authenticated callback/copy support");
-	const python = targets.includes("pypi") ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs }) : null;
+	const python = targets.includes("pypi") ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults }) : null;
 	if(python && !hostCallbacks) throw new TypeError("Owned Python projection requires authenticated callback/copy support");
 	const p = generated.values.prefix, root = join(working, "native/owned-c-binding");
 	const adapterFiles = { ...generated.files, ...cpp?.files

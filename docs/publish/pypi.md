@@ -361,9 +361,31 @@ package receipt version 3. The shared C adapter uses version 4 with
 compiler metadata and rejects changed consumption or alias rules. Packages
 without transfers retain their existing versions and generated API.
 
-A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet, Maven and CPAN.
-Other consumer bindings still reject these contracts. Building a wheel does
-not upload it.
+A combined transfer build can select the compatible native consumer targets.
+The PHP-Wasm, npm and WIT/WASI projections also support explicit input transfers.
+Building a wheel does not upload it.
+
+## Anchor a result to an input
+
+The [C author example](c.md#anchor-a-result-to-an-input) declares a result borrowed
+from a particular input owner. Keep its resource and `ownedAggregates` declarations
+and select `targets.pypi` for a Python wheel. Ordinary source and reviewed IR use
+the same compiler-checked lifetime contract. Anchored packages can share a build
+with C, C++ and Cargo; other projections still reject result anchors.
+
+Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
+Consumers receive `Value[T]` roots with checked access, shared shallow copies and
+explicit independent retains. Empty results keep their owners. Borrowed results
+expire with the original anchor's release or transfer. Resource equality compares
+canonical identity and rejects expired values. See the
+[consumer example](../consume/python.md#results-borrowed-from-an-input).
+
+These wheels use `owned-python-v3`, ownership and binding contract version 3,
+and package receipt version 4. The shared C adapter uses version 5 with
+`ownedValues` version 4. Verification reconstructs both the shared native and
+Python contracts from compiler metadata, including the original owner, transitive
+expiration, empty values, copy selectors, equality and original-owner transfers.
+Packages without result anchors keep their prior API and contract versions.
 
 ## Choose the package name and platform
 

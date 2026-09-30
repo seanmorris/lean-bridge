@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPythonBorrow, ownedPythonBorrowChangedPaths } from "./owned-python-borrow-history.mjs";
 
 export const ownedRustBorrowPath = "docs/evidence/owned-rust-borrows-20260930.json";
 export const ownedRustBorrowBaseline = "741a2af5e68a77996f2b478b4110d97bfc6e4c58";
@@ -43,6 +44,7 @@ export const ownedRustBorrowAddedPaths = [
 	, "tests/owned-rust-borrows.test.mjs"
 ].sort();
 let cached;
+export const ownedRustBorrowNormalizationPaths = [...new Set([...ownedRustBorrowChangedPaths, ...ownedPythonBorrowChangedPaths])].sort();
 
 /**
  * Reverse complete authenticated source versions through exact ordered edits.
@@ -75,6 +77,7 @@ export const reverseOwnedRustBorrowUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedRustBorrow = (path, source, expected) => {
+	source = beforeOwnedPythonBorrow(path, source, expected);
 	if(!ownedRustBorrowChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedRustBorrowPath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-rust-borrows");
@@ -92,5 +95,5 @@ export const beforeOwnedRustBorrow = (path, source, expected) => {
  * @param bytes - Complete current source bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedRustBorrowHistoricalBytes = (path, bytes, expected) => ownedRustBorrowChangedPaths.includes(path)
+export const ownedRustBorrowHistoricalBytes = (path, bytes, expected) => ownedRustBorrowNormalizationPaths.includes(path)
 	? beforeOwnedRustBorrow(path, bytes.toString("utf8"), expected) : bytes;

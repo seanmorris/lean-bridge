@@ -16,13 +16,15 @@ import { ownedPythonRuntime } from "./owned-runtime.mjs";
  * @param evidence - Verified native library identities, or null for inspection.
  * @param options - Compiler-authenticated ownership capabilities.
  * @param options.transferredInputs - Enable explicitly consuming input leases.
+ * @param options.anchoredResults - Preserve whole original owners for borrowed results.
  */
-export const generateOwnedPythonPackage = (ir, evidence = null, { transferredInputs = false } = {}) => {
-	const generated = generateOwnedPythonConversions(ir, { transferredInputs }), prefix = generated.c.prefix;
+export const generateOwnedPythonPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const generated = generateOwnedPythonConversions(ir, { transferredInputs, anchoredResults }), prefix = generated.c.prefix;
 	const transfers = generated.c.functions.some(item => item.transfers?.length);
+	const anchors = Boolean(generated.c.anchoredResults);
 	const { packageDir } = generated;
 	const publicModule = `${packageDir}/__init__.py`, typeStub = `${packageDir}/__init__.pyi`;
-	const runtime = ownedPythonRuntime(prefix, { transferredInputs: transfers });
+	const runtime = ownedPythonRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors });
 	const source = `${generated.source}\nfrom . import _assets as _Assets\n_bind(_R._OwnedRuntime(_Assets._LIBRARY, _Assets._ensure_process))\n`;
 	const abiHeader = `#pragma once
 #include "${prefix}.h"
@@ -32,14 +34,24 @@ _Static_assert(sizeof(__mpz_struct) == 16 && _Alignof(__mpz_struct) == 8 && offs
 _Static_assert(sizeof(${prefix}_status) == 4, "Owned Python status layout");
 ${generated.types.filter(node => node.kind === "variant").map(node => `_Static_assert(sizeof(${node.cName}_kind) == 4, "Owned Python variant layout");`).join("\n")}
 `;
-	const contract = { schemaVersion: transfers ? 2 : 1, language: "python-3.11"
+	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
+		, language: "python-3.11"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
-			, arguments: "ordinary-values", consumption: "before-lean-call"
+			, arguments: anchors ? "whole-values" : "ordinary-values"
+			, consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"
 			, aliases: "shared-lease", borrowedInputs: "reject"
 			, independentRetains: "preserved" } } : {}
+		, ...anchors ? { resultAnchors: { schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-result-owner"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved", aliases: "shared-owner"
+			, independentOwnership: "retain-or-copy_value"
+			, copyType: "nominal-or-result_of-or-parameter_of"
+			, resourceEquality: "canonical-identity", invalidEquality: "raise"
+			, transfers: "original-owner" } } : {}
 		, exactIntegers: "python-int", loader: "authenticated-bundled-native"
 		, publicSha256: sha256(generated.valuesSource)
 		, stubSha256: sha256(generated.stub)
@@ -77,7 +89,28 @@ Finalization supplies fallback cleanup on the creating thread. Resources reject
 use from other threads, after their creating thread exits, or after fork.
 Start a fresh interpreter after fork. Deep copying and serialization of resource
 identities are rejected.
-${transfers ? `
+${anchors ? `
+Resource-containing results use Value[T], including empty containers and
+constructors. get() validates the whole result owner. Shallow Value copies share
+immutable storage and the original lease; close() releases this wrapper. Borrowed
+results do not keep their anchor alive. They and their descendants expire when
+the original owner is released or transferred. Resource wrappers extracted by
+get() can also share an owning lease; releasing the last owning alias releases
+that owner. Copied field reads do not revalidate, but resource operations do.
+Equality checks lifetime and canonical resource identity; expired values raise.
+
+Value.retain() and copy_value(host_value) create independent owners. Nominal
+records, variants and resources identify their own type. For containers and empty
+values, select the public result type with result_of=api.function, or an argument
+type with parameter_of=(api.function, "arg0"). These selectors do not call the
+function. Returned Lean closures use callable Value wrappers.
+` : ""}${transfers && anchors ? `
+Transferred inputs take Value roots and consume the original owner, including
+empty values. Validation and preparation failures preserve inputs. Handoff
+closes aliases and borrowed descendants before callbacks can reenter. Errors
+after handoff leave inputs consumed. Borrowed roots cannot transfer; retain them
+first. A call cannot consume its result anchor or that anchor's ancestor.
+` : transfers ? `
 Functions with transferred inputs accept ordinary Python values. Validation and
 preparation finish before any input is consumed. At the Lean call boundary,
 resource leases in transferred inputs become closed, including shallow aliases
@@ -110,8 +143,8 @@ aliases use typing_extensions >=4.6,<5 on Python 3.11 and the standard library
 on Python 3.12+; pip installs the backport when needed.
 `
 	};
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: transfers ? 2 : 1
-		, backend: transfers ? "owned-python-v2" : "owned-python-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : transfers ? 2 : 1
+		, backend: anchors ? "owned-python-v3" : transfers ? "owned-python-v2" : "owned-python-v1"
 		, component: ir.component.id
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, publicModule, typeStub, internalModule: `${packageDir}/_native.py`
