@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedBorrowCi, ownedBorrowCiChangedPaths } from "./owned-borrow-ci-history.mjs";
 
 export const ownedBorrowBaseline = "2fab6b1635341d6622fc13fe8da9b3fdc947790e";
 export const ownedBorrowPath = "docs/evidence/owned-borrow-results-20260930.json";
@@ -49,6 +50,7 @@ export const ownedBorrowAddedPaths = [
 	, "tests/owned-c-borrows.test.mjs"
 ].sort();
 let cached;
+export const ownedBorrowNormalizationPaths = [...new Set([...ownedBorrowChangedPaths, ...ownedBorrowCiChangedPaths])].sort();
 
 /**
  * Reverse only recorded non-overlapping edits with matching whole-file hashes.
@@ -81,6 +83,7 @@ export const reverseOwnedBorrowUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedBorrow = (path, source, expected) => {
+	source = beforeOwnedBorrowCi(path, source, expected);
 	if(!ownedBorrowChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedBorrowPath, "utf8"));
@@ -99,5 +102,5 @@ export const beforeOwnedBorrow = (path, source, expected) => {
  * @param bytes - Complete current source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedBorrowHistoricalBytes = (path, bytes, expected) => ownedBorrowChangedPaths.includes(path)
+export const ownedBorrowHistoricalBytes = (path, bytes, expected) => ownedBorrowNormalizationPaths.includes(path)
 	? beforeOwnedBorrow(path, bytes.toString("utf8"), expected) : bytes;

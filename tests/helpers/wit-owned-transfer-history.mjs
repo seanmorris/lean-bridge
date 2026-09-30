@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedBorrow, ownedBorrowChangedPaths } from "./owned-borrow-history.mjs";
+import { beforeOwnedBorrow, ownedBorrowNormalizationPaths } from "./owned-borrow-history.mjs";
 
 export const ownedWitTransferBaseline = "3e28428f0b304f1dfed2cb2ad524b50c1fabdeef";
 export const ownedWitTransferPath = "docs/evidence/wit-owned-transfers-20260930.json";
@@ -57,7 +57,7 @@ export const ownedWitTransferAddedPaths = [
 	, "tests/wit-owned-transfers.test.mjs"
 ];
 let cached;
-export const ownedWitTransferNormalizationPaths = [...new Set([...ownedWitTransferChangedPaths, ...ownedBorrowChangedPaths])].sort();
+export const ownedWitTransferNormalizationPaths = [...new Set([...ownedWitTransferChangedPaths, ...ownedBorrowNormalizationPaths])].sort();
 
 /**
  * Reverse only authenticated, ordered, non-overlapping edit spans.

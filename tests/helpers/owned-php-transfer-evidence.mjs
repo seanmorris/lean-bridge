@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
 import { createCompiledNativeModel } from "../../src/build/native-graph-model.mjs";
 import { generateOwnedPhpCalls } from "../../src/backends/php/owned-calls.mjs";
 import { generateOwnedPhpPackage } from "../../src/backends/php/owned-package.mjs";
@@ -59,7 +60,8 @@ export const assertOwnedPhpTransferExecution = async record => {
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
-		assert.equal(item.input.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+		const extractor = "src/analyze/NativeExports.lean", expectedExtractor = item.input.sourceIdentity.extractorSha256;
+		assert.equal(sha256(ownedBorrowHistoricalBytes(extractor, await readFile(extractor), expectedExtractor)), expectedExtractor);
 		const model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
 		assert.equal(model.schemaVersion, 8); assert.equal(model.exports.length, 26);
 		assert.equal(model.ownedGraph.inputTransfers.exports.length, 20);
