@@ -11,13 +11,15 @@
  *
  * @param model - Finite wasm32 ownership model and nominal identity kinds.
  */
-export const ownedZendOwnershipSource = model => `
+export const ownedZendOwnershipSource = model => {
+	const transfers = model.functions.some(fn => fn.transfers?.length);
+	return `
 #include <Zend/zend_exceptions.h>
 #include <Zend/zend_fibers.h>
 
 typedef struct lgo_state lgo_state;
 typedef struct lgo_lease lgo_lease;
-typedef struct lgo_borrow lgo_borrow;
+typedef struct lgo_borrow lgo_borrow;${transfers ? "\ntypedef struct lgo_input_group lgo_input_group;" : ""}
 struct lgo_state {
   lb_owned_context native;
   lgo_lease *leases;
@@ -29,7 +31,7 @@ struct lgo_lease {
   lgo_lease *next;
   ov_result_owner owner;
   size_t references;
-  int pending, clearing;
+  int pending, clearing;${transfers ? "\n  lgo_input_group *input_move;\n  int published, consumed;" : ""}
 };
 struct lgo_borrow {
   lgo_state *state;
@@ -211,7 +213,7 @@ static int lgo_handle_check(lgo_handle *handle) {
   if (handle->lease) {
     lgo_lease *lease = handle->lease;
     int status = lgo_ready(lease->state); if (status) return status;
-    if (!lease->references || lease->pending || lease->clearing) return LB_OWNED_CLOSED;
+    if (!lease->references || lease->pending || lease->clearing${transfers ? " || lease->consumed" : ""}) return LB_OWNED_CLOSED;
     if (lease->owner.batch.context != &lease->state->native
         || !lgo_entries_contain(lease->owner.batch.entries, handle->type, handle->token)) return LB_OWNED_INVALID;
   } else {
@@ -281,7 +283,7 @@ static int lgo_handle_retain(lgo_handle *handle, zval *out) {
     zend_catch { lgo_lease_release(lease); zend_bailout(); }
     zend_end_try();
   }
-  lgo_lease_release(lease); return status;
+${transfers ? "  if (!status) lease->published = 1;\n" : ""}  lgo_lease_release(lease); return status;
 }
 static void lgo_clear_zvals(zval *values, size_t count, int *bailout) {
   zend_object *volatile failure = EG(exception);
@@ -309,3 +311,4 @@ static int lgo_borrow_finish(lgo_borrow **borrow, ov_transaction *transaction,
   lgo_borrow_end(borrow); return status;
 }
 `;
+};

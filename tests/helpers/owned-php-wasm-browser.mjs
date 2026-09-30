@@ -58,8 +58,9 @@ try{
  *
  * @param deployment - Relocated installation with bundled descriptor assets.
  * @param diagnostic - Progress reporter.
+ * @param expected - Required consumer result fields for this fixture.
  */
-export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic) => {
+export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }) => {
 	await saveLakeFile(deployment, "vendor-files.json", canonicalJson(await nativeArtifactPaths(join(deployment, "vendor"))));
 	await saveLakeFile(deployment, "index.html", '<!doctype html><html><head><link rel="icon" href="data:,"></head><body><script type="module" src="./browser.mjs"></script></body></html>');
 	const observations = [];
@@ -72,8 +73,7 @@ export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic) => {
 			, environment: process.env });
 		for(const run of browser.executions)
 		{
-			assert.equal(run.observed.scalars, 19);
-			assert.equal(run.observed.structured, 23);
+			for(const [key, value] of Object.entries(expected)) assert.deepEqual(run.observed[key], value, key);
 			assert.equal(run.observed.phpBits, 32);
 			assert.ok(run.observed.checks > 100);
 			assert.deepEqual(run.phases.map(phase => phase.stage), ["ready", "autoload", "invalid", "complete", "recovered"]);

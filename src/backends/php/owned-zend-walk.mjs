@@ -6,6 +6,7 @@
 import { graphZendSupport } from "./copied-graph-zend-runtime.mjs";
 import { ownedZendDescriptorSource } from "./owned-zend-descriptors.mjs";
 import { ownedZendOwnershipSource } from "./owned-zend-ownership.mjs";
+import { ownedZendInputTransferSource, ownedZendInputTransferTypes } from "./owned-zend-input-transfers.mjs";
 
 /**
  * Native ownership codecs precede this source. Callback and downcall emitters
@@ -13,19 +14,21 @@ import { ownedZendOwnershipSource } from "./owned-zend-ownership.mjs";
  *
  * @param model - Compiler-authenticated wasm32 ownership schema.
  */
-export const ownedZendWalkSource = model => `
+export const ownedZendWalkSource = model => {
+	const transfers = model.functions.some(fn => fn.transfers?.length);
+	return `
 ${graphZendSupport}
 ${ownedZendOwnershipSource(model)}
 static int lgo_identity_input(lb_scope *, unsigned, zval *, uint64_t *);
 static int lgo_identity_output(lb_scope *, unsigned, uint64_t, zval *);
-${ownedZendDescriptorSource(model)}
+${ownedZendDescriptorSource(model)}${transfers ? ownedZendInputTransferTypes : ""}
 typedef struct {
   lg_walk graph;
   lgo_state *state;
   lgo_lease *lease;
   lgo_borrow *borrow;
   lb_owned_scope *inputs;
-  int status;
+  int status;${transfers ? "\n  lgo_input_group *input_group;" : ""}
 } lgo_walk;
 _Static_assert(offsetof(lgo_walk, graph) == 0 && offsetof(lg_walk, scope) == 0,
   "owned Zend identity hooks require the walk's first-field scope");
@@ -35,7 +38,7 @@ typedef struct {
   ov_transaction inputs;
   lgo_host *hosts;
   zval wire;
-  int bailout;
+  int bailout;${transfers ? "\n  lgo_input_group *moves;\n  size_t move_count;\n  ov_transaction move_input;" : ""}
 } lgo_call;
 struct lgo_host {
   lgo_host *next;
@@ -57,11 +60,11 @@ static int lgo_walk_failure(lgo_walk *walk, int output) {
   if (walk->status == OV_RESULT) lean_bridge_native_runtime_retire();
   return 0;
 }
-static int lgo_identity_input(lb_scope *scope, unsigned type, zval *value, uint64_t *token) {
+${transfers ? ownedZendInputTransferSource(model) : ""}static int lgo_identity_input(lb_scope *scope, unsigned type, zval *value, uint64_t *token) {
   lgo_walk *walk = (lgo_walk *)scope; lgo_handle *handle = NULL;
   int status = lgo_handle_fetch(value, type, walk->state, &handle);
   lean_object *pinned = NULL;
-  if (!status) status = lb_owned_scope_borrow(walk->inputs, lgo_kind(type), handle->token, &pinned);
+  if (!status) status = lb_owned_scope_borrow(walk->inputs, lgo_kind(type), handle->token, &pinned);${transfers ? "\n  if (!status && walk->input_group) status = lgo_input_reserve(walk, handle, pinned);" : ""}
   if (status) return lgo_walk_fail(walk, status, "Invalid, foreign or expired Lean identity", status == LB_OWNED_INVALID);
   *token = handle->token; return 1;
 }
@@ -104,10 +107,10 @@ static void lgo_hosts_end(lgo_call *call) {
   call->hosts = NULL;
 }
 static void lgo_call_finish(lgo_call *call, zval *out) {
-  lgo_hosts_end(call);
+${transfers ? "  lgo_inputs_finish(call);\n" : ""}  lgo_hosts_end(call);
   if (call->inputs.scope.context) call->walk.status = ov_abort(&call->inputs, call->walk.status);
   if (!call->walk.status && !call->walk.graph.scope.error && !call->bailout && !EG(exception)) {
-    ZVAL_COPY_VALUE(out, &call->wire); ZVAL_UNDEF(&call->wire);
+${transfers ? "    call->walk.lease->published = 1;\n" : ""}    ZVAL_COPY_VALUE(out, &call->wire); ZVAL_UNDEF(&call->wire);
   }
   lgo_clear_zvals(&call->wire, 1, &call->bailout);
   if (call->walk.lease) { lgo_lease_release(call->walk.lease); call->walk.lease = NULL; }
@@ -120,3 +123,4 @@ static void lgo_error(int status, const char *message, int type_error) {
   else zend_throw_exception(zend_ce_exception, message ? message : "Compiled Lean ownership call failed", status);
 }
 `;
+};

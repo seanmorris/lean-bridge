@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedPhpWasmTransfer, ownedPhpWasmTransferHistoricalBytes } from "./helpers/owned-php-wasm-transfer-history.mjs";
 import { assertOwnedPhpTransferExecution } from "./helpers/owned-php-transfer-evidence.mjs";
 import { beforeOwnedPhpTransfer, ownedPhpTransferAddedPaths, ownedPhpTransferBaseline
 	, ownedPhpTransferChangedPaths, ownedPhpTransferPath, ownedPhpTransferPrevious
@@ -22,27 +23,27 @@ test("native PHP transfers preserve frozen receipts without promoting unrelated 
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPhpTransferAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedPhpWasmTransferHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPhpTransferChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedPhpTransfer(update.path, source);
+		const source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedPhpTransfer(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedPhpTransfer(update.path, prior), prior);
 		assert.equal(beforeOwnedPhpTransfer(update.path, source, update.currentSha256), source);
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeOwnedPhpWasmTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
 	const prior = JSON.parse(beforeOwnedPhpTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPhpWasmTransferHistoricalBytes(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
 test("native PHP transfer history rejects unknown edits and forged reversal spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedPhpWasmTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedPhpTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedPhpTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

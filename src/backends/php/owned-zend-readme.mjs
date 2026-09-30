@@ -20,3 +20,12 @@ Finite recursive values can contain resource leaves. Cycles, malformed branches,
 
 Keep wrappers in their originating PHP instance and use the main PHP execution context. The pinned PHP-Wasm host cannot start Fibers. After exit or request termination, await php.refresh(), require the autoloader again and create new PHP values. Compatible copied and resource-containing packages use the same shared runtime automatically. Transferred inputs and anchored results are not implemented by this lease profile.
 `;
+
+export const ownedPhpWasmTransferReadme = ownedPhpWasmReadme.replace(
+	"Transferred inputs and anchored results are not implemented by this lease profile.",
+	"Owner-anchored borrowed results are not implemented by this lease profile."
+) + `
+Consuming parameters transfer their entire shared result lease, including siblings outside the supplied value. PHPDoc identifies each consuming parameter. Assignment aliases become closed when Lean receives the call. Use retain() beforehand to keep an independent lease. Repeated identities within one consuming argument are allowed; sharing one lease between two consuming arguments rejects before consumption. Callback borrows must be retained before transfer. A consuming callable parameter accepts a generated Lean closure, not an arbitrary PHP callable.
+
+All arguments validate before consumption. Validation and preparation failures leave inputs open. Once the call reaches Lean, inputs remain consumed even if a callback throws or result conversion fails. Callbacks observe the consumed state during reentry. The original Throwable propagates after cleanup. close() remains safe on a consumed wrapper.
+`;

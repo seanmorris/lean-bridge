@@ -15,19 +15,27 @@ const calls = model => {
 		, ...model.callbacks.map(fn => ({ ...fn, entry: `invoke${fn.index}` }))];
 	return declarations.map(fn => {
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
+		const transfers = fn.transfers ?? [];
 		return `
 typedef struct {
   lgo_call call;
   ${parameters.map((node, index) => `${node.cName} a${index};`).join("\n  ")}
-  ${result.cName} output;
+  ${result.cName} output;${transfers.length ? `
+  lgo_input_group moves[${transfers.length}];
+  ov_result_owner *input_owners[${transfers.length}];
+  ov_input_transfers transfer;` : ""}
 } lgo_${fn.entry}_frame;
 static void lgo_${fn.entry}_execute(lgo_${fn.entry}_frame *frame, zval *arguments) {
   (void)arguments;
   lgo_call *call = &frame->call;
-  if (lgo_call_open(call, sizeof(*frame))) return;
-${parameters.map((node, index) => `  if (!${fn.hostArguments[index] ? `lgo_host${signatures.get(node.id)}_begin(call, &arguments[${index}], &frame->a${index})`
-		: `lgo_to(&call->walk, ${node.index}, &arguments[${index}], &frame->a${index})`}) return;`).join("\n")}
-  call->walk.status = ${fn.symbol}(&call->walk.state->native, ${[...parameters.map((_, index) => `&frame->a${index}`), "&frame->output", "&call->walk.lease->owner"].join(", ")});
+  if (lgo_call_open(call, sizeof(*frame))) return;${transfers.length ? `
+  call->moves = frame->moves; call->move_count = ${transfers.length};
+  for (size_t index = 0; index < ${transfers.length}; ++index) frame->input_owners[index] = &frame->moves[index].owner;
+  frame->transfer = (ov_input_transfers){ .owners = frame->input_owners, .count = ${transfers.length},
+    .consume = lgo_input_consume, .context = call };` : ""}
+${parameters.map((node, index) => `${transfers.includes(index) ? `  if (lgo_input_begin(call, ${transfers.indexOf(index)})) return;\n` : ""}  if (!${fn.hostArguments[index] ? `lgo_host${signatures.get(node.id)}_begin(call, &arguments[${index}], &frame->a${index})`
+		: `lgo_to(&call->walk, ${node.index}, &arguments[${index}], &frame->a${index})`}) return;${transfers.includes(index) ? "\n  if (lgo_input_commit(call)) return;" : ""}`).join("\n")}
+  call->walk.status = ${fn.symbol}(&call->walk.state->native, ${[...parameters.map((_, index) => `&frame->a${index}`), ...transfers.length ? ["&frame->transfer"] : [], "&frame->output", "&call->walk.lease->owner"].join(", ")});
   if (!call->walk.status && !call->bailout && !EG(exception))
     (void)lgo_from(&call->walk, ${result.index}, &frame->output, &call->wire);
 }
@@ -117,7 +125,8 @@ static ZEND_FUNCTION(lgo_retire) {
  * @param generated - Private native adapters generated with wordBits32 and hostCallbacks.
  */
 export const generateOwnedPhpZendExtension = generated => {
-	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr);
+	const transferredInputs = generated.layout.functions.some(fn => fn.transfers?.length);
+	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs });
 	if(canonicalJson(model.layout) !== canonicalJson(generated.layout)) throw new TypeError("Zend transport requires its exact wasm32 native layout");
 	if(generated.carriers.hostCallbacks?.length !== model.callbacks.length || !generated.carriers.callbackSource)
 		throw new TypeError("Zend transport requires compiler-authenticated host callback carriers");

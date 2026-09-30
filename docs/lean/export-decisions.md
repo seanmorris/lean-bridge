@@ -115,13 +115,14 @@ Ordinary [native PHP builds](../publish/php.md#build-an-ordinary-lean-project) e
 
 Ordinary [PHP-Wasm builds](../publish/php.md#build-an-ordinary-php-wasm-package) compile copied values, Lists and synchronous primitive, [acyclic structured](../publish/php.md#export-structured-callbacks) or [recursive callables](../publish/php.md#export-recursive-callbacks) for a separate wasm32 Zend adapter. [List inputs, results and fields](../evidence/php-wasm-lists-20260921.md) have installed checks on both source paths in Node and Chromium. `UInt32` and `Int64` use `Brick\Math\BigInteger` on this host, alongside `UInt64`, `Nat`, `Int` and 32-bit `USize`. Returned functions are invokable `LeanClosure` owners with explicit `close()`. Generated npm descriptors include Brick Math and register the shared runtime and component before PHP starts; the companion Composer ZIP supplies the same public PHP API. Installed startup and lazy-loading packages run in Node and Chromium with PHP 8.4.
 
-Native PHP's [explicit ownership profile](../publish/php.md#export-resource-containing-values)
-also accepts resource leaves in records, variants, containers, finite recursive
-values and synchronous callback payloads. The generated Composer package loads
-its checked leases and private native dependencies automatically. Callback
-borrows expire on return unless retained. Both ordinary source and reviewed
-contracts use this profile; it does not yet admit PHP-Wasm, transferred inputs,
-anchored results or asynchronous delivery.
+PHP's [explicit ownership profile](../publish/php.md#export-resource-containing-values)
+accepts resource leaves in records, variants, containers, finite recursive values
+and synchronous callback payloads. Native Composer packages load their checked
+leases and private native dependencies automatically. PHP-Wasm packages use a
+separately compiled 32-bit Zend extension and shared runtime. Callback borrows
+expire on return unless retained. Ordinary source and reviewed contracts can
+select [consuming inputs](../publish/php.md#export-consuming-inputs) in both
+transports. Anchored results and asynchronous delivery remain unsupported.
 
 ## Native Perl exports
 
@@ -150,7 +151,7 @@ The compiler-backed analyzer projects:
 
 Nested arrays, Lists, copied records, variants, aliases, bounded recursive values, Option, Except, nested binary products and synchronous callbacks and returned functions with those payloads are supported. Configure `arities` to separate an export's arguments from those of its returned function. `IO`, `Task` and unsupported collection constructors produce diagnostics that retain their elaborated types for inspection. Analysis uses the pinned Nix or Docker engine and does not compile consumer adapters.
 
-For resource-containing values, select `resources` and an explicit `ownedAggregates` policy. The analyzer then projects resource identities, owned records and variants, containers, recursive values and synchronous callbacks through the shared ownership model. Its schema-4 Binding IR records borrowed inputs and explicitly leased results. It also preserves explicit input-transfer decisions from ordinary configuration or a reviewed API. C packages compile those decisions into [owner-consuming calls](../consume/c.md#transferred-inputs); C++ packages use [rvalue references](../consume/cpp.md#transferred-inputs), Rust packages use [mutable references](../consume/rust.md#transferred-inputs), and Python, Ruby, C#, Java, Kotlin, Perl and native PHP packages consume checked resource leases ([Python](../consume/python.md#transferred-inputs), [Ruby](../consume/ruby.md#transferred-inputs), [C#](../consume/dotnet.md#consuming-inputs), [Java](../consume/java.md#consuming-inputs), [Kotlin](../consume/kotlin.md#consuming-inputs), [Perl](../consume/perl.md#consuming-inputs), [PHP](../php.md#consuming-inputs)). Other consumer bindings still reject transfers. Owner-anchored borrowed results remain unimplemented.
+For resource-containing values, select `resources` and an explicit `ownedAggregates` policy. The analyzer then projects resource identities, owned records and variants, containers, recursive values and synchronous callbacks through the shared ownership model. Its schema-4 Binding IR records borrowed inputs and explicitly leased results. It also preserves explicit input-transfer decisions from ordinary configuration or a reviewed API. C packages compile those decisions into [owner-consuming calls](../consume/c.md#transferred-inputs); C++ packages use [rvalue references](../consume/cpp.md#transferred-inputs), Rust packages use [mutable references](../consume/rust.md#transferred-inputs), and Python, Ruby, C#, Java, Kotlin, Perl and PHP packages consume checked resource leases ([Python](../consume/python.md#transferred-inputs), [Ruby](../consume/ruby.md#transferred-inputs), [C#](../consume/dotnet.md#consuming-inputs), [Java](../consume/java.md#consuming-inputs), [Kotlin](../consume/kotlin.md#consuming-inputs), [Perl](../consume/perl.md#consuming-inputs), [PHP](../php.md#consuming-inputs)). Other consumer bindings still reject transfers. Owner-anchored borrowed results remain unimplemented.
 
 Schema-3 reviewed Binding IR can be validated without a compiler. Schema-4 ownership reviews are checked against freshly compiled Lean types, including resource identity, field order, callbacks and lifetimes. Builds [reconcile reviewed APIs](existing-package.md#compile-a-reviewed-contract) before compiling adapters. Combined builds require every selected profile to admit the same API; analysis alone does not establish target or installed-package support. The [consumer support contract](../consumer-support.v1.json) records those runtime checks.
 

@@ -28,7 +28,7 @@ export const installOwnedPhpWasmCli = async ({ directory, runtimeRoot, phpSource
 	const inputs = await buildPhpWasmCompilerInputs({ runtimeRoot, phpSource, outputRoot: join(source, "inputs") });
 	const archive = await buildCliNpmPackage({ outputRoot: join(source, "archive"), phpWasmInputsRoot: inputs.directory });
 	await saveLakeFile(installed, "package.json", canonicalJson({ private: true }));
-	const run = (args, cwd, env) => processBuildRunner.capture({ command: process.execPath, args, cwd, env, timeoutMs: 600000 })
+	const run = (args, cwd, env) => processBuildRunner.capture({ command: process.execPath, args, cwd, env, timeoutMs: 1200000 })
 		.catch(error => { error.message += ": " + JSON.stringify(error.details); throw error; });
 	await processBuildRunner.capture({ command: "npm", args: ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", archive.archive], cwd: installed });
 	const packageRoot = join(installed, "node_modules", archive.report.package.name), cli = join(packageRoot, "scripts/lean-bridge.mjs");

@@ -176,7 +176,7 @@ export const buildMultiProfileProject = async ({
 			await verifyNativeFiles(componentRoot, (await json(join(componentRoot, "artifacts.json"))).files);
 			const reconstructed = createCompiledNativeModel({ metadata: await json(join(componentRoot, "metadata.json"))
 				, component: nativeModel.component, moduleName: nativeModel.moduleName
-				, sourceIdentity: nativeReceipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: ownedGraphs });
+				, sourceIdentity: nativeReceipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: ownedGraphs, ownedInputTransfers: ownedGraphs });
 			if(canonicalJson(reconstructed) !== canonicalJson(nativeModel) || sha256(canonicalJson(nativeModel)) !== nativeReceipt.modelSha256) fail("Native model changed after compilation");
 			models.push(nativeModel);
 		}

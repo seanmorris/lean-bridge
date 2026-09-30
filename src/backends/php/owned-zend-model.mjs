@@ -14,10 +14,12 @@ import { generateOwnedPhpValues } from "./owned-values.mjs";
  * private ownership ABI's canonical [success, error] order.
  *
  * @param ir - Explicit, compiler-authenticated resource ownership contract.
+ * @param options - Explicit transport capabilities.
+ * @param options.transferredInputs - Admit atomic consuming arguments.
  */
-export const compileOwnedPhpZendModel = ir => {
-	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32 });
-	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32 });
+export const compileOwnedPhpZendModel = (ir, { transferredInputs = false } = {}) => {
+	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs });
+	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs });
 	const fail = message => { throw new TypeError(`Owned PHP-Wasm values: ${message}`); };
 	const types = layout.nodes.map((node, index) => {
 		const php = values.types[index];

@@ -453,14 +453,15 @@ startup descriptor. First-use loading inside a synchronous Lean callback throws
 before downloading an extension; the peer remains usable from a normal call.
 After `php.refresh()`, require the autoloader again and initialize lazy peers
 outside callbacks. Do not reuse resource wrappers from an earlier request.
-PHP-Wasm does not yet accept transferred inputs. Owner-anchored borrowed results
-and asynchronous callbacks remain unsupported in both PHP transports.
+Owner-anchored borrowed results and asynchronous callbacks remain unsupported
+in both PHP transports.
 
 ### Consuming inputs
 
-Native Composer packages can expose functions that consume resource-containing
-arguments. The generated function documentation names those arguments. Pass the
-same PHP values you use for borrowed arguments; no transfer wrapper is needed.
+Native PHP and PHP-Wasm packages can expose functions that consume
+resource-containing arguments. The generated function documentation names those
+arguments. Pass the same PHP values you use for borrowed arguments; no transfer
+wrapper is needed.
 
 With the [consuming author configuration](publish/php.md#export-consuming-inputs),
 save this as `consume.php`:
@@ -498,8 +499,11 @@ try {
 }
 ```
 
-Run `php consume.php`. It prints `42`, `42`, then `closed`. The native call
-consumes `$ticket` and its alias; the independent `retain()` result stays open.
+Run `php consume.php` for a native package. For PHP-Wasm, mount the Composer
+`vendor` directory and run the same file inside the interpreter, or replace the
+Composer `require` with the descriptor's autoloader. It prints `42`, `42`, then
+`closed`. The Lean call consumes `$ticket` and its alias; the independent
+`retain()` result stays open.
 
 Validation and snapshot failures before the Lean call preserve the inputs.
 Once Lean receives them, their shared result owners close even if a callback

@@ -184,7 +184,7 @@ package. See the [consumer lifetime rules](../php.md#resource-containing-values)
 
 ### Export consuming inputs
 
-For a native Composer release, add this `contracts` map to the
+For a native PHP or PHP-Wasm release, add this `contracts` map to the
 [resource example's configuration](#export-resource-containing-values):
 
 ```json
@@ -200,19 +200,20 @@ For a native Composer release, add this `contracts` map to the
 }
 ```
 
-Build with `--target php-native`. This changes the ownership of the first
-argument without changing the Lean function or its PHP value type. The generated
-PHPDoc names the consuming argument. Source analysis, compiled receipts and the
-Composer adapter retain that decision. A compiler-checked reviewed contract can
-select the same transfer policy.
+Build with `--target php-native` or `--target php-wasm`. This changes the ownership
+of the first argument without changing the Lean function or its PHP value type.
+The generated PHPDoc names the consuming argument. Source analysis, compiled
+receipts and the package adapter retain that decision. A compiler-checked
+reviewed contract can select the same transfer policy.
 
 Use the [installed consumer example](../php.md#consuming-inputs). Inputs remain
 usable after validation failures before the native handoff. After the handoff,
 shared aliases close, including when a callback throws. Independent `retain()`
 results survive. Callback borrows must be retained before they can be consumed.
 
-A combined release may select other transfer-capable native targets such as C.
-PHP-Wasm still rejects this contract; do not select `--target php-wasm` for it.
+A combined release may select other transfer-capable targets such as C. Native
+PHP uses its 64-bit FFI adapter; PHP-Wasm compiles a separate 32-bit Zend
+extension and ships the matching npm descriptor and optional Composer package.
 
 ### Export named copied aliases
 

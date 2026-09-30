@@ -134,7 +134,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 		, createModel: createCompiledPhpWasmModel
 		, createAdapters: generateCompiledPhpWasmLeanAdapters
 		, validateModel: model => {
-			if(model.ownedGraph) compileOwnedPhpZendModel(model.bindingIr);
+			if(model.ownedGraph) compileOwnedPhpZendModel(model.bindingIr, { transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
 			else if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr);
 			else if(model.copiedGraph) compileCopiedPhpGraphZendModel(model.bindingIr);
 			else compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });

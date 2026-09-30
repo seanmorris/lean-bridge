@@ -204,7 +204,7 @@ function with_recovery(mixed $callback, mixed $value): WithRecovery {
 }
 require_once __DIR__ . '/Internal/Native.php';
 ${model.functions.map(fn => `/**
-${fn.parameters.map((id, index) => ` * @param ${fn.hostArguments[index] ? `callable|${nodes.get(id).docType}|WithRecovery` : nodes.get(id).docType} $${fn.publicParameters[index]}`).join("\n")}
+${fn.parameters.map((id, index) => ` * @param ${fn.hostArguments[index] ? `callable|${nodes.get(id).docType}|WithRecovery` : nodes.get(id).docType} $${fn.publicParameters[index]}`).join("\n")}${fn.transfers?.length ? `\n * Consumes resource leases in ${fn.transfers.map(index => "$" + fn.publicParameters[index]).join(", ")} at the Lean call boundary.` : ""}
  * @return ${nodes.get(fn.result).docType}
  */
 function ${fn.publicName}(${fn.publicParameters.map(name => `mixed $${name}`).join(", ")}): ${nodes.get(fn.result).publicType} {
