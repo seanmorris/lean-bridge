@@ -162,6 +162,17 @@ jobs:
           test -s build/owned-javascript-wasm/installed.log
           rg '^# fail 0$' build/owned-javascript-wasm/installed.log
           rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
+      - name: Verify consuming JavaScript input ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-javascript-transfers 2>&1 | tee build/owned-javascript-wasm/transfers.log
+          rg '^# fail 0$' build/owned-javascript-wasm/transfers.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/transfers.log
+          test -s build/owned-javascript-transfers/ordinary.json
+          test -s build/owned-javascript-transfers/reviewed.json
+          test -s build/owned-javascript-transfer-packaging/report.json
       - name: Verify installed copied and owned npm coexistence
         shell: bash
         run: |
@@ -220,6 +231,10 @@ jobs:
             build/owned-javascript-wasm/runtime.log
             build/owned-javascript-wasm/execution.log
             build/owned-javascript-wasm/installed.log
+            build/owned-javascript-wasm/transfers.log
+            build/owned-javascript-transfers/ordinary.json
+            build/owned-javascript-transfers/reviewed.json
+            build/owned-javascript-transfer-packaging/report.json
             build/owned-javascript-wasm/coexistence.log
             build/owned-javascript-wasm/analysis.log
             build/owned-javascript-wasm/engine.log

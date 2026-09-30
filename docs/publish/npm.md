@@ -82,8 +82,10 @@ through the component engine. The engine verifies the captured source,
 generated inputs, export selection and output inventory. Nix acceptance builds
 ordinary and reviewed packages with unusable host SDK paths, then installs and
 executes them offline after removing their producer directories. The
-owned-specific Docker installed-package check remains open. Transferred inputs
-and results borrowed from another object remain unsupported.
+owned-specific Docker installed-package check remains open. Results borrowed
+from another object remain unsupported.
+
+### Publish the owned package
 
 Commit the author package and declare `package.license` with nonempty license
 terms before creating a publication candidate:
@@ -103,6 +105,31 @@ Its shared-runtime dependency must already be available at the exact recorded
 version and archive hash. Retrying a completed transaction does not republish it.
 The resulting signed archive receipt can be checked without the author source
 or compiler. The copied-value publication workflow is unchanged.
+
+### Declare consuming inputs
+
+Use `contracts` to declare an owned argument as `transfer`, alongside the
+project's `resources` and `ownedAggregates` selections. For example:
+
+```json
+{
+  "contracts": {
+    "Owned.retainTicket": {
+      "parameters": [
+        { "ownership": "transfer", "lifetime": { "scope": "call", "anchor": null } }
+      ]
+    }
+  }
+}
+```
+
+A schema-4 reviewed API can declare the same ownership directly. The compiler
+checks both source paths, and the component receipt records which parameters
+consume ownership. Generated JavaScript functions accept the values normally;
+their [lifetime rules](../javascript-typescript.md#consuming-inputs) take effect
+at the native handoff. Generated TypeScript requires a returned Lean lease for
+a consuming callable argument. Borrowed callback arguments still accept
+ordinary JavaScript functions.
 
 ## Export callbacks and returned functions
 

@@ -20,7 +20,7 @@ const description = value => `/** ${value.documentation.summary.replaceAll("*/",
  * @param document - Explicit compiler-derived or independently reviewed v4 IR.
  */
 export const compileOwnedJavaScriptPackageModel = document => {
-	const layout = compileOwnedJavaScriptWasmLayout(document), model = layout.native.model;
+	const layout = compileOwnedJavaScriptWasmLayout(document, { transferredInputs: true }), model = layout.native.model;
 	const ir = model.bindingIr, names = new Set(reserved);
 	const claim = name => {
 		if(!/^[$\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*$/u.test(name) || name.startsWith("_") || names.has(name))
@@ -71,7 +71,7 @@ const typeText = (reference, direction, definitions) => {
 const declarations = ir => {
 	const definitions = new Map(ir.types.map(type => [type.id, type]));
 	const value = (reference, direction) => typeText(reference, direction, definitions);
-	const parameters = (items, direction) => items.map((item, index) => `arg${index}: ${value(item.type, direction)}`).join(", ");
+	const parameters = (items, direction) => items.map((item, index) => `arg${index}: ${value(item.type, item.ownership === "transfer" ? "output" : direction)}`).join(", ");
 	const lines = ["declare const leanResource: unique symbol;", ""
 		, "export interface LeanLease {", "  readonly disposed: boolean;"
 		, "  dispose(): boolean;", "  retain(): this;", "}", ""];
@@ -122,6 +122,7 @@ const declarations = ir => {
  */
 export const renderOwnedJavaScriptPackageLayout = model => {
 	const { ir, bindingIrSha256 } = model;
+	const transfers = ir.declarations.filter(item => item.parameters.some(parameter => parameter.ownership === "transfer"));
 	const exports = [...ir.declarations.map(item => item.name), "close", "withRecovery"];
 	const entry = [`// Generated from Binding IR SHA-256 ${bindingIrSha256}.`
 		, 'import { runtime } from "./internal/runtime.mjs";', ""];
@@ -148,8 +149,15 @@ export const renderOwnedJavaScriptPackageLayout = model => {
 			, "Callback arguments expire when the callback returns. Retain a resource inside the callback to keep it."
 			, "close() releases the component and invalidates its outstanding leases. It does not close other packages."
 			, "A native trap retires the shared heap; all packages using that heap reject further calls."
+			, ...transfers.length ? ["", "## Consuming arguments", ""
+				, "Arguments declared transfer consume the whole shared result owner, including aliases and sibling handles."
+				, "Validation failures leave inputs usable. Handoff invalidates inputs before Lean runs; they stay consumed if the call or a callback later fails."
+				, "Call retain() first to keep an independent lease. Borrowed callback arguments must be retained before transfer."
+				, "A result owner may appear repeatedly in one consuming argument, but cannot supply two consuming arguments or concurrent reentrant transfers."
+				, "Consuming function arguments require returned Lean function leases, not ordinary JavaScript callbacks."
+				, ...transfers.map(item => `- ${item.name}: consumes ${item.parameters.flatMap((parameter, index) => parameter.ownership === "transfer" ? [`arg${index}`] : []).join(", ")}.`)] : []
 			, "", "## Callbacks and types", ""
-			, "Pass ordinary synchronous functions as callbacks. Return a value of the declared result type."
+			, transfers.length ? "Pass ordinary synchronous functions for borrowed callback arguments. Return a value of the declared result type." : "Pass ordinary synchronous functions as callbacks. Return a value of the declared result type."
 			, "For a callback whose result has no default value, use withRecovery(callback, recoveryValue). The original thrown error reaches the caller."
 			, "The TypeScript declarations distinguish host inputs from native results. Input types accept ordinary callbacks; returned functions include explicit lifetime methods."
 			, "Conversions reject cycles, invalid fields, invalid tags and out-of-range values. Limits: 128 levels, 262144 visits, 16 MiB and 4096 retained references per call."

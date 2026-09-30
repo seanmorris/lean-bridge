@@ -111,7 +111,8 @@ test("export contract examples validate and distinguish implemented decisions fr
 	assert.deepEqual(closure.contracts["Library.makeWordAdder"].result, { ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
 	assert.match(existing, /after specialization and configured closure arity/);
 	assert.match(existing, /C, C\+\+, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support \[explicit input transfers\]/);
-	assert.match(existing, /Other consumer bindings still reject transfer contracts/);
+	assert.match(existing, /WIT\/WASI still rejects transfer contracts/);
+	assert.match(existing, /JavaScript\/TypeScript\]\(\.\.\/javascript-typescript\.md#consuming-inputs\)/);
 	assert.match(existing, /Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis/);
 	assert.match(existing, /not memory allocation inside Lean/);
 	const diagnostics = await readFile("docs/lean/diagnostics.md", "utf8");

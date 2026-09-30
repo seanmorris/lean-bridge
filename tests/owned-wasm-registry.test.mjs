@@ -131,6 +131,50 @@ test("borrowed callback values expire on return and explicit retain can escape t
 	assert.equal(f.owners.size, 0); f.registry.close();
 });
 
+test("consuming one value invalidates its result siblings before callback reentry, but not an independent retain", () => {
+	const f = fixture(), transaction = f.registry.output(f.owner([[ticket, 1n], [ticket, 2n]]));
+	const first = transaction.project(ticket, 1n), sibling = transaction.project(ticket, 2n);
+	transaction.commit(); const retained = first.retain();
+	const scope = f.registry.pin(); let consumed = false;
+	const transfer = scope.transfers(1, () => consumed);
+	assert.equal(transfer.toToken(0, ticket, first), 1n);
+	assert.equal(transfer.toToken(0, ticket, first), 1n);
+	assert.deepEqual(transfer.owners(), [[1]]);
+	assert.equal(first.disposed, false); assert.equal(f.tokenOf(sibling), 2n);
+	consumed = true;
+	assert.equal(first.disposed, true); assert.equal(sibling.disposed, true);
+	assert.throws(() => f.tokenOf(first), /disposed/);
+	assert.throws(() => sibling.retain(), /disposed/);
+	assert.equal(f.tokenOf(retained), 1n);
+	const returned = f.publish(ticket, 1n);
+	assert.notEqual(returned, first); assert.equal(returned.disposed, false);
+	transfer.finish(); assert.equal(f.released.length, 0, "Input owner remains pinned until the call returns");
+	scope.close(); assert.deepEqual(f.released, [1]);
+	retained.dispose(); returned.dispose(); f.registry.close(); assert.equal(f.owners.size, 0);
+});
+
+test("transfer reservation rejects shared owners across arguments or nested calls without consuming inputs", () => {
+	const f = fixture(), value = f.publish(), scope = f.registry.pin();
+	const transfer = scope.transfers(2, () => false);
+	transfer.toToken(0, ticket, value);
+	assert.throws(() => transfer.toToken(1, ticket, value), /multiple consuming/);
+	const nested = f.registry.pin(), next = nested.transfers(1, () => false);
+	assert.throws(() => next.toToken(0, ticket, value), /multiple consuming/); nested.close();
+	transfer.finish(); scope.close(); assert.equal(value.disposed, false); assert.equal(f.tokenOf(value), 1n);
+	const retry = f.registry.pin(); retry.transfers(1, () => false).toToken(0, ticket, value); retry.close();
+	value.dispose(); f.registry.close(); assert.equal(f.owners.size, 0);
+});
+
+test("transfers reject callback borrows and validate disposed inputs again before dispatch", () => {
+	const f = fixture(), owner = f.owner(), borrow = f.registry.borrow(owner);
+	const value = borrow.project(ticket, 1n), scope = f.registry.pin(), transfer = scope.transfers(1, () => false);
+	assert.throws(() => transfer.toToken(0, ticket, value), /borrowed callback/);
+	const retained = value.retain(); transfer.toToken(0, ticket, retained);
+	retained.dispose(); assert.throws(() => transfer.owners(), /disposed/);
+	scope.close(); borrow.rollback(); f.native.releaseOwner(owner); f.registry.close();
+	assert.equal(f.owners.size, 0);
+});
+
 test("active input pins defer native release after disposal and enforce 64-level reentry", () => {
 	const f = fixture(), first = f.publish(), scope = f.registry.pin();
 	assert.equal(scope.toToken(ticket, first), 1n); assert.equal(scope.toToken(ticket, first), 1n);

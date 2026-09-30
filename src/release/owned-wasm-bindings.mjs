@@ -101,7 +101,7 @@ export const createOwnedWasmBindings = (module, operation, lifecycle, callbackKe
 		, releaseOwner: owner => invoke(op.release, [owner]).status
 		, claimAllocation: (owner, pointer, bytes) => value(op.claim, [owner, pointer, bytes])
 		, claimIdentity: (owner, type, token) => value(op.identity, [owner, type], token)
-		, dispatch: (index, args, out, owner) => invoke(op.dispatch, [index, args, out, owner]).status
+		, dispatch: (index, args, out, owner, transfers = 0) => invoke(op.dispatch, [index, args, out, owner, ...transfers ? [transfers] : []]).status
 		, retain: (type, token, out, owner) => invoke(op.retain, [type, out, owner], token).status
 		, close: () => {
 			const status = invoke(op.close).status;

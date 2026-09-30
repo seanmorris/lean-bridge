@@ -40,9 +40,10 @@ const freeze = value => {
  * native ownership layout. Resource and callback tokens remain 64-bit.
  *
  * @param ir - Explicit version-4 ownership contract.
+ * @param options - Whether the caller implements atomic input-owner transfers.
  */
-export const compileOwnedJavaScriptWasmLayout = ir => {
-	const native = compileOwnedNativeValueLayout(ir, { wordBits: 32 });
+export const compileOwnedJavaScriptWasmLayout = (ir, options = {}) => {
+	const native = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs: options.transferredInputs ?? false });
 	const nodes = new Map(native.nodes.map(node => [node.id, node]));
 	const storage = new Map();
 	const fieldStorage = field => field.pointer ? pointer : storage.get(field.type);

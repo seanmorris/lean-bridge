@@ -85,15 +85,17 @@ createRoot(document.querySelector("#app")).render(React.createElement(StrictMode
  * @param options.root - Installed consumer directory.
  * @param options.name - Public component package name.
  * @param options.run - Compiler-free npm process runner rooted in the consumer.
+ * @param options.probeSource - Optional consuming API checks against that installation.
+ * @param options.expected - Exact result expected from the consuming checks.
  */
-export const checkOwnedJavaScriptBrowsers = async ({ root, name, run }) => {
+export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSource, expected }) => {
 	const frameworks = await browserFrameworkArchives(root);
 	await run("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", ...frameworks.map(item => "./" + item.archive)]);
 	const installedAssets = await Promise.all([
 		join(root, "node_modules/@lean-bridge/runtime/internal/main.wasm")
 		, join(root, "node_modules", name, "internal/component.so.wasm")
 	].map(async path => sha256(await readFile(path))));
-	await saveLakeFile(root, "probe.mjs", probe(name));
+	await saveLakeFile(root, "probe.mjs", probeSource ?? probe(name));
 	for(const [profile, source] of [["page", page], ["react", react], ["worker", workerPage]])
 	{
 		await saveLakeFile(root, `${profile}/entry.mjs`, source);
@@ -151,7 +153,9 @@ export const checkOwnedJavaScriptBrowsers = async ({ root, name, run }) => {
 						catch(error)
 						{ throw new Error(`${engine}/${profile}: ${error.message}; page errors: ${JSON.stringify(errors)}; foreign requests: ${JSON.stringify(foreign)}; body: ${await page.locator("body").innerText()}`, { cause: error }); }
 						const first = await page.evaluate(() => globalThis.ownedResult);
-						assert.equal(first.error, undefined, first.error); assert.equal(first.value.checks, 16);
+						assert.equal(first.error, undefined, first.error);
+						if(expected) assert.deepEqual(first.value, expected);
+						else assert.equal(first.value.checks, 16);
 						assert.equal(first.value.serial, (1n << 90n).toString());
 						assert.equal(first.value.borrowExpired, true); assert.equal(first.value.closureDisposed, true);
 						for(let iteration = 0; iteration < 2; iteration++)

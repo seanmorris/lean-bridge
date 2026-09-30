@@ -13,6 +13,7 @@ import { pathToFileURL } from "node:url";
 import { compileOwnedJavaScriptWasmLayout } from "../../src/backends/javascript/owned-wasm-layout.mjs";
 import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
 import { ownedAggregateLeaseSource } from "../../src/backends/native/owned-aggregate-leases.mjs";
+import { ownedAggregateTransferLeaseSource } from "../../src/backends/native/owned-aggregate-transfers.mjs";
 import { brokerHeader, brokerSource } from "../../src/backends/native/runtime-broker.mjs";
 import { nativeCallbackHeader } from "../../src/build/native-component.mjs";
 import { ownedWasmCallbackBroker } from "../../src/backends/javascript/owned-wasm-callbacks.mjs";
@@ -26,7 +27,12 @@ import { generateOwnedWasmBroker } from "../../src/backends/javascript/owned-was
 import { compileOwnedWasmSharedHost } from "./owned-javascript-wasm-shared.mjs";
 import { compileOwnedWasmPreparedHost } from "./owned-javascript-wasm-prepared.mjs";
 
-const probe = component => `#include <stddef.h>
+/**
+ * Add deterministic allocation faults to a generated private component.
+ *
+ * @param component - Compiler-authenticated Wasm component source.
+ */
+export const ownedJavaScriptWasmNativeProbe = component => `#include <stddef.h>
 static size_t attempts, fail_at;
 #define LB_JS_ALLOC_FAIL() (++attempts == fail_at)
 ${component.source}
@@ -49,13 +55,16 @@ void owned_fail_after(unsigned count) { fail_at = count ? attempts + count : 0; 
  */
 export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggregates", options = {}) => {
 	const hostCallbacks = options.hostCallbacks ?? false;
+	const transferredInputs = options.transferredInputs ?? false;
 	const native = await compileOwnedAggregateFixture(t, { fixture
 		, witness: "import Owned\n", hostCallbacks
+		, ...options.fixtureOptions
 		, ...options.reviewedIr ? { reviewedIr: options.reviewedIr } : {} });
 	const generated = generateOwnedNativeValueAdapters({ metadata: native.metadata
 		, sourceIdentity: native.sourceIdentity
-		, component: native.model.component, wordBits: 32, hostCallbacks });
-	const layout = compileOwnedJavaScriptWasmLayout(generated.layout.model.bindingIr), directory = native.directory;
+		, component: native.model.component, wordBits: 32
+		, hostCallbacks, transferredInputs });
+	const layout = compileOwnedJavaScriptWasmLayout(generated.layout.model.bindingIr, { transferredInputs }), directory = native.directory;
 	const component = generateOwnedWasmComponent(generated), callbacks = component.callbacks;
 	const sharedBroker = options.sharedRuntime ? generateOwnedWasmBroker() : null;
 	assert.equal(generated.carriers.leanSource, native.leanSource);
@@ -73,12 +82,12 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 	for(const [path, source] of Object.entries({
 		"owned-values.h": generated.typesHeader
 		, "owned-values-codec.h": generated.source
-		, "owned-leases.h": ownedAggregateLeaseSource
+		, "owned-leases.h": transferredInputs ? ownedAggregateTransferLeaseSource : ownedAggregateLeaseSource
 		, "carriers.h": generated.carriers.header
 		, "owned-js-layout.h": layout.assertions
 		, "lean_bridge_native_runtime.h": sharedBroker?.header ?? (hostCallbacks ? brokerHeader.replace("#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`) : brokerHeader)
 		, "broker.c": sharedBroker?.source ?? (brokerSource + (hostCallbacks ? ownedWasmCallbackBroker() : ""))
-		, "probe.c": probe(component)
+		, "probe.c": ownedJavaScriptWasmNativeProbe(component)
 	})) await saveLakeFile(directory, path, source);
 	t.diagnostic(`Compiling ${fixture} and the owned codec for the JavaScript wasm32 target`);
 	const objects = ["Owned", "Carriers", "broker", "probe", ...hostCallbacks ? ["Callbacks"] : []];
@@ -187,7 +196,12 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 	const runtime = createOwnedWasmCalls(module, layout, bindings, options);
 	const close = () => runtime.close();
 	t.after(close);
+	const evidence = transferredInputs ? { directory
+		, input: { metadata: native.metadata, sourceIdentity: native.sourceIdentity
+			, component: native.model.component }
+		, privateAbi: component.privateAbi } : null;
 	return { call: (name, ...args) => runtime.call(layout.native.functions.find(fn => fn.name === name)?.id, args)
 		, close, module, layout, withRecovery: runtime.withRecovery, shared
+		, ...evidence ? { evidence } : {}
 		, callbackCount: () => callbacks ? module[`_${callbacks.symbols.live}`]() : 0 };
 };

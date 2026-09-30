@@ -2759,6 +2759,22 @@ before compiling through the installed executable. The reviewed project also
 requests native C, requiring both compiled profiles to agree on one captured API.
 The npm consumers install their two archives after source and build-output removal.
 
+The consuming-input gate checks atomic handoff, shared-owner invalidation,
+independent retains, callback reentry, and cleanup after native and JavaScript
+allocation failures. It builds both source paths through an installed CLI and
+executes all 26 fixture exports, including 20 consuming exports. The installed
+checks also cover strict TypeScript and every browser context above:
+
+```sh
+source scripts/env.sh
+npm run test:owned-javascript-transfers
+```
+
+CI requires zero skipped tests. It preserves
+`build/owned-javascript-transfers/{ordinary,reviewed}.json`,
+`build/owned-javascript-transfer-packaging/report.json`, and
+`build/owned-javascript-wasm/transfers.log` in the ownership job's artifact.
+
 The coexistence gate builds a copied compound-value package and an owned package
 independently. Both must produce the same runtime archive byte for byte. It
 installs the archives offline, deletes producer files and tests owned-first,

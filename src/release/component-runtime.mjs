@@ -15,7 +15,7 @@ import { compileComponentCopiedCall } from "./component-copied-runtime.mjs";
 import { componentRecordAbi, componentCompoundAbi, componentNominalAbi, assertComponentRecordBindings } from "../abi/component-records.mjs";
 import { componentRecursiveAbi, assertComponentRecursiveBindings } from "../abi/component-recursive-abi.mjs";
 import { componentStructuredCallableAbi, assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../abi/component-structured-callables.mjs";
-import { componentOwnedWasmAbi, assertComponentOwnedWasmBindings } from "../abi/component-owned-wasm.mjs";
+import { componentOwnedWasmAbi, componentOwnedWasmTransferAbi, assertComponentOwnedWasmBindings } from "../abi/component-owned-wasm.mjs";
 import { createOwnedWasmComponentRuntime } from "./owned-wasm-component-runtime.mjs";
 
 const encoder = new TextEncoder();
@@ -183,7 +183,7 @@ export const createComponentRuntime = async (createMain, mainWasm) => {
 		const record = { fingerprint, promise: null, linking: false };
 		loaded.set(descriptor.id, record);
 		record.promise = (async () => {
-			const owned = descriptor.privateAbi.version === componentOwnedWasmAbi;
+			const owned = [componentOwnedWasmAbi, componentOwnedWasmTransferAbi].includes(descriptor.privateAbi.version);
 			const structured = descriptor.privateAbi.version === componentStructuredCallableAbi;
 			const callable = structured || descriptor.privateAbi.version === 3, copied = [componentCopiedAbi, componentRecordAbi, componentCompoundAbi, componentNominalAbi, componentRecursiveAbi].includes(descriptor.privateAbi.version);
 			if(owned)

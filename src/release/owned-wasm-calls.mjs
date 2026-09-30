@@ -95,7 +95,7 @@ export const createOwnedWasmCalls = (module, suppliedLayout, bindings, options =
 			, budget: createOwnedWasmValueBudget()
 		};
 		frames.push(frame);
-		let owner = 0, output = null, failed = false, failure, value;
+		let owner = 0, output = null, failed = false, failure, value, transfers = null, transferPointer = 0, transferIndex = -1;
 		const allocate = (bytes, arena = allocations) => {
 			registry.assertOpen();
 			if(!Number.isSafeInteger(bytes) || bytes < 0 || bytes > ownedWasmValueLimits.bytes)
@@ -110,21 +110,46 @@ export const createOwnedWasmCalls = (module, suppliedLayout, bindings, options =
 		};
 		frame.allocate = allocate;
 		const controls = { allocate
-			, toToken: (type, value) => callbacks ? callbacks.toToken(type, value, frame, scope) : scope.toToken(type, value)
+			, toToken: (type, value) => transferIndex >= 0 ? transfers.toToken(transferIndex, type, value)
+				: callbacks ? callbacks.toToken(type, value, frame, scope) : scope.toToken(type, value)
 			, claim: (pointer, bytes) => requireNative(native(() => bindings.claimAllocation(owner, pointer, bytes)) === 1, "allocation claim")
 			, fromToken: (type, token) => output.project(type, token)
 		};
 		try
 		{
 			const budget = frame.budget, pointerBytes = args.length * 4;
+			if(signature.transfers?.length)
+			{
+				budget.charge(16); transferPointer = allocate(16);
+				module.HEAP8.fill(0, transferPointer, transferPointer + 16);
+				transfers = scope.transfers(signature.transfers.length, () => poisoned || new DataView(module.HEAP8.buffer).getUint32(transferPointer + 12, true) === 1);
+			}
 			budget.charge(pointerBytes); const argumentsPointer = allocate(pointerBytes);
 			for(const [i, id] of signature.parameters.entries())
 			{
 				const pointer = allocate(types.get(id).size);
+				transferIndex = signature.transfers?.indexOf(i) ?? -1;
 				if(i === 0 && identity)
 					new DataView(module.HEAP8.buffer).setBigUint64(pointer, identity.token, true);
 				else codec.write(module, id, pointer, args[i], controls, budget);
 				new DataView(module.HEAP8.buffer).setUint32(argumentsPointer + i * 4, pointer, true);
+			}
+			transferIndex = -1;
+			if(transfers)
+			{
+				const rows = transfers.owners();
+				budget.charge(rows.length * 8); const groups = allocate(rows.length * 8);
+				for(const [index, owners] of rows.entries())
+				{
+					budget.charge(owners.length * 4); const pointer = allocate(owners.length * 4);
+					const view = new DataView(module.HEAP8.buffer);
+					owners.forEach((owner, i) => view.setUint32(pointer + i * 4, owner, true));
+					view.setUint32(groups + index * 8, pointer, true);
+					view.setUint32(groups + index * 8 + 4, owners.length, true);
+				}
+				const view = new DataView(module.HEAP8.buffer);
+				view.setUint32(transferPointer, 1, true); view.setUint32(transferPointer + 4, rows.length, true);
+				view.setUint32(transferPointer + 8, groups, true);
 			}
 			const result = allocate(types.get(signature.result).size);
 			module.HEAP8.fill(0, result, result + types.get(signature.result).size);
@@ -132,7 +157,12 @@ export const createOwnedWasmCalls = (module, suppliedLayout, bindings, options =
 			if(owner === 0) throw new Error("Owned wasm32 result allocation failed");
 			requireNative(Number.isInteger(owner) && owner > 0 && owner <= 0xffffffff, "result owner");
 			const nativeStatus = native(() => identity?.retain ? bindings.retain(identity.type.index, identity.token, result, owner)
-				: bindings.dispatch(index, argumentsPointer, result, owner));
+				: bindings.dispatch(index, argumentsPointer, result, owner, transferPointer));
+			if(transfers)
+			{
+				const consumed = new DataView(module.HEAP8.buffer).getUint32(transferPointer + 12, true);
+				requireNative([0, 1].includes(consumed) && (nativeStatus !== 0 || consumed === 1), "input-transfer handoff");
+			}
 			if(frame.callbackFailed) throw frame.callbackError;
 			status(nativeStatus);
 			try
@@ -159,6 +189,7 @@ export const createOwnedWasmCalls = (module, suppliedLayout, bindings, options =
 		};
 		if(output) cleanup(output.rollback);
 		else if(owner && !poisoned) cleanup(() => releaseOwner(owner));
+		if(transfers) cleanup(transfers.finish);
 		if(callbacks) cleanup(() => callbacks.cleanup(frame));
 		for(const pointer of allocations.reverse()) if(!poisoned) cleanup(() => native(() => module._free(pointer)));
 		if(!existingScope) cleanup(scope.close);

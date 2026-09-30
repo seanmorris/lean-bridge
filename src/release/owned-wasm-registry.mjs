@@ -42,6 +42,7 @@ export const createOwnedWasmRegistry = (layout, native, options = {}) => {
 	const reference = options.createWeakReference ?? weakReference;
 	let closed = false, poisoned = false, nativeClosed = false, active = 0, live = 0;
 	const unavailable = () => closed || poisoned;
+	const consumed = group => group.consumed || Boolean(group.move?.consumed());
 	const requireOpen = () => {
 		if(unavailable()) throw new Error("Owned wasm32 registry is closed or poisoned");
 		native.assertOpen();
@@ -98,7 +99,7 @@ export const createOwnedWasmRegistry = (layout, native, options = {}) => {
 	const requireState = (state, type = state?.type) => {
 		requireOpen();
 		if(!state || state.type.id !== type?.id) invalid("foreign or wrong-type resource");
-		if(state.disposed || state.group.cancelled || state.group.released)
+		if(state.disposed || state.group.cancelled || state.group.released || consumed(state.group))
 			throw new Error("Lean resource is disposed or its borrow expired");
 		if(!state.group.published) invalid("result has not been published");
 		return state;
@@ -108,19 +109,55 @@ export const createOwnedWasmRegistry = (layout, native, options = {}) => {
 		if(counted && active === 64) throw new RangeError("Owned wasm32 reentry limit (64) exceeded");
 		if(!counted && !active) invalid("callback pins require an enclosing call");
 		checkpoint();
-		const pinned = new Set(); let finished = false; if(counted) active++;
+		const pinned = new Set(); let finished = false, transfers = null; if(counted) active++;
+		const pinState = state => {
+			if(!pinned.has(state.group))
+			{ pinned.add(state.group); state.group.pins++; }
+			return state.token;
+		};
 		return Object.freeze({
 			toToken: (type, value) => {
 				if(finished) invalid("call scope has expired");
-				const state = requireState(handles.get(value), typeOf(type)), group = state.group;
-				if(!pinned.has(group))
-				{ pinned.add(group); group.pins++; }
-				return state.token;
+				return pinState(requireState(handles.get(value), typeOf(type)));
+			}
+			, transfers: (count, isConsumed) => {
+				if(finished || transfers || !Number.isInteger(count) || count < 1 || count > 4096 || typeof isConsumed !== "function")
+					invalid("invalid input-transfer scope");
+				const rows = Array.from({ length: count }, () => new Set()), states = new Set();
+				let ended = false;
+				transfers = Object.freeze({
+					toToken: (index, type, value) => {
+						if(ended || finished || !rows[index]) invalid("input-transfer scope has expired");
+						const state = requireState(handles.get(value), typeOf(type)), group = state.group;
+						if(group.borrowed) invalid("borrowed callback arguments cannot transfer ownership");
+						if(group.move && (group.move.scope !== transfers || group.move.index !== index))
+							invalid("one result owner cannot supply multiple consuming arguments or calls");
+						checkpoint();
+						pinState(state); rows[index].add(group); states.add(state);
+						group.move ??= { scope: transfers, index, consumed: isConsumed };
+						return state.token;
+					}
+					, owners: () => {
+						if(ended || finished) invalid("input-transfer scope has expired");
+						for(const state of states) requireState(state);
+						return rows.map(row => [...row].map(group => group.owner));
+					}
+					, finish: () => {
+						if(ended) return; ended = true;
+						const moved = isConsumed();
+						// Mark the entire set before disposing any wrapper. The native
+						// handoff flag already makes aliases unusable during reentry.
+						for(const row of rows) for(const group of row)
+						{ group.consumed = moved; group.move = null; }
+						if(moved) cleanupAll(rows.flatMap(row => [...row].flatMap(group => [...group.states].map(state => () => dispose(state)))));
+					}
+				});
+				return transfers;
 			}
 			, close: () => {
 				if(finished) return; finished = true;
 				try
-				{ cleanupAll([...pinned].map(group => () => { group.pins--; releaseGroup(group); })); }
+				{ cleanupAll([() => transfers?.finish(), ...[...pinned].map(group => () => { group.pins--; releaseGroup(group); })]); }
 				finally
 				{ if(counted) active--; pinned.clear(); finishClose(); }
 			}
@@ -156,7 +193,7 @@ export const createOwnedWasmRegistry = (layout, native, options = {}) => {
 			checkpoint();
 			const value = type.kind === "callback" ? callable(state) : Object.create(null);
 			Object.defineProperties(value, {
-				disposed: { get: () => state.disposed || state.group.cancelled || retired() }
+				disposed: { get: () => state.disposed || state.group.cancelled || retired() || consumed(state.group) }
 				, dispose: { value: () => dispose(state) }
 				, retain: { value: () => use(state, (type, token, scope) => native.retain(type, token, scope)) }
 				, ...Symbol.dispose ? { [Symbol.dispose]: { value: () => { dispose(state); } } } : {}
@@ -221,7 +258,7 @@ export const createOwnedWasmRegistry = (layout, native, options = {}) => {
 					const existing = canonical.get(key), value = existing?.reference.deref();
 					if(existing && !existing.disposed)
 					{
-						if(value !== undefined)
+						if(value !== undefined && !consumed(existing.group))
 						{ group.values.set(key, value); return value; }
 						dispose(existing);
 					}

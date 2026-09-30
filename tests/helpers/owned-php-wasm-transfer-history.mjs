@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptTransfer, ownedJavaScriptTransferChangedPaths } from "./owned-javascript-transfer-history.mjs";
 
 export const ownedPhpWasmTransferBaseline = "7a05e2fa3186112a364df8451d16f5dfa34348c6";
 export const ownedPhpWasmTransferPath = "docs/evidence/owned-php-wasm-transfers-20260930.json";
@@ -57,6 +58,7 @@ export const ownedPhpWasmTransferAddedPaths = [
 	, "tests/owned-php-wasm-transfer-packaging.test.mjs"
 	, "tests/owned-php-wasm-transfers.test.mjs"
 ];
+export const ownedPhpWasmTransferNormalizationPaths = [...new Set([...ownedPhpWasmTransferChangedPaths, ...ownedJavaScriptTransferChangedPaths])].sort();
 let cached;
 
 /**
@@ -90,6 +92,7 @@ export const reverseOwnedPhpWasmTransferUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedPhpWasmTransfer = (path, source, expected) => {
+	source = beforeOwnedJavaScriptTransfer(path, source, expected);
 	if(!ownedPhpWasmTransferChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedPhpWasmTransferPath, "utf8"));
@@ -108,5 +111,5 @@ export const beforeOwnedPhpWasmTransfer = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedPhpWasmTransferHistoricalBytes = (path, bytes, expected) => ownedPhpWasmTransferChangedPaths.includes(path)
+export const ownedPhpWasmTransferHistoricalBytes = (path, bytes, expected) => ownedPhpWasmTransferNormalizationPaths.includes(path)
 	? beforeOwnedPhpWasmTransfer(path, bytes.toString("utf8"), expected) : bytes;

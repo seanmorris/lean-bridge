@@ -7,7 +7,8 @@
 import { compileOwnedJavaScriptWasmLayout } from "./owned-wasm-layout.mjs";
 import { generateOwnedWasmCallbacks } from "./owned-wasm-callbacks.mjs";
 import { ownedWasmControlBytes, ownedWasmControlOperations, ownedWasmControlVersion } from "../../abi/owned-wasm-control.mjs";
-import { assertComponentOwnedWasmBindings, componentOwnedWasmAbi } from "../../abi/component-owned-wasm.mjs";
+import { assertComponentOwnedWasmBindings, componentOwnedWasmAbi, componentOwnedWasmTransferAbi } from "../../abi/component-owned-wasm.mjs";
+import { ownedWasmInputTransferSource } from "./owned-wasm-input-transfers.mjs";
 
 /**
  * Generate one component's private native bindings. Allocation headers retain
@@ -19,7 +20,8 @@ import { assertComponentOwnedWasmBindings, componentOwnedWasmAbi } from "../../a
 export const generateOwnedWasmComponent = generated => {
 	if(generated?.layout?.wordBits !== 32)
 		throw new TypeError("Owned JavaScript components require a wasm32 adapter");
-	const native = generated.layout, layout = compileOwnedJavaScriptWasmLayout(native.model.bindingIr);
+	const native = generated.layout, transfers = native.functions.some(fn => fn.transfers?.length);
+	const layout = compileOwnedJavaScriptWasmLayout(native.model.bindingIr, { transferredInputs: transfers });
 	if(generated.typesHeader !== layout.native.header || JSON.stringify(native) !== JSON.stringify(layout.native))
 		throw new TypeError("Owned JavaScript component layout differs from its binding IR");
 	const p = `lbjs_component_${native.model.bindingIrSha256.slice(0, 20)}`;
@@ -34,10 +36,13 @@ export const generateOwnedWasmComponent = generated => {
 	const identities = native.nodes.filter(type => ["resource", "callback"].includes(type.kind));
 	const signatures = [...native.functions, ...native.callbacks];
 	const controlSymbol = `${p}_control`, op = ownedWasmControlOperations;
-	const privateAbi = Object.freeze({ version: componentOwnedWasmAbi
+	const privateAbi = Object.freeze({ version: transfers ? componentOwnedWasmTransferAbi : componentOwnedWasmAbi
 		, dispatch: "owned-wasm32-control-v1", controlSymbol
 		, initializer: `initialize_${generated.carriers.module}`
-		, callbackKey: callbacks?.handlerKey ?? null, layout });
+		, callbackKey: callbacks?.handlerKey ?? null, layout
+		, ...transfers ? { inputTransfers: {
+			schemaVersion: 1, frameBytes: 16, groupBytes: 8, consumedOffset: 12
+			, exports: native.functions.filter(fn => fn.transfers?.length).map(fn => ({ bindingId: fn.id, parameters: fn.transfers })) } } : {} });
 	const metadataHash = assertComponentOwnedWasmBindings(privateAbi, native.model.bindingIr);
 	const source = `#include <lean/lean.h>
 #include <stddef.h>
@@ -72,9 +77,10 @@ static void ${p}_free(void *value) {
 #include "owned-js-layout.h"
 extern lean_object *initialize_${generated.carriers.module}(uint8_t);
 static lb_owned_context ${context};
-typedef struct { ov_result_owner value; unsigned key; } ${p}_owner;
+typedef struct { ov_result_owner value; unsigned key;${transfers ? " unsigned published, consumed, moving;" : ""} } ${p}_owner;
 static ${p}_owner ${p}_owners[4096];
 static unsigned ${p}_next_owner, ${p}_closed;
+${transfers ? ownedWasmInputTransferSource(p, context, native.model.component.id) : ""}\
 static ov_result_owner *${find}(unsigned key) {
   if (!key) return NULL;
   for (size_t i = 0; i < 4096; ++i)
@@ -91,9 +97,10 @@ unsigned ${symbols.open}(void) {
 int ${symbols.valid}(unsigned key) { return ${find}(key) != NULL; }
 int ${symbols.release}(unsigned key) {
   ov_result_owner *owner = ${find}(key); if (!owner) return LB_OWNED_INVALID;
+${transfers ? `  if (${p}_slot(key)->moving) return LB_OWNED_ORDER;\n` : ""}\
   int status = ov_owner_clear(owner);
   if (!status) for (size_t i = 0; i < 4096; ++i)
-    if (${p}_owners[i].key == key) { ${p}_owners[i].key = 0; break; }
+    if (${p}_owners[i].key == key) { ${transfers ? `${p}_owners[i] = (${p}_owner){0}` : `${p}_owners[i].key = 0`}; break; }
   return status;
 }
 ${callbacks?.source ?? ""}
@@ -104,8 +111,9 @@ int ${symbols.init}(void) {
       (lean_bridge_native_initializer)initialize_${generated.carriers.module})) return LB_OWNED_RUNTIME;
   return lb_owned_context_init(&${context}, ${component});
 }
-int ${symbols.dispatch}(unsigned index, const uintptr_t *args, void *out, unsigned key) {
+int ${symbols.dispatch}(unsigned index, const uintptr_t *args, void *out, unsigned key${transfers ? `, ${p}_input_frame *inputs` : ""}) {
   ov_result_owner *owner = ${find}(key); if (!owner) return LB_OWNED_INVALID;
+${transfers ? `  if (${p}_slot(key)->published || ${p}_slot(key)->consumed || ${p}_slot(key)->moving) return LB_OWNED_INVALID;\n` : ""}\
   switch (index) {
 ${signatures.map((fn, index) => {
 		const params = fn.parameters.map(id => types.get(id)), result = types.get(fn.result);
@@ -114,6 +122,20 @@ ${signatures.map((fn, index) => {
 			, ...params.length ? [`!ov_pointer(args, ${params.length} * sizeof(*args), _Alignof(uintptr_t))`] : []
 		];
 		const argumentsText = params.map((type, i) => `(const ${type.cName} *)args[${i}]`);
+		if(transfers)
+		{
+			const callArgs = [...argumentsText, ...fn.transfers?.length ? ["&transfer"] : [], `(${result.cName} *)out`, "owner"].join(", ");
+			return `  case ${index}: {
+    if (${[...checks, ...fn.transfers?.length ? [] : ["inputs != NULL"]].join(" || ")}) return LB_OWNED_INVALID;
+    ${fn.transfers?.length ? `${p}_moves moves = {0};
+    int status = ${p}_moves_prepare(&moves, inputs, ${fn.transfers.length}, key);
+    ov_input_transfers transfer = { .owners = moves.owners, .count = ${fn.transfers.length}, .consume = ${p}_moves_consume, .context = &moves };
+    if (!status) status = ${fn.symbol}(&${context}, ${callArgs});
+    status = ${p}_moves_finish(&moves, status);` : `int status = ${fn.symbol}(&${context}, ${callArgs});`}
+    if (!status) ${p}_slot(key)->published = 1;
+    return status;
+  }`;
+		}
 		return `  case ${index}:
     if (${checks.join(" || ")}) return LB_OWNED_INVALID;
     return ${fn.symbol}(&${context}, ${[...argumentsText, `(${result.cName} *)out`, "owner"].join(", ")});`;
@@ -143,6 +165,7 @@ ${identities.map(type => `  case ${type.index}: kind = ${JSON.stringify(type.ide
 }
 int ${symbols.retain}(unsigned type, uint64_t token, void *out, unsigned key) {
   ov_result_owner *owner = ${find}(key); if (!owner) return LB_OWNED_INVALID;
+${transfers ? `  if (${p}_slot(key)->published || ${p}_slot(key)->consumed || ${p}_slot(key)->moving) return LB_OWNED_INVALID;\n` : ""}\
   ov_transaction transaction = {0};
   int status = ov_begin(&transaction, &${context}, owner, ${component});
   if (status) return status;
@@ -157,7 +180,9 @@ ${identities.map(type => `  case ${type.index}: {
   }`).join("\n")}
   default: status = LB_OWNED_INVALID;
   }
-  return status ? ov_abort(&transaction, status) : ov_commit(&transaction, owner);
+${transfers ? `  status = status ? ov_abort(&transaction, status) : ov_commit(&transaction, owner);
+  if (!status) ${p}_slot(key)->published = 1;
+  return status;` : "  return status ? ov_abort(&transaction, status) : ov_commit(&transaction, owner);"}
 }
 int ${symbols.close}(void) {
   if (${p}_closed) return LB_OWNED_OK;
@@ -203,7 +228,7 @@ unsigned ${controlSymbol}(${p}_control_frame *frame) {
   case ${op.release}: status = ${symbols.release}(a[0]); break;
   case ${op.claim}: frame->value = ${symbols.claim}(a[0], (const void *)a[1], a[2]); break;
   case ${op.identity}: frame->value = ${symbols.identity}(a[0], a[1], frame->token); break;
-  case ${op.dispatch}: status = ${symbols.dispatch}(a[0], (const uintptr_t *)a[1], (void *)a[2], a[3]); break;
+  case ${op.dispatch}: status = ${symbols.dispatch}(a[0], (const uintptr_t *)a[1], (void *)a[2], a[3]${transfers ? `, (${p}_input_frame *)a[4]` : ""}); break;
   case ${op.retain}: status = ${symbols.retain}(a[0], frame->token, (void *)a[1], a[2]); break;
   case ${op.close}: status = ${symbols.close}(); break;
   case ${op.live}: frame->value = ${symbols.live}(); break;

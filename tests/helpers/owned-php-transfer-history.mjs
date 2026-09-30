@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPhpWasmTransfer, ownedPhpWasmTransferChangedPaths } from "./owned-php-wasm-transfer-history.mjs";
+import { beforeOwnedPhpWasmTransfer, ownedPhpWasmTransferNormalizationPaths } from "./owned-php-wasm-transfer-history.mjs";
 
 export const ownedPhpTransferBaseline = "ff28039c497d97fdcb3496299f8357ee8674c358";
 export const ownedPhpTransferPath = "docs/evidence/owned-php-transfers-20260930.json";
@@ -54,7 +54,7 @@ export const ownedPhpTransferAddedPaths = [
 	, "tests/owned-php-transfer-packaging.test.mjs"
 	, "tests/owned-php-transfers.test.mjs"
 ];
-export const ownedPhpTransferNormalizationPaths = [...new Set([...ownedPhpTransferChangedPaths, ...ownedPhpWasmTransferChangedPaths])].sort();
+export const ownedPhpTransferNormalizationPaths = [...new Set([...ownedPhpTransferChangedPaths, ...ownedPhpWasmTransferNormalizationPaths])].sort();
 let cached;
 
 /**

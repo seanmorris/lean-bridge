@@ -263,7 +263,40 @@ cover Node, strict TypeScript, Chromium, Firefox, WebKit, React and workers.
 Copied and owned packages built against the same runtime share its dependency
 automatically. Import order does not require configuration. Closing an owned
 API releases that component's leases without closing other loaded packages.
-Transferred inputs and results borrowed from another object remain unsupported.
+Results borrowed from another object remain unsupported.
+
+### Consuming inputs
+
+An argument declared `transfer` consumes its shared result owner. Every alias
+and sibling handle from that owner becomes unusable before Lean runs, including
+inside callbacks. Validation failures leave the inputs usable. A failure after
+handoff does not restore them.
+
+Call `retain()` first if you need an independent lease. For an API whose
+`retainTicket` export declares its argument as a transfer:
+
+```js
+const original = api.newTicket(42n, "door");
+const kept = original.retain();
+let returned;
+try {
+  returned = api.retainTicket(original);
+  console.log(original.disposed); // true
+  console.log(api.serial(kept)); // 42n
+  console.log(api.serial(returned)); // 42n
+} finally {
+  original.dispose();
+  kept.dispose();
+  returned?.dispose();
+}
+```
+
+A consuming aggregate can contain handles from several owners. Repeated
+references within one argument are allowed. Two consuming arguments cannot
+share an owner; retain a separate lease for the second argument. Callback
+arguments are borrowed and must be retained before passing them to a consuming
+export. Consuming function arguments require returned Lean function leases,
+not ordinary JavaScript functions. TypeScript checks that distinction.
 
 ### Type conversions
 
