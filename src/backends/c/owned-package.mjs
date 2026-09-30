@@ -25,8 +25,8 @@ import { ownedCInputTransfers } from "./owned-transfers.mjs";
 export const generateOwnedCPackage = (options, backend = null) => {
 	const generated = generateOwnedNativeValueAdapters(options);
 	const hasTransfers = generated.layout.functions.some(item => item.transfers?.length);
-	if(backend && hasTransfers) throw new TypeError("Owned C transport does not support transferred inputs");
-	const publicPrefix = backend ? backend.publicPrefix(generated.layout.model.bindingIr) : options.publicPrefix;
+	if(backend && hasTransfers && backend.transferredInputs !== true) throw new TypeError("Owned C transport does not support transferred inputs");
+	const publicPrefix = backend ? backend.publicPrefix(generated.layout.model.bindingIr, { transferredInputs: options.transferredInputs }) : options.publicPrefix;
 	const values = generateOwnedCValues(generated.layout.model.bindingIr, {
 		hostCallbacks: options.hostCallbacks
 		, publicPrefix

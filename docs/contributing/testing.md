@@ -1465,7 +1465,31 @@ Lean runtime, Wasmtime and GMP with its corresponding source and notices. The
 public host uses semantic C values and opaque owners. It does not expose raw
 Wasmtime resources or a custom-linker API. CI requires all six tests without
 skips and retains `build/wit-owned-packaging.log` and the installed reports.
-Transferred Lean inputs and owner-anchored borrowed results remain open.
+
+The consuming-input gate builds ordinary and reviewed packages with all 26
+fixture exports, including 20 consuming exports:
+
+```sh
+source scripts/env.sh
+npm run test:owned-wit-transfers
+```
+
+It checks whole-owner handoff before Lean and callback reentry, independent
+retains, multiple input owners, recursive and mixed values, allocation failures
+before and after consumption, and malformed results. A missing native transfer
+frame must reject without consuming its input. AddressSanitizer and
+UndefinedBehaviorSanitizer runs must match the cold Lean startup leak baseline.
+Removing owner validation, owner-slot invalidation or cleanup must fail the
+consumer checks.
+
+Both installed source paths run after removing producer files and relocating the
+package. The reviewed build also requests C. Tests compile the documented
+consuming example, reject altered capability receipts and generated sources,
+and exercise loaded-library isolation. Byte-identical archive reassembly does
+not establish an independent rebuild. CI requires five tests with no skips and
+preserves `build/wit-owned-transfers.log` plus
+`build/owned-wit-transfers/{ordinary,reviewed}{,-package}.json`.
+Owner-anchored borrowed results remain open.
 
 ### Staged WIT callable projection
 

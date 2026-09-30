@@ -78,17 +78,52 @@ source. Reassembling the archive from verified build artifacts requires no
 compiler and preserves its bytes.
 
 Ordinary source extraction and independently reviewed version-4 binding IR use
-the same ownership-aware build path. Inputs borrow resource-containing values;
+the same ownership-aware build path. Inputs borrow resource-containing values
+unless an export contract declares a transfer;
 results own independent leases and copied storage. Typed synchronous callbacks
 support resource arguments and replies, reentry and returned Lean closures.
 The [consumer API](../consume/wit-wasi.md#packages-containing-resources) keeps
-Wasmtime handles private. Retained host callbacks, transferred inputs,
-owner-anchored borrowed results and asynchronous callbacks remain unsupported.
+Wasmtime handles private. Retained host callbacks, owner-anchored borrowed
+results and asynchronous callbacks remain unsupported.
 
 Ship the original archive and package-set receipt together. Consumers need a C11
 compiler, not Lean, Wasmtime headers from another installation, or a system GMP
 package. Keep the bundled shared libraries unchanged; the host rejects loaded
 dependencies whose bytes differ from its compiler receipts.
+
+### Transfer input ownership
+
+Add an explicit parameter contract when the Lean export should consume its
+caller's owner. For example, add `Owned.retainTicket` to `exports` and include:
+
+```json
+{
+  "contracts": {
+    "Owned.retainTicket": {
+      "parameters": [
+        { "ownership": "transfer", "lifetime": { "scope": "call", "anchor": null } }
+      ]
+    }
+  }
+}
+```
+
+Both ordinary configuration and reviewed Binding IR preserve this decision.
+The generated C signature adds an owner-slot pointer for each consuming
+parameter. The WIT signature uses owned resources, including resource leaves
+inside records, containers, variants and recursive values. Borrowed parameters
+keep borrowed WIT resources.
+
+The adapter validates all inputs before consuming any owner. It consumes the
+original native owners together before entering Lean. Callbacks observe those
+owners as consumed even if the call later fails. Returning the value creates
+an independent result owner. See the [consumer example](../consume/wit-wasi.md#consuming-inputs)
+for whole-owner lifetime and cleanup rules.
+
+Combined C and WIT/WASI builds use the same compiled Lean component and
+ownership contracts. The package records its transfer capability in the
+compiler-authenticated `ownedValues.inputTransfers` receipt. Keep that receipt
+and generated files unchanged when assembling or distributing the archive.
 
 ## Export structured callbacks
 

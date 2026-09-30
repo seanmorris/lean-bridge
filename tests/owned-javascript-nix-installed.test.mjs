@@ -58,9 +58,13 @@ test("the filtered component engine imports without undeclared checkout files", 
 	const run = () => execFileSync(process.execPath, ["--input-type=module", "-e"
 		, `for(const path of ${JSON.stringify(modules)}) await import("./" + path); console.log("filtered-component-ready");`], options);
 	assert.equal(run(), "filtered-component-ready\n");
-	await rm(join(directory, "src/backends/native/owned-value-transfers.mjs"));
-	assert.throws(run, error => error.stderr.includes("ERR_MODULE_NOT_FOUND")
-		&& error.stderr.includes("owned-value-transfers.mjs"));
+	for(const name of ["owned-value-transfers.mjs", "owned-aggregate-transfers.mjs"])
+	{
+		const path = "src/backends/native/" + name;
+		await rm(join(directory, path));
+		assert.throws(run, error => error.stderr.includes("ERR_MODULE_NOT_FOUND") && error.stderr.includes(name));
+		await copyFile(path, join(directory, path));
+	}
 });
 
 for(const reviewed of [false, true]) test(`actual Nix installs ${reviewed ? "reviewed" : "ordinary"} owned npm exports after producer removal`, {

@@ -38,11 +38,11 @@ static wasmtime_error_t *ow_native_import_${index}(void *data, wasmtime_context_
   wasmtime_component_val_t converted = {0}; wasmtime_error_t *failure = NULL;
   int status = 0;
 ${native.parameters.map((id, i) => `  ${table.get(id).cName} arg${i} = {0};`).join("\n")}
-${native.parameters.map((id, i) => `  if (!ow_decode_${table.get(id).index}_input(&args[${i}], &input.scope, &arg${i})) {
+${native.parameters.map((id, i) => `  if (!ow_decode_${table.get(id).index}_${native.transfers?.includes(i) ? "output" : "input"}(&args[${i}], &input.scope, &arg${i})) {
     (void)ow_native_status(host, input.scope.memory.failure ? (int)input.scope.memory.failure : LB_OWNED_INVALID);
     failure = wasmtime_error_new("Invalid owned WIT input, expired resource or conversion limit"); goto done;
   }`).join("\n")}
-  status = ${native.symbol}(host->native, ${native.parameters.map((_, i) => `&arg${i}`).concat("&value", "&owner").join(", ")});
+  status = ${native.symbol}(host->native, ${[...native.parameters.map((_, i) => `&arg${i}`), ...native.transfers?.length ? ["host->input_transfers"] : [], "&value", "&owner"].join(", ")});
   if (status) {
     (void)ow_native_status(host, status);
     if (status == OV_RESULT) lean_bridge_native_runtime_retire();

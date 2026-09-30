@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedWitTransfer, ownedWitTransferChangedPaths } from "./wit-owned-transfer-history.mjs";
 
 export const ownedJavaScriptTransferBaseline = "10463a29b72d47b01e11cc799d97589f2ca594fe";
 export const ownedJavaScriptTransferPath = "docs/evidence/owned-javascript-transfers-20260930.json";
@@ -55,6 +56,7 @@ export const ownedJavaScriptTransferAddedPaths = [
 	, "tests/owned-javascript-transfer-packaging.test.mjs"
 	, "tests/owned-javascript-transfers.test.mjs"
 ];
+export const ownedJavaScriptTransferNormalizationPaths = [...new Set([...ownedJavaScriptTransferChangedPaths, ...ownedWitTransferChangedPaths])].sort();
 let cached;
 
 /**
@@ -88,6 +90,7 @@ export const reverseOwnedJavaScriptTransferUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedJavaScriptTransfer = (path, source, expected) => {
+	source = beforeOwnedWitTransfer(path, source, expected);
 	if(!ownedJavaScriptTransferChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedJavaScriptTransferPath, "utf8"));
@@ -106,5 +109,5 @@ export const beforeOwnedJavaScriptTransfer = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedJavaScriptTransferHistoricalBytes = (path, bytes, expected) => ownedJavaScriptTransferChangedPaths.includes(path)
+export const ownedJavaScriptTransferHistoricalBytes = (path, bytes, expected) => ownedJavaScriptTransferNormalizationPaths.includes(path)
 	? beforeOwnedJavaScriptTransfer(path, bytes.toString("utf8"), expected) : bytes;

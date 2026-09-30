@@ -83,8 +83,9 @@ export const projectOwnedWasi = async options => {
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity, library, component, settings
 		, glibcMinimumVersion: floor
-		, ownedValues: { schemaVersion: 1
+		, ownedValues: { schemaVersion: model.ownedGraph.inputTransfers ? 2 : 1
 			, hostCallbacks: model.ownedGraph.hostCallbacks ?? null
+			, ...model.ownedGraph.inputTransfers ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, headerSha256: sha256(sources.generated.publicHeader)
 			, sourceSha256: sha256(sources.files[`src/${p}.c`]) }
 		, dependencies: sources.dependencies

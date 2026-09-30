@@ -41,9 +41,11 @@ const witShape = copy => {
  *
  * @param ir - Explicit compiler-authenticated or reviewed version-4 contract.
  * @param settings - Optional WIT package coordinates.
+ * @param options - Explicit capabilities of the consuming host adapter.
  */
-export const compileOwnedWitGraphModel = (ir, settings = {}) => {
-	const layout = compileOwnedNativeValueLayout(ir), model = layout.model;
+export const compileOwnedWitGraphModel = (ir, settings = {}, options = {}) => {
+	const layout = compileOwnedNativeValueLayout(ir, options), model = layout.model;
+	const transfers = layout.functions.filter(item => item.transfers?.length);
 	const name = settings.name ?? `owned-h${model.bindingIrSha256.slice(0, 20)}`;
 	const version = settings.version ?? model.component.version;
 	validateOrdinaryWasiSettings({ name, version });
@@ -52,7 +54,7 @@ export const compileOwnedWitGraphModel = (ir, settings = {}) => {
 	const fn = (declaration, name, parameters, result, resource = null) => {
 		const names = new Set();
 		return { declaration, witName: label(name, scope), resource
-			, parameters: parameters.map((site, index) => ({ witName: label(site.name ?? `arg${index}`, names), copy: graph.value(site.type, "input") }))
+			, parameters: parameters.map((site, index) => ({ witName: label(site.name ?? `arg${index}`, names), copy: graph.value(site.type, site.ownership === "transfer" ? "output" : "input") }))
 			, resultCopy: graph.value(result.type, "output") };
 	};
 	const functions = model.declarations.map(declaration => fn(declaration, declaration.name, declaration.parameters, declaration.result));
@@ -82,10 +84,11 @@ ${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(par
 			, result: { ...declaration.result, witType: functions[index].resultCopy.wit } }))
 		, graph: { schemaVersion: 1, representation: "owned-typed-node-tables-v1"
 			, layoutSha256: sha256(canonicalJson(layout)), limits: model.limits
+			, ...transfers.length ? { inputTransfers: transfers.map(fn => ({ bindingId: fn.id, parameters: fn.transfers })) } : {}
 			, types: model.types
 			, resources: resources.map(resource => ({ id: resource.id, kind: resource.node.kind, witName: resource.witName }))
 			, values: [...graph.values].map(([key, copy]) => ({ key, witType: copy.wit
 				, tables: copy.tables.map(table => ({ type: table.node.id, field: table.field, rowType: table.row.wit })) })) }
-		, deferred: ["transferred-inputs", "anchored-borrowed-results", "retained-host-callbacks", "asynchronous-callables"] };
+		, deferred: [...transfers.length ? [] : ["transferred-inputs"], "anchored-borrowed-results", "retained-host-callbacks", "asynchronous-callables"] };
 	return { model, layout, graph, functions, types, resources, name, version, importName, exportName, wit, wat, manifest };
 };

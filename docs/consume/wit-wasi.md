@@ -132,7 +132,8 @@ The program prints `42`. pkg-config supplies the host and bundled GMP; the host
 loads Lean and Wasmtime automatically. CMake consumers can use the package and
 target named in `lean-bridge-package.json`. Both methods support relocation.
 
-Inputs borrow their values for one call. Each returned value has a result owner
+Inputs borrow their values for one call unless the export declares a transfer.
+Each returned value has a result owner
 that owns its copied storage and resource leases. Initialize owner slots to
 `NULL`, release each owner once, and use generated retain/copy helpers when a
 value must outlive its original owner. Failure leaves output slots unchanged.
@@ -153,8 +154,69 @@ cleanup return a process error; start a fresh consumer with `exec`.
 
 This API does not expose raw Wasmtime handles or custom caller-owned stores.
 The supplied component requires its native host, not a standalone WASI runtime.
-Transferred inputs, owner-anchored borrowed results, retained host callbacks and
-asynchronous callbacks remain unsupported.
+Owner-anchored borrowed results, retained host callbacks and asynchronous
+callbacks remain unsupported.
+
+### Consuming inputs
+
+A consuming parameter takes its value and a pointer to its result-owner slot.
+The adapter validates every argument and its owner before transferring ownership.
+At handoff, it sets all consuming owner slots to `NULL` before Lean runs, including
+before a callback can reenter the package. A failure before handoff preserves the
+owners. A later failure leaves them consumed and does not publish output values.
+
+For the `owned-transfers` example, save this as `main.c`:
+
+```c
+#include "owned_aggregates_wasmtime.h"
+#include <stdio.h>
+
+int main(void)
+{
+    owned_aggregates_wasmtime_session *session = NULL;
+    owned_aggregates_wasmtime_result *input_owner = NULL;
+    owned_aggregates_wasmtime_result *output_owner = NULL, *number_owner = NULL;
+    owned_aggregates_wasmtime_ticket_t input = NULL, output = NULL;
+    mpz_t number;
+    mpz_init_set_ui(number, 42);
+    mpz_srcptr serial = NULL;
+    int status = owned_aggregates_wasmtime_session_open(&session);
+    if (!status) status = owned_aggregates_wasmtime_new_ticket(
+        session, number,
+        (owned_aggregates_wasmtime_scalar_string_t){"ticket", 6},
+        &input, &input_owner);
+    if (!status) status = owned_aggregates_wasmtime_retain_ticket(
+        session, input, &input_owner, &output, &output_owner);
+    if (!status && input_owner != NULL) status = 1;
+    if (!status) status = owned_aggregates_wasmtime_serial(
+        session, output, &serial, &number_owner);
+    if (!status) gmp_printf("%Zd\n", serial);
+    owned_aggregates_wasmtime_result_release(&number_owner);
+    owned_aggregates_wasmtime_result_release(&output_owner);
+    owned_aggregates_wasmtime_result_release(&input_owner);
+    owned_aggregates_wasmtime_session_close(&session);
+    mpz_clear(number);
+    return status ? 1 : 0;
+}
+```
+
+Compile with `pkg-config --cflags --libs owned-transfers-wit` as above. The
+program prints `42`. The name `retain_ticket` comes from this Lean example;
+its author explicitly declared that export to consume its input. Generated
+`_retain` and `_copy` helpers still create independent owners without consuming.
+
+A transfer consumes the whole supplied owner, including sibling resource leases
+not present in the selected value. Make an independent retain or copy first if
+another caller needs to keep that value. Each consuming argument requires a
+distinct owner from the same session. Do not read the original owner's copied
+storage after the call returns. The adapter keeps that storage alive internally
+until the active call and callbacks finish.
+
+These rules apply to resource-containing records, variants, recursive values,
+containers and returned Lean closures. The bundled WIT contract uses `own`
+resources for consuming parameters and `borrow` resources for borrowed ones.
+The package's native session performs the handoff; caller-owned Wasmtime stores
+are not an alternative entry point.
 
 ### Arrays and copied records
 

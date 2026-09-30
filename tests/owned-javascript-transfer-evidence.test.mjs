@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedJavaScriptTransferExecution } from "./helpers/owned-javascript-transfer-evidence.mjs";
+import { beforeOwnedWitTransfer, ownedWitTransferHistoricalBytes } from "./helpers/wit-owned-transfer-history.mjs";
 import { beforeOwnedJavaScriptTransfer, ownedJavaScriptTransferAddedPaths, ownedJavaScriptTransferBaseline
 	, ownedJavaScriptTransferChangedPaths, ownedJavaScriptTransferPath, ownedJavaScriptTransferPrevious
 	, reverseOwnedJavaScriptTransferUpdate } from "./helpers/owned-javascript-transfer-history.mjs";
@@ -22,27 +23,28 @@ test("JavaScript transfers preserve prior receipts without promoting unrelated s
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedJavaScriptTransferAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedWitTransferHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptTransferChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedJavaScriptTransfer(update.path, source);
+		const source = beforeOwnedWitTransfer(update.path, await readFile(update.path, "utf8"));
+		const prior = beforeOwnedJavaScriptTransfer(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJavaScriptTransfer(update.path, prior), prior);
 		assert.equal(beforeOwnedJavaScriptTransfer(update.path, source, update.currentSha256), source);
 	}
-	const current = await readFile("docs/type-surface.v1.json", "utf8");
+	const current = beforeOwnedWitTransfer("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"));
 	const prior = JSON.parse(beforeOwnedJavaScriptTransfer("docs/type-surface.v1.json", current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitTransferHistoricalBytes(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 
 test("JavaScript transfer history rejects unknown changes and forged edit spans", async () => {
 	for(const update of (await read()).updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedWitTransfer(update.path, await readFile(update.path, "utf8")), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedJavaScriptTransfer(update.path, unknown), unknown);
 		assert.throws(() => reverseOwnedJavaScriptTransferUpdate(unknown, update));
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }

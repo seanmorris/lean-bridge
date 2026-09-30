@@ -34,6 +34,7 @@ struct ow_native_host {
   size_t live, depth;
   int status;
   ow_native_call *call;
+${model.layout.functions.some(fn => fn.transfers?.length) ? "  ov_input_transfers *input_transfers;\n" : ""}\
   bool closing;
   wasmtime_error_t *failure;
 };
@@ -145,8 +146,8 @@ static inline bool ow_native_type(ow_native_host *host, size_t type, const wasmt
 static bool ow_native_read_identity(void *data, size_t type, bool borrowed,
     const wasmtime_component_val_t *value, uint64_t *out) {
   ow_native_conversion *conversion = data; ow_native_host *host = conversion->host;
-  if (!ow_native_ready(host) || !host->call || host->failure || !borrowed
-      || !ow_native_type(host, type, value->of.resource) || wasmtime_component_resource_any_owned(value->of.resource)) return false;
+  if (!ow_native_ready(host) || !host->call || host->failure${model.layout.functions.some(fn => fn.transfers?.length) ? "" : " || !borrowed"}
+      || !ow_native_type(host, type, value->of.resource) || ${model.layout.functions.some(fn => fn.transfers?.length) ? "wasmtime_component_resource_any_owned(value->of.resource) == borrowed" : "wasmtime_component_resource_any_owned(value->of.resource)"}) return false;
   ow_native_read *read = conversion->reads;
   while (read && read->handle != value->of.resource) read = read->next;
   if (!read) {
@@ -165,7 +166,7 @@ static bool ow_native_read_identity(void *data, size_t type, bool borrowed,
     if (tag != host->tags[type]) return false;
   }
   ow_native_entry *entry = ow_native_find(host, read->rep);
-  if (!entry || read->type != type || !read->borrowed || entry->type != type
+  if (!entry || read->type != type || ${model.layout.functions.some(fn => fn.transfers?.length) ? "read->borrowed != borrowed" : "!read->borrowed"} || entry->type != type
       || !lb_owned_find(host->native, ow_native_kinds[type], entry->token)) return false;
   if (out) *out = entry->token;
   return true;

@@ -55,8 +55,10 @@ export const assertOwnedConsumerCiExecution = async record => {
 		if(before) assert.ok(run.text.includes(wit ? "WIT must install ripgrep" : "ERR_MODULE_NOT_FOUND"));
 		else assert.doesNotMatch(run.text, /^not ok|# SKIP|# TODO/mu);
 	}
-	const boundary = JSON.parse(await readFile("nix/component-engine-source-boundary.json", "utf8"));
-	const core = JSON.parse(await readFile("nix/core-source-boundary.json", "utf8"));
+	const historicalBoundary = async path => JSON.parse(ownedPythonTransferHistoricalBytes(
+		path, await readFile(path), record.nixSource.files[path]).toString("utf8"));
+	const boundary = await historicalBoundary("nix/component-engine-source-boundary.json");
+	const core = await historicalBoundary("nix/core-source-boundary.json");
 	assert.ok(boundary.includedFiles.includes(ownedConsumerCiModule));
 	const paths = [...new Set([...core.includedFiles, ...boundary.includedFiles, ...boundary.identityFiles])].sort();
 	assert.deepEqual(Object.keys(record.nixSource.files).sort(), paths);

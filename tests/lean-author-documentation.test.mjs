@@ -111,10 +111,16 @@ test("export contract examples validate and distinguish implemented decisions fr
 	assert.deepEqual(closure.contracts["Library.makeWordAdder"].result, { ownership: "lease", lifetime: { scope: "explicit", anchor: null } });
 	assert.match(existing, /after specialization and configured closure arity/);
 	assert.match(existing, /C, C\+\+, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support \[explicit input transfers\]/);
-	assert.match(existing, /WIT\/WASI still rejects transfer contracts/);
+	assert.match(existing, /WIT\/WASI\]\(\.\.\/consume\/wit-wasi\.md#consuming-inputs\)/);
 	assert.match(existing, /JavaScript\/TypeScript\]\(\.\.\/javascript-typescript\.md#consuming-inputs\)/);
 	assert.match(existing, /Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis/);
 	assert.match(existing, /not memory allocation inside Lean/);
+	const wit = await readFile("docs/publish/wit-wasi.md", "utf8");
+	const owned = JSON.parse(fences(wit.split("## Export resource-containing values\n")[1]).find(block => block.language === "json").source);
+	const transferred = JSON.parse(fences(wit.split("### Transfer input ownership\n")[1]).find(block => block.language === "json").source);
+	owned.exports.push("Owned.retainTicket"); Object.assign(owned, transferred);
+	validateExportConfiguration(owned);
+	assert.deepEqual(owned.contracts["Owned.retainTicket"].parameters, [{ ownership: "transfer", lifetime: { scope: "call", anchor: null } }]);
 	const diagnostics = await readFile("docs/lean/diagnostics.md", "utf8");
 	for(const code of ["export-contract-mismatch", "unused-export-contract", "contracts-require-elaboration"])
 		assert.ok(diagnostics.includes(`\`${code}\``));

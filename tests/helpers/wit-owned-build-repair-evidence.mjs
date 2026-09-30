@@ -80,6 +80,7 @@ export const assertOwnedWitBuildRepairExecution = async record => {
 	assert.deepEqual({ ...boundary, includedFiles: previous.includedFiles }, previous);
 	assert.deepEqual(boundary.includedFiles.filter(path => !previous.includedFiles.includes(path)), ownedWitBuildRepairModules);
 	assert.deepEqual(boundary.includedFiles.filter(path => !ownedWitBuildRepairModules.includes(path)), previous.includedFiles);
-	for(const path of ownedWitBuildRepairModules) assert.equal(sha256(await readFile(path)), record.sources[path], path);
+	for(const path of ownedWitBuildRepairModules)
+		assert.equal(sha256(beforeOwnedTransferC(path, await readFile(path, "utf8"), record.sources[path])), record.sources[path], path);
 	await assertPhpNixImportClosure(JSON.parse(current));
 };

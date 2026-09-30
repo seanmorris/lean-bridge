@@ -128,9 +128,28 @@ custom caller-owned stores are not part of this public API.
 
 Initialize each output owner to NULL. A successful call returns a typed value and
 an independent result owner. Release it with ${p}_result_release. Failure leaves
-both output slots unchanged. Inputs are borrowed for the call. A result owns all
+both output slots unchanged. ${model.ownedGraph.inputTransfers ? "Inputs borrow unless their declaration specifies transfer." : "Inputs are borrowed for the call."} A result owns all
 its copied storage and resource leaves; aliases expire when that owner is released.
-Use the generated retain/copy helpers to acquire independent ownership.
+Use the generated retain/copy helpers to acquire independent ownership.${model.ownedGraph.inputTransfers ? `
+
+## Consuming inputs
+
+An input declared transfer adds a result-owner pointer beside its value. Pass
+the address of that value's owning result. Every consuming argument needs a
+distinct owner from the same session. An owner covers its entire result, including
+aliases and sibling resources, even when only one member is passed to the call.
+
+The adapter validates every input before consuming any owner. At the native
+handoff it invalidates the original owners and sets every supplied owner slot to
+NULL before Lean runs, including before callbacks reenter. Failures after handoff
+do not restore those owners. Their copied storage remains pinned until the call
+returns. Retain or copy first when you need independent ownership.
+
+The WIT contract uses own resources for consuming inputs and borrow resources
+for borrowed inputs. The bundled session passes the original native ownership
+frame to its trusted import, so the Component Model call cannot postpone or
+bypass native owner validation. Raw caller-owned Wasmtime stores are not part
+of this public API.` : ""}
 
 Close with ${p}_session_close. Resource operations reject closed sessions. Copied
 result storage remains readable until its result owner is released, even after

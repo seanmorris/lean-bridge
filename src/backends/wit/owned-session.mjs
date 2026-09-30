@@ -123,7 +123,7 @@ static inline int ows_invoke(ows_frame *frame, const char *name,
 /* Canonical lowering borrows an owned host proxy. Creating ResourceAny borrows
  * here would require an already-active Component Model call frame. */
 static bool ows_write_input(void *data, size_t type, bool borrowed, uint64_t token, wasmtime_component_val_t *out) {
-  return borrowed && ow_native_write_identity(data, type, false, token, out);
+${model.layout.functions.some(fn => fn.transfers?.length) ? "  (void)borrowed;\n  return ow_native_write_identity(data, type, false, token, out);" : "  return borrowed && ow_native_write_identity(data, type, false, token, out);"}
 }
 /* Only results of this frame's trusted component enter this reader. An own is
  * consumed once, even when several graph references point to its table row. */
@@ -161,15 +161,16 @@ static inline int ows_conversion_status(ow_native_conversion *conversion, int in
 ${functions.map(({ native, witName, index }) => {
 	const result = nodes.get(native.result), parameters = native.parameters.map(id => nodes.get(id));
 	return `static inline int ows_dispatch_${index}(ows_session *session,
-    ${parameters.map((node, i) => `const ${node.cName} *a${i}, `).join("")}${result.cName} *out, ov_result_owner *owner) {
+    ${parameters.map((node, i) => `const ${node.cName} *a${i}, `).join("")}${native.transfers?.length ? "ov_input_transfers *transfer, " : ""}${result.cName} *out, ov_result_owner *owner) {
   ows_frame frame = {0}; int status = ows_frame_begin(session, &frame);
   if (status) return status;
+${native.transfers?.length ? "  frame.host.input_transfers = transfer;\n" : ""}\
   ow_native_conversion input, output;
   ow_native_conversion_init(&input, &frame.host); ow_native_conversion_init(&output, &frame.host);
   input.scope.identities.write = ows_write_input; output.scope.identities.read = ows_read_output;
   wasmtime_component_val_t args[${Math.max(1, parameters.length)}] = {{0}}, reply = {0};
   ${result.cName} decoded = {0}, converted = {0}; ov_transaction transaction = {0};
-${parameters.map((node, i) => `  if (!ow_encode_${node.index}_input(a${i}, &input.scope, &args[${i}])) {
+${parameters.map((node, i) => `  if (!ow_encode_${node.index}_${native.transfers?.includes(i) ? "output" : "input"}(a${i}, &input.scope, &args[${i}])) {
     status = ows_conversion_status(&input, LB_OWNED_INVALID); goto done;
   }`).join("\n")}
   status = ows_invoke(&frame, ${JSON.stringify(witName)}, args, ${parameters.length}, &reply);

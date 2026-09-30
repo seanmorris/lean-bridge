@@ -22,8 +22,9 @@ export const generateOwnedWitPackage = (options, componentBytes, settings = {}) 
 	let model;
 	const generated = generateOwnedCPackage(options, {
 		publicPrefix: ownedWitPublicPrefix
+		, transferredInputs: options.transferredInputs === true
 		, render: ({ generated }) => {
-			model = compileOwnedWitGraphModel(generated.layout.model.bindingIr, settings);
+			model = compileOwnedWitGraphModel(generated.layout.model.bindingIr, settings, { transferredInputs: options.transferredInputs });
 			if(generated.layout.header !== model.layout.header) throw new TypeError("Owned WIT and native value layouts must match");
 			return renderOwnedWitSession(model, componentBytes);
 		}
@@ -35,5 +36,6 @@ export const generateOwnedWitPackage = (options, componentBytes, settings = {}) 
  * Resolve a separate host namespace without changing the authenticated IR.
  *
  * @param ir - Authenticated version-4 binding contract.
+ * @param options - Explicit public C ownership capabilities.
  */
-export const ownedWitPublicPrefix = ir => `${generateOwnedCValues(ir).prefix}_wasmtime`;
+export const ownedWitPublicPrefix = (ir, options = {}) => `${generateOwnedCValues(ir, options).prefix}_wasmtime`;
