@@ -18,12 +18,14 @@ import { ownedRubyAbiHeader } from "./owned-abi.mjs";
  * @param evidence - Verified native library identities, or null for inspection.
  * @param options - Compiler-authenticated ownership capabilities.
  * @param options.transferredInputs - Enable explicitly consuming input leases.
+ * @param options.anchoredResults - Preserve original whole-result owners.
  */
-export const generateOwnedRubyPackage = (ir, evidence = null, { transferredInputs = false } = {}) => {
-	const generated = generateOwnedRubyConversions(ir, { transferredInputs }), prefix = generated.c.prefix;
+export const generateOwnedRubyPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const generated = generateOwnedRubyConversions(ir, { transferredInputs, anchoredResults }), prefix = generated.c.prefix;
 	const transfers = generated.c.functions.some(fn => fn.transfers?.length);
+	const anchors = Boolean(generated.c.anchoredResults);
 	const { requirePath, componentName, namespace } = generated;
-	const entry = `lib/${requirePath}.rb`, runtime = ownedRubyRuntime(prefix, { transferredInputs: transfers });
+	const entry = `lib/${requirePath}.rb`, runtime = ownedRubyRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors });
 	const native = `${generated.source}
 require "digest"
 require "digest/sha2"
@@ -40,14 +42,26 @@ ${verifiedRubyAssets(evidence)}
 end
 `;
 	const abiHeader = ownedRubyAbiHeader(generated);
-	const contract = { schemaVersion: transfers ? 2 : 1, language: "ruby-3.3"
+	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
+		, language: "ruby-3.3"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
-			, arguments: "ordinary-values", consumption: "before-lean-call"
+			, arguments: anchors ? "whole-values" : "ordinary-values"
+			, consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"
 			, aliases: "shared-lease", borrowedInputs: "reject"
 			, independentRetains: "preserved" } } : {}
+		, ...anchors ? { resultAnchors: {
+			schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-result-owner"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved", aliases: "shared-owner"
+			, independentOwnership: "retain-or-copy_value"
+			, copyType: "nominal-or-result_of-or-parameter_of"
+			, rawViews: "borrowed-from-whole-owner"
+			, resourceEquality: "canonical-identity", invalidEquality: "raise"
+			, transfers: "original-owner" } } : {}
 		, exactIntegers: "ruby-integer", loader: "authenticated-bundled-native"
 		, loadingPolicy: "linux-x64-deepbind-v1"
 		, gmp: "libgmp-lean-bridge.so.10"
@@ -78,12 +92,31 @@ Unit is UNIT. Nat and Int remain exact Ruby Integers; fixed-width ranges check
 before native entry. String preserves valid UTF-8 and embedded NUL; ByteArray
 uses binary String. Char contains one Unicode scalar. Float32 rounds to binary32.
 
-Resource wrappers share checked result leases. dup and clone create independent
+${anchors ? `Resource-containing results use Value, including empty containers and variants.
+get checks the whole owner and returns its Ruby value. dup and clone share that
+owner with independent close guards. close releases one guard; closing the last
+guard expires raw resource views obtained through get. Those views do not keep
+the owner alive. retain on a Value or a resource creates independent ownership.
+Borrowed results do not keep their original anchor alive: releasing or consuming
+the anchor expires its descendants. Copied Ruby fields remain ordinary data.
+
+Use copy_value(record_or_resource) for nominal shapes. Ambiguous containers
+require result_of: :function_name or parameter_of: [:function_name, :arg0].
+These selectors choose a declared type without calling that function. Resource
+equality uses native canonical identity and rejects expired values. Lean owners
+and resources cannot be serialized or used as Hash keys.
+` : `Resource wrappers share checked result leases. dup and clone create independent
 close guards; retain creates an independent native owner. Use with { |value| }
 or close for deterministic release. Finalization queues fallback cleanup on the
 creating thread. Resource calls reject after that thread exits, after fork or
 from another thread. Serialization of resource identities is rejected.
-${transfers ? `
+`}${transfers ? anchors ? `
+Transferred parameters require original owning Value roots, including empty
+values. The native handoff consumes those exact owners before callback reentry.
+Borrowed roots, duplicate owners and conflicting anchors reject before handoff.
+Preflight failures preserve inputs; errors after handoff leave them consumed.
+Independently retained owners stay valid.
+` : `
 Transferred inputs use ordinary Ruby values. Generated function comments name
 the consuming arguments. All validation and snapshot preparation precede the
 Lean call boundary. At handoff, resource leases close together with their dup
@@ -112,8 +145,8 @@ These limits do not bound Lean algorithm memory or every Ruby allocator cost.
 Malformed native values retire the runtime. Ordinary input and allocation
 failures leave it usable. Partial output wrappers are revoked on failure.
 ` };
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: transfers ? 2 : 1
-		, backend: transfers ? "owned-ruby-v2" : "owned-ruby-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : transfers ? 2 : 1
+		, backend: anchors ? "owned-ruby-v3" : transfers ? "owned-ruby-v2" : "owned-ruby-v1"
 		, target: "ruby", component: ir.component.id
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, namespace, requirePath, publicFiles: [entry]

@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPythonBorrow, ownedPythonBorrowChangedPaths } from "./owned-python-borrow-history.mjs";
+import { beforeOwnedPythonBorrow, ownedPythonBorrowNormalizationPaths } from "./owned-python-borrow-history.mjs";
 
 export const ownedRustBorrowPath = "docs/evidence/owned-rust-borrows-20260930.json";
 export const ownedRustBorrowBaseline = "741a2af5e68a77996f2b478b4110d97bfc6e4c58";
@@ -44,7 +44,7 @@ export const ownedRustBorrowAddedPaths = [
 	, "tests/owned-rust-borrows.test.mjs"
 ].sort();
 let cached;
-export const ownedRustBorrowNormalizationPaths = [...new Set([...ownedRustBorrowChangedPaths, ...ownedPythonBorrowChangedPaths])].sort();
+export const ownedRustBorrowNormalizationPaths = [...new Set([...ownedRustBorrowChangedPaths, ...ownedPythonBorrowNormalizationPaths])].sort();
 
 /**
  * Reverse complete authenticated source versions through exact ordered edits.

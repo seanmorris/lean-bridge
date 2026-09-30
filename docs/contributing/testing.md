@@ -1391,6 +1391,33 @@ relocation. The reviewed build also installs C, C++, Cargo and PyPI companions.
 Reports go to `build/owned-ruby-transfers/` and
 `build/owned-ruby-transfer-packaging/`.
 
+#### Installed Ruby borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-ruby-borrows
+```
+
+Use the owned-gem toolchains above. On a glibc 2.36 test host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`; symbol-version checks still apply.
+The enabled gate requires seven tests without skips. Both source paths execute
+whole-owner, empty-value and transitive-expiration checks, original-owner
+transfers, callback reentry, returned closures and canonical equality. Ruby and
+native allocation failures must preserve owners before handoff and consume
+them after handoff, with no residual allocations or identities after cleanup.
+Four executable mutations must fail independent assertions. Borrowed results
+also compile and execute separately without input-transfer support.
+
+Prepared-gem tests remove producer sources before offline installation, reject
+forged contracts and incapable readers, reproduce the archive byte for byte,
+and execute the documentation example. Loader tests cover concurrent requires,
+private GMP, fork with a held loader lock, altered libraries and symlinks.
+Installed consumers run again after handoff and gem-cache deletion and
+relocation. The reviewed build also installs C++, Cargo and PyPI consumers.
+Reports go to `build/owned-ruby-borrows/` and
+`build/owned-ruby-borrow-packaging/`; CI requires both source paths and the
+separate `borrow-only.json` report.
+
 #### Installed .NET transfers
 
 ```sh

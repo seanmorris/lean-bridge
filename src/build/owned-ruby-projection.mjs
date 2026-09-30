@@ -22,12 +22,13 @@ import { packageOwnedRuby } from "../release/owned-rubygems.mjs";
 export const projectOwnedRuby = async options => {
 	const { working, nativeRoot, runtimeRoot, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true });
 	if(!model.ownedGraph?.hostCallbacks) throw new TypeError("Owned Ruby requires authenticated callback/copy support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs });
-	const ruby = generateOwnedRubyPackage(model.bindingIr, null, { transferredInputs }), prefix = c.values.prefix;
+	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs, anchoredResults });
+	const ruby = generateOwnedRubyPackage(model.bindingIr, null, { transferredInputs, anchoredResults }), prefix = c.values.prefix;
 	const root = join(working, "native/owned-ruby-binding"), gmpRoot = join(root, "gmp");
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid Ruby native glibc floor");
@@ -68,13 +69,14 @@ export const projectOwnedRuby = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(root, "native-ruby-adapter.json"), canonicalJson({ schemaVersion: transferredInputs ? 2 : 1
+	await writeFile(join(root, "native-ruby-adapter.json"), canonicalJson({ schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, profile: "native-library-v1"
 		, bindingIrSha256: model.bindingIrSha256
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity: identity, library
-		, ownedValues: { schemaVersion: transferredInputs ? 3 : 2
+		, ownedValues: { schemaVersion: anchoredResults ? 4 : transferredInputs ? 3 : 2
 			, hostCallbacks: model.ownedGraph.hostCallbacks
+			, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
 			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, headerSha256: sha256(c.publicHeader), sourceSha256: sha256(c.source) }
 		, rubyValues: ruby.contract

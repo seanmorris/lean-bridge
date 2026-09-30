@@ -60,8 +60,11 @@ static inline ${p}_status ${forward}(void *context, ${p}_session *session, ${par
 			}
 			else arguments_.push(node.leaf ? `*(${node.cName} const *)arg${i}` : `(${node.cName} const *)arg${i}`);
 			if(fn.transfers?.includes(i)) arguments_.push(`input_owner${i}`);
+			if(fn.anchor === i) arguments_.push(`anchor${i}`);
 		}
-		sources.push(`uint32_t ${symbol}(${p}_session *session, ${parameters.flatMap((_, i) => [`void const *arg${i}`, ...fn.transfers?.includes(i) ? [`${p}_result **input_owner${i}`] : []]).concat("void *output", `${p}_result **owner`).join(", ")}) {
+		sources.push(`uint32_t ${symbol}(${p}_session *session, ${parameters.flatMap((_, i) => [`void const *arg${i}`
+			, ...fn.transfers?.includes(i) ? [`${p}_result **input_owner${i}`] : []
+			, ...fn.anchor === i ? [`${p}_result *anchor${i}`] : []]).concat("void *output", `${p}_result **owner`).join(", ")}) {
 ${setup.join("\n")}
   return (uint32_t)${fn.cName}(session, ${arguments_.concat(`(${result.cName} *)output`, "owner").join(", ")});
 }`);

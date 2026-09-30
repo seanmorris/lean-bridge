@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { ownedRubyAnchoredValues } from "./owned-borrows.mjs";
 
 /**
  * Emit deterministic resource copies, borrowed frames and queued GC cleanup.
@@ -11,8 +12,9 @@
  * @param prefix - Validated public C package identifier.
  * @param options - Explicit ownership capabilities.
  * @param options.transferredInputs - Observe the C consuming-input owner slots.
+ * @param options.anchoredResults - Keep and validate whole result owners.
  */
-export const ownedRubyRuntime = (prefix, { transferredInputs = false } = {}) => {
+export const ownedRubyRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Ruby prefix");
 	return `require "fiddle"
 raise LoadError, "Owned Lean values require MRI Ruby 3.3 on Linux x86-64" unless RUBY_ENGINE == "ruby" && RUBY_VERSION.start_with?("3.3.") && RUBY_PLATFORM.include?("x86_64-linux") && Fiddle::SIZEOF_VOIDP == 8 && [1].pack("I") == [1].pack("L<")
@@ -67,14 +69,23 @@ module Owned
     end
   end
   class Lease
-    attr_reader :state, :slot, :scope${transferredInputs ? "\n    attr_accessor :input_move" : ""}
-    def initialize(state, slot = nil, scope = nil)
+    attr_reader :state, :slot, :scope${anchoredResults ? ", :borrowed_result, :whole_result" : ""}${transferredInputs ? "\n    attr_accessor :input_move" : ""}
+    def initialize(state, slot = nil, scope = nil${anchoredResults ? ", borrowed_result = false, whole_result = false" : ""})
       @state, @slot, @scope = state, slot, scope
+${anchoredResults ? "      @borrowed_result, @whole_result = borrowed_result, whole_result\n" : ""}\
       @references = 0${transferredInputs ? "\n      @input_move = nil" : ""}
     end
     def closed?
-      @state.closed? || @state.exited? || ::Process.pid != @state.runtime.pid ||${transferredInputs ? "\n        (@input_move && @input_move.value.zero?) ||" : ""}
+      ${anchoredResults ? "closed = " : ""}@state.closed? || @state.exited? || ::Process.pid != @state.runtime.pid ||${transferredInputs ? "\n        (@input_move && @input_move.value.zero?) ||" : ""}
         (@scope ? !@scope.active : !@slot || @slot.pending || @slot.releasing || @slot.value.zero?)
+${anchoredResults ? `      return true if closed
+      if @slot
+        status = @state.runtime.result_validate.call(@state.require_open, @slot.value)
+        return true if status == 4
+        Owned.check(status)
+      end
+      false
+` : ""}\
     end
     def require_open
       @state.require_open
@@ -90,13 +101,20 @@ module Owned
       @state.release(@slot, finalizing) if @references.zero? && @slot
     end
     def referenced?; @references > 0; end
+${anchoredResults ? `    def owner(state)
+      require_open
+      raise Error, 1 unless @state.equal?(state) && @slot && !@scope
+      @slot.value
+    end
+` : ""}\
   end
   class Guard
     attr_reader :lease, :handle
-    def initialize(lease, handle)
+    def initialize(lease, handle${anchoredResults ? ", owning = !lease.whole_result" : ""})
       @lease, @handle = lease, handle
       @released = true
-      lease.acquire
+${anchoredResults ? "      @owning = owning\n" : ""}\
+      lease.acquire${anchoredResults ? " if @owning" : ""}
       @released = false
     end
     def closed?; @released || @lease.closed?; end
@@ -105,7 +123,7 @@ module Owned
       return if @released
       @released = true
       @handle = 0
-      @lease.release(finalizing)
+      @lease.release(finalizing)${anchoredResults ? " if @owning" : ""}
     end
     def self.finalizer(guard)
       proc do
@@ -137,11 +155,11 @@ module Owned
       raise Error, 4 unless @slot
       @slot.pointer
     end
-    def adopt
+    def adopt${anchoredResults ? "(borrowed_result = false, whole_result = false)" : ""}
       @state.require_open
       raise Error, 1 if !@slot || @slot.value.zero? || @lease
       Owned.checkpoint
-      @lease = Lease.new(@state, @slot)
+      @lease = Lease.new(@state, @slot${anchoredResults ? ", nil, borrowed_result, whole_result" : ""})
     end
     def publish
       if @lease && @lease.referenced?
@@ -286,7 +304,7 @@ module Owned
     end
   end
   class Runtime
-    attr_reader :pid, :library, :session_open, :session_close, :result_release
+    attr_reader :pid, :library, :session_open, :session_close, :result_release${anchoredResults ? ", :result_validate" : ""}
     def initialize(library, ensure_process = nil)
       @pid, @library, @loader_context = ::Process.pid, library, ensure_process
       ensure_process()
@@ -294,6 +312,8 @@ module Owned
       @session_open = function("${prefix}_session_open")
       @session_close = function("${prefix}_session_close")
       @result_release = function("${prefix}_result_release")
+${anchoredResults ? `      @result_validate = ::Fiddle::Function.new(library["${prefix}_result_validate"], [::Fiddle::TYPE_VOIDP, ::Fiddle::TYPE_VOIDP], ::Fiddle::TYPE_INT, need_gvl: true)
+` : ""}\
       @retire = ::Fiddle::Function.new(library["lean_bridge_native_runtime_retire"], [], ::Fiddle::TYPE_VOID, need_gvl: true)
       key = @key
       @trace = ::TracePoint.new(:thread_end) do
@@ -429,6 +449,7 @@ module Owned
     def inspect; "#<#{self.class} #{closed? ? 'closed' : 'open'}>"; end
     alias to_s inspect
   end
+${anchoredResults ? ownedRubyAnchoredValues : ""}\
 end
 `;
 };

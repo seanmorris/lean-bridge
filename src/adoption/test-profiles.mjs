@@ -405,6 +405,7 @@ const profileManifest = Object.freeze({
 		, "owned-ruby-runtime", "owned-ruby-values", "owned-ruby-layout"
 		, "owned-ruby-conversions", "owned-ruby-gmp", "owned-ruby-package"
 		, "owned-ruby-transfers", "owned-ruby-transfer-packaging"
+		, "owned-ruby-borrows", "owned-ruby-borrow-packaging"
 		, "owned-ruby-packaging", "owned-ruby-coexistence"
 		, "owned-dotnet-runtime", "owned-dotnet-layout", "owned-dotnet-values"
 		, "owned-dotnet-conversions", "owned-dotnet-callables"

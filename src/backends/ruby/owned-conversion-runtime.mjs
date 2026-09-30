@@ -9,8 +9,9 @@
  *
  * @param limits - Authenticated native conversion limits.
  * @param transfers - Whether calls collect explicitly transferred leases.
+ * @param anchors - Whether results carry original-owner lifetime anchors.
  */
-export const ownedRubyConversionSupport = (limits, transfers = false) => `
+export const ownedRubyConversionSupport = (limits, transfers = false, anchors = false) => `
       EXACT = ::Object.instance_method(:instance_of?)
       SAME = ::BasicObject.instance_method(:equal?)
       IDENTIFY = ::BasicObject.instance_method(:__id__)
@@ -26,6 +27,9 @@ export const ownedRubyConversionSupport = (limits, transfers = false) => `
       STRING_ORD = ::String.instance_method(:ord)
       DATA_FIELDS = ::Data.instance_method(:deconstruct)
       RESOURCE_RAW = Owned::Resource.instance_method(:raw)
+${anchors ? `      VALUE_GET = Owned::Value.instance_method(:get)
+      VALUE_LEASE = Owned::Value.instance_method(:lease)
+` : ""}\
       class Invalid < Owned::Error
         def initialize(message = "Malformed native owned value"); super(9, message); end
       end
@@ -115,11 +119,11 @@ export const ownedRubyConversionSupport = (limits, transfers = false) => `
         end
       end
       class Output
-        def initialize(owner, lease = nil); @owner, @lease = owner, lease; end
+        def initialize(owner, lease = nil${anchors ? ", borrowed = false, whole = false" : ""}); @owner, @lease = owner, lease${anchors ? "; @borrowed, @whole = borrowed, whole" : ""}; end
         def hold
           unless @lease
             raise Invalid, "Missing native result owner" unless @owner && @owner.slot && !@owner.slot.value.zero?
-            @lease = @owner.adopt
+            @lease = @owner.adopt${anchors ? "(@borrowed, @whole)" : ""}
           end
           @lease.require_open
           @lease

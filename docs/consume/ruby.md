@@ -427,12 +427,13 @@ threads. Resource calls belong to their creating Ruby thread and process. Thread
 exit closes remaining owners; Ractors, M:N threads and calls after fork reject.
 Inputs, callbacks and results share depth 128, 262,144 visits and a 16 MiB native
 conversion budget, with a separate 16 MiB Ruby conversion-storage budget.
-Anchored results and asynchronous callbacks are not enabled.
+Packages with parameter-anchored results use the whole-owner API below.
+Asynchronous callbacks remain unsupported.
 
 ### Transferred inputs
 
-An author can declare a parameter as consuming its resource ownership. Pass the
-ordinary Ruby value to that function. At the Lean call boundary, its resource
+An author can declare a parameter as consuming its resource ownership. In a
+package without result anchors, pass the ordinary Ruby value. At the Lean call boundary, its resource
 leases close, including `dup`, `clone` and sibling resources sharing the same
 result owner. Copied fields remain Ruby values. Call `retain` first when another
 part of the application needs independent ownership.
@@ -469,6 +470,57 @@ callbacks see caller aliases as closed while callback-local borrows remain
 usable. Retain a callback borrow before transferring it. Two consuming arguments
 cannot share a resource lease; use independent retains. Borrow-only functions
 keep their existing behavior.
+
+### Results borrowed from an input
+
+A publisher can tie a result to an input's original owner. In these packages,
+every resource-containing result uses `Value`, including empty containers and
+variants. `get` checks the owner before returning its Ruby value. Parameters
+used as result anchors or transferred inputs require the `Value` itself;
+other parameters accept ordinary Ruby values.
+
+For the prepared `owned-borrows` gem, save `owned-borrows.rb`:
+
+```ruby file=ruby/owned-borrows.rb
+require "lean_bridge/owned_aggregates"
+
+api = LeanBridge::OwnedAggregates
+owner = api.new_ticket(42, "owner")
+view = api.retain_ticket(owner)
+independent = view.retain
+puts api.serial(view.get)
+
+owner.close
+raise "Borrowed result outlived its owner" unless view.closed?
+raise "Independent owner was lost" unless api.serial(independent.get) == 42
+view.close
+independent.close
+```
+
+Run `ruby owned-borrows.rb`. It prints `42`. Releasing or transferring the
+original owner expires its borrowed results and all their descendants.
+`view.get` then raises `LeanBridgeError`. An independent retain stays usable.
+
+`dup` and `clone` share a whole owner with separate close guards. Closing one
+wrapper leaves the others usable. Closing the last whole-owner wrapper also
+expires raw resource views obtained through `get`; those views do not keep the
+owner alive. Use `retain` on the wrapper or a resource to create independent
+ownership. Copied Ruby fields remain ordinary data after their owner closes.
+`with` and `ensure` provide deterministic cleanup; GC queues fallback release
+on the creating thread.
+
+Use `api.copy_value(record_or_resource)` for a nominal value. For an empty or
+ambiguous container, choose its declared type with
+`api.copy_value([], result_of: :echo_array)` or
+`api.copy_value([], parameter_of: [:bundle, :arg2])`. These symbols select a
+type without calling the named function. `Value#retain` copies its known type.
+
+Transferred parameters consume the original `Value` owner, including an empty
+one, before callback reentry. Borrowed roots, duplicate consuming owners and
+conflicting anchors reject before handoff. Preflight errors preserve inputs;
+errors after handoff leave them consumed. Resource equality compares canonical
+native identity and raises on expired values. Owners and resource wrappers
+cannot be serialized or used as Hash keys.
 
 ### Alpha interoperability example
 

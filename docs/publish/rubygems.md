@@ -357,8 +357,8 @@ values and synchronous callback payloads. All nineteen primitive fields retain
 their normal Ruby meaning. Ordinary source and independently reviewed Binding
 IR use the same compiler-checked C layouts and lifetime rules. Host callbacks
 borrow for one call; retaining a callback argument retains its resource, not
-the host callback itself. Anchored results and asynchronous delivery remain
-unsupported.
+the host callback itself. Parameter-anchored results use the whole-owner API
+below. Asynchronous delivery remains unsupported.
 
 The gem bundles an isolated GMP 6.3.0 library and its source and license notices.
 Its loader authenticates native files and shares compatible Lean libraries
@@ -394,10 +394,36 @@ package receipt version 2. The private Ruby adapter uses version 2 with
 compiler metadata and rejects changed consumption or alias rules. Packages
 without transfers keep their existing versions and generated API.
 
-A combined transfer build can select C, C++, Cargo, PyPI, RubyGems, NuGet, Maven and CPAN.
+A combined transfer build can select the implemented native consumer targets.
 Ruby keeps its private pointer-call adapter and isolated GMP library while sharing the
-compiled Lean component. Other consumer bindings still reject transfer
-contracts. Building a gem does not upload it.
+compiled Lean component. Building a gem does not upload it.
+
+## Anchor a result to an input
+
+Use the [result-anchor configuration](c.md#anchor-a-result-to-an-input) and set
+the package coordinate under `targets.rubygems`. The analyzer checks the same
+parameter-relative lifetime contract for ordinary Lean source and reviewed IR.
+Build with the ordinary `--target rubygems` command.
+
+The gem returns checked `Value` owners for resource-containing results,
+including empty values. Result anchors and transferred parameters require
+whole owners. Releasing or consuming an owner expires borrowed descendants;
+`retain` and `copy_value` create independent ownership. Raw resource views from
+`get` borrow the whole owner. See the
+[consumer example](../consume/ruby.md#results-borrowed-from-an-input).
+
+These gems use `owned-ruby-v3`, ownership contract version 3 and package receipt
+version 3. The private Ruby adapter uses version 3 with `ownedValues` version 4.
+Its receipt authenticates `resultAnchors` separately from `inputTransfers`,
+including original-owner selection, transitive expiration, empty-value owners,
+copy selectors and canonical equality. Readers regenerate these rules from
+compiler metadata and reject changes. Packages without result anchors retain
+their existing API and contract versions.
+
+A combined anchored-result build can select C, C++, Cargo, PyPI and RubyGems.
+The Ruby gem keeps its isolated GMP and private pointer-call adapter while
+sharing the compiled Lean component and runtime. Other consumer projections
+of result anchors remain unfinished.
 
 ## Build the gem
 

@@ -8,6 +8,7 @@ import { ownedRubyConversionSupport } from "./owned-conversion-runtime.mjs";
 import { ownedRubyCallBoundary } from "./owned-call-boundary.mjs";
 import { ownedRubyCallbacks } from "./owned-callables.mjs";
 import { ownedRubyTransfers } from "./owned-transfers.mjs";
+import { ownedRubyAnchoredCall, ownedRubyAnchoredTransfers, ownedRubyValueCopies } from "./owned-borrows.mjs";
 
 /**
  * Generate resource-aware snapshots, typed function wrappers and callback frames.
@@ -19,6 +20,7 @@ import { ownedRubyTransfers } from "./owned-transfers.mjs";
 export const generateOwnedRubyConversions = (ir, options = {}) => {
 	const model = compileOwnedRubyLayout(ir, options), boundary = ownedRubyCallBoundary(model);
 	const transfers = model.c.functions.some(fn => fn.transfers?.length);
+	const anchored = model.c.functions.some(fn => fn.anchor !== undefined);
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const publicName = name => `::${model.namespace}::${name}`;
 	const read = (node, value, offset = 0) => node.aggregate ? `(${value} + ${offset})` : `${value}[${offset}, ${node.size}].unpack1("${node.pack}")`;
@@ -56,7 +58,7 @@ export const generateOwnedRubyConversions = (ir, options = {}) => {
 		{
 			input.push(`raise TypeError, "Expected exact ${node.publicType}" unless exact?(value, ${publicName(node.publicType)})`
 				, "handle = RESOURCE_RAW.bind_call(value, scope.state)", "scope.pin_lease(FIELD.bind_call(value, :@guard).lease)"
-				, ...transfers ? ["scope.moves.add(FIELD.bind_call(value, :@guard).lease, scope.move_group, scope) if scope.moves && !scope.move_group.nil?"] : []
+				, ...transfers && !anchored ? ["scope.moves.add(FIELD.bind_call(value, :@guard).lease, scope.move_group, scope) if scope.moves && !scope.move_group.nil?"] : []
 				, "handle");
 			output.push('raise Invalid, "Missing native resource" if value.zero?', "scope.charge(:storage, 256)"
 				, `${publicName(node.publicType)}.from_lease(output.hold, value)`);
@@ -201,7 +203,12 @@ ${output.map(line => `          ${line}`).join("\n")}
 		const { parameters, result, hosts } = fn, args = parameters.map((_, i) => `arg${i}`);
 		const moving = fn.transfers ?? [];
 		const input = (node, i, checking) => hosts[i] ? `host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})` : `input${node.index}(arg${i}, ${checking ? "checked" : "scope"})`;
-		bindings.push(`        functions[:${fn.name}] = ::Fiddle::Function.new(runtime.library[${JSON.stringify(fn.symbol)}], [${Array(parameters.length + moving.length + 3).fill("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)`);
+		bindings.push(`        functions[:${fn.name}] = ::Fiddle::Function.new(runtime.library[${JSON.stringify(fn.symbol)}], [${Array(parameters.length + moving.length + 3 + Number(fn.anchor !== undefined)).fill("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)`);
+		if(anchored)
+		{
+			methods.push(ownedRubyAnchoredCall(fn, boundary, { read, write }));
+			continue;
+		}
 		const inputs = parameters.flatMap((node, i) => [
 			...moving.length ? [`            scope.move_group = ${moving.includes(i) ? moving.indexOf(i) : "nil"}`] : []
 			, ...hosts[i] || node.aggregate
@@ -266,13 +273,41 @@ ${moving.length ? "            end\n" : ""}\
         end
       end`);
 	}
+	if(anchored)
+	{
+		methods.push(ownedRubyValueCopies(model, boundary));
+		for(const node of model.types.filter(item => item.identity))
+		{
+			const name = `same${node.index}`;
+			bindings.push(`        functions[:${name}] = ::Fiddle::Function.new(runtime.library["${node.cName}_equal"], [::Fiddle::TYPE_VOIDP, ::Fiddle::TYPE_VOIDP, ::Fiddle::TYPE_VOIDP, ::Fiddle::TYPE_VOIDP], ::Fiddle::TYPE_INT, need_gvl: true)`);
+			methods.push(`      def ${name}(left, right)
+        raise RuntimeError, "Build the native adapter before calling this API" unless @runtime
+        Owned.atomic do
+          state = @runtime.current_state
+          scope = ValueScope.new(state)
+          begin
+            first = input${node.index}(left, scope)
+            return false unless exact?(right, ${publicName(node.publicType)})
+            second = input${node.index}(right, scope)
+            output = scope.allocate(1)
+            Owned.check(@functions[:${name}].call(state.require_open, first, second, output))
+            value = output[0, 1].unpack1("C")
+            raise Invalid, "Invalid native equality result" unless value == 0 || value == 1
+            value == 1
+          ensure
+            scope.close
+          end
+        end
+      end`);
+		}
+	}
 	const callbacks = ownedRubyCallbacks(model, boundary, { read, write });
 	const source = `require "fiddle"
 module LeanBridge
   module ${model.componentName}
     module Native
       extend self
-${ownedRubyConversionSupport(model.c.native.model.limits, transfers)}${transfers ? ownedRubyTransfers : ""}
+${ownedRubyConversionSupport(model.c.native.model.limits, transfers, anchored)}${transfers ? anchored ? ownedRubyAnchoredTransfers : ownedRubyTransfers : ""}
 ${callbacks}
 ${methods.join("\n")}
       def bind(runtime)
