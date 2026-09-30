@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedBorrowCi, ownedBorrowCiChangedPaths } from "./owned-borrow-ci-history.mjs";
+import { beforeOwnedBorrowCi, ownedBorrowCiNormalizationPaths } from "./owned-borrow-ci-history.mjs";
 
 export const ownedBorrowBaseline = "2fab6b1635341d6622fc13fe8da9b3fdc947790e";
 export const ownedBorrowPath = "docs/evidence/owned-borrow-results-20260930.json";
@@ -50,7 +50,7 @@ export const ownedBorrowAddedPaths = [
 	, "tests/owned-c-borrows.test.mjs"
 ].sort();
 let cached;
-export const ownedBorrowNormalizationPaths = [...new Set([...ownedBorrowChangedPaths, ...ownedBorrowCiChangedPaths])].sort();
+export const ownedBorrowNormalizationPaths = [...new Set([...ownedBorrowChangedPaths, ...ownedBorrowCiNormalizationPaths])].sort();
 
 /**
  * Reverse only recorded non-overlapping edits with matching whole-file hashes.

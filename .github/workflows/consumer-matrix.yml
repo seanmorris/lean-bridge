@@ -1004,6 +1004,15 @@ jobs:
           test -s build/owned-cpp-packaging/ordinary.json
           test -s build/owned-cpp-packaging/reviewed.json
           npm run test:owned-cpp-transfers
+          npm run test:owned-cpp-borrows > build/owned-cpp-borrows.log 2>&1
+          cat build/owned-cpp-borrows.log
+          rg '^# pass 5$' build/owned-cpp-borrows.log
+          rg '^# fail 0$' build/owned-cpp-borrows.log
+          rg '^# skipped 0$' build/owned-cpp-borrows.log
+          test -s build/owned-cpp-borrows/ordinary.json
+          test -s build/owned-cpp-borrows/reviewed.json
+          test -s build/owned-cpp-borrow-packaging/ordinary.json
+          test -s build/owned-cpp-borrow-packaging/reviewed.json
           test -s build/owned-cpp-transfers/ordinary.json
           test -s build/owned-cpp-transfers/reviewed.json
           test -s build/owned-cpp-transfer-packaging/ordinary.json
@@ -1055,6 +1064,9 @@ jobs:
             build/owned-cpp-packaging/ordinary.json
             build/owned-cpp-packaging/reviewed.json
             build/owned-cpp-transfers/
+            build/owned-cpp-borrows/
+            build/owned-cpp-borrow-packaging/
+            build/owned-cpp-borrows.log
             build/owned-cpp-transfer-packaging/
             build/recursive-callables/c.json
             build/recursive-callables/cpp.json
@@ -1302,6 +1314,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-cpp-callables.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-cpp-packaging.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-cpp-transfers"
+              consumer_command="$consumer_command && npm run test:owned-cpp-borrows"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_FAMILY_RECURSIVE_DOCUMENTATION_TEST=1 node --test tests/c-family-recursive-documentation.test.mjs"

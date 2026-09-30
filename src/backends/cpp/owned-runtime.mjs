@@ -13,8 +13,9 @@ import { ownedCppTransferSignal } from "./owned-transfers.mjs";
  * @param prefix - Validated public C package identifier.
  * @param options - Explicit input-consumption support for this projection.
  * @param options.transferredInputs - Watch the C handoff before callback reentry.
+ * @param options.anchoredResults - Validate original-owner result lifetimes.
  */
-export const ownedCppRuntime = (prefix, { transferredInputs = false } = {}) => {
+export const ownedCppRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned C++ prefix");
 	const p = prefix, m = prefix.toUpperCase();
 	return `
@@ -41,7 +42,7 @@ class State;
 class Lease {
   std::shared_ptr<State> state_;
   std::shared_ptr<Slot> slot_;
-  std::shared_ptr<BorrowScope> borrow_;
+  std::shared_ptr<BorrowScope> borrow_;${anchoredResults ? "\n  bool borrowed_result_ = false;" : ""}
   ${transferredInputs ? "std::atomic<std::shared_ptr<InputMoveSignal>> transfer_;\n  std::atomic<bool> transferred_{false};\n  " : ""}friend class State;
   Lease(std::shared_ptr<State> state, std::shared_ptr<Slot> slot) noexcept
     : state_(std::move(state)), slot_(std::move(slot)) {}
@@ -53,16 +54,24 @@ public:
   ~Lease();
   const std::shared_ptr<State>& state() const noexcept { return state_; }
   void require() const;
-  bool closed() const noexcept;${transferredInputs ? `
+  bool closed() const noexcept;${anchoredResults ? `
+  ${p}_result *owner(const std::shared_ptr<State>& state) const {
+    require();
+    if (state != state_ || !slot_) throw Error(${m}_INVALID_ARGUMENT);
+    ${transferredInputs ? "const auto pending = transfer_.load(); if (pending) return pending->owner.value;" : ""}
+    return slot_->owner.load();
+  }
+  bool borrowed_result() const noexcept { return borrowed_result_; }
+` : ""}${transferredInputs ? `
   bool transferred() const noexcept {
     if (transferred_.load()) return true;
     const auto pending = transfer_.load(); return pending && pending->consumed();
   }
   void require_transfer() const {
     require();
-    if (!slot_ || transfer_.load()) throw Error(${m}_INVALID_ARGUMENT);
+    if (!slot_ || ${anchoredResults ? "borrowed_result_ || " : ""}transfer_.load()) throw Error(${m}_INVALID_ARGUMENT);
   }
-  void begin_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept { transfer_.store(signal); }
+  void begin_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept { ${anchoredResults ? "signal->owner.value = slot_->owner.exchange(nullptr); " : ""}transfer_.store(signal); }
   void finish_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept;
 ` : ""}
 };
@@ -120,12 +129,12 @@ public:
     if (closed_.load()) throw Error(${m}_CLOSED);
     drain(); return session_;
   }
-  std::shared_ptr<Lease> adopt(NativeOwner& owner) {
+  std::shared_ptr<Lease> adopt(NativeOwner& owner${anchoredResults ? ", bool borrowed = false" : ""}) {
     (void)require();
     if (!owner.value) throw Error(${m}_INVALID_ARGUMENT);
     auto slot = std::make_shared<Slot>();
     // Allocate every C++ control before moving native ownership out of the guard.
-    auto lease = std::shared_ptr<Lease>(new Lease(shared_from_this(), slot));
+    auto lease = std::shared_ptr<Lease>(new Lease(shared_from_this(), slot));${anchoredResults ? "\n    lease->borrowed_result_ = borrowed;" : ""}
     {
       std::lock_guard lock(mutex_);
       slots_.push_back(slot);
@@ -157,14 +166,20 @@ public:
 };
 inline Lease::~Lease() { if (slot_) state_->release(slot_); }
 inline bool Lease::closed() const noexcept {
-  return state_->closed() || ${transferredInputs ? "transferred() || " : ""}(borrow_ ? !borrow_->active.load() : !slot_->owner.load());
+  ${anchoredResults ? "try { require(); return false; } catch (...) { return true; }" : `return state_->closed() || ${transferredInputs ? "transferred() || " : ""}(borrow_ ? !borrow_->active.load() : !slot_->owner.load());`}
 }
 inline void Lease::require() const {
   (void)state_->require();
-  if (${transferredInputs ? "transferred() || (" : ""}borrow_ ? !borrow_->active.load() : !slot_->owner.load()${transferredInputs ? ")" : ""}) throw Error(${m}_CLOSED);
+  ${anchoredResults ? `${transferredInputs ? `if (transferred()) throw Error(${m}_CLOSED);\n  ` : ""}if (borrow_) { if (!borrow_->active.load()) throw Error(${m}_CLOSED); return; }
+  auto *owner = slot_->owner.load();
+  ${transferredInputs ? "const auto pending = transfer_.load(); if (pending) owner = pending->owner.value;\n  " : ""}if (!owner) throw Error(${m}_CLOSED);
+  checked(${p}_result_validate(state_->require(), owner));` : `if (${transferredInputs ? "transferred() || (" : ""}borrow_ ? !borrow_->active.load() : !slot_->owner.load()${transferredInputs ? ")" : ""}) throw Error(${m}_CLOSED);`}
 }
 ${transferredInputs ? `inline void Lease::finish_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept {
-  if (signal->consumed()) { transferred_.store(true); state_->release(slot_); }
+  ${anchoredResults ? `if (signal->consumed()) {
+    transferred_.store(true);
+    std::lock_guard lock(state_->mutex_); state_->slots_.remove(slot_);
+  } else { slot_->owner.store(std::exchange(signal->owner.value, nullptr)); }` : "if (signal->consumed()) { transferred_.store(true); state_->release(slot_); }"}
   transfer_.store(nullptr);
 }
 ` : ""}struct BorrowFrame {
@@ -210,9 +225,9 @@ public:
     requires requires { detail::ResourceOps<Kind>::call(*this, std::forward<Args>(args)...); } {
     return detail::ResourceOps<Kind>::call(*this, std::forward<Args>(args)...);
   }
-  friend bool operator==(const Resource& a, const Resource& b) noexcept {
-    return a.handle_ == b.handle_ && ((!a.lease_ && !b.lease_)
-      || (a.lease_ && b.lease_ && a.lease_->state() == b.lease_->state()));
+  friend bool operator==(const Resource& a, const Resource& b)${anchoredResults ? "" : " noexcept"} {
+    ${anchoredResults ? "return detail::ResourceOps<Kind>::equal(a, b);" : `return a.handle_ == b.handle_ && ((!a.lease_ && !b.lease_)
+      || (a.lease_ && b.lease_ && a.lease_->state() == b.lease_->state()));`}
   }
 };
 namespace detail {

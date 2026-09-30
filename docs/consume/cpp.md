@@ -439,7 +439,49 @@ Callbacks observe consumed inputs as closed before their body runs. Their own
 resource arguments borrow the callback's lifetime and cannot be transferred;
 retain those resources before passing them to a consuming export. Returned Lean
 closures can be moved under the same rules. Moving does not change the creating
-thread or process. Owner-anchored borrowed results remain unimplemented.
+thread or process.
+
+### Borrowed results
+
+Packages with [parameter-anchored results](../publish/cpp.md#anchor-a-result-to-an-input)
+return resource-containing values as `Value<T>`. This wrapper keeps the original
+result owner even for an empty vector, `None`, or an empty variant. `get()`, `*`
+and `->` check that owner before exposing the C++ value.
+
+```cpp file=cpp/owned-borrows.cpp
+#include "owned_aggregates.hpp"
+#include <cassert>
+#include <iostream>
+
+namespace api = lean_bridge::owned_aggregates;
+
+int main() {
+    auto owner = api::new_ticket(42, "example");
+    auto borrowed = api::retain_ticket(owner);
+    auto kept = borrowed.retain();
+    assert(borrowed == owner);
+    owner.close();
+    assert(borrowed.is_closed());
+    std::cout << api::serial(kept) << '\n';
+}
+```
+
+Copying `Value<T>` shares its immutable storage and owner. `close()` releases that
+copy; the owner remains alive while another owning copy or extracted resource
+wrapper holds it. A borrowed result does not keep its anchor alive. Releasing the
+last owning reference or transferring the owner expires every borrowed descendant.
+Calling `retain()` or `copy_value(value)` creates an independent owner.
+
+Use `copy_value(rawValue)` to give a resource-containing record or container its own
+owner before passing it as an anchor. Anchor parameters require `Value<T>`, not a
+raw container. In these packages, transferred parameters take `Value<T>&&` and
+consume the original owner. Borrowed values must be retained before transfer. A
+call cannot transfer its own result's anchor or an ancestor of that anchor.
+
+Call `get()` again when you need a fresh lifetime check. A previously obtained
+C++ reference does not check later access automatically; copied resource wrappers
+still reject use after their borrowed lifetime ends. Resource equality uses Lean
+identity, including when the two wrappers belong to different result owners.
 
 ### Type conversions
 

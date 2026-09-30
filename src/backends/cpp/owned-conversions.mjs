@@ -7,7 +7,7 @@
  */
 import { generateOwnedCppValues } from "./owned-values.mjs";
 
-const support = (p, limits, bigint) => {
+const support = (p, limits, bigint, anchors) => {
 	const m = p.toUpperCase();
 	return `static_assert(sizeof(void*) == 8 && sizeof(size_t) == 8 && CHAR_BIT == 8 && sizeof(bool) == 1, "Verified native ownership ABI requires 64-bit pointers and 8-bit bytes");
 struct OwnedBudget {
@@ -57,13 +57,13 @@ inline void owned_utf8(const char *data, size_t length, ${p}_status status) {
 struct OwnedOutput {
   NativeOwner owner;
   std::shared_ptr<State> state;
-  std::shared_ptr<Lease> lease;
+  std::shared_ptr<Lease> lease;${anchors ? "\n  bool anchored_result = false;" : ""}
   explicit OwnedOutput(std::shared_ptr<State> input, std::shared_ptr<Lease> borrowed = {})
     : state(std::move(input)), lease(std::move(borrowed)) {}
   const std::shared_ptr<Lease>& hold() {
     if (!lease) {
       if (!owner.value) throw Error(${m}_MALFORMED_RESULT);
-      lease = state->adopt(owner);
+      lease = state->adopt(owner${anchors ? ", anchored_result" : ""});
     }
     lease->require(); return lease;
   }
@@ -98,9 +98,10 @@ struct OwnedIntegerView {
  * @param ir - Compiler-authenticated explicit ownership contract.
  * @param options - Consumer capabilities implemented by the caller.
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
+ * @param options.anchoredResults - Validate whole-result lifetimes.
  */
-export const generateOwnedCppConversions = (ir, { transferredInputs = false } = {}) => {
-	const values = generateOwnedCppValues(ir, { transferredInputs }), { c } = values, p = c.prefix, m = p.toUpperCase();
+export const generateOwnedCppConversions = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const values = generateOwnedCppValues(ir, { transferredInputs, anchoredResults }), { c } = values, p = c.prefix, m = p.toUpperCase();
 	const nodes = new Map(values.types.map(node => [node.id, node]));
 	const declarations = [], structures = [], implementations = [];
 	const finite = new Set(); let changed = true;
@@ -268,7 +269,7 @@ export const generateOwnedCppConversions = (ir, { transferredInputs = false } = 
 	const header = ["#pragma once", `#include "${p}-values.hpp"`
 		, "#include <climits>", "#include <cstring>", "#include <iterator>"
 		, `namespace lean_bridge::${p}::detail {`
-		, support(p, c.native.model.limits, c.nodes.some(node => node.integer))
+		, support(p, c.native.model.limits, c.nodes.some(node => node.integer), c.functions.some(item => item.anchor !== undefined))
 		, ...declarations, ...structures, ...implementations, "}", ""].join("\n");
 	return { ...values, valuesHeader: values.header, header };
 };

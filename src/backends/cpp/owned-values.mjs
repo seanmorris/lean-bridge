@@ -11,6 +11,7 @@ import { generateOwnedCValues } from "../c/owned-values.mjs";
 import { planNativeGraphStorage } from "../c/copied-graph-layout.mjs";
 import { cppValueBox } from "./copied-graph-values.mjs";
 import { ownedCppRuntime } from "./owned-runtime.mjs";
+import { ownedCppAnchoredValues } from "./owned-borrows.mjs";
 
 const scalar = {
 	unit: "std::monostate", bool: "bool", string: "std::string"
@@ -27,10 +28,12 @@ const scalar = {
  * @param ir - Validated explicit ownership contract with named resource identities.
  * @param options - Consumer capabilities implemented by the caller.
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
+ * @param options.anchoredResults - Keep complete result owners, including empty values.
  */
-export const generateOwnedCppValues = (ir, { transferredInputs = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
+export const generateOwnedCppValues = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
 	const transfers = c.functions.some(item => item.transfers?.length);
+	const anchors = c.functions.some(item => item.anchor !== undefined);
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node
 		, aggregate: !node.leaf
 		, fields: node.fields.map(field => ({ ...field, storage: "value" }))
@@ -38,6 +41,7 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false } = {}) =
 	}]));
 	const layout = planNativeGraphStorage(nodes);
 	const occupied = new Set(["Box", "Ok", "Err", "Result", "Resource", "Nat", "Int", "Error", "detail", "std", "boost", "with_recovery"]);
+	if(anchors) for(const name of ["Value", "copy_value"]) occupied.add(name);
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || cKeywords.has(name) || occupied.has(name))
 			throw new TypeError(`Owned C++ value name is reserved or duplicated: ${name}`);
@@ -80,7 +84,9 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false } = {}) =
 		, "#include <vector>", "#include <unistd.h>"
 		, ...bigint ? ["#ifndef BOOST_MP_STANDALONE", "#define BOOST_MP_STANDALONE", "#endif", "#include <boost/multiprecision/cpp_int.hpp>"] : []
 		, `namespace lean_bridge::${c.prefix} {`
-		, ownedCppRuntime(c.prefix, { transferredInputs: transfers }), cppValueBox
+		, ownedCppRuntime(c.prefix, { transferredInputs: transfers, anchoredResults: anchors })
+		, cppValueBox
+		, ...anchors ? [ownedCppAnchoredValues(c.prefix)] : []
 		, "template<class T> struct Ok { T value; friend bool operator==(const Ok&, const Ok&) = default; };"
 		, "template<class E> struct Err { E value; friend bool operator==(const Err&, const Err&) = default; };"
 		, "template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;"
@@ -123,9 +129,16 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false } = {}) =
 	for(const alias of c.native.aliases) lines.push(`using ${definitions.get(alias.id).name} = ${type(alias.target)};`);
 	lines.push(...equalities, "}", "");
 	const members = (id, fields) => fields.map(field => ({ ...field, boxed: boxed(id, field) }));
+	const canonical = id => {
+		const node = nodes.get(id);
+		if(names.has(id) || node.kind === "primitive") return type(id);
+		if(node.element) return `std::vector<${canonical(node.element)}>`;
+		return `${{ option: "std::optional", result: "Result", tuple: "std::pair" }[node.kind]}<${node.fields.map(field => boxed(id, field) ? `Box<${canonical(field.type)}>` : canonical(field.type)).join(", ")}>`;
+	};
 	return { c, layout, header: lines.join("\n")
 		, types: [...nodes.values()].map(node => ({ ...node
 			, hostName: type(node.id), identityTag: identities.get(node.id)
+			, ...anchors ? { canonicalHostName: canonical(node.id) } : {}
 			, fields: members(node.id, node.fields)
 			, cases: node.cases.map((branch, index) => ({ ...branch, hostName: alternatives.get(node.id)[index], fields: members(node.id, branch.fields) })) })) };
 };

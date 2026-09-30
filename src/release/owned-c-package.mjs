@@ -32,7 +32,7 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	if(!["c", "cpp"].includes(target)) throw new TypeError("Owned native packaging requires c or cpp");
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: target === "c" });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true });
 	if(!model.ownedGraph) throw new TypeError("Owned C packaging requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
@@ -40,7 +40,7 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults });
 	const p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
-	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs }) : null;
+	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults }) : null;
 	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
 		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
@@ -141,7 +141,27 @@ close() releases that wrapper; other owning copies remain usable. retain() makes
 an independently owned reference. Calls reject closed, foreign-thread and inherited
 post-fork resources. Foreign-thread destruction queues disposal for the creating
 thread. Thread exit closes its session and releases registered native owners.
-Copied container storage is independent; its resource leaves retain their leases.${transferredInputs ? `
+${anchoredResults ? `Functions returning resource-containing values use Value<T>, including empty
+containers. get(), operator* and operator-> check the complete result lifetime.
+Copies of Value<T> share immutable storage and its original owner. close() drops
+one such reference. retain() or copy_value(value) creates independent ownership;
+copy_value(rawValue) gives a host-assembled value its own result owner.
+
+A parameter-anchored result borrows the original Value<T> argument's owner. Keep
+that owner alive: releasing its last owning reference or transferring it expires
+the result and every borrowed descendant. A borrowed result does not retain its
+anchor. Resource equality compares canonical identity across different views.
+Use get() again to validate access; a previously obtained C++ reference does not
+perform further checks by itself. Resource leaves still validate their own use.
+` : "Copied container storage is independent; its resource leaves retain their leases."}${transferredInputs ? anchoredResults ? `
+
+Transferred inputs take Value<T>&&. Pass std::move(value) after constructing an
+owner with a Lean call or copy_value. The original owner is consumed, not a copied
+stand-in; aliases and all borrowed descendants expire before Lean or a callback
+runs. A call cannot consume the anchor of its own result, or an ancestor of that
+anchor. Borrowed Value<T> inputs cannot be transferred; retain() first. Validation
+failures preserve owners. Failures after handoff leave them consumed.
+` : `
 
 Transferred inputs take rvalue references. Pass std::move(value), or a temporary.
 The bridge validates every argument before consuming any resource lease. At the

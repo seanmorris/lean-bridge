@@ -1174,7 +1174,29 @@ The installed gate removes the Lean project and producer output before using the
 C archive. It checks all 19 anchored exports through pkg-config and relocated
 CMake, and rejects altered anchor contracts and readers without the capability.
 CI requires both gates without skips and retains `build/owned-borrows/` plus the
-runtime and installed logs. The other consumer adapters still need this coverage.
+runtime and installed logs.
+
+### Owner-anchored C++ results
+
+```sh
+source scripts/env.sh
+npm run test:owned-cpp-borrows
+```
+
+The enabled gate covers ordinary and reviewed APIs. Its public C++ consumer
+checks complete result owners, empty constructors, nested and recursive values,
+canonical identity, explicit retain/copy, callback escape, and transitive
+expiration during consuming calls. C++ and native allocation failures must not
+leak result owners. ASan/UBSan runs compare against a separate startup baseline.
+Four compiled mutations test whole-value validation, empty ownership, callback
+expiration and equality across borrowed views.
+
+Installed tests delete author sources and producer output before using the
+archive through pkg-config. After deleting the handoff, they relocate the
+installation and run it through CMake and sanitizers. They execute the consumer
+documentation example and reject altered anchor contracts. CI requires all five
+tests without skips and retains `build/owned-cpp-borrows/`,
+`build/owned-cpp-borrow-packaging/`, and `build/owned-cpp-borrows.log`.
 
 ### Staged input transfers
 

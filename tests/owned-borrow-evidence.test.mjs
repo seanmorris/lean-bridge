@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedCppBorrow } from "./helpers/owned-cpp-borrow-history.mjs";
 import { assertOwnedBorrowCiRepair } from "./helpers/owned-borrow-ci-evidence.mjs";
 import { beforeOwnedBorrowCi, ownedBorrowCiHistoricalBytes, ownedBorrowCiPath
 	, reverseOwnedBorrowCiUpdate } from "./helpers/owned-borrow-ci-history.mjs";
@@ -57,7 +58,7 @@ test("extractor-history repair rejects unrelated edits and forged reversal ident
 	const record = JSON.parse(await readFile(ownedBorrowCiPath, "utf8"));
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), unknown = source + "\n/* unrelated */\n";
+		const source = beforeOwnedCppBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256), unknown = source + "\n/* unrelated */\n";
 		assert.equal(beforeOwnedBorrowCi(update.path, unknown), unknown);
 		assert.equal(beforeOwnedBorrowCi(update.path, source, update.currentSha256), source);
 		assert.throws(() => reverseOwnedBorrowCiUpdate(unknown, update));

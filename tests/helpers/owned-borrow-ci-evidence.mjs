@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
+import { beforeOwnedCppBorrow, ownedCppBorrowHistoricalBytes } from "./owned-cpp-borrow-history.mjs";
 import { ownedBorrowCiBaseline, ownedBorrowCiPrevious, ownedBorrowCiChangedPaths
 	, ownedBorrowCiAddedPaths, reverseOwnedBorrowCiUpdate } from "./owned-borrow-ci-history.mjs";
 
@@ -27,13 +28,14 @@ export const assertOwnedBorrowCiRepair = async record => {
 	const priorBytes = await readFile(record.previous.path), previous = JSON.parse(priorBytes);
 	assert.equal(sha256(priorBytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedBorrowCiAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(ownedCppBorrowHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedBorrowCiChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		assert.equal(sha256(reverseOwnedBorrowCiUpdate(await readFile(update.path, "utf8"), update)), update.previousSha256);
+		const current = beforeOwnedCppBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		assert.equal(sha256(reverseOwnedBorrowCiUpdate(current, update)), update.previousSha256);
 	}
 	assert.equal(record.sources["docs/type-surface.v1.json"], previous.sources["docs/type-surface.v1.json"]);
 	const extractor = "src/analyze/NativeExports.lean", bytes = await readFile(extractor);

@@ -67,7 +67,7 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed ${mode} C borrowed r
 	assert.deepEqual(rebuilt.packages, built.packages);
 	assert.deepEqual(await readFile(join(reassembled, "archives", rebuilt.packages[0].archive)), await readFile(join(output, "archives", built.packages[0].archive)));
 	await rm(reassembled, { recursive: true, force: true });
-	await assert.rejects(packageOwnedNativeC({ ...packaging, working: join(directory, "unsupported-cpp"), target: "cpp" }), { code: "native-owned-anchors-unavailable" });
+	await assert.rejects(packageOwnedNativeC({ ...packaging, working: join(directory, "unsupported-cpp"), target: "cpp" }), /Owned C\+\+ adapter differs from compiler-authenticated/u);
 	const mutations = [
 		value => { delete value.ownedValues.resultAnchors; }
 		, value => { value.ownedValues.resultAnchors.exports.pop(); }
