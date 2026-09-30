@@ -363,9 +363,72 @@ Owner slots must not overlap each other, output values or output-owner slots.
 The [installed transfer consumer](../../tests/fixtures/structured-types/owned-installed-transfers.c)
 exercises records, all variant branches, empty containers, nested values,
 recursive trees, transferred closures and callback failure. Transfer support is
-available in C, [C++](cpp.md#transferred-inputs), [Rust](rust.md#transferred-inputs)
-and [Python](python.md#transferred-inputs). Other consumer bindings and owner-anchored
-borrowed results remain in development.
+available across the consumer profiles. See each language's ownership API for
+its input syntax and alias rules.
+
+### Borrowed results
+
+A package can return a view whose lifetime depends on one input owner. Its
+manifest records these declarations under `ownedValues.resultAnchors`. Pass the
+anchor's `<prefix>_result *` immediately after that input. This argument is an
+owner handle, not the pointer-to-pointer slot used for transfers.
+
+The returned view expires when its anchor is released or consumed. Expiration
+also reaches views borrowed from that view, including empty containers. Use
+`<prefix>_result_validate(session, owner)` before reading a borrowed result's
+fields. C field reads cannot perform that check automatically. Keep the result
+owner until you finish with its storage, then release it even if it has expired.
+
+Calls reject expired resource handles, including when another owner retains the
+same resource. To keep a resource independently, call its generated `_retain`
+operation while the view is valid. Aggregate `_copy` does the same for a complete
+value. Compare resources with the generated `_equal` operation: two view handles
+can refer to one resource while having different lifetimes.
+
+For a package that declares `retainTicket`'s result borrowed from its first
+argument, save `borrow.c`:
+
+```c
+#include "owned_aggregates.h"
+#include <stdio.h>
+
+int main(void) {
+    owned_aggregates_session *session = NULL;
+    owned_aggregates_result *root = NULL, *view_owner = NULL;
+    owned_aggregates_result *kept_owner = NULL, *number_owner = NULL;
+    owned_aggregates_ticket_t ticket = NULL, view = NULL, kept = NULL;
+    mpz_t input;
+    mpz_init_set_ui(input, 42);
+    mpz_srcptr number = NULL;
+    int result = 1;
+#define CALL(expression) do { if ((expression) != OWNED_AGGREGATES_OK) goto cleanup; } while (0)
+    CALL(owned_aggregates_session_open(&session));
+    CALL(owned_aggregates_new_ticket(session, input,
+        (owned_aggregates_scalar_string_t){"example", 7}, &ticket, &root));
+    CALL(owned_aggregates_retain_ticket(session, ticket, root, &view, &view_owner));
+    CALL(owned_aggregates_result_validate(session, view_owner));
+    CALL(owned_aggregates_ticket_t_retain(session, view, &kept, &kept_owner));
+    CALL(owned_aggregates_result_release(&root));
+    if (owned_aggregates_result_validate(session, view_owner) != OWNED_AGGREGATES_CLOSED)
+        goto cleanup;
+    CALL(owned_aggregates_serial(session, kept, &number, &number_owner));
+    gmp_printf("%Zd\n", number);
+    result = 0;
+cleanup:
+    owned_aggregates_result_release(&number_owner);
+    owned_aggregates_result_release(&kept_owner);
+    owned_aggregates_result_release(&view_owner);
+    owned_aggregates_result_release(&root);
+    owned_aggregates_session_close(&session);
+    mpz_clear(input);
+    return result;
+}
+```
+
+Compile with the installed package's pkg-config flags or CMake target. This prints
+`42`: the borrowed view expires, while the explicitly retained resource survives.
+The [author configuration](../publish/c.md#anchor-a-result-to-an-input) selects
+which function results follow this rule.
 
 ### Callbacks containing resources
 

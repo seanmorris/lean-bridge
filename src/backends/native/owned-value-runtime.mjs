@@ -10,8 +10,9 @@
  * @param limits - Immutable model limits, not host-controlled overrides.
  * @param wordBits - Lean and host pointer width, either 32 or 64.
  * @param transferredInputs - Include owner-specific input conversion state.
+ * @param anchoredResults - Preserve the exact generation of a borrowed-result owner.
  */
-export const ownedNativeValueRuntime = (limits, wordBits = 64, transferredInputs = false) => {
+export const ownedNativeValueRuntime = (limits, wordBits = 64, transferredInputs = false, anchoredResults = false) => {
 	if(![32, 64].includes(wordBits)) throw new TypeError("Owned native values: machine-word width must be 32 or 64");
 	return `
 #include <stddef.h>
@@ -31,7 +32,8 @@ typedef struct ov_allocation {
 } ov_allocation;
 typedef struct {
   lb_owned_scope scope;
-${transferredInputs ? "  lb_owned_batch *input_owner;\n  int input_transfer;\n" : ""}  ov_budget budget;
+${transferredInputs ? "  lb_owned_batch *input_owner;\n  int input_transfer;\n" : ""}\
+${anchoredResults ? "  const lb_owned_batch *anchor;\n  uint64_t anchor_generation;\n  int anchor_input;\n" : ""}  ov_budget budget;
   ov_allocation *allocations;
 } ov_transaction;
 typedef struct ov_result_owner {
@@ -40,6 +42,11 @@ typedef struct ov_result_owner {
   lb_owned_batch batch;
   ov_allocation *allocations;
 } ov_result_owner;
+${anchoredResults ? `typedef struct {
+  const lb_owned_batch *batch;
+  uint64_t generation;
+} ov_input_anchor;
+` : ""}\
 
 static inline void ov_release(ov_allocation *allocation) {
   while (allocation) {
@@ -134,7 +141,10 @@ static inline int ov_finish(lean_object *value, lean_object **out) {
 }
 static inline int ov_owner_empty(const ov_result_owner *owner) {
   return owner && !owner->self && !owner->context && !owner->allocations
-    && !owner->batch.context && !owner->batch.entries && !owner->batch.next;
+    && !owner->batch.context && !owner->batch.entries && !owner->batch.next${anchoredResults ? `
+    && !owner->batch.generation && !owner->batch.parent && !owner->batch.children
+    && !owner->batch.sibling && !owner->batch.previous_sibling && !owner->batch.depth
+    && !owner->batch.borrowed && !owner->batch.expired` : ""};
 }
 static inline int ov_owner_clear(ov_result_owner *owner) {
   if (!owner) return LB_OWNED_INVALID;
@@ -169,13 +179,35 @@ static inline int ov_abort(ov_transaction *transaction, int status) {
   }
   return status;
 }
+${anchoredResults ? `static inline int ov_anchor_prepare(ov_transaction *transaction, const ov_input_anchor *anchor) {
+  if (!ov_pointer(anchor, sizeof(*anchor), _Alignof(ov_input_anchor))) return LB_OWNED_INVALID;
+  int status = lb_owned_scope_ready(&transaction->scope);
+  if (status) return status;
+  lb_owned_batch *batch = lb_owned_batch_find(transaction->scope.context, anchor->batch, anchor->generation);
+  if (!batch) return LB_OWNED_INVALID;
+  transaction->anchor = batch; transaction->anchor_generation = anchor->generation;
+  return LB_OWNED_OK;
+}
+static inline int ov_anchor_transfer_conflict(const ov_transaction *transaction, const lb_owned_batch *candidate) {
+  /* Called only before Lean or host callbacks, while the verified chain is live. */
+  const lb_owned_batch *ancestor = transaction->anchor;
+  while (ancestor) {
+    if (ancestor == candidate) return LB_OWNED_INVALID;
+    ancestor = ancestor->parent;
+  }
+  return LB_OWNED_OK;
+}
+` : ""}\
 static inline int ov_commit(ov_transaction *transaction, ov_result_owner *owner) {
   lb_owned_context *context = transaction->scope.context;
   int status = lb_owned_scope_ready(&transaction->scope);
   if (status) return ov_abort(transaction, status);
-  if (!transaction->allocations && !transaction->scope.outputs)
+${anchoredResults ? "" : `  if (!transaction->allocations && !transaction->scope.outputs)
     return ov_abort(transaction, LB_OWNED_OK);
-  status = lb_owned_scope_commit(&transaction->scope, &owner->batch);
+`}\
+  status = ${anchoredResults ? `transaction->anchor
+    ? lb_owned_scope_commit_borrow(&transaction->scope, &owner->batch, transaction->anchor, transaction->anchor_generation)
+    : ` : ""}lb_owned_scope_commit(&transaction->scope, &owner->batch);
   if (status) {
     /* Commit may have transferred outputs before dropping a failing input pin. */
     if (owner->batch.context) lb_owned_batch_release(context, &owner->batch);

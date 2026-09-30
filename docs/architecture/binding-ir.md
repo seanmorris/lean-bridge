@@ -87,8 +87,15 @@ the same consuming arguments and shared-lease alias rules. Its converter reserve
 the resource leases it visits, rejects overlapping consuming arguments, and
 observes the native handoff during callback reentry. Perl save-stack cleanup
 preserves pre-handoff inputs and releases consumed owners after exceptions.
-Other consumer bindings and owner-anchored
-borrowed results remain unfinished.
+The remaining consumer profiles also implement explicit transfers; each consumer
+page describes its handoff and alias rules. C additionally implements
+parameter-anchored function results. A borrowed result depends on the exact
+input-owner generation, including when it contains no resources. Releasing or
+transferring the owner expires all descendants; an independent retained alias
+cannot revive them. C view handles separate lifetime from resource identity and
+provide typed equality plus result-owner validation. Component model version 9
+and package manifest version 5 authenticate `resultAnchors` separately from
+`inputTransfers`. Other consumer projections of result anchors remain unfinished.
 Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
 support is documented for [JavaScript](../consume/javascript.md),
 [PHP-Wasm](../php.md) and [WIT/WASI](../consume/wit-wasi.md).

@@ -34,13 +34,14 @@ export const projectOwnedNativeCFamily = async ({ working, nativeRoot, runtimeRo
 	if(!Array.isArray(targets) || !targets.length || targets.some(target => !["c", "cpp", "cargo", "pypi"].includes(target)) || new Set(targets).size !== targets.length)
 		throw new TypeError("Owned C-family projections require distinct c/cpp/cargo/pypi targets");
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi"].includes(target)) });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi"].includes(target)), ownedAnchoredResults: targets.every(target => target === "c") });
 	if(!model.ownedGraph) throw new TypeError("Owned C projection requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	if(targets.includes("cpp") && !hostCallbacks) throw new TypeError("Owned C++ projection requires authenticated callback/copy support");
-	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs });
+	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults });
 	const cpp = targets.includes("cpp") ? generateOwnedCppPackage(model.bindingIr, { transferredInputs }) : null;
 	const rust = targets.includes("cargo") ? generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs }) : null;
 	if(rust && !hostCallbacks) throw new TypeError("Owned Rust projection requires authenticated callback/copy support");
@@ -98,13 +99,14 @@ export const projectOwnedNativeCFamily = async ({ working, nativeRoot, runtimeRo
 		const bytes = await readFile(join(root, path));
 		files[path] = { bytes: bytes.length, sha256: sha256(bytes) };
 	}
-	const adapter = { schemaVersion: transferredInputs ? 4 : hostCallbacks ? 3 : 2
+	const adapter = { schemaVersion: anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2
 		, profile: "native-library-v1"
 		, bindingIrSha256: model.bindingIrSha256
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity: identity, library
-		, ownedValues: { schemaVersion: transferredInputs ? 3 : hostCallbacks ? 2 : 1
+		, ownedValues: { schemaVersion: anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1
 			, ...(transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {})
+			, ...(anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {})
 			, ...(hostCallbacks ? { hostCallbacks: model.ownedGraph.hostCallbacks } : {})
 			, headerSha256: sha256(generated.publicHeader)
 			, sourceSha256: sha256(generated.source) }

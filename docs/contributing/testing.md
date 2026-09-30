@@ -1154,6 +1154,28 @@ exception, not terminate with a fatal signal. All installed files must remain
 unchanged, and the public consumer runs again after the probes. Each ABI job
 requires and uploads `build/recursive-callables/perl.json`.
 
+### Owner-anchored C results
+
+Run the runtime and prepared-package gates with the pinned native toolchain:
+
+```sh
+source scripts/env.sh
+npm run test:owned-borrows
+npm run test:owned-borrow-packages
+```
+
+The runtime gate compiles ordinary and independently reviewed contracts. It
+checks exact-owner expiration through nested values, empty containers, returned
+closures, callback reentry and consuming calls. Allocation-fault, sanitizer,
+wrong-thread, post-fork and stale-handle probes check cleanup and rejected use.
+Deliberately broken lifetime implementations must fail the independent consumer.
+
+The installed gate removes the Lean project and producer output before using the
+C archive. It checks all 19 anchored exports through pkg-config and relocated
+CMake, and rejects altered anchor contracts and readers without the capability.
+CI requires both gates without skips and retains `build/owned-borrows/` plus the
+runtime and installed logs. The other consumer adapters still need this coverage.
+
 ### Staged input transfers
 
 With the pinned Lean compiler, a C/C++ compiler, GMP headers and sanitizers, run:

@@ -64,6 +64,7 @@ static inline int oc_transfer_finish(oc_transfer_frame *frame, int status) {
     oc_result *result = frame->inputs[i].result;
     int cleanup = ov_owner_clear(&result->native);
     if (!status) status = cleanup;
+${values.anchoredResults ? "    cleanup = oc_views_clear(&result->views); if (!status) status = cleanup;\n" : ""}\
     if (lean_bridge_native_identity_release(result->key, ${resultKind}, result) < 0 && !status)
       status = LB_OWNED_RUNTIME;
     oc_release(result->blocks); LB_OWNED_FREE(result);

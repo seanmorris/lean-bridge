@@ -510,6 +510,10 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String)
       ["call", "explicit"].contains ((lifetime.getObjValAs? String "scope").toOption.getD "") &&
       (lifetime.getObjVal? "anchor").toOption == some Json.null then
     return none
+  if owned && result && identity &&
+      (site.getObjValAs? String "ownership").toOption == some "borrow" &&
+      (lifetime.getObjValAs? String "scope").toOption == some "parameter" then
+    return none
   let ownership := if identity then (if result then "lease" else "borrow") else "copy"
   if (site.getObjValAs? String "ownership").toOption != some ownership then
     return some s!"{label}: ownership or lifetime differs from the implemented adapter"
@@ -545,7 +549,21 @@ def contractProblem (contract projection : Json) (owned : Bool := false) : Optio
         return some problem
   if let .ok site := contract.getObjVal? "result" then
     let type := (projection.getObjVal? "result").toOption.getD Json.null
-    if let some problem := contractSiteProblem site type true "result" then return some problem
+    if let some problem := contractSiteProblem site type true "result" owned then return some problem
+    if (site.getObjValAs? String "ownership").toOption == some "borrow" then
+      let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null
+      let anchor := (lifetime.getObjValAs? String "anchor").toOption.getD ""
+      let index := (List.range parameters.size).find? fun index => anchor == s!"arg{index}"
+      if let some index := index then
+        let anchorType := (parameters[index]!.getObjVal? "type").toOption.getD Json.null
+        if !["resource", "callback", "owned-graph"].contains ((anchorType.getObjValAs? String "kind").toOption.getD "") then
+          return some "result: borrowed results require a retained identity or aggregate anchor"
+        let sites := (contract.getObjValAs? (Array Json) "parameters").toOption.getD #[]
+        if let some input := sites[index]? then
+          if (input.getObjValAs? String "ownership").toOption == some "transfer" then
+            return some "result: borrowed results cannot use a transferred input as their anchor"
+      else
+        return some "result: borrowed results require a retained identity or aggregate anchor"
   return none
 
 def constrainProjection (request : Request) (name : String) (projection : Json) : Json := Id.run do

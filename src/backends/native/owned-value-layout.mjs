@@ -22,8 +22,9 @@ const fail = message => { throw new TypeError(`Owned native values: ${message}`)
  * @param options - Native storage selection, separate from the semantic model.
  * @param options.wordBits - Lean and host pointer width, either 32 or 64.
  * @param options.transferredInputs - Caller implements atomic input-owner consumption.
+ * @param options.anchoredResults - Caller preserves exact borrowed-result owners.
  */
-export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false } = {}) => {
+export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false, anchoredResults = false } = {}) => {
 	if(![32, 64].includes(wordBits)) fail("machine-word width must be 32 or 64");
 	const targetScalars = { ...scalars, usize: `uint${wordBits}_t`, isize: `int${wordBits}_t` };
 	const model = compileOwnedAggregateModel(ir);
@@ -72,6 +73,8 @@ export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredIn
 		if(transferredInputs && transfers && !copied && !result && value.ownership === "transfer"
 			&& !value.optional && value.default == null
 			&& ["call", "explicit"].includes(value.lifetime?.scope) && value.lifetime.anchor === null) return resolve(value.type);
+		if(anchoredResults && transfers && !copied && result && value.ownership === "borrow"
+			&& value.lifetime?.scope === "parameter") return resolve(value.type);
 		if(value.optional || value.default != null || value.ownership !== (copied ? "copy" : result ? "lease" : "borrow")
 			|| (copied ? value.lifetime !== null : value.lifetime?.scope !== (result ? "explicit" : "call") || value.lifetime?.anchor !== null))
 			fail("this transport requires copied values, call-scoped input borrows and explicit output leases");
@@ -85,7 +88,8 @@ export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredIn
 			, symbol: `${prefix}_f${sha256(declaration.id).slice(0, 20)}`
 			, parameters: declaration.parameters.map(value => site(value, false, true))
 			, ...(transfers.length ? { transfers } : {})
-			, result: site(declaration.result, true) };
+			, ...declaration.result.ownership === "borrow" ? { anchor: declaration.parameters.findIndex(value => value.name === declaration.result.lifetime.anchor) } : {}
+			, result: site(declaration.result, true, true) };
 	});
 	const callbacks = nodes.filter(node => node.kind === "callback").map(node => ({
 		id: node.id

@@ -295,6 +295,18 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 		if(ownedAggregates && !result && site.ownership === "transfer"
 			&& exportContractOwnership(type).ownership !== "copy"
 			&& ["call", "explicit"].includes(site.lifetime?.scope) && site.lifetime.anchor === null) continue;
+		const anchored = ownedAggregates && result && site.ownership === "borrow"
+			&& exportContractOwnership(type).ownership !== "copy"
+			&& site.lifetime?.scope === "parameter";
+		if(anchored)
+		{
+			const index = projection.parameters.findIndex((_, index) => site.lifetime.anchor === `arg${index}`);
+			if(index < 0 || exportContractOwnership(projection.parameters[index].type).ownership === "copy")
+				return "result: borrowed results require a retained identity or aggregate anchor";
+			if(contract.parameters?.[index].ownership === "transfer")
+				return "result: borrowed results cannot use a transferred input as their anchor";
+			continue;
+		}
 		if(canonicalJson({ ownership: site.ownership, lifetime: site.lifetime }) !== canonicalJson(exportContractOwnership(type, result)))
 			return `${label}: ownership or lifetime differs from the implemented adapter`;
 	}

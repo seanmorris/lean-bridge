@@ -26,9 +26,11 @@ const nominal = name => {
  * @param options.hostCallbacks - Admit call-scoped host descriptors and copies.
  * @param options.publicPrefix - Internal backend namespace, independent of Lean identity.
  * @param options.transferredInputs - Admit explicit consumption of input owners.
+ * @param options.anchoredResults - Preserve owner-scoped result views.
  */
-export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false } = {}) => {
-	const native = compileOwnedNativeValueLayout(ir, { transferredInputs });
+export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false } = {}) => {
+	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults });
+	const hasAnchors = native.functions.some(item => item.anchor !== undefined);
 	const p = publicPrefix ?? cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");
 	const names = new Map();
@@ -38,6 +40,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 	};
 	for(const suffix of ["status", "session", "result", "session_open", "session_close", "result_release"])
 		claim(`${p}_${suffix}`, "runtime");
+	if(hasAnchors) claim(`${p}_result_validate`, "runtime");
 	const callableNames = new Map();
 	for(const item of [...native.functions].sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
 		for(const [site, id] of [...item.parameters.map((id, i) => [`argument${i}`, id]), ["result", item.result]])
@@ -51,7 +54,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 				: node.name ? `${p}_${node.kind === "primitive" ? "scalar_" : ""}${nominal(node.name)}_t`
 				: `${p}_value_${sha256(node.id).slice(0, 20)}_t`;
 		if(!integer && !scalar) claim(name, node.id);
-		if(identity) for(const suffix of ["handle", "retain", ...node.kind === "callback" ? ["call"] : []]) claim(`${name}_${suffix}`, node.id);
+		if(identity) for(const suffix of ["handle", "retain", ...hasAnchors ? ["equal"] : [], ...node.kind === "callback" ? ["call"] : []]) claim(`${name}_${suffix}`, node.id);
 		if(hostCallbacks && node.kind === "callback")
 		{
 			claim(`${name}_host`, node.id);
@@ -123,7 +126,8 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 		, `typedef struct ${p}_session ${p}_session;`
 		, `typedef struct ${p}_result ${p}_result;`
 		, "/* Immutable views: input children borrow caller storage for one call."
-		, "   Output children, including GMP integers, remain valid until result_release."
+		, hasAnchors ? "   Output storage lives until result_release; borrowed views also need a live anchor."
+			: "   Output children, including GMP integers, remain valid until result_release."
 		, "   Never free a child or mutate a returned GMP integer. Retain an identity"
 		, "   before releasing its last owning result. Sessions are thread/process bound."
 		, "   Close invalidates resource use; result_release still frees copied storage."
@@ -140,6 +144,15 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 		, "   its slot becomes NULL. A later failure does not restore consumed owners."
 		, "   Old views expire when this call returns. Independently retained owners"
 		, "   remain valid. Failure before consumption leaves input owners unchanged. */"
+	);
+	if(hasAnchors) header.push(
+		"/* Borrowed results take their anchor parameter's result owner as an extra"
+		, "   argument. Release or transfer of that owner expires the borrowed view."
+		, "   result_validate checks its lifetime, including empty values. Keep a view's"
+		, "   result storage until finished reading its copied fields, then release it."
+		, "   Retain/copy creates independent ownership. Use the typed equal function"
+		, "   to compare resource identity across views with different lifetimes. */"
+		, `${p}_status ${p}_result_validate(${p}_session *session, ${p}_result *owner);`
 	);
 	for(const node of nodes)
 	{
@@ -198,12 +211,14 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 	}
 	const hostArgument = (item, index) => hostCallbacks && !item.retain && !item.copy
 		&& !item.transfers?.includes(index)
+		&& item.anchor !== index
 		&& table.get(item.parameters[index]).kind === "callback"
 		&& !(callbacks.some(callback => callback.id === item.id) && index === 0);
 	const signature = item => `${p}_status ${item.cName}(${p}_session *session, ${[
 		...item.parameters.flatMap((id, i) => [
 			`${hostArgument(item, i) ? `${table.get(id).cName}_host const *` : input(id)} a${i}`
 			, ...item.transfers?.includes(i) ? [`${p}_result **a${i}_owner`] : []
+			, ...item.anchor === i ? [`${p}_result *a${i}_owner`] : []
 		])
 		, `${table.get(item.result).cName} *out`, `${p}_result **owner`
 	].join(", ")})`;
@@ -213,6 +228,8 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 		, parameters: [node.id], result: node.id, retain: true
 	}));
 	for(const item of retains) header.push(signature(item) + ";");
+	if(hasAnchors) for(const node of nodes.filter(node => node.identity))
+		header.push(`${p}_status ${node.cName}_equal(${p}_session *session, ${node.cName} left, ${node.cName} right, bool *out);`);
 	const copies = hostCallbacks ? nodes.filter(node => !node.identity).map(node => ({
 		id: node.id
 		, cName: node.kind === "primitive" ? `${p}_scalar_${node.name}_copy` : `${node.cName}_copy`
@@ -221,6 +238,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 	for(const item of copies) header.push(signature(item) + ";");
 	header.push("#ifdef __cplusplus", "}", "#endif", "");
 	return { native, prefix: p, nodes, functions, callbacks, retains
+		, ...hasAnchors ? { anchoredResults: true } : {}
 		, ...(hostCallbacks ? { copies, hostArgument } : {})
 		, aliases: [...aliases].map(([name, id]) => ({ name, id }))
 		, signature, header: header.join("\n") };

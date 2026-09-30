@@ -4,7 +4,7 @@
  *
  * @file
  */
-import { ownedAggregateLeaseSource } from "./owned-aggregate-leases.mjs";
+import { ownedAggregateLeaseRuntime } from "./owned-aggregate-leases.mjs";
 
 /**
  * The caller converts and validates every argument before this operation. It
@@ -16,8 +16,11 @@ import { ownedAggregateLeaseSource } from "./owned-aggregate-leases.mjs";
  *
  * Copied payload storage and host wrapper invalidation belong to the caller.
  * The array is generated adapter storage, not an untrusted public C span.
+ *
+ * @param options - Internal runtime capabilities.
+ * @param options.anchoredResults - Expire borrowed descendants on owner transfer.
  */
-export const ownedAggregateTransferLeaseSource = ownedAggregateLeaseSource + `
+export const ownedAggregateTransferRuntime = ({ anchoredResults = false } = {}) => ownedAggregateLeaseRuntime({ anchoredResults }) + `
 /* Conversion may inspect an input only through the owner supplied for that
    argument. Do not pin it again: the registered batch retains it until the
    atomic move, after which the call scope retains the very same entries.
@@ -30,7 +33,7 @@ static inline int lb_owned_scope_transfer_borrow(lb_owned_scope *scope,
   if (!kind || !*kind || !out) return LB_OWNED_INVALID;
   lb_owned_batch *batch = scope->context->batches;
   while (batch && batch != candidate) batch = batch->next;
-  if (!batch) return LB_OWNED_INVALID;
+  if (!batch${anchoredResults ? " || batch->borrowed || batch->expired" : ""}) return LB_OWNED_INVALID;
   for (lb_owned_entry *entry = batch->entries; entry; entry = entry->next) {
     if (entry->owner->token == token && !strcmp(entry->owner->kind, kind)) {
       *out = entry->owner->value; return LB_OWNED_OK;
@@ -54,16 +57,22 @@ static inline int lb_owned_scope_transfer_many(lb_owned_scope *scope,
       if (batches[i] == batches[j]) return LB_OWNED_INVALID;
     lb_owned_batch *batch = context->batches;
     while (batch && batch != batches[i]) batch = batch->next;
-    if (!batch || batch->context != context) return LB_OWNED_INVALID;
-    for (lb_owned_entry *entry = batch->entries; entry; entry = entry->next) {
+    if (!batch || batch->context != context${anchoredResults ? " || batch->borrowed || batch->expired" : ""}) return LB_OWNED_INVALID;
+${anchoredResults ? `    size_t count = 0;
+    status = lb_owned_batch_tree_count(batch, LB_OWNED_RETAINED_LIMIT - scope->retained - retained, &count);
+    if (status) return status;
+    retained += count;
+` : `    for (lb_owned_entry *entry = batch->entries; entry; entry = entry->next) {
       if (retained >= LB_OWNED_RETAINED_LIMIT - scope->retained) return LB_OWNED_LIMIT;
       ++retained;
     }
+`}\
   }
   /* No fallible operation occurs after this point. The same-thread call scope
      prevents mutation between validation and moving the original entries. */
   for (size_t i = 0; i < count; ++i) {
     lb_owned_batch *batch = batches[i];
+${anchoredResults ? "    lb_owned_batch_move_children(scope, batch);\n" : ""}\
     lb_owned_batch **position = &context->batches;
     while (*position != batch) position = &(*position)->next;
     *position = batch->next;
@@ -78,3 +87,5 @@ static inline int lb_owned_scope_transfer_many(lb_owned_scope *scope,
   return LB_OWNED_OK;
 }
 `;
+
+export const ownedAggregateTransferLeaseSource = ownedAggregateTransferRuntime();

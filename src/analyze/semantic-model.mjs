@@ -157,7 +157,10 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			, parameters: projection.parameters.map((p, i) => ({ ...parameter(p.type, i)
 				, ...contract?.parameters ? { ownership: contract.parameters[i].ownership
 					, lifetime: structuredClone(contract.parameters[i].lifetime) } : {} }))
-			, result: site(projection.result, true), mutability: "immutable"
+			, result: { ...site(projection.result, true)
+				, ...contract?.result ? { ownership: contract.result.ownership
+					, lifetime: structuredClone(contract.result.lifetime) } : {} }
+			, mutability: "immutable"
 			, effects: exportContractEffects(projection, ownedAggregates)
 			, failure: hasCallback ? callbackFailure : { mode: "none", errors: [], unexpected: "poison-runtime" }
 			, resultMode: "value", capabilities: [], assurance: []

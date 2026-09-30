@@ -812,6 +812,8 @@
     "acceptance:docs:consumer": "node scripts/check-component-browser-consumer.mjs --release build/documentation-author-acceptance/release/packages/npm",
     "test:target-runtime-profiles": "node --test tests/target-runtime-profiles.test.mjs",
     "test:type-surface": "node --test tests/type-surface.test.mjs",
+    "test:owned-borrows": "LEAN_BRIDGE_OWNED_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-borrows.test.mjs tests/owned-borrow-analysis.test.mjs tests/owned-c-borrows.test.mjs",
+    "test:owned-borrow-packages": "LEAN_BRIDGE_OWNED_BORROW_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/owned-borrow-packaging.test.mjs",
     "test:owned-transfers": "LEAN_BRIDGE_OWNED_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-aggregate-transfers.test.mjs tests/owned-c-transfers.test.mjs",
     "test:owned-transfer-packages": "LEAN_BRIDGE_OWNED_TRANSFER_PACKAGE_TEST=1 node --test --test-concurrency=1 tests/owned-transfer-analysis.test.mjs tests/owned-transfer-packaging.test.mjs",
     "test:owned-cpp-transfers": "LEAN_BRIDGE_OWNED_CPP_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-transfers.test.mjs tests/owned-cpp-transfer-packaging.test.mjs",

@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedWitTransfer, ownedWitTransferChangedPaths } from "./wit-owned-transfer-history.mjs";
+import { beforeOwnedWitTransfer, ownedWitTransferNormalizationPaths } from "./wit-owned-transfer-history.mjs";
 
 export const ownedJavaScriptTransferBaseline = "10463a29b72d47b01e11cc799d97589f2ca594fe";
 export const ownedJavaScriptTransferPath = "docs/evidence/owned-javascript-transfers-20260930.json";
@@ -56,7 +56,7 @@ export const ownedJavaScriptTransferAddedPaths = [
 	, "tests/owned-javascript-transfer-packaging.test.mjs"
 	, "tests/owned-javascript-transfers.test.mjs"
 ];
-export const ownedJavaScriptTransferNormalizationPaths = [...new Set([...ownedJavaScriptTransferChangedPaths, ...ownedWitTransferChangedPaths])].sort();
+export const ownedJavaScriptTransferNormalizationPaths = [...new Set([...ownedJavaScriptTransferChangedPaths, ...ownedWitTransferNormalizationPaths])].sort();
 let cached;
 
 /**

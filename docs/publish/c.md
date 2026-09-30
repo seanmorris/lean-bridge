@@ -92,7 +92,8 @@ callback build flag is required.
 Host callbacks borrow the enclosing call's lifetime. The generated header identifies
 signatures that require a typed recovery value if the host fails. The compiler
 derives other recovery values from arguments and constructors; it never fabricates
-a resource. Owner-anchored borrowed results remain unfinished. See
+a resource. Function results can also borrow an input owner's lifetime as described
+below. See
 [C ownership and cleanup](../consume/c.md#resource-containing-values) and
 [callback lifetimes](../consume/c.md#callbacks-containing-resources).
 
@@ -122,19 +123,52 @@ directly. Transfer applies to resource-containing inputs and returned Lean closu
 inputs; copied scalar inputs still use `copy`. Both `call` and `explicit` input
 lifetime scopes are accepted, with no anchor.
 
-Build with `--target c`, or select a combination of C, C++, Cargo, PyPI, RubyGems,
-NuGet, Maven and CPAN.
-Other targets reject these transfer contracts, including a combined release
-that selects an unsupported target. A failed build
-leaves no partial release. This does not extend a host callback's lifetime or
+Build with `--target c`, or select the other supported consumer targets. Transfers
+are also implemented for C++, Cargo, PyPI, RubyGems, NuGet, Maven, CPAN, native PHP,
+PHP-Wasm, npm and WIT/WASI. A failed build leaves no partial release. This does
+not extend a host callback's lifetime or
 transfer the arguments that Lean passes into a host callback.
 
 The public function takes an owner slot beside each transferred argument. It
 validates every input before consuming all selected owners, clears their slots
 before calling Lean, and keeps them consumed on later failure. See
 [the consumer rules](../consume/c.md#transferred-inputs). These packages use
-manifest version 4 and `ownedValues` version 3. Borrow-only packages retain
-manifest version 3 and their existing signatures.
+manifest version 4 and `ownedValues` version 3. Packages without transfers or
+anchored results retain manifest version 3 and their existing signatures.
+
+### Anchor a result to an input
+
+For `--target c`, an owned function result can borrow a named input's lifetime:
+
+```json
+{
+  "contracts": {
+    "Owned.retainTicket": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg0" }
+      }
+    }
+  }
+}
+```
+
+Keep the `resources` and `ownedAggregates` policy. Ordinary configuration uses
+zero-based parameter names such as `arg0`; a reviewed schema-4 API uses its
+declared parameter names. The compiler checks the anchor against the resolved
+signature. It must name a resource-containing or callable input that is not
+copied or transferred. The function can still consume a different input.
+
+Releasing or consuming the anchor expires the result and every view borrowed
+from it. Retain or copy explicitly to create independent ownership. This contract
+also covers empty results and returned Lean closures. It does not add receiver
+anchors or parameter-anchored callback-result contracts.
+
+The C package records the checked parameter indices under
+`ownedValues.resultAnchors`; its manifest uses version 5 and `ownedValues`
+version 4. Builds selecting a consumer that does not implement result anchors
+reject the contract. See [C borrowed results](../consume/c.md#borrowed-results)
+for validation, equality and cleanup.
 
 ## Copied arrays and records
 

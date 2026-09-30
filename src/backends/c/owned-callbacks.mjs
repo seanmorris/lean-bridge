@@ -13,6 +13,7 @@
  */
 export const ownedCCallbacks = (values, carriers) => {
 	const p = values.prefix, nodes = new Map(values.nodes.map(node => [node.id, node]));
+	const anchored = values.anchoredResults === true;
 	const component = JSON.stringify(values.native.model.component.id), lines = [];
 	for(const item of values.callbacks)
 	{
@@ -26,7 +27,8 @@ export const ownedCCallbacks = (values, carriers) => {
 			, `  ${name} *borrow = context; ov_callback_frame *frame = ov_active_callback_frame;`
 			, "  int status = !frame || frame->transaction->scope.context != &borrow->session->native ? OV_CALLBACK : frame->status;"
 			, "  ov_transaction arguments = {0}; ov_result_owner argument_owner = {0};"
-			, "  oc_arena views = { .budget = borrow->budget }, reply_input = { .budget = borrow->budget };"
+			, ...anchored ? ["  oc_view *argument_views = NULL;"] : []
+			, `  oc_arena views = { .budget = borrow->budget${anchored ? ", .session = borrow->session, .view_batch = &argument_owner.batch, .views = &argument_views" : ""} }, reply_input = { .budget = borrow->budget${anchored ? ", .session = borrow->session" : ""} };`
 			, `  ${p}_result *reply_owner = NULL; lean_object *returned = NULL;`
 			, ...params.flatMap((param, i) => [`  ${param.nativeName} raw${i} = {0};`, `  ${param.cName} view${i} = {0};`])
 			, `  ${result.cName} reply = {0}; ${result.nativeName} raw_reply = {0};`
@@ -48,6 +50,7 @@ export const ownedCCallbacks = (values, carriers) => {
 			, `  if (!status) status = ${result.walker}_in(&raw_reply, 0, 1, frame->transaction, &returned);`
 			, `  int cleanup = ${p}_result_release(&reply_owner); if (!status) status = cleanup;`
 			, "  cleanup = ov_owner_clear(&argument_owner); if (!status) status = cleanup;"
+			, ...anchored ? ["  cleanup = oc_views_clear(&argument_views); if (!status) status = cleanup;"] : []
 			, "  oc_release(reply_input.head); oc_release(views.head);"
 			, ...params.map((_, i) => `  if (a${i}) lean_dec(a${i});`)
 			, "  if (status) { ov_callback_fail(frame, status); if (returned) lean_dec(returned); return lean_alloc_array(0, 0); }"
@@ -64,11 +67,11 @@ export const ownedCCallbacks = (values, carriers) => {
 			, "  if ((!input->call) == (!input->closure)) return LB_OWNED_INVALID;"
 			, "  if (input->closure) {"
 			, "    if (input->context || input->recovery) return LB_OWNED_INVALID;"
-			, "    oc_arena arena = { .budget = budget };"
+			, `    oc_arena arena = { .budget = budget${anchored ? ", .session = session" : ""} };`
 			, `    return oc_v${node.index}_to(&input->closure, out, 0, &arena);`, "  }"
 			, `  borrow->token = lb_native_callback_register((void (*)(void))${name}_invoke, borrow);`
 			, "  if (!borrow->token) return LB_OWNED_LIMIT;"
-			, "  ov_transaction transaction = {0}; oc_arena arena = { .budget = budget };"
+			, `  ov_transaction transaction = {0}; oc_arena arena = { .budget = budget${anchored ? ", .session = session" : ""} };`
 			, `  int status = ov_begin(&transaction, &session->native, &borrow->owner, ${component});`
 			, "  lean_object *recovery = NULL;"
 			, "  if (!status && input->recovery) {"

@@ -62,11 +62,12 @@ const checkReview = document => {
 		reject(type.kind !== "apply" || !arity || type.arguments.length !== arity, path);
 		type.arguments.forEach((item, index) => reference(item, `${path}.arguments[${index}]`, true));
 	};
-	const site = (value, path, result = false, transfers = false) => {
+	const site = (value, path, result = false, transfers = false, anchors = false) => {
 		reference(value.type, `${path}.type`);
 		const copy = copied(value.type);
 		if(transfers && !copy && !result && value.ownership === "transfer"
 			&& ["call", "explicit"].includes(value.lifetime?.scope) && value.lifetime.anchor === null) return;
+		if(anchors && !copy && result && value.ownership === "borrow" && value.lifetime?.scope === "parameter") return;
 		reject(value.ownership !== (copy ? "copy" : result ? "lease" : "borrow")
 			|| !same(value.lifetime, copy ? null : { scope: result ? "explicit" : "call", anchor: null }), path);
 	};
@@ -114,7 +115,7 @@ const checkReview = document => {
 			|| declaration.resultMode !== "value" || !same(declaration.effects.toSorted(), effects)
 			|| !same(declaration.failure, hasCallback ? callbackFailure : pureFailure), declaration.id);
 		declaration.parameters.forEach((value, index) => parameter(value, `${declaration.id}.parameters[${index}]`, true));
-		site(declaration.result, `${declaration.id}.result`, true);
+		site(declaration.result, `${declaration.id}.result`, true, false, true);
 	}
 	return document;
 };
@@ -139,8 +140,13 @@ export const validateReviewedOwnedSource = review => {
 export const reviewedOwnedSourceSelection = review => {
 	const document = validateReviewedOwnedSource(review);
 	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
-	const contracts = Object.fromEntries(document.declarations.filter(item => item.parameters.some(value => value.ownership === "transfer"))
-		.map(item => [item.source.declaration, { parameters: item.parameters.map(({ ownership, lifetime }) => ({ ownership, lifetime: structuredClone(lifetime) })) }])
+	const contracts = Object.fromEntries(document.declarations.filter(item => item.result.ownership === "borrow" || item.parameters.some(value => value.ownership === "transfer"))
+		.map(item => [item.source.declaration, {
+			...item.parameters.some(value => value.ownership === "transfer")
+				? { parameters: item.parameters.map(({ ownership, lifetime }) => ({ ownership, lifetime: structuredClone(lifetime) })) } : {}
+			, ...item.result.ownership === "borrow" ? { result: { ownership: "borrow"
+				, lifetime: { scope: "parameter", anchor: `arg${item.parameters.findIndex(value => value.name === item.result.lifetime.anchor)}` } } } : {}
+		}])
 		.sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0));
 	return { exports: document.declarations.map(item => item.source.declaration).sort()
 		, resources: document.types.filter(type => type.kind === "resource").map(item => item.source.declaration).sort()
@@ -209,7 +215,9 @@ export const verifyReviewedOwnedSourceInputs = (sourceIdentity, inputs) => {
 };
 
 const normalizeEffects = document => ({ ...document
-	, declarations: document.declarations.map(item => ({ ...item, effects: item.effects.toSorted() }))
+	, declarations: document.declarations.map(item => ({ ...item, effects: item.effects.toSorted()
+		, result: item.result.ownership === "borrow" && item.result.lifetime.scope === "parameter"
+			? { ...item.result, lifetime: { scope: "parameter", anchor: `arg${item.parameters.findIndex(value => value.name === item.result.lifetime.anchor)}` } } : item.result }))
 	, types: document.types.map(item => item.callable ? { ...item, callable: { ...item.callable, effects: item.callable.effects.toSorted() } } : item) });
 
 const retainAnnotations = (reviewed, compiled) => {
@@ -218,8 +226,13 @@ const retainAnnotations = (reviewed, compiled) => {
 	const errors = new Map(reviewed.errors.map(item => [item.id, item]));
 	const fields = (actual, authored) => actual.map((item, index) => ({ ...item, documentation: structuredClone(authored[index].documentation) }));
 	const parameters = (actual, authored) => actual.map((item, index) => ({ ...item, name: authored[index].name }));
+	const result = (item, authored) => item.result.ownership === "borrow" && item.result.lifetime.scope === "parameter"
+		? { ...item.result, lifetime: { scope: "parameter"
+			, anchor: authored.parameters[item.parameters.findIndex(value => value.name === item.result.lifetime.anchor)].name } }
+		: item.result;
 	return { ...compiled, documentation: structuredClone(reviewed.documentation)
 		, declarations: compiled.declarations.map(item => ({ ...item, documentation: structuredClone(declarations.get(item.id).documentation)
+			, result: result(item, declarations.get(item.id))
 			, parameters: parameters(item.parameters, declarations.get(item.id).parameters) }))
 		, errors: compiled.errors.map(item => ({ ...item, documentation: structuredClone(errors.get(item.id).documentation) }))
 		, types: compiled.types.map(item => {

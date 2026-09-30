@@ -6,9 +6,9 @@
  */
 import { generateOwnedNativeValueAdapters } from "../native/owned-value-adapters.mjs";
 import { ownedAggregateLeaseSource } from "../native/owned-aggregate-leases.mjs";
-import { ownedAggregateTransferLeaseSource } from "../native/owned-aggregate-transfers.mjs";
+import { ownedAggregateTransferLeaseSource, ownedAggregateTransferRuntime } from "../native/owned-aggregate-transfers.mjs";
 import { generateOwnedCValues } from "./owned-values.mjs";
-import { ownedCRuntime } from "./owned-runtime.mjs";
+import { ownedCRuntime, ownedCBorrowRuntime } from "./owned-runtime.mjs";
 import { ownedCCallbacks } from "./owned-callbacks.mjs";
 import { ownedCInputTransfers } from "./owned-transfers.mjs";
 
@@ -25,18 +25,22 @@ import { ownedCInputTransfers } from "./owned-transfers.mjs";
 export const generateOwnedCPackage = (options, backend = null) => {
 	const generated = generateOwnedNativeValueAdapters(options);
 	const hasTransfers = generated.layout.functions.some(item => item.transfers?.length);
+	const hasAnchors = generated.layout.functions.some(item => item.anchor !== undefined);
 	if(backend && hasTransfers && backend.transferredInputs !== true) throw new TypeError("Owned C transport does not support transferred inputs");
+	if(backend && hasAnchors && backend.anchoredResults !== true) throw new TypeError("Owned C transport does not support anchored results");
 	const publicPrefix = backend ? backend.publicPrefix(generated.layout.model.bindingIr, { transferredInputs: options.transferredInputs }) : options.publicPrefix;
 	const values = generateOwnedCValues(generated.layout.model.bindingIr, {
 		hostCallbacks: options.hostCallbacks
 		, publicPrefix
 		, transferredInputs: options.transferredInputs
+		, anchoredResults: options.anchoredResults
 	});
 	const p = values.prefix;
 	const transport = backend?.render({ generated, values });
 	const nodes = new Map(values.nodes.map(node => [node.id, node]));
 	const walker = node => `oc_v${node.index}`;
 	const source = [`#include "${p}.h"`, generated.source, ...transport ? [transport.source] : [], ownedCRuntime(values, generated.carriers, transport?.session)];
+	if(hasAnchors) source.push(ownedCBorrowRuntime(values));
 	if(hasTransfers) source.push(ownedCInputTransfers(values));
 	for(const node of nodes.values()) source.push(
 		`static inline int ${walker(node)}_to(${node.cName} const *, ${node.nativeName} *, size_t, oc_arena *);`
@@ -62,8 +66,12 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			};
 			if(node.identity)
 			{
-				lines.push(`if (!${into ? "*value" : "value->token"}) return ${invalid};`
-					, into ? "out->token = (uint64_t)(uintptr_t)*value;" : `*out = (${node.cName})(uintptr_t)value->token;`);
+				lines.push(`if (!${into ? "*value" : "value->token"}) return ${invalid};`);
+				if(hasAnchors) lines.push("uint64_t token = 0;"
+					, `status = oc_identity_${direction}(arena, ${JSON.stringify(node.identityKind)}, ${into ? "(uint64_t)(uintptr_t)*value" : "value->token"}, &token);`
+					, "if (status) return status;"
+					, into ? "out->token = token;" : `*out = (${node.cName})(uintptr_t)token;`);
+				else lines.push(into ? "out->token = (uint64_t)(uintptr_t)*value;" : `*out = (${node.cName})(uintptr_t)value->token;`);
 			}
 			else if(node.integer)
 			{
@@ -129,6 +137,16 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			, ...body(false).map(line => `  ${line}`), "}");
 	}
 	if(options.hostCallbacks) source.push(ownedCCallbacks(values, generated.carriers));
+	if(hasAnchors) for(const node of values.nodes.filter(node => node.identity)) source.push(
+		`${p}_status ${node.cName}_equal(${p}_session *session, ${node.cName} left, ${node.cName} right, bool *out) {`
+		, `  if (!ov_pointer(out, sizeof(*out), _Alignof(bool))) return (${p}_status)LB_OWNED_INVALID;`
+		, "  oc_session *active = NULL; int status = oc_session_get(session, &active);"
+		, `  if (status) return (${p}_status)status;`
+		, "  oc_arena arena = { .session = active }; uint64_t a = 0, b = 0;"
+		, `  status = oc_identity_to(&arena, ${JSON.stringify(node.identityKind)}, (uint64_t)(uintptr_t)left, &a);`
+		, `  if (!status) status = oc_identity_to(&arena, ${JSON.stringify(node.identityKind)}, (uint64_t)(uintptr_t)right, &b);`
+		, "  if (!status) *out = a == b;", `  return (${p}_status)status;`, "}"
+	);
 	for(const item of [...values.retains, ...values.copies ?? []])
 	{
 		const node = nodes.get(item.id);
@@ -156,9 +174,10 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			, `  if (!oc_outputs(out, sizeof(*out), _Alignof(${result.cName}), owner) || *owner) return (${p}_status)LB_OWNED_INVALID;`
 			, "  oc_session *active = NULL; int status = oc_session_get(session, &active);"
 			, `  if (status) return (${p}_status)status;`
-			, "  ov_budget budget = oc_budget(); oc_arena input = { .budget = &budget }, output = { .budget = &budget };"
+			, `  ov_budget budget = oc_budget(); oc_arena input = { .budget = &budget${hasAnchors ? ", .session = active" : ""} }, output = { .budget = &budget${hasAnchors ? ", .session = active" : ""} };`
 			, "  oc_result *result_owner = NULL; status = oc_result_begin(active, &budget, &result_owner);"
 			, `  if (status) return (${p}_status)status;`
+			, ...item.anchor !== undefined ? ["  ov_input_anchor anchor = {0};"] : []
 			, ...transfers.length ? [
 				`  oc_transfer_input transfer_inputs[${transfers.length}] = { ${transfers.map(i => `{ .slot = a${i}_owner }`).join(", ")} };`
 				, `  ov_result_owner *transfer_owners[${transfers.length}] = {0};`
@@ -169,15 +188,20 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			, ...borrows.map(({ node, index }) => `  oc_host_v${node.index} borrow${index} = {0};`)
 			, `  ${result.nativeName} returned = {0};`, `  ${result.cName} converted = {0};`
 			, "  status = ov_charge(&budget, 1, sizeof(converted));"
+			, ...item.anchor !== undefined ? [`  if (!status) status = oc_anchor_prepare(active, a${item.anchor}_owner, &anchor);`] : []
 			, ...transfers.length ? [
 				`  if (!status) status = oc_transfer_prepare(active, &transfer_frame, transfer_owners, out, sizeof(*out), _Alignof(${result.cName}), owner);`
 			] : []
 			, ...params.map((node, i) => borrows.some(borrow => borrow.index === i)
 				? `  if (!status) status = oc_host_v${node.index}_begin(&borrow${i}, a${i}, active, &budget, &raw${i});`
 				: `  if (!status) status = ${walker(node)}_to(${node.leaf ? "&" : ""}a${i}, &raw${i}, 0, &input);`)
-			, `  if (!status) status = ${symbol}(${context}, ${[...params.map((_, i) => `&raw${i}`), ...transfers.length ? ["&transfer"] : [], "&returned", "&result_owner->native"].join(", ")});`
+			, `  if (!status) status = ${symbol}(${context}, ${[...params.map((_, i) => `&raw${i}`), ...transfers.length ? ["&transfer"] : [], ...item.anchor !== undefined ? ["&anchor"] : [], "&returned", "&result_owner->native"].join(", ")});`
 			, ...borrows.map(({ node, index }) => `  { int cleanup = oc_host_v${node.index}_end(&borrow${index}); if (!status) status = cleanup; }`)
 			, "  if (!status) {"
+			, ...hasAnchors ? [
+				"    output.views = &result_owner->views;"
+				, "    if (result_owner->native.batch.borrowed) output.view_batch = &result_owner->native.batch;"
+			] : []
 			, `    status = ${walker(result)}_from(&returned, &converted, 0, &output);`
 			, "    if (status == LB_OWNED_INVALID) status = OV_RESULT;", "  }"
 			, "  oc_release(input.head);"
@@ -189,7 +213,7 @@ export const generateOwnedCPackage = (options, backend = null) => {
 	return { ...generated, values, publicHeader: values.header, source: code
 		, files: { [`include/${p}.h`]: values.header
 			, "internal/owned-values.h": generated.typesHeader
-			, "internal/owned-leases.h": hasTransfers ? ownedAggregateTransferLeaseSource : ownedAggregateLeaseSource
+			, "internal/owned-leases.h": hasAnchors ? ownedAggregateTransferRuntime({ anchoredResults: true }) : hasTransfers ? ownedAggregateTransferLeaseSource : ownedAggregateLeaseSource
 			, "internal/carriers.h": generated.carriers.header
 			, [`src/${p}.c`]: code } };
 };

@@ -4,7 +4,14 @@
  *
  * @file
  */
-export const ownedAggregateLeaseSource = `
+/**
+ * Emit the existing ledger or its explicit owner-anchored lifetime extension.
+ * The default keeps the previously published adapter bytes unchanged.
+ *
+ * @param options - Internal runtime capabilities, never an authored contract.
+ * @param options.anchoredResults - Track bounded borrowed-result owner trees.
+ */
+export const ownedAggregateLeaseRuntime = ({ anchoredResults = false } = {}) => `
 #include <lean/lean.h>
 #include "lean_bridge_native_runtime.h"
 #include <pthread.h>
@@ -47,6 +54,11 @@ struct lb_owned_batch {
   lb_owned_batch *next;
   lb_owned_context *context;
   lb_owned_entry *entries;
+${anchoredResults ? `  lb_owned_batch *parent, *children, *sibling, *previous_sibling;
+  uint64_t generation;
+  size_t depth;
+  int borrowed, expired;
+` : ""}\
 };
 struct lb_owned_scope {
   lb_owned_context *context;
@@ -149,11 +161,98 @@ static void lb_owned_drop_entries(lb_owned_context *context, lb_owned_entry *ent
     lb_owned_drop(context, entry->owner); LB_OWNED_FREE(entry); entry = next;
   }
 }
+${anchoredResults ? `/* Generations are process-wide within this adapter and never repeat, even
+   when a batch or its entire context is destroyed and its storage is reused. */
+static _Atomic uint64_t lb_owned_next_batch_generation;
+enum { LB_OWNED_BORROW_DEPTH = 128 };
+static inline int lb_owned_batch_generation(uint64_t *out) {
+  uint64_t previous = atomic_load(&lb_owned_next_batch_generation);
+  do {
+    if (previous == UINT64_MAX) return LB_OWNED_LIMIT;
+  } while (!atomic_compare_exchange_weak(&lb_owned_next_batch_generation, &previous, previous + 1));
+  *out = previous + 1; return LB_OWNED_OK;
+}
+static inline lb_owned_batch *lb_owned_batch_find(lb_owned_context *context,
+    const lb_owned_batch *candidate, uint64_t generation) {
+  for (lb_owned_batch *batch = context->batches; batch; batch = batch->next) {
+    if (batch != candidate || batch->generation != generation || batch->expired) continue;
+    /* A root is unregistered before its descendants are drained. A resource
+       finalizer cannot reenter through a descendant still awaiting cleanup. */
+    lb_owned_batch *parent = batch->parent;
+    for (size_t depth = 0; parent; ++depth) {
+      if (depth == LB_OWNED_BORROW_DEPTH) return NULL;
+      lb_owned_batch *registered = context->batches;
+      while (registered && registered != parent) registered = registered->next;
+      if (!registered || registered->expired) return NULL;
+      parent = registered->parent;
+    }
+    return batch;
+  }
+  return NULL;
+}
+static inline void lb_owned_batch_detach(lb_owned_batch *batch) {
+  if (!batch->parent) return;
+  if (batch->previous_sibling) batch->previous_sibling->sibling = batch->sibling;
+  else batch->parent->children = batch->sibling;
+  if (batch->sibling) batch->sibling->previous_sibling = batch->previous_sibling;
+  batch->parent = NULL; batch->sibling = NULL; batch->previous_sibling = NULL;
+}
+/* Post-order traversal uses existing links, not recursion or allocation. Each
+   descendant remains registered for its eventual host-side storage cleanup,
+   but loses all resource leases and becomes unusable immediately. */
+static inline void lb_owned_batch_expire_children(lb_owned_context *context, lb_owned_batch *batch) {
+  lb_owned_batch *child = batch->children;
+  while (child) {
+    if (child->children) { child = child->children; continue; }
+    lb_owned_batch *parent = child->parent;
+    lb_owned_batch_detach(child);
+    lb_owned_entry *entries = child->entries;
+    child->entries = NULL; child->expired = 1;
+    lb_owned_drop_entries(context, entries);
+    child = parent == batch ? batch->children : parent;
+  }
+}
+/* Transfer preflight counts the whole owner tree before mutating any batch.
+   Moving borrowed leases into the call pins them without running destructors
+   before the generated adapter has invalidated every public source owner. */
+static inline int lb_owned_batch_tree_count(lb_owned_batch *root, size_t available, size_t *count) {
+  lb_owned_batch *batch = root; size_t total = 0;
+  for (;;) {
+    for (lb_owned_entry *entry = batch->entries; entry; entry = entry->next) {
+      if (total == available) return LB_OWNED_LIMIT;
+      ++total;
+    }
+    if (batch->children) { batch = batch->children; continue; }
+    while (batch != root && !batch->sibling) batch = batch->parent;
+    if (batch == root) break;
+    batch = batch->sibling;
+  }
+  *count = total; return LB_OWNED_OK;
+}
+static inline void lb_owned_batch_move_children(lb_owned_scope *scope, lb_owned_batch *batch) {
+  lb_owned_batch *child = batch->children;
+  while (child) {
+    if (child->children) { child = child->children; continue; }
+    lb_owned_batch *parent = child->parent;
+    lb_owned_batch_detach(child);
+    if (child->entries) {
+      lb_owned_entry *last = child->entries;
+      while (last->next) last = last->next;
+      last->next = scope->inputs; scope->inputs = child->entries;
+    }
+    child->entries = NULL; child->expired = 1;
+    child = parent == batch ? batch->children : parent;
+  }
+}
+` : ""}\
 static void lb_owned_finish_close(lb_owned_context *context) {
   if (!context->closing || context->top) return;
   while (context->batches) {
     lb_owned_batch *batch = context->batches;
     context->batches = batch->next;
+${anchoredResults ? `    lb_owned_batch_expire_children(context, batch);
+    lb_owned_batch_detach(batch);
+` : ""}\
     lb_owned_drop_entries(context, batch->entries);
     *batch = (lb_owned_batch){0};
   }
@@ -173,6 +272,9 @@ static int lb_owned_batch_release(lb_owned_context *context, lb_owned_batch *bat
   /* Check membership before dereferencing an unregistered or already closed batch. */
   if (!*position) return LB_OWNED_INVALID;
   *position = batch->next;
+${anchoredResults ? `  lb_owned_batch_expire_children(context, batch);
+  lb_owned_batch_detach(batch);
+` : ""}\
   lb_owned_drop_entries(context, batch->entries); *batch = (lb_owned_batch){0};
   return context->poisoned ? LB_OWNED_RUNTIME : LB_OWNED_OK;
 }
@@ -247,7 +349,7 @@ static int lb_owned_scope_abort(lb_owned_scope *scope) {
   lb_owned_finish_close(context);
   return context->poisoned ? LB_OWNED_RUNTIME : LB_OWNED_OK;
 }
-static int lb_owned_scope_commit(lb_owned_scope *scope, lb_owned_batch *batch) {
+static int ${anchoredResults ? "lb_owned_scope_commit_link(lb_owned_scope *scope, lb_owned_batch *batch,\n    const lb_owned_batch *candidate, uint64_t generation, int borrowed)" : "lb_owned_scope_commit(lb_owned_scope *scope, lb_owned_batch *batch)"} {
   int status = lb_owned_scope_ready(scope);
   if (status) return status; /* Caller must abort any failed commit. */
   if (!batch) return LB_OWNED_INVALID;
@@ -256,8 +358,58 @@ static int lb_owned_scope_commit(lb_owned_scope *scope, lb_owned_batch *batch) {
     if (active == batch) return LB_OWNED_INVALID;
   /* Caller supplies zero-initialized output storage, never another context's batch. */
   if (batch->context || batch->entries || batch->next) return LB_OWNED_INVALID;
+${anchoredResults ? `  if (batch->parent || batch->children || batch->sibling || batch->previous_sibling ||
+      batch->generation || batch->depth || batch->borrowed || batch->expired) return LB_OWNED_INVALID;
+  lb_owned_batch *anchor = NULL;
+  if (borrowed) {
+    anchor = lb_owned_batch_find(context, candidate, generation);
+    if (!anchor) return LB_OWNED_INVALID;
+    if (anchor->depth == LB_OWNED_BORROW_DEPTH) return LB_OWNED_LIMIT;
+  }
+  uint64_t fresh = 0; status = lb_owned_batch_generation(&fresh);
+  if (status) return status;
+  batch->generation = fresh; batch->borrowed = borrowed;
+  if (anchor) {
+    batch->parent = anchor; batch->depth = anchor->depth + 1;
+    batch->sibling = anchor->children;
+    if (anchor->children) anchor->children->previous_sibling = batch;
+    anchor->children = batch;
+  }
+` : ""}\
   batch->context = context; batch->entries = scope->outputs; batch->next = context->batches;
   context->batches = batch; scope->outputs = NULL;
   return lb_owned_scope_abort(scope);
 }
+${anchoredResults ? `static inline int lb_owned_scope_commit(lb_owned_scope *scope, lb_owned_batch *batch) {
+  return lb_owned_scope_commit_link(scope, batch, NULL, 0, 0);
+}
+static inline int lb_owned_scope_commit_borrow(lb_owned_scope *scope, lb_owned_batch *batch,
+    const lb_owned_batch *anchor, uint64_t generation) {
+  return lb_owned_scope_commit_link(scope, batch, anchor, generation, 1);
+}
+/* The host retains a batch generation with each private borrowed view. Check
+   registry membership before reading a possibly freed or reused batch address.
+   The call pins only this view's identity, so owner disposal during reentry
+   expires subsequent calls without destroying the already converted argument. */
+static inline int lb_owned_scope_borrow_anchored(lb_owned_scope *scope,
+    const lb_owned_batch *candidate, uint64_t generation, const char *kind,
+    uint64_t token, lean_object **out) {
+  int status = lb_owned_scope_ready(scope);
+  if (status) return status;
+  if (!kind || !*kind || !out) return LB_OWNED_INVALID;
+  lb_owned_batch *batch = lb_owned_batch_find(scope->context, candidate, generation);
+  if (!batch) return LB_OWNED_INVALID;
+  for (lb_owned_entry *entry = batch->entries; entry; entry = entry->next) {
+    if (entry->owner->token == token && !strcmp(entry->owner->kind, kind)) {
+      uint64_t retained = 0;
+      status = lb_owned_scope_hold(scope, kind, entry->owner->value, entry->owner, 1, &retained);
+      if (!status) *out = entry->owner->value;
+      return status;
+    }
+  }
+  return LB_OWNED_INVALID;
+}
+` : ""}\
 `;
+
+export const ownedAggregateLeaseSource = ownedAggregateLeaseRuntime();

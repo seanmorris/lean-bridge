@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedBorrow, ownedBorrowChangedPaths } from "./owned-borrow-history.mjs";
 
 export const ownedWitTransferBaseline = "3e28428f0b304f1dfed2cb2ad524b50c1fabdeef";
 export const ownedWitTransferPath = "docs/evidence/wit-owned-transfers-20260930.json";
@@ -56,6 +57,7 @@ export const ownedWitTransferAddedPaths = [
 	, "tests/wit-owned-transfers.test.mjs"
 ];
 let cached;
+export const ownedWitTransferNormalizationPaths = [...new Set([...ownedWitTransferChangedPaths, ...ownedBorrowChangedPaths])].sort();
 
 /**
  * Reverse only authenticated, ordered, non-overlapping edit spans.
@@ -88,6 +90,7 @@ export const reverseOwnedWitTransferUpdate = (source, update) => {
  * @param expected - Optional historical stopping digest.
  */
 export const beforeOwnedWitTransfer = (path, source, expected) => {
+	source = beforeOwnedBorrow(path, source, expected);
 	if(!ownedWitTransferChangedPaths.includes(path)) return source;
 	const digest = sha256(source); if(digest === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedWitTransferPath, "utf8"));
@@ -106,5 +109,5 @@ export const beforeOwnedWitTransfer = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional historical stopping digest.
  */
-export const ownedWitTransferHistoricalBytes = (path, bytes, expected) => ownedWitTransferChangedPaths.includes(path)
+export const ownedWitTransferHistoricalBytes = (path, bytes, expected) => ownedWitTransferNormalizationPaths.includes(path)
 	? beforeOwnedWitTransfer(path, bytes.toString("utf8"), expected) : bytes;
