@@ -11,7 +11,7 @@ import { generateOwnedCValues } from "../c/owned-values.mjs";
 import { planNativeGraphStorage } from "../c/copied-graph-layout.mjs";
 import { cppValueBox } from "./copied-graph-values.mjs";
 import { ownedCppRuntime } from "./owned-runtime.mjs";
-import { ownedCppAnchoredValues } from "./owned-borrows.mjs";
+import { ownedCppAnchoredValues, ownedCppReceiverMembers } from "./owned-borrows.mjs";
 
 const scalar = {
 	unit: "std::monostate", bool: "bool", string: "std::string"
@@ -29,11 +29,14 @@ const scalar = {
  * @param options - Consumer capabilities implemented by the caller.
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
  * @param options.anchoredResults - Keep complete result owners, including empty values.
+ * @param options.receiverExports - Expose named methods and properties.
+ * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedCppValues = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
+export const generateOwnedCppValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	const transfers = c.functions.some(item => item.transfers?.length);
 	const anchors = c.functions.some(item => item.anchor !== undefined);
+	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node
 		, aggregate: !node.leaf
 		, fields: node.fields.map(field => ({ ...field, storage: "value" }))
@@ -41,7 +44,7 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 	}]));
 	const layout = planNativeGraphStorage(nodes);
 	const occupied = new Set(["Box", "Ok", "Err", "Result", "Resource", "Nat", "Int", "Error", "detail", "std", "boost", "with_recovery"]);
-	if(anchors) for(const name of ["Value", "copy_value"]) occupied.add(name);
+	if(wholeOwners) for(const name of ["Value", "copy_value"]) occupied.add(name);
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || cKeywords.has(name) || occupied.has(name))
 			throw new TypeError(`Owned C++ value name is reserved or duplicated: ${name}`);
@@ -84,9 +87,11 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 		, "#include <vector>", "#include <unistd.h>"
 		, ...bigint ? ["#ifndef BOOST_MP_STANDALONE", "#define BOOST_MP_STANDALONE", "#endif", "#include <boost/multiprecision/cpp_int.hpp>"] : []
 		, `namespace lean_bridge::${c.prefix} {`
-		, ownedCppRuntime(c.prefix, { transferredInputs: transfers, anchoredResults: anchors })
+		, ownedCppRuntime(c.prefix, { transferredInputs: transfers
+			, anchoredResults: anchors
+			, ...receivers ? { receiverMembers: ownedCppReceiverMembers(c) } : {} })
 		, cppValueBox
-		, ...anchors ? [ownedCppAnchoredValues(c.prefix)] : []
+		, ...wholeOwners ? [ownedCppAnchoredValues(c.prefix, { receiverExports: receivers })] : []
 		, "template<class T> struct Ok { T value; friend bool operator==(const Ok&, const Ok&) = default; };"
 		, "template<class E> struct Err { E value; friend bool operator==(const Err&, const Err&) = default; };"
 		, "template<class T, class E> using Result = std::variant<Ok<T>, Err<E>>;"
@@ -138,7 +143,7 @@ export const generateOwnedCppValues = (ir, { transferredInputs = false, anchored
 	return { c, layout, header: lines.join("\n")
 		, types: [...nodes.values()].map(node => ({ ...node
 			, hostName: type(node.id), identityTag: identities.get(node.id)
-			, ...anchors ? { canonicalHostName: canonical(node.id) } : {}
+			, ...wholeOwners ? { canonicalHostName: canonical(node.id) } : {}
 			, fields: members(node.id, node.fields)
 			, cases: node.cases.map((branch, index) => ({ ...branch, hostName: alternatives.get(node.id)[index], fields: members(node.id, branch.fields) })) })) };
 };

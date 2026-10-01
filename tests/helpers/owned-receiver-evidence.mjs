@@ -11,6 +11,7 @@ import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from ".
 import { ownedReceiverKinds, ownedReceiverSource, ownedReceiverProbe, ownedReceiverCopyMacros } from "./owned-receiver-fixture.mjs";
 import { ownedReceiverMutants } from "./owned-receiver-mutants.mjs";
 import { assertOwnedReceiverCi } from "./owned-receiver-ci.mjs";
+import { ownedCppReceiverHistoricalBytes } from "./owned-cpp-receiver-history.mjs";
 
 export const ownedReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-receivers";
 export const ownedReceiverScope = Object.freeze({
@@ -170,7 +171,8 @@ export const assertOwnedReceiverExecution = async record => {
 		assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 		for(const path of cliConfig.files)
 		{
-			const file = item.cli.files.find(entry => entry.path === path), bytes = await readFile(path);
+			const file = item.cli.files.find(entry => entry.path === path);
+			const bytes = Buffer.from(ownedCppReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
 			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.builds.length, 2);

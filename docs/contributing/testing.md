@@ -3259,3 +3259,26 @@ CI retains `build/owned-receivers.log` and all six reports in
 `build/owned-receivers/`. The [source-bound receipt](../evidence/owned-receivers-20261001.md)
 records this C milestone. Other receiver projections, callback-result anchors
 and the final Docker audit remain separate work.
+
+## C++ receiver acceptance
+
+Run the member API gate with the pinned Lean toolchain and C++20 compiler:
+
+```sh
+npm run test:owned-cpp-receivers
+```
+
+The gate requires ten passing tests with no skips. Compile checks enforce nominal
+receiver types, zero-argument property accessors and consuming rvalue qualifiers.
+Both source paths execute sixteen receiver exports through fresh Lean code.
+Runtime checks cover original-owner borrows, other-argument anchors, copied
+properties, reentrant callbacks, returned closures, recursive values and
+allocation failures. ASan/UBSan runs compare against a cold-start baseline.
+Compiled broken adapters must fail the unchanged consumer assertions.
+
+Resource-only cases separately test receiver APIs without borrowed results or
+callbacks, with and without consuming methods. Installed tests use the packaged
+CLI offline, compare independent builds, reject forged metadata and generated
+sources, remove producer files and execute relocated pkg-config/CMake consumers
+and the documentation example. CI retains `build/owned-cpp-receivers.log` and
+eight JSON reports in `build/owned-cpp-receivers/`.

@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedReceiver, ownedReceiverChangedPaths } from "./owned-receiver-history.mjs";
+import { beforeOwnedReceiver, ownedReceiverNormalizationPaths } from "./owned-receiver-history.mjs";
 
 export const ownedWitBorrowPath = "docs/evidence/wit-owned-borrows-20261001.json";
 export const ownedWitBorrowBaseline = "3701d0880be3195b249ed17caac6975dea7283f6";
@@ -55,7 +55,7 @@ export const ownedWitBorrowAddedPaths = [
 	, "tests/wit-owned-borrows.test.mjs"
 ].sort();
 let cached;
-export const ownedWitBorrowNormalizationPaths = [...new Set([...ownedWitBorrowChangedPaths, ...ownedReceiverChangedPaths])].sort();
+export const ownedWitBorrowNormalizationPaths = [...new Set([...ownedWitBorrowChangedPaths, ...ownedReceiverNormalizationPaths])].sort();
 
 /**
  * Reverse exact ordered edit spans, checking both complete source identities.

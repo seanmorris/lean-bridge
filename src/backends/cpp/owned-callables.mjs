@@ -18,18 +18,21 @@ import { ownedCppAnchoredTransfers, ownedCppValueCopies } from "./owned-borrows.
  * @param options - Consumer capabilities implemented by the caller.
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
  * @param options.anchoredResults - Preserve original owners for returned borrows.
+ * @param options.receiverExports - Expose checked nominal methods and properties.
+ * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedCppCallables = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const conversions = generateOwnedCppConversions(ir, { transferredInputs, anchoredResults }), { c } = conversions;
+export const generateOwnedCppCallables = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const conversions = generateOwnedCppConversions(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = conversions;
 	const transfers = c.functions.some(item => item.transfers?.length);
 	const anchors = c.functions.some(item => item.anchor !== undefined);
+	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const p = c.prefix, m = p.toUpperCase(), nodes = new Map(conversions.types.map(node => [node.id, node]));
 	const unit = node => node.kind === "primitive" && node.name === "unit";
 	const resultType = node => unit(node) ? "void" : node.hostName;
-	const wrappedResult = item => anchors && !item.retain && nodes.get(item.result).representation !== "copied";
+	const wrappedResult = item => wholeOwners && !item.retain && nodes.get(item.result).representation !== "copied";
 	const callResult = item => wrappedResult(item) ? `Value<${nodes.get(item.result).hostName}>` : resultType(nodes.get(item.result));
 	const callbacks = [], calls = [], operations = [], exports = [];
-	for(const callback of c.callbacks)
+	if(hostCallbacks) for(const callback of c.callbacks)
 	{
 		const node = nodes.get(callback.id), result = nodes.get(callback.result), i = node.index;
 		const params = callback.parameters.slice(1).map(id => nodes.get(id));
@@ -84,8 +87,8 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 	const all = [...c.functions, ...c.callbacks, ...c.retains];
 	const signature = (item, offset = 0, qualified = "") => {
 		const params = item.parameters.map(id => nodes.get(id));
-		const wrapped = params.map((_, index) => anchors && (item.anchor === index || item.transfers?.includes(index)));
-		const descriptors = params.map((_, index) => index >= offset && c.hostArgument(item, index));
+		const wrapped = params.map((_, index) => wholeOwners && (item.anchor === index || item.transfers?.includes(index)));
+		const descriptors = params.map((_, index) => index >= offset && Boolean(c.hostArgument?.(item, index)));
 		const host = descriptors.map((yes, index) => yes && !wrapped[index]);
 		const templates = host.flatMap((yes, index) => yes ? [index] : []);
 		return { params, host, wrapped, descriptors
@@ -102,10 +105,10 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 		const moving = item.transfers ?? [];
 		const argument = i => `a${i}${sig.wrapped[i] ? ".get()" : ""}`;
 		const prepare = moving.length ? [`  OwnedInputTransfers moves(call.state, ${moving.length});`
-			, ...moving.map((parameter, group) => anchors
+			, ...moving.map((parameter, group) => wholeOwners
 				? `  moves.add(ValueAccess::lease(a${parameter}, call.state), ${group});`
 				: `  owned_move_leases${sig.params[parameter].index}(a${parameter}, 0, moves, ${group});`)
-			, ...anchors ? [] : moving.flatMap((parameter, group) => {
+			, ...wholeOwners ? [] : moving.flatMap((parameter, group) => {
 				const node = sig.params[parameter], copy = [...c.retains, ...c.copies].find(candidate => candidate.id === node.id);
 				return [`  ${node.cName} moved${parameter}{};`
 					, `  checked(${copy.cName}(call.state->require(), ${node.leaf ? "" : "&"}view${parameter}.value, &moved${parameter}, moves.owner(${group})));`];
@@ -119,7 +122,7 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 			, ...item.anchor !== undefined ? [`  auto *anchor = ValueAccess::lease(a${item.anchor}, call.state)->owner(call.state);`, "  output.anchored_result = true;"] : []
 			, ...prepare
 			, `  const auto status = ${item.cName}(${moving.length ? "session" : "call.state->require()"}${sig.params.map((param, i) => moving.includes(i)
-				? `, ${param.leaf ? "" : "&"}${anchors ? `view${i}.value` : `moved${i}`}, moves.owner(${moving.indexOf(i)})`
+				? `, ${param.leaf ? "" : "&"}${wholeOwners ? `view${i}.value` : `moved${i}`}, moves.owner(${moving.indexOf(i)})`
 				: `, ${sig.descriptors[i] || !param.leaf ? "&" : ""}view${i}.value${item.anchor === i ? ", anchor" : ""}`).join("")}, &returned, &output.owner.value);`
 			, ...moving.length ? ["  moves.finish();"] : []
 			, "  if (call.error) std::rethrow_exception(call.error);", "  checked(status);"
@@ -152,6 +155,26 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 		}
 		operations.push("};");
 	}
+	const receiverGroups = new Map();
+	for(const item of c.functions.filter(item => item.receiver === 0))
+	{
+		const sig = signature(item, 1), node = sig.params[0];
+		const name = item.cName.slice(p.length + 1), moving = item.transfers?.includes(0);
+		const owners = [{ type: `Value<${node.hostName}>`, wrapped: true }];
+		if(node.identity && !sig.wrapped[0]) owners.push({ type: node.hostName, wrapped: false });
+		for(const owner of owners)
+		{
+			const methods = receiverGroups.get(owner.type) ?? [];
+			const argument = moving ? "std::move(self)" : owner.wrapped && !sig.wrapped[0] ? "self.get()" : "self";
+			methods.push(...sig.prefix.map(line => "  " + line)
+				, `  static ${callResult(item)} ${name}(${moving ? `${owner.type}&&` : `const ${owner.type}&`} self${sig.parameters ? ", " + sig.parameters : ""}) {`
+				, `    return owned_invoke${all.indexOf(item)}(${argument}${sig.arguments ? ", " + sig.arguments : ""});`, "  }");
+			receiverGroups.set(owner.type, methods);
+		}
+	}
+	const receiverOperations = [...receiverGroups].flatMap(([type, methods]) => [
+		`template<> struct ReceiverOps<${type}> {`, ...methods, "};"
+	]);
 	const header = ["#pragma once", `#include "${p}-conversions.hpp"`
 		, "#include <concepts>", "#include <exception>", "#include <functional>"
 		, ...transfers ? ["#include <unordered_map>"] : []
@@ -168,9 +191,10 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 		, "template<class F> inline F& owned_function(F& function) { return function; }"
 		, "template<class F, class R> inline F& owned_function(RecoveredCallback<F, R>& function) { return function.function; }"
 		, "template<class F, class R> inline const F& owned_function(const RecoveredCallback<F, R>& function) { return function.function; }"
-		, ...transfers ? [anchors ? ownedCppAnchoredTransfers(p) : ownedCppInputTransfers(conversions)] : []
+		, ...transfers ? [wholeOwners ? ownedCppAnchoredTransfers(p) : ownedCppInputTransfers(conversions)] : []
 		, ...callbacks, ...calls, ...operations
-		, ...anchors ? [ownedCppValueCopies(conversions)] : [], "}"
+		, ...wholeOwners ? [ownedCppValueCopies(conversions)] : []
+		, ...receiverOperations, "}"
 		, "// Recovery supplies a typed failure-path value for Lean cleanup, never a successful host result."
 		, "template<class F, class R> inline auto with_recovery(F&& function, R&& recovery) {"
 		, "  return detail::RecoveredCallback<std::decay_t<F>, std::decay_t<R>>{std::forward<F>(function), std::forward<R>(recovery)};"

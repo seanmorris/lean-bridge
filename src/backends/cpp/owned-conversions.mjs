@@ -99,9 +99,11 @@ struct OwnedIntegerView {
  * @param options - Consumer capabilities implemented by the caller.
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
  * @param options.anchoredResults - Validate whole-result lifetimes.
+ * @param options.receiverExports - Preserve named receiver calls.
+ * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedCppConversions = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const values = generateOwnedCppValues(ir, { transferredInputs, anchoredResults }), { c } = values, p = c.prefix, m = p.toUpperCase();
+export const generateOwnedCppConversions = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const values = generateOwnedCppValues(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = values, p = c.prefix, m = p.toUpperCase();
 	const nodes = new Map(values.types.map(node => [node.id, node]));
 	const declarations = [], structures = [], implementations = [];
 	const finite = new Set(); let changed = true;

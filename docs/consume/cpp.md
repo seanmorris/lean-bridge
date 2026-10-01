@@ -483,6 +483,45 @@ C++ reference does not check later access automatically; copied resource wrapper
 still reject use after their borrowed lifetime ends. Resource equality uses Lean
 identity, including when the two wrappers belong to different result owners.
 
+### Methods and properties
+
+Packages with [receiver exports](../publish/cpp.md#export-methods-and-properties)
+provide named members on `Value<T>`. Properties use zero-argument const accessors.
+Names use snake case: Lean's `retainTicket` becomes `retain_ticket()`.
+
+```cpp file=cpp/owned-receivers.cpp
+#include "owned_aggregates.hpp"
+#include <cassert>
+#include <iostream>
+
+namespace api = lean_bridge::owned_aggregates;
+
+int main() {
+    auto owner = api::new_ticket(42, "receiver");
+    auto view = owner.retain_ticket();
+    auto kept = view.retain();
+    std::cout << view.serial() << '\n';
+    owner.close();
+    assert(view.is_closed());
+    std::cout << kept.serial() << '\n';
+}
+```
+
+A receiver-bound result expires with its receiver's original owner. A method
+can instead borrow another argument's owner; closing an unrelated receiver does
+not expire that result. Copied properties, including strings and integers, own
+their storage after the call.
+
+Consuming methods require `std::move(value).method(...)`. Passing an lvalue or
+const receiver to them fails compilation. Non-consuming properties on resource
+leaves, such as `bundle->primary.serial()`, keep the same lifetime checks as free
+functions. Record fields remain fields; `bundle.primary()` is the exported
+property, while `bundle->primary` reads the record's field.
+
+Receiver packages return resource-containing values as `Value<T>` even when
+they have no borrowed-result exports. `retain()` and `copy_value()` create
+independent owners; generated free functions remain available.
+
 ### Type conversions
 
 Profiles: C++. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.

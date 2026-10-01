@@ -14,10 +14,12 @@ import { ownedCppTransferSignal } from "./owned-transfers.mjs";
  * @param options - Explicit input-consumption support for this projection.
  * @param options.transferredInputs - Watch the C handoff before callback reentry.
  * @param options.anchoredResults - Validate original-owner result lifetimes.
+ * @param options.receiverMembers - Checked nominal method definitions.
  */
-export const ownedCppRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
+export const ownedCppRuntime = (prefix, { transferredInputs = false, anchoredResults = false, receiverMembers = "" } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned C++ prefix");
 	const p = prefix, m = prefix.toUpperCase();
+	const wholeOwners = anchoredResults || Boolean(receiverMembers);
 	return `
 class Error final : public std::runtime_error {
 public:
@@ -71,7 +73,7 @@ public:
     require();
     if (!slot_ || ${anchoredResults ? "borrowed_result_ || " : ""}transfer_.load()) throw Error(${m}_INVALID_ARGUMENT);
   }
-  void begin_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept { ${anchoredResults ? "signal->owner.value = slot_->owner.exchange(nullptr); " : ""}transfer_.store(signal); }
+  void begin_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept { ${wholeOwners ? "signal->owner.value = slot_->owner.exchange(nullptr); " : ""}transfer_.store(signal); }
   void finish_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept;
 ` : ""}
 };
@@ -176,7 +178,7 @@ inline void Lease::require() const {
   checked(${p}_result_validate(state_->require(), owner));` : `if (${transferredInputs ? "transferred() || (" : ""}borrow_ ? !borrow_->active.load() : !slot_->owner.load()${transferredInputs ? ")" : ""}) throw Error(${m}_CLOSED);`}
 }
 ${transferredInputs ? `inline void Lease::finish_transfer(const std::shared_ptr<InputMoveSignal>& signal) noexcept {
-  ${anchoredResults ? `if (signal->consumed()) {
+  ${wholeOwners ? `if (signal->consumed()) {
     transferred_.store(true);
     std::lock_guard lock(state_->mutex_); state_->slots_.remove(slot_);
   } else { slot_->owner.store(std::exchange(signal->owner.value, nullptr)); }` : "if (signal->consumed()) { transferred_.store(true); state_->release(slot_); }"}
@@ -202,7 +204,7 @@ inline std::shared_ptr<State> current_state() {
 struct ResourceAccess;
 template<class Kind> struct ResourceOps;
 }
-template<class Kind> class Resource {
+${receiverMembers}template<class Kind> class Resource${receiverMembers ? " : public detail::ReceiverMembers<Resource<Kind>>" : ""} {
   std::shared_ptr<detail::Lease> lease_;
   void *handle_ = nullptr;
   Resource(std::shared_ptr<detail::Lease> lease, void *handle) noexcept

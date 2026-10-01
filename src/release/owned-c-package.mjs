@@ -32,7 +32,7 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	if(!["c", "cpp"].includes(target)) throw new TypeError("Owned native packaging requires c or cpp");
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: target === "c" });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });
 	if(!model.ownedGraph) throw new TypeError("Owned C packaging requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
@@ -41,8 +41,8 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	const receiverExports = Boolean(model.ownedGraph.receiverExports);
 	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	const p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
-	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults }) : null;
-	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
+	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;
+	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks && !receiverExports) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
 		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== (receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
@@ -143,6 +143,15 @@ close() releases that wrapper; other owning copies remain usable. retain() makes
 an independently owned reference. Calls reject closed, foreign-thread and inherited
 post-fork resources. Foreign-thread destruction queues disposal for the creating
 thread. Thread exit closes its session and releases registered native owners.
+${receiverExports ? `Methods and properties are members of Value<T>. A property is a zero-argument
+const accessor, such as value.serial(). Names use snake_case. Resource wrappers
+also expose non-consuming members that do not need their original whole owner.
+Consuming receiver methods require std::move(value).method(...). Other consuming
+arguments also require rvalues. Methods preserve the receiver or selected input
+owner specified by the author; they never create an implicit retained anchor.
+Resource-containing results use Value<T> even without borrowed-result exports.
+retain() or copy_value creates an independent owner; close() releases a copy.
+` : ""}
 ${anchoredResults ? `Functions returning resource-containing values use Value<T>, including empty
 containers. get(), operator* and operator-> check the complete result lifetime.
 Copies of Value<T> share immutable storage and its original owner. close() drops
@@ -155,7 +164,7 @@ the result and every borrowed descendant. A borrowed result does not retain its
 anchor. Resource equality compares canonical identity across different views.
 Use get() again to validate access; a previously obtained C++ reference does not
 perform further checks by itself. Resource leaves still validate their own use.
-` : "Copied container storage is independent; its resource leaves retain their leases."}${transferredInputs ? anchoredResults ? `
+` : "Copied container storage is independent; its resource leaves retain their leases."}${transferredInputs ? anchoredResults || receiverExports ? `
 
 Transferred inputs take Value<T>&&. Pass std::move(value) after constructing an
 owner with a Lean call or copy_value. The original owner is consumed, not a copied

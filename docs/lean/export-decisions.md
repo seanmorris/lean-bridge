@@ -29,8 +29,9 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [parameter-anchored function results](../publish/c.md#anchor-a-result-to-an-input). The [JavaScript/TypeScript owner API](../javascript-typescript.md#borrowed-results-and-whole-value-owners) uses `LeanValue<T>`; the [WIT/WASI API](../consume/wit-wasi.md#borrowed-results) carries the original owner through the Component Model call.
 The result expires with the selected input owner; callers explicitly retain or
-copy it when they need independent ownership. C also supports
-[methods, properties and receiver-bound results](../publish/c.md#export-methods-and-properties).
+copy it when they need independent ownership. C and C++ also support
+[methods, properties and receiver-bound results](../publish/c.md#export-methods-and-properties),
+with [named C++ members](../publish/cpp.md#export-methods-and-properties).
 Receiver support for other projections and callback-result anchors remain in
 development.
 
