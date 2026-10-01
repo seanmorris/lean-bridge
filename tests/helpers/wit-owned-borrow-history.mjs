@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedReceiver, ownedReceiverChangedPaths } from "./owned-receiver-history.mjs";
 
 export const ownedWitBorrowPath = "docs/evidence/wit-owned-borrows-20261001.json";
 export const ownedWitBorrowBaseline = "3701d0880be3195b249ed17caac6975dea7283f6";
@@ -54,6 +55,7 @@ export const ownedWitBorrowAddedPaths = [
 	, "tests/wit-owned-borrows.test.mjs"
 ].sort();
 let cached;
+export const ownedWitBorrowNormalizationPaths = [...new Set([...ownedWitBorrowChangedPaths, ...ownedReceiverChangedPaths])].sort();
 
 /**
  * Reverse exact ordered edit spans, checking both complete source identities.
@@ -86,6 +88,7 @@ export const reverseOwnedWitBorrowUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedWitBorrow = (path, source, expected) => {
+	source = beforeOwnedReceiver(path, source, expected);
 	if(!ownedWitBorrowChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -113,5 +116,5 @@ export const beforeOwnedWitBorrow = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedWitBorrowHistoricalBytes = (path, bytes, expected) => ownedWitBorrowChangedPaths.includes(path)
+export const ownedWitBorrowHistoricalBytes = (path, bytes, expected) => ownedWitBorrowNormalizationPaths.includes(path)
 	? beforeOwnedWitBorrow(path, bytes.toString("utf8"), expected) : bytes;

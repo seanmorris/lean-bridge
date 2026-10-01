@@ -151,12 +151,15 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		const { projection } = item;
 		const contract = exportContractFor(request.contracts, item.identity);
 		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
+		const parameters = projection.parameters.map((p, i) => ({ ...parameter(p.type, i)
+			, ...contract?.parameters ? { ownership: contract.parameters[i].ownership
+				, lifetime: structuredClone(contract.parameters[i].lifetime) } : {} }));
+		const receiver = contract?.receiver ? (({ type, ownership, lifetime, mutability }) =>
+			({ type, ownership, lifetime, mutability }))(parameters.shift()) : null;
 		return { id: `lean:${item.identity}`, name: item.identity.split(".").at(-1)
-			, kind: "function", owner: null, overloadKey: item.identity
-			, typeParameters: [], receiver: null
-			, parameters: projection.parameters.map((p, i) => ({ ...parameter(p.type, i)
-				, ...contract?.parameters ? { ownership: contract.parameters[i].ownership
-					, lifetime: structuredClone(contract.parameters[i].lifetime) } : {} }))
+			, kind: contract?.receiver ?? "function", owner: receiver?.type.id ?? null
+			, overloadKey: item.identity
+			, typeParameters: [], receiver, parameters
 			, result: { ...site(projection.result, true)
 				, ...contract?.result ? { ownership: contract.result.ownership
 					, lifetime: structuredClone(contract.result.lifetime) } : {} }

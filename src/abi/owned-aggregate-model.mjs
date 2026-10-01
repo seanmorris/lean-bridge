@@ -94,7 +94,8 @@ export const compileOwnedAggregateModel = input => {
 				, result: site(type.callable.result) };
 		}
 	}
-	if(![...nodes.values()].some(node => node.representation === "owned"))
+	if(![...nodes.values()].some(node => node.representation === "owned")
+		&& !declarations.some(declaration => declaration.receiver))
 		fail("owned-aggregate-required", "This model requires at least one reachable owned aggregate");
 	return freeze({ schemaVersion: 1, kind: "owned-aggregate-value-model"
 		, bindingIr: ir, bindingIrSha256: sha256Text(canonicalizeJsonValue(ir))

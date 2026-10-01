@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
 import { generateOwnedRustCallables } from "../../src/backends/rust/owned-callables.mjs";
@@ -63,7 +64,7 @@ export const assertOwnedRustBorrowExecution = async record => {
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
-		assert.equal(item.input.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+		assert.equal(item.input.sourceIdentity.extractorSha256, sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"))));
 		const model = createCompiledNativeModel(item.input, capabilities);
 		assert.equal(model.schemaVersion, 9); assert.equal(model.exports.length, 26);
 		assert.equal(model.ownedGraph.resultAnchors.exports.length, 19);

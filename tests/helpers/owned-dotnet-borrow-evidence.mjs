@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 import { generateOwnedDotnetCalls } from "../../src/backends/dotnet/owned-calls.mjs";
 import { generateOwnedDotnetPackage } from "../../src/backends/dotnet/owned-package.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
@@ -75,7 +76,7 @@ export const assertOwnedDotnetBorrowExecution = async record => {
 	const documentation = await readFile("tests/fixtures/documentation/consumers/dotnet/owned-borrows.cs");
 	const baseLean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	const lean = baseLean + ownedRustBorrowSource;
-	const extractor = sha256(await readFile("src/analyze/NativeExports.lean"));
+	const extractor = sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean")));
 	assert.equal((await readFile("docs/consume/dotnet.md", "utf8")).match(/\x60\x60\x60csharp file=dotnet\/owned-borrows\.cs\n([\s\S]*?)\x60\x60\x60/u)?.[1], documentation.toString("utf8"));
 	assert.equal(record.borrowOnly.probeSha256, sha256(record.borrowOnly.probe));
 	assert.ok((await readFile("tests/owned-dotnet-borrows.test.mjs", "utf8")).includes(record.borrowOnly.probe));

@@ -27,9 +27,10 @@ const nominal = name => {
  * @param options.publicPrefix - Internal backend namespace, independent of Lean identity.
  * @param options.transferredInputs - Admit explicit consumption of input owners.
  * @param options.anchoredResults - Preserve owner-scoped result views.
+ * @param options.receiverExports - Preserve method and property receivers.
  */
-export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false } = {}) => {
-	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults });
+export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
+	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports });
 	const hasAnchors = native.functions.some(item => item.anchor !== undefined);
 	const p = publicPrefix ?? cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");
@@ -136,6 +137,11 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 		, `${p}_status ${p}_session_open(${p}_session **out);`
 		, `${p}_status ${p}_session_close(${p}_session **value);`
 		, `${p}_status ${p}_result_release(${p}_result **value);`];
+	if(functions.some(item => item.receiver === 0)) header.push(
+		"/* Methods and properties pass their receiver as a0. A receiver-borrowed"
+		, "   result additionally requires a0_owner, its original result owner."
+		, "   Other parameters keep their source order after the receiver. */"
+	);
 	if(functions.some(item => item.transfers?.length)) header.push(
 		"/* Transferred arguments take an additional input-owner slot. All arguments"
 		, "   and owners are validated before consumption. Each owner must be distinct"

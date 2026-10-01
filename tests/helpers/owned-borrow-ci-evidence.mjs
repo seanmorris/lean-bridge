@@ -38,12 +38,13 @@ export const assertOwnedBorrowCiRepair = async record => {
 		assert.equal(sha256(reverseOwnedBorrowCiUpdate(current, update)), update.previousSha256);
 	}
 	assert.equal(record.sources["docs/type-surface.v1.json"], previous.sources["docs/type-surface.v1.json"]);
-	const extractor = "src/analyze/NativeExports.lean", bytes = await readFile(extractor);
+	const extractor = "src/analyze/NativeExports.lean", currentExtractor = await readFile(extractor);
+	const bytes = Buffer.from(ownedCppBorrowHistoricalBytes(extractor, currentExtractor, record.extractor.currentSha256));
 	assert.equal(record.extractor.path, extractor);
 	assert.equal(record.extractor.currentSha256, sha256(bytes));
 	assert.equal(record.extractor.previousSha256, "bbee934c9edbf1de092857dc68a0d770d9139fea40e6cfa74a2bfd3abff61b08");
 	assert.equal(sha256(ownedBorrowHistoricalBytes(extractor, bytes, record.extractor.previousSha256)), record.extractor.previousSha256);
-	const unknown = Buffer.concat([bytes, Buffer.from("\n-- unrecorded extractor edit\n")]);
+	const unknown = Buffer.concat([currentExtractor, Buffer.from("\n-- unrecorded extractor edit\n")]);
 	assert.equal(ownedBorrowHistoricalBytes(extractor, unknown, record.extractor.previousSha256), unknown.toString("utf8"));
 	for(const [i, name] of ownedBorrowCiConsumers.entries())
 	{

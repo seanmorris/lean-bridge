@@ -122,6 +122,7 @@
       "additionalProperties": {
         "type": "object", "minProperties": 1, "additionalProperties": false,
         "properties": {
+          "receiver": {"enum": ["method", "property"]},
           "parameters": {"type": "array", "maxItems": 1024, "items": {"$ref": "#/$defs/contractSite"}},
           "result": {"$ref": "#/$defs/contractSite"},
           "effects": {"type": "array", "uniqueItems": true, "items": {"enum": ["allocates", "reads-resource", "writes-resource", "fails", "host-call", "async", "nondeterministic"]}}
@@ -146,11 +147,15 @@
       "type": "object", "additionalProperties": false, "required": ["scope", "anchor"],
       "properties": {
         "scope": {"enum": ["call", "receiver", "parameter", "explicit", "runtime"]},
-        "anchor": {"oneOf": [{"type": "null"}, {"type": "string", "pattern": "^arg(0|[1-9][0-9]*)$(?![\\s\\S])"}]}
+        "anchor": {"oneOf": [{"type": "null"}, {"const": "receiver"}, {"type": "string", "pattern": "^arg(0|[1-9][0-9]*)$(?![\\s\\S])"}]}
       },
       "if": {"properties": {"scope": {"const": "parameter"}}},
-      "then": {"properties": {"anchor": {"type": "string"}}},
-      "else": {"properties": {"anchor": {"type": "null"}}}
+      "then": {"properties": {"anchor": {"type": "string", "pattern": "^arg(0|[1-9][0-9]*)$(?![\\s\\S])"}}},
+      "else": {
+        "if": {"properties": {"scope": {"const": "receiver"}}},
+        "then": {"properties": {"anchor": {"const": "receiver"}}},
+        "else": {"properties": {"anchor": {"type": "null"}}}
+      }
     },
     "specializations": {
       "type": "array", "maxItems": 128,

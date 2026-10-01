@@ -430,6 +430,58 @@ Compile with the installed package's pkg-config flags or CMake target. This prin
 The [author configuration](../publish/c.md#anchor-a-result-to-an-input) selects
 which function results follow this rule.
 
+### Methods and properties
+
+Prepared packages can mark exports as methods or properties. Both use ordinary
+C calls: pass the receiver immediately after the session. A property has no
+other input. When a result borrows the receiver, pass its original result owner
+immediately after it. A result borrowing another argument takes that argument's
+owner instead. Releasing an unrelated receiver does not expire that result.
+
+For a package exposing `retainTicket` as a receiver-borrowing method and `serial`
+as a property, save `receiver.c`:
+
+```c
+#include "owned_aggregates.h"
+#include <stdio.h>
+
+int main(void) {
+    owned_aggregates_session *session = NULL;
+    owned_aggregates_result *root = NULL, *view_owner = NULL, *number_owner = NULL;
+    owned_aggregates_ticket_t ticket = NULL, view = NULL;
+    mpz_t input;
+    mpz_init_set_ui(input, 42);
+    mpz_srcptr number = NULL;
+    int result = 1;
+#define CALL(expression) do { if ((expression) != OWNED_AGGREGATES_OK) goto cleanup; } while (0)
+    CALL(owned_aggregates_session_open(&session));
+    CALL(owned_aggregates_new_ticket(session, input,
+        (owned_aggregates_scalar_string_t){"example", 7}, &ticket, &root));
+    CALL(owned_aggregates_retain_ticket(session, ticket, root, &view, &view_owner));
+    CALL(owned_aggregates_serial(session, view, &number, &number_owner));
+    gmp_printf("%Zd\n", number);
+    CALL(owned_aggregates_result_release(&root));
+    if (owned_aggregates_result_validate(session, view_owner) != OWNED_AGGREGATES_CLOSED)
+        goto cleanup;
+    puts("receiver released: view expired");
+    result = 0;
+cleanup:
+    owned_aggregates_result_release(&number_owner);
+    owned_aggregates_result_release(&view_owner);
+    owned_aggregates_result_release(&root);
+    owned_aggregates_session_close(&session);
+    mpz_clear(input);
+    return result;
+}
+```
+
+Compile with the installed package's pkg-config flags or CMake target. It prints
+`42`, then `receiver released: view expired`. Keep and release the view's owner
+even after expiration. Explicitly retain a resource or copy an aggregate while
+the view is valid if it must survive its receiver. The
+[author configuration](../publish/c.md#export-methods-and-properties) selects
+methods, properties and their lifetime rules.
+
 ### Callbacks containing resources
 
 Set the generated `_host` descriptor's `call` and `context` fields for a C

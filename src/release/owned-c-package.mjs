@@ -32,23 +32,25 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	if(!["c", "cpp"].includes(target)) throw new TypeError("Owned native packaging requires c or cpp");
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: target === "c" });
 	if(!model.ownedGraph) throw new TypeError("Owned C packaging requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
-	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults });
+	const receiverExports = Boolean(model.ownedGraph.receiverExports);
+	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	const p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults }) : null;
 	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
 		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
-	if(adapter.schemaVersion !== (anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
+	if(adapter.schemaVersion !== (receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
 		|| adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt)) || adapter.bindingIrSha256 !== model.bindingIrSha256
-		|| adapter.library !== `lib${p}.so` || adapter.ownedValues?.schemaVersion !== (anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1) || adapter.gmp?.version !== "6.3.0"
+		|| adapter.library !== `lib${p}.so` || adapter.ownedValues?.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1) || adapter.gmp?.version !== "6.3.0"
 		|| canonicalJson(adapter.ownedValues.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)
 		|| canonicalJson(adapter.ownedValues.resultAnchors ?? null) !== canonicalJson(model.ownedGraph.resultAnchors ?? null)
+		|| canonicalJson(adapter.ownedValues.receiverExports ?? null) !== canonicalJson(model.ownedGraph.receiverExports ?? null)
 		|| canonicalJson(adapter.ownedValues.hostCallbacks ?? null) !== canonicalJson(model.ownedGraph.hostCallbacks ?? null)
 		|| adapter.ownedValues.headerSha256 !== sha256(generated.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(generated.source)
 		|| (await nativeArtifactPaths(adapterRoot)).some(path => path !== "native-c-adapter.json" && !Object.hasOwn(adapter.files, path)))
@@ -211,7 +213,13 @@ Close sessions with ${p}_session_close. Copied result storage survives session c
 until result release; resource calls do not. Sessions and results belong to their
 creating thread and process. Inherited handles reject after fork. Cleanup remains
 available after runtime retirement. Initialize output handles to NULL; functions
-publish outputs only on success. Keep and release earlier owners before reusing slots.${transferredInputs ? `
+publish outputs only on success. Keep and release earlier owners before reusing slots.${receiverExports ? `
+
+Methods and properties take their receiver as the first argument. Receiver-borrowed
+results also take that receiver's original result owner immediately after it.
+Releasing or consuming the receiver owner expires the result and its descendants.
+A result anchored to another parameter follows that parameter's owner instead.
+` : ""}${transferredInputs ? `
 Transferred inputs take an additional result-owner pointer immediately after the
 value. Supply a distinct owner from the same session for each transferred argument.
 Every resource in the value must belong to that owner. The bridge validates all
@@ -264,7 +272,7 @@ ${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n"
 `);
 	const files = [];
 	for(const path of await nativeArtifactPaths(root)) files.push({ path, bytes: await readFile(join(root, path)), mode: 0o644 });
-	const manifest = { schemaVersion: anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2
+	const manifest = { schemaVersion: receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2
 		, kind: `lean-bridge-native-${target}-package`
 		, ecosystem: target, name, version, component: model.component
 		, profile: "native-library-v1"
@@ -284,7 +292,7 @@ ${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n"
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: target
-		, backend: `native-${target}-owned-v${anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1}`
+		, backend: `native-${target}-owned-v${receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1}`
 		, runtimeIdentity
 		, glibcMinimumVersion
 		, packages: [{ archive, sha256: sha256(bytes), bytes: bytes.length, name, version, compilerAccess: false }]

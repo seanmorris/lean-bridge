@@ -3233,3 +3233,29 @@ CI requires all six JSON reports in `build/owned-wit-borrows/` and retains
 `build/wit-owned-borrows.log`. The [source-bound receipt](../evidence/wit-owned-borrows-20261001.md)
 keeps prior receipts unchanged. Receiver and callback-result anchors and the
 final Docker audit remain separate work.
+
+## C receiver acceptance
+
+Run the receiver gate with the pinned Lean and native C toolchain:
+
+```sh
+npm run test:owned-receivers
+```
+
+The gate requires eight passing tests and no skips. Both ordinary-source and
+reviewed APIs execute fifteen method/property exports through compiled Lean.
+Checks cover receiver-bound results, a result borrowed from another argument,
+consuming receivers, callbacks, recursive values, allocation failures and
+ASan/UBSan cleanup. Seven deliberately broken adapters must fail the original
+consumer assertions. Lean rejects invalid receiver declarations; reviewed
+contracts must preserve the selected method/property kind and anchor. Separate
+resource-only APIs test methods and properties without owned aggregates,
+borrowed results, transfers or host callbacks.
+
+Installed tests use an offline-installed CLI, build twice independently, compare
+archive bytes, reject forged contracts and generated sources, remove producers,
+install offline, relocate the package and execute the C documentation example.
+CI retains `build/owned-receivers.log` and all six reports in
+`build/owned-receivers/`. The [source-bound receipt](../evidence/owned-receivers-20261001.md)
+records this C milestone. Other receiver projections, callback-result anchors
+and the final Docker audit remain separate work.

@@ -190,9 +190,10 @@ export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declara
 		const original = declarations.get(declaration.id);
 		const selectedName = original.source.extensions?.["lean-lang.org/specialization"]?.name ?? original.source.declaration;
 		const source = selected.find(item => item.name === selectedName);
-		if(!source || declaration.kind !== "function" || declaration.receiver) fail("export lacks a selected pure function");
-		const names = declaration.parameters.map((_, index) => `a${index}`);
-		const parameters = declaration.parameters.map((site, index) => `(${names[index]} : ${carrier(site.type)})`).join(" ");
+		if(!source || !["function", "method", "property"].includes(declaration.kind)) fail("export lacks a selected pure function");
+		const inputs = [...declaration.receiver ? [declaration.receiver] : [], ...declaration.parameters];
+		const names = inputs.map((_, index) => `a${index}`);
+		const parameters = inputs.map((site, index) => `(${names[index]} : ${carrier(site.type)})`).join(" ");
 		const call = `${source.specialization ? `(${source.specialization.application})` : `_root_.${source.name}`} ${names.join(" ")}`;
 		emit(symbols.exports[declaration.id], parameters || "(_bridgeUnit : _root_.Unit)", carrier(declaration.result.type)
 			, checked(names, [`pure (${call})`]), names.length);

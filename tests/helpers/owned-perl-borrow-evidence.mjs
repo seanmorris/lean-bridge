@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedPerlPackage } from "../../src/backends/perl/owned-package.mjs";
 import { generateOwnedPerlXs } from "../../src/backends/perl/owned-xs.mjs";
@@ -177,7 +178,7 @@ const assertBorrowOnly = async record => {
 	assert.deepEqual(record.observations.map(item => item.mode + ":" + variant(item.perl)).sort()
 		, ["ordinary", "reviewed"].flatMap(mode => variants.map(name => mode + ":" + name)).sort());
 	const lean = sha256(await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean"));
-	const extractor = sha256(await readFile("src/analyze/NativeExports.lean"));
+	const extractor = sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean")));
 	for(const item of record.observations)
 	{
 		assert.equal(item.actualLean, true); assert.equal(item.code, 0);
@@ -230,7 +231,7 @@ export const assertOwnedPerlBorrowArtifacts = async record => {
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean));
-		assert.equal(sha256(await readFile("src/analyze/NativeExports.lean")), item.input.sourceIdentity.extractorSha256);
+		assert.equal(sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"))), item.input.sourceIdentity.extractorSha256);
 		assert.equal(item.consumerSha256, consumer);
 		const model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true });
 		assert.equal(model.schemaVersion, 9); assert.equal(model.exports.length, 26);

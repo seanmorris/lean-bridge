@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedRubyConversions } from "../../src/backends/ruby/owned-conversions.mjs";
 import { generateOwnedRubyPackage } from "../../src/backends/ruby/owned-package.mjs";
@@ -62,7 +63,7 @@ export const assertOwnedRubyBorrowExecution = async record => {
 	for(const group of [record.runtime, record.packages, record.borrowOnly.observations])
 		assert.deepEqual(group.map(item => item.mode), ["ordinary", "reviewed"]);
 	const baseLean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
-	const extractor = sha256(await readFile("src/analyze/NativeExports.lean"));
+	const extractor = sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean")));
 	const probePath = "tests/fixtures/structured-types/owned-ruby-borrows.rb";
 	let probe = await readFile(probePath, "utf8");
 	if(!repaired) probe = beforeManagedClose(probePath, probe, record.sources[probePath]);

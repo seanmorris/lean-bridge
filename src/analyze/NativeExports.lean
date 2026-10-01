@@ -512,7 +512,7 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String)
     return none
   if owned && result && identity &&
       (site.getObjValAs? String "ownership").toOption == some "borrow" &&
-      (lifetime.getObjValAs? String "scope").toOption == some "parameter" then
+      ["parameter", "receiver"].contains ((lifetime.getObjValAs? String "scope").toOption.getD "") then
     return none
   let ownership := if identity then (if result then "lease" else "borrow") else "copy"
   if (site.getObjValAs? String "ownership").toOption != some ownership then
@@ -527,6 +527,21 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String)
 
 def contractProblem (contract projection : Json) (owned : Bool := false) : Option String := Id.run do
   let parameters := (projection.getObjValAs? (Array Json) "parameters").toOption.getD #[]
+  let receiverKind := (contract.getObjValAs? String "receiver").toOption
+  if let some kind := receiverKind then
+    if !owned then return some "receiver exports require the explicit ownership-aware profile"
+    let receiver := (parameters[0]?.bind fun p => (p.getObjVal? "type").toOption).getD Json.null
+    let root := (receiver.getObjVal? "root").toOption.getD Json.null
+    let definitions := (receiver.getObjValAs? (Array Json) "types").toOption.getD #[]
+    let definition := definitions.find? fun item =>
+      (item.getObjValAs? String "name").toOption == (root.getObjValAs? String "name").toOption
+    let nominal := (receiver.getObjValAs? String "kind").toOption == some "owned-graph" &&
+      (root.getObjValAs? String "kind").toOption == some "reference" &&
+      ["record", "variant"].contains ((definition.bind fun item => (item.getObjValAs? String "kind").toOption).getD "")
+    if (receiver.getObjValAs? String "kind").toOption != some "resource" && !nominal then
+      return some "receiver must be the first argument and name a resource or owned record or variant"
+    if kind == "property" && parameters.size != 1 then
+      return some "a property must have only its receiver argument"
   if let .ok effects := contract.getObjValAs? (Array String) "effects" then
     let hasCallback := parameters.any fun parameter =>
       ((parameter.getObjVal? "type" >>= fun type => type.getObjValAs? String "kind").toOption == some "callback")
@@ -553,7 +568,11 @@ def contractProblem (contract projection : Json) (owned : Bool := false) : Optio
     if (site.getObjValAs? String "ownership").toOption == some "borrow" then
       let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null
       let anchor := (lifetime.getObjValAs? String "anchor").toOption.getD ""
-      let index := (List.range parameters.size).find? fun index => anchor == s!"arg{index}"
+      let receiver := (lifetime.getObjValAs? String "scope").toOption == some "receiver"
+      let index := if receiver then (if receiverKind.isSome then some 0 else none)
+        else (List.range parameters.size).find? fun index => anchor == s!"arg{index}"
+      if !receiver && receiverKind.isSome && index == some 0 then
+        return some "result: use receiver scope to borrow from the receiver"
       if let some index := index then
         let anchorType := (parameters[index]!.getObjVal? "type").toOption.getD Json.null
         if !["resource", "callback", "owned-graph"].contains ((anchorType.getObjValAs? String "kind").toOption.getD "") then

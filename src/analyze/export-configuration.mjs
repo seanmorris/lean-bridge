@@ -85,8 +85,10 @@ export const validateExportConfiguration = configuration => {
 			if(!specializationName.test(name)) fail("invalid-export-configuration", "contracts require exact Lean export names");
 			if(configuration.exports !== undefined && (!Array.isArray(configuration.exports) || !configuration.exports.includes(name)))
 				fail("invalid-export-configuration", `Contract ${name} must refer to a selected export`);
-			closed(contract, ["parameters", "result", "effects"], `contracts.${name}`);
+			closed(contract, ["parameters", "result", "effects", "receiver"], `contracts.${name}`);
 			if(!Object.keys(contract).length) fail("invalid-export-configuration", `Contract ${name} must declare a decision`);
+			if(contract.receiver !== undefined && !["method", "property"].includes(contract.receiver))
+				fail("invalid-export-configuration", `Contract ${name} receiver must select method or property`);
 			if(contract.effects !== undefined && (!Array.isArray(contract.effects)
 				|| contract.effects.some(effect => !effects.includes(effect))
 				|| new Set(contract.effects).size !== contract.effects.length))
@@ -109,7 +111,8 @@ export const validateExportConfiguration = configuration => {
 					closed(site.lifetime, ["scope", "anchor"], `Contract ${name} lifetime`);
 					const { scope, anchor } = site.lifetime;
 					if(!["call", "receiver", "parameter", "explicit", "runtime"].includes(scope)
-						|| (scope === "parameter" ? typeof anchor !== "string" || !/^arg(?:0|[1-9][0-9]*)$(?![\s\S])/.test(anchor) : anchor !== null))
+						|| (scope === "parameter" ? typeof anchor !== "string" || !/^arg(?:0|[1-9][0-9]*)$(?![\s\S])/.test(anchor)
+							: anchor !== (scope === "receiver" ? "receiver" : null)))
 						fail("invalid-export-configuration", `Contract ${name} has an invalid lifetime or parameter anchor`);
 					if(scope === "parameter" && contract.parameters && Number(anchor.slice(3)) >= contract.parameters.length)
 						fail("invalid-export-configuration", `Contract ${name} lifetime anchor is outside its parameters`);
@@ -283,6 +286,17 @@ export const exportContractEffects = (projection, ownedAggregates = false) => {
  */
 export const exportContractProblem = (contract, projection, ownedAggregates = false) => {
 	if(!contract || projection.status !== "supported") return null;
+	if(contract.receiver !== undefined)
+	{
+		if(!ownedAggregates) return "receiver exports require the explicit ownership-aware profile";
+		const receiver = projection.parameters[0]?.type;
+		const definition = receiver?.kind === "owned-graph" && receiver.root.kind === "reference"
+			? receiver.types.find(type => type.name === receiver.root.name) : null;
+		if(receiver?.kind !== "resource" && !["record", "variant"].includes(definition?.kind))
+			return "receiver must be the first argument and name a resource or owned record or variant";
+		if(contract.receiver === "property" && projection.parameters.length !== 1)
+			return "a property must have only its receiver argument";
+	}
 	if(contract.effects && canonicalJson(contract.effects.toSorted()) !== canonicalJson(exportContractEffects(projection, ownedAggregates)))
 		return "effects differ from the implemented boundary effects";
 	if(contract.parameters && contract.parameters.length !== projection.parameters.length)
@@ -297,10 +311,14 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 			&& ["call", "explicit"].includes(site.lifetime?.scope) && site.lifetime.anchor === null) continue;
 		const anchored = ownedAggregates && result && site.ownership === "borrow"
 			&& exportContractOwnership(type).ownership !== "copy"
-			&& site.lifetime?.scope === "parameter";
+			&& ["parameter", "receiver"].includes(site.lifetime?.scope);
 		if(anchored)
 		{
-			const index = projection.parameters.findIndex((_, index) => site.lifetime.anchor === `arg${index}`);
+			const receiver = site.lifetime.scope === "receiver";
+			const index = receiver ? contract.receiver ? 0 : -1
+				: projection.parameters.findIndex((_, index) => site.lifetime.anchor === `arg${index}`);
+			if(!receiver && contract.receiver && index === 0)
+				return "result: use receiver scope to borrow from the receiver";
 			if(index < 0 || exportContractOwnership(projection.parameters[index].type).ownership === "copy")
 				return "result: borrowed results require a retained identity or aggregate anchor";
 			if(contract.parameters?.[index].ownership === "transfer")

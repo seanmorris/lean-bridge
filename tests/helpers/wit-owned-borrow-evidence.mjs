@@ -12,6 +12,7 @@ import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
 import { ownedWitBorrowProbe, ownedWitBorrowNativeSource } from "./wit-owned-borrow-probe.mjs";
 import { ownedWitBorrowMutations } from "./wit-owned-borrow-mutants.mjs";
 import { assertOwnedWitBorrowCi } from "./wit-owned-borrow-ci.mjs";
+import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 
 export const ownedWitBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-wit-borrows";
 export const ownedWitBorrowScope = Object.freeze({
@@ -116,7 +117,9 @@ export const assertOwnedWitBorrowExecution = async record => {
 		assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 		for(const path of cliConfig.files)
 		{
-			const file = report.files.find(entry => entry.path === path), bytes = await readFile(path);
+			const file = report.files.find(entry => entry.path === path);
+			assert.ok(file, path);
+			const bytes = Buffer.from(ownedReceiverHistoricalBytes(path, await readFile(path), file.sha256));
 			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.cliBuilds.length, 2);

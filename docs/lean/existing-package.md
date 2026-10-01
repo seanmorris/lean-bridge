@@ -162,7 +162,7 @@ For the `Library.echo` definition above, this configuration requires a copied `U
 }
 ```
 
-Each contract needs at least one of `parameters`, `result` or `effects`. Omitted decisions keep the adapter's existing rules. If supplied, `parameters` covers every runtime argument in order, after specialization and configured closure arity. The file accepts at most 128 contracts. When `exports` is present, every contract key must appear there; otherwise it must name an export discovered by Lean.
+Each contract needs at least one of `parameters`, `result`, `effects` or `receiver`. Omitted decisions keep the adapter's existing rules. If supplied, `parameters` covers every runtime argument in order, including a selected receiver, after specialization and configured closure arity. The file accepts at most 128 contracts. When `exports` is present, every contract key must appear there; otherwise it must name an export discovered by Lean.
 
 | Value at the boundary | Supported ownership and lifetime |
 | --- | --- |
@@ -177,9 +177,19 @@ npm leases use `dispose()` or `Symbol.dispose`. Perl, Python and Ruby leases use
 
 `refinement: "reject"` keeps unsupported refined types rejected; it does not erase a `Fin` bound or a `Subtype` predicate. C, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl packages support [explicit input transfers](../publish/c.md#transfer-input-ownership) for resource-containing values and returned Lean closures. [Native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs) and [WIT/WASI](../consume/wit-wasi.md#consuming-inputs) also consume checked resource leases. Ordinary configuration and reviewed APIs preserve those decisions through compiler analysis.
 
-C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages accept [function results anchored to an input owner](../publish/c.md#anchor-a-result-to-an-input). Use `"ownership": "borrow"` with a `"parameter"` lifetime and an anchor such as `"arg0"`. The anchor must be an existing non-copied, non-transferred input. Receiver and callback-result anchors, `{ "constructor": "Library.checked" }` and additional effect labels still require their [type-family implementation](../architecture/cross-language-authoring.md#stages).
+C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages accept [function results anchored to an input owner](../publish/c.md#anchor-a-result-to-an-input). Use `"ownership": "borrow"` with a `"parameter"` lifetime and an anchor such as `"arg0"`. The anchor must be an existing non-copied, non-transferred input.
 
-Analysis and both builders bind contracts into the compiler request and source identity. Target compilation checks them again. Generated Binding IR records them under `lean-lang.org/export-contract` for inspection without adding proof claims. Public `analyze` uses the scalar profile; native-only contracts must be checked with the CPAN build.
+C builds also accept `"receiver": "method"` or `"receiver": "property"`, selecting
+the first Lean runtime argument. It must be a declared resource or an owned
+record or variant; a property takes no additional arguments. A receiver-bound
+result uses `"scope": "receiver", "anchor": "receiver"`. Parameter anchors keep
+their original runtime indices, so `"arg1"` names the argument after the
+receiver. See [the receiver configuration](../publish/c.md#export-methods-and-properties).
+Other receiver projections, callback-result anchors,
+`{ "constructor": "Library.checked" }` and additional effect labels still
+require their [type-family implementation](../architecture/cross-language-authoring.md#stages).
+
+Analysis and both builders bind contracts into the compiler request and source identity. Target compilation checks them again. Generated Binding IR records them under `lean-lang.org/export-contract` for inspection without adding proof claims. Public `analyze` uses the scalar profile; check native-only contracts with a build for their supported consumer target.
 
 ### Select modules in a custom source directory
 

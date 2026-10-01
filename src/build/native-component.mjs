@@ -119,12 +119,12 @@ export const generateCompiledCallbacks = model => {
  * @param options - Source selection, pinned compiler and native runtime paths.
  */
 export const buildNativeComponent = async options => {
-	const { runtimeRoot, leanPrefix, cc = "cc", signal, copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false } = options;
+	const { runtimeRoot, leanPrefix, cc = "cc", signal, copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false } = options;
 	const runtime = resolve(runtimeRoot);
 	const { manifest: runtimeManifest } = await readVerifiedNativeRuntime(runtime);
 	if(runtimeManifest.leanCommit !== pinnedNativeLean) throw new Error("incompatible native runtime");
 	const createModel = input => {
-		const model = createCompiledNativeModel(input, { ownedGraphs, ownedHostCallbacks, ownedInputTransfers, ownedAnchoredResults });
+		const model = createCompiledNativeModel(input, { ownedGraphs, ownedHostCallbacks, ownedInputTransfers, ownedAnchoredResults, ownedReceiverExports });
 		if(model.copiedGraph && !copiedGraphs) throw Object.assign(new TypeError("Native graph components require a graph-capable host adapter"), { code: "native-graph-projection-unavailable" });
 		return model;
 	};
@@ -177,9 +177,10 @@ export const buildNativeComponent = async options => {
 				, `-Wl,-soname,${library}`
 				, "-o"
 				, join(staging, library)], { signal });
-			const receipt = { schemaVersion: model.ownedGraph?.resultAnchors ? 5 : model.ownedGraph?.inputTransfers ? 4 : model.ownedGraph?.hostCallbacks ? 3 : 2
+			const receipt = { schemaVersion: model.ownedGraph?.receiverExports ? 6 : model.ownedGraph?.resultAnchors ? 5 : model.ownedGraph?.inputTransfers ? 4 : model.ownedGraph?.hostCallbacks ? 3 : 2
 				, ...(model.ownedGraph?.inputTransfers ? { inputTransfers: model.ownedGraph.inputTransfers } : {})
 				, ...(model.ownedGraph?.resultAnchors ? { resultAnchors: model.ownedGraph.resultAnchors } : {})
+				, ...(model.ownedGraph?.receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {})
 				, ...(model.ownedGraph?.hostCallbacks ? { callbackSourceSha256: sha256(callbacks) } : {})
 				, profile: "native-library-v1"
 				, runtimeIdentity: sha256(canonicalJson(runtimeManifest))

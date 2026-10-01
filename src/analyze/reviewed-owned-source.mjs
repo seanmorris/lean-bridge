@@ -67,7 +67,7 @@ const checkReview = document => {
 		const copy = copied(value.type);
 		if(transfers && !copy && !result && value.ownership === "transfer"
 			&& ["call", "explicit"].includes(value.lifetime?.scope) && value.lifetime.anchor === null) return;
-		if(anchors && !copy && result && value.ownership === "borrow" && value.lifetime?.scope === "parameter") return;
+		if(anchors && !copy && result && value.ownership === "borrow" && ["parameter", "receiver"].includes(value.lifetime?.scope)) return;
 		reject(value.ownership !== (copy ? "copy" : result ? "lease" : "borrow")
 			|| !same(value.lifetime, copy ? null : { scope: result ? "explicit" : "call", anchor: null }), path);
 	};
@@ -106,14 +106,21 @@ const checkReview = document => {
 	for(const declaration of document.declarations)
 	{
 		source(declaration);
+		const inputs = [...declaration.receiver ? [declaration.receiver] : [], ...declaration.parameters];
 		const hasCallback = declaration.parameters.some(value => isCallback(value.type));
 		const effects = [...(hasCallback ? ["fails", "host-call"] : [])
-			, ...(declaration.parameters.some(value => !copied(value.type)) ? ["reads-resource"] : [])
+			, ...(inputs.some(value => !copied(value.type)) ? ["reads-resource"] : [])
 			, ...(!copied(declaration.result.type) ? ["allocates"] : [])].sort();
-		reject(declaration.kind !== "function" || declaration.owner !== null || declaration.receiver !== null
+		reject(!["function", "method", "property"].includes(declaration.kind)
+			|| (declaration.kind === "property" && declaration.parameters.length !== 0)
 			|| declaration.typeParameters.length || declaration.capabilities.length || declaration.mutability !== "immutable"
 			|| declaration.resultMode !== "value" || !same(declaration.effects.toSorted(), effects)
 			|| !same(declaration.failure, hasCallback ? callbackFailure : pureFailure), declaration.id);
+		if(declaration.receiver)
+		{
+			reject(declaration.receiver.mutability !== "immutable", `${declaration.id}.receiver`);
+			site(declaration.receiver, `${declaration.id}.receiver`, false, true);
+		}
 		declaration.parameters.forEach((value, index) => parameter(value, `${declaration.id}.parameters[${index}]`, true));
 		site(declaration.result, `${declaration.id}.result`, true, false, true);
 	}
@@ -140,18 +147,23 @@ export const validateReviewedOwnedSource = review => {
 export const reviewedOwnedSourceSelection = review => {
 	const document = validateReviewedOwnedSource(review);
 	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
-	const contracts = Object.fromEntries(document.declarations.filter(item => item.result.ownership === "borrow" || item.parameters.some(value => value.ownership === "transfer"))
-		.map(item => [item.source.declaration, {
-			...item.parameters.some(value => value.ownership === "transfer")
-				? { parameters: item.parameters.map(({ ownership, lifetime }) => ({ ownership, lifetime: structuredClone(lifetime) })) } : {}
-			, ...item.result.ownership === "borrow" ? { result: { ownership: "borrow"
-				, lifetime: { scope: "parameter", anchor: `arg${item.parameters.findIndex(value => value.name === item.result.lifetime.anchor)}` } } } : {}
-		}])
+	const contracts = Object.fromEntries(document.declarations.filter(item => item.receiver || item.result.ownership === "borrow" || item.parameters.some(value => value.ownership === "transfer"))
+		.map(item => {
+			const inputs = [...item.receiver ? [item.receiver] : [], ...item.parameters];
+			return [item.source.declaration, {
+				...item.receiver ? { receiver: item.kind } : {}
+				, ...inputs.some(value => value.ownership === "transfer")
+					? { parameters: inputs.map(({ ownership, lifetime }) => ({ ownership, lifetime: structuredClone(lifetime) })) } : {}
+				, ...item.result.ownership === "borrow" ? { result: { ownership: "borrow"
+					, lifetime: item.result.lifetime.scope === "receiver" ? { scope: "receiver", anchor: "receiver" }
+						: { scope: "parameter", anchor: `arg${inputs.findIndex(value => value.name === item.result.lifetime.anchor)}` } } } : {}
+			}];
+		})
 		.sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0));
 	return { exports: document.declarations.map(item => item.source.declaration).sort()
 		, resources: document.types.filter(type => type.kind === "resource").map(item => item.source.declaration).sort()
 		, arities: document.declarations.filter(item => item.result.type.kind === "named" && callbacks.has(item.result.type.id))
-			.map(item => [item.source.declaration, item.parameters.length]).sort(([a], [b]) => a.localeCompare(b))
+			.map(item => [item.source.declaration, item.parameters.length + Number(item.receiver !== null)]).sort(([a], [b]) => a.localeCompare(b))
 		, ownedAggregates: structuredClone(document.aggregatePolicy)
 		, ...(Object.keys(contracts).length ? { contracts } : {}) };
 };
@@ -217,7 +229,7 @@ export const verifyReviewedOwnedSourceInputs = (sourceIdentity, inputs) => {
 const normalizeEffects = document => ({ ...document
 	, declarations: document.declarations.map(item => ({ ...item, effects: item.effects.toSorted()
 		, result: item.result.ownership === "borrow" && item.result.lifetime.scope === "parameter"
-			? { ...item.result, lifetime: { scope: "parameter", anchor: `arg${item.parameters.findIndex(value => value.name === item.result.lifetime.anchor)}` } } : item.result }))
+			? { ...item.result, lifetime: { scope: "parameter", anchor: `arg${item.parameters.findIndex(value => value.name === item.result.lifetime.anchor) + Number(item.receiver !== null)}` } } : item.result }))
 	, types: document.types.map(item => item.callable ? { ...item, callable: { ...item.callable, effects: item.callable.effects.toSorted() } } : item) });
 
 const retainAnnotations = (reviewed, compiled) => {

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedPhpCalls } from "../../src/backends/php/owned-calls.mjs";
 import { generateOwnedPhpPackage } from "../../src/backends/php/owned-package.mjs";
@@ -120,7 +121,7 @@ export const assertOwnedPhpBorrowArtifacts = async record => {
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
-	const extractor = sha256(await readFile("src/analyze/NativeExports.lean"));
+	const extractor = sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean")));
 	for(const item of [...record.runtime, ...record.packages])
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");

@@ -23,9 +23,11 @@ const fail = message => { throw new TypeError(`Owned native values: ${message}`)
  * @param options.wordBits - Lean and host pointer width, either 32 or 64.
  * @param options.transferredInputs - Caller implements atomic input-owner consumption.
  * @param options.anchoredResults - Caller preserves exact borrowed-result owners.
+ * @param options.receiverExports - Caller implements typed receiver exports.
  */
-export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false, anchoredResults = false } = {}) => {
+export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
 	if(![32, 64].includes(wordBits)) fail("machine-word width must be 32 or 64");
+	if(typeof receiverExports !== "boolean") fail("receiver capability must be explicit");
 	const targetScalars = { ...scalars, usize: `uint${wordBits}_t`, isize: `int${wordBits}_t` };
 	const model = compileOwnedAggregateModel(ir);
 	const prefix = `lbov_${model.bindingIrSha256.slice(0, 20)}`;
@@ -74,21 +76,26 @@ export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredIn
 			&& !value.optional && value.default == null
 			&& ["call", "explicit"].includes(value.lifetime?.scope) && value.lifetime.anchor === null) return resolve(value.type);
 		if(anchoredResults && transfers && !copied && result && value.ownership === "borrow"
-			&& value.lifetime?.scope === "parameter") return resolve(value.type);
+			&& (value.lifetime?.scope === "parameter" || (receiverExports && value.lifetime?.scope === "receiver"))) return resolve(value.type);
 		if(value.optional || value.default != null || value.ownership !== (copied ? "copy" : result ? "lease" : "borrow")
 			|| (copied ? value.lifetime !== null : value.lifetime?.scope !== (result ? "explicit" : "call") || value.lifetime?.anchor !== null))
 			fail("this transport requires copied values, call-scoped input borrows and explicit output leases");
 		return resolve(value.type);
 	};
 	const functions = model.declarations.map(declaration => {
-		if(declaration.kind !== "function" || declaration.receiver || declaration.resultMode !== "value")
+		if((declaration.kind !== "function" || declaration.receiver)
+			&& !(receiverExports && ["method", "property"].includes(declaration.kind) && declaration.receiver))
 			fail("only synchronous function exports are supported");
-		const transfers = declaration.parameters.flatMap((value, index) => value.ownership === "transfer" ? [index] : []);
+		if(declaration.resultMode !== "value") fail("only synchronous function exports are supported");
+		const inputs = [...declaration.receiver ? [declaration.receiver] : [], ...declaration.parameters];
+		const transfers = inputs.flatMap((value, index) => value.ownership === "transfer" ? [index] : []);
 		return { id: declaration.id, name: declaration.name
 			, symbol: `${prefix}_f${sha256(declaration.id).slice(0, 20)}`
-			, parameters: declaration.parameters.map(value => site(value, false, true))
+			, parameters: inputs.map(value => site(value, false, true))
+			, ...declaration.receiver ? { receiver: 0 } : {}
 			, ...(transfers.length ? { transfers } : {})
-			, ...declaration.result.ownership === "borrow" ? { anchor: declaration.parameters.findIndex(value => value.name === declaration.result.lifetime.anchor) } : {}
+			, ...declaration.result.ownership === "borrow" ? { anchor: declaration.result.lifetime.scope === "receiver" ? 0
+				: inputs.findIndex(value => value.name === declaration.result.lifetime.anchor) } : {}
 			, result: site(declaration.result, true, true) };
 	});
 	const callbacks = nodes.filter(node => node.kind === "callback").map(node => ({

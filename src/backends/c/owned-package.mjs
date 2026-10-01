@@ -26,17 +26,21 @@ export const generateOwnedCPackage = (options, backend = null) => {
 	const generated = generateOwnedNativeValueAdapters(options);
 	const hasTransfers = generated.layout.functions.some(item => item.transfers?.length);
 	const hasAnchors = generated.layout.functions.some(item => item.anchor !== undefined);
+	if(backend && generated.layout.functions.some(item => item.receiver === 0) && backend.receiverExports !== true)
+		throw new TypeError("Owned C transport does not support receiver exports");
 	if(backend && hasTransfers && backend.transferredInputs !== true) throw new TypeError("Owned C transport does not support transferred inputs");
 	if(backend && hasAnchors && backend.anchoredResults !== true) throw new TypeError("Owned C transport does not support anchored results");
 	const publicPrefix = backend ? backend.publicPrefix(generated.layout.model.bindingIr, {
 		transferredInputs: options.transferredInputs
 		, anchoredResults: options.anchoredResults
+		, receiverExports: options.receiverExports
 	}) : options.publicPrefix;
 	const values = generateOwnedCValues(generated.layout.model.bindingIr, {
 		hostCallbacks: options.hostCallbacks
 		, publicPrefix
 		, transferredInputs: options.transferredInputs
 		, anchoredResults: options.anchoredResults
+		, receiverExports: options.receiverExports
 	});
 	const p = values.prefix;
 	const transport = backend?.render({ generated, values });

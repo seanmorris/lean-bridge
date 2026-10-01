@@ -161,14 +161,55 @@ copied or transferred. The function can still consume a different input.
 
 Releasing or consuming the anchor expires the result and every view borrowed
 from it. Retain or copy explicitly to create independent ownership. This contract
-also covers empty results and returned Lean closures. It does not add receiver
-anchors or parameter-anchored callback-result contracts.
+also covers empty results and returned Lean closures. Parameter-anchored
+callback-result contracts remain unsupported.
 
 The C package records the checked parameter indices under
 `ownedValues.resultAnchors`; its manifest uses version 5 and `ownedValues`
 version 4. Builds selecting a consumer that does not implement result anchors
 reject the contract. See [C borrowed results](../consume/c.md#borrowed-results)
 for validation, equality and cleanup.
+
+### Export methods and properties
+
+Select a Lean function's first runtime argument as its receiver with
+`"receiver": "method"` or `"receiver": "property"`. The receiver must be a
+declared resource or an owned record or variant. A property takes only that
+receiver; a method may take additional arguments. Lean supplies and checks their
+types. The C API keeps ordinary function syntax, with the receiver first.
+
+For example, `Owned.retainTicket (ticket : Ticket) : Ticket` can return a view
+that expires with `ticket`'s owner:
+
+```json
+{
+  "contracts": {
+    "Owned.retainTicket": {
+      "receiver": "method",
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      }
+    },
+    "Owned.serial": { "receiver": "property" }
+  }
+}
+```
+
+Keep the existing resource and aggregate policy. If you supply `parameters`, it
+still covers every Lean runtime argument, including the receiver at index zero.
+A borrowed result cannot use a transferred receiver as its anchor. A method may
+instead borrow another argument: `"scope": "parameter", "anchor": "arg1"`
+selects the first argument after the receiver. Use receiver scope for `arg0`.
+Reviewed APIs store the receiver separately and use the remaining parameters'
+declared names.
+
+Build with `--target c`. Receiver exports currently require the C projection;
+combined builds with other consumer targets reject them. These packages use
+manifest version 6 and `ownedValues` version 5. Metadata records the
+receiver-first convention and distinguishes receiver anchors from parameter
+anchors. Packages without receivers keep their earlier format. See
+[the C receiver example](../consume/c.md#methods-and-properties).
 
 ## Copied arrays and records
 

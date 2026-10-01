@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedJvmCalls } from "../../src/backends/jvm/owned-calls.mjs";
 import { generateOwnedJvmPackage } from "../../src/backends/jvm/owned-package.mjs";
@@ -72,7 +73,7 @@ export const assertOwnedJvmBorrowExecution = async record => {
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
 	const baseLean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
-	const extractor = sha256(await readFile("src/analyze/NativeExports.lean"));
+	const extractor = sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean")));
 	const checkInput = (item, suffix) => {
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(baseLean + suffix));

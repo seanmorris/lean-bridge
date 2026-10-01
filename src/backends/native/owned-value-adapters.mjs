@@ -22,9 +22,9 @@ const suffix = name => ({ uint32: "_uint32", int32: "_uint32", char: "_uint32"
  * optional wordBits (32 or 64, default 64).
  */
 export const generateOwnedNativeValueAdapters = options => {
-	const { wordBits = 64, transferredInputs = false, anchoredResults = false } = options;
+	const { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false } = options;
 	const carriers = generateOwnedAggregateCarriers(options);
-	const layout = compileOwnedNativeValueLayout(carriers.model.bindingIr, { wordBits, transferredInputs, anchoredResults });
+	const layout = compileOwnedNativeValueLayout(carriers.model.bindingIr, { wordBits, transferredInputs, anchoredResults, receiverExports });
 	const hasTransfers = layout.functions.some(item => item.transfers?.length);
 	const hasAnchors = layout.functions.some(item => item.anchor !== undefined);
 	const table = new Map(layout.nodes.map(node => [node.id, node]));

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedReceiverHistoricalBytes } from "./owned-receiver-history.mjs";
 import { generateOwnedNativeValueAdapters } from "../../src/backends/native/owned-value-adapters.mjs";
 import { ownedAggregateTransferRuntime } from "../../src/backends/native/owned-aggregate-transfers.mjs";
 import { ownedAggregateLeaseRuntime } from "../../src/backends/native/owned-aggregate-leases.mjs";
@@ -264,7 +265,7 @@ export const assertOwnedPhpWasmBorrowExecution = async record => {
 	{
 		assert.equal(Boolean(item.input.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 		assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean + (item.borrowOnly ? "" : ownedRustBorrowSource)));
-		assert.equal(item.input.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+		assert.equal(item.input.sourceIdentity.extractorSha256, sha256(ownedReceiverHistoricalBytes("src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"))));
 		await runtime(item);
 		assert.equal(item.runtimeIdentity, record.packages.runtimeIdentity);
 	}

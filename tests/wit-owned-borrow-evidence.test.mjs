@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedWitBorrowExecution } from "./helpers/wit-owned-borrow-evidence.mjs";
+import { beforeOwnedReceiver, ownedReceiverHistoricalBytes } from "./helpers/owned-receiver-history.mjs";
 import { ownedWitBorrowPath, ownedWitBorrowBaseline, ownedWitBorrowPrevious
 	, ownedWitBorrowChangedPaths, ownedWitBorrowAddedPaths
 	, beforeOwnedWitBorrow, reverseOwnedWitBorrowUpdate } from "./helpers/wit-owned-borrow-history.mjs";
@@ -23,13 +24,13 @@ test("WIT borrowed results preserve predecessor sources without support promotio
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedWitBorrowAddedPaths].sort());
-	for(const [path, identity] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), identity, path);
+	for(const [path, identity] of Object.entries(record.sources)) assert.equal(sha256(ownedReceiverHistoricalBytes(path, await readFile(path), identity)), identity, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedWitBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedWitBorrow(update.path, source);
+		const source = beforeOwnedReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedWitBorrow(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedWitBorrow(update.path, prior), prior);
 		assert.equal(beforeOwnedWitBorrow(update.path, source, update.currentSha256), source);
@@ -41,9 +42,9 @@ test("WIT borrowed results preserve predecessor sources without support promotio
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedWitBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedWitBorrow(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
 	for(const name of ["wit-owned-borrows", "wit-owned-borrow-packaging", "wit-owned-borrow-evidence"])
 		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "contract");

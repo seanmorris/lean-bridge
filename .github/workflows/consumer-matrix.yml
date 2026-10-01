@@ -1051,6 +1051,19 @@ jobs:
           test -s build/owned-borrows/c-reviewed.json
           test -s build/owned-borrows/installed-ordinary.json
           test -s build/owned-borrows/installed-reviewed.json
+          npm run test:owned-receivers > build/owned-receivers.log 2>&1
+          cat build/owned-receivers.log
+          rg '^# tests 8$' build/owned-receivers.log
+          rg '^# pass 8$' build/owned-receivers.log
+          rg '^# fail 0$' build/owned-receivers.log
+          rg '^# cancelled 0$' build/owned-receivers.log
+          rg '^# skipped 0$' build/owned-receivers.log
+          test -s build/owned-receivers/ordinary.json
+          test -s build/owned-receivers/reviewed.json
+          test -s build/owned-receivers/ordinary-package.json
+          test -s build/owned-receivers/reviewed-package.json
+          test -s build/owned-receivers/ordinary-plain.json
+          test -s build/owned-receivers/reviewed-plain.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/reviewed-owned-source.test.mjs
           test -s build/owned-aggregate-native/reviewed-public-c.json
           LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-c-packaging.test.mjs
@@ -1117,6 +1130,8 @@ jobs:
             build/owned-borrows/
             build/owned-borrows-runtime.log
             build/owned-borrows-installed.log
+            build/owned-receivers/
+            build/owned-receivers.log
             build/owned-aggregate-native/reviewed-public-c.json
             build/owned-c-packaging/
             build/owned-host-callbacks/ordinary.json
