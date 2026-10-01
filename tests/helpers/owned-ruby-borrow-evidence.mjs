@@ -14,6 +14,8 @@ import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from ".
 import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { ownedRustBorrowSource, ownedRustBorrowNativeSource } from "./owned-rust-borrow-fixture.mjs";
+import { beforeManagedClose } from "./managed-close-history.mjs";
+import { beforeManagedCloseGenerated, historicalManagedCloseRubyPackage } from "./managed-close-generated-history.mjs";
 
 export const ownedRubyBorrowScript = "LEAN_BRIDGE_OWNED_RUBY_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-borrows.test.mjs tests/owned-ruby-borrow-packaging.test.mjs";
 export const ownedRubyBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-ruby-borrows";
@@ -34,6 +36,8 @@ export const ownedRubyBorrowScope = Object.freeze({
 	, receiverAnchors: false, callbackResultAnchors: false
 	, sanitizers: [], docker: false, installedSupportPromotions: 0
 });
+export const ownedRubyCloseScope = Object.freeze({ ...ownedRubyBorrowScope, foreignCloseSnapshots: true });
+export const ownedRubyCloseCommand = "LEAN_BRIDGE_PYTHON_TYPING_WHEELS=/app/build/python-typing-wheels " + ownedRubyBorrowCommand;
 const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
 	, ownedInputTransfers: true, ownedAnchoredResults: true };
 const options = { transferredInputs: true, anchoredResults: true };
@@ -47,8 +51,10 @@ const fields = ["values", "anchor", "expiration", "descendants", "emptyValues"
  * @param record - Exact execution log, compiler inputs and observed receipts.
  */
 export const assertOwnedRubyBorrowExecution = async record => {
-	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedRubyBorrowScope);
-	assert.equal(record.run.command, ownedRubyBorrowCommand);
+	const repaired = record.kind === "owned-ruby-close-repair";
+	assert.equal(record.kind, repaired ? "owned-ruby-close-repair" : "owned-ruby-borrows");
+	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, repaired ? ownedRubyCloseScope : ownedRubyBorrowScope);
+	assert.equal(record.run.command, repaired ? ownedRubyCloseCommand : ownedRubyBorrowCommand);
 	assert.equal(record.run.exitCode, 0); assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [name, count] of Object.entries({ tests: 7, pass: 7, fail: 0, skipped: 0, cancelled: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp(`^# ${name} ${count}$`, "mu"));
@@ -57,7 +63,9 @@ export const assertOwnedRubyBorrowExecution = async record => {
 		assert.deepEqual(group.map(item => item.mode), ["ordinary", "reviewed"]);
 	const baseLean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	const extractor = sha256(await readFile("src/analyze/NativeExports.lean"));
-	const probe = await readFile("tests/fixtures/structured-types/owned-ruby-borrows.rb");
+	const probePath = "tests/fixtures/structured-types/owned-ruby-borrows.rb";
+	let probe = await readFile(probePath, "utf8");
+	if(!repaired) probe = beforeManagedClose(probePath, probe, record.sources[probePath]);
 	const helpers = await readFile("tests/fixtures/structured-types/owned-ruby-probe.rb");
 	const consumer = await readFile("tests/fixtures/structured-types/owned-installed-ruby-borrows.rb");
 	const loader = await readFile("tests/fixtures/structured-types/owned-ruby-installed-loader.rb");
@@ -81,7 +89,8 @@ export const assertOwnedRubyBorrowExecution = async record => {
 		assert.equal(item.publicSha256, sha256(ruby.valuesSource));
 		assert.equal(item.conversionsSha256, sha256(ruby.source));
 		assert.equal(item.boundarySha256, sha256(ruby.cSource));
-		assert.equal(item.runtimeSha256, sha256(ownedRubyRuntime(c.values.prefix, { anchoredResults: true })));
+		const currentRuntime = ownedRubyRuntime(c.values.prefix, { anchoredResults: true });
+		assert.equal(item.runtimeSha256, sha256(repaired ? currentRuntime : beforeManagedCloseGenerated(currentRuntime, item.runtimeSha256)));
 		assert.equal(item.stdout, "borrow-only-ok\n");
 	}
 	for(const item of [...record.runtime, ...record.packages])
@@ -94,10 +103,12 @@ export const assertOwnedRubyBorrowExecution = async record => {
 		assert.equal(model.ownedGraph.resultAnchors.exports.length, 19);
 		assert.equal(model.ownedGraph.inputTransfers.exports.length, 4);
 		const c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...options });
-		const ruby = generateOwnedRubyPackage(model.bindingIr, null, options);
-		const runtime = ownedRubyRuntime(c.values.prefix, options);
+		let ruby = generateOwnedRubyPackage(model.bindingIr, null, options);
+		if(!repaired && !record.runtime.includes(item)) ruby = historicalManagedCloseRubyPackage(ruby, item.adapterReceipt.rubyValues);
+		let runtime = ownedRubyRuntime(c.values.prefix, options);
 		if(record.runtime.includes(item))
 		{
+			if(!repaired) runtime = beforeManagedCloseGenerated(runtime, item.runtimeSha256);
 			assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
 			assert.equal(item.nativeSha256, sha256(ownedRustBorrowNativeSource(c) + ruby.cSource));
 			assert.equal(item.publicSha256, sha256(ruby.valuesSource));
@@ -107,22 +118,33 @@ export const assertOwnedRubyBorrowExecution = async record => {
 			assert.equal(item.probeSha256, sha256(probe)); assert.equal(item.helpersSha256, sha256(helpers));
 			const mutants = [
 				["unchecked-whole-value", runtime
-					, "      @guard.lease.require_open\n      @guard.payload[0]"
-					, "      @guard.payload[0]"]
+					, repaired ? "      guard.lease.require_open\n      payload" : "      @guard.lease.require_open\n      @guard.payload[0]"
+					, repaired ? "      payload" : "      @guard.payload[0]"]
 				, ["unchecked-empty-value", runtime
-					, "      @guard.lease.require_open\n      @guard.payload[0]"
-					, "      @guard.lease.require_open unless @guard.payload[0].nil? || @guard.payload[0] == []\n      @guard.payload[0]"]
+					, repaired ? "      guard.lease.require_open\n      payload" : "      @guard.lease.require_open\n      @guard.payload[0]"
+					, repaired ? "      guard.lease.require_open unless payload[0].nil? || payload[0] == []\n      payload" : "      @guard.lease.require_open unless @guard.payload[0].nil? || @guard.payload[0] == []\n      @guard.payload[0]"]
 				, ["escaped-callback-frame", runtime
 					, "    def close; @scope.active = false; end"
 					, "    def close; @scope.active = true; end"]
 				, ["pointer-equality", ruby.valuesSource
 					, "      def ==(other); same_identity?(other); end"
 					, "      def ==(other); equal?(other); end"]
-			].map(([name, source, before, after]) => ({ name, compiled: true, sourceSha256: sha256(source.replaceAll(before, after)) }));
+				, ...repaired ? [
+					["late-whole-payload-read", runtime, "      guard.lease.require_open\n      payload", "      guard.lease.require_open\n      guard.payload"]
+					, ["late-retain-payload-read", runtime, "      payload[1].call(payload[0], whole: true)", "      @guard.payload[1].call(payload[0], whole: true)"]
+					, ["late-duplicate-payload-read", runtime, "        install(guard.lease, payload)", "        install(guard.lease, guard.payload)"]
+				] : []
+			].map(([name, source, before, after]) => {
+				assert.ok(source.includes(before), name);
+				return { name, compiled: true, sourceSha256: sha256(source.replaceAll(before, after)) };
+			});
 			assert.deepEqual(item.rejectedMutations, mutants);
 			const observed = item.observed;
 			assert.match(observed.ruby, /^ruby 3\.3\./u);
-			assert.equal(observed.checks, 1243);
+			assert.equal(observed.checks, repaired ? 1268 : 1243);
+			if(repaired) assert.deepEqual(observed.foreignCloseSchedules, ["array", "option", "nested"].flatMap(shape =>
+				["get", "retain", "dup", "clone"].map(operation => `${shape}/${operation}`)));
+			else assert.equal(observed.foreignCloseSchedules, undefined);
 			assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 			for(const [key, count] of Object.entries({ rubyCheckpoints: 55, rubyFaults: 55, nativeFaults: 32, rubyBefore: 36, rubyAfter: 69, nativeBefore: 11, nativeAfter: 81 }))
 				assert.equal(observed[key], count, key);
@@ -180,7 +202,8 @@ export const assertOwnedRubyBorrowExecution = async record => {
 			, componentReceiptSha256: sha256(canonicalJson(component))
 			, ownedValues: ruby.contract
 			, library: adapter.library, libraries };
-		const packaged = generateOwnedRubyPackage(model.bindingIr, evidence, options);
+		let packaged = generateOwnedRubyPackage(model.bindingIr, evidence, options);
+		if(!repaired) packaged = historicalManagedCloseRubyPackage(packaged, adapter.rubyValues);
 		assert.equal(manifest.schemaVersion, 3); assert.equal(manifest.kind, "lean-bridge-owned-rubygems-package");
 		assert.equal(manifest.glibcMinimumVersion, "2.36");
 		assert.deepEqual(manifest.sourceIdentity, model.sourceIdentity);

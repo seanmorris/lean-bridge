@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertStructuredDocsCiExecution } from "./helpers/structured-docs-ci-evidence.mjs";
+import { beforeManagedClose, managedCloseHistoricalBytes } from "./helpers/managed-close-history.mjs";
 import { structuredDocsCiPath, structuredDocsCiBaseline, structuredDocsCiPrevious
 	, structuredDocsCiChangedPaths, structuredDocsCiAddedPaths
 	, beforeStructuredDocsCi, reverseStructuredDocsCiUpdate } from "./helpers/structured-docs-ci-history.mjs";
@@ -23,13 +24,14 @@ test("structured documentation repair preserves exact predecessor source identit
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...structuredDocsCiAddedPaths].sort());
-	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(managedCloseHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.updates.map(update => update.path), structuredDocsCiChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeStructuredDocsCi(update.path, source);
+		const source = beforeManagedClose(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeStructuredDocsCi(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeStructuredDocsCi(update.path, prior), prior);
 		assert.equal(beforeStructuredDocsCi(update.path, source, update.currentSha256), source);
@@ -41,9 +43,10 @@ test("structured documentation repair preserves exact predecessor source identit
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseStructuredDocsCiUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeManagedClose(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeStructuredDocsCi(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files)
+		file.sha256 = sha256(managedCloseHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["component-structured-callable-documentation", "structured-docs-ci-evidence"])
 		assert.equal(classifyRepositoryTest(`tests/${name}.test.mjs`), "contract");

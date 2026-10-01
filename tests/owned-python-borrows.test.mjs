@@ -241,8 +241,8 @@ for(const mode of ["ordinary", "reviewed"]) test(`Python borrowed results expire
 			, before: "            storage.lease.require()\n            return storage.value"
 			, after: "            return storage.value" }
 		, { name: "discarded-empty-owner", path: "_owned.py", source: runtime
-			, before: "            result._storage = storage"
-			, after: "            result._storage = None if value == () or value is None else storage" }
+			, before: "            result = object.__new__(cls)\n            result._storage = storage"
+			, after: "            result = object.__new__(cls)\n            result._storage = None if value == () or value is None else storage" }
 		, { name: "escaped-callback-frame", path: "_owned.py", source: runtime
 			, before: "            self.scope.active = False"
 			, after: "            self.scope.active = True" }
@@ -250,6 +250,18 @@ for(const mode of ["ordinary", "reviewed"]) test(`Python borrowed results expire
 			, source: generated.valuesSource
 			, before: "        return self.same_identity(other)"
 			, after: "        return self._handle == other._handle" }
+		, { name: "late-whole-value-read", path: "_owned.py", source: runtime
+			, before: "            return storage.value"
+			, after: "            return self._storage.value" }
+		, { name: "late-retain-storage-read", path: "_owned.py", source: runtime
+			, before: "            return storage.copy(value, _whole=True)"
+			, after: "            return self._storage.copy(value, _whole=True)" }
+		, { name: "late-copy-storage-read", path: "_owned.py", source: runtime
+			, before: "            result = object.__new__(type(self))\n            result._storage = storage"
+			, after: "            result = object.__new__(type(self))\n            result._storage = self._storage" }
+		, { name: "late-status-storage-read", path: "_owned.py", source: runtime
+			, before: "            return storage is None or storage.lease.closed"
+			, after: "            return storage is None or self._storage.lease.closed" }
 	];
 	const observations = [];
 	for(const interpreter of await pythonGraphInterpreters(compiled.directory))
@@ -267,6 +279,8 @@ for(const mode of ["ordinary", "reviewed"]) test(`Python borrowed results expire
 		{ throw new Error(JSON.stringify(error.details), { cause: error }); }
 		assert.equal(observed.stderr, ""); const result = JSON.parse(observed.stdout);
 		assert.ok(result.checks > 100); assert.equal(result.live, 0); assert.equal(result.identities, 0);
+		assert.deepEqual(result.foreignCloseSchedules, ["array", "option", "nested"].flatMap(shape =>
+			["get", "retain", "copy", "is_closed"].map(operation => `${shape}/${operation}`)));
 		const rejectedMutations = [];
 		for(const mutant of mutants)
 		{

@@ -17,6 +17,8 @@ import { validatePackageSetReceipt } from "../../src/release/package-set-receipt
 import { ownedRustBorrowReviewedIr, ownedRustBorrowSource, ownedRustBorrowNativeSource } from "./owned-rust-borrow-fixture.mjs";
 import { ownedPythonInstalledProbe } from "./owned-python-installed-probes.mjs";
 import { pythonTypingWheels } from "./python-wheel-install.mjs";
+import { beforeManagedClose } from "./managed-close-history.mjs";
+import { beforeManagedCloseGenerated, historicalManagedClosePythonPackage } from "./managed-close-generated-history.mjs";
 
 export const ownedPythonBorrowScript = "LEAN_BRIDGE_OWNED_PYTHON_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-python-borrows.test.mjs tests/owned-python-borrow-packaging.test.mjs";
 export const ownedPythonBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-python-borrows";
@@ -37,6 +39,8 @@ export const ownedPythonBorrowScope = Object.freeze({
 	, receiverAnchors: false, callbackResultAnchors: false
 	, sanitizers: [], docker: false, installedSupportPromotions: 0
 });
+export const ownedPythonCloseScope = Object.freeze({ ...ownedPythonBorrowScope, foreignCloseSnapshots: true });
+export const ownedPythonCloseCommand = "LEAN_BRIDGE_COLLECTION_MYPY_PYTHON=/app/build/python-collection-typecheck/bin/python LEAN_BRIDGE_PYTHON_TYPING_WHEELS=/app/build/python-typing-wheels " + ownedPythonBorrowCommand;
 const names = ["3.11-minimum", "3.11-current", "3.12-standard"];
 const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
 	, ownedInputTransfers: true, ownedAnchoredResults: true };
@@ -51,9 +55,11 @@ const fields = ["values", "anchor", "expiration", "descendants", "emptyValues"
  * @param record - Source-bound runtime, typing and prepared-wheel observations.
  */
 export const assertOwnedPythonBorrowExecution = async record => {
+	const repaired = record.kind === "owned-python-close-repair";
+	assert.equal(record.kind, repaired ? "owned-python-close-repair" : "owned-python-borrows");
 	assert.equal(record.acceptance, "passed");
-	assert.deepEqual(record.scope, ownedPythonBorrowScope);
-	assert.equal(record.run.command, ownedPythonBorrowCommand);
+	assert.deepEqual(record.scope, repaired ? ownedPythonCloseScope : ownedPythonBorrowScope);
+	assert.equal(record.run.command, repaired ? ownedPythonCloseCommand : ownedPythonBorrowCommand);
 	assert.equal(record.run.exitCode, 0); assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [name, count] of Object.entries({ tests: 8, pass: 8, fail: 0, skipped: 0, cancelled: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp(`^# ${name} ${count}$`, "mu"));
@@ -76,7 +82,9 @@ export const assertOwnedPythonBorrowExecution = async record => {
 		assert.deepEqual(item.rejected, [3, 4, 5, 6, 8, 9, 10]);
 		assert.equal(item.borrowOnlyCompiled, true);
 	}
-	const probe = await readFile("tests/fixtures/structured-types/owned-python-borrows.py");
+	const probePath = "tests/fixtures/structured-types/owned-python-borrows.py";
+	let probe = await readFile(probePath, "utf8");
+	if(!repaired) probe = beforeManagedClose(probePath, probe, record.sources[probePath]);
 	const consumer = await readFile("tests/fixtures/structured-types/owned-installed-python-borrows.py");
 	const documentation = await readFile("tests/fixtures/documentation/consumers/python/owned-borrows.py", "utf8");
 	const page = await readFile("docs/consume/python.md", "utf8");
@@ -104,7 +112,8 @@ export const assertOwnedPythonBorrowExecution = async record => {
 		assert.equal(item.publicSha256, sha256(python.valuesSource));
 		assert.equal(item.stubSha256, sha256(python.stub));
 		assert.equal(item.conversionsSha256, sha256(python.source));
-		assert.equal(item.runtimeSha256, sha256(ownedPythonRuntime(c.values.prefix, { anchoredResults: true })));
+		const currentRuntime = ownedPythonRuntime(c.values.prefix, { anchoredResults: true });
+		assert.equal(item.runtimeSha256, sha256(repaired ? currentRuntime : beforeManagedCloseGenerated(currentRuntime, item.runtimeSha256)));
 		assert.deepEqual(item.interpreters.map(value => value.name), names);
 		for(const [index, value] of item.interpreters.entries())
 		{
@@ -127,7 +136,8 @@ export const assertOwnedPythonBorrowExecution = async record => {
 		{
 			assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
 			const generated = generateOwnedPythonConversions(model.bindingIr, options);
-			const runtime = ownedPythonRuntime(c.values.prefix, options);
+			let runtime = ownedPythonRuntime(c.values.prefix, options);
+			if(!repaired) runtime = beforeManagedCloseGenerated(runtime, item.runtimeSha256);
 			assert.equal(item.publicSha256, sha256(generated.valuesSource));
 			assert.equal(item.stubSha256, sha256(generated.stub));
 			assert.equal(item.conversionsSha256, sha256(generated.source));
@@ -136,14 +146,28 @@ export const assertOwnedPythonBorrowExecution = async record => {
 			assert.equal(item.nativeSha256, sha256(ownedRustBorrowNativeSource(c)));
 			const mutants = [
 				["unchecked-whole-value", runtime, "            storage.lease.require()\n            return storage.value", "            return storage.value"]
-				, ["discarded-empty-owner", runtime, "            result._storage = storage", "            result._storage = None if value == () or value is None else storage"]
+				, ["discarded-empty-owner", runtime
+					, (repaired ? "            result = object.__new__(cls)\n" : "") + "            result._storage = storage"
+					, (repaired ? "            result = object.__new__(cls)\n" : "") + "            result._storage = None if value == () or value is None else storage"]
 				, ["escaped-callback-frame", runtime, "            self.scope.active = False", "            self.scope.active = True"]
 				, ["pointer-equality", generated.valuesSource, "        return self.same_identity(other)", "        return self._handle == other._handle"]
-			].map(([name, source, before, after]) => ({ name, compiled: true, sourceSha256: sha256(source.replaceAll(before, after)) }));
+				, ...repaired ? [
+					["late-whole-value-read", runtime, "            return storage.value", "            return self._storage.value"]
+					, ["late-retain-storage-read", runtime, "            return storage.copy(value, _whole=True)", "            return self._storage.copy(value, _whole=True)"]
+					, ["late-copy-storage-read", runtime, "            result = object.__new__(type(self))\n            result._storage = storage", "            result = object.__new__(type(self))\n            result._storage = self._storage"]
+					, ["late-status-storage-read", runtime, "            return storage is None or storage.lease.closed", "            return storage is None or self._storage.lease.closed"]
+				] : []
+			].map(([name, source, before, after]) => {
+				assert.ok(source.includes(before), name);
+				return { name, compiled: true, sourceSha256: sha256(source.replaceAll(before, after)) };
+			});
 			for(const [index, observation] of item.observations.entries())
 			{
 				assert.equal(observation.typing, ["4.6.0", "4.16.0", null][index]);
-				assert.equal(observation.checks, 2410);
+				assert.equal(observation.checks, repaired ? 2447 : 2410);
+				if(repaired) assert.deepEqual(observation.foreignCloseSchedules, ["array", "option", "nested"].flatMap(shape =>
+					["get", "retain", "copy", "is_closed"].map(operation => `${shape}/${operation}`)));
+				else assert.equal(observation.foreignCloseSchedules, undefined);
 				assert.equal(observation.live, 0); assert.equal(observation.identities, 0);
 				assert.deepEqual(observation.retainedLifetimeFailures, ["borrowed-transfer", "expired-get", "expired-argument", "wrong-thread"]);
 				for(const [key, count] of Object.entries({ pythonBefore: 114, pythonAfter: 63, nativeBefore: 129, nativeAfter: 97 }))
@@ -165,7 +189,8 @@ export const assertOwnedPythonBorrowExecution = async record => {
 		const { componentReceipt: component, adapterReceipt: adapter
 			, runtimeReceipt: runtime, packageSetReceipt: packages } = item;
 		const native = generateCompiledNativeLeanAdapters(model);
-		const python = generateOwnedPythonPackage(model.bindingIr, null, options);
+		let python = generateOwnedPythonPackage(model.bindingIr, null, options);
+		if(!repaired) python = historicalManagedClosePythonPackage(python, adapter.pythonValues);
 		assert.equal(component.schemaVersion, 5); assert.equal(adapter.schemaVersion, 5);
 		assert.equal(adapter.ownedValues.schemaVersion, 4);
 		assert.equal(component.modelSha256, sha256(canonicalJson(model)));
@@ -191,7 +216,8 @@ export const assertOwnedPythonBorrowExecution = async record => {
 			, componentId: model.component.id
 			, componentReceiptSha256: sha256(canonicalJson(component))
 			, ownedValues: python.contract, library: adapter.library, libraries };
-		const packaged = generateOwnedPythonPackage(model.bindingIr, evidence, options);
+		let packaged = generateOwnedPythonPackage(model.bindingIr, evidence, options);
+		if(!repaired) packaged = historicalManagedClosePythonPackage(packaged, adapter.pythonValues);
 		for(const [index, observation] of item.observations.entries())
 		{
 			assert.equal(observation.checks, 328);

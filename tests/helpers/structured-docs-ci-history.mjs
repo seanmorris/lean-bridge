@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeManagedClose, managedCloseChangedPaths } from "./managed-close-history.mjs";
 
 export const structuredDocsCiPath = "docs/evidence/structured-docs-ci-repair-20260930.json";
 export const structuredDocsCiBaseline = "f88043186b944a3f3bd0133d5e49efd5ff034c69";
@@ -30,6 +31,7 @@ export const structuredDocsCiAddedPaths = [
 	, "tests/structured-docs-ci-evidence.test.mjs"
 ].sort();
 let cached;
+export const structuredDocsCiNormalizationPaths = [...new Set([...structuredDocsCiChangedPaths, ...managedCloseChangedPaths])].sort();
 
 /**
  * Reverse complete authenticated versions through exact ordered source edits.
@@ -62,6 +64,7 @@ export const reverseStructuredDocsCiUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeStructuredDocsCi = (path, source, expected) => {
+	source = beforeManagedClose(path, source, expected);
 	if(!structuredDocsCiChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(structuredDocsCiPath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "structured-docs-ci-repair");
@@ -79,5 +82,5 @@ export const beforeStructuredDocsCi = (path, source, expected) => {
  * @param bytes - Complete current source bytes.
  * @param expected - Optional stopping digest.
  */
-export const structuredDocsCiHistoricalBytes = (path, bytes, expected) => structuredDocsCiChangedPaths.includes(path)
+export const structuredDocsCiHistoricalBytes = (path, bytes, expected) => structuredDocsCiNormalizationPaths.includes(path)
 	? beforeStructuredDocsCi(path, bytes.toString("utf8"), expected) : bytes;

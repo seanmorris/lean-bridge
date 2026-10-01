@@ -25,6 +25,7 @@ identities = native("owned_test_identities", [])
 handoffs = native("owned_test_handoffs", [])
 native_fail = native("owned_test_fail_after", [c.c_ssize_t], None)
 checks = 0
+foreign_close_schedules = []
 
 def check(value):
     global checks
@@ -221,9 +222,66 @@ def depth():
         check(item.is_closed)
     check(api.serial(kept.get()) == 33)
 
+def close_races():
+    # Interleave a real foreign-thread close after the first storage read.
+    # The hook delegates to the generated class's original attribute access.
+    attribute = api.Value.__getattribute__
+    cases = [("array", [], api.echo_array, ()),
+             ("option", None, api.echo_option, None),
+             ("nested", [[], []], api.echo_nested, ((), ()))]
+    for shape, raw, function, expected in cases:
+        for operation in ("get", "retain", "copy", "is_closed"):
+            owner = api.copy_value(raw, result_of=function)
+            pending = [True]
+            errors = []
+            result = None
+
+            def close_owner():
+                try:
+                    owner.close()
+                except BaseException as error:
+                    errors.append(error)
+
+            def close_after_read(self, name):
+                value = attribute(self, name)
+                if self is owner and name == "_storage" and pending[0]:
+                    pending[0] = False
+                    closer = threading.Thread(target=close_owner)
+                    closer.start()
+                    closer.join(10)
+                    check(not closer.is_alive() and not errors)
+                return value
+
+            try:
+                api.Value.__getattribute__ = close_after_read
+                try:
+                    if operation == "is_closed":
+                        result = owner.is_closed
+                    elif operation == "copy":
+                        result = copy.copy(owner)
+                    else:
+                        result = getattr(owner, operation)()
+                finally:
+                    api.Value.__getattribute__ = attribute
+                check(not pending[0] and owner.is_closed)
+                if operation in ("copy", "retain"):
+                    check(not result.is_closed and result.get() == expected)
+                elif operation == "is_closed":
+                    check(result is False)
+                else:
+                    check(result == expected)
+            except (AttributeError, r.LeanBridgeError):
+                raise AssertionError("foreign-close " + operation + " lost its captured owner") from None
+            finally:
+                api.Value.__getattribute__ = attribute
+                owner.close()
+                if type(result) is api.Value:
+                    result.close()
+            foreign_close_schedules.append(shape + "/" + operation)
+
 state = runtime.current_state()
 baseline = live(), identities()
-for operation in [owners, shapes, transfers, callbacks, affinity, depth]:
+for operation in [owners, shapes, transfers, callbacks, affinity, depth, close_races]:
     operation()
     gc.collect()
     state.drain()
@@ -327,4 +385,5 @@ for kind in ("borrowed-transfer", "expired-get", "expired-argument", "wrong-thre
 state.close()
 check(live() == identities() == 0)
 print(json.dumps({"checks": checks, **counts, "live": live(), "identities": identities(),
-                  "retainedLifetimeFailures": lifetime_failures}))
+                  "retainedLifetimeFailures": lifetime_failures,
+                  "foreignCloseSchedules": foreign_close_schedules}))

@@ -509,6 +509,11 @@ ownership. Copied Ruby fields remain ordinary data after their owner closes.
 `with` and `ensure` provide deterministic cleanup; GC queues fallback release
 on the creating thread.
 
+Whole-value reads, retains, `dup` and `clone` capture their payload before
+validation. If another thread closes the wrapper during an operation, that
+operation uses its captured payload or raises `LeanBridgeError` for expiration.
+Resource calls still run on the creating thread.
+
 Use `api.copy_value(record_or_resource)` for a nominal value. For an empty or
 ambiguous container, choose its declared type with
 `api.copy_value([], result_of: :echo_array)` or

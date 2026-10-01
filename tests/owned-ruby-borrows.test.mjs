@@ -77,22 +77,33 @@ for(const mode of ["ordinary", "reviewed"]) test(`Ruby borrowed results expire w
 	{ throw new Error(JSON.stringify(error.details), { cause: error }); }
 	assert.equal(executed.stderr, ""); const observed = JSON.parse(executed.stdout);
 	assert.ok(observed.checks > 100); assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
+	assert.deepEqual(observed.foreignCloseSchedules, ["array", "option", "nested"].flatMap(shape =>
+		["get", "retain", "dup", "clone"].map(operation => `${shape}/${operation}`)));
 	for(const key of ["rubyBefore", "rubyAfter", "nativeBefore", "nativeAfter"])
 		assert.ok(observed[key] > 0, key);
 	const runtimePath = source => `module LeanBridge\nmodule ${generated.componentName}\n${source}\nend\nend\n`;
 	const mutants = [
 		["unchecked-whole-value", "runtime.rb", runtime
-			, "      @guard.lease.require_open\n      @guard.payload[0]"
-			, "      @guard.payload[0]"]
+			, "      guard.lease.require_open\n      payload"
+			, "      payload"]
 		, ["unchecked-empty-value", "runtime.rb", runtime
-			, "      @guard.lease.require_open\n      @guard.payload[0]"
-			, "      @guard.lease.require_open unless @guard.payload[0].nil? || @guard.payload[0] == []\n      @guard.payload[0]"]
+			, "      guard.lease.require_open\n      payload"
+			, "      guard.lease.require_open unless payload[0].nil? || payload[0] == []\n      payload"]
 		, ["escaped-callback-frame", "runtime.rb", runtime
 			, "    def close; @scope.active = false; end"
 			, "    def close; @scope.active = true; end"]
 		, ["pointer-equality", "values.rb", generated.valuesSource
 			, "      def ==(other); same_identity?(other); end"
 			, "      def ==(other); equal?(other); end"]
+		, ["late-whole-payload-read", "runtime.rb", runtime
+			, "      guard.lease.require_open\n      payload"
+			, "      guard.lease.require_open\n      guard.payload"]
+		, ["late-retain-payload-read", "runtime.rb", runtime
+			, "      payload[1].call(payload[0], whole: true)"
+			, "      @guard.payload[1].call(payload[0], whole: true)"]
+		, ["late-duplicate-payload-read", "runtime.rb", runtime
+			, "        install(guard.lease, payload)"
+			, "        install(guard.lease, guard.payload)"]
 	];
 	const rejectedMutations = [], ruby = resolve(process.env.LEAN_BRIDGE_RUBY ?? ".toolchains/ruby33/bin/ruby");
 	for(const [name, path, source, before, after] of mutants)

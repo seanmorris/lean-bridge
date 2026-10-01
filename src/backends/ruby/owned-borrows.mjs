@@ -53,19 +53,23 @@ export const ownedRubyAnchoredValues = `
       @guard.lease
     end
     private :lease
-    def get
-      raise Error, 4 unless @guard && !@guard.released?
-      @guard.lease.require_open
-      @guard.payload[0]
+    def checked_payload
+      guard = @guard
+      payload = guard&.payload
+      raise Error, 4 unless guard && !guard.released?
+      guard.lease.require_open
+      payload
     end
+    private :checked_payload
+    def get; checked_payload[0]; end
     def closed?; !@guard || @guard.closed?; end
     def close
       Owned.atomic { @guard&.close }
       nil
     end
     def retain
-      value = get
-      @guard.payload[1].call(value, whole: true)
+      payload = checked_payload
+      payload[1].call(payload[0], whole: true)
     end
     def dup; Owned.atomic { super }; end
     def clone(**options); Owned.atomic { super(**options) }; end
@@ -74,9 +78,10 @@ export const ownedRubyAnchoredValues = `
       @guard = nil
       Owned.atomic do
         guard = original.instance_variable_get(:@guard)
+        payload = guard&.payload
         raise Error, 4 unless guard && !guard.released?
         guard.lease.require_open
-        install(guard.lease, guard.payload)
+        install(guard.lease, payload)
       end
     end
     def with

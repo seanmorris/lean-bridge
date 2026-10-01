@@ -61,7 +61,12 @@ class Value(_Generic[_ValueT]):
 
     @property
     def is_closed(self):
-        return self._storage is None or self._storage.lease.closed
+        storage = None
+        try:
+            storage = self._storage
+            return storage is None or storage.lease.closed
+        finally:
+            storage = None
 
     def close(self):
         self._storage = None
@@ -69,18 +74,28 @@ class Value(_Generic[_ValueT]):
     def retain(self):
         storage = None
         try:
-            value = self.get()
             storage = self._storage
+            if storage is None:
+                raise LeanBridgeError(4)
+            storage.lease.require()
+            value = storage.value
             return storage.copy(value, _whole=True)
         finally:
             storage = value = None
 
     def __copy__(self):
-        self.get()
-        _owned_checkpoint()
-        result = object.__new__(type(self))
-        result._storage = self._storage
-        return result
+        storage = None
+        try:
+            storage = self._storage
+            if storage is None:
+                raise LeanBridgeError(4)
+            storage.lease.require()
+            _owned_checkpoint()
+            result = object.__new__(type(self))
+            result._storage = storage
+            return result
+        finally:
+            storage = None
 
     def __deepcopy__(self, memo):
         raise TypeError("Use retain() for independent Lean ownership")

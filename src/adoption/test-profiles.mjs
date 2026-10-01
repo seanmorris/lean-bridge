@@ -23,6 +23,8 @@ const profileManifest = Object.freeze({
 		, "owned-python-borrow-evidence"
 		, "owned-ruby-transfer-evidence"
 		, "owned-ruby-borrow-evidence"
+		, "managed-close-generated-history"
+		, "managed-close-evidence"
 		, "owned-dotnet-transfer-evidence"
 		, "owned-dotnet-borrow-evidence"
 		, "owned-dotnet-lifetime-evidence"

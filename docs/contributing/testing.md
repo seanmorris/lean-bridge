@@ -1237,7 +1237,9 @@ Both authoring paths compile real Lean code. Runtime probes check whole owners,
 empty containers, all fixture constructors, recursive values, canonical equality,
 callback expiry, original-owner transfers, thread/process affinity and transitive
 anchor limits. Allocation failures retain exception tracebacks while checking
-that temporary owners release. Four compiled mutations must fail those checks.
+that temporary owners release. Twelve schedules close a wrapper from another
+thread during reads, retains, copies and status checks. Eight compiled mutations
+must fail those checks, including late reads of cleared storage.
 Strict typing rejects seven malformed consumers on each interpreter configuration.
 A separate borrow-only API compiles and executes on both source paths without
 input-transfer support.
@@ -1405,7 +1407,10 @@ whole-owner, empty-value and transitive-expiration checks, original-owner
 transfers, callback reentry, returned closures and canonical equality. Ruby and
 native allocation failures must preserve owners before handoff and consume
 them after handoff, with no residual allocations or identities after cleanup.
-Four executable mutations must fail independent assertions. Borrowed results
+Twelve schedules close the source wrapper during reads, retains, `dup` and
+`clone`, with an owning sibling keeping the lease live. Seven executable
+mutations must fail independent assertions, including late payload reads.
+Borrowed results
 also compile and execute separately without input-transfer support.
 
 Prepared-gem tests remove producer sources before offline installation, reject

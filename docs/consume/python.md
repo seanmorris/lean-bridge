@@ -510,6 +510,11 @@ operations and equality raise `LeanBridgeError` for expired owners. Equality
 compares canonical resource identity; independently retained aliases compare
 equal. Already extracted ordinary fields remain Python data.
 
+Whole-value reads, retains and shallow copies capture their payload before
+validation. If another thread closes the wrapper during an operation, that
+operation uses its captured payload or raises `LeanBridgeError` for expiration.
+Resource calls still run on the creating thread.
+
 Use `copy_value(record)` for generated records, variants and resources. For
 containers, `result_of=api.function` selects the function's exact result type,
 including when the value is empty. `parameter_of=(api.function, "arg2")` selects

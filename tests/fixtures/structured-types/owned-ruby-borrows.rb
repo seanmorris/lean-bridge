@@ -25,6 +25,47 @@ module Probe
       owner = ticket(37)
       [API.retain_ticket(owner), owner.get.dup]
     end
+    def close_races
+      schedules = []
+      cases = [[:array, [], :echo_array], [:option, nil, :echo_option],
+        [:nested, [[], []], :echo_nested]]
+      cases.each do |shape, expected, function|
+        [:get, :retain, :dup, :clone].each do |operation|
+          original = API.copy_value(expected, result_of: function)
+          # Keep the lease live while closing the particular wrapper being read.
+          # This also catches a duplicated guard receiving the cleared payload.
+          sibling = original.dup
+          lease = original.instance_variable_get(:@guard).lease
+          require_open = lease.method(:require_open)
+          pending = true
+          result = nil
+          lease.define_singleton_method(:require_open) do
+            require_open.call
+            if pending
+              pending = false
+              closer = Thread.new { original.close }
+              raise "foreign close timed out" unless closer.join(10)
+              closer.value
+            end
+          end
+          begin
+            result = original.public_send(operation)
+            check(!pending && original.closed?, "foreign close was not executed")
+            value = operation == :get ? result : result.get
+            check(value == expected, "foreign-close #{operation} lost its payload")
+          rescue NoMethodError, API::LeanBridgeError
+            check(false, "foreign-close #{operation} lost its captured owner")
+          ensure
+            lease.singleton_class.remove_method(:require_open)
+            result.close if result.instance_of?(API::Value)
+            original.close
+            sibling.close
+          end
+          schedules << "#{shape}/#{operation}"
+        end
+      end
+      schedules
+    end
   end
 
   state
@@ -86,6 +127,8 @@ module Probe
   rejected(API::LeanBridgeError, 4) { chain[-1].get }
   dispose(chain)
   check(counts == empty_counts, "GC, thread exit and deep borrows release all owners")
+  foreign_close_schedules = close_races
+  check(counts == empty_counts, "foreign closes release all original and copied owners")
 
   seed = ticket(29)
   raw = seed.get
@@ -248,5 +291,5 @@ module Probe
   check(transfers.values.all?(&:positive?))
   seed.close
   check(counts == empty_counts, "closed results after fault sweep: #{counts}, expected #{empty_counts}")
-  finish(faults.merge(transfers))
+  finish(faults.merge(transfers).merge(foreignCloseSchedules: foreign_close_schedules))
 end

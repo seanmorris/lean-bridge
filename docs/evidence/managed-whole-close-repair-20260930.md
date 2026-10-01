@@ -1,0 +1,9 @@
+# Python and Ruby whole-value close races
+
+Python's `Value.retain`, shallow copy and closed-status query could reread storage after another thread cleared it. Ruby's whole-value reads, retains and duplicate initialization could similarly read a cleared payload. Capturing the storage or payload once keeps those operations consistent with the owner they validated. Existing thread-affinity and borrow-expiration checks still apply.
+
+Both actual-Lean source paths execute twelve deterministic foreign-close schedules per runtime configuration. Python covers `get`, `retain`, `copy.copy` and `is_closed` for empty arrays, absent options and nested empty arrays. Ruby covers `get`, `retain`, `dup` and `clone` for the same shapes, with an owning sibling preserving the lease while the source wrapper closes. Hooks call the generated implementation and use an actual foreign thread; they do not replace native ownership checks.
+
+The Python gate executes on 3.11 with minimum/current typing backports and on 3.12. It rejects eight compiled negative variants. Ruby rejects seven. Both gates retain their allocation-failure, thread/process, callback, transitive-expiration, equality and cleanup checks. Installed wheels and gems are exercised from both source paths after producer-source removal and again after relocation. The Python gate includes strict typing. The paired JSON receipt records complete commands, reports and original archive identities.
+
+Earlier receipts remain unchanged. Source-history reconstruction accepts only exact recorded file versions. Generated-runtime reconstruction restores a predecessor only when the complete result matches its recorded digest, including the package contract and embedded manifest. Unknown changes remain visible. This repair adds no receiver or callback-result anchors and promotes no additional type-support cells.

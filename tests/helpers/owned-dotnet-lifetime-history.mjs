@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeStructuredDocsCi, structuredDocsCiChangedPaths } from "./structured-docs-ci-history.mjs";
+import { beforeStructuredDocsCi, structuredDocsCiNormalizationPaths } from "./structured-docs-ci-history.mjs";
 
 export const ownedDotnetLifetimePath = "docs/evidence/owned-dotnet-lifetime-repair-20260930.json";
 export const ownedDotnetLifetimeBaseline = "f5cde9256639f3989464822f8cf711015d518b31";
@@ -31,7 +31,7 @@ export const ownedDotnetLifetimeAddedPaths = [
 	, "tests/owned-dotnet-lifetime-evidence.test.mjs"
 ].sort();
 let cached;
-export const ownedDotnetLifetimeNormalizationPaths = [...new Set([...ownedDotnetLifetimeChangedPaths, ...structuredDocsCiChangedPaths])].sort();
+export const ownedDotnetLifetimeNormalizationPaths = [...new Set([...ownedDotnetLifetimeChangedPaths, ...structuredDocsCiNormalizationPaths])].sort();
 
 /**
  * Reverse only recorded spans whose complete before/after identities match.
