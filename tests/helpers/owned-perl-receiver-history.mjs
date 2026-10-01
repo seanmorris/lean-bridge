@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPhpReceiver, ownedPhpReceiverChangedPaths } from "./owned-php-receiver-history.mjs";
+import { beforeOwnedPhpReceiver, ownedPhpReceiverNormalizationPaths } from "./owned-php-receiver-history.mjs";
 
 export const ownedPerlReceiverPath = "docs/evidence/owned-perl-receivers-20261001.json";
 export const ownedPerlReceiverBaseline = "2e9e748fc0354bfa309c2283de66ff8a917df349";
@@ -68,7 +68,7 @@ export const ownedPerlReceiverAddedPaths = [
 	, "tests/owned-perl-receiver-unanchored.test.mjs"
 ].sort();
 let cached;
-export const ownedPerlReceiverNormalizationPaths = [...new Set([...ownedPerlReceiverChangedPaths, ...ownedPhpReceiverChangedPaths])].sort();
+export const ownedPerlReceiverNormalizationPaths = [...new Set([...ownedPerlReceiverChangedPaths, ...ownedPhpReceiverNormalizationPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.

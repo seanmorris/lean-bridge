@@ -106,7 +106,10 @@ test("PHP borrow guides explain whole roots in both transports and retain packag
 	assert.match(consumer, /\$kept = \$view->retain\(\)/u);
 	assert.match(consumer, /last root expires its borrowed descendants/u);
 	assert.match(consumer, /input's lifetime in native PHP or\nPHP-Wasm/u);
-	assert.match(consumer, /Receiver-anchored and callback-result-anchored\nlifetimes remain unsupported/u);
+	assert.match(consumer, /Callback-result-anchored lifetimes remain\nunsupported/u);
+	assert.match(consumer, /### Methods and properties/u);
+	assert.match(consumer, /Native PHP packages can expose methods and read-only properties/u);
+	assert.match(consumer, /PHP-Wasm receiver members are still pending/u);
 	assert.match(publisher, /### Anchor a result to an input/u);
 	assert.match(publisher, /"scope": "parameter", "anchor": "arg0"/u);
 	assert.match(publisher, /### Publish to the private HTTPS repository/u);

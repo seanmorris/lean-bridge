@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedReceiverCiRepair, ownedReceiverCiRepairChangedPaths } from "./owned-receiver-ci-repair-history.mjs";
 
 export const ownedPhpReceiverPath = "docs/evidence/owned-php-receivers-20261001.json";
 export const ownedPhpReceiverBaseline = "ffc4b5d9c881be809a17649c545be8bbb24a0110";
@@ -67,6 +68,7 @@ export const ownedPhpReceiverAddedPaths = [
 	, "tests/owned-php-receivers.test.mjs"
 ].sort();
 let cached;
+export const ownedPhpReceiverNormalizationPaths = [...new Set([...ownedPhpReceiverChangedPaths, ...ownedReceiverCiRepairChangedPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.
@@ -99,6 +101,7 @@ export const reverseOwnedPhpReceiverUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedPhpReceiver = (path, source, expected) => {
+	source = beforeOwnedReceiverCiRepair(path, source, expected);
 	if(!ownedPhpReceiverChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -125,5 +128,5 @@ export const beforeOwnedPhpReceiver = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedPhpReceiverHistoricalBytes = (path, bytes, expected) => ownedPhpReceiverChangedPaths.includes(path)
+export const ownedPhpReceiverHistoricalBytes = (path, bytes, expected) => ownedPhpReceiverNormalizationPaths.includes(path)
 	? beforeOwnedPhpReceiver(path, bytes.toString("utf8"), expected) : bytes;

@@ -27,12 +27,13 @@ export const assertOwnedPerlReceiverCi = (workflow, manifest) => {
 	assert.deepEqual([...job.matchAll(/^ {10}- (\d+\.\d+\.\d+-(?:un)?threaded)$/gmu)].map(item => item[1])
 		, ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"]);
 	for(const command of ["npm ci --ignore-scripts --no-audit --no-fund"
-		, "sudo apt-get update && sudo apt-get install -y build-essential curl zstd"
+		, "sudo apt-get update && sudo apt-get install -y build-essential curl zstd ripgrep"
 		, "bash scripts/bootstrap-toolchains.sh --lean-only"
 		, 'node scripts/build-perl-toolchains.mjs "${RECEIVER_PERL_CONFIGURATION%-*}" "${RECEIVER_PERL_CONFIGURATION##*-}"'])
 		assert.ok(job.split("\n").includes("        run: " + command), command);
 	const gates = job.split("      - name: Verify receiver lifetimes and installed CPAN releases\n");
 	assert.equal(gates.length, 2); const gate = gates[1].split("      - name: ")[0];
+	assert.match(gates[0], /^ {8}run: sudo apt-get .*install -y [^\n]*\bripgrep\b/mu);
 	assert.doesNotMatch(gate, /^ {8}(?:if|continue-on-error):/mu);
 	assert.match(gate, /^ {10}RECEIVER_PERL_CONFIGURATION: \$\{\{ matrix\.configuration \}\}$/mu);
 	for(const line of [
