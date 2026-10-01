@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptReceiver, ownedJavaScriptReceiverChangedPaths } from "./owned-javascript-receiver-history.mjs";
 
 export const ownedPhpWasmReceiverPath = "docs/evidence/owned-php-wasm-receivers-20261001.json";
 export const ownedPhpWasmReceiverBaseline = "c1725cc2ed8122cf656bfc62446f36069987c53a";
@@ -68,6 +69,7 @@ export const ownedPhpWasmReceiverAddedPaths = [
 	, "tests/owned-php-wasm-receivers.test.mjs"
 ].sort();
 let cached;
+export const ownedPhpWasmReceiverNormalizationPaths = [...new Set([...ownedPhpWasmReceiverChangedPaths, ...ownedJavaScriptReceiverChangedPaths])].sort();
 
 /**
  * Reverse exact ordered edits after authenticating both complete identities.
@@ -100,6 +102,7 @@ export const reverseOwnedPhpWasmReceiverUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedPhpWasmReceiver = (path, source, expected) => {
+	source = beforeOwnedJavaScriptReceiver(path, source, expected);
 	if(!ownedPhpWasmReceiverChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -126,5 +129,5 @@ export const beforeOwnedPhpWasmReceiver = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedPhpWasmReceiverHistoricalBytes = (path, bytes, expected) => ownedPhpWasmReceiverChangedPaths.includes(path)
+export const ownedPhpWasmReceiverHistoricalBytes = (path, bytes, expected) => ownedPhpWasmReceiverNormalizationPaths.includes(path)
 	? beforeOwnedPhpWasmReceiver(path, bytes.toString("utf8"), expected) : bytes;

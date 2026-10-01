@@ -57,6 +57,7 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 	const hostCallbacks = options.hostCallbacks ?? false;
 	const transferredInputs = options.transferredInputs ?? false;
 	const anchoredResults = options.anchoredResults ?? false;
+	const receiverExports = options.receiverExports ?? false, wholeOwners = anchoredResults || receiverExports;
 	const native = await compileOwnedAggregateFixture(t, { fixture
 		, witness: "import Owned\n", hostCallbacks
 		, ...options.fixtureOptions
@@ -64,8 +65,8 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 	const generated = generateOwnedNativeValueAdapters({ metadata: native.metadata
 		, sourceIdentity: native.sourceIdentity
 		, component: native.model.component, wordBits: 32
-		, hostCallbacks, transferredInputs, anchoredResults });
-	const layout = compileOwnedJavaScriptWasmLayout(generated.layout.model.bindingIr, { transferredInputs, anchoredResults }), directory = native.directory;
+		, hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+	const layout = compileOwnedJavaScriptWasmLayout(generated.layout.model.bindingIr, { transferredInputs, anchoredResults, receiverExports }), directory = native.directory;
 	const component = generateOwnedWasmComponent(generated), callbacks = component.callbacks;
 	const sharedBroker = options.sharedRuntime ? generateOwnedWasmBroker() : null;
 	assert.equal(generated.carriers.leanSource, native.leanSource);
@@ -83,7 +84,7 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 	for(const [path, source] of Object.entries({
 		"owned-values.h": generated.typesHeader
 		, "owned-values-codec.h": generated.source
-		, "owned-leases.h": transferredInputs ? ownedAggregateTransferRuntime({ anchoredResults }) : ownedAggregateLeaseRuntime({ anchoredResults })
+		, "owned-leases.h": transferredInputs ? ownedAggregateTransferRuntime({ anchoredResults: wholeOwners }) : ownedAggregateLeaseRuntime({ anchoredResults: wholeOwners })
 		, "carriers.h": generated.carriers.header
 		, "owned-js-layout.h": layout.assertions
 		, "lean_bridge_native_runtime.h": sharedBroker?.header ?? (hostCallbacks ? brokerHeader.replace("#ifdef __cplusplus\n}", `${nativeCallbackHeader}\n#ifdef __cplusplus\n}`) : brokerHeader)
@@ -133,7 +134,7 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 		module = await create();
 	}
 	if(!options.preparedRoot) for(const [name, symbol] of Object.entries(component.symbols)) module[`_owned_${name}`] = module[`_${symbol}`];
-	const evidence = transferredInputs || anchoredResults ? { directory
+	const evidence = transferredInputs || wholeOwners ? { directory
 		, input: { metadata: native.metadata, sourceIdentity: native.sourceIdentity
 			, component: native.model.component }
 		, privateAbi: component.privateAbi, controlSymbol: component.controlSymbol
@@ -145,7 +146,7 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 		return { call: (name, ...args) => runtime.call(layout.native.functions.find(fn => fn.name === name)?.id, args)
 			, close: runtime.close, module, layout, shared
 			, withRecovery: runtime.withRecovery
-			, ...anchoredResults ? { copyValue: runtime.copyValue } : {}
+			, ...wholeOwners ? { copyValue: runtime.copyValue } : {}
 			, ...evidence ? { evidence } : {}
 			, callbackCount: () => callbacks ? module[`_${callbacks.symbols.live}`]() : 0 };
 	}
@@ -209,7 +210,7 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 	t.after(close);
 	return { call: (name, ...args) => runtime.call(layout.native.functions.find(fn => fn.name === name)?.id, args)
 		, close, module, layout, withRecovery: runtime.withRecovery, shared
-		, ...anchoredResults ? { copyValue: runtime.copyValue } : {}
+		, ...wholeOwners ? { copyValue: runtime.copyValue } : {}
 		, ...evidence ? { evidence } : {}
 		, callbackCount: () => callbacks ? module[`_${callbacks.symbols.live}`]() : 0 };
 };

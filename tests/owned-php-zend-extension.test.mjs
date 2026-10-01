@@ -20,8 +20,14 @@ const inputs = async () => JSON.parse(await readFile("docs/evidence/owned-aggreg
 test("owned Zend extensions require the exact wasm32 layout and authenticated host callbacks", async () => {
 	const input = (await inputs()).aggregates;
 	assert.throws(() => generateOwnedPhpZendExtension(generateOwnedNativeValueAdapters(input)), /wasm32/u);
-	assert.throws(() => generateOwnedPhpZendExtension(generateOwnedNativeValueAdapters({ ...input, wordBits: 32 })), /callback carriers/u);
+	const withoutHost = generateOwnedNativeValueAdapters({ ...input, wordBits: 32 });
+	const withoutHostExtension = generateOwnedPhpZendExtension(withoutHost);
+	assert.equal(withoutHostExtension.model.hostCallbacks, false);
+	assert.equal(withoutHostExtension.model.functions.some(fn => fn.hostArguments.some(Boolean)), false);
+	assert.doesNotMatch(withoutHostExtension.source, /static lean_object \*lgo_host/u);
+	assert.throws(() => generateOwnedPhpZendExtension({ ...withoutHost, carriers: { ...withoutHost.carriers, hostCallbacks: [] } }), /callback carriers/u);
 	const native = generateOwnedNativeValueAdapters({ ...input, wordBits: 32, hostCallbacks: true });
+	assert.throws(() => generateOwnedPhpZendExtension({ ...native, carriers: { ...native.carriers, hostCallbacks: [] } }), /callback carriers/u);
 	const generated = generateOwnedPhpZendExtension(native);
 	assert.deepEqual(generated, generateOwnedPhpZendExtension(native));
 	assert.equal(generated.model.callbacks.length, native.carriers.hostCallbacks.length);
@@ -43,9 +49,9 @@ test("owned Zend scalar and recursive extensions compile every downcall and host
 	const sdk = resolve(process.env.LEAN_BRIDGE_PHP_EMSDK ?? ".toolchains/emsdk-php-wasm");
 	const php = resolve(process.env.LEAN_BRIDGE_PHP_SOURCE ?? "build/php-wasm-sdk/php8.4-src");
 	const runtime = (await prepareOwnedPhpWasmRuntime(directory)).root;
-	for(const [name, input] of Object.entries(await inputs()))
+	for(const [name, input] of Object.entries(await inputs())) for(const hostCallbacks of [false, true])
 	{
-		const native = generateOwnedNativeValueAdapters({ ...input, wordBits: 32, hostCallbacks: true });
+		const native = generateOwnedNativeValueAdapters({ ...input, wordBits: 32, hostCallbacks });
 		const extension = generateOwnedPhpZendExtension(native);
 		for(const [path, source] of Object.entries({ "owned-values.h": native.typesHeader
 			, "owned-values-codec.h": native.source
@@ -61,6 +67,6 @@ test("owned Zend scalar and recursive extensions compile every downcall and host
 			, cwd: directory, timeoutMs: 60000
 			, env: { ...process.env, EM_CONFIG: join(sdk, ".emscripten"), EMSDK: sdk }
 		}).catch(error => { error.message += ": " + (error.details?.stderr ?? ""); throw error; });
-		t.diagnostic(`${name}: ${extension.model.functions.length} exports, ${extension.model.callbacks.length} typed callbacks`);
+		t.diagnostic(`${name}: ${extension.model.functions.length} exports, ${extension.model.callbacks.length} callback types, hostCallbacks=${hostCallbacks}`);
 	}
 });

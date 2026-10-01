@@ -17,6 +17,7 @@ import { ownedJavaScriptWasmNativeProbe } from "./owned-javascript-wasm-native.m
 import { ownedJavaScriptBorrowMutations } from "./owned-javascript-borrow-mutants.mjs";
 import { assertOwnedJavaScriptBorrowCi } from "./owned-javascript-borrow-ci.mjs";
 import { ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
+import { beforeOwnedJavaScriptReceiver } from "./owned-javascript-receiver-history.mjs";
 
 export const ownedJavaScriptBorrowCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-javascript-borrows";
 export const ownedJavaScriptBorrowScope = Object.freeze({
@@ -118,7 +119,7 @@ export const assertOwnedJavaScriptBorrowExecution = async record => {
 		for(const [name, path, before, after] of ownedJavaScriptBorrowMutations)
 		{
 			const original = path === "probe.c" ? source : path === "owned-leases.h"
-				? ownedAggregateTransferRuntime({ anchoredResults: true }) : await readFile(path, "utf8");
+				? ownedAggregateTransferRuntime({ anchoredResults: true }) : beforeOwnedJavaScriptReceiver(path, await readFile(path, "utf8"));
 			assert.equal(original.split(before).length, 2, name);
 			expected.push({ name, path, sourceSha256: sha256(original.replace(before, after)), parsed: true, semanticRejection: true });
 		}
@@ -172,7 +173,10 @@ export const assertOwnedJavaScriptBorrowExecution = async record => {
 		const publicFiles = generateJavaScriptPackage(model.bindingIr);
 		for(const path of ["index.mjs", "index.d.ts"]) assert.equal(item.inventory[component.name + "/" + path].sha256, sha256(publicFiles[path]));
 		for(const name of ["calls", "borrow-registry"])
-			assert.equal(item.inventory[`@lean-bridge/runtime/internal/owned-wasm-${name}.mjs`].sha256, sha256(await readFile(`src/release/owned-wasm-${name}.mjs`)));
+		{
+			const path = `src/release/owned-wasm-${name}.mjs`;
+			assert.equal(item.inventory[`@lean-bridge/runtime/internal/owned-wasm-${name}.mjs`].sha256, sha256(beforeOwnedJavaScriptReceiver(path, await readFile(path, "utf8"))));
+		}
 		observed(item.observed);
 		assert.deepEqual(item.documentation, { sourceSha256: sha256(example), output: "42n\nexpired\n42n\n" });
 		flags(item.browser, ["installedSourcesRemoved", "externalNetworkBlocked"]);

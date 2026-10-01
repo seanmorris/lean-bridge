@@ -29,6 +29,8 @@ const cleanupAll = operations => {
 export const createOwnedWasmBorrowRegistry = (layout, native, options = {}) => {
 	const types = new Map(layout.types.map(type => [type.id, type]));
 	for(const alias of layout.native.aliases) types.set(alias.id, types.get(alias.target));
+	const declarations = new Map(layout.native.model.bindingIr.declarations.map(fn => [fn.id, fn]));
+	const members = layout.native.functions.filter(fn => fn.receiver === 0);
 	const views = new WeakMap(), roots = new WeakMap(), owners = new Set(), groups = new Set();
 	const checkpoint = options.checkpoint ?? (() => {}), enqueue = options.enqueue ?? queueMicrotask;
 	let closed = false, poisoned = false, nativeClosed = false, active = 0, live = 0;
@@ -203,6 +205,16 @@ export const createOwnedWasmBorrowRegistry = (layout, native, options = {}) => {
 		const state = { group, type, root, token, disposed: false };
 		(root ? group.roots : group.views).add(state); live++; return state;
 	};
+	const memberDescriptors = (type, value, state, raw = false) => {
+		const descriptors = Object.create(null);
+		for(const fn of members)
+		{
+			if(fn.parameters[0] !== type.id || (raw && (fn.anchor === 0 || fn.transfers?.includes(0)))) continue;
+			const invoke = (...args) => { requireState(state); return native.member(fn.id, [value, ...args]); };
+			descriptors[fn.name] = declarations.get(fn.id).kind === "property" ? { get: invoke } : { value: invoke };
+		}
+		return descriptors;
+	};
 	const wrapRoot = (group, type, payload) => {
 		const state = createState(group, type, true);
 		try
@@ -215,6 +227,7 @@ export const createOwnedWasmBorrowRegistry = (layout, native, options = {}) => {
 				, share: { value: () => { requireState(state); return wrapRoot(group, type, payload); } }
 				, retain: { value: () => use(state, scope => native.copy(type, payload, scope)) }
 				, ...Symbol.dispose ? { [Symbol.dispose]: { value: () => { dispose(state); } } } : {}
+				, ...memberDescriptors(type, value, state)
 			});
 			checkpoint(); roots.set(value, { state, payload }); finalizer.register(value, state, state);
 			return Object.freeze(value);
@@ -241,6 +254,7 @@ export const createOwnedWasmBorrowRegistry = (layout, native, options = {}) => {
 					requireState(candidate); return candidate.token === token;
 				} }
 				, ...Symbol.dispose ? { [Symbol.dispose]: { value: () => { dispose(state); } } } : {}
+				, ...memberDescriptors(type, value, state, true)
 			});
 			checkpoint(); views.set(value, state); identityHandles.add(value); finalizer.register(value, state, state);
 			return Object.freeze(value);

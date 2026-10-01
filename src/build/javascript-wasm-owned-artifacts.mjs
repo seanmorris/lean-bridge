@@ -27,8 +27,10 @@ const file = value => closed(value, ["bytes", "sha256"]) && Number.isSafeInteger
  *
  * @param bytes - Compiled side module bytes.
  * @param controlSymbol - Sole component entry point authenticated by its IR.
+ * @param hostCallbacks - Require the two callback metadata globals when present.
  */
-export const validateOwnedJavaScriptWasmBinary = async (bytes, controlSymbol) => {
+export const validateOwnedJavaScriptWasmBinary = async (bytes, controlSymbol, hostCallbacks = true) => {
+	if(typeof hostCallbacks !== "boolean") throw new TypeError("JavaScript callback capability must be explicit");
 	const suffix = /^lbjs_component_([a-f0-9]{20})_control$(?![\s\S])/.exec(controlSymbol)?.[1];
 	if(!suffix) throw new Error("Invalid owned JavaScript control symbol");
 	const module = await WebAssembly.compile(bytes);
@@ -39,8 +41,8 @@ export const validateOwnedJavaScriptWasmBinary = async (bytes, controlSymbol) =>
 	// Emscripten reads these two data globals to install the component's EM_JS
 	// callbacks. They are metadata, not additional callable or resource exports.
 	const expected = [`function:${controlSymbol}`, "function:__wasm_call_ctors"
-		, `global:__em_js__lbjs_${suffix}_dispatch_js`
-		, `global:__em_js__lbjs_${suffix}_finish_js`].sort();
+		, ...hostCallbacks ? [`global:__em_js__lbjs_${suffix}_dispatch_js`
+			, `global:__em_js__lbjs_${suffix}_finish_js`] : []].sort();
 	// The linker omits this private helper when the module has no data relocations.
 	const required = exports.map(item => `${item.kind}:${item.name}`).filter(name => name !== "function:__wasm_apply_data_relocs").sort();
 	if(!same(required, expected)
@@ -70,7 +72,12 @@ export const readVerifiedOwnedJavaScriptWasmComponent = async root => {
 			|| !file(entry) || !same(entry, identity(await readFile(join(root, path))))) throw new Error(`Owned JavaScript artifact drift: ${path}`);
 	}
 	const receipt = await read("javascript-wasm-component.json"), model = await read("model.json"), metadata = await read("metadata.json");
-	const reconstructed = createOwnedJavaScriptWasmModel({ metadata, component: model.component, sourceIdentity: receipt.sourceIdentity });
+	const reconstructed = createOwnedJavaScriptWasmModel({ metadata
+		, component: model.component, sourceIdentity: receipt.sourceIdentity
+		, hostCallbacks: Boolean(model.ownedGraph?.hostCallbacks)
+		, transferredInputs: Boolean(model.ownedGraph?.inputTransfers)
+		, anchoredResults: Boolean(model.ownedGraph?.resultAnchors)
+		, receiverExports: Boolean(model.ownedGraph?.receiverExports) });
 	const adapters = generateOwnedJavaScriptWasmLeanAdapters(reconstructed);
 	const generated = generateCompiledJavaScriptWasmOwned(reconstructed, metadata, adapters);
 	const headers = Object.fromEntries(javascriptWasmTargetHeaders.map(name => [`compiler/include/lean/${name}`, inventory.files[`compiler/include/lean/${name}`]]));
@@ -100,7 +107,7 @@ export const readVerifiedOwnedJavaScriptWasmComponent = async root => {
 	});
 	const bytes = await readFile(join(root, receipt.library));
 	if(!same(receipt.wasmLibrary, identity(bytes))) throw new Error("Owned JavaScript binary drift");
-	await validateOwnedJavaScriptWasmBinary(bytes, generated.privateAbi.controlSymbol);
+	await validateOwnedJavaScriptWasmBinary(bytes, generated.privateAbi.controlSymbol, Boolean(reconstructed.ownedGraph.hostCallbacks));
 	const notices = await readVerifiedSourceNotices(root, receipt.sourceIdentity);
 	verifyPackageMetadataSource(receipt.sourceIdentity, notices.document.packages[0].source.inputs);
 	verifyReviewedOwnedSourceInputs(receipt.sourceIdentity, notices.document.packages[0].source.inputs);

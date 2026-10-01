@@ -30,7 +30,7 @@ export const createOwnedWasmCalls = (module, suppliedLayout, bindings, options =
 	const types = new Map(layout.types.map(type => [type.id, type]));
 	for(const alias of layout.native.aliases) types.set(alias.id, types.get(alias.target));
 	const signatures = [...layout.native.functions, ...layout.native.callbacks];
-	const anchored = layout.native.functions.some(signature => signature.anchor !== undefined);
+	const anchored = layout.native.functions.some(signature => signature.anchor !== undefined || signature.receiver === 0);
 	const exports = new Map(layout.native.functions.map((signature, index) => [signature.id, index]));
 	for(const name of ["assertOpen", "openOwner", "validOwner", "releaseOwner", "claimAllocation", "claimIdentity", "dispatch", "retain", "close", "poison"])
 		if(typeof bindings[name] !== "function") throw new TypeError(`Owned wasm32 calls require native ${name}`);
@@ -229,6 +229,7 @@ export const createOwnedWasmCalls = (module, suppliedLayout, bindings, options =
 			, copy: (type, value, scope) => invoke(-1, [value], { type, copy: true }, scope)
 		} : {}
 		, invoke: (type, token, args, scope) => invoke(signatures.findIndex(signature => signature.id === type.id), [null, ...args], { type, token }, scope)
+		, member: (id, args) => invoke(exports.get(id), args)
 		, retain: (type, token, scope) => invoke(-1, [], { type, token, retain: true }, scope)
 		, close: () => { callbacks?.close(); requireNative(native(() => bindings.close()) === 0, "component close"); }
 		, poison

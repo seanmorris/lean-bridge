@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedPhpWasmReceiverExecution } from "./helpers/owned-php-wasm-receiver-evidence.mjs";
+import { beforeOwnedJavaScriptReceiver, ownedJavaScriptReceiverHistoricalBytes } from "./helpers/owned-javascript-receiver-history.mjs";
 import { ownedPhpWasmReceiverPath, ownedPhpWasmReceiverBaseline, ownedPhpWasmReceiverPrevious
 	, ownedPhpWasmReceiverChangedPaths, ownedPhpWasmReceiverAddedPaths
 	, beforeOwnedPhpWasmReceiver, reverseOwnedPhpWasmReceiverUpdate } from "./helpers/owned-php-wasm-receiver-history.mjs";
@@ -23,13 +24,13 @@ test("PHP-Wasm receiver history authenticates exact sources and preserves prior 
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPhpWasmReceiverAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPhpWasmReceiverChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedPhpWasmReceiver(update.path, source);
+		const source = beforeOwnedJavaScriptReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256), prior = beforeOwnedPhpWasmReceiver(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedPhpWasmReceiver(update.path, prior), prior);
 		assert.equal(beforeOwnedPhpWasmReceiver(update.path, source, update.currentSha256), source);
@@ -41,9 +42,9 @@ test("PHP-Wasm receiver history authenticates exact sources and preserves prior 
 			, { ...update, path: "unknown.mjs" }])
 			assert.throws(() => reverseOwnedPhpWasmReceiverUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedJavaScriptReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedPhpWasmReceiver(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["model", "resource", "packaging", "resource-packaging", "documentation", "ci", "evidence"])
 		assert.equal(classifyRepositoryTest(`tests/owned-php-wasm-receiver-${name}.test.mjs`), "contract");

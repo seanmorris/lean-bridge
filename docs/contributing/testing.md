@@ -3123,6 +3123,34 @@ cross-language Docker audit is separate. The
 [borrowed-result receipt](../evidence/owned-javascript-borrows-20261001.md)
 records the executed scope and the source identities used for it.
 
+The receiver gate checks named methods and read-only properties, original
+receiver and remaining-argument anchors, and original-owner consumption. It
+sweeps native and JavaScript allocation failures, retains thrown errors during
+cleanup checks, and runs actual garbage collection against nominal owners,
+payload cycles and retained method references. Twelve deliberately broken
+implementations must fail their named semantic assertions.
+
+```sh
+source scripts/env.sh
+npm run test:owned-javascript-receivers
+```
+
+The command enables garbage collection and requires 28 tests with no skips.
+Both ordinary source and reviewed contracts run through the installed CLI,
+offline npm installation, strict TypeScript, and Chromium, Firefox and WebKit
+pages, React and workers. Separate packages exercise resource-only methods with
+and without transfers, plus callback members without result anchors. Every
+package configuration requires independent rebuilds and identical reassembly.
+The full package test executes the exact methods-and-properties documentation
+example. Copied Alpha handles and receiver owners share one runtime in both
+load orders, including shutdown and rejection after retirement.
+
+The independent `owned-javascript-receivers` CI job requires all 23 reports in
+`build/owned-javascript-receivers/` and
+`build/owned-javascript-receiver-packaging/report.json`, and keeps the TAP log
+at `build/owned-javascript-receivers.log`. Callback-result lifetime support and
+the final cross-language container audit remain separate work.
+
 The coexistence gate builds a copied compound-value package and an owned package
 independently. Both must produce the same runtime archive byte for byte. It
 installs the archives offline, deletes producer files and tests owned-first,

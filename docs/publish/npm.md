@@ -111,8 +111,44 @@ Packages with these declarations expose owned results as `LeanValue<T>`.
 Consumers use `get()`, `share()`, `retain()` and `dispose()` without importing a
 runtime or handling owner identifiers. The [consumer example](../javascript-typescript.md#borrowed-results-and-whole-value-owners)
 shows the lifetime rules and typed aggregate construction. Copied results keep
-their ordinary JavaScript representation. Receiver and callback-result anchors
-remain unsupported.
+their ordinary JavaScript representation. Callback-result anchors remain
+unsupported.
+
+### Export methods and properties
+
+Mark the first Lean parameter as a receiver in the export contract. A property
+has no remaining parameters and is read-only in JavaScript and TypeScript:
+
+```json
+{
+  "contracts": {
+    "Owned.serial": { "receiver": "property" },
+    "Owned.retainTicket": {
+      "receiver": "method",
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      }
+    }
+  }
+}
+```
+
+Merge these decisions with the package's existing exports, resource declarations
+and `ownedAggregates` policy. The compiler checks the receiver type. Consumers
+get named owner types with properties and methods, such as `ticket.serial` and
+`ticket.retainTicket()`. They do not construct resource handles or load a runtime.
+
+Use a receiver lifetime only when the result follows that receiver. A result
+borrowed from another Lean parameter retains its parameter lifetime and original
+source name, such as `arg1`. Marking the first parameter as a receiver does not
+renumber source parameter names. A consuming receiver uses the existing
+`arg0` transfer contract. Its method consumes the original owner, including
+shared roots and borrowed descendants.
+
+Receiver exports also work without callback declarations or borrowed results.
+The [consumer example](../javascript-typescript.md#methods-and-properties)
+shows member calls, independent retention and typed receiver construction.
 
 ### Publish the owned package
 

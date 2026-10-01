@@ -10,6 +10,7 @@ import { sha256Text } from "../binding-ir/sha256.mjs";
 export const componentOwnedWasmAbi = 10;
 export const componentOwnedWasmTransferAbi = 11;
 export const componentOwnedWasmBorrowAbi = 12;
+export const componentOwnedWasmReceiverAbi = 13;
 
 /**
  * Validate the descriptor before loading code or entering the shared heap.
@@ -20,12 +21,14 @@ export const componentOwnedWasmBorrowAbi = 12;
  */
 export const assertComponentOwnedWasmBindings = (abi, bindingIr) => {
 	const fields = ["callbackKey", "controlSymbol", "dispatch", "initializer", "layout", "version"];
-	const anchored = abi?.version === componentOwnedWasmBorrowAbi;
-	const transfers = abi?.version === componentOwnedWasmTransferAbi || (anchored && Object.hasOwn(abi, "inputTransfers"));
+	const receivers = abi?.version === componentOwnedWasmReceiverAbi;
+	const anchored = abi?.version === componentOwnedWasmBorrowAbi || (receivers && Object.hasOwn(abi, "resultAnchors"));
+	const transfers = abi?.version === componentOwnedWasmTransferAbi || ((receivers || anchored) && Object.hasOwn(abi, "inputTransfers"));
 	if(transfers) fields.push("inputTransfers");
 	if(anchored) fields.push("resultAnchors");
+	if(receivers) fields.push("receiverExports");
 	if(!abi || canonicalizeJsonValue(Object.keys(abi).sort()) !== canonicalizeJsonValue(fields.sort())
-		|| ![componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi].includes(abi.version) || abi.dispatch !== "owned-wasm32-control-v1"
+		|| ![componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi].includes(abi.version) || abi.dispatch !== "owned-wasm32-control-v1"
 		|| abi.layout?.schemaVersion !== 1 || abi.layout.kind !== "owned-javascript-wasm32-layout"
 		|| abi.layout.native?.wordBits !== 32 || !Array.isArray(abi.layout.types)
 		|| !Array.isArray(abi.layout.native.functions) || !Array.isArray(abi.layout.native.callbacks))
@@ -38,21 +41,29 @@ export const assertComponentOwnedWasmBindings = (abi, bindingIr) => {
 		|| (abi.callbackKey !== null && abi.callbackKey !== `leanBridgeOwnedCallbacks_${hash}`))
 		throw new TypeError("Owned Wasm component binding identity mismatch");
 	const consuming = bindingIr.declarations.flatMap(fn => {
-		const parameters = fn.parameters.flatMap((parameter, index) => parameter.ownership === "transfer" ? [index] : []);
+		const parameters = [...fn.receiver ? [fn.receiver] : [], ...fn.parameters].flatMap((parameter, index) => parameter.ownership === "transfer" ? [index] : []);
 		return parameters.length ? [{ bindingId: fn.id, parameters }] : [];
 	});
 	if(Boolean(consuming.length) !== transfers || (transfers && canonicalizeJsonValue(abi.inputTransfers) !== canonicalizeJsonValue({
 		schemaVersion: 1, frameBytes: 16, groupBytes: 8, consumedOffset: 12
 		, exports: consuming
 	}))) throw new TypeError("Owned Wasm input-transfer capability mismatch");
-	const anchors = bindingIr.declarations.filter(fn => fn.result.ownership === "borrow").map(fn => ({
-		bindingId: fn.id
-		, parameter: fn.parameters.findIndex(parameter => parameter.name === fn.result.lifetime?.anchor)
-	}));
+	const anchors = bindingIr.declarations.filter(fn => fn.result.ownership === "borrow").map(fn => {
+		const index = fn.parameters.findIndex(parameter => parameter.name === fn.result.lifetime?.anchor);
+		return { bindingId: fn.id
+			, parameter: fn.result.lifetime?.scope === "receiver" && fn.receiver ? 0
+			: index < 0 ? -1 : index + (fn.receiver ? 1 : 0) };
+	});
 	const expectedAnchors = { schemaVersion: 1, anchor: "original-result-owner"
 		, maximumDepth: 128, exports: anchors };
 	if(Boolean(anchors.length) !== anchored || (anchored && (anchors.some(fn => fn.parameter < 0)
 		|| canonicalizeJsonValue(abi.resultAnchors) !== canonicalizeJsonValue(expectedAnchors))))
 		throw new TypeError("Owned Wasm result-anchor capability mismatch");
+	const members = bindingIr.declarations.filter(fn => fn.receiver).map(fn => ({
+		bindingId: fn.id, kind: fn.kind, owner: fn.owner, argument: 0
+	}));
+	if(Boolean(members.length) !== receivers || (receivers && canonicalizeJsonValue(abi.receiverExports) !== canonicalizeJsonValue({
+		schemaVersion: 1, callingConvention: "receiver-first", exports: members
+	}))) throw new TypeError("Owned Wasm receiver capability mismatch");
 	return sha256Text(canonicalizeJsonValue(abi));
 };

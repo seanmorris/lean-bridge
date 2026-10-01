@@ -275,6 +275,84 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  owned-javascript-receivers:
+    name: JavaScript and TypeScript receiver packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    env:
+      EMCC_CORES: "2"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install compiler tools and log tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev pkg-config python3 ripgrep zstd
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh
+      - name: Install all JavaScript browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Build the production runtime for receiver packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-javascript-receiver-runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Verify JavaScript receiver packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-javascript-receivers 2>&1 | tee build/owned-javascript-receivers.log
+          rg '^# tests 28$' build/owned-javascript-receivers.log
+          rg '^# pass 28$' build/owned-javascript-receivers.log
+          rg '^# fail 0$' build/owned-javascript-receivers.log
+          rg '^# cancelled 0$' build/owned-javascript-receivers.log
+          rg '^# skipped 0$' build/owned-javascript-receivers.log
+          test -s build/owned-javascript-receivers/ordinary.json
+          test -s build/owned-javascript-receivers/ordinary-plain-false.json
+          test -s build/owned-javascript-receivers/ordinary-plain-true.json
+          test -s build/owned-javascript-receivers/ordinary-unanchored.json
+          test -s build/owned-javascript-receivers/ordinary-gc.json
+          test -s build/owned-javascript-receivers/ordinary-mutants.json
+          test -s build/owned-javascript-receivers/ordinary-owned-first.json
+          test -s build/owned-javascript-receivers/ordinary-copied-first.json
+          test -s build/owned-javascript-receivers/ordinary-plain-package.json
+          test -s build/owned-javascript-receivers/ordinary-consuming-package.json
+          test -s build/owned-javascript-receivers/ordinary-unanchored-package.json
+          test -s build/owned-javascript-receivers/reviewed.json
+          test -s build/owned-javascript-receivers/reviewed-plain-false.json
+          test -s build/owned-javascript-receivers/reviewed-plain-true.json
+          test -s build/owned-javascript-receivers/reviewed-unanchored.json
+          test -s build/owned-javascript-receivers/reviewed-gc.json
+          test -s build/owned-javascript-receivers/reviewed-mutants.json
+          test -s build/owned-javascript-receivers/reviewed-owned-first.json
+          test -s build/owned-javascript-receivers/reviewed-copied-first.json
+          test -s build/owned-javascript-receivers/reviewed-plain-package.json
+          test -s build/owned-javascript-receivers/reviewed-consuming-package.json
+          test -s build/owned-javascript-receivers/reviewed-unanchored-package.json
+          test -s build/owned-javascript-receiver-packaging/report.json
+      - name: Preserve JavaScript receiver acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: javascript-receivers-${{ github.sha }}
+          path: |
+            build/owned-javascript-receivers/
+            build/owned-javascript-receiver-packaging/
+            build/owned-javascript-receivers.log
+            build/owned-javascript-receiver-runtime.log
+          if-no-files-found: error
+          retention-days: 30
+
   node-consumers:
     name: Node and browser npm consumers
     runs-on: ubuntu-24.04
@@ -2677,6 +2755,7 @@ jobs:
       - nix-cache
       - node-consumers
       - owned-javascript-wasm
+      - owned-javascript-receivers
       - browser-consumer
       - php-consumers
       - php-receivers
@@ -2715,6 +2794,9 @@ jobs:
           retention-days: 30
       - name: Enforce owned JavaScript and Wasm execution
         if: needs.owned-javascript-wasm.result != 'success'
+        run: exit 1
+      - name: Enforce JavaScript receiver acceptance
+        if: needs.owned-javascript-receivers.result != 'success'
         run: exit 1
       - name: Enforce real Nix owned npm acceptance
         if: needs.node-consumers.result != 'success'

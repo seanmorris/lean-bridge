@@ -7,7 +7,7 @@
 import { compileOwnedJavaScriptWasmLayout } from "./owned-wasm-layout.mjs";
 import { generateOwnedWasmCallbacks } from "./owned-wasm-callbacks.mjs";
 import { ownedWasmControlBytes, ownedWasmControlOperations, ownedWasmControlVersion, ownedWasmBorrowOperations } from "../../abi/owned-wasm-control.mjs";
-import { assertComponentOwnedWasmBindings, componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi } from "../../abi/component-owned-wasm.mjs";
+import { assertComponentOwnedWasmBindings, componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi } from "../../abi/component-owned-wasm.mjs";
 import { ownedWasmInputTransferSource } from "./owned-wasm-input-transfers.mjs";
 import { ownedWasmBorrowOwners, ownedWasmBorrowTransfers, ownedWasmBorrowDispatch, ownedWasmBorrowCopy } from "./owned-wasm-borrows.mjs";
 
@@ -22,8 +22,10 @@ export const generateOwnedWasmComponent = generated => {
 	if(generated?.layout?.wordBits !== 32)
 		throw new TypeError("Owned JavaScript components require a wasm32 adapter");
 	const native = generated.layout, transfers = native.functions.some(fn => fn.transfers?.length);
-	const anchors = native.functions.some(fn => fn.anchor !== undefined), tracked = transfers || anchors;
-	const layout = compileOwnedJavaScriptWasmLayout(native.model.bindingIr, { transferredInputs: transfers, anchoredResults: anchors });
+	const declaredAnchors = native.functions.some(fn => fn.anchor !== undefined);
+	const receivers = native.functions.some(fn => fn.receiver === 0);
+	const anchors = declaredAnchors || receivers, tracked = transfers || anchors;
+	const layout = compileOwnedJavaScriptWasmLayout(native.model.bindingIr, { transferredInputs: transfers, anchoredResults: declaredAnchors, receiverExports: receivers });
 	if(generated.typesHeader !== layout.native.header || JSON.stringify(native) !== JSON.stringify(layout.native))
 		throw new TypeError("Owned JavaScript component layout differs from its binding IR");
 	const p = `lbjs_component_${native.model.bindingIrSha256.slice(0, 20)}`;
@@ -39,13 +41,16 @@ export const generateOwnedWasmComponent = generated => {
 	const identities = native.nodes.filter(type => ["resource", "callback"].includes(type.kind));
 	const signatures = [...native.functions, ...native.callbacks];
 	const controlSymbol = `${p}_control`, op = { ...ownedWasmControlOperations, ...anchors ? ownedWasmBorrowOperations : {} };
-	const privateAbi = Object.freeze({ version: anchors ? componentOwnedWasmBorrowAbi : transfers ? componentOwnedWasmTransferAbi : componentOwnedWasmAbi
+	const privateAbi = Object.freeze({ version: receivers ? componentOwnedWasmReceiverAbi : anchors ? componentOwnedWasmBorrowAbi : transfers ? componentOwnedWasmTransferAbi : componentOwnedWasmAbi
 		, dispatch: "owned-wasm32-control-v1", controlSymbol
 		, initializer: `initialize_${generated.carriers.module}`
 		, callbackKey: callbacks?.handlerKey ?? null, layout
-		, ...anchors ? { resultAnchors: {
+		, ...declaredAnchors ? { resultAnchors: {
 			schemaVersion: 1, anchor: "original-result-owner", maximumDepth: 128
 			, exports: native.functions.filter(fn => fn.anchor !== undefined).map(fn => ({ bindingId: fn.id, parameter: fn.anchor })) } } : {}
+		, ...receivers ? { receiverExports: {
+			schemaVersion: 1, callingConvention: "receiver-first"
+			, exports: native.model.bindingIr.declarations.filter(fn => fn.receiver).map(fn => ({ bindingId: fn.id, kind: fn.kind, owner: fn.owner, argument: 0 })) } } : {}
 		, ...transfers ? { inputTransfers: {
 			schemaVersion: 1, frameBytes: 16, groupBytes: 8, consumedOffset: 12
 			, exports: native.functions.filter(fn => fn.transfers?.length).map(fn => ({ bindingId: fn.id, parameters: fn.transfers })) } } : {} });

@@ -29,6 +29,8 @@ export const ownedPhpWasmCiReports = [
  * @param workflow - Complete current consumer matrix workflow.
  */
 export const assertOwnedPhpWasmCi = workflow => {
+	workflow = workflow.match(/^ {2}php-consumers:\n([^]*?)(?=^ {2}[a-z][a-z0-9-]*:\n)/mu)?.[0];
+	assert.ok(workflow, "Missing PHP consumer job");
 	const step = workflow.match(/^ {6}- name: Execute owned PHP-Wasm values and installed CLI releases\n([^]*?)(?=^ {6}- name: )/mu)?.[0];
 	assert.ok(step); assert.match(step, /^ {8}id: owned_php_wasm$/mu);
 	assert.doesNotMatch(step, /^ {8}if:/mu);

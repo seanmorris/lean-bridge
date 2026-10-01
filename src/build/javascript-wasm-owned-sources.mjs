@@ -22,33 +22,37 @@ import { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters
  */
 export const generateCompiledJavaScriptWasmOwned = (model, metadata, adapters) => {
 	const anchoredResults = Boolean(model.ownedGraph?.resultAnchors);
-	const inputs = { metadata, sourceIdentity: model.sourceIdentity, component: model.component, anchoredResults };
+	const receiverExports = Boolean(model.ownedGraph?.receiverExports), wholeOwners = anchoredResults || receiverExports;
+	const hostCallbacks = Boolean(model.ownedGraph?.hostCallbacks), transferredInputs = Boolean(model.ownedGraph?.inputTransfers);
+	const inputs = { metadata, sourceIdentity: model.sourceIdentity
+		, component: model.component
+		, anchoredResults, receiverExports, hostCallbacks, transferredInputs };
 	if(canonicalJson(createOwnedJavaScriptWasmModel(inputs)) !== canonicalJson(model)
 		|| canonicalJson(generateOwnedJavaScriptWasmLeanAdapters(model)) !== canonicalJson(adapters))
 		throw new TypeError("JavaScript ownership sources differ from compiler inputs");
-	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
-	const native = generateOwnedNativeValueAdapters({ ...inputs, wordBits: 32, hostCallbacks: true, transferredInputs });
+	const native = generateOwnedNativeValueAdapters({ ...inputs, wordBits: 32 });
 	const component = generateOwnedWasmComponent(native);
 	if(native.carriers.leanSource !== adapters.leanSource || native.carriers.module !== adapters.module)
 		throw new TypeError("JavaScript ownership carrier source drift");
 	const files = { "owned/carriers.h": adapters.header
 		, "owned/owned-values.h": native.typesHeader
 		, "owned/owned-values-codec.h": native.source
-		, "owned/owned-leases.h": transferredInputs ? ownedAggregateTransferRuntime({ anchoredResults }) : ownedAggregateLeaseRuntime({ anchoredResults })
+		, "owned/owned-leases.h": transferredInputs ? ownedAggregateTransferRuntime({ anchoredResults: wholeOwners }) : ownedAggregateLeaseRuntime({ anchoredResults: wholeOwners })
 		, "owned/owned-js-layout.h": component.layout.assertions
 		, "owned/lean_bridge_native_runtime.h": generateOwnedWasmBroker().header
-		, "owned/callbacks.c": adapters.callbackSource
+		, ...hostCallbacks ? { "owned/callbacks.c": adapters.callbackSource } : {}
 		, "owned/allocation-guard.h": nativeAllocationGuardHeader
 		, "owned/component.c": component.source
 		, "private-abi.json": canonicalJson(component.privateAbi) };
 	return { files, privateAbi: component.privateAbi
 		, metadataHash: component.metadataHash
-		, sources: ["owned/callbacks.c", "owned/component.c"]
+		, sources: [...hostCallbacks ? ["owned/callbacks.c"] : [], "owned/component.c"]
 		, allocationGuard: "owned/allocation-guard.h"
-		, receipt: { schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
+		, receipt: { schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 			, transport: "owned-wasm32-control-v1"
 			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
+			, ...receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
 			, layoutSha256: model.ownedGraph.layoutSha256
 			, metadataHash: component.metadataHash
 			, files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) } };

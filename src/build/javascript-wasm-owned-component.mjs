@@ -51,7 +51,11 @@ export const buildOwnedJavaScriptWasmComponent = async options => {
 	return buildElaboratedComponent({ ...options
 		, targets: ["npm"], ownedGraphs: true, moduleName: undefined
 		, profile, receiptName: "javascript-wasm-component.json"
-		, createModel: createOwnedJavaScriptWasmModel
+		, createModel: input => createOwnedJavaScriptWasmModel({ ...input
+			, hostCallbacks: options.hostCallbacks ?? true
+			, transferredInputs: options.transferredInputs ?? true
+			, anchoredResults: options.anchoredResults ?? true
+			, receiverExports: options.receiverExports ?? true })
 		, createAdapters: generateOwnedJavaScriptWasmLeanAdapters
 		, validateModel: model => { compileOwnedJavaScriptPackageModel(model.bindingIr); options.validateModel?.(model); }
 		, compileComponent: async ({ staging, model, metadata, sourceIdentity, adapters, compileOrder, generatedC, lakeWorkspace, lakeSnapshot }) => {
@@ -94,7 +98,7 @@ export const buildOwnedJavaScriptWasmComponent = async options => {
 				, ...objects, ...(native?.objects ?? [])
 				, "-o", join(staging, library)], staging);
 			const bytes = await readFile(join(staging, library));
-			await validateOwnedJavaScriptWasmBinary(bytes, generated.privateAbi.controlSymbol);
+			await validateOwnedJavaScriptWasmBinary(bytes, generated.privateAbi.controlSymbol, Boolean(model.ownedGraph.hostCallbacks));
 			const receipt = { schemaVersion: 1, profile, pointerBits: 32, pins
 				, bindingIrSha256: model.bindingIrSha256, sourceIdentity
 				, metadataSha256: sha256(canonicalJson(metadata))

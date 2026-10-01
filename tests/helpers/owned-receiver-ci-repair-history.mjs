@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPhpWasmReceiver, ownedPhpWasmReceiverChangedPaths } from "./owned-php-wasm-receiver-history.mjs";
+import { beforeOwnedPhpWasmReceiver, ownedPhpWasmReceiverNormalizationPaths } from "./owned-php-wasm-receiver-history.mjs";
 
 export const ownedReceiverCiRepairPath = "docs/evidence/owned-receiver-ci-repair-20261001.json";
 export const ownedReceiverCiRepairBaseline = "16fadc8add3769e83852c51d6ad89e6dedfb6c06";
@@ -29,7 +29,7 @@ export const ownedReceiverCiRepairAddedPaths = [
 	, "tests/helpers/owned-receiver-ci-repair-history.mjs"
 ].sort();
 let cached;
-export const ownedReceiverCiRepairNormalizationPaths = [...new Set([...ownedReceiverCiRepairChangedPaths, ...ownedPhpWasmReceiverChangedPaths])].sort();
+export const ownedReceiverCiRepairNormalizationPaths = [...new Set([...ownedReceiverCiRepairChangedPaths, ...ownedPhpWasmReceiverNormalizationPaths])].sort();
 
 /**
  * Check complete identities before reversing registered edit spans.

@@ -311,7 +311,51 @@ empty array acquire an owner before it is passed to a borrowing function.
 Nested resource views do not keep their whole owner alive. Their `retain()`
 method creates an independent `LeanValue`. Compare resource identity with
 `view.equals(otherView)`, including views obtained from different owners.
-Results anchored to receivers or callback results remain unsupported.
+Results anchored to callback results remain unsupported.
+
+### Methods and properties
+
+When the author marks an export as a method or property, call it on the generated
+whole-value owner. TypeScript names these owners, such as `TicketValue` and
+`BundleValue`. Properties are read-only. `share()` and `retain()` preserve the
+owner's member types.
+
+For a package with a `serial` property and a receiver-borrowing `retainTicket`
+method:
+
+```js
+const owner = api.newTicket(42n, "door");
+const borrowed = owner.retainTicket();
+const independent = borrowed.retain();
+try {
+  console.log(borrowed.serial); // 42n
+  owner.dispose();
+  try {
+    console.log(borrowed.serial);
+  } catch (error) {
+    if (!borrowed.disposed) throw error;
+    console.log("expired");
+  }
+  console.log(independent.serial); // 42n
+} finally {
+  borrowed.dispose();
+  independent.dispose();
+  owner.dispose();
+}
+```
+
+A method's result can borrow from its receiver or another argument. The result
+follows the declared original owner. A consuming method invalidates its
+receiver's shared roots and borrowed descendants before Lean runs.
+
+Resource views returned by `get()` expose members that neither consume nor
+borrow from the receiver. For example, `owner.get().serial` reads the property;
+`owner.retainTicket()` needs the whole owner. A view expires when its owner does.
+
+Use `copyValue(payload, { receiverOf: "methodName" })` to create an independent
+receiver from a payload. For method exports, `parameterOf` indexes the remaining
+arguments, excluding the receiver. Named function exports remain available too.
+The package manages its shared runtime in both forms.
 
 ### Consuming inputs
 
@@ -339,13 +383,15 @@ try {
 }
 ```
 
-A consuming aggregate in an unanchored package can contain handles from several owners. Repeated
+A consuming aggregate in a package without borrowed results or receiver members
+can contain handles from several owners. Repeated
 references within one argument are allowed. Two consuming arguments cannot
 share an owner; retain a separate lease for the second argument. Callback
 arguments are borrowed and must be retained before passing them to a consuming
 export. Consuming function arguments require returned Lean function leases,
 not ordinary JavaScript functions. TypeScript checks that distinction.
-Packages with borrowed results require one whole owner per consuming argument.
+Packages with borrowed results or receiver members require one whole owner per
+consuming argument.
 Use `copyValue` to gather payload views into an independent aggregate first.
 
 ### Type conversions
