@@ -1586,6 +1586,33 @@ and native assets, reproduces both archives, and repeats relocated execution
 without producer sources, handoff archives or build tools. Reports go to
 `build/owned-perl-borrows/` and `build/owned-perl-borrow-packaging/`.
 
+#### Installed Perl receiver members
+
+```sh
+source scripts/env.sh
+npm run test:owned-perl-receivers
+```
+
+Use the same four Perl ABIs as the transfer suite. On the local glibc 2.36
+test host, set `LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36` and
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` for the acceptance command.
+
+The receiver tests cover nominal resource, record, variant and recursive
+owners; read-only properties; original receiver and argument anchors; consuming
+members; and independent retains. Seven altered implementations must fail the
+consumer assertions before the restored implementation passes again. Separate
+cases omit callbacks, result anchors, or both.
+
+The CPAN checks install the real CLI, build twice, verify package policies,
+reassemble archives and run relocated consumers through both `prebuilt-only`
+and `build-xs` installation. Resource-only packages use the native build API
+with callback transport disabled. The documentation test compiles the author
+example and runs the exact consumer file from an installed C/CPAN release.
+The dedicated receiver CI job runs all sixteen tests on each of the four Perl
+ABIs. It rejects skipped or cancelled tests and requires all thirteen reports
+under `build/owned-perl-receiver-core/`. CI retains those reports and
+`build/owned-perl-receivers.log` separately for each ABI.
+
 #### Installed native PHP borrowed results
 
 ```sh

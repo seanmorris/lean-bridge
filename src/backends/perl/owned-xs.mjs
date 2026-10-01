@@ -103,8 +103,8 @@ BOOT:
     lpo_boot(aTHX);
 `];
 	const hostClass = moduleName + "::Runtime::Callback";
-	const hostClasses = model.c.callbacks.length ? [callbackClass(hostClass)] : [];
-	for(const callback of model.c.callbacks)
+	const hostClasses = model.hostCallbacks && model.c.callbacks.length ? [callbackClass(hostClass)] : [];
+	for(const callback of model.hostCallbacks ? model.c.callbacks : [])
 	{
 		const node = nodes.get(callback.id), result = nodes.get(callback.result);
 		const parameters = callback.parameters.slice(1).map(id => nodes.get(id));
@@ -170,17 +170,17 @@ ${invoker}(...)
 `);
 	}
 	const render = (name, fn) => {
-		if(model.c.anchoredResults) return ownedPerlAnchoredCall(name, fn, model);
+		if(model.wholeOwners) return ownedPerlAnchoredCall(name, fn, model);
 		const inputs = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 		const moving = fn.transfers ?? [];
 		const snapshots = moving.map((index, group) => {
-			const node = inputs[index], copy = [...model.c.copies, ...model.c.retains].find(fn => fn.result === node.id);
+			const node = inputs[index], copy = [...model.c.copies ?? [], ...model.c.retains].find(fn => fn.result === node.id);
 			if(!copy) throw new TypeError(`Missing Perl transfer snapshot for ${node.id}`);
 			return `${node.cName} moved${index} = {0};\n    lpo_status(aTHX_ ${copy.cName}(lpo_state.session, ${node.leaf ? "" : "&"}input${index}, &moved${index}, &moves->groups[${group}].result));`;
 		}).join("\n    ");
 		const arguments_ = inputs.flatMap((node, index) => moving.includes(index)
 			? [`${node.leaf ? "" : "&"}moved${index}`, `&moves->groups[${moving.indexOf(index)}].result`]
-			: [`${model.c.hostArgument(fn, index) || !node.leaf ? "&" : ""}input${index}`]);
+			: [`${model.c.hostArgument?.(fn, index) || !node.leaf ? "&" : ""}input${index}`]);
 		return `void
 ${name}(...)
   PPCODE:
@@ -191,7 +191,7 @@ ${name}(...)
     lpo_frame *frame = lpo_begin_frame(aTHX_ scope);
     lpo_owner *owner = lpo_begin_owner(aTHX_ 0);
     ${inputs.map((_, index) => `SV *argument${index} = lpg_pin(aTHX_ ST(${index}));`).join("\n    ")}
-    ${moving.length ? `lpo_input_scope *moves = lpo_begin_inputs(aTHX_ scope, ${moving.length});\n    ` : ""}${inputs.map((node, index) => (moving.length ? `moves->selected = ${moving.includes(index) ? moving.indexOf(index) : "SIZE_MAX"};\n    ` : "") + (model.c.hostArgument(fn, index)
+    ${moving.length ? `lpo_input_scope *moves = lpo_begin_inputs(aTHX_ scope, ${moving.length});\n    ` : ""}${inputs.map((node, index) => (moving.length ? `moves->selected = ${moving.includes(index) ? moving.indexOf(index) : "SIZE_MAX"};\n    ` : "") + (model.c.hostArgument?.(fn, index)
 		? `${node.cName}_host input${index} = lpo_host${node.index}(aTHX_ frame, argument${index});`
 		: `${node.cName} input${index} = {0}; lpo_read${node.index}(aTHX_ scope, argument${index}, &input${index}, 0, 1);`)).join("\n    ")}
     lpo_context(aTHX);
@@ -243,7 +243,7 @@ same_identity(value, other)
     RETVAL
 `);
 	}
-	if(model.c.anchoredResults)
+	if(model.wholeOwners)
 	{
 		const borrowed = ownedPerlBorrowXs(model);
 		declarations.push(borrowed.declarations); xs.push(borrowed.xs);

@@ -542,8 +542,42 @@ Resource-bearing results now return `Value` owners. Anchors and consuming
 parameters require those owners; ordinary non-anchoring parameters still take
 their Perl values. `get` checks the lifetime, `share` shares it, and `retain`
 creates independent ownership. Consumers use `copy_value` to acquire an owner
-for a Perl-built aggregate. Packages with no borrowed results keep their
-existing API. See the [Perl borrowed-result example](../consume/perl.md#borrowed-results).
+for a Perl-built aggregate. Packages with neither borrowed results nor receiver
+exports keep their existing API. See the
+[Perl borrowed-result example](../consume/perl.md#borrowed-results).
+
+## Export methods and properties
+
+For the resource-containing example above, use these `contracts` entries in
+`lean-bridge.exports.json`:
+
+```json
+{
+  "Owned.serial": { "receiver": "property" },
+  "Owned.callbackRecord": {
+    "receiver": "method",
+    "result": {
+      "ownership": "borrow",
+      "lifetime": { "scope": "receiver", "anchor": "receiver" }
+    }
+  }
+}
+```
+
+Lean Bridge checks the first input as the receiver. Perl exposes `serial` as a
+read-only, zero-argument method and `callback_record` as an instance method.
+Resource-containing results use nominal whole-value owners. `share`, `retain`,
+and `copy_value` preserve their methods. The
+[consumer example](../consume/perl.md#methods-and-properties) uses these contracts.
+
+The version-4 CPAN ownership contract records receivers separately from input
+transfers, result anchors, and callbacks. A resource-only receiver package needs
+none of those optional capabilities. Receiver and parameter anchors retain
+their original owner slots. A consuming receiver uses the same original-owner
+handoff as a consuming parameter.
+
+Keep export decisions in the reviewed IR when compiling a reviewed contract.
+Its `lean-bridge.exports.json` selects source modules and package settings only.
 
 ## Verify the release candidate
 

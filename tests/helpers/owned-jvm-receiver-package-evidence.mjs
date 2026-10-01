@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { ownedPerlReceiverHistoricalBytes } from "./owned-perl-receiver-history.mjs";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
@@ -114,7 +115,7 @@ const assertConsumers = async (item, projection, libraries, pkg, plain) => {
 };
 
 const assertCli = async (item, targets) => {
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const config = JSON.parse(ownedPerlReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json")).toString());
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;
 	assert.equal(item.cli.kind, "lean-bridge-cli-package"); assert.equal(inventorySha256, sha256(canonicalJson(inventory)));
 	assert.equal(item.cli.productionApproved, false); assert.equal(externalRegistryWrites, false);
@@ -124,7 +125,8 @@ const assertCli = async (item, targets) => {
 	assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 	for(const path of config.files)
 	{
-		const file = item.cli.files.find(value => value.path === path), bytes = await readFile(path);
+		const file = item.cli.files.find(value => value.path === path);
+		const bytes = Buffer.from(ownedPerlReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
 		assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 	}
 	assert.equal(item.cliBuilds.length, 2);

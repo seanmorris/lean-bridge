@@ -6,6 +6,7 @@
 import { generateOwnedCValues } from "../c/owned-values.mjs";
 import { projectPerlNames, perlStringLiteral } from "./naming.mjs";
 import { ownedPerlBorrowClasses } from "./owned-borrows.mjs";
+import { ownedPerlReceiverClasses } from "./owned-receivers.mjs";
 
 const reserved = new Set("new DESTROY CLONE CLONE_SKIP can isa DOES VERSION import unimport AUTOLOAD BEGIN UNITCHECK CHECK INIT END STORABLE_freeze STORABLE_thaw".split(" "));
 const identifier = name => typeof name === "string" && /^[A-Za-z][A-Za-z0-9_]*$/u.test(name);
@@ -47,10 +48,13 @@ ${fields.map(field => `# ${field.publicName}: ${field.contractType}\nsub ${field
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Enable consuming parameters.
  * @param options.anchoredResults - Keep whole owners for borrowed results.
+ * @param options.receiverExports - Preserve receiver methods and properties.
+ * @param options.hostCallbacks - Enable callback/copy transport independently.
  */
-export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
-	const anchored = c.anchoredResults === true;
+export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+	const receivers = c.functions.some(fn => fn.receiver === 0);
+	const anchored = c.anchoredResults === true || receivers;
 	const definitions = new Map(ir.types.map(type => [type.id, type]));
 	const projected = projectPerlNames(moduleName, ir.declarations.map(declaration => ({
 		...declaration, name: declaration.source.declaration
@@ -91,6 +95,8 @@ export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = fa
 			?? (node.element || node.kind === "tuple" ? "array reference"
 				: node.kind === "option" ? "undef | Some" : "Ok | Err");
 		return { ...node, index, publicType
+			, ...receivers && ["resource", "record", "variant"].includes(node.kind) && node.representation !== "copied"
+				? { ownerType: claim(node.name + "Value") } : {}
 			, fields: node.kind === "record" ? members(node.fields, definition.fields) : node.fields
 			, cases: node.cases.map(branch => {
 				const name = branch.sourceName[0].toUpperCase() + branch.sourceName.slice(1);
@@ -141,10 +147,13 @@ sub value { $_[0]->{value} }
 `).join("\n")}
 ${declarations.join("\n")}
 ${anchored ? ownedPerlBorrowClasses(moduleName, types, functions, ir) : ""}\
+${receivers ? ownedPerlReceiverClasses(moduleName, types, functions) : ""}\
 1;
 `;
 	return { c, moduleName, types, functions, aliases, source
+		, wholeOwners: anchored, receiverExports: receivers, hostCallbacks
 		, publicTypes: [...anchored ? [`${moduleName}::Value`] : []
+			, ...types.filter(node => node.ownerType).map(node => node.ownerType)
 			, ...wrappers.map(name => `${moduleName}::${name}`)
 			, ...nominal.flatMap(node => [node.publicType, ...node.cases.map(branch => branch.publicName)])] };
 };

@@ -47,14 +47,16 @@ __attribute__((destructor)) static void probe_final(void) {
  * @param options - Authored fixture name and optional independent reviewed IR.
  */
 export const prepareOwnedPerlNative = async (t, options) => {
-	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
+	const hostCallbacks = options.hostCallbacks ?? true;
+	const receiverExports = Boolean(options.receiverExports);
+	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks });
 	const transferredInputs = Boolean(options.transferredInputs);
 	const anchoredResults = Boolean(options.anchoredResults);
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
-		, component: compiled.model.component, hostCallbacks: true
-		, transferredInputs, anchoredResults });
-	const model = generateOwnedPerlXs(c.layout.model.bindingIr, "LeanBridge::OwnedProbe", { transferredInputs, anchoredResults });
+		, component: compiled.model.component, hostCallbacks
+		, transferredInputs, anchoredResults, receiverExports });
+	const model = generateOwnedPerlXs(c.layout.model.bindingIr, "LeanBridge::OwnedProbe", { transferredInputs, anchoredResults, receiverExports, hostCallbacks });
 	const handoff = "static inline void oc_transfer_consume(void *context) {";
 	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const native = `#include <stdlib.h>
@@ -89,7 +91,8 @@ __attribute__((destructor)) static void owned_test_final(void) {
 	await runCopied("/usr/bin/cc", ["-std=c11", "-O1", "-g", "-Wall"
 		, "-Wextra", "-Werror", "-fPIC", "-shared"
 		, "-I", join(compiled.directory, "runtime/include"), "public-api.c"
-		, "Owned.o", "Carriers.o", "Witness.o", "Callbacks.o"
+		, "Owned.o", "Carriers.o", "Witness.o"
+		, ...hostCallbacks ? ["Callbacks.o"] : []
 		, "-L", join(compiled.directory, "runtime/lib")
 		, "-llean_bridge_native", "-lleanshared", "-lgmp"
 		, "-Wl,-rpath," + join(compiled.directory, "runtime/lib")

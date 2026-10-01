@@ -30,26 +30,35 @@ export const verifyOwnedCpanTransfers = (manifest, files) => {
 		|| manifest.ownedValues?.resultAnchors || binding?.owned?.resultAnchors
 		|| model?.schemaVersion === 9 || model?.ownedGraph?.resultAnchors
 		|| model?.bindingIr?.declarations?.some(fn => fn.result.ownership === "borrow");
-	if(!hasTransfers && !hasAnchors) return;
+	const hasReceivers = manifest.ownedValues?.schemaVersion === 4 || binding?.owned?.schemaVersion === 4
+		|| manifest.ownedValues?.receiverExports || binding?.owned?.receiverExports
+		|| model?.schemaVersion === 10 || model?.ownedGraph?.receiverExports
+		|| model?.bindingIr?.declarations?.some(fn => fn.receiver !== null);
+	if(!hasTransfers && !hasAnchors && !hasReceivers) return;
 	const fail = message => { throw new TypeError("Owned CPAN transfer contract differs from " + message); };
-	if(manifest.ownedValues?.schemaVersion !== (hasAnchors ? 3 : 2) || binding?.schemaVersion !== (hasAnchors ? 3 : 2)
-		|| model?.schemaVersion !== (hasAnchors ? 9 : 8) || !model.ownedGraph?.hostCallbacks) fail("its supported schema");
+	const version = hasReceivers ? 4 : hasAnchors ? 3 : 2;
+	const hostCallbacks = Boolean(model?.ownedGraph?.hostCallbacks);
+	if(manifest.ownedValues?.schemaVersion !== version || binding?.schemaVersion !== version
+		|| model?.schemaVersion !== (hasReceivers ? 10 : hasAnchors ? 9 : 8)
+		|| (!hasReceivers && !hostCallbacks)) fail("its supported schema");
 	const receipt = json("native-component.json"), metadata = json("metadata.json");
 	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, sourceIdentity: receipt.sourceIdentity }
-		, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: Boolean(hasAnchors) });
+		, { ownedGraphs: true, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: true, ownedAnchoredResults: Boolean(hasAnchors), ownedReceiverExports: Boolean(hasReceivers) });
 	const adapters = generateCompiledNativeLeanAdapters(reconstructed);
 	if(canonicalJson(model) !== canonicalJson(reconstructed)
-		|| receipt.schemaVersion !== (hasAnchors ? 5 : 4) || receipt.profile !== "native-library-v1"
+		|| receipt.schemaVersion !== (hasReceivers ? 6 : hasAnchors ? 5 : 4) || receipt.profile !== "native-library-v1"
 		|| receipt.runtimeIdentity !== manifest.nativeRuntimeIdentity
 		|| receipt.modelSha256 !== sha256(canonicalJson(model))
 		|| receipt.bindingIrSha256 !== model.bindingIrSha256
 		|| canonicalJson(json("binding-ir.json")) !== canonicalJson(model.bindingIr)
 		|| canonicalJson(receipt.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)
 		|| canonicalJson(receipt.resultAnchors ?? null) !== canonicalJson(model.ownedGraph.resultAnchors ?? null)
+		|| canonicalJson(receipt.receiverExports ?? null) !== canonicalJson(model.ownedGraph.receiverExports ?? null)
 		|| receipt.metadataSha256 !== sha256(bytes("metadata.json"))
 		|| receipt.headerSha256 !== sha256(adapters.header) || bytes("component.h").toString() !== adapters.header
 		|| receipt.adaptersSha256 !== sha256(adapters.leanSource) || bytes("generated.lean").toString() !== adapters.leanSource
-		|| receipt.callbackSourceSha256 !== sha256(adapters.callbackSource) || bytes("callbacks.c").toString() !== adapters.callbackSource
+		|| (hostCallbacks ? receipt.callbackSourceSha256 !== sha256(adapters.callbackSource) || bytes("callbacks.c").toString() !== adapters.callbackSource
+			: receipt.callbackSourceSha256 !== undefined || files.has("callbacks.c"))
 		|| receipt.allocationGuardSha256 !== sha256(bytes("allocation-guard.h"))
 		|| receipt.initializer !== `initialize_${adapters.module}`
 		|| !/^libcomponent_[0-9a-f]{20}\.so$/u.test(receipt.library)) fail("compiler-authenticated native inputs");

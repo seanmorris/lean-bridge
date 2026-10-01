@@ -54,28 +54,30 @@ sub owned_values {
   my $owned = $manifest->{ownedValues};
   die "Invalid owned Perl package contract\n" unless ref($owned) eq 'HASH'
     && $manifest->{module} ne 'LeanBridge::Runtime'
-    && ($owned->{schemaVersion} == 1 || $owned->{schemaVersion} == 2 || $owned->{schemaVersion} == 3)
+    && ($owned->{schemaVersion} == 1 || $owned->{schemaVersion} == 2 || $owned->{schemaVersion} == 3 || $owned->{schemaVersion} == 4)
     && $owned->{prefix} =~ /\A[A-Za-z_][A-Za-z0-9_]*\z/
     && $owned->{gmpLibrary} eq 'libgmp-lean-bridge.so.10'
     && $owned->{componentLibrary} =~ /\A[A-Za-z0-9_][A-Za-z0-9_.+-]*\.so\z/;
   my $model = read_json('model.json');
   my $anchored = $owned->{schemaVersion} == 3 || $model->{schemaVersion} == 9
     || exists($owned->{resultAnchors}) || exists($model->{ownedGraph}{resultAnchors});
-  if ($anchored || $owned->{schemaVersion} == 2 || $model->{schemaVersion} == 8) {
+  my $receivers = $owned->{schemaVersion} == 4 || $model->{schemaVersion} == 10
+    || exists($owned->{receiverExports}) || exists($model->{ownedGraph}{receiverExports});
+  if ($receivers || $anchored || $owned->{schemaVersion} == 2 || $model->{schemaVersion} == 8) {
     my $binding = read_json('binding-manifest.json');
     my $native = $model->{ownedGraph}{inputTransfers};
     my $moves = $owned->{inputTransfers};
     my $json = JSON::PP->new->canonical;
     die "Invalid owned Perl lifetime contract\n"
-      unless $owned->{schemaVersion} == ($anchored ? 3 : 2)
-        && $model->{schemaVersion} == ($anchored ? 9 : 8)
-        && $binding->{schemaVersion} == ($anchored ? 3 : 2)
+      unless $owned->{schemaVersion} == ($receivers ? 4 : $anchored ? 3 : 2)
+        && $model->{schemaVersion} == ($receivers ? 10 : $anchored ? 9 : 8)
+        && $binding->{schemaVersion} == ($receivers ? 4 : $anchored ? 3 : 2)
         && $json->encode($binding->{owned}) eq $json->encode($owned)
         && $owned->{bindingIrSha256} eq $model->{bindingIrSha256};
-    if (!$anchored || defined($native) || defined($moves)) {
+    if ((!$anchored && !$receivers) || defined($native) || defined($moves)) {
       die "Invalid owned Perl input-transfer contract\n" unless ref($native) eq 'HASH' && ref($moves) eq 'HASH';
-      my %expected = (%$native, arguments => $anchored ? 'whole-values' : 'ordinary-values',
-        aliases => $anchored ? 'shared-owner' : 'shared-lease',
+      my %expected = (%$native, arguments => ($anchored || $receivers) ? 'whole-values' : 'ordinary-values',
+        aliases => ($anchored || $receivers) ? 'shared-owner' : 'shared-lease',
         borrowedInputs => 'reject', independentRetains => 'preserved');
       die "Owned Perl input transfers differ from the native model\n"
         unless $json->encode($moves) eq $json->encode(\%expected);
@@ -88,6 +90,16 @@ sub owned_values {
         emptyValues => 'owner-scoped', independentRetains => 'preserved', identityEquality => 'native-identity');
       die "Owned Perl result anchors differ from the native model\n"
         unless $json->encode($owned->{resultAnchors}) eq $json->encode(\%expected);
+    }
+    if ($receivers) {
+      my $members = $model->{ownedGraph}{receiverExports};
+      die "Invalid owned Perl receiver contract\n"
+        unless ref($members) eq 'HASH' && ref($owned->{receiverExports}) eq 'HASH';
+      my %expected = (%$members, values => 'checked-whole-result', members => 'snake-case',
+        properties => 'read-only-zero-argument-methods', owners => 'nominal-whole-values',
+        consumingReceivers => 'original-owner-handoff');
+      die "Owned Perl receivers differ from the native model\n"
+        unless $json->encode($owned->{receiverExports}) eq $json->encode(\%expected);
     }
   }
   return $owned;

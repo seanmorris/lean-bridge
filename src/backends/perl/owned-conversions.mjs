@@ -46,7 +46,7 @@ static SV *lpo_write_integer(pTHX_ lpg_scope *scope, mpz_srcptr value, int natur
 export const generateOwnedPerlConversions = (ir, moduleName, options = {}) => {
 	const model = generateOwnedPerlValues(ir, moduleName, options), nodes = new Map(model.types.map(node => [node.id, node]));
 	const transferredInputs = model.functions.some(fn => fn.transfers?.length);
-	const anchoredResults = model.c.anchoredResults === true;
+	const anchoredResults = model.wholeOwners;
 	const finite = new Set();
 	let changed = true;
 	while(changed)
@@ -61,7 +61,12 @@ export const generateOwnedPerlConversions = (ir, moduleName, options = {}) => {
 			{ finite.add(node.id); changed = true; }
 		}
 	}
-	const lines = [`#include "${model.c.prefix}.h"`, ownedPerlRuntime(model.c.prefix, { transferredInputs, anchoredResults }), integers];
+	const lines = [`#include "${model.c.prefix}.h"`
+		, ownedPerlRuntime(model.c.prefix, {
+			transferredInputs, anchoredResults: model.c.anchoredResults === true
+			, wholeOwners: anchoredResults
+		})
+		, integers];
 	for(const node of nodes.values()) lines.push(`static void lpo_read${node.index}(pTHX_ lpg_scope *, SV *, ${node.cName} *, size_t, int);`
 		, `static SV *lpo_write${node.index}(pTHX_ lpg_scope *, lpo_owner *, ${node.cName} const *, size_t, int);`);
 	for(const node of nodes.values())

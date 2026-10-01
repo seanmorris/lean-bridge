@@ -21,21 +21,25 @@ export const ownedPerlXsSeal = "__LEAN_BRIDGE_OWNED_XS_SHA256__";
  * @param options.gmpSha256 - Verified private GMP library digest.
  */
 export const generateOwnedPerlPackage = ({ model, receipt, metadata, moduleName, gmpSha256 }) => {
-	if(!model.ownedGraph?.hostCallbacks || !/^[0-9a-f]{64}$/u.test(gmpSha256))
-		throw new TypeError("Owned Perl requires authenticated callbacks and private GMP");
+	if(!model.ownedGraph || !/^[0-9a-f]{64}$/u.test(gmpSha256))
+		throw new TypeError("Owned Perl requires an authenticated ownership model and private GMP");
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
+	const receiverExports = Boolean(model.ownedGraph.receiverExports);
+	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
+	const wholeOwners = anchoredResults || receiverExports;
 	const c = generateOwnedCPackage({ metadata
 		, sourceIdentity: model.sourceIdentity, component: model.component
-		, hostCallbacks: true, transferredInputs, anchoredResults });
+		, hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	if(canonicalJson(c.layout.model.bindingIr) !== canonicalJson(model.bindingIr))
 		throw new TypeError("Perl ownership types differ from the compiled component");
-	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults });
+	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults, receiverExports, hostCallbacks });
 	if(generated.c.prefix !== c.values.prefix) throw new TypeError("Perl and C ownership prefixes differ");
 	const prefix = c.values.prefix, relative = moduleName.replaceAll("::", "/"), stem = moduleName.split("::").at(-1);
 	const gmpLibrary = "libgmp-lean-bridge.so.10", q = perlStringLiteral;
 	const declarations = new Map(model.bindingIr.declarations.map(declaration => [declaration.id, declaration.source.declaration]));
-	const parameters = new Map(model.bindingIr.declarations.map(declaration => [declaration.id, declaration.parameters.map(site => site.name)]));
+	const parameters = new Map(model.bindingIr.declarations.map(declaration => [declaration.id
+		, [...declaration.receiver ? ["receiver"] : [], ...declaration.parameters.map(site => site.name)]]));
 	const sources = model.sourceIdentity.modules.map(item => `${q(item.module)} => ${q(item.source.sha256)}`).join(", ");
 	const identityArgs = `${q(receipt.runtimeIdentity)}, { ${sources} }, ${q(model.component.id)}, ${q(receipt.nativeLibrary.sha256)}`;
 	const pm = `${generated.valuesSource}
@@ -76,7 +80,7 @@ sub CLONE_SKIP { 1 }
 __END__
 =head1 NAME
 
-${moduleName} - Generated owned Lean values and synchronous callbacks
+${moduleName} - Generated owned Lean values${hostCallbacks ? " and synchronous callbacks" : ""}
 
 =head1 API
 
@@ -88,12 +92,24 @@ products use array references. None and Unit use undef; Some->new(undef) keeps
 optional Unit distinct from None. Ok and Err preserve their result branches.
 Nat and Int use Math::BigInt. Text retains Unicode and NUL; ByteArray uses octets.
 
-Resources and Lean closures provide close, closed and retain. Retained results
+Resources${hostCallbacks ? " and Lean closures" : ""} provide close, closed and retain. Retained results
 own independent native references. Close is idempotent; finalization releases
 unclosed owners. Closing an input during a call does not invalidate its active
-borrow. Callback arguments expire on return unless explicitly retained.
+borrow.${hostCallbacks ? " Callback arguments expire on return unless explicitly retained." : ""}
 
-${anchoredResults ? `Resource-bearing results use Value owners, including empty arrays and None.
+${receiverExports ? `Declared methods and properties use snake_case members on nominal Value owners.
+Properties are read-only, zero-argument methods. share, retain and copy_value
+preserve the owner's nominal class. Member calls keep original receiver and
+argument owner slots; consuming methods invalidate shared aliases at handoff.
+Raw resources expose members only when they need no receiver anchor or transfer.
+
+${!anchoredResults ? `Resource-bearing results use checked Value owners, including empty containers.
+Call get to read the payload, share for shared ownership, retain for independent
+ownership, and close when finished. copy_value accepts named result_of and
+parameter_of selectors for containers. Consuming calls require whole owners.
+This package declares no borrowed-result anchors.
+
+` : ""}` : ""}${anchoredResults ? `Resource-bearing results use Value owners, including empty arrays and None.
 Call get to read a checked payload, share to share its original owner, retain
 for independent ownership, and close when finished. Resource leaves from get
 expire when the last whole owner closes. A declared borrowed result expires
@@ -109,17 +125,17 @@ owners remain valid. Borrowed results cannot be transferred without retain.
 Pre-handoff validation failures preserve ownership; callback and conversion
 failures after handoff do not restore consumed owners.
 
-` : transferredInputs ? `Consuming arguments use ordinary Perl values. Validation and native snapshot
+` : transferredInputs && !receiverExports ? `Consuming arguments use ordinary Perl values. Validation and native snapshot
 preparation happen before handoff. At the Lean call boundary, shared aliases and
 sibling resources using the same result owner close together. Independent
 retains survive. Retain callback borrows before transferring them. Two consuming
 arguments cannot share a resource lease. Pre-handoff errors preserve ownership;
 callback and result-conversion failures after handoff leave inputs consumed.
 
-` : ""}Pass CODE references for synchronous callbacks. Signatures that require a typed
+` : ""}${hostCallbacks ? `Pass CODE references for synchronous callbacks. Signatures that require a typed
 recovery value accept Runtime::Callback->new(code => ..., recovery => ...).
 Perl exceptions retain their identity after native cleanup. Host callbacks
-cannot escape their initiating call. Owners cannot be serialized or used by a
+cannot escape their initiating call. ` : ""}Owners cannot be serialized or used by a
 different process or interpreter thread.
 
 =head1 INSTALLATION
@@ -130,17 +146,22 @@ adapter with local Perl headers. Lean, Lake and Node are not required.
 
 =cut
 `;
-	const owned = { schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
+	const owned = { schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, prefix, gmpLibrary
 		, ...transferredInputs ? { inputTransfers: { ...model.ownedGraph.inputTransfers
-			, arguments: anchoredResults ? "whole-values" : "ordinary-values"
-			, aliases: anchoredResults ? "shared-owner" : "shared-lease"
+			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
+			, aliases: wholeOwners ? "shared-owner" : "shared-lease"
 			, borrowedInputs: "reject"
 			, independentRetains: "preserved" } } : {}
 		, ...anchoredResults ? { resultAnchors: { ...model.ownedGraph.resultAnchors
 			, arguments: "whole-values", results: "checked-whole-values"
 			, emptyValues: "owner-scoped", independentRetains: "preserved"
 			, identityEquality: "native-identity" } } : {}
+		, ...receiverExports ? { receiverExports: { ...model.ownedGraph.receiverExports
+			, values: "checked-whole-result", members: "snake-case"
+			, properties: "read-only-zero-argument-methods"
+			, owners: "nominal-whole-values"
+			, consumingReceivers: "original-owner-handoff" } } : {}
 		, componentLibrary: receipt.library
 		, bindingIrSha256: model.bindingIrSha256
 		, publicHeaderSha256: sha256(c.publicHeader)
@@ -149,7 +170,7 @@ adapter with local Perl headers. Lean, Lake and Node are not required.
 		, "Component.xs": `#include "owned/src/${prefix}.c"\n#include "runtime.h"\n${generated.declarations}\n${generated.xs}`
 		, [`lib/${relative}.pm`]: pm
 		, "binding-manifest.json": canonicalJson({
-			schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
+			schemaVersion: owned.schemaVersion
 			, backend: "perl"
 			, profile: "native-library-v1", owned
 			, runtimeIdentity: receipt.runtimeIdentity

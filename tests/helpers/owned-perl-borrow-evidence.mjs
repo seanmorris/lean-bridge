@@ -97,6 +97,8 @@ ${transferredInputs ? `\nUV\nhandoffs()\n  CODE:\n    RETVAL = owned_test_handof
 	return { native, xs };
 };
 
+export { instrumentedSources as ownedPerlBorrowInstrumentedSources };
+
 const flags = (value, names) => {
 	for(const name of names) assert.equal(value[name], true, name);
 };

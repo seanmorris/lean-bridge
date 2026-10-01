@@ -179,7 +179,7 @@ npm leases use `dispose()` or `Symbol.dispose`. Perl, Python and Ruby leases use
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages accept [function results anchored to an input owner](../publish/c.md#anchor-a-result-to-an-input). Use `"ownership": "borrow"` with a `"parameter"` lifetime and an anchor such as `"arg0"`. The anchor must be an existing non-copied, non-transferred input.
 
-C, C++, Rust, Python, Ruby, C#, Java and Kotlin builds also accept `"receiver": "method"` or `"receiver": "property"`, selecting
+C, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl builds also accept `"receiver": "method"` or `"receiver": "property"`, selecting
 the first Lean runtime argument. It must be a declared resource or an owned
 record or variant; a property takes no additional arguments. A receiver-bound
 result uses `"scope": "receiver", "anchor": "receiver"`. Parameter anchors keep
@@ -189,8 +189,9 @@ and the [C++](../publish/cpp.md#export-methods-and-properties),
 [Rust](../publish/cargo.md#export-methods-and-properties),
 [Python](../publish/pypi.md#export-methods-and-properties),
 [Ruby](../publish/rubygems.md#export-methods-and-properties),
-[C#](../publish/nuget.md#export-methods-and-properties) and
-[Java/Kotlin member APIs](../publish/maven.md#export-methods-and-properties).
+[C#](../publish/nuget.md#export-methods-and-properties),
+[Java/Kotlin](../publish/maven.md#export-methods-and-properties) and
+[Perl member APIs](../publish/cpan.md#export-methods-and-properties).
 Other receiver projections, callback-result anchors,
 `{ "constructor": "Library.checked" }` and additional effect labels still
 require their [type-family implementation](../architecture/cross-language-authoring.md#stages).

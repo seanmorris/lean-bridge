@@ -173,7 +173,7 @@ export const stageCpanPackage = async ({ outputRoot
 	{
 		const isOwned = ownedGmpRoot !== null;
 		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity
-			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned });
+			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned });
 		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
 		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
 		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");
@@ -202,7 +202,8 @@ export const stageCpanPackage = async ({ outputRoot
 		await copy(join(componentRoot, receipt.library), join(directory, `lib/${relative}/native/${receipt.library}`));
 		for(const path of ["component.h", "model.json", "binding-ir.json", "native-component.json", "metadata.json", "generated.lean", "allocation-guard.h", "artifacts.json"])
       await copy(join(componentRoot, path), join(directory, path));
-		if(model.ownedGraph?.inputTransfers || model.ownedGraph?.resultAnchors) await copy(join(componentRoot, "callbacks.c"), join(directory, "callbacks.c"));
+		if(model.ownedGraph?.hostCallbacks && (model.ownedGraph.inputTransfers || model.ownedGraph.resultAnchors || model.ownedGraph.receiverExports))
+			await copy(join(componentRoot, "callbacks.c"), join(directory, "callbacks.c"));
 		const generatedDigest = receipt.sourceIdentity?.lakeDependencies?.generatedSourcesSha256;
 		if(generatedDigest !== undefined)
 		{

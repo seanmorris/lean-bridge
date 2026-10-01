@@ -257,6 +257,79 @@ jobs:
           if-no-files-found: error
           overwrite: true
 
+  perl-receivers:
+    name: Perl receiver packages (${{ matrix.configuration }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration:
+          - 5.36.3-threaded
+          - 5.36.3-unthreaded
+          - 5.38.2-threaded
+          - 5.38.2-unthreaded
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install the checkout dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Install the native build tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential curl zstd
+      - name: Install only the pinned Lean compiler
+        run: bash scripts/bootstrap-toolchains.sh --lean-only
+      - name: Restore this checksummed Perl toolchain
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl/${{ matrix.configuration }}
+          key: perl-abi-v2-${{ runner.os }}-${{ matrix.configuration }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Build this checksummed Perl configuration
+        env:
+          RECEIVER_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: node scripts/build-perl-toolchains.mjs "${RECEIVER_PERL_CONFIGURATION%-*}" "${RECEIVER_PERL_CONFIGURATION##*-}"
+      - name: Verify receiver lifetimes and installed CPAN releases
+        env:
+          RECEIVER_PERL_CONFIGURATION: ${{ matrix.configuration }}
+        run: |
+          export LEAN_BRIDGE_CORPUS_PERL="$PWD/.toolchains/perl/$RECEIVER_PERL_CONFIGURATION/bin/perl"
+          source scripts/env.sh
+          mkdir -p build
+          npm run test:owned-perl-receivers > build/owned-perl-receivers.log 2>&1
+          cat build/owned-perl-receivers.log
+          rg '^# tests 16$' build/owned-perl-receivers.log
+          rg '^# pass 16$' build/owned-perl-receivers.log
+          rg '^# fail 0$' build/owned-perl-receivers.log
+          rg '^# cancelled 0$' build/owned-perl-receivers.log
+          rg '^# skipped 0$' build/owned-perl-receivers.log
+          test -s build/owned-perl-receiver-core/ordinary.json
+          test -s build/owned-perl-receiver-core/ordinary-plain.json
+          test -s build/owned-perl-receiver-core/ordinary-consuming.json
+          test -s build/owned-perl-receiver-core/ordinary-unanchored.json
+          test -s build/owned-perl-receiver-core/ordinary-package.json
+          test -s build/owned-perl-receiver-core/ordinary-resource-package.json
+          test -s build/owned-perl-receiver-core/reviewed.json
+          test -s build/owned-perl-receiver-core/reviewed-plain.json
+          test -s build/owned-perl-receiver-core/reviewed-consuming.json
+          test -s build/owned-perl-receiver-core/reviewed-unanchored.json
+          test -s build/owned-perl-receiver-core/reviewed-package.json
+          test -s build/owned-perl-receiver-core/reviewed-resource-package.json
+          test -s build/owned-perl-receiver-core/documentation.json
+      - name: Upload this configuration's receiver acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: perl-receivers-${{ matrix.configuration }}-${{ github.sha }}
+          path: |
+            build/owned-perl-receiver-core/
+            build/owned-perl-receivers.log
+          if-no-files-found: error
+          retention-days: 30
+
   perl-summary:
     name: Combined Perl consumer observation
     if: always()

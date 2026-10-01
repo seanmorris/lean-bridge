@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJvmReceiver, ownedJvmReceiverChangedPaths } from "./owned-jvm-receiver-history.mjs";
+import { beforeOwnedJvmReceiver, ownedJvmReceiverNormalizationPaths } from "./owned-jvm-receiver-history.mjs";
 
 export const ownedDotnetReceiverPath = "docs/evidence/owned-dotnet-receivers-20261001.json";
 export const ownedDotnetReceiverBaseline = "7f1a432b5cffb9a0cddfa2fef30440f9847afc39";
@@ -67,7 +67,7 @@ export const ownedDotnetReceiverAddedPaths = [
 	, "tests/owned-dotnet-receivers.test.mjs"
 ].sort();
 let cached;
-export const ownedDotnetReceiverNormalizationPaths = [...new Set([...ownedDotnetReceiverChangedPaths, ...ownedJvmReceiverChangedPaths])].sort();
+export const ownedDotnetReceiverNormalizationPaths = [...new Set([...ownedDotnetReceiverChangedPaths, ...ownedJvmReceiverNormalizationPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.

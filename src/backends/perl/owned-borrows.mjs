@@ -109,8 +109,11 @@ export const ownedPerlBorrowClasses = (moduleName, types, functions, ir) => {
 		.map(fn => `${q(fn.publicName)} => ${nodes.get(fn.result).index}`);
 	const parameters = functions.flatMap(fn => fn.parameters.flatMap((id, index) => nodes.get(id).representation === "copied" ? [] : [
 		`${q(`${fn.publicName}/${index}`)} => ${nodes.get(id).index}`
-		, `${q(`${fn.publicName}/${declarations.get(fn.id).parameters[index].name}`)} => ${nodes.get(id).index}`
+		, ...fn.receiver === 0 && index === 0 ? [] : [
+			`${q(`${fn.publicName}/${declarations.get(fn.id).parameters[index - (fn.receiver === 0 ? 1 : 0)].name}`)} => ${nodes.get(id).index}`
+		]
 	]));
+	const receivers = functions.some(fn => fn.receiver === 0);
 	return `package ${moduleName}::Value;
 sub new { CORE::die "Value owners come from Lean functions or copy_value\\n" }
 sub CLONE_SKIP { 1 }
@@ -140,7 +143,7 @@ sub copy_value {
     $type = $parameters{CORE::join('/', @$site)};
   } elsif (!CORE::keys(%options)) {
     my %nominal = (${noncopied.flatMap(node => node.name ? [[node.publicType, node.index], ...node.cases.map(branch => [branch.publicName, node.index])] : []).map(([name, index]) => `${q(name)} => ${index}`).join(", ")});
-    return $value->retain if CORE::ref($value) eq '${moduleName}::Value';
+    return $value->retain if ${receivers ? `CORE::ref($value) && UNIVERSAL::isa($value, '${moduleName}::Value')` : `CORE::ref($value) eq '${moduleName}::Value'`};
     $type = $nominal{CORE::ref($value)};
   } else { CORE::die "unknown copy selector\\n" }
   CORE::die "copy_value requires an owned type; select result_of or parameter_of for containers\\n" unless CORE::defined($type);
@@ -163,7 +166,7 @@ export const ownedPerlAnchoredCall = (name, fn, model) => {
 	const moving = fn.transfers ?? [], wraps = index => moving.includes(index) || fn.anchor === index;
 	const whole = result.representation !== "copied" && !fn.retain && !fn.copy;
 	const args = inputs.flatMap((node, index) => [
-		`${model.c.hostArgument(fn, index) || !node.leaf ? "&" : ""}input${index}`
+		`${model.c.hostArgument?.(fn, index) || !node.leaf ? "&" : ""}input${index}`
 		, ...moving.includes(index) ? [`&input_owner${index}->result`] : []
 		, ...fn.anchor === index ? [`input_owner${index}->result`] : []
 	]);
@@ -182,7 +185,7 @@ ${inputs.map((node, index) => [
 	...wraps(index) ? [`    lpo_owner *input_owner${index} = NULL;`
 		, `    argument${index} = lpo_value_input(aTHX_ argument${index}, ${node.index}, &input_owner${index});`] : []
 	, ...moving.includes(index) ? [`    lpo_add_input(aTHX_ moves, ${moving.indexOf(index)}, input_owner${index});`] : []
-	, model.c.hostArgument(fn, index)
+	, model.c.hostArgument?.(fn, index)
 		? `    ${node.cName}_host input${index} = lpo_host${node.index}(aTHX_ frame, argument${index});`
 		: `    ${node.cName} input${index} = {0}; lpo_read${node.index}(aTHX_ scope, argument${index}, &input${index}, 0, 1);`
 ].join("\n")).join("\n")}
@@ -196,7 +199,7 @@ ${moving.length ? "    lpo_finish_inputs(aTHX_ moves);\n" : ""}\
     lpo_finish_frame(aTHX_ frame, status);
 ${fn.anchor !== undefined ? `    lpo_anchor_owner(aTHX_ owner, input_owner${fn.anchor});\n` : ""}\
     SV *out = lpo_write${result.index}(aTHX_ scope, owner, &returned, 0, 1);
-${whole ? `    out = lpo_wrap_value(aTHX_ scope, owner, out, ${result.index}, "${model.moduleName}::Value");\n` : ""}\
+${whole ? `    out = lpo_wrap_value(aTHX_ scope, owner, out, ${result.index}, "${result.ownerType ?? model.moduleName + "::Value"}");\n` : ""}\
     lpo_publish(aTHX_ owner);
     LEAVE;
     SPAGAIN; SP = PL_stack_base + ax - 1; EXTEND(SP, 1); XPUSHs(out);
@@ -212,14 +215,15 @@ export const ownedPerlBorrowXs = model => {
 	const valueClass = `${model.moduleName}::Value`;
 	const types = model.types.filter(node => node.representation !== "copied");
 	const declarations = types.map(node => {
-		const copy = [...model.c.copies, ...model.c.retains].find(fn => fn.result === node.id);
+		const copy = [...model.c.copies ?? [], ...model.c.retains].find(fn => fn.result === node.id);
+		if(!copy) throw new TypeError(`Missing Perl whole-value copy transport: ${node.id}`);
 		return `static SV *lpo_copy_value${node.index}(pTHX_ lpg_scope *scope, SV *value) {
   lpo_owner *owner = lpo_begin_owner(aTHX_ 0);
   ${node.cName} input = {0}, returned = {0};
   lpo_read${node.index}(aTHX_ scope, value, &input, 0, 1);
   lpo_status(aTHX_ ${copy.cName}(lpo_state.session, ${node.leaf ? "" : "&"}input, &returned, &owner->result));
   SV *out = lpo_write${node.index}(aTHX_ scope, owner, &returned, 0, 1);
-  out = lpo_wrap_value(aTHX_ scope, owner, out, ${node.index}, "${valueClass}");
+  out = lpo_wrap_value(aTHX_ scope, owner, out, ${node.index}, "${node.ownerType ?? valueClass}");
   lpo_publish(aTHX_ owner);
   return out;
 }`;
@@ -268,7 +272,7 @@ share(value)
     lpo_enter_call(aTHX);
     lpg_scope *scope = lpg_begin(aTHX_ NULL);
     lpo_wrapper *wrapper = lpo_value_require(aTHX_ value, SIZE_MAX);
-    SV *out = lpo_wrap_value(aTHX_ scope, wrapper->owner, wrapper->payload, wrapper->type, "${valueClass}");
+    SV *out = lpo_wrap_value(aTHX_ scope, wrapper->owner, wrapper->payload, wrapper->type, ${model.receiverExports ? "wrapper->package" : `"${valueClass}"`});
     LEAVE;
     SPAGAIN; SP = PL_stack_base + ax - 1; EXTEND(SP, 1); XPUSHs(out);
 

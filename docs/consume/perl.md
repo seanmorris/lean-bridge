@@ -470,8 +470,8 @@ unsupported.
 ### Consuming inputs
 
 An author can mark an argument as consuming. Its generated POD names that
-argument. Packages without borrowed results use the same Perl values; packages
-with borrowed results require a `Value` owner for each consuming argument.
+argument. Packages without borrowed results or receiver exports use the same
+Perl values. Either feature requires a `Value` owner for each consuming argument.
 Validation errors preserve inputs. Once Lean takes ownership, shared
 aliases close even if a callback throws or converting the result fails.
 An independent `retain` survives that handoff.
@@ -572,8 +572,57 @@ preserve the owners of empty containers and `None`.
 Consuming parameters in these packages take whole `Value` owners and consume
 their original native slots. Shared owners and borrowed descendants expire
 together. Independently retained owners survive. A borrowed result must be
-retained before it can be consumed. Packages without borrowed results keep the
-ordinary-value API described above.
+retained before it can be consumed. Packages without borrowed results or receiver
+exports keep the ordinary-value API described above.
+
+### Methods and properties
+
+Declared receivers become `snake_case` methods on nominal owners such as
+`TicketValue` and `BundleValue`. Properties are read-only, zero-argument methods.
+For the [author's receiver contracts](../publish/cpan.md#export-methods-and-properties),
+save `members.pl`:
+
+```perl
+use strict;
+use warnings;
+use Math::BigInt;
+use LeanBridge::OwnedValues;
+
+my ($ticket, $owner, $view, $retained);
+my $ok = eval {
+  $ticket = LeanBridge::OwnedValues::new_ticket(Math::BigInt->new(42), 'receipt');
+  $owner = LeanBridge::OwnedValues::copy_value(
+    LeanBridge::OwnedValues::Bundle->new(
+      primary => $ticket->get, spare => undef, peers => [], history => [],
+      payload => LeanBridge::OwnedValues::Payload->new(
+        count => Math::BigInt->new(-1), bytes => "\0\xff"
+      )
+    )
+  );
+  $view = $owner->callback_record(sub { $_[0] });
+  $retained = $view->retain;
+  print $view->get->primary->serial->bstr, "\n";
+  $owner->close;
+  print $view->closed ? "expired\n" : "live\n";
+  print $retained->get->primary->serial->bstr, "\n";
+  1;
+};
+my $error = $@;
+$_->close for grep { defined } ($ticket, $owner, $view, $retained);
+die $error unless $ok;
+```
+
+Run `perl members.pl`. It prints `42`, `expired`, and `42`. `share`, `retain`,
+and `copy_value` preserve the nominal owner's methods. A receiver-anchored
+result follows the original receiver owner; an argument-anchored result follows
+the selected argument owner. Independent retains survive either owner's closure.
+Consuming methods invalidate the original owner and its shared aliases at the
+Lean call boundary.
+
+Raw resources expose methods that need neither a receiver anchor nor a consuming
+receiver. Use the whole owner for those lifetime-sensitive methods. Ordinary
+module-level functions remain available. Packages with receiver exports use
+whole-value owners even when they declare no borrowed results.
 
 ## Values and cleanup
 
