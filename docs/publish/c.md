@@ -204,9 +204,10 @@ selects the first argument after the receiver. Use receiver scope for `arg0`.
 Reviewed APIs store the receiver separately and use the remaining parameters'
 declared names.
 
-Build with `--target c`, `--target cpp`, `--target cargo`, `--target pypi`, or a
-combination. C++, [Rust](cargo.md#export-methods-and-properties) and
-[Python](pypi.md#export-methods-and-properties) expose named receiver members. Combined builds
+Build with `--target c`, `--target cpp`, `--target cargo`, `--target pypi`,
+`--target rubygems`, or a combination. C++, [Rust](cargo.md#export-methods-and-properties),
+[Python](pypi.md#export-methods-and-properties) and
+[Ruby](rubygems.md#export-methods-and-properties) expose named receiver members. Combined builds
 with other consumer targets reject receiver exports. These packages use
 manifest version 6 and `ownedValues` version 5. Metadata records the
 receiver-first convention and distinguishes receiver anchors from parameter

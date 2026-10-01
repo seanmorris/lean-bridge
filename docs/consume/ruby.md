@@ -527,6 +527,49 @@ errors after handoff leave them consumed. Resource equality compares canonical
 native identity and raises on expired values. Owners and resource wrappers
 cannot be serialized or used as Hash keys.
 
+### Methods and properties
+
+Publishers can expose Lean functions as members of their declared receiver
+type. Call methods on the returned `Value` owner. Read-only properties use
+zero-argument Ruby methods, such as `owner.serial`; they have no setter.
+The module-level function remains available.
+
+For the prepared `owned-receivers` acceptance gem, save `owned-receivers.rb`:
+
+```ruby file=ruby/owned-receivers.rb
+require "lean_bridge/owned_aggregates"
+
+api = LeanBridge::OwnedAggregates
+owner = api.new_ticket(42, "owner")
+view = owner.retain_ticket
+independent = view.retain
+begin
+  puts owner.serial
+  owner.close
+  raise "Borrowed result outlived its owner" unless view.closed?
+  puts independent.serial
+ensure
+  [owner, view, independent].each(&:close)
+end
+```
+
+Run `ruby owned-receivers.rb`. It prints `42` twice. The member call preserves
+the publisher's ownership contract: receiver-anchored results expire with the
+original owner; `retain` creates independent ownership. A result anchored to a
+different argument follows that argument, not the receiver. Consuming members
+transfer the original owner and invalidate its aliases before callback reentry.
+
+Each member checks the receiver's exact generated type and lifetime. Calling a
+Ticket member on a record owner raises `NoMethodError`. A raw resource from
+`get` exposes only members that neither consume nor borrow from its receiver.
+Methods on records, variants and recursive values belong to the `Value` owner;
+`owner.get.primary` still reads the record field, while `owner.primary` calls
+the exported Lean property. Ordinary Ruby class-level introspection and unbound
+method calls work, including `api::Value.instance_method(:serial)`.
+
+These APIs do not require callbacks or result anchors when the exported Lean
+functions do not use them. See the [author configuration](../publish/rubygems.md#export-methods-and-properties).
+
 ### Alpha interoperability example
 
 The remaining example uses `lean_bridge_alpha-0.0.0.gem`. It exercises resources and callbacks through the separate Alpha fixture API. Resource identities remain separate from ordinary copied values and primitive callables.

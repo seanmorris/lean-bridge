@@ -3332,3 +3332,31 @@ on Python 3.11 with both typing dependency bounds and Python 3.12 with standard
 typing. A reviewed combined build also executes C++ and Rust consumers from the
 same authenticated adapter. CI retains `build/owned-python-receivers.log` and
 nine reports in `build/owned-python-receivers/`.
+
+## Ruby receiver acceptance
+
+Run the gate with the pinned Lean toolchain and MRI Ruby 3.3. The reviewed
+combined build also needs the C++, Rust and Python consumer tools and offline
+dependencies described in [Installed Ruby borrowed results](#installed-ruby-borrowed-results):
+
+```sh
+npm run test:owned-ruby-receivers
+```
+
+The gate requires ten passing tests with no skips. Both source paths execute
+nominal methods, read-only property readers, unbound class members, receiver and
+other-argument anchors, original-owner transfers, callbacks and recursive
+values. It retains allocation-failure and foreign-thread close regressions.
+Three broken implementations must fail the unchanged consumer assertions.
+Resource-only builds run without callback or result-anchor capabilities, with
+and without consuming receivers.
+
+Installed-gem tests use an offline-installed CLI, compare two independent
+builds and reject changed receiver contracts and adapter files. They remove
+producer sources and tools, install through local RubyGems, execute the public
+API and documentation example, then remove the handoff and gem cache before
+relocating and rerunning the installation. Loader checks cover isolated GMP,
+concurrent require, fork affinity and changed or injected native libraries.
+The reviewed build also executes C++, Rust and Python prepared packages sharing
+the same Lean component. CI retains `build/owned-ruby-receivers.log` and all
+eight reports under `build/owned-ruby-receivers/`.

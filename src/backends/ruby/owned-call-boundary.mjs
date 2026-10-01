@@ -15,12 +15,12 @@ export const ownedRubyCallBoundary = model => {
 	const { c } = model, p = c.prefix, nodes = new Map(model.types.map(node => [node.id, node]));
 	const callbacks = [], calls = [], sources = [];
 	const invalid = `${p.toUpperCase()}_INVALID_ARGUMENT`;
-	const names = new Set([...c.functions, ...c.callbacks, ...c.retains, ...c.copies, ...c.nodes].map(item => item.cName));
+	const names = new Set([...c.functions, ...c.callbacks, ...c.retains, ...c.copies ?? [], ...c.nodes].map(item => item.cName));
 	const claim = name => {
 		if(names.has(name)) throw new TypeError(`Owned Ruby forwarder collides with export: ${name}`);
 		names.add(name);
 	};
-	for(const callback of c.callbacks)
+	for(const callback of c.hostArgument ? c.callbacks : [])
 	{
 		const node = nodes.get(callback.id), result = nodes.get(callback.result), index = node.index;
 		const parameters = callback.parameters.slice(1).map(id => nodes.get(id));
@@ -39,12 +39,12 @@ static inline ${p}_status ${forward}(void *context, ${p}_session *session, ${par
   return (${p}_status)host->call(host->context, session, ${parameters.map((parameter, i) => `${parameter.leaf ? "&" : ""}arg${i}`).concat("output", "owner").join(", ")});
 }`);
 	}
-	for(const [group, functions] of [["call", c.functions], ["invoke", c.callbacks], ["retain", c.retains], ["copy", c.copies]]) for(const [index, fn] of functions.entries())
+	for(const [group, functions] of [["call", c.functions], ["invoke", c.callbacks], ["retain", c.retains], ["copy", c.copies ?? []]]) for(const [index, fn] of functions.entries())
 	{
 		const name = `${group}${group === "call" ? index : nodes.get(fn.id).index}`, symbol = `${p}_ruby_${name}`;
 		claim(symbol);
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
-		const hosts = parameters.map((_, i) => c.hostArgument(fn, i));
+		const hosts = parameters.map((_, i) => c.hostArgument?.(fn, i) ?? false);
 		calls.push({ ...fn, group, name, symbol, parameters, result, hosts });
 		const setup = [], arguments_ = [];
 		for(const [i, node] of parameters.entries())

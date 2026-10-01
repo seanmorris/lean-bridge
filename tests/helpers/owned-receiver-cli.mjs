@@ -21,6 +21,8 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
  */
 export const prepareOwnedReceiverCli = async (t, options) => {
 	const { label, configuration, reviewedIr, source, profiles } = options;
+	const buildTimeoutMs = options.buildTimeoutMs ?? 900000;
+	assert.ok(Number.isSafeInteger(buildTimeoutMs) && buildTimeoutMs > 0 && buildTimeoutMs <= 3600000);
 	const directory = await mkdtemp(join(tmpdir(), `lean-bridge-${label}-`));
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const author = join(directory, "author"), project = join(directory, "source");
@@ -47,7 +49,7 @@ export const prepareOwnedReceiverCli = async (t, options) => {
 	const build = async destination => {
 		const result = await processBuildRunner.capture({ command: process.execPath
 			, args: [cli, "build", "--project", project, ...targets.flatMap(target => ["--target", target]), "--output", destination, "--json"]
-			, cwd: directory, env: environment, timeoutMs: 900000 })
+			, cwd: directory, env: environment, timeoutMs: buildTimeoutMs })
 			.catch(error => { throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); });
 		const response = JSON.parse(result.stdout); assert.equal(response.status, "ok");
 		assert.deepEqual([...response.result.targets].sort(), [...targets].sort());

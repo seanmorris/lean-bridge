@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedRubyReceiverHistoricalBytes } from "./owned-ruby-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
 import { generateOwnedRustPackage } from "../../src/backends/rust/owned-package.mjs";
@@ -153,7 +154,7 @@ export const assertOwnedPythonReceiverExecution = async record => {
 	assert.equal((await readFile("docs/consume/python.md", "utf8")).match(/```python file=python\/owned-receivers\.py\n([\s\S]*?)```/u)?.[1], example);
 	const loader = ownedPythonInstalledProbe.replaceAll("compatible.serial(ticket)", "compatible.serial(ticket.get())")
 		.replaceAll("module.serial(value)", "module.serial(value.get())").replaceAll("api.serial(ticket)", "api.serial(ticket.get())");
-	const cliConfig = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const cliConfig = JSON.parse(ownedRubyReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
 	for(const item of record.packages)
 	{
 		trueFields(item, ["sourceRemovedBeforeInstall"
@@ -238,7 +239,8 @@ export const assertOwnedPythonReceiverExecution = async record => {
 		assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 		for(const path of cliConfig.files)
 		{
-			const file = item.cli.files.find(value => value.path === path), bytes = await readFile(path);
+			const file = item.cli.files.find(value => value.path === path);
+			const bytes = Buffer.from(ownedRubyReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
 			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.builds.length, 2);

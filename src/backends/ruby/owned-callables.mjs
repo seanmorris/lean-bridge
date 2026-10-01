@@ -62,7 +62,7 @@ export const ownedRubyCallbacks = (model, boundary, access) => {
 		const copy = boundary.calls.find(fn => (fn.retain || fn.copy) && fn.id === result.id);
 		const output = (parameter, j) => access.read(parameter, `pointer(arg${j}.to_i, ${parameter.size}, ${parameter.alignment})`);
 		lines.push(`      def host${i}(value, scope, frame = nil)
-${c.functions.some(fn => fn.anchor !== undefined) ? "        value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)\n" : ""}\
+${c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0) ? "        value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)\n" : ""}\
         scope.enter(nil, 0, 32)
         if exact?(value, ::${model.namespace}::${node.publicType})
           handle = input${i}(value, scope)

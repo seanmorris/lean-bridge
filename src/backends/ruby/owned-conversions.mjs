@@ -21,6 +21,7 @@ export const generateOwnedRubyConversions = (ir, options = {}) => {
 	const model = compileOwnedRubyLayout(ir, options), boundary = ownedRubyCallBoundary(model);
 	const transfers = model.c.functions.some(fn => fn.transfers?.length);
 	const anchored = model.c.functions.some(fn => fn.anchor !== undefined);
+	const wholeOwners = anchored || model.c.functions.some(fn => fn.receiver === 0);
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const publicName = name => `::${model.namespace}::${name}`;
 	const read = (node, value, offset = 0) => node.aggregate ? `(${value} + ${offset})` : `${value}[${offset}, ${node.size}].unpack1("${node.pack}")`;
@@ -58,7 +59,7 @@ export const generateOwnedRubyConversions = (ir, options = {}) => {
 		{
 			input.push(`raise TypeError, "Expected exact ${node.publicType}" unless exact?(value, ${publicName(node.publicType)})`
 				, "handle = RESOURCE_RAW.bind_call(value, scope.state)", "scope.pin_lease(FIELD.bind_call(value, :@guard).lease)"
-				, ...transfers && !anchored ? ["scope.moves.add(FIELD.bind_call(value, :@guard).lease, scope.move_group, scope) if scope.moves && !scope.move_group.nil?"] : []
+				, ...transfers && !wholeOwners ? ["scope.moves.add(FIELD.bind_call(value, :@guard).lease, scope.move_group, scope) if scope.moves && !scope.move_group.nil?"] : []
 				, "handle");
 			output.push('raise Invalid, "Missing native resource" if value.zero?', "scope.charge(:storage, 256)"
 				, `${publicName(node.publicType)}.from_lease(output.hold, value)`);
@@ -204,7 +205,7 @@ ${output.map(line => `          ${line}`).join("\n")}
 		const moving = fn.transfers ?? [];
 		const input = (node, i, checking) => hosts[i] ? `host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})` : `input${node.index}(arg${i}, ${checking ? "checked" : "scope"})`;
 		bindings.push(`        functions[:${fn.name}] = ::Fiddle::Function.new(runtime.library[${JSON.stringify(fn.symbol)}], [${Array(parameters.length + moving.length + 3 + Number(fn.anchor !== undefined)).fill("::Fiddle::TYPE_VOIDP").join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)`);
-		if(anchored)
+		if(wholeOwners)
 		{
 			methods.push(ownedRubyAnchoredCall(fn, boundary, { read, write }));
 			continue;
@@ -273,9 +274,9 @@ ${moving.length ? "            end\n" : ""}\
         end
       end`);
 	}
+	if(wholeOwners) methods.push(ownedRubyValueCopies(model, boundary));
 	if(anchored)
 	{
-		methods.push(ownedRubyValueCopies(model, boundary));
 		for(const node of model.types.filter(item => item.identity))
 		{
 			const name = `same${node.index}`;
@@ -307,7 +308,7 @@ module LeanBridge
   module ${model.componentName}
     module Native
       extend self
-${ownedRubyConversionSupport(model.c.native.model.limits, transfers, anchored)}${transfers ? anchored ? ownedRubyAnchoredTransfers : ownedRubyTransfers : ""}
+${ownedRubyConversionSupport(model.c.native.model.limits, transfers, wholeOwners)}${transfers ? wholeOwners ? ownedRubyAnchoredTransfers : ownedRubyTransfers : ""}
 ${callbacks}
 ${methods.join("\n")}
       def bind(runtime)

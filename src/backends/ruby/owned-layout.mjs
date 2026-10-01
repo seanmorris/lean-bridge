@@ -66,7 +66,7 @@ export const compileOwnedRubyLayout = (ir, options = {}) => {
 			Object.assign(node, fields(node.fields, flagged ? 1 : 0));
 		}
 	}
-	const callbackLayouts = values.c.callbacks.map(callback => ({
+	const callbackLayouts = (values.c.hostArgument ? values.c.callbacks : []).map(callback => ({
 		id: callback.id, name: `${table.get(callback.id).cName}_host`
 		, size: 32, alignment: 8
 		, fields: ["call", "context", "closure", "recovery"].map((name, index) => ({ name, offset: index * 8 }))

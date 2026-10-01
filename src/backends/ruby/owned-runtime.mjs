@@ -13,9 +13,11 @@ import { ownedRubyAnchoredValues } from "./owned-borrows.mjs";
  * @param options - Explicit ownership capabilities.
  * @param options.transferredInputs - Observe the C consuming-input owner slots.
  * @param options.anchoredResults - Keep and validate whole result owners.
+ * @param options.receiverExports - Keep original owners for receiver members.
  */
-export const ownedRubyRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
+export const ownedRubyRuntime = (prefix, { transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Ruby prefix");
+	const wholeOwners = anchoredResults || receiverExports;
 	return `require "fiddle"
 raise LoadError, "Owned Lean values require MRI Ruby 3.3 on Linux x86-64" unless RUBY_ENGINE == "ruby" && RUBY_VERSION.start_with?("3.3.") && RUBY_PLATFORM.include?("x86_64-linux") && Fiddle::SIZEOF_VOIDP == 8 && [1].pack("I") == [1].pack("L<")
 raise LoadError, "Owned Lean values require Ruby 1:1 threads; unset RUBY_MN_THREADS" unless ENV.fetch("RUBY_MN_THREADS", "0").to_i.zero?
@@ -69,10 +71,10 @@ module Owned
     end
   end
   class Lease
-    attr_reader :state, :slot, :scope${anchoredResults ? ", :borrowed_result, :whole_result" : ""}${transferredInputs ? "\n    attr_accessor :input_move" : ""}
-    def initialize(state, slot = nil, scope = nil${anchoredResults ? ", borrowed_result = false, whole_result = false" : ""})
+    attr_reader :state, :slot, :scope${wholeOwners ? ", :borrowed_result, :whole_result" : ""}${transferredInputs ? "\n    attr_accessor :input_move" : ""}
+    def initialize(state, slot = nil, scope = nil${wholeOwners ? ", borrowed_result = false, whole_result = false" : ""})
       @state, @slot, @scope = state, slot, scope
-${anchoredResults ? "      @borrowed_result, @whole_result = borrowed_result, whole_result\n" : ""}\
+${wholeOwners ? "      @borrowed_result, @whole_result = borrowed_result, whole_result\n" : ""}\
       @references = 0${transferredInputs ? "\n      @input_move = nil" : ""}
     end
     def closed?
@@ -101,7 +103,7 @@ ${anchoredResults ? `      return true if closed
       @state.release(@slot, finalizing) if @references.zero? && @slot
     end
     def referenced?; @references > 0; end
-${anchoredResults ? `    def owner(state)
+${wholeOwners ? `    def owner(state)
       require_open
       raise Error, 1 unless @state.equal?(state) && @slot && !@scope
       @slot.value
@@ -110,11 +112,11 @@ ${anchoredResults ? `    def owner(state)
   end
   class Guard
     attr_reader :lease, :handle
-    def initialize(lease, handle${anchoredResults ? ", owning = !lease.whole_result" : ""})
+    def initialize(lease, handle${wholeOwners ? ", owning = !lease.whole_result" : ""})
       @lease, @handle = lease, handle
       @released = true
-${anchoredResults ? "      @owning = owning\n" : ""}\
-      lease.acquire${anchoredResults ? " if @owning" : ""}
+${wholeOwners ? "      @owning = owning\n" : ""}\
+      lease.acquire${wholeOwners ? " if @owning" : ""}
       @released = false
     end
     def closed?; @released || @lease.closed?; end
@@ -123,7 +125,7 @@ ${anchoredResults ? "      @owning = owning\n" : ""}\
       return if @released
       @released = true
       @handle = 0
-      @lease.release(finalizing)${anchoredResults ? " if @owning" : ""}
+      @lease.release(finalizing)${wholeOwners ? " if @owning" : ""}
     end
     def self.finalizer(guard)
       proc do
@@ -155,11 +157,11 @@ ${anchoredResults ? "      @owning = owning\n" : ""}\
       raise Error, 4 unless @slot
       @slot.pointer
     end
-    def adopt${anchoredResults ? "(borrowed_result = false, whole_result = false)" : ""}
+    def adopt${wholeOwners ? "(borrowed_result = false, whole_result = false)" : ""}
       @state.require_open
       raise Error, 1 if !@slot || @slot.value.zero? || @lease
       Owned.checkpoint
-      @lease = Lease.new(@state, @slot${anchoredResults ? ", nil, borrowed_result, whole_result" : ""})
+      @lease = Lease.new(@state, @slot${wholeOwners ? ", nil, borrowed_result, whole_result" : ""})
     end
     def publish
       if @lease && @lease.referenced?
@@ -449,7 +451,7 @@ ${anchoredResults ? `      @result_validate = ::Fiddle::Function.new(library["${
     def inspect; "#<#{self.class} #{closed? ? 'closed' : 'open'}>"; end
     alias to_s inspect
   end
-${anchoredResults ? ownedRubyAnchoredValues : ""}\
+${wholeOwners ? ownedRubyAnchoredValues : ""}\
 end
 `;
 };

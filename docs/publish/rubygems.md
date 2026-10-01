@@ -425,6 +425,36 @@ The Ruby gem keeps its isolated GMP and private pointer-call adapter while
 sharing the compiled Lean component and runtime. Other consumer projections
 of result anchors remain unfinished.
 
+## Export methods and properties
+
+Use `receiver: "method"` or `receiver: "property"` in the
+[export contracts](../lean/existing-package.md#declare-export-contracts).
+Lean checks the first argument's nominal type; a property has no remaining
+arguments. Keep ownership and result-anchor annotations on that same export.
+The [C author example](c.md#export-methods-and-properties) shows the shared
+configuration. Set your gem coordinate under `targets.rubygems` and build with
+`--target rubygems`.
+
+Ruby exposes snake-case methods and zero-argument property readers on checked
+`Value` owners while retaining module functions. Generated members verify the
+nominal receiver and preserve original-owner transfers, receiver-relative
+results and anchors on other arguments. Record fields remain fields on the
+raw value. Members do not replace `get`, `retain`, `close` or other ownership
+operations; conflicting names reject during generation. See the
+[installed consumer example](../consume/ruby.md#methods-and-properties).
+
+Receiver gems use `owned-ruby-v4`, ownership contract version 4 and package
+receipt version 4. Their private adapter uses version 4 with `ownedValues`
+version 5. Authentication checks `receiverExports`, member names, declaration
+kinds and lifetimes against compiler metadata. Packages without receivers keep
+their existing APIs and versions. Receiver-only APIs need no callback, copied
+aggregate or borrowed-result capability unless their declarations use it.
+
+Combined receiver builds can select C, C++, Cargo, PyPI and RubyGems. Ruby keeps
+its private pointer-call adapter and isolated GMP library. The targets share
+the compiled Lean component and runtime; each generated package carries its
+own authenticated loader and ownership contract.
+
 ## Build the gem
 
 The separate Alpha fixture retains its resource and callback examples.

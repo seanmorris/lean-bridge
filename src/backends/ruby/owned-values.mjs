@@ -48,12 +48,15 @@ ${fields.map(field => `        @${field.publicName} = ${field.publicName}`).join
  * @param options - Explicit C transport capabilities.
  * @param options.transferredInputs - Admit consuming resource-containing inputs.
  * @param options.anchoredResults - Admit original-owner borrowed results.
+ * @param options.receiverExports - Expose nominal methods and properties.
+ * @param options.hostCallbacks - The adapter provides callback and copy helpers.
  */
-export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
+export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	const anchored = c.functions.some(fn => fn.anchor !== undefined);
+	const receivers = c.functions.filter(fn => fn.receiver === 0), wholeOwners = anchored || receivers.length > 0;
 	const componentName = constant(c.prefix), occupied = new Set(reservedConstants), names = new Map();
-	if(anchored) occupied.add("Value");
+	if(wholeOwners) occupied.add("Value");
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || occupied.has(name))
 			throw new TypeError(`Owned Ruby name is reserved or duplicated: ${name}`);
@@ -93,10 +96,14 @@ export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchore
 	});
 	const functions = c.functions.map(fn => {
 		const publicName = fn.cName.slice(c.prefix.length + 1);
-		if(anchored && publicName === "copy_value") throw new TypeError("Owned Ruby function name is reserved: copy_value");
+		if(wholeOwners && publicName === "copy_value") throw new TypeError("Owned Ruby function name is reserved: copy_value");
 		if(reservedMembers.has(publicName) && !["next", "inspect"].includes(publicName))
 			throw new TypeError(`Owned Ruby function name is reserved: ${publicName}`);
-		return { ...fn, publicName };
+		if(fn.receiver === 0 && (reservedMembers.has(publicName)
+			|| ["get", "retain", "close", "closed", "call", "with", "lease", "checked_payload", "same_identity"].includes(publicName)))
+			throw new TypeError(`Owned Ruby receiver member is reserved: ${publicName}`);
+		return { ...fn, publicName
+			, ...fn.receiver === 0 ? { receiverKind: ir.declarations.find(item => item.id === fn.id).kind } : {} };
 	});
 	const table = new Map(types.map(node => [node.id, node]));
 	const aliases = c.native.aliases.map(alias => ({ ...alias
@@ -107,10 +114,23 @@ export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchore
 		, ...types.some(node => node.kind === "result") ? ["Ok", "Err"] : []];
 	const nominal = types.filter(node => names.has(node.id));
 	const exports = ["UNIT", "LeanBridgeError", ...wrappers
-		, ...anchored ? ["Value", "copy_value"] : []
+		, ...wholeOwners ? ["Value", "copy_value"] : []
 		, ...nominal.flatMap(node => [node.publicType, ...node.cases.map(branch => branch.publicName)])
-		, ...c.callbacks.length ? ["WithRecovery", "with_recovery"] : []
+		, ...hostCallbacks && c.callbacks.length ? ["WithRecovery", "with_recovery"] : []
 		, ...functions.map(fn => fn.publicName)];
+	const receiverMember = (fn, whole) => {
+		const node = table.get(fn.parameters[0]), args = fn.parameters.slice(1).map((_, i) => `arg${i + 1}`);
+		const nominal = node.kind === "variant" ? node.cases.map(branch => branch.publicName) : [node.publicType];
+		const receiver = whole ? fn.anchor === 0 || fn.transfers?.includes(0) ? "self" : "receiver" : "self";
+		return `      def ${fn.publicName}(${args.join(", ")})
+${whole ? `        receiver = get
+        unless ${nominal.map(name => `OwnedValues::EXACT.bind_call(receiver, ${name})`).join(" || ")}
+          raise NoMethodError, "${fn.publicName} requires ${node.publicType}"
+        end
+` : ""}\
+        Native.call${functions.indexOf(fn)}(${[receiver, ...args].join(", ")})
+      end`;
+	};
 	const declarations = nominal.map(node => {
 		if(node.identity)
 		{
@@ -123,6 +143,8 @@ ${anchored ? `      def same_identity?(other); Native.same${node.index}(self, ot
       alias eql? ==
 ` : ""}\
 ${callback ? `      def call(${args.join(", ")}); Native.invoke${node.index}(${["self", ...args].join(", ")}); end\n` : ""}\
+${functions.filter(fn => fn.receiver === 0 && fn.parameters[0] === node.id
+	&& fn.anchor !== 0 && !fn.transfers?.includes(0)).map(fn => receiverMember(fn, false) + "\n").join("")}\
     end`;
 		}
 		return node.kind === "record" ? valueClass(node.publicType, node.fields)
@@ -144,13 +166,13 @@ module LeanBridge
 ${aliases.map(alias => `    # ${alias.name} = ${alias.contractType}; Ruby: ${alias.rubyType}`).join("\n")}
     UNIT = ::Object.new.freeze
     LeanBridgeError = Owned::Error
-${anchored ? `    Value = Owned::Value
+${wholeOwners ? `    Value = Owned::Value
     def self.copy_value(value, result_of: nil, parameter_of: nil)
       Native.copy_value(value, result_of: result_of, parameter_of: parameter_of)
     end
 ` : ""}\
 ${wrappers.map(name => `    ${name} = ::Data.define(:value)`).join("\n")}
-${c.callbacks.length ? `    WithRecovery = ::Data.define(:function, :recovery)
+${hostCallbacks && c.callbacks.length ? `    WithRecovery = ::Data.define(:function, :recovery)
     def self.with_recovery(function, recovery)
       WithRecovery.new(function: function, recovery: recovery)
     end` : ""}
@@ -161,6 +183,10 @@ ${c.callbacks.length ? `    WithRecovery = ::Data.define(:function, :recovery)
       FREEZE = ::Object.instance_method(:freeze)
     end
 ${declarations.join("\n")}
+${receivers.length ? `    class Value
+${functions.filter(fn => fn.receiver === 0).map(fn => receiverMember(fn, true)).join("\n")}
+    end
+` : ""}\
 ${methods.join("\n")}
     private_constant :OwnedValues
   end

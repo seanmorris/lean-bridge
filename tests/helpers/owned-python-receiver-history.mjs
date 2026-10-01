@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedRubyReceiver, ownedRubyReceiverChangedPaths } from "./owned-ruby-receiver-history.mjs";
 
 export const ownedPythonReceiverPath = "docs/evidence/owned-python-receivers-20261001.json";
 export const ownedPythonReceiverBaseline = "18324f5a302fb99238b8a503114b3f5a5294d3cd";
@@ -66,6 +67,7 @@ export const ownedPythonReceiverAddedPaths = [
 	, "tests/owned-python-receivers.test.mjs"
 ].sort();
 let cached;
+export const ownedPythonReceiverNormalizationPaths = [...new Set([...ownedPythonReceiverChangedPaths, ...ownedRubyReceiverChangedPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.
@@ -98,6 +100,7 @@ export const reverseOwnedPythonReceiverUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedPythonReceiver = (path, source, expected) => {
+	source = beforeOwnedRubyReceiver(path, source, expected);
 	if(!ownedPythonReceiverChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -124,5 +127,5 @@ export const beforeOwnedPythonReceiver = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedPythonReceiverHistoricalBytes = (path, bytes, expected) => ownedPythonReceiverChangedPaths.includes(path)
+export const ownedPythonReceiverHistoricalBytes = (path, bytes, expected) => ownedPythonReceiverNormalizationPaths.includes(path)
 	? beforeOwnedPythonReceiver(path, bytes.toString("utf8"), expected) : bytes;

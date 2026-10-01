@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPythonReceiver, ownedPythonReceiverChangedPaths } from "./owned-python-receiver-history.mjs";
+import { beforeOwnedPythonReceiver, ownedPythonReceiverNormalizationPaths } from "./owned-python-receiver-history.mjs";
 
 export const ownedRustReceiverPath = "docs/evidence/owned-rust-receivers-20261001.json";
 export const ownedRustReceiverBaseline = "39caf918fbbb49658026fc27572db1decdbd24a3";
@@ -59,7 +59,7 @@ export const ownedRustReceiverAddedPaths = [
 	, "tests/owned-rust-receivers.test.mjs"
 ].sort();
 let cached;
-export const ownedRustReceiverNormalizationPaths = [...new Set([...ownedRustReceiverChangedPaths, ...ownedPythonReceiverChangedPaths])].sort();
+export const ownedRustReceiverNormalizationPaths = [...new Set([...ownedRustReceiverChangedPaths, ...ownedPythonReceiverNormalizationPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.
