@@ -6,6 +6,7 @@
 import { phpCallableLiteral as literal } from "./callable-graph-calls.mjs";
 import { copiedPhpWasmLoader } from "./php-wasm-copied-loader.mjs";
 import { ownedZendPhpWire } from "./owned-zend-wire.mjs";
+import { ownedZendBorrowFiles, ownedZendBorrowPhpRuntime } from "./owned-zend-borrows.mjs";
 
 const runtime = String.raw`
 final class ZendBinding implements ResourceBinding
@@ -187,10 +188,14 @@ export const generateOwnedPhpZendPhp = model => {
 	const signature = (fn, entry) => ({ entry
 		, parameters: fn.parameters.map(id => nodes.get(id).index)
 		, host: fn.hostArguments, result: nodes.get(fn.result).index
+		, ...model.anchoredResults ? {
+			whole: nodes.get(fn.result).representation !== "copied"
+			, wholeParameters: fn.parameters.flatMap((_, index) => fn.anchor === index || fn.transfers?.includes(index) ? [index] : [])
+		} : {}
 		, ...Object.hasOwn(fn, "automaticRecovery") ? { automaticRecovery: fn.automaticRecovery } : {} });
 	const functions = model.functions.map(fn => signature(fn, `call${fn.index}`));
 	const callbacks = Object.fromEntries(model.callbacks.map(fn => [fn.type, signature(fn, `invoke${fn.index}`)]));
-	const files = { ...model.files };
+	const files = ownedZendBorrowFiles(model);
 	files["src/Api.php"] += `
 final readonly class WithRecovery
 {
@@ -204,16 +209,16 @@ function with_recovery(mixed $callback, mixed $value): WithRecovery {
 }
 require_once __DIR__ . '/Internal/Native.php';
 ${model.functions.map(fn => `/**
-${fn.parameters.map((id, index) => ` * @param ${fn.hostArguments[index] ? `callable|${nodes.get(id).docType}|WithRecovery` : nodes.get(id).docType} $${fn.publicParameters[index]}`).join("\n")}${fn.transfers?.length ? `\n * Consumes resource leases in ${fn.transfers.map(index => "$" + fn.publicParameters[index]).join(", ")} at the Lean call boundary.` : ""}
- * @return ${nodes.get(fn.result).docType}
+${fn.parameters.map((id, index) => ` * @param ${model.anchoredResults && (fn.anchor === index || fn.transfers?.includes(index)) ? `Value<${nodes.get(id).docType}>` : fn.hostArguments[index] ? `callable|${nodes.get(id).docType}|WithRecovery` : nodes.get(id).docType} $${fn.publicParameters[index]}`).join("\n")}${fn.transfers?.length ? `\n * Consumes ${model.anchoredResults ? "original whole owners" : "resource leases"} in ${fn.transfers.map(index => "$" + fn.publicParameters[index]).join(", ")} at the Lean call boundary.` : ""}
+ * @return ${fn.whole ? `Value<${nodes.get(fn.result).docType}>` : nodes.get(fn.result).docType}
  */
-function ${fn.publicName}(${fn.publicParameters.map(name => `mixed $${name}`).join(", ")}): ${nodes.get(fn.result).publicType} {
+function ${fn.publicName}(${fn.publicParameters.map(name => `mixed $${name}`).join(", ")}): ${fn.whole ? "Value" : nodes.get(fn.result).publicType} {
     if (\\func_num_args() !== ${fn.parameters.length}) throw new \\ArgumentCountError('${fn.publicName} requires exactly ${fn.parameters.length} arguments');
     return Internal\\Native::call(${fn.index}, [${fn.publicParameters.map(name => `$${name}`).join(", ")}]);
 }`).join("\n\n")}
 `;
 	files["src/Internal/Wire.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${model.namespace}\\Internal;\nrequire_once __DIR__ . '/Values.php';\n${ownedZendPhpWire(model.namespace)}\n`;
-	files["src/Internal/Native.php"] = `<?php\ndeclare(strict_types=1);\n${copiedPhpWasmLoader}\nnamespace ${model.namespace}\\Internal {\nrequire_once __DIR__ . '/Wire.php';\n${runtime
+	files["src/Internal/Native.php"] = `<?php\ndeclare(strict_types=1);\n${copiedPhpWasmLoader}\nnamespace ${model.namespace}\\Internal {\nrequire_once __DIR__ . '/Wire.php';\n${ownedZendBorrowPhpRuntime(runtime, model, literal)
 		.replaceAll("@NAMESPACE@", `\\${model.namespace}`)
 		.replace("@TRANSPORT@", literal(model.transport)).replace("@LIBRARY@", literal(model.library))
 		.replace("@FUNCTIONS@", literal(functions)).replace("@CALLBACKS@", literal(callbacks))}\n}\n`;

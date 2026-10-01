@@ -218,7 +218,7 @@ extension and ships the matching npm descriptor and optional Composer package.
 
 ### Anchor a result to an input
 
-For a native PHP release, add this `contracts` map to the
+For a native PHP or PHP-Wasm release, add this `contracts` map to the
 [resource example's configuration](#export-resource-containing-values):
 
 ```json
@@ -234,7 +234,7 @@ For a native PHP release, add this `contracts` map to the
 }
 ```
 
-Build with `--target php-native`. `arg0` names the first parameter in the
+Build with `--target php-native` or `--target php-wasm`. `arg0` names the first parameter in the
 compiler's ordinary contract. A reviewed contract uses its declared parameter
 name. The result follows that input's original owner, including when the input
 contains no resources at runtime. Closing or consuming the owner expires the
@@ -247,10 +247,12 @@ borrowed inputs still take the payload returned by `get()`. Consumers use
 result. The [installed example](../php.md#owner-anchored-results) prints `42`,
 `expired`, then `42`.
 
-Combine this target with another anchor-capable target, such as `--target c`,
-to reuse the native Lean build. PHP-Wasm does not yet accept this result
-contract. Keep publishing the native Composer ZIP and package-set receipt
-through the same [Composer repository procedure](#publish-to-the-private-https-repository).
+Combine native PHP with another anchor-capable target, such as `--target c`,
+to reuse the native Lean build. PHP-Wasm compiles its own 32-bit component and
+checks the same source API in a combined release. Publish the Composer ZIP
+through the [Composer repository procedure](#publish-to-the-private-https-repository).
+Publish the PHP-Wasm npm archives through the [npm procedure](#publish-the-php-wasm-profile).
+Keep the package-set receipt with the release.
 
 ### Export named copied aliases
 

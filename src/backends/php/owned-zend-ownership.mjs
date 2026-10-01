@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { ownedZendBorrowOwnership } from "./owned-zend-borrows.mjs";
 
 /**
  * Emit context-affine identity storage without exposing native tokens to PHP.
@@ -12,8 +13,8 @@
  * @param model - Finite wasm32 ownership model and nominal identity kinds.
  */
 export const ownedZendOwnershipSource = model => {
-	const transfers = model.functions.some(fn => fn.transfers?.length);
-	return `
+	const transfers = model.anchoredResults || model.functions.some(fn => fn.transfers?.length);
+	const source = `
 #include <Zend/zend_exceptions.h>
 #include <Zend/zend_fibers.h>
 
@@ -311,4 +312,5 @@ static int lgo_borrow_finish(lgo_borrow **borrow, ov_transaction *transaction,
   lgo_borrow_end(borrow); return status;
 }
 `;
+	return ownedZendBorrowOwnership(source, model);
 };

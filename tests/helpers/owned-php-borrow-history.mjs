@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPhpWasmBorrow, ownedPhpWasmBorrowChangedPaths } from "./owned-php-wasm-borrow-history.mjs";
 
 export const ownedPhpBorrowPath = "docs/evidence/owned-php-borrows-20261001.json";
 export const ownedPhpBorrowBaseline = "25745d5f3683a3919b40bbc8ce64f6140e615e39";
@@ -47,6 +48,7 @@ export const ownedPhpBorrowAddedPaths = [
 	, "tests/owned-php-borrows.test.mjs"
 ].sort();
 let cached;
+export const ownedPhpBorrowNormalizationPaths = [...new Set([...ownedPhpBorrowChangedPaths, ...ownedPhpWasmBorrowChangedPaths])].sort();
 
 /**
  * Reverse only ordered, authenticated spans of registered source files.
@@ -79,6 +81,7 @@ export const reverseOwnedPhpBorrowUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedPhpBorrow = (path, source, expected) => {
+	source = beforeOwnedPhpWasmBorrow(path, source, expected);
 	if(!ownedPhpBorrowChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -106,5 +109,5 @@ export const beforeOwnedPhpBorrow = (path, source, expected) => {
  * @param bytes - Complete file bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedPhpBorrowHistoricalBytes = (path, bytes, expected) => ownedPhpBorrowChangedPaths.includes(path)
+export const ownedPhpBorrowHistoricalBytes = (path, bytes, expected) => ownedPhpBorrowNormalizationPaths.includes(path)
 	? beforeOwnedPhpBorrow(path, bytes.toString("utf8"), expected) : bytes;

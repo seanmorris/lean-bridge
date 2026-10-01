@@ -1611,7 +1611,39 @@ automatic shutdown. The unchanged documentation example executes from a combined
 C/Composer release. Reports go to `build/owned-php-borrows/` and
 `build/owned-php-borrow-packaging/`.
 
-Owner-anchored borrowed results in PHP-Wasm, JavaScript/TypeScript and WIT/WASI,
+#### Installed PHP-Wasm borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-php-wasm-borrows
+```
+
+Use the pinned PHP-Wasm SDK, host and prepared runtime, plus native PHP with
+matching development headers and `pcntl` for the separate Fiber/fork companion.
+The runtime gate executes both compiler paths in weak and strict PHP. It covers
+whole owners, empty values, transitive expiration, independent retention,
+canonical identity, callback reentry and original-owner consumption. Allocation
+faults exercise Zend/native allocation and PHP result construction while keeping
+the original exceptions alive. Six parsed or compiled lifetime mutations must
+fail the public consumer assertions. Borrow-only components run separately.
+
+Request-bailout tests check cleanup and recovery after callbacks, nested calls,
+destructors, explicit shutdown and interrupted whole-owner construction. The
+pinned Wasm host cannot start Fibers; a native Zend companion exercises actual
+Fiber entry guards, deferred finalizers and fork rejection.
+
+The installed gate builds through the standalone CLI and consumes the original
+npm and Composer archives after removing producer sources. It checks startup
+and lazy loading in Node and Chromium, weak and strict PHP, source relocation,
+deterministic rebuilds and receipt tampering. The unchanged owner example also
+runs from a combined C/PHP-Wasm release. CI requires all twelve tests without
+skips and retains the seven JSON reports in `build/owned-php-wasm-borrows/` plus
+`build/owned-php-wasm-borrows.log`.
+
+The [borrowed-result receipt](../evidence/owned-php-wasm-borrows-20261001.md)
+reconstructs the generated Zend/PHP sources and installed package inventories.
+
+Owner-anchored borrowed results in JavaScript/TypeScript and WIT/WASI,
 receiver and callback-result anchors, and owned Docker acceptance remain open.
 
 ### Staged WIT owned graphs

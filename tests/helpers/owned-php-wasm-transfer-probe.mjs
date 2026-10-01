@@ -8,9 +8,10 @@
  * Add diagnostics without replacing any argument or result conversion.
  *
  * @param source - Complete generated consuming Zend extension.
+ * @param options - Test-only instrumentation hook selection.
+ * @param options.consume - Exact original-owner handoff declaration.
  */
-export const ownedPhpWasmTransferProbe = source => {
-	const consume = "static void lgo_input_consume(void *context) {";
+export const ownedPhpWasmTransferProbe = (source, { consume = "static void lgo_input_consume(void *context) {" } = {}) => {
 	if(source.split(consume).length !== 2 || source.split("  PHP_FE_END").length !== 2)
 		throw new TypeError("Expected one consuming hook and Zend registration table");
 	return `#include <php.h>

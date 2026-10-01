@@ -98,14 +98,15 @@ test("JVM borrow guides include executable Java/Kotlin examples and whole-owner 
 	assert.match(publisher, /version-3/u);
 });
 
-test("native PHP borrow guides explain whole roots and retain package-manager guidance", async () => {
+test("PHP borrow guides explain whole roots in both transports and retain package-manager guidance", async () => {
 	const consumer = await readFile("docs/php.md", "utf8");
 	const publisher = await readFile("docs/publish/php.md", "utf8");
 	assert.match(consumer, /### Owner-anchored results/u);
 	assert.match(consumer, /\$owner = copy_value\(new Bundle\(\$ticket->get\(\)/u);
 	assert.match(consumer, /\$kept = \$view->retain\(\)/u);
 	assert.match(consumer, /last root expires its borrowed descendants/u);
-	assert.match(consumer, /currently applies to native PHP, not\nPHP-Wasm/u);
+	assert.match(consumer, /input's lifetime in native PHP or\nPHP-Wasm/u);
+	assert.match(consumer, /Receiver-anchored and callback-result-anchored\nlifetimes remain unsupported/u);
 	assert.match(publisher, /### Anchor a result to an input/u);
 	assert.match(publisher, /"scope": "parameter", "anchor": "arg0"/u);
 	assert.match(publisher, /### Publish to the private HTTPS repository/u);

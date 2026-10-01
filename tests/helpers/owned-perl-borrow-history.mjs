@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPhpBorrow, ownedPhpBorrowChangedPaths } from "./owned-php-borrow-history.mjs";
+import { beforeOwnedPhpBorrow, ownedPhpBorrowNormalizationPaths } from "./owned-php-borrow-history.mjs";
 
 export const ownedPerlBorrowPath = "docs/evidence/owned-perl-borrows-20261001.json";
 export const ownedPerlBorrowBaseline = "85e684e746df8458e48f18ce2962b4a54ea3c989";
@@ -44,7 +44,7 @@ export const ownedPerlBorrowAddedPaths = [
 	, "tests/owned-perl-borrows.test.mjs"
 ].sort();
 let cached;
-export const ownedPerlBorrowNormalizationPaths = [...new Set([...ownedPerlBorrowChangedPaths, ...ownedPhpBorrowChangedPaths])].sort();
+export const ownedPerlBorrowNormalizationPaths = [...new Set([...ownedPerlBorrowChangedPaths, ...ownedPhpBorrowNormalizationPaths])].sort();
 
 /**
  * Reverse complete versions using exact ordered edits and both source digests.

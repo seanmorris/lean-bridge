@@ -11,7 +11,7 @@ import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { browserPhpWasmCorpus } from "./type-corpus-php-wasm-browser.mjs";
 
-const browserSource = arrangement => `import {PhpWeb} from './node_modules/php-wasm/PhpWeb.mjs';
+const browserSource = (arrangement, anchoredResults = false) => `import {PhpWeb} from './node_modules/php-wasm/PhpWeb.mjs';
 import descriptor from './bundled/consumer.mjs';
 const query=new URL(location.href).searchParams,loading=query.get('loading'),mode=query.get('mode');
 const arrangement=${JSON.stringify(arrangement)},api=loading==='lazy'?descriptor.lazy:descriptor;
@@ -45,7 +45,7 @@ try{
   const cleaned=await snapshot();
   await php.refresh();stdout='';stderr='';
   await run("<?php require '"+autoload+"'; $ticket=LeanOwnedAggregates\\\\new_ticket(Brick\\\\Math\\\\BigInteger::of(77),'fresh'); "+
-    "if((string)LeanOwnedAggregates\\\\serial($ticket)!=='77')throw new Exception('Request recovery failed'); $ticket->close(); echo 'recovered';");
+    "if((string)LeanOwnedAggregates\\\\serial($ticket${anchoredResults ? "->get()" : ""})!=='77')throw new Exception('Request recovery failed'); $ticket->close(); echo 'recovered';");
   if(stdout!=='recovered')throw Error('Missing recovery output');
   phases.push({stage:'recovered',libraries:[...libraries]});
   const refreshed=await snapshot();
@@ -59,14 +59,16 @@ try{
  * @param deployment - Relocated installation with bundled descriptor assets.
  * @param diagnostic - Progress reporter.
  * @param expected - Required consumer result fields for this fixture.
+ * @param options - Public whole-owner result profile.
+ * @param options.anchoredResults - Require Value.get() on resource results.
  */
-export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }) => {
+export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }, { anchoredResults = false } = {}) => {
 	await saveLakeFile(deployment, "vendor-files.json", canonicalJson(await nativeArtifactPaths(join(deployment, "vendor"))));
 	await saveLakeFile(deployment, "index.html", '<!doctype html><html><head><link rel="icon" href="data:,"></head><body><script type="module" src="./browser.mjs"></script></body></html>');
 	const observations = [];
 	for(const arrangement of ["embedded", "composer"])
 	{
-		const source = browserSource(arrangement);
+		const source = browserSource(arrangement, anchoredResults);
 		await saveLakeFile(deployment, "browser.mjs", source);
 		const browser = await browserPhpWasmCorpus({ t: { diagnostic }
 			, library: { id: "owned/" + arrangement }, deployment

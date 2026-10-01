@@ -29,3 +29,15 @@ Consuming parameters transfer their entire shared result lease, including siblin
 
 All arguments validate before consumption. Validation and preparation failures leave inputs open. Once the call reaches Lean, inputs remain consumed even if a callback throws or result conversion fails. Callbacks observe the consumed state during reentry. The original Throwable propagates after cleanup. close() remains safe on a consumed wrapper.
 `;
+
+export const ownedPhpWasmBorrowReadme = ownedPhpWasmReadme.replace(
+	"Resource-containing values use opaque Zend resource wrappers, not PHP integers or native pointers. Each returned wrapper owns a checked lease. Assigning a wrapper to another variable shares that wrapper; retain() creates an independently closable wrapper. Call close() on resources and Lean closures in a finally block. close() is idempotent. Destruction and request shutdown provide fallback cleanup. Cloning and serialization reject.",
+	"Resource-containing results return Value<T>, including empty collections, None and resource-free variant branches. get() reads the checked payload. share() adds a separately closable root to the same owner; retain() copies the whole value into an independent owner. Assignment shares the same PHP wrapper. Close whole owners in a finally block. close() is idempotent, and destruction and request shutdown provide fallback cleanup. Cloning and serialization reject. The generated classes expose no native pointers or integer identity tokens."
+).replace("Transferred inputs and anchored results are not implemented by this lease profile.",
+	"Receiver-anchored and callback-result-anchored lifetimes are not implemented by this profile.") + `
+PHPDoc identifies whole-owner parameters. Pass a Value to an anchored or consuming parameter; pass get() to an ordinary call-scoped parameter. A borrowed result follows the original input owner, not a retained snapshot. Closing the last shared root or consuming it expires its borrowed descendants, including empty values and returned Lean closures. retain() keeps an independent copy; retaining a leaf keeps only that resource alive. Canonical identity equality and hashes do not depend on PHP wrapper identity.
+
+Use copy_value($payload) for a nominal generated resource, record or variant, or select the type with resultOf: 'public_function' or parameterOf: ['public_function', 0]. Selectors also accept the generated public parameter name. Arrays, lists, tuples, options and results require a selector. copy_value($value) retains an existing Value independently. Wrong nominal types and weak-mode selector coercions reject.
+
+Consuming calls move the original whole owner at the Lean boundary. Shares and existing borrowed descendants become closed before callbacks run. A borrowed owner cannot be consumed, and the same owner cannot be both an anchor and a consuming argument. Validation and preparation errors preserve inputs; failures after the handoff do not restore them. Original PHP exceptions propagate after cleanup, and unpublished results are released even when an exception is retained.
+`;

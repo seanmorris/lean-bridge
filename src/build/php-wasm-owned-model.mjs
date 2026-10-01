@@ -8,7 +8,7 @@ import { createOwnedCompiledNativeModel, generateOwnedNativeLeanAdapters } from 
 import { compileOwnedPhpZendModel } from "../backends/php/owned-zend-model.mjs";
 
 const transport = "owned-zend-v1";
-const layoutHash = (ir, transferredInputs) => compileOwnedPhpZendModel(ir, { transferredInputs }).layoutSha256;
+const layoutHash = (ir, transferredInputs, anchoredResults = false) => compileOwnedPhpZendModel(ir, { transferredInputs, anchoredResults }).layoutSha256;
 
 /**
  * Typed Lean carriers are target-independent. The Zend layout, machine words
@@ -18,10 +18,12 @@ const layoutHash = (ir, transferredInputs) => compileOwnedPhpZendModel(ir, { tra
  * @param options - Measured compiler metadata, source identity and coordinates.
  */
 export const createOwnedPhpWasmModel = options => {
-	const native = createOwnedCompiledNativeModel({ ...options, hostCallbacks: true, transferredInputs: true });
+	const native = createOwnedCompiledNativeModel({ ...options
+		, hostCallbacks: true, transferredInputs: true
+		, anchoredResults: options.anchoredResults ?? true });
 	return Object.freeze({ ...native
 		, profile: "php-wasm-copied-v1", pointerBits: 32
-		, ownedGraph: { ...native.ownedGraph, transport, layoutSha256: layoutHash(native.bindingIr, Boolean(native.ownedGraph.inputTransfers)) } });
+		, ownedGraph: { ...native.ownedGraph, transport, layoutSha256: layoutHash(native.bindingIr, Boolean(native.ownedGraph.inputTransfers), Boolean(native.ownedGraph.resultAnchors)) } });
 };
 
 /**
@@ -31,17 +33,21 @@ export const createOwnedPhpWasmModel = options => {
  * @param model - Reconstructed ownership component for the PHP-Wasm target.
  */
 export const generateOwnedPhpWasmLeanAdapters = model => {
-	const transferredInputs = model.schemaVersion === 8;
+	const anchoredResults = model.schemaVersion === 9;
+	const transferredInputs = model.schemaVersion === 8 || (anchoredResults && model.ownedGraph?.inputTransfers !== undefined);
 	if(model.profile !== "php-wasm-copied-v1" || model.pointerBits !== 32 || model.byteOrder !== "little"
-		|| ![7, 8].includes(model.schemaVersion) || model.ownedGraph?.schemaVersion !== (transferredInputs ? 3 : 2)
+		|| ![7, 8, 9].includes(model.schemaVersion) || model.ownedGraph?.schemaVersion !== (anchoredResults ? 4 : transferredInputs ? 3 : 2)
 		|| !model.ownedGraph.hostCallbacks
-		|| model.ownedGraph.transport !== transport || model.ownedGraph.layoutSha256 !== layoutHash(model.bindingIr, transferredInputs))
+		|| model.ownedGraph.transport !== transport || model.ownedGraph.layoutSha256 !== layoutHash(model.bindingIr, transferredInputs, anchoredResults))
 		throw new TypeError("PHP-Wasm ownership model differs from the checked 32-bit transport");
 	const ownedGraph = { ...model.ownedGraph };
 	delete ownedGraph.transport; delete ownedGraph.layoutSha256;
 	const semantic = { ...model, profile: "native-library-v1", pointerBits: 64, ownedGraph };
 	const adapters = generateOwnedNativeLeanAdapters(semantic);
-	const expected = ["schemaVersion", "module", "metadataSha256", "symbols", "hostCallbacks", ...transferredInputs ? ["inputTransfers"] : []].sort();
+	const expected = [
+		"schemaVersion", "module", "metadataSha256", "symbols", "hostCallbacks"
+		, ...transferredInputs ? ["inputTransfers"] : []
+		, ...anchoredResults ? ["resultAnchors"] : []].sort();
 	if(canonicalJson(Object.keys(ownedGraph).sort()) !== canonicalJson(expected))
 		throw new TypeError("Unexpected PHP-Wasm ownership carrier capability");
 	return { ...adapters

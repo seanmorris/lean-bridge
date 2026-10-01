@@ -16,10 +16,12 @@ import { generateOwnedPhpValues } from "./owned-values.mjs";
  * @param ir - Explicit, compiler-authenticated resource ownership contract.
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Admit atomic consuming arguments.
+ * @param options.anchoredResults - Carry exact whole-result owner lifetimes.
  */
-export const compileOwnedPhpZendModel = (ir, { transferredInputs = false } = {}) => {
-	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs });
-	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs });
+export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults });
+	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs, anchoredResults });
+	anchoredResults = values.c.anchoredResults;
 	const fail = message => { throw new TypeError(`Owned PHP-Wasm values: ${message}`); };
 	const types = layout.nodes.map((node, index) => {
 		const php = values.types[index];
@@ -79,10 +81,12 @@ export const compileOwnedPhpZendModel = (ir, { transferredInputs = false } = {})
 			fail("PHP and native function signatures differ");
 		return { ...fn, index, publicName: php.publicName
 			, publicParameters: php.publicParameters
+			, ...anchoredResults ? { whole: nodes.get(fn.result).representation !== "copied" } : {}
 			, hostArguments: php.parameters.map((_, position) => values.c.hostArgument(php, position)) };
 	});
 	if(functions.length !== values.functions.length) fail("PHP and native export counts differ");
 	if(functions.some(fn => fn.publicName.toLowerCase() === "with_recovery")) fail("function collides with with_recovery");
+	if(anchoredResults && functions.some(fn => fn.publicName.toLowerCase() === "copy_value")) fail("function collides with copy_value");
 	const semantic = new Map(layout.model.types.map(node => [node.id, node]));
 	const callbacks = layout.callbacks.map((callback, index) => ({ ...callback, index
 		, type: nodes.get(callback.id).index
@@ -90,6 +94,7 @@ export const compileOwnedPhpZendModel = (ir, { transferredInputs = false } = {})
 		, automaticRecovery: ownedCallbackRecovery(layout.model, semantic.get(callback.id), id => id) !== null }));
 	const identity = layout.model.bindingIrSha256, stem = `lb_owned_${identity.slice(0, 20)}`;
 	return { namespace: values.namespace, integerBits: 32, wordBits: 32
+		, ...anchoredResults ? { anchoredResults: true } : {}
 		, files: values.files, aliases: values.aliases
 		, publicFiles: values.publicFiles
 		, layout, types, descriptors, functions, callbacks

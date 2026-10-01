@@ -7,6 +7,7 @@ import { canonicalJson } from "../../capsule/node.mjs";
 import { compileOwnedPhpZendModel } from "./owned-zend-model.mjs";
 import { ownedZendWalkSource } from "./owned-zend-walk.mjs";
 import { ownedZendCallbacks } from "./owned-zend-callbacks.mjs";
+import { ownedZendBorrowCalls, ownedZendBorrowEntries, ownedZendBorrowHandles } from "./owned-zend-borrow-calls.mjs";
 
 const calls = model => {
 	const nodes = new Map(model.types.map(node => [node.id, node]));
@@ -126,11 +127,12 @@ static ZEND_FUNCTION(lgo_retire) {
  */
 export const generateOwnedPhpZendExtension = generated => {
 	const transferredInputs = generated.layout.functions.some(fn => fn.transfers?.length);
-	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs });
+	const anchoredResults = generated.layout.functions.some(fn => fn.anchor !== undefined);
+	const model = compileOwnedPhpZendModel(generated.carriers.model.bindingIr, { transferredInputs, anchoredResults });
 	if(canonicalJson(model.layout) !== canonicalJson(generated.layout)) throw new TypeError("Zend transport requires its exact wasm32 native layout");
 	if(generated.carriers.hostCallbacks?.length !== model.callbacks.length || !generated.carriers.callbackSource)
 		throw new TypeError("Zend transport requires compiler-authenticated host callback carriers");
-	const registrations = [...model.functions.map(fn => [`call${fn.index}`, `call${fn.index}`])
+	const registrations = anchoredResults ? ownedZendBorrowEntries(model) : [...model.functions.map(fn => [`call${fn.index}`, `call${fn.index}`])
 		, ...model.callbacks.map(cb => [`invoke${cb.index}`, `invoke${cb.index}`])];
 	const source = `#include <php.h>
 #include <stdbool.h>
@@ -146,10 +148,12 @@ static int lgo_initialize(void) {
     ? LB_OWNED_OK : LB_OWNED_RUNTIME;
 }
 ${ownedZendCallbacks(model, generated.carriers)}
-${calls(model)}
+${anchoredResults ? ownedZendBorrowCalls(model) : calls(model)}
 ${handles}
+${anchoredResults ? ownedZendBorrowHandles(model) : ""}\
 static PHP_MINIT_FUNCTION(${model.stem}) {
   lgo_resource_type = zend_register_list_destructors_ex(lgo_resource_destroy, NULL, ${JSON.stringify(model.namespace + " owned value")}, module_number);
+${anchoredResults ? `  lgo_root_resource_type = zend_register_list_destructors_ex(lgo_root_destroy, NULL, ${JSON.stringify(model.namespace + " whole owner")}, module_number);\n` : ""}\
   return SUCCESS;
 }
 static PHP_RSHUTDOWN_FUNCTION(${model.stem}) { (void)lgo_shutdown(); return SUCCESS; }
@@ -160,6 +164,7 @@ ${registrations.map(([entry, info]) => `  ZEND_NS_NAMED_FE(${JSON.stringify(mode
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, close, ZEND_FN(lgo_close), lgo_handle_args)
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, shutdown, ZEND_FN(lgo_shutdown_entry), lgo_no_args)
   ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, retire, ZEND_FN(lgo_retire), lgo_no_args)
+${anchoredResults ? ["check", "close", "share"].map(name => `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, owner_${name}, ZEND_FN(lgo_owner_${name}), lgo_handle_args)`).join("\n") + `\n  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, equal, ZEND_FN(lgo_equal), lgo_equal_args)\n` : ""}\
   PHP_FE_END
 };
 zend_module_entry ${model.stem}_module_entry = {

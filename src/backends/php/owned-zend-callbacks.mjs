@@ -16,6 +16,7 @@ export const ownedZendCallbacks = (model, carriers) => {
 	return model.callbacks.map(callback => {
 		const node = nodes.get(callback.id), result = nodes.get(callback.result);
 		const parameters = callback.parameters.slice(1).map(id => nodes.get(id));
+		const releaseArguments = parameters.map((_, index) => `  if (a${index}) lean_dec(a${index});`).join("\n");
 		const symbol = carriers.symbols.types[callback.id], name = `lgo_host${callback.index}`;
 		return `
 typedef struct {
@@ -51,7 +52,7 @@ ${parameters.map((node, index) => `  if (!frame->status) { frame->status = ${nod
   if (!frame->status) frame->status = lgo_borrow_new(call->walk.state, &frame->arguments.scope, &frame->borrow);
   frame->previous_borrow = call->walk.borrow; frame->previous_inputs = call->walk.inputs;
   call->walk.borrow = frame->borrow; call->walk.inputs = &frame->arguments.scope;
-  zend_try {
+${model.anchoredResults ? "  // Finish incoming Lean ownership before PHP can longjmp.\n" + releaseArguments + "\n" : ""}  zend_try {
     do {
       if (frame->status) break;
 ${parameters.map((node, index) => `      if (!lgo_from(&call->walk, ${node.index}, &frame->a${index}, &frame->values[${index}])) break;`).join("\n")}
@@ -67,7 +68,7 @@ ${parameters.map((node, index) => `      if (!lgo_from(&call->walk, ${node.index
   if (frame->arguments.scope.context) parent->transaction->budget = frame->arguments.budget;
   frame->status = lgo_borrow_finish(&frame->borrow, &frame->arguments, frame->values, ${parameters.length + 1}, frame->status, &call->bailout);
   call->walk.borrow = frame->previous_borrow; call->walk.inputs = frame->previous_inputs;
-${parameters.map((_, index) => `  if (a${index}) lean_dec(a${index});`).join("\n")}
+${model.anchoredResults ? "" : releaseArguments + "\n"}\
   if (!frame->status && (call->bailout || EG(exception))) frame->status = OV_CALLBACK;
   if (frame->status) {
     ov_callback_fail(parent, frame->status);

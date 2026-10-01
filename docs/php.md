@@ -453,16 +453,16 @@ startup descriptor. First-use loading inside a synchronous Lean callback throws
 before downloading an extension; the peer remains usable from a normal call.
 After `php.refresh()`, require the autoloader again and initialize lazy peers
 outside callbacks. Do not reuse resource wrappers from an earlier request.
-Native packages also support [owner-anchored results](#owner-anchored-results).
-That result contract remains unavailable in PHP-Wasm. Asynchronous callbacks
-remain unsupported in both transports.
+Native and PHP-Wasm packages also support
+[owner-anchored results](#owner-anchored-results). Asynchronous callbacks remain
+unsupported in both transports.
 
 ### Consuming inputs
 
 Native PHP and PHP-Wasm packages can expose functions that consume
 resource-containing arguments. The generated function documentation names those
 arguments. Pass the same PHP values you use for borrowed arguments; no transfer
-wrapper is needed for packages without owner-anchored results. In native
+wrapper is needed for packages without owner-anchored results. In
 packages with that result contract, consuming inputs use the
 [whole-value owners](#owner-anchored-results) described below.
 
@@ -517,7 +517,8 @@ remain PHP values, but their consumed resource fields are no longer usable.
 
 ### Owner-anchored results
 
-A native publisher can tie a function's result to an input's lifetime. In those
+A publisher can tie a function's result to an input's lifetime in native PHP or
+PHP-Wasm. In those
 packages, resource-containing results return a `Value`, including empty arrays,
 empty Lists and `None`. Use `get()` to access the PHP payload. Anchored and
 consuming parameters take the whole `Value`; ordinary borrowed parameters take
@@ -562,6 +563,9 @@ try {
 
 Run `php borrowed.php`. It prints `42`, `expired`, then `42`. The retained result
 owns an independent lifetime. Composer handles loading and dependencies.
+For PHP-Wasm, mount the same file beside the installed Composer `vendor`
+directory and run it with the [prepared npm descriptor](#ordinary-php-wasm-packages).
+The descriptor handles the shared runtime and extension; no FFI setup is needed.
 
 `share()` creates another root for the same owner. Closing or destroying the
 last root expires its borrowed descendants. A saved resource from `get()` does
@@ -583,8 +587,8 @@ Consuming calls invalidate the original whole owner and every borrowed
 descendant at the native handoff. Independent retained values survive. Validation
 failures before handoff preserve the owner; callback or conversion failures
 afterward do not restore it. A borrowed result must be retained before passing
-it to a consuming parameter. This API currently applies to native PHP, not
-PHP-Wasm.
+it to a consuming parameter. Receiver-anchored and callback-result-anchored
+lifetimes remain unsupported.
 
 ### Native callbacks and returned functions
 
