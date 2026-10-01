@@ -4,7 +4,13 @@
  * @file
  */
 
-export const ownedRustAnchoredValues = `
+/**
+ * Emit checked whole-result owners and only the required native input access.
+ *
+ * @param options - Actual call capabilities, not requested projection flags.
+ * @param options.inputOwners - An anchor or transfer needs the original owner.
+ */
+export const ownedRustAnchoredValues = ({ inputOwners = true } = {}) => `
 struct OwnedValueStorage<T> { lease: std::rc::Rc<owned_runtime::Lease>, value: T }
 pub struct Value<T> { storage: Option<std::rc::Rc<OwnedValueStorage<T>>> }
 impl<T> Value<T> {
@@ -12,13 +18,13 @@ impl<T> Value<T> {
         lease.require()?;
         Ok(Self { storage: Some(std::rc::Rc::new(OwnedValueStorage { lease, value })) })
     }
-    pub(crate) fn lease(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<std::rc::Rc<owned_runtime::Lease>, Error> {
+${inputOwners ? `    pub(crate) fn lease(&self, state: &std::rc::Rc<owned_runtime::State>) -> Result<std::rc::Rc<owned_runtime::Lease>, Error> {
         let storage = self.storage.as_ref().ok_or(Error::Closed)?;
         storage.lease.require()?;
         if !std::rc::Rc::ptr_eq(&storage.lease.state, state) { return Err(Error::InvalidArgument); }
         Ok(std::rc::Rc::clone(&storage.lease))
     }
-    pub fn get(&self) -> Result<&T, Error> {
+` : ""}    pub fn get(&self) -> Result<&T, Error> {
         let storage = self.storage.as_ref().ok_or(Error::Closed)?;
         storage.lease.require()?; Ok(&storage.value)
     }

@@ -42,19 +42,22 @@ impl OwnedCall {
  * @param options.dynamic - Resolve the authenticated embedded library table.
  * @param options.transferredInputs - Enable explicit mutable input consumption.
  * @param options.anchoredResults - Preserve original owners and borrowed views.
+ * @param options.receiverExports - Expose nominal methods and property accessors.
+ * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInputs = false, anchoredResults = false } = {}) => {
-	const conversions = generateOwnedRustConversions(ir, { dynamic, transferredInputs, anchoredResults }), { c } = conversions;
+export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const conversions = generateOwnedRustConversions(ir, { dynamic, transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = conversions;
 	const anchors = Boolean(c.anchoredResults);
+	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(conversions.types.map(node => [node.id, node]));
-	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies];
-	const wrappedResult = item => anchors && !item.retain && !item.copy && nodes.get(item.result).representation !== "copied";
+	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies ?? []];
+	const wrappedResult = item => wholeOwners && !item.retain && !item.copy && nodes.get(item.result).representation !== "copied";
 	const returnType = item => wrappedResult(item) ? `Value<${nodes.get(item.result).hostName}>` : nodes.get(item.result).hostName;
 	const raw = [], helpers = [], traits = [], publicCalls = [], nativeEntries = [];
 	const signature = (item, offset = 0) => {
 		const params = item.parameters.map(id => nodes.get(id));
-		const host = params.map((_, index) => c.hostArgument(item, index));
-		const wrapped = params.map((_, index) => anchors && (item.anchor === index || item.transfers?.includes(index)));
+		const host = params.map((_, index) => Boolean(c.hostArgument?.(item, index)));
+		const wrapped = params.map((_, index) => wholeOwners && (item.anchor === index || item.transfers?.includes(index)));
 		const slots = params.map((node, index) => ({ node, index })).slice(offset);
 		const generic = slots.filter(({ index }) => host[index]);
 		return { params, host, wrapped
@@ -74,7 +77,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		else raw.push("unsafe extern \"C\" {", `    #[link_name = "${item.cName}"]`
 			, `    fn owned_native${index}(${parameters}) -> u32;`, "}");
 	});
-	for(const callback of c.callbacks)
+	if(hostCallbacks) for(const callback of c.callbacks)
 	{
 		const node = nodes.get(callback.id), result = nodes.get(callback.result), i = node.index;
 		const params = callback.parameters.slice(1).map(id => nodes.get(id));
@@ -87,7 +90,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error>;`
 			, `    fn closure(&self) -> Option<&${node.hostName}> { None }`
 			, `    fn recovery(&self) -> Option<&${result.hostName}> { None }`
-			, ...anchors ? ["    fn validate(&self) -> Result<(), Error> { Ok(()) }"] : [], "}");
+			, ...wholeOwners ? ["    fn validate(&self) -> Result<(), Error> { Ok(()) }"] : [], "}");
 		if(automatic) traits.push(`impl<F: ${bound}> OwnedCallback${i} for F {`
 			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error> { self(${arguments_}) }`, "}");
 		traits.push(`impl<F: ${bound}> OwnedCallback${i} for WithRecovery<F, ${result.hostName}> {`
@@ -96,7 +99,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		for(const receiver of [node.hostName, `&${node.hostName}`]) traits.push(`impl OwnedCallback${i} for ${receiver} {`
 			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error> { ${wrappedResult(callback) ? "let value = " : ""}self.call(${params.map((param, index) => `${param.scalar ? "" : "&"}a${index}`).join(", ")})${wrappedResult(callback) ? "?; Ok(value.get()?.clone())" : ""} }`
 			, `    fn closure(&self) -> Option<&${node.hostName}> { Some(self) }`, "}");
-		if(anchors) for(const receiver of [`Value<${node.hostName}>`, `&Value<${node.hostName}>`]) traits.push(`impl OwnedCallback${i} for ${receiver} {`
+		if(wholeOwners) for(const receiver of [`Value<${node.hostName}>`, `&Value<${node.hostName}>`]) traits.push(`impl OwnedCallback${i} for ${receiver} {`
 			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error> { ${wrappedResult(callback) ? "let value = " : ""}self.get()?.call(${params.map((param, index) => `${param.scalar ? "" : "&"}a${index}`).join(", ")})${wrappedResult(callback) ? "?; Ok(value.get()?.clone())" : ""} }`
 			, `    fn closure(&self) -> Option<&${node.hostName}> { self.get().ok() }`
 			, "    fn validate(&self) -> Result<(), Error> { self.get().map(|_| ()) }", "}");
@@ -127,7 +130,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 			, "        Ok(Err(error)) => { context.call.failures.borrow_mut().push(OwnedFailure::Error(error)); 10 },"
 			, "        Err(payload) => { context.call.failures.borrow_mut().push(OwnedFailure::Panic(payload)); 10 },", "    }", "}"
 			, `fn owned_check_callback${i}<F: OwnedCallback${i}>(function: &F, budget: &mut OwnedBudget, state: &Rc<State>) -> Result<(), Error> {`
-			, ...anchors ? ["    function.validate()?;"] : []
+			, ...wholeOwners ? ["    function.validate()?;"] : []
 			, `    if let Some(closure) = function.closure() { return owned_check${i}(closure, 0, budget, state); }`
 			, `    budget.enter(0)?; budget.native(1, std::mem::size_of::<OwnedHost${i}>())?;`
 			, ...automatic ? [] : ["    if function.recovery().is_none() { return Err(Error::InvalidArgument); }"]
@@ -158,8 +161,8 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 			}
 		});
 		if(moving.length) helpers.push(`    let mut moves = OwnedInputTransfers::new(Rc::clone(&state), ${moving.length})?;`
-			, ...moving.map((parameter, group) => anchors ? `    moves.add(Rc::clone(&owner${parameter}), ${group})?;` : `    owned_move_leases${sig.params[parameter].index}(a${parameter}, 0, &mut moves, ${group})?;`)
-			, ...anchors ? [] : moving.flatMap((parameter, group) => {
+			, ...moving.map((parameter, group) => wholeOwners ? `    moves.add(Rc::clone(&owner${parameter}), ${group})?;` : `    owned_move_leases${sig.params[parameter].index}(a${parameter}, 0, &mut moves, ${group})?;`)
+			, ...wholeOwners ? [] : moving.flatMap((parameter, group) => {
 				const node = sig.params[parameter], copyIndex = all.findIndex(root => (root.retain || root.copy) && root.id === node.id);
 				if(copyIndex < 0) throw new TypeError(`Missing owned Rust input snapshot for ${node.id}`);
 				return [`    let mut moved${parameter}: ${node.raw} = Default::default();`
@@ -171,7 +174,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		helpers.push("    call.budget.replace(scope.budget.clone());"
 			, `    let mut raw: ${result.raw} = Default::default(); let mut output = OwnedOutput::new(Rc::clone(&state));`
 			, ...item.anchor !== undefined ? ["    output.anchored_result = true;"] : []
-			, `    let status = unsafe { owned_native${index}(${moving.length ? "session" : "state.require()?"}${sig.params.map((param, i) => moving.includes(i) ? `, ${param.leaf ? "" : "&"}${anchors ? "view" : "moved"}${i}, moves.owner(${moving.indexOf(i)})` : `, ${sig.host[i] || !param.leaf ? "&" : ""}view${i}${item.anchor === i ? ", anchor" : ""}`).join("")}, &mut raw, &mut output.owner.value) };`
+			, `    let status = unsafe { owned_native${index}(${moving.length ? "session" : "state.require()?"}${sig.params.map((param, i) => moving.includes(i) ? `, ${param.leaf ? "" : "&"}${wholeOwners ? "view" : "moved"}${i}, moves.owner(${moving.indexOf(i)})` : `, ${sig.host[i] || !param.leaf ? "&" : ""}view${i}${item.anchor === i ? ", anchor" : ""}`).join("")}, &mut raw, &mut output.owner.value) };`
 			, ...moving.length ? ["    moves.finish();"] : []
 			, "    call.finish(status)?;", "    let mut result_scope = OwnedScope::new(call.budget.into_inner());"
 			, ...wrappedResult(item) ? [`    let value = unsafe { owned_from${result.index}(&raw, 0, &mut result_scope, &mut output)? };`
@@ -207,25 +210,41 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 				, `    pub fn same_identity(&self, other: &Self) -> Result<bool, Error> { owned_values::owned_equal${node.index}(self, other) }`, "}"
 				, `impl PartialEq for Resource<${node.identityTag}> {`
 				, "    fn eq(&self, other: &Self) -> bool { self.same_identity(other).unwrap_or(false) }", "}");
-			if(index !== -1)
-			{
-				const sig = signature(all[index], 1);
-				publicCalls.push(`impl Value<${node.hostName}> {`
-					, `    pub fn call${sig.generic}(&self${sig.publicParams ? `, ${sig.publicParams}` : ""}) -> Result<${returnType(all[index])}, Error> {`
-					, `        self.get()?.call(${sig.params.slice(1).map((_, i) => `a${i + 1}`).join(", ")})`, "    }", "}");
-			}
+		}
+		if(wholeOwners && index !== -1)
+		{
+			const sig = signature(all[index], 1);
+			publicCalls.push(`impl Value<${node.hostName}> {`
+				, `    pub fn call${sig.generic}(&self${sig.publicParams ? `, ${sig.publicParams}` : ""}) -> Result<${returnType(all[index])}, Error> {`
+				, `        self.get()?.call(${sig.params.slice(1).map((_, i) => `a${i + 1}`).join(", ")})`, "    }", "}");
 		}
 	}
-	if(anchors)
+	for(const item of c.functions.filter(item => item.receiver === 0))
+	{
+		const sig = signature(item, 1), node = sig.params[0];
+		const name = item.cName.slice(c.prefix.length + 1), moving = item.transfers?.includes(0);
+		if(["close", "is_closed", "get", "retain", "try_equal", "same_identity", "lease", "from_owned", "raw", "transfer_lease", "call"].includes(name))
+			throw new TypeError(`Owned Rust receiver member is reserved: ${name}`);
+		const owners = [{ type: `Value<${node.hostName}>`, wrapped: true }];
+		if(node.identity && !sig.wrapped[0]) owners.push({ type: `Resource<${node.identityTag}>`, wrapped: false });
+		for(const owner of owners)
+		{
+			const argument = owner.wrapped && !sig.wrapped[0] ? "self.get()?" : "self";
+			publicCalls.push(`impl ${owner.type} {`
+				, `    pub fn ${name}${sig.generic}(&${moving ? "mut " : ""}self${sig.publicParams ? `, ${sig.publicParams}` : ""}) -> Result<${returnType(item)}, Error> {`
+				, `        owned_values::owned_invoke${all.indexOf(item)}(${argument}${sig.arguments ? ", " + sig.arguments : ""})`, "    }", "}");
+		}
+	}
+	if(wholeOwners)
 	{
 		const copies = ownedRustValueCopies(conversions, all);
 		publicCalls.push(...copies.publicCalls); helpers.push(...copies.helpers);
 	}
 	const apiSource = [conversions.valuesSource
-		, "/// A typed failure-path value for Lean cleanup, never a successful callback reply."
-		, "pub struct WithRecovery<F, R> { function: F, recovery: R }"
-		, "pub fn with_recovery<F, R>(function: F, recovery: R) -> WithRecovery<F, R> { WithRecovery { function, recovery } }"
+		, ...(!receivers || (hostCallbacks && c.callbacks.length)) ? ["/// A typed failure-path value for Lean cleanup, never a successful callback reply."
+			, "pub struct WithRecovery<F, R> { function: F, recovery: R }"
+			, "pub fn with_recovery<F, R>(function: F, recovery: R) -> WithRecovery<F, R> { WithRecovery { function, recovery } }"] : []
 		, ...traits, ...publicCalls, ""].join("\n");
 	return { ...conversions, apiSource, nativeEntries
-		, source: [conversions.source, support, ...c.functions.some(item => item.transfers?.length) ? [anchors ? ownedRustAnchoredTransfers : ownedRustInputTransfers(conversions)] : [], ...raw, ...helpers, ""].join("\n") };
+		, source: [conversions.source, support, ...c.functions.some(item => item.transfers?.length) ? [wholeOwners ? ownedRustAnchoredTransfers : ownedRustInputTransfers(conversions)] : [], ...raw, ...helpers, ""].join("\n") };
 };

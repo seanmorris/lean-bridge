@@ -305,8 +305,30 @@ and expire that owner's borrowed descendants. See the [consumer example](../cons
 These crates use `owned-rust-v3`, Rust ownership contract version 3, and compiled
 Rust/package receipts version 4. The shared C adapter uses version 5 and binds
 the compiler-derived result-anchor contract. Packaging regenerates the native
-and Rust sources before accepting an archive. Combined builds may select C, C++
-and Cargo; the other consumer adapters still reject these result contracts.
+and Rust sources before accepting an archive. Every target in a combined build
+must accept the complete ownership contract.
+
+## Export methods and properties
+
+Use the [shared receiver configuration](c.md#export-methods-and-properties) to
+select a Lean function's first runtime argument as a method or property receiver.
+The receiver must be a named resource, owned record or owned variant. Properties
+take no remaining arguments. Declare a receiver-bound result with
+`"lifetime": { "scope": "receiver", "anchor": "receiver" }`; use the remaining
+parameter's original argument index to anchor a result elsewhere.
+
+Rust emits snake-case methods on `Value<T>` and zero-argument property accessors.
+Consuming receivers take `&mut self`; other receivers take `&self`. Methods cannot
+replace the ownership API's `close`, `get`, `is_closed`, `retain`, `try_equal`,
+`same_identity`, `call`, or internal owner-access helpers. Copied fields remain
+ordinary fields. See the [consumer example](../consume/rust.md#methods-and-properties).
+
+Receiver crates use `owned-rust-v4`, Rust ownership contract version 4, and
+compiled Rust/package receipts version 5. The shared C adapter uses version 6
+and authenticates both receiver and result-anchor descriptors. Receivers also
+work in resource-only APIs with no aggregate, callback or borrowed-result
+capability. C, C++ and Cargo may share a receiver build. Other targets reject
+receiver exports until their projections support them.
 
 ## Package identity and publisher prerequisites
 

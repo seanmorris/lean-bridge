@@ -12,6 +12,7 @@ import { createCompiledNativeModel } from "../../src/build/native-graph-model.mj
 import { ownedCppReceiverSource, ownedCppReceiverProbe, ownedCppPlainReceiverProbe } from "./owned-cpp-receiver-fixture.mjs";
 import { ownedReceiverSource } from "./owned-receiver-fixture.mjs";
 import { assertOwnedCppReceiverCi } from "./owned-cpp-receiver-ci.mjs";
+import { ownedRustReceiverHistoricalBytes } from "./owned-rust-receiver-history.mjs";
 
 export const ownedCppReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-cpp-receivers";
 export const ownedCppReceiverScope = Object.freeze({
@@ -176,7 +177,8 @@ export const assertOwnedCppReceiverExecution = async record => {
 		assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 		for(const path of cliConfig.files)
 		{
-			const file = item.cli.files.find(file => file.path === path), bytes = await readFile(path);
+			const file = item.cli.files.find(file => file.path === path);
+			const bytes = Buffer.from(ownedRustReceiverHistoricalBytes(path, await readFile(path), file.sha256));
 			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.builds.length, 2);

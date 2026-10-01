@@ -101,7 +101,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, ownedHostCallbacks: ownedGraphs
 			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
-			, ownedReceiverExports: targets.every(target => ["c", "cpp"].includes(target))
+			, ownedReceiverExports: targets.every(target => ["c", "cpp", "cargo"].includes(target))
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)
@@ -111,7 +111,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 						, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
 						, receiverExports: Boolean(model.ownedGraph.receiverExports) });
 					if(targets.includes("cpp")) generateOwnedCppPackage(model.bindingIr, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
-					if(targets.includes("cargo")) generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors) });
+					if(targets.includes("cargo")) generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
 					if(targets.includes("pypi")) generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors) });
 					if(targets.includes("rubygems")) generateOwnedRubyPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors) });
 					if(targets.includes("nuget")) generateOwnedDotnetPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors) });

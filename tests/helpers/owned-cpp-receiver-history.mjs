@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedRustReceiver, ownedRustReceiverChangedPaths } from "./owned-rust-receiver-history.mjs";
 
 export const ownedCppReceiverPath = "docs/evidence/owned-cpp-receivers-20261001.json";
 export const ownedCppReceiverBaseline = "a514c3516343740ea8b3ef9335fb82f2251b3435";
@@ -55,6 +56,7 @@ export const ownedCppReceiverAddedPaths = [
 	, "tests/owned-cpp-receivers.test.mjs"
 ].sort();
 let cached;
+export const ownedCppReceiverNormalizationPaths = [...new Set([...ownedCppReceiverChangedPaths, ...ownedRustReceiverChangedPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.
@@ -87,6 +89,7 @@ export const reverseOwnedCppReceiverUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedCppReceiver = (path, source, expected) => {
+	source = beforeOwnedRustReceiver(path, source, expected);
 	if(!ownedCppReceiverChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -113,5 +116,5 @@ export const beforeOwnedCppReceiver = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedCppReceiverHistoricalBytes = (path, bytes, expected) => ownedCppReceiverChangedPaths.includes(path)
+export const ownedCppReceiverHistoricalBytes = (path, bytes, expected) => ownedCppReceiverNormalizationPaths.includes(path)
 	? beforeOwnedCppReceiver(path, bytes.toString("utf8"), expected) : bytes;

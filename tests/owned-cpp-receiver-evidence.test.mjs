@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedCppReceiverExecution } from "./helpers/owned-cpp-receiver-evidence.mjs";
+import { ownedRustReceiverHistoricalBytes } from "./helpers/owned-rust-receiver-history.mjs";
 import { ownedCppReceiverPath, ownedCppReceiverBaseline, ownedCppReceiverPrevious
 	, ownedCppReceiverChangedPaths, ownedCppReceiverAddedPaths
 	, beforeOwnedCppReceiver, reverseOwnedCppReceiverUpdate } from "./helpers/owned-cpp-receiver-history.mjs";
@@ -23,13 +24,13 @@ test("C++ receiver evidence binds complete sources without changing historical r
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedCppReceiverAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedRustReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(item => item.path), ownedCppReceiverChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8");
+		const source = ownedRustReceiverHistoricalBytes(update.path, await readFile(update.path), update.currentSha256).toString();
 		const prior = beforeOwnedCppReceiver(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedCppReceiver(update.path, prior), prior);
@@ -42,9 +43,9 @@ test("C++ receiver evidence binds complete sources without changing historical r
 			, { ...update, path: "unrelated.mjs" }])
 			assert.throws(() => reverseOwnedCppReceiverUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = ownedRustReceiverHistoricalBytes(path, await readFile(path), record.sources[path]).toString();
 	const prior = JSON.parse(beforeOwnedCppReceiver(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedRustReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["owned-cpp-receivers", "owned-cpp-receiver-packaging"
 		, "owned-cpp-receiver-plain", "owned-cpp-receiver-contract"

@@ -55,11 +55,14 @@ ${entries.map(entry => `            ${entry.field}: symbol!("${entry.symbol}", $
  * @param options - Compiler-authenticated ownership capabilities.
  * @param options.transferredInputs - Enable explicit mutable input consumption.
  * @param options.anchoredResults - Keep whole original owners for borrowed results.
+ * @param options.receiverExports - Expose checked nominal receiver members.
+ * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs, anchoredResults });
+export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs, anchoredResults, receiverExports, hostCallbacks });
 	const transfers = generated.c.functions.some(item => item.transfers?.length);
 	const anchors = Boolean(generated.c.anchoredResults);
+	const receivers = generated.c.functions.filter(item => item.receiver === 0), wholeOwners = anchors || receivers.length > 0;
 	const name = settings.name ?? `lean_bridge_${generated.c.prefix}`, version = settings.version ?? ir.component.version;
 	validateOrdinaryCargoSettings({ name, version });
 	const source = nativeSource(generated);
@@ -102,7 +105,18 @@ Previously extracted references do not revalidate ordinary copied field reads;
 resource operations still validate their own lifetime. try_equal() and resource
 same_identity() return errors for expired values. PartialEq returns false on an
 invalid lifetime and compares canonical resource identity for valid values.
-` : ""}${transfers && anchors ? `
+` : ""}${receivers.length ? `
+Declared methods and properties are snake_case methods on Value<NominalType>.
+Properties are zero-argument accessors such as owner.serial(). Copied fields remain
+fields of the value returned by get(). Non-consuming receivers take &self;
+consuming receivers take &mut self. The free functions remain available.
+Resource-containing results retain their whole original owner, including empty
+containers. Value<T> clones share immutable storage and ownership; close()
+releases this clone, and get() checks the owner before returning its value.
+Raw resource wrappers expose only members that do not require that
+whole receiver owner. A borrowed result anchored to another argument expires with
+that argument, not with the receiver.
+` : ""}${transfers && wholeOwners ? `
 Transferred inputs take &mut Value<T> and consume the original owner, including
 empty values. Validation and preparation failures preserve the owner. Handoff
 closes aliases and borrowed descendants before callbacks can reenter. Subsequent
@@ -117,7 +131,7 @@ remain ordinary Rust values. Independently retained resources stay usable.
 Callback-frame borrows cannot be transferred; retain them first. Two transferred
 arguments cannot consume the same lease. After handoff, errors and panics leave
 the inputs consumed; validation or preparation failures leave them usable.
-` : ""}
+` : ""}${!receivers.length || hostCallbacks ? `
 Callbacks accept synchronous FnMut functions returning Result. Callback arguments
 own their copied storage, while resource leaves borrow the callback frame. Those
 borrows expire on return, including cloned wrappers. Call retain() inside the
@@ -129,14 +143,14 @@ Host errors return to the original Rust caller. Original panic payloads resume
 only after C has returned; no Rust panic crosses a C trampoline. Signatures that
 cannot derive failure recovery from their arguments require
 with_recovery(callback, typed_value). Recovery is never a successful result.
-
+` : ""}
 Conversions enforce depth 128, 262,144 visits and 16 MiB native/storage budgets. Invalid
 inputs, malformed outputs and partial conversions release their temporary owners.
 These budgets do not bound Lean algorithm memory or every allocator overhead.
 Rust and GMP retain their normal fatal allocator-exhaustion policies.
 `
 	};
-	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
+	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
 		, language: "rust-1.90"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "resume-after-native-return"
@@ -153,11 +167,22 @@ Rust and GMP retain their normal fatal allocator-exhaustion policies.
 			, resourceEquality: "canonical-identity", invalidEquality: "false"
 			, fallibleEquality: "try_equal-or-same_identity"
 			, transfers: "original-owner" } } : {}
+		, ...receivers.length ? { receiverExports: { schemaVersion: 1
+			, values: "checked-whole-result", members: "snake-case"
+			, properties: "zero-argument-methods"
+			, consumingReceivers: "mutable-references"
+			, exports: receivers.map(item => {
+				const declaration = ir.declarations.find(declaration => declaration.id === item.id);
+				return { bindingId: item.id, owner: declaration.owner
+					, kind: declaration.kind
+					, member: item.cName.slice(generated.c.prefix.length + 1) };
+			})
+		} } : {}
 		, exactIntegers: "num-bigint-0.4.6", loader: "authenticated-embedded-native"
 		, apiSha256: sha256(generated.apiSource), conversionsSha256: sha256(source)
 		, limits: generated.c.native.model.limits };
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : transfers ? 2 : 1
-		, backend: anchors ? "owned-rust-v3" : transfers ? "owned-rust-v2" : "owned-rust-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+		, backend: receivers.length ? "owned-rust-v4" : anchors ? "owned-rust-v3" : transfers ? "owned-rust-v2" : "owned-rust-v1"
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, component: ir.component, contract, evidence
 		, publicModule: "src/lib.rs", files: Object.keys(files).sort()

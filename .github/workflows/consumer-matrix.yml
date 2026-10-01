@@ -1353,6 +1353,21 @@ jobs:
           test -s build/owned-rust-borrows/reviewed.json
           test -s build/owned-rust-borrow-packaging/ordinary.json
           test -s build/owned-rust-borrow-packaging/reviewed.json
+          npm run test:owned-rust-receivers > build/owned-rust-receivers.log 2>&1
+          cat build/owned-rust-receivers.log
+          rg '^# tests 10$' build/owned-rust-receivers.log
+          rg '^# pass 10$' build/owned-rust-receivers.log
+          rg '^# fail 0$' build/owned-rust-receivers.log
+          rg '^# cancelled 0$' build/owned-rust-receivers.log
+          rg '^# skipped 0$' build/owned-rust-receivers.log
+          test -s build/owned-rust-receivers/ordinary.json
+          test -s build/owned-rust-receivers/reviewed.json
+          test -s build/owned-rust-receivers/ordinary-package.json
+          test -s build/owned-rust-receivers/reviewed-package.json
+          test -s build/owned-rust-receivers/ordinary-plain.json
+          test -s build/owned-rust-receivers/reviewed-plain.json
+          test -s build/owned-rust-receivers/ordinary-consuming.json
+          test -s build/owned-rust-receivers/reviewed-consuming.json
           LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs
           test -s build/compounds/rust.json
           LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs
@@ -1394,6 +1409,8 @@ jobs:
             build/owned-rust-borrows/
             build/owned-rust-borrow-packaging/
             build/owned-rust-borrows.log
+            build/owned-rust-receivers/
+            build/owned-rust-receivers.log
             build/owned-rust-packaging/ordinary.json
             build/owned-rust-packaging/reviewed.json
             build/compounds/rust.json
@@ -1483,6 +1500,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-rust-packaging.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-rust-transfers"
               consumer_command="$consumer_command && npm run test:owned-rust-borrows"
+              consumer_command="$consumer_command && npm run test:owned-rust-receivers"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_COMPOUND_TEST=1 node --test tests/rust-compounds.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_LIST_TEST=1 node --test tests/rust-lists.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_RUST_ALIAS_TEST=1 node --test tests/rust-aliases.test.mjs"

@@ -518,8 +518,42 @@ identity for valid values. Resources and whole values remain neither `Send` nor
 In a package with these result contracts, consuming functions take
 `&mut Value<T>`. They transfer the original owner, including for empty values.
 Aliases and borrowed descendants expire before callback reentry. A call cannot
-consume its result anchor or an ancestor of it. Packages without anchored results
+consume its result anchor or an ancestor of it. Packages without anchored results or receiver contracts
 keep the APIs described above. See the [author contract](../publish/cargo.md#anchor-a-result-to-an-input).
+
+### Methods and properties
+
+Declared receivers expose snake-case methods on `Value<NominalType>`. Properties
+are zero-argument accessors such as `owner.serial()`. Copied record fields remain
+fields of the value returned by `get()`. Free functions remain available.
+
+For the `owned-receivers` acceptance crate, save this as `src/main.rs`:
+
+```rust file=rust/owned-receivers.rs
+use owned_receivers::{new_ticket, BigUint, Error};
+
+fn main() -> Result<(), Error> {
+    let mut owner = new_ticket(&BigUint::from(42u32), "order")?;
+    let borrowed = owner.retain_ticket()?;
+    let independent = borrowed.retain()?;
+    println!("{}", borrowed.serial()?);
+    owner.close();
+    assert_eq!(borrowed.serial(), Err(Error::Closed));
+    println!("{}", independent.serial()?);
+    Ok(())
+}
+```
+
+Non-consuming methods borrow `&self`. Consuming methods require `&mut self` and
+transfer the original owner; aliases and borrowed descendants expire before a
+callback can reenter. Validation failures preserve the owner. Empty containers
+and constructors keep their owners too.
+
+A result may borrow from another argument instead of its receiver. For example,
+`receiver.choose_ticket(&source)` expires with `source`, not `receiver`. Raw
+resource wrappers expose only members that need no whole receiver owner.
+Callback arguments still expire on return unless retained. See the
+[author configuration](../publish/cargo.md#export-methods-and-properties).
 
 ### Alpha resource and callback example
 

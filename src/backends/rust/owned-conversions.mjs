@@ -285,10 +285,10 @@ export const generateOwnedRustConversions = (ir, options = {}) => {
 			, `pub(crate) unsafe fn owned_from${i}(value: &${node.raw}, depth: usize, scope: &mut OwnedScope, output: &mut OwnedOutput) -> Result<${node.hostName}, Error> {`
 			, "    let _ = (&value, &output);", ...from.map(line => `    ${line}`), "}");
 	}
-	for(const root of [...c.functions, ...c.retains, ...c.copies])
+	for(const root of [...c.functions, ...c.retains, ...c.copies ?? []])
 	{
 		// Callback descriptors and input-owner transactions use the callable projection.
-		if(c.anchoredResults || root.transfers?.length || root.parameters.some((_, index) => c.hostArgument(root, index))) continue;
+		if(c.anchoredResults || root.transfers?.length || root.parameters.some((_, index) => c.hostArgument?.(root, index))) continue;
 		const params = root.parameters.map(id => nodes.get(id)), result = nodes.get(root.result);
 		const name = root.cName.slice(c.prefix.length + 1);
 		const invoke = `unsafe extern "C" fn(${["*mut c_void", ...params.map(node => `${node.leaf ? "" : "*const "}${node.raw}`), `*mut ${result.raw}`, "*mut *mut c_void"].join(", ")}) -> u32`;
@@ -306,5 +306,5 @@ export const generateOwnedRustConversions = (ir, options = {}) => {
 	return { ...values, valuesSource: values.source
 		, types: [...nodes.values()], calls: callModels
 		, rawSource: raw.join("\n")
-		, source: ["#![allow(dead_code, unused_imports)]", support(c.native.model.limits, Boolean(c.anchoredResults)), ...raw, ...functions, ...calls, ""].join("\n") };
+		, source: ["#![allow(dead_code, unused_imports)]", support(c.native.model.limits, Boolean(c.anchoredResults) || c.functions.some(item => item.receiver === 0)), ...raw, ...functions, ...calls, ""].join("\n") };
 };

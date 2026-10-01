@@ -27,15 +27,19 @@ const scalars = {
  * @param options - Prepared-package runtime policy.
  */
 export const generateOwnedRustValues = (ir, options = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs: options.transferredInputs ?? false, anchoredResults: options.anchoredResults ?? false });
+	const c = generateOwnedCValues(ir, { hostCallbacks: options.hostCallbacks ?? true
+		, transferredInputs: options.transferredInputs ?? false
+		, anchoredResults: options.anchoredResults ?? false
+		, receiverExports: options.receiverExports ?? false });
 	const anchors = c.functions.some(item => item.anchor !== undefined);
+	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node
 		, aggregate: !node.leaf
 		, fields: node.fields.map(field => ({ ...field, storage: "value" }))
 		, cases: node.cases.map(branch => ({ ...branch, fields: branch.fields.map(field => ({ ...field, storage: "value" })) }))
 	}]));
 	const layout = planNativeGraphStorage(nodes), occupied = new Set(reserved);
-	if(anchors) for(const name of ["Value", "ValueType", "OwnedValueStorage", "copy_value"]) occupied.add(name);
+	if(wholeOwners) for(const name of ["Value", "ValueType", "OwnedValueStorage", "copy_value"]) occupied.add(name);
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || occupied.has(name)
 			|| /^Owned(?:Identity|Raw|Union|Case|Callback)/u.test(name)) throw new TypeError(`Owned Rust name is reserved or duplicated: ${name}`);
@@ -85,8 +89,8 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 		return [node.id, { fields: members(node.id, node.fields), cases }];
 	}));
 	const bigint = c.nodes.some(node => node.integer);
-	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length), anchoredResults: anchors })
-		, ...anchors ? [ownedRustAnchoredValues] : []
+	const lines = [ownedRustRuntime(c.prefix, { ...options, transferredInputs: c.functions.some(item => item.transfers?.length), anchoredResults: anchors, receiverExports: receivers })
+		, ...wholeOwners ? [ownedRustAnchoredValues({ inputOwners: anchors || c.functions.some(item => item.transfers?.length) })] : []
 		, ...bigint ? ["pub use num_bigint::{BigInt, BigUint};", ""] : []];
 	const fieldType = field => field.boxed ? `Box<${type(field.type)}>` : type(field.type);
 	for(const id of layout.order)
@@ -111,5 +115,5 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 	return { c, layout, source: lines.join("\n") + "\n", bigint
 		, types: [...nodes.values()].map(node => ({ ...node, hostName: type(node.id)
 			, identityTag: identities.get(node.id), ...models.get(node.id)
-			, ...anchors ? { canonicalHostName: canonical(node.id) } : {} })) };
+			, ...wholeOwners ? { canonicalHostName: canonical(node.id) } : {} })) };
 };

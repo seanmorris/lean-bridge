@@ -3282,3 +3282,27 @@ CLI offline, compare independent builds, reject forged metadata and generated
 sources, remove producer files and execute relocated pkg-config/CMake consumers
 and the documentation example. CI retains `build/owned-cpp-receivers.log` and
 eight JSON reports in `build/owned-cpp-receivers/`.
+
+## Rust receiver acceptance
+
+Run the receiver API gate with the pinned Lean toolchain and Rust 1.90:
+
+```sh
+npm run test:owned-rust-receivers
+```
+
+The gate requires ten passing tests with no skips. It checks nominal methods,
+zero-argument property accessors, mutable consuming receivers, receiver and
+other-argument anchors, empty values, callbacks and recursive values. Both source
+paths compile and execute the same independent assertions. Allocation failures,
+panic unwinding, six compile-time misuse cases and three compiled broken
+implementations test the lifetime checks. Resource-only APIs are tested with and
+without consumption, independently of callback or borrowed-result support.
+
+Installed-package tests build through an offline-installed CLI, compare two
+independent archives, reject altered contracts and generated Rust, and execute
+the consumer and documentation example with an empty Cargo home and vendored
+dependencies. A relocated executable must still run after removing both source
+trees, the installed crate, the CLI and the handoff. CI keeps
+`build/owned-rust-receivers.log` and eight JSON reports under
+`build/owned-rust-receivers/`.

@@ -204,8 +204,8 @@ selects the first argument after the receiver. Use receiver scope for `arg0`.
 Reviewed APIs store the receiver separately and use the remaining parameters'
 declared names.
 
-Build with `--target c`, `--target cpp`, or both. C++ exposes
-[named receiver members](cpp.md#export-methods-and-properties). Combined builds
+Build with `--target c`, `--target cpp`, `--target cargo`, or a combination. C++ and
+[Rust](cargo.md#export-methods-and-properties) expose named receiver members. Combined builds
 with other consumer targets reject receiver exports. These packages use
 manifest version 6 and `ownedValues` version 5. Metadata records the
 receiver-first convention and distinguishes receiver anchors from parameter
