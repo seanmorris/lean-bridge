@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedPhpWasmReceiver, ownedPhpWasmReceiverHistoricalBytes } from "./helpers/owned-php-wasm-receiver-history.mjs";
 import { assertOwnedPerlReceiverCi, ownedPerlReceiverReports } from "./helpers/owned-perl-receiver-ci.mjs";
 import { beforeOwnedReceiverCiRepair, ownedReceiverCiRepairPath, ownedReceiverCiRepairBaseline
 	, ownedReceiverCiRepairPrevious, ownedReceiverCiRepairChangedPaths, ownedReceiverCiRepairAddedPaths
@@ -46,12 +47,13 @@ test("receiver CI repair preserves frozen receipts and rejects unrelated source 
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedReceiverCiRepairAddedPaths].sort());
 	assert.deepEqual(record.updates.map(update => update.path), ownedReceiverCiRepairChangedPaths);
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedPhpWasmReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedReceiverCiRepair(update.path, source);
+		const source = beforeOwnedPhpWasmReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedReceiverCiRepair(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedReceiverCiRepair(update.path, prior), prior);
 		assert.equal(beforeOwnedReceiverCiRepair(update.path, source, update.currentSha256), source);
@@ -65,8 +67,8 @@ test("receiver CI repair preserves frozen receipts and rejects unrelated source 
 	}
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(ownedReceiverCiRepairHistoricalBytes("unrelated.bin", binary), binary);
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedPhpWasmReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedReceiverCiRepair(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedPhpWasmReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 });

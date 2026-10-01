@@ -213,7 +213,7 @@ C++, [Rust](cargo.md#export-methods-and-properties),
 [C#](nuget.md#export-methods-and-properties),
 [Java/Kotlin](maven.md#export-methods-and-properties),
 [Perl](cpan.md#export-methods-and-properties) and
-[native PHP](php.md#export-methods-and-properties) expose named receiver members.
+[native PHP and PHP-Wasm](php.md#export-methods-and-properties) expose named receiver members.
 Combined builds with other consumer targets reject receiver exports. The C packages use
 manifest version 6 and `ownedValues` version 5. Metadata records the
 receiver-first convention and distinguishes receiver anchors from parameter

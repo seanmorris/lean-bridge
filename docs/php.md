@@ -592,7 +592,7 @@ unsupported.
 
 ### Methods and properties
 
-Native PHP packages can expose methods and read-only properties on generated
+Native PHP and PHP-Wasm packages can expose methods and read-only properties on generated
 owner classes. For the [author example](publish/php.md#export-methods-and-properties),
 install `example/owned-values` and save this as `members.php`:
 
@@ -647,7 +647,11 @@ Independent retained wrappers for the same resource compare equal and produce
 the same `hashCode()`. Separate resources with identical fields remain distinct.
 Comparing a closed owner raises an exception.
 
-This section applies to native PHP. PHP-Wasm receiver members are still pending.
+In PHP-Wasm, run the same file inside your PHP instance with the installed
+Composer `vendor/` directory mounted beside it. Use the npm package's
+`extensions` descriptor for startup loading, or `lazy.extensions` for first-call
+loading, as shown in [Ordinary PHP-Wasm packages](#ordinary-php-wasm-packages).
+Both transports preserve the same receiver and argument lifetimes.
 
 ### Native callbacks and returned functions
 

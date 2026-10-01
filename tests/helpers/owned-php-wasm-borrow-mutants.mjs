@@ -15,29 +15,45 @@ import { saveLakeFile } from "./lake-workspace.mjs";
  * @param options.files - Unmodified source bytes for each mutant.
  * @param options.run - Checked compiler and VM process execution.
  * @param options.compile - Recompile and link the complete Zend extension.
+ * @param options.receiverExports - Require nominal members in the public probe.
  */
-export const rejectOwnedPhpWasmBorrowMutants = async ({ directory, files, run, compile }) => {
+export const rejectOwnedPhpWasmBorrowMutants = async ({ directory, files, run, compile, receiverExports = false }) => {
 	const mutations = [
 		["share-is-independent", "src/Api.php"
-			, "return new self(Internal\\Native::owner('share', $type, $owner), $type, $payload, $retain);"
-			, "return $this->retain();", /shared root keeps descendants alive/u]
+			, `return new ${receiverExports ? "static" : "self"}(Internal\\Native::owner('share', $type, $owner), $type, $payload, $retain);`
+			, "return $this->retain();"
+			, receiverExports ? /member share preserves the original anchor/u : /shared root keeps descendants alive/u]
 		, ["retain-is-shared", "src/Api.php"
 			, "return $retain($payload);", "return $this->share();"
 			, /Compiled Lean ownership call failed/u]
 		, ["wrapper-identity", "src/Internal/Native.php"
 			, "Native::sameIdentity($this->type, $this->resource, $other->resource)"
 			, "$this->resource === $other->resource"
-			, /canonical resource equality/u]
+			, receiverExports ? /member preserves a nonreceiver anchor/u : /canonical resource equality/u]
 		, ["last-root", "extension.c", "if (!--lease->roots) lease->invalid = 1;"
-			, "--lease->roots;", /transitive expiry/u]
+			, "--lease->roots;"
+			, receiverExports ? /member follows the original anchor/u : /transitive expiry/u]
 		, ["empty-root", "extension.c", "if (!--lease->roots) lease->invalid = 1;"
 			, "if (!--lease->roots && lease->owner.batch.entries) lease->invalid = 1;"
-			, /empty descendants expire/u]
+			, receiverExports ? /empty member results expire/u : /empty descendants expire/u]
 		, ["unpublished-owner", "src/Internal/Native.php"
 			, "if ($unpublishedOwner !== null) self::owner('close', $fn['result'], $unpublishedOwner);"
 			, "/* broken: rely on exception-held resource destruction */"
 			, /native cleanup/u]
 	];
+	if(receiverExports)
+	{
+		const selected = files["src/Api.php"].match(/return choose_ticket\(\$this->get\(\), (\$[a-zA-Z_][a-zA-Z_0-9]*)\);/u);
+		assert.ok(selected);
+		mutations.push(["receiver-replaces-parameter-anchor", "src/Api.php"
+			, selected[0]
+			, `return choose_ticket(${selected[1]}->get(), $this);`
+			, /nonreceiver anchor survives receiver close/u]);
+		mutations.push(["receiver-transfer-is-snapshot", "src/Api.php"
+			, "return transfer_ticket($this);"
+			, "return transfer_ticket($this->retain());"
+			, /member consumes the original receiver/u]);
+	}
 	const observations = [];
 	for(const [name, path, before, after, failure] of mutations)
 	{

@@ -41,3 +41,27 @@ Use copy_value($payload) for a nominal generated resource, record or variant, or
 
 Consuming calls move the original whole owner at the Lean boundary. Shares and existing borrowed descendants become closed before callbacks run. A borrowed owner cannot be consumed, and the same owner cannot be both an anchor and a consuming argument. Validation and preparation errors preserve inputs; failures after the handoff do not restore them. Original PHP exceptions propagate after cleanup, and unpublished results are released even when an exception is retained.
 `;
+
+/**
+ * Describe only the ownership capabilities present in this receiver package.
+ *
+ * @param model - Checked Zend receiver model and enabled transport features.
+ */
+export const ownedPhpWasmReceiverReadme = model => {
+	const transfers = model.functions.some(fn => fn.transfers?.length);
+	const paragraphs = ownedPhpWasmBorrowReadme.trim().split("\n\n").filter(paragraph => {
+		if(paragraph.startsWith("Callbacks ") || paragraph.startsWith("A callback ")) return model.hostCallbacks;
+		if(paragraph.startsWith("PHPDoc identifies whole-owner parameters.")) return false;
+		if(paragraph.startsWith("Consuming calls ")) return transfers;
+		return true;
+	}).map(paragraph => paragraph.replace(
+		"Receiver-anchored and callback-result-anchored lifetimes are not implemented by this profile."
+		, model.anchoredResults ? "Callback-result-anchored lifetimes are not implemented by this profile."
+			: "This package declares no borrowed-result anchors."
+	).replace("These mappings apply inside aggregates and callbacks.", model.hostCallbacks
+		? "These mappings apply inside aggregates and callbacks." : "These mappings apply inside aggregates."));
+	paragraphs.push(`Methods use camelCase names; properties use read-only PHP property syntax. Resources and named aggregates have nominal owners such as TicketValue and BundleValue. share(), retain() and copy_value() preserve the owner class. Public functions remain available with snake_case names. Raw resource views omit members that require an original whole owner. Property assignment and deletion reject.`);
+	paragraphs.push(`get() returns a borrowed payload. Pass a whole Value to parameters marked as whole-owner parameters in PHPDoc; pass get() to an ordinary call-scoped parameter. Closing the last shared root expires its raw resource views. retain() keeps an independent whole value. Canonical resource equality and hashes do not depend on PHP wrapper identity.`);
+	if(model.anchoredResults) paragraphs.push(`A borrowed result follows its original receiver or selected parameter owner. Closing the last shared root or consuming that owner expires borrowed descendants, including empty values and returned Lean closures. Retaining a borrowed value keeps an independent copy.`);
+	return paragraphs.join("\n\n") + "\n";
+};

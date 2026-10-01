@@ -15,7 +15,8 @@ import { ownedZendInputTransferSource, ownedZendInputTransferTypes } from "./own
  * @param model - Compiler-authenticated wasm32 ownership schema.
  */
 export const ownedZendWalkSource = model => {
-	const transfers = !model.anchoredResults && model.functions.some(fn => fn.transfers?.length);
+	const wholeOwners = model.anchoredResults || model.wholeOwners;
+	const transfers = !wholeOwners && model.functions.some(fn => fn.transfers?.length);
 	return `
 ${graphZendSupport}
 ${ownedZendOwnershipSource(model)}
@@ -110,7 +111,7 @@ static void lgo_call_finish(lgo_call *call, zval *out) {
 ${transfers ? "  lgo_inputs_finish(call);\n" : ""}  lgo_hosts_end(call);
   if (call->inputs.scope.context) call->walk.status = ov_abort(&call->inputs, call->walk.status);
   if (!call->walk.status && !call->walk.graph.scope.error && !call->bailout && !EG(exception)) {
-${transfers || model.anchoredResults ? "    call->walk.lease->published = 1;\n" : ""}    ZVAL_COPY_VALUE(out, &call->wire); ZVAL_UNDEF(&call->wire);
+${transfers || wholeOwners ? "    call->walk.lease->published = 1;\n" : ""}    ZVAL_COPY_VALUE(out, &call->wire); ZVAL_UNDEF(&call->wire);
   }
   lgo_clear_zvals(&call->wire, 1, &call->bailout);
   if (call->walk.lease) { lgo_lease_release(call->walk.lease); call->walk.lease = NULL; }

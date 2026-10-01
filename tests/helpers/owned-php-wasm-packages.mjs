@@ -25,7 +25,15 @@ import { compileOwnedPhpZendModel } from "../../src/backends/php/owned-zend-mode
 import { ownedRustTransferConfiguration, ownedRustTransferReviewedIr, ownedRustTransferSource } from "./owned-rust-transfer-fixture.mjs";
 import { phpWasmInventory } from "./type-corpus-php-wasm-install.mjs";
 import { ownedRustBorrowConfiguration, ownedRustBorrowReviewedIr, ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
+import { ownedRustReceiverConfiguration, ownedRustReceiverReviewedIr, ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
+import { ownedPhpInstalledReceiverProbe } from "./owned-php-receiver-fixture.mjs";
 
+/**
+ * Run an installed package with both autoload and extension-loading modes.
+ *
+ * @param name - Installed component npm name.
+ * @param anchoredResults - Public resource results use whole Value owners.
+ */
 const hostSource = (name, anchoredResults = false) => `import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
 import {join} from 'node:path';
@@ -66,6 +74,8 @@ assert.equal(stdout,'recovered');assert.equal(libraries.length,2);
 const refreshed=await snapshot();
 console.log(JSON.stringify({arrangement,loading,strict:Number(strict),observed,libraries,invalidStayedCold:true,requestRecovery:true,cleaned,refreshed}));
 `;
+
+export { hostSource as ownedPhpWasmInstalledHost };
 
 const rejectDrift = async (root, runtimeIdentity) => {
 	const inventory = JSON.parse(await readFile(join(root, "artifacts.json"), "utf8"));
@@ -115,6 +125,17 @@ const rejectDrift = async (root, runtimeIdentity) => {
 			const ownedGraph = structuredClone(receipt.ownedGraph); mutate(ownedGraph);
 			await check("php-wasm-component.json", canonicalJson({ ...receipt, ownedGraph }));
 		}
+	if(receipt.ownedGraph.receiverExports)
+		for(const mutate of [
+			value => { value.schemaVersion = 3; }
+			, value => { delete value.receiverExports; }
+			, value => { value.receiverExports.exports.pop(); }
+			, value => { value.receiverExports.exports[0].kind = "function"; }
+			, value => { value.receiverExports.exports[0].argument = 1; }
+		]) {
+			const ownedGraph = structuredClone(receipt.ownedGraph); mutate(ownedGraph);
+			await check("php-wasm-component.json", canonicalJson({ ...receipt, ownedGraph }));
+		}
 	await readVerifiedPhpWasmCopiedComponent(root, runtimeIdentity);
 	return rejected;
 };
@@ -127,8 +148,10 @@ const rejectDrift = async (root, runtimeIdentity) => {
  * @param options - Select explicit consuming inputs or the borrowed fixture.
  * @param options.transferredInputs - Run all 26 consuming-fixture exports.
  * @param options.anchoredResults - Run original-owner borrowed results and moves.
+ * @param options.receiverExports - Run nominal members and original receivers.
  */
-export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transferredInputs = false, anchoredResults = false } = {}) => {
+export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
+	anchoredResults ||= receiverExports;
 	transferredInputs ||= anchoredResults;
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 	const runtime = await prepareOwnedPhpWasmRuntime(directory), runtimeRoot = runtime.root;
@@ -137,7 +160,7 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 	const host = resolve(process.env.LEAN_BRIDGE_PHP_WASM_HOST ?? "build/php-wasm-host/node_modules/php-wasm");
 	diagnostic("Installing the standalone CLI with verified PHP-Wasm compiler inputs");
 	const cli = await installOwnedPhpWasmCli({ directory: join(directory, "cli"), runtimeRoot, phpSource, leanPrefix, emsdkRoot });
-	let consumer = await readFile(anchoredResults ? "tests/fixtures/structured-types/owned-installed-php-borrows.php"
+	let consumer = receiverExports ? await ownedPhpInstalledReceiverProbe() : await readFile(anchoredResults ? "tests/fixtures/structured-types/owned-installed-php-borrows.php"
 		: transferredInputs ? "tests/fixtures/structured-types/owned-installed-php-wasm-transfers.php" : "tests/fixtures/structured-types/owned-php-wasm-installed.php", "utf8");
 	if(anchoredResults) consumer = consumer.replace("require __DIR__ . '/vendor/autoload.php';", "// The host has already loaded the installed Composer or embedded autoloader.")
 		.replace("'ordinaryAutoload' => true", "'phpBits' => PHP_INT_SIZE * 8, 'ordinaryAutoload' => true");
@@ -148,25 +171,26 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 		const projectRoot = join(author, "project"), buildRoot = join(author, "compiled"), componentRoot = join(buildRoot, "php-wasm/component");
 		const fixture = transferredInputs ? "tests/fixtures/onboarding/owned-aggregates" : "tests/fixtures/onboarding/owned-dotnet-callables";
 		for(const path of ["Owned.lean", "lean-toolchain", "lakefile.toml"])
-			await saveLakeFile(projectRoot, path, await readFile(join(fixture, path), "utf8") + (transferredInputs && path === "Owned.lean" ? anchoredResults ? ownedRustBorrowSource : ownedRustTransferSource : ""));
-		const config = anchoredResults ? await ownedRustBorrowConfiguration() : transferredInputs ? await ownedRustTransferConfiguration() : JSON.parse(await readFile(join(fixture, "lean-bridge.exports.json"), "utf8"));
+			await saveLakeFile(projectRoot, path, await readFile(join(fixture, path), "utf8") + (transferredInputs && path === "Owned.lean" ? receiverExports ? ownedRustReceiverSource : anchoredResults ? ownedRustBorrowSource : ownedRustTransferSource : ""));
+		const config = receiverExports ? await ownedRustReceiverConfiguration() : anchoredResults ? await ownedRustBorrowConfiguration() : transferredInputs ? await ownedRustTransferConfiguration() : JSON.parse(await readFile(join(fixture, "lean-bridge.exports.json"), "utf8"));
 		const selected = reviewed ? { schemaVersion: 1, modules: config.modules } : config;
 		delete selected.targets;
 		const npmSettings = { name: "@lean-bridge-test/owned-php-wasm", version: "1.0.0" };
 		const composerSettings = { name: "lean-bridge-test/owned-php-wasm", version: "1.0.0" };
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ ...selected
 			, targets: { "php-wasm": { npm: npmSettings, composer: composerSettings } } }));
-		if(reviewed) await saveLakeFile(projectRoot, "reviewed.binding-ir.json", canonicalJson(anchoredResults ? ownedRustBorrowReviewedIr() : transferredInputs ? ownedRustTransferReviewedIr() : ownedDotnetCallbacksReviewedIr()));
+		if(reviewed) await saveLakeFile(projectRoot, "reviewed.binding-ir.json", canonicalJson(receiverExports ? ownedRustReceiverReviewedIr() : anchoredResults ? ownedRustBorrowReviewedIr() : transferredInputs ? ownedRustTransferReviewedIr() : ownedDotnetCallbacksReviewedIr()));
 		const before = await lakeInputState(projectRoot);
 		diagnostic(`${reviewed ? "reviewed" : "ordinary"}: installed CLI builds the PHP-Wasm ownership release`);
 		const cliBuild = await cli.build(projectRoot, buildRoot);
 		assert.deepEqual(await lakeInputState(projectRoot), before);
 		const { model, receipt } = await readVerifiedPhpWasmCopiedComponent(componentRoot, runtime.identity);
-		assert.equal(model.pointerBits, 32); assert.equal(model.schemaVersion, anchoredResults ? 9 : transferredInputs ? 8 : 7);
-		assert.equal(model.ownedGraph.transport, "owned-zend-v1"); assert.equal(model.exports.length, transferredInputs ? 26 : 51);
+		assert.equal(model.pointerBits, 32); assert.equal(model.schemaVersion, receiverExports ? 10 : anchoredResults ? 9 : transferredInputs ? 8 : 7);
+		assert.equal(model.ownedGraph.transport, "owned-zend-v1"); assert.equal(model.exports.length, receiverExports ? 27 : transferredInputs ? 26 : 51);
 		if(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, anchoredResults ? 4 : 20);
-		if(anchoredResults) assert.equal(model.ownedGraph.resultAnchors.exports.length, 19);
-		const expected = transferredInputs ? { functions: compileOwnedPhpZendModel(model.bindingIr, { transferredInputs, anchoredResults }).functions.map(fn => fn.publicName).sort(), heldOriginalError: true }
+		if(anchoredResults) assert.equal(model.ownedGraph.resultAnchors.exports.length, receiverExports ? 20 : 19);
+		if(receiverExports) assert.equal(model.ownedGraph.receiverExports.exports.length, 16);
+		const expected = transferredInputs ? { functions: compileOwnedPhpZendModel(model.bindingIr, { transferredInputs, anchoredResults, receiverExports }).functions.map(fn => fn.publicName).sort(), heldOriginalError: true }
 			: { scalars: 19, structured: 23 };
 		const inputs = { metadata: JSON.parse(await readFile(join(componentRoot, "metadata.json"), "utf8"))
 			, sourceIdentity: model.sourceIdentity, component: model.component };
@@ -241,7 +265,7 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 	}
 	assert.equal((await readVerifiedPhpWasmCopiedRuntime(runtimeRoot)).identity, runtime.identity);
 	return { schemaVersion: 1
-		, profile: anchoredResults ? "installed-owned-php-wasm-borrows" : transferredInputs ? "installed-owned-php-wasm-transfers" : "installed-owned-php-wasm"
+		, profile: receiverExports ? "installed-owned-php-wasm-receivers" : anchoredResults ? "installed-owned-php-wasm-borrows" : transferredInputs ? "installed-owned-php-wasm-transfers" : "installed-owned-php-wasm"
 		, compiledLean: true, installedPackage: true
 		, installedCli: cli.identity, cliAdmission: true
 		, runtimeSupplied: runtime.supplied

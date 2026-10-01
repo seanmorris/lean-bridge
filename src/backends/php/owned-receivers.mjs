@@ -65,13 +65,16 @@ ${properties.map(({ name, call }) => `            '${name}' => ${call},`).join("
  * @param namespace - Public namespace.
  * @param types - Nominal owners and runtime type indices.
  * @param functions - Checked receiver exports.
+ * @param templates - Transport-specific storage with the same owner API.
+ * @param templates.valueSource - Whole-owner class before nominal specialization.
+ * @param templates.accessSource - Private factory and snapshot implementation.
  */
-export const ownedPhpReceiverOwners = (namespace, types, functions) => {
-	let value = ownedPhpBorrowValue.replace("final class Value", "class Value")
+export const ownedPhpReceiverOwners = (namespace, types, functions, { valueSource = ownedPhpBorrowValue, accessSource = ownedPhpBorrowAccess } = {}) => {
+	let value = valueSource.replace("final class Value", "class Value")
 		.replaceAll("    public function ", "    final public function ")
 		.replace("public function share(): self", "public function share(): static")
 		.replace("public function retain(): self", "public function retain(): static")
-		.replace("return new self($lease, $type, $payload, $retain);", "return new static($lease, $type, $payload, $retain);");
+		.replace("return new self(", "return new static(");
 	for(const node of types.filter(node => node.ownerType))
 	{
 		const members = ownedPhpReceiverMembers(node, functions, types);
@@ -79,9 +82,9 @@ export const ownedPhpReceiverOwners = (namespace, types, functions) => {
 		value += `\n${doc}final class ${node.ownerType} extends Value\n{\n${members.source}}\n`;
 	}
 	const classes = types.filter(node => node.ownerType).map(node => `            ${node.index} => @NAMESPACE@\\${node.ownerType}::class,`).join("\n");
-	const access = ownedPhpBorrowAccess.replace(
-		"$create = \\Closure::bind(static fn() => new @NAMESPACE@\\Value($lease, $type, $payload, $retain), null, @NAMESPACE@\\Value::class);"
-		, `$class = match ($type) {\n${classes}\n            default => @NAMESPACE@\\Value::class\n        };\n        $create = \\Closure::bind(static fn() => new $class($lease, $type, $payload, $retain), null, @NAMESPACE@\\Value::class);`)
+	const access = accessSource.replace(
+		"$create = \\Closure::bind(static fn() => new @NAMESPACE@\\Value("
+		, `$class = match ($type) {\n${classes}\n            default => @NAMESPACE@\\Value::class\n        };\n        $create = \\Closure::bind(static fn() => new $class(`)
 		.replaceAll("@NAMESPACE@", `\\${namespace}`);
 	return { value, access };
 };

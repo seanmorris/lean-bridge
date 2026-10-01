@@ -110,7 +110,14 @@ export const readVerifiedPhpWasmCopiedComponent = async (root, runtimeIdentity) 
 	if(!closed(inventory, ["schemaVersion", "profile", "files"]) || inventory.schemaVersion !== 1 || inventory.profile !== phpWasmCopiedProfile) throw new Error("Invalid PHP-Wasm component inventory");
 	await verifyPhpWasmCopiedFiles(root, inventory.files, "artifacts.json");
 	const metadata = await read("metadata.json");
-	const reconstructed = createCompiledPhpWasmModel({ metadata, component: model.component, sourceIdentity: receipt.sourceIdentity });
+	const reconstructed = createCompiledPhpWasmModel({ metadata
+		, component: model.component, sourceIdentity: receipt.sourceIdentity
+		, ...model.ownedGraph ? {
+			hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
+			, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
+			, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
+			, receiverExports: Boolean(model.ownedGraph.receiverExports)
+		} : {} });
 	const adapters = generateCompiledPhpWasmLeanAdapters(reconstructed);
 	const graph = reconstructed.ownedGraph ? generateCompiledPhpWasmOwned(reconstructed, metadata, adapters)
 		: reconstructed.copiedGraph ? generateCompiledPhpWasmGraph(reconstructed, adapters) : null;

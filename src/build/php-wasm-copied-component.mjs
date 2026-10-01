@@ -131,10 +131,19 @@ export const buildPhpWasmCopiedComponent = async options => {
 	return buildElaboratedComponent({ ...options
 		, targets: ["php-wasm"], ownedGraphs: true
 		, moduleName: undefined, profile, receiptName: "php-wasm-component.json"
-		, createModel: createCompiledPhpWasmModel
+		, createModel: inputs => createCompiledPhpWasmModel({ ...inputs
+			, hostCallbacks: options.hostCallbacks
+			, transferredInputs: options.transferredInputs
+			, anchoredResults: options.anchoredResults
+			, receiverExports: options.receiverExports })
 		, createAdapters: generateCompiledPhpWasmLeanAdapters
 		, validateModel: model => {
-			if(model.ownedGraph) compileOwnedPhpZendModel(model.bindingIr, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors) });
+			if(model.ownedGraph) compileOwnedPhpZendModel(model.bindingIr, {
+				hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
+				, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
+				, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
+				, receiverExports: Boolean(model.ownedGraph.receiverExports)
+			});
 			else if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr);
 			else if(model.copiedGraph) compileCopiedPhpGraphZendModel(model.bindingIr);
 			else compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
@@ -150,7 +159,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 			const manifest = JSON.parse(zend[manifestPath]);
 			const runtimeHeader = await readFile(join(runtime, "include/lean_bridge_native_runtime.h"), "utf8");
 			if(graph && !runtimeHeader.includes("#define LEAN_BRIDGE_NATIVE_RUNTIME_RETIREMENT_VERSION 1")) throw new Error("PHP-Wasm recursive packages require compiler inputs rebuilt with runtime retirement support");
-			if((model.copiedGraph?.callbacks || model.ownedGraph) && !runtimeHeader.includes(nativeCallbackHeader)) throw new Error("PHP-Wasm callables require compiler inputs rebuilt with callback registry support");
+			if((model.copiedGraph?.callbacks || model.ownedGraph?.hostCallbacks) && !runtimeHeader.includes(nativeCallbackHeader)) throw new Error("PHP-Wasm callables require compiler inputs rebuilt with callback registry support");
 			for(const [path, source] of Object.entries(zend)) await save(staging, path, source);
 			const initializer = `initialize_${adapters.module}`;
 			let adapterSources;

@@ -256,7 +256,7 @@ Keep the package-set receipt with the release.
 
 ### Export methods and properties
 
-For native PHP, add this `contracts` map to the
+For native PHP or PHP-Wasm, add this `contracts` map to the
 [resource example](#export-resource-containing-values):
 
 ```json
@@ -274,7 +274,7 @@ For native PHP, add this `contracts` map to the
 }
 ```
 
-Build with `--target php-native`. The first Lean argument becomes the receiver;
+Build with `--target php-native` or `--target php-wasm`. The first Lean argument becomes the receiver;
 the method's remaining arguments keep their order. `serial` becomes a read-only
 PHP property, and `callbackRecord` becomes a camelCase instance method. Public
 functions such as `serial()` and `callback_record()` remain available.
@@ -294,7 +294,9 @@ or borrowed results.
 The [installed consumer example](../php.md#methods-and-properties) prints `42`,
 `expired`, then `42`. Publish its Composer ZIP with the existing
 [repository procedure](#publish-to-the-private-https-repository).
-PHP-Wasm receiver members are not implemented yet.
+For PHP-Wasm, publish the npm archives and companion Composer ZIP using the
+[PHP-Wasm procedure](#publish-the-php-wasm-profile). The runtime and component
+descriptors support startup and first-call loading of the same member API.
 
 ### Export named copied aliases
 

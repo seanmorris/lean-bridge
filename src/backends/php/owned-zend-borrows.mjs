@@ -4,6 +4,7 @@
  * @file
  */
 import { ownedPhpBorrowValue, ownedPhpBorrowAccess } from "./owned-borrows.mjs";
+import { ownedPhpReceiverOwners } from "./owned-receivers.mjs";
 
 export const ownedZendBorrowValue = String.raw`
 /** @template T */
@@ -132,12 +133,15 @@ const replace = (source, before, after) => {
  */
 export const ownedZendBorrowFiles = model => {
 	const files = { ...model.files };
-	if(!model.anchoredResults) return files;
-	files["src/Api.php"] = replace(files["src/Api.php"], ownedPhpBorrowValue, ownedZendBorrowValue);
+	if(!model.anchoredResults && !model.wholeOwners) return files;
 	const namespace = `\\${model.namespace}`;
-	files["src/Internal/Values.php"] = replace(files["src/Internal/Values.php"],
-		ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", namespace),
-		ownedZendBorrowAccess.replaceAll("@NAMESPACE@", namespace));
+	const native = model.receiverExports ? ownedPhpReceiverOwners(model.namespace, model.types, model.functions)
+		: { value: ownedPhpBorrowValue, access: ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", namespace) };
+	const zend = model.receiverExports ? ownedPhpReceiverOwners(model.namespace, model.types, model.functions, {
+		valueSource: ownedZendBorrowValue, accessSource: ownedZendBorrowAccess
+	}) : { value: ownedZendBorrowValue, access: ownedZendBorrowAccess.replaceAll("@NAMESPACE@", namespace) };
+	files["src/Api.php"] = replace(files["src/Api.php"], native.value, zend.value);
+	files["src/Internal/Values.php"] = replace(files["src/Internal/Values.php"], native.access, zend.access);
 	files["src/Internal/Values.php"] = files["src/Internal/Values.php"]
 		.replaceAll("instanceof NativeBinding", "instanceof ZendBinding")
 		.replaceAll("Expected native PHP resources", "Expected Zend resources");
@@ -160,7 +164,7 @@ function copy_value(mixed $value, mixed $resultOf = null, mixed $parameterOf = n
  * @param literal - Existing checked PHP literal encoder.
  */
 export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
-	if(!model.anchoredResults) return source;
+	if(!model.anchoredResults && !model.wholeOwners) return source;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const nominals = Object.fromEntries(model.types.filter(node => node.representation !== "copied").flatMap(node =>
 		(node.identity || node.kind === "record" ? [node.publicType] : node.cases.map(branch => branch.publicName))
@@ -255,7 +259,7 @@ export const ownedZendBorrowPhpRuntime = (source, model, literal) => {
  * @param model - Explicitly enabled whole-owner schema.
  */
 export const ownedZendBorrowOwnership = (source, model) => {
-	if(!model.anchoredResults) return source;
+	if(!model.anchoredResults && !model.wholeOwners) return source;
 	source = replace(source, "  int pending, clearing;", `  int pending, clearing;
   size_t roots, pins;
   int whole, invalid;

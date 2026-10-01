@@ -24,6 +24,7 @@ import { ownedPhpWasmTransferProbe } from "./owned-php-wasm-transfer-probe.mjs";
 import { prepareOwnedPhpWasmRuntime } from "./owned-php-wasm-runtime.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { rejectOwnedPhpWasmBorrowMutants } from "./owned-php-wasm-borrow-mutants.mjs";
+import { ownedRustReceiverConfiguration, ownedRustReceiverReviewedIr, ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
 
 /**
  * Recompile captured Lean for wasm32. No native fixture objects enter the VM.
@@ -32,19 +33,28 @@ import { rejectOwnedPhpWasmBorrowMutants } from "./owned-php-wasm-borrow-mutants
  * @param mode - Ordinary-source or independently reviewed API.
  * @param options - Additional compiler fixture coverage.
  * @param options.borrowOnly - Require working borrowed results without transfers.
+ * @param options.receiverExports - Exercise nominal members and receiver anchors.
  */
-export const checkOwnedPhpWasmBorrows = async (t, mode, { borrowOnly = false } = {}) => {
+export const checkOwnedPhpWasmBorrows = async (t, mode, { borrowOnly = false, receiverExports = false } = {}) => {
+	assert.ok(!borrowOnly || !receiverExports);
 	const compiled = await compileOwnedAggregateFixture(t, { hostCallbacks: true
-		, sourceSuffix: borrowOnly ? "" : ownedRustBorrowSource
-		, configuration: borrowOnly ? await ownedBorrowConfiguration() : await ownedRustBorrowConfiguration()
-		, ...mode === "reviewed" ? { reviewedIr: borrowOnly ? ownedBorrowReviewedIr() : ownedRustBorrowReviewedIr() } : {} });
+		, sourceSuffix: receiverExports ? ownedRustReceiverSource : borrowOnly ? "" : ownedRustBorrowSource
+		, configuration: receiverExports ? await ownedRustReceiverConfiguration() : borrowOnly ? await ownedBorrowConfiguration() : await ownedRustBorrowConfiguration()
+		, ...mode === "reviewed" ? { reviewedIr: receiverExports ? ownedRustReceiverReviewedIr() : borrowOnly ? ownedBorrowReviewedIr() : ownedRustBorrowReviewedIr() } : {} });
 	const directory = compiled.directory;
 	const input = { metadata: compiled.metadata, sourceIdentity: compiled.sourceIdentity, component: compiled.model.component };
 	const native = generateOwnedNativeValueAdapters({ ...input, wordBits: 32
-		, hostCallbacks: true, transferredInputs: true, anchoredResults: true });
+		, hostCallbacks: true, transferredInputs: true
+		, anchoredResults: true, receiverExports });
 	assert.equal(native.carriers.leanSource, compiled.leanSource);
 	const extension = generateOwnedPhpZendExtension(native), { model } = extension;
 	assert.equal(model.functions.some(fn => fn.transfers?.length), !borrowOnly);
+	if(receiverExports)
+	{
+		assert.equal(model.functions.filter(fn => fn.receiver === 0).length, 16);
+		assert.equal(model.functions.find(fn => fn.name === "chooseTicket").anchor, 1);
+		assert.equal(model.functions.find(fn => fn.name === "retainTicket").anchor, 0);
+	}
 	const php = generateOwnedPhpZendPhp(model);
 	const sdk = resolve(process.env.LEAN_BRIDGE_PHP_EMSDK ?? ".toolchains/emsdk-php-wasm");
 	const emcc = join(sdk, "upstream/emscripten/emcc");
@@ -72,6 +82,13 @@ export const checkOwnedPhpWasmBorrows = async (t, mode, { borrowOnly = false } =
 			.replace("global $model;", "global $model, $functions; $functions[$name] = true;")
 			.replace("$item instanceof Resource", "$item instanceof Resource || $item instanceof \\LeanOwnedAggregates\\Value")
 		, "probe-model.json": canonicalJson({ transport: model.transport, functions: Object.fromEntries(model.functions.map(fn => [fn.name, fn.publicName])) }) };
+	if(receiverExports)
+	{
+		const members = (await readFile("tests/fixtures/structured-types/owned-php-wasm-receivers.php", "utf8")).replace("<?php\n", "");
+		const first = "$root = ticket(); $alias = $root->share(); $view = owned_call('retainTicket', [$root]);";
+		assert.equal(files["check.php"].split(first).length, 2);
+		files["check.php"] = files["check.php"].replace(first, members + "\nreceiver_members(); balanced();\n\n" + first);
+	}
 	const checkpoint = "private static function checkpoint(): void {}";
 	assert.equal(files["src/Internal/Wire.php"].split(checkpoint).length, 2);
 	files["src/Internal/Wire.php"] = files["src/Internal/Wire.php"].replace(checkpoint,
@@ -161,10 +178,16 @@ console.log(JSON.stringify({observations,bailouts}));
 		await run(emcc, [...flags, "-Wall", "-Wextra", "-Werror", "-Wno-unused-parameter", "-Wno-unused-function", "-c", "extension.c", "-o", "extension.wasm.o"]);
 		await run(emcc, [...flags, "-sSIDE_MODULE=2", "-sEXPORTED_FUNCTIONS=['_get_module']", "-Wl,--no-entry", ...objects, join(runtime.root, runtime.manifest.library), "-o", "extension.so"]);
 	};
-	const mutants = borrowOnly ? [] : await rejectOwnedPhpWasmBorrowMutants({ directory, files, run, compile: compileMutant });
-	assert.equal(mutants.length, borrowOnly ? 0 : 6);
+	const mutants = borrowOnly ? [] : await rejectOwnedPhpWasmBorrowMutants({ directory, files, run, compile: compileMutant, receiverExports });
+	assert.equal(mutants.length, borrowOnly ? 0 : receiverExports ? 8 : 6);
+	if(receiverExports)
+	{
+		const restored = await run(process.execPath, ["host.mjs"]);
+		assert.equal(restored.stderr, ""); assert.deepEqual(JSON.parse(restored.stdout), observed);
+	}
 	const report = { schemaVersion: 1
 		, mode
+		, ...receiverExports ? { receiverExports: true, restoredAfterMutations: true } : {}
 		, installedPackage: false
 		, compiledLean: true
 		, borrowOnly
@@ -174,6 +197,6 @@ console.log(JSON.stringify({observations,bailouts}));
 		, sourceSha256: sha256(extension.source)
 		, binarySha256: sha256(binary), files: hashes, ...observed };
 	t.diagnostic(JSON.stringify({ observations: observed.observations, bailoutRecoveryCases: observed.bailouts.length }));
-	await saveLakeFile("build/owned-php-wasm-borrows", `${mode}${borrowOnly ? "-borrow-only" : ""}.json`, canonicalJson(report));
+	await saveLakeFile(receiverExports ? "build/owned-php-wasm-receivers" : "build/owned-php-wasm-borrows", `${mode}${borrowOnly ? "-borrow-only" : ""}.json`, canonicalJson(report));
 	return report;
 };

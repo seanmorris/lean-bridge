@@ -17,11 +17,15 @@ import { generateOwnedPhpValues } from "./owned-values.mjs";
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Admit atomic consuming arguments.
  * @param options.anchoredResults - Carry exact whole-result owner lifetimes.
+ * @param options.receiverExports - Admit typed receiver methods and properties.
+ * @param options.hostCallbacks - Admit synchronous PHP callback transport.
  */
-export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults });
-	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs, anchoredResults });
+export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const values = generateOwnedPhpValues(ir, { integerBits: 32, wordBits: 32, transferredInputs, anchoredResults, receiverExports, hostCallbacks });
+	const layout = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs, anchoredResults, receiverExports });
 	anchoredResults = values.c.anchoredResults;
+	receiverExports = values.receiverExports;
+	const wholeOwners = Boolean(anchoredResults || receiverExports);
 	const fail = message => { throw new TypeError(`Owned PHP-Wasm values: ${message}`); };
 	const types = layout.nodes.map((node, index) => {
 		const php = values.types[index];
@@ -32,6 +36,7 @@ export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchor
 			return { ...field, publicKey: ["option", "result"].includes(node.kind) ? "value" : publicField.publicName };
 		});
 		return { ...node, identity: php.identity
+			, ...php.ownerType ? { ownerType: php.ownerType } : {}
 			, publicType: php.publicType, docType: php.docType
 			, fields: fields(node.fields, php.fields)
 			, cases: node.cases.map((branch, position) => ({ ...branch
@@ -81,20 +86,22 @@ export const compileOwnedPhpZendModel = (ir, { transferredInputs = false, anchor
 			fail("PHP and native function signatures differ");
 		return { ...fn, index, publicName: php.publicName
 			, publicParameters: php.publicParameters
-			, ...anchoredResults ? { whole: nodes.get(fn.result).representation !== "copied" } : {}
-			, hostArguments: php.parameters.map((_, position) => values.c.hostArgument(php, position)) };
+			, ...receiverExports ? { declaration: php.declaration } : {}
+			, ...wholeOwners ? { whole: nodes.get(fn.result).representation !== "copied" } : {}
+			, hostArguments: php.parameters.map((_, position) => hostCallbacks && values.c.hostArgument(php, position)) };
 	});
 	if(functions.length !== values.functions.length) fail("PHP and native export counts differ");
-	if(functions.some(fn => fn.publicName.toLowerCase() === "with_recovery")) fail("function collides with with_recovery");
-	if(anchoredResults && functions.some(fn => fn.publicName.toLowerCase() === "copy_value")) fail("function collides with copy_value");
+	if(hostCallbacks && functions.some(fn => fn.publicName.toLowerCase() === "with_recovery")) fail("function collides with with_recovery");
+	if(wholeOwners && functions.some(fn => fn.publicName.toLowerCase() === "copy_value")) fail("function collides with copy_value");
 	const semantic = new Map(layout.model.types.map(node => [node.id, node]));
 	const callbacks = layout.callbacks.map((callback, index) => ({ ...callback, index
 		, type: nodes.get(callback.id).index
-		, hostArguments: callback.parameters.map((id, position) => position > 0 && nodes.get(id).kind === "callback")
+		, hostArguments: callback.parameters.map((id, position) => hostCallbacks && position > 0 && nodes.get(id).kind === "callback")
 		, automaticRecovery: ownedCallbackRecovery(layout.model, semantic.get(callback.id), id => id) !== null }));
 	const identity = layout.model.bindingIrSha256, stem = `lb_owned_${identity.slice(0, 20)}`;
 	return { namespace: values.namespace, integerBits: 32, wordBits: 32
 		, ...anchoredResults ? { anchoredResults: true } : {}
+		, ...receiverExports ? { receiverExports: true, wholeOwners: true, hostCallbacks } : !hostCallbacks ? { hostCallbacks: false } : {}
 		, files: values.files, aliases: values.aliases
 		, publicFiles: values.publicFiles
 		, layout, types, descriptors, functions, callbacks

@@ -185,10 +185,18 @@ final class Native
  */
 export const generateOwnedPhpZendPhp = model => {
 	const nodes = new Map(model.types.map(node => [node.id, node]));
+	const wholeOwners = model.anchoredResults || model.wholeOwners;
+	let runtimeSource = runtime;
+	if(model.hostCallbacks === false)
+	{
+		const start = runtimeSource.indexOf("    private static function callback("), end = runtimeSource.indexOf("    private static function execute(");
+		if(start < 0 || end <= start) throw new TypeError("Zend callback runtime source anchor changed");
+		runtimeSource = runtimeSource.slice(0, start) + runtimeSource.slice(end);
+	}
 	const signature = (fn, entry) => ({ entry
 		, parameters: fn.parameters.map(id => nodes.get(id).index)
 		, host: fn.hostArguments, result: nodes.get(fn.result).index
-		, ...model.anchoredResults ? {
+		, ...wholeOwners ? {
 			whole: nodes.get(fn.result).representation !== "copied"
 			, wholeParameters: fn.parameters.flatMap((_, index) => fn.anchor === index || fn.transfers?.includes(index) ? [index] : [])
 		} : {}
@@ -196,7 +204,7 @@ export const generateOwnedPhpZendPhp = model => {
 	const functions = model.functions.map(fn => signature(fn, `call${fn.index}`));
 	const callbacks = Object.fromEntries(model.callbacks.map(fn => [fn.type, signature(fn, `invoke${fn.index}`)]));
 	const files = ownedZendBorrowFiles(model);
-	files["src/Api.php"] += `
+	files["src/Api.php"] += model.hostCallbacks === false ? "\n" : `
 final readonly class WithRecovery
 {
     public function __construct(public mixed $callback, public mixed $value) {
@@ -207,18 +215,20 @@ function with_recovery(mixed $callback, mixed $value): WithRecovery {
     if (\\func_num_args() !== 2) throw new \\ArgumentCountError('with_recovery requires two arguments');
     return new WithRecovery($callback, $value);
 }
+`;
+	files["src/Api.php"] += `\
 require_once __DIR__ . '/Internal/Native.php';
 ${model.functions.map(fn => `/**
-${fn.parameters.map((id, index) => ` * @param ${model.anchoredResults && (fn.anchor === index || fn.transfers?.includes(index)) ? `Value<${nodes.get(id).docType}>` : fn.hostArguments[index] ? `callable|${nodes.get(id).docType}|WithRecovery` : nodes.get(id).docType} $${fn.publicParameters[index]}`).join("\n")}${fn.transfers?.length ? `\n * Consumes ${model.anchoredResults ? "original whole owners" : "resource leases"} in ${fn.transfers.map(index => "$" + fn.publicParameters[index]).join(", ")} at the Lean call boundary.` : ""}
- * @return ${fn.whole ? `Value<${nodes.get(fn.result).docType}>` : nodes.get(fn.result).docType}
+${fn.parameters.map((id, index) => ` * @param ${wholeOwners && (fn.anchor === index || fn.transfers?.includes(index)) ? nodes.get(id).ownerType ?? `Value<${nodes.get(id).docType}>` : fn.hostArguments[index] ? `callable|${nodes.get(id).docType}|WithRecovery` : nodes.get(id).docType} $${fn.publicParameters[index]}`).join("\n")}${fn.transfers?.length ? `\n * Consumes ${wholeOwners ? "original whole owners" : "resource leases"} in ${fn.transfers.map(index => "$" + fn.publicParameters[index]).join(", ")} at the Lean call boundary.` : ""}
+ * @return ${fn.whole ? nodes.get(fn.result).ownerType ?? `Value<${nodes.get(fn.result).docType}>` : nodes.get(fn.result).docType}
  */
-function ${fn.publicName}(${fn.publicParameters.map(name => `mixed $${name}`).join(", ")}): ${fn.whole ? "Value" : nodes.get(fn.result).publicType} {
+function ${fn.publicName}(${fn.publicParameters.map(name => `mixed $${name}`).join(", ")}): ${fn.whole ? nodes.get(fn.result).ownerType ?? "Value" : nodes.get(fn.result).publicType} {
     if (\\func_num_args() !== ${fn.parameters.length}) throw new \\ArgumentCountError('${fn.publicName} requires exactly ${fn.parameters.length} arguments');
     return Internal\\Native::call(${fn.index}, [${fn.publicParameters.map(name => `$${name}`).join(", ")}]);
 }`).join("\n\n")}
 `;
 	files["src/Internal/Wire.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${model.namespace}\\Internal;\nrequire_once __DIR__ . '/Values.php';\n${ownedZendPhpWire(model.namespace)}\n`;
-	files["src/Internal/Native.php"] = `<?php\ndeclare(strict_types=1);\n${copiedPhpWasmLoader}\nnamespace ${model.namespace}\\Internal {\nrequire_once __DIR__ . '/Wire.php';\n${ownedZendBorrowPhpRuntime(runtime, model, literal)
+	files["src/Internal/Native.php"] = `<?php\ndeclare(strict_types=1);\n${copiedPhpWasmLoader}\nnamespace ${model.namespace}\\Internal {\nrequire_once __DIR__ . '/Wire.php';\n${ownedZendBorrowPhpRuntime(runtimeSource, model, literal)
 		.replaceAll("@NAMESPACE@", `\\${model.namespace}`)
 		.replace("@TRANSPORT@", literal(model.transport)).replace("@LIBRARY@", literal(model.library))
 		.replace("@FUNCTIONS@", literal(functions)).replace("@CALLBACKS@", literal(callbacks))}\n}\n`;

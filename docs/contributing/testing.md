@@ -3481,3 +3481,28 @@ C/Composer release.
 The independent native PHP receiver CI job requires sixteen passes with no
 skips. It retains `build/owned-php-receivers.log` and thirteen reports under
 `build/owned-php-receivers/` and `build/owned-php-receiver-packaging/`.
+
+## PHP-Wasm methods and properties
+
+Use the pinned PHP-Wasm SDK, host and prepared Lean runtime, Composer, Chromium,
+and native PHP with `php-config` for the Zend Fiber companion:
+
+```sh
+source scripts/env.sh
+npm run test:owned-php-wasm-receivers
+```
+
+The seventeen-test gate compiles both ordinary source and reviewed contracts.
+It checks nominal owners, read-only properties, receiver and parameter anchors,
+original-owner consumption, synchronous callbacks, recursive values, expiration,
+retained errors, bailout recovery and eight semantic mutations. Resource-only
+and unanchored-callback cases exercise independently disabled capabilities.
+The native Zend companion tests Fiber suspension and fork rejection; the pinned
+PHP-Wasm host does not execute Fibers.
+
+Installed npm and Composer packages run in Node and Chromium with startup and
+first-call loading, weak and strict PHP, runtime refreshes, source-free installs
+and reproducible archives. The exact receiver documentation runs from a combined
+C/PHP-Wasm release through an installed CLI. The independent receiver CI job
+requires seventeen passes without skips and retains thirteen JSON reports in
+`build/owned-php-wasm-receivers/` plus `build/owned-php-wasm-receivers.log`.

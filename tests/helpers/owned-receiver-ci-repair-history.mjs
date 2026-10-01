@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPhpWasmReceiver, ownedPhpWasmReceiverChangedPaths } from "./owned-php-wasm-receiver-history.mjs";
 
 export const ownedReceiverCiRepairPath = "docs/evidence/owned-receiver-ci-repair-20261001.json";
 export const ownedReceiverCiRepairBaseline = "16fadc8add3769e83852c51d6ad89e6dedfb6c06";
@@ -28,6 +29,7 @@ export const ownedReceiverCiRepairAddedPaths = [
 	, "tests/helpers/owned-receiver-ci-repair-history.mjs"
 ].sort();
 let cached;
+export const ownedReceiverCiRepairNormalizationPaths = [...new Set([...ownedReceiverCiRepairChangedPaths, ...ownedPhpWasmReceiverChangedPaths])].sort();
 
 /**
  * Check complete identities before reversing registered edit spans.
@@ -60,6 +62,7 @@ export const reverseOwnedReceiverCiRepair = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedReceiverCiRepair = (path, source, expected) => {
+	source = beforeOwnedPhpWasmReceiver(path, source, expected);
 	if(!ownedReceiverCiRepairChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedReceiverCiRepairPath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-receiver-ci-repair");
@@ -77,5 +80,5 @@ export const beforeOwnedReceiverCiRepair = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedReceiverCiRepairHistoricalBytes = (path, bytes, expected) => ownedReceiverCiRepairChangedPaths.includes(path)
+export const ownedReceiverCiRepairHistoricalBytes = (path, bytes, expected) => ownedReceiverCiRepairNormalizationPaths.includes(path)
 	? beforeOwnedReceiverCiRepair(path, bytes.toString("utf8"), expected) : bytes;

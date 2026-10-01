@@ -15,6 +15,7 @@ import { bundledBrickMath } from "../../src/backends/php/brick-math.mjs";
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { compileOwnedAggregateFixture } from "./owned-aggregate-native.mjs";
 import { ownedRustBorrowConfiguration, ownedRustBorrowSource } from "./owned-rust-borrow-fixture.mjs";
+import { ownedRustReceiverConfiguration, ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
 import { ownedPhpWasmTransferProbe } from "./owned-php-wasm-transfer-probe.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
@@ -23,13 +24,16 @@ import { saveLakeFile } from "./lake-workspace.mjs";
  * Width-specific C carriers are generated independently, never reused as Wasm.
  *
  * @param t - Test context that removes its temporary native component.
+ * @param options - Checked receiver capability for nominal member guards.
+ * @param options.receiverExports - Exercise receiver methods and properties.
  */
-export const checkOwnedPhpWasmBorrowFibers = async t => {
+export const checkOwnedPhpWasmBorrowFibers = async (t, { receiverExports = false } = {}) => {
 	const compiled = await compileOwnedAggregateFixture(t, { hostCallbacks: true
-		, sourceSuffix: ownedRustBorrowSource
-		, configuration: await ownedRustBorrowConfiguration() });
+		, sourceSuffix: receiverExports ? ownedRustReceiverSource : ownedRustBorrowSource
+		, configuration: receiverExports ? await ownedRustReceiverConfiguration() : await ownedRustBorrowConfiguration() });
 	const input = { metadata: compiled.metadata, sourceIdentity: compiled.sourceIdentity, component: compiled.model.component };
-	const options = { ...input, hostCallbacks: true, transferredInputs: true, anchoredResults: true };
+	const options = { ...input, hostCallbacks: true, transferredInputs: true
+		, anchoredResults: true, receiverExports };
 	const wasm = generateOwnedNativeValueAdapters({ ...options, wordBits: 32 });
 	const native = generateOwnedNativeValueAdapters({ ...options, wordBits: 64 });
 	const extension = generateOwnedPhpZendExtension(wasm), { model } = extension;
@@ -50,6 +54,21 @@ export const checkOwnedPhpWasmBorrowFibers = async t => {
 		, "probe.php": (await readFile("tests/fixtures/structured-types/owned-php-zend-generated-probe.php", "utf8"))
 			.replace("$item instanceof Resource", "$item instanceof Resource || $item instanceof \\LeanOwnedAggregates\\Value")
 		, "probe-model.json": canonicalJson({ transport: model.transport, functions: Object.fromEntries(model.functions.map(fn => [fn.name, fn.publicName])) }) };
+	if(receiverExports)
+	{
+		const fiber = "    reject(fn() => $view->equals($root), 5);";
+		const fork = "        reject(fn() => transfer_ticket($root), 6);";
+		assert.equal(files["check.php"].split(fiber).length, 2);
+		assert.equal(files["check.php"].split(fork).length, 2);
+		files["check.php"] = files["check.php"].replace(fiber, fiber + `
+    reject(fn() => $root->serial, 5);
+    reject(fn() => $root->retainTicket(), 5);
+    reject(fn() => $root->transferTicket(), 5);`)
+			.replace(fork, `        reject(fn() => $root->serial, 6);
+        reject(fn() => $root->retainTicket(), 6);
+        reject(fn() => $root->transferTicket(), 6);
+` + fork);
+	}
 	for(const [path, source] of Object.entries(files)) await saveLakeFile(compiled.directory, path, source);
 	const php = process.env.LEAN_BRIDGE_ZEND_PHP ?? process.env.LEAN_BRIDGE_PHP ?? "php";
 	const phpConfig = process.env.LEAN_BRIDGE_ZEND_PHP_CONFIG ?? php + "-config";
@@ -79,11 +98,12 @@ export const checkOwnedPhpWasmBorrowFibers = async t => {
 		assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 		observations.push({ strict, ...observed });
 	}
-	const report = { profile: "native-zend-borrow-fibers", wasm32: false, input
+	const report = { profile: receiverExports ? "native-zend-receiver-fibers" : "native-zend-borrow-fibers"
+		, wasm32: false, input
 		, phpVersion: (await run(php, ["-v"])).stdout.split("\n")[0]
 		, files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)]))
 		, observations };
 	t.diagnostic(JSON.stringify(observations));
-	await saveLakeFile("build/owned-php-wasm-borrows", "native-fibers.json", canonicalJson(report));
+	await saveLakeFile(receiverExports ? "build/owned-php-wasm-receivers" : "build/owned-php-wasm-borrows", "native-fibers.json", canonicalJson(report));
 	return report;
 };

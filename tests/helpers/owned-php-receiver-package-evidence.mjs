@@ -15,6 +15,7 @@ import { validateBrickMathInstall } from "./brick-math.mjs";
 import { ownedPhpReceiverCommand, ownedPhpReceiverScope, ownedPhpReceiverModel, assertOwnedPhpReceiverRuntime } from "./owned-php-receiver-evidence.mjs";
 import { ownedPhpInstalledReceiverProbe, ownedPhpPlainInstalledReceiverProbe } from "./owned-php-receiver-fixture.mjs";
 import { assertOwnedPhpReceiverCi } from "./owned-php-receiver-ci.mjs";
+import { ownedPhpWasmReceiverHistoricalBytes } from "./owned-php-wasm-receiver-history.mjs";
 
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
 const identity = source => ({ bytes: Buffer.byteLength(source), sha256: sha256(source) });
@@ -32,7 +33,8 @@ const assertCli = async item => {
 	assert.equal(new Set(cli.files.map(file => file.path)).size, cli.files.length);
 	for(const path of config.files)
 	{
-		const file = cli.files.find(value => value.path === path), bytes = await readFile(path);
+		const file = cli.files.find(value => value.path === path);
+		const bytes = Buffer.from(ownedPhpWasmReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
 		assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 	}
 	assert.equal(item.cliBuilds.length, 2);

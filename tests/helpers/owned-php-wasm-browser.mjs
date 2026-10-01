@@ -61,8 +61,9 @@ try{
  * @param expected - Required consumer result fields for this fixture.
  * @param options - Public whole-owner result profile.
  * @param options.anchoredResults - Require Value.get() on resource results.
+ * @param options.minimumChecks - Minimum assertions for a smaller public API.
  */
-export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }, { anchoredResults = false } = {}) => {
+export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }, { anchoredResults = false, minimumChecks = 101 } = {}) => {
 	await saveLakeFile(deployment, "vendor-files.json", canonicalJson(await nativeArtifactPaths(join(deployment, "vendor"))));
 	await saveLakeFile(deployment, "index.html", '<!doctype html><html><head><link rel="icon" href="data:,"></head><body><script type="module" src="./browser.mjs"></script></body></html>');
 	const observations = [];
@@ -77,7 +78,7 @@ export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected 
 		{
 			for(const [key, value] of Object.entries(expected)) assert.deepEqual(run.observed[key], value, key);
 			assert.equal(run.observed.phpBits, 32);
-			assert.ok(run.observed.checks > 100);
+			assert.ok(run.observed.checks >= minimumChecks);
 			assert.deepEqual(run.phases.map(phase => phase.stage), ["ready", "autoload", "invalid", "complete", "recovered"]);
 			assert.deepEqual(run.phases.map(phase => phase.libraries.length), run.loading === "lazy" ? [0, 0, 0, 2, 2] : [2, 2, 2, 2, 2]);
 			assert.equal(new Set(run.phases.at(-1).libraries).size, 2);

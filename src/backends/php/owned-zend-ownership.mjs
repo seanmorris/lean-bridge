@@ -13,7 +13,7 @@ import { ownedZendBorrowOwnership } from "./owned-zend-borrows.mjs";
  * @param model - Finite wasm32 ownership model and nominal identity kinds.
  */
 export const ownedZendOwnershipSource = model => {
-	const transfers = model.anchoredResults || model.functions.some(fn => fn.transfers?.length);
+	const transfers = model.anchoredResults || model.wholeOwners || model.functions.some(fn => fn.transfers?.length);
 	const source = `
 #include <Zend/zend_exceptions.h>
 #include <Zend/zend_fibers.h>
