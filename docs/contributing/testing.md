@@ -3450,3 +3450,34 @@ members. These packages install and run without callback artifacts. CI requires
 fifteen passes without skips and retains
 `build/owned-jvm-receivers.log` and twelve reports under
 `build/owned-jvm-receiver-core/`.
+
+## Native PHP receiver acceptance
+
+Use PHP CLI 8.2 or later, Composer, the FFI extension and the pinned native
+Lean toolchain. On a glibc 2.36 host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+```sh
+npm run test:owned-php-receivers
+```
+
+The sixteen-test gate checks nominal owner classes, camelCase methods,
+read-only properties, receiver and other-argument anchors, original-owner
+transfers, recursive values, callbacks and returned closures. Nine broken
+implementations must fail the consumer assertions before the restored sources
+pass again. Resource-only and unanchored-callback cases check canonical identity
+equality across independent owners, equal hashes and expired-owner rejection.
+
+Installed-package tests build twice through an offline-installed CLI and compare
+the archives. They remove producer sources and tools before installing with
+offline Composer, then remove the handoff and installation cache. Strict and
+weak consumers run in two relocated deployments. Loader checks reject modified,
+missing and symlinked native libraries and verify private GMP and automatic
+shutdown without leaked identities. Separate native builds disable callback
+transport and result anchors, then install and execute packages without callback
+artifacts. The exact author and consumer guide examples run from an installed
+C/Composer release.
+
+The independent native PHP receiver CI job requires sixteen passes with no
+skips. It retains `build/owned-php-receivers.log` and thirteen reports under
+`build/owned-php-receivers/` and `build/owned-php-receiver-packaging/`.

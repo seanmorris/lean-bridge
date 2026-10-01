@@ -29,15 +29,16 @@ Declare supported ownership, lifetime, refinement policy and boundary-effect req
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages also support [parameter-anchored function results](../publish/c.md#anchor-a-result-to-an-input). The [JavaScript/TypeScript owner API](../javascript-typescript.md#borrowed-results-and-whole-value-owners) uses `LeanValue<T>`; the [WIT/WASI API](../consume/wit-wasi.md#borrowed-results) carries the original owner through the Component Model call.
 The result expires with the selected input owner; callers explicitly retain or
-copy it when they need independent ownership. C, C++, Rust, Python, Ruby, C#, Java, Kotlin and Perl also support
+copy it when they need independent ownership. C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl and native PHP also support
 [methods, properties and receiver-bound results](../publish/c.md#export-methods-and-properties),
 with named members in [C++](../publish/cpp.md#export-methods-and-properties),
 [Rust](../publish/cargo.md#export-methods-and-properties),
 [Python](../publish/pypi.md#export-methods-and-properties),
 [Ruby](../publish/rubygems.md#export-methods-and-properties),
 [C#](../publish/nuget.md#export-methods-and-properties),
-[Java/Kotlin](../publish/maven.md#export-methods-and-properties) and
-[Perl](../publish/cpan.md#export-methods-and-properties).
+[Java/Kotlin](../publish/maven.md#export-methods-and-properties),
+[Perl](../publish/cpan.md#export-methods-and-properties) and
+[native PHP](../publish/php.md#export-methods-and-properties).
 Receiver support for other projections and callback-result anchors remain in
 development.
 
@@ -137,7 +138,9 @@ separately compiled 32-bit Zend extension and shared runtime. Callback borrows
 expire on return unless retained. Ordinary source and reviewed contracts can
 select [consuming inputs](../publish/php.md#export-consuming-inputs) in both
 transports. Both also support [owner-anchored function results](../php.md#owner-anchored-results).
-Receiver and callback-result anchors, and asynchronous delivery remain unsupported.
+Native PHP also supports [methods, read-only properties and receiver-anchored
+results](../publish/php.md#export-methods-and-properties). PHP-Wasm receiver
+support, callback-result anchors and asynchronous delivery remain unfinished.
 
 ## Native Perl exports
 

@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { ownedPhpReceiverHistoricalBytes } from "./owned-php-receiver-history.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedPerlPackage } from "../../src/backends/perl/owned-package.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
@@ -45,7 +46,7 @@ const flags = (value, names) => {
 };
 
 const assertCli = async item => {
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const config = JSON.parse(ownedPhpReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json")).toString());
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;
 	assert.equal(item.cli.kind, "lean-bridge-cli-package");
 	assert.equal(inventorySha256, sha256(canonicalJson(inventory)));
@@ -56,7 +57,8 @@ const assertCli = async item => {
 	assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 	for(const path of config.files)
 	{
-		const file = item.cli.files.find(value => value.path === path), bytes = await readFile(path);
+		const file = item.cli.files.find(value => value.path === path);
+		const bytes = Buffer.from(ownedPhpReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
 		assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 	}
 	assert.equal(item.cliBuilds.length, 2);

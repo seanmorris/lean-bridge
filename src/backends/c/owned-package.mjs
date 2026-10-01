@@ -41,6 +41,7 @@ export const generateOwnedCPackage = (options, backend = null) => {
 		, transferredInputs: options.transferredInputs
 		, anchoredResults: options.anchoredResults
 		, receiverExports: options.receiverExports
+		, identityEquality: options.identityEquality
 	});
 	const p = values.prefix;
 	const transport = backend?.render({ generated, values });
@@ -144,14 +145,16 @@ export const generateOwnedCPackage = (options, backend = null) => {
 			, ...body(false).map(line => `  ${line}`), "}");
 	}
 	if(options.hostCallbacks) source.push(ownedCCallbacks(values, generated.carriers));
-	if(hasAnchors) for(const node of values.nodes.filter(node => node.identity)) source.push(
+	if(hasAnchors || options.identityEquality) for(const node of values.nodes.filter(node => node.identity)) source.push(
 		`${p}_status ${node.cName}_equal(${p}_session *session, ${node.cName} left, ${node.cName} right, bool *out) {`
 		, `  if (!ov_pointer(out, sizeof(*out), _Alignof(bool))) return (${p}_status)LB_OWNED_INVALID;`
 		, "  oc_session *active = NULL; int status = oc_session_get(session, &active);"
 		, `  if (status) return (${p}_status)status;`
-		, "  oc_arena arena = { .session = active }; uint64_t a = 0, b = 0;"
-		, `  status = oc_identity_to(&arena, ${JSON.stringify(node.identityKind)}, (uint64_t)(uintptr_t)left, &a);`
-		, `  if (!status) status = oc_identity_to(&arena, ${JSON.stringify(node.identityKind)}, (uint64_t)(uintptr_t)right, &b);`
+		, ...hasAnchors ? ["  oc_arena arena = { .session = active }; uint64_t a = 0, b = 0;"
+			, `  status = oc_identity_to(&arena, ${JSON.stringify(node.identityKind)}, (uint64_t)(uintptr_t)left, &a);`
+			, `  if (!status) status = oc_identity_to(&arena, ${JSON.stringify(node.identityKind)}, (uint64_t)(uintptr_t)right, &b);`]
+			: ["  uint64_t a = (uint64_t)(uintptr_t)left, b = (uint64_t)(uintptr_t)right;"
+				, `  if (!lb_owned_find(&active->native, ${JSON.stringify(node.identityKind)}, a) || !lb_owned_find(&active->native, ${JSON.stringify(node.identityKind)}, b)) status = LB_OWNED_INVALID;`]
 		, "  if (!status) *out = a == b;", `  return (${p}_status)status;`, "}"
 	);
 	for(const item of [...values.retains, ...values.copies ?? []])

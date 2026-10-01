@@ -29,13 +29,15 @@ export const ownedPhpAdapterSources = (c, php) => ({ ...c.files
 export const ownedPhpEvidence = async options => {
 	const { nativeRoot, runtimeRoot, adapterRoot, environment = process.env, signal } = options;
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true });
-	if(!model.ownedGraph?.hostCallbacks) throw new TypeError("Owned PHP requires authenticated callback/copy support");
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });
+	if(!model.ownedGraph) throw new TypeError("Owned PHP requires an authenticated ownership graph");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks: true, transferredInputs, anchoredResults });
-	const php = generateOwnedPhpPackage(model.bindingIr, null, { transferredInputs, anchoredResults }), prefix = c.values.prefix;
+	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
+	const capabilities = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...capabilities, identityEquality: receiverExports });
+	const php = generateOwnedPhpPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-php-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	const sources = ownedPhpAdapterSources(c, php), gmpLibrary = "libgmp-lean-bridge.so.10";
@@ -44,13 +46,14 @@ export const ownedPhpEvidence = async options => {
 		, ...["COPYING", "COPYING.LESSERv3", "COPYINGv2", "COPYINGv3"].map(name => `share/lean-bridge/licenses/GMP-${name}`)];
 	const expectedPaths = [...Object.keys(sources), `lib/lib${prefix}_php.so`, ...gmpFiles.map(path => `gmp/${path}`)].sort();
 	if(Object.keys(adapter).sort().join(",") !== "bindingIrSha256,componentReceiptSha256,files,gmp,library,ownedValues,phpValues,profile,runtimeIdentity,schemaVersion"
-		|| adapter.schemaVersion !== (anchoredResults ? 3 : transferredInputs ? 2 : 1) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
+		|| adapter.schemaVersion !== (receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
 		|| adapter.bindingIrSha256 !== model.bindingIrSha256 || adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt))
 		|| adapter.library !== `lib${prefix}_php.so`
-		|| canonicalJson(adapter.ownedValues) !== canonicalJson({ schemaVersion: anchoredResults ? 4 : transferredInputs ? 3 : 2
-			, hostCallbacks: model.ownedGraph.hostCallbacks
+		|| canonicalJson(adapter.ownedValues) !== canonicalJson({ schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2
+			, ...hostCallbacks ? { hostCallbacks: model.ownedGraph.hostCallbacks } : {}
 			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
+			, ...receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
 			, headerSha256: sha256(c.publicHeader), sourceSha256: sha256(c.source) })
 		|| canonicalJson(adapter.phpValues ?? null) !== canonicalJson(php.contract)
 		|| canonicalJson(adapter.gmp) !== canonicalJson({ version: "6.3.0", soname: gmpLibrary, binding: "local-symbols" })

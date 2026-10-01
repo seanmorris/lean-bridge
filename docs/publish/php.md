@@ -254,6 +254,48 @@ through the [Composer repository procedure](#publish-to-the-private-https-reposi
 Publish the PHP-Wasm npm archives through the [npm procedure](#publish-the-php-wasm-profile).
 Keep the package-set receipt with the release.
 
+### Export methods and properties
+
+For native PHP, add this `contracts` map to the
+[resource example](#export-resource-containing-values):
+
+```json
+{
+  "contracts": {
+    "Owned.serial": { "receiver": "property" },
+    "Owned.callbackRecord": {
+      "receiver": "method",
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      }
+    }
+  }
+}
+```
+
+Build with `--target php-native`. The first Lean argument becomes the receiver;
+the method's remaining arguments keep their order. `serial` becomes a read-only
+PHP property, and `callbackRecord` becomes a camelCase instance method. Public
+functions such as `serial()` and `callback_record()` remain available.
+
+Resource-containing results use nominal owner classes such as `TicketValue`
+and `BundleValue`. A receiver-bound result follows the original receiver owner.
+A result anchored to another parameter follows that argument instead. A
+consuming method hands off the receiver's original owner, closing its shared
+aliases at the call boundary. Raw resource views omit methods that require an
+original whole owner.
+
+Properties use PHP 8.2-compatible virtual accessors. Writing or unsetting a
+property raises an exception. `share()`, `retain()`, and `copy_value()` preserve
+the nominal owner class. Receiver-only resource APIs do not require callbacks
+or borrowed results.
+
+The [installed consumer example](../php.md#methods-and-properties) prints `42`,
+`expired`, then `42`. Publish its Composer ZIP with the existing
+[repository procedure](#publish-to-the-private-https-repository).
+PHP-Wasm receiver members are not implemented yet.
+
 ### Export named copied aliases
 
 Native Composer and PHP-Wasm builds preserve concrete copied alias names, targets and chains

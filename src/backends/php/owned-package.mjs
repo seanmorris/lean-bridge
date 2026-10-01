@@ -7,6 +7,7 @@ import { canonicalJson, sha256 } from "../../capsule/node.mjs";
 import { generateOwnedPhpCalls } from "./owned-calls.mjs";
 import { copiedPhpLoader } from "./copied-assets.mjs";
 import { ownedPhpLoader } from "./owned-assets.mjs";
+import { ownedPhpMemberName } from "./owned-receivers.mjs";
 
 const hash = value => typeof value === "string" && /^[a-f0-9]{64}$/u.test(value);
 
@@ -39,17 +40,20 @@ const checkEvidence = (model, contract, evidence) => {
  * @param options - Authenticated ownership capabilities.
  * @param options.transferredInputs - Enable consuming input leases.
  * @param options.anchoredResults - Preserve whole owners for borrowed results.
+ * @param options.receiverExports - Generate nominal methods and read-only properties.
+ * @param options.hostCallbacks - Enable synchronous callback transport independently.
  */
-export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const model = generateOwnedPhpCalls(ir, { transferredInputs, anchoredResults }), { namespace } = model, prefix = model.c.prefix;
+export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const model = generateOwnedPhpCalls(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { namespace, wholeOwners } = model, prefix = model.c.prefix;
 	const transfers = model.functions.some(fn => fn.transfers?.length);
 	const anchors = Boolean(model.c.anchoredResults);
+	const receivers = model.functions.filter(fn => fn.receiver === 0);
 	if(["gmp", "leanshared", "lean_bridge_native"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned PHP component name collides with a dependency or exceeds its name limit");
-	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
+	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
 		, language: "php-8.2-nts-cli"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
-			, arguments: anchors ? "whole-values" : "ordinary-values"
+			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
 			, consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"
 			, aliases: "shared-lease", borrowedInputs: "reject"
@@ -64,8 +68,20 @@ export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs
 			, rawViews: "borrowed-from-whole-owner"
 			, resourceEquality: "canonical-identity", invalidEquality: "raise"
 			, transfers: "original-owner" } } : {}
-		, ownership: "checked-result-leases", callbackLifetime: "call"
-		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
+		, ...receivers.length ? { receiverExports: { schemaVersion: 1
+			, values: "checked-whole-result", members: "camel-case"
+			, properties: "read-only-virtual-properties"
+			, owners: "nominal-Value-subclasses"
+			, consumingReceivers: "original-owner-handoff"
+			, resourceEquality: "canonical-identity", invalidEquality: "raise"
+			, exports: receivers.map(fn => ({ bindingId: fn.id
+				, owner: fn.declaration.owner
+				, kind: fn.declaration.kind, member: ownedPhpMemberName(fn.publicName) }))
+		} } : {}
+		, ownership: "checked-result-leases"
+		, ...hostCallbacks ? { callbackLifetime: "call" } : {}
+		, explicitRetention: "retain"
+		, ...hostCallbacks ? { callbackFailure: "raise-after-native-return" } : {}
 		, exactIntegers: "brick-math", integerDecimalDigits: 16384
 		, loadingPolicy: "linux-x64-deepbind-v1", gmp: "libgmp-lean-bridge.so.10"
 		, sourcesSha256: Object.fromEntries(Object.entries(model.files).map(([path, source]) => [path, sha256(source)]))
@@ -120,12 +136,31 @@ scalar, String preserves UTF-8 and NUL, and Bytes preserves arbitrary bytes.
 Float32 rounds to binary32. Unit is null. Weak and strict callers receive the
 same generated validation without scalar coercion.
 
-Resource and returned Lean closure wrappers support close() and retain(). Close
+${hostCallbacks ? "Resource and returned Lean closure wrappers" : "Resource wrappers"} support close() and retain(). Close
 them in a finally block. Destruction provides fallback cleanup. Calls from
 Fibers reject; cleanup deferred by Fiber destruction runs in the main context.
 Resource identities cannot be cloned or serialized.
 
-${anchors ? `Resource-bearing results use Value owners, including empty containers and
+${receivers.length ? `Methods use camelCase names; properties use read-only PHP property syntax.
+Resources and named aggregates have nominal owners such as TicketValue and
+BundleValue. get() returns a borrowed payload. share() preserves the owner
+class and shares its native owner; closing the last shared root expires raw
+resource views. retain() and copy_value() preserve the class while creating
+independent owners. Public functions remain available with snake_case names.
+Receiver-bound results follow the original receiver, and parameter-bound
+results follow the selected argument. Raw resources omit members that require
+an original whole owner. These APIs work on PHP 8.2 without property hooks.
+
+${!anchors ? `Resource sameIdentity() compares native identities. Value equals() compares
+structured payloads using native identity for resources; equal values have
+equal hashCode() results. Expired operands raise. Independent retained wrappers
+for the same resource compare equal, while separate resources remain distinct.
+
+` : ""}${!anchors && transfers ? `Consuming members hand off the original native owner. Invalid arguments
+preserve it; after handoff all shared roots expire even if the call fails.
+Independent retained owners remain usable.
+
+` : ""}` : ""}${anchors ? `Resource-bearing results use Value owners, including empty containers and
 None. Call get() for the typed PHP payload. A borrowed result follows its
 declared original input owner, and its descendants expire with that owner.
 share() adds a root to the same owner; closing or destroying the last root
@@ -146,7 +181,7 @@ owner. Independent retain() and copy_value() results remain usable. Borrowed
 results cannot be consumed directly; retain them first. An owner cannot be
 both a consumed input and the result anchor of the same call.
 
-` : ""}` : transfers ? `Consuming parameters accept ordinary PHP values. Validation and snapshot
+` : ""}` : transfers && !wholeOwners ? `Consuming parameters accept ordinary PHP values. Validation and snapshot
 failures before Lean runs preserve their owners. At the native handoff, each
 consumed result owner closes all its resource and closure aliases, including
 sibling fields. Later callback or result-conversion failures do not restore
@@ -155,7 +190,7 @@ be consumed; retain them first. Two consuming arguments cannot share one owner.
 Generated function documentation names the consuming parameters.
 
 ` : ""}\
-Pass synchronous PHP callables to callback parameters. Borrowed resources in
+${hostCallbacks ? `Pass synchronous PHP callables to callback parameters. Borrowed resources in
 callback arguments expire on return. Call retain() inside the callback to keep
 one. Callback replies are copied before native borrowed storage expires.
 Returned Lean closures are invokable but cannot extend a borrowed PHP callback's
@@ -164,6 +199,7 @@ failure-path value. Recovery never becomes a successful result after failure.
 PHP receives the original Throwable after native cleanup. Native reply-copy
 failures preserve their status. Generator and reference callbacks reject.
 
+` : ""}\
 Inputs, callbacks and output share bounded conversion budgets: 128 value levels,
 262144 visits, 16 MiB accounted PHP storage and 16 MiB native conversion data.
 These limits exclude Lean working memory and some PHP allocator overhead.
@@ -172,12 +208,13 @@ allocation failures leave it usable. Generated values load with FFI disabled,
 and invalid calls reject before loading native code.
 `;
 	const exports = ["Bytes", "LeanBridgeError", "Some", "Ok", "Err"
-		, "WithRecovery", "with_recovery"
-		, ...anchors ? ["Value", "copy_value"] : []
+		, ...hostCallbacks ? ["WithRecovery", "with_recovery"] : []
+		, ...wholeOwners ? ["Value", "copy_value"] : []
+		, ...model.types.flatMap(node => node.ownerType ? [node.ownerType] : [])
 		, ...model.types.filter(node => node.identity || node.kind === "variant").map(node => node.publicType)
 		, ...model.records.map(record => record.name)
 		, ...model.functions.map(fn => fn.publicName)].map(name => `${namespace}\\${name}`);
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : 1
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : 1
 		, generator: { id: "lean-wasm/php-owned", version: 1 }
 		, component: ir.component.id
 		, bindingIrSha256: model.c.native.model.bindingIrSha256

@@ -22,14 +22,17 @@ import { runCopied } from "./copied-fixture-install.mjs";
  * @param options - Authored fixture and optional independent reviewed contract.
  */
 export const compileOwnedPhpFixture = async (t, options = {}) => {
-	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
+	const hostCallbacks = options.hostCallbacks ?? true;
+	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks });
 	const transferredInputs = Boolean(options.transferredInputs);
 	const anchoredResults = Boolean(options.anchoredResults);
+	const receiverExports = Boolean(options.receiverExports);
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component
-		, hostCallbacks: true, transferredInputs, anchoredResults });
-	const model = generateOwnedPhpCalls(c.values.native.model.bindingIr, { transferredInputs, anchoredResults });
+		, hostCallbacks, transferredInputs, anchoredResults, receiverExports
+		, identityEquality: receiverExports });
+	const model = generateOwnedPhpCalls(c.values.native.model.bindingIr, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	const handoff = "static inline void oc_transfer_consume(void *context) {";
 	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const implementation = `#include <stdlib.h>
@@ -57,7 +60,8 @@ size_t owned_test_identities(void) {
 	await runCopied("/usr/bin/cc", ["-std=c11", "-O1", "-g", "-Wall"
 		, "-Wextra", "-Werror", "-fPIC", "-shared"
 		, "-I", join(compiled.directory, "runtime/include")
-		, "public-api.c", "Owned.o", "Carriers.o", "Witness.o", "Callbacks.o"
+		, "public-api.c", "Owned.o", "Carriers.o", "Witness.o"
+		, ...compiled.callbackSource ? ["Callbacks.o"] : []
 		, "-L", join(compiled.directory, "runtime/lib")
 		, "-llean_bridge_native", "-lleanshared", "-lgmp"
 		, "-Wl,-rpath," + join(compiled.directory, "runtime/lib")
@@ -77,7 +81,7 @@ size_t owned_test_identities(void) {
 	let helpers = transferredInputs ? originalHelpers
 		.replace("size_t owned_test_live(void);", "size_t owned_test_live(void);\\nsize_t owned_test_handoffs(void);")
 		.replace("global $model;", "global $model, $visited; $visited[$name] = true;") : originalHelpers;
-	if(anchoredResults) helpers = helpers.replace("$item instanceof Resource", "$item instanceof Resource || $item instanceof LeanOwnedAggregates\\Value");
+	if(model.wholeOwners) helpers = helpers.replace("$item instanceof Resource", "$item instanceof Resource || $item instanceof LeanOwnedAggregates\\Value");
 	await saveLakeFile(compiled.directory, "probe.php", helpers);
 	const execute = async (source, mode = "normal") => {
 		await saveLakeFile(compiled.directory, "consumer.php", source);

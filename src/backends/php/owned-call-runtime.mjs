@@ -10,9 +10,10 @@
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Prepare and finish consuming input groups.
  * @param options.anchoredResults - Carry whole roots and original native slots.
+ * @param options.wholeOwners - Carry receiver owners independently of borrowed results.
  */
-export const ownedPhpCallRuntime = ({ transferredInputs: requestedTransfers = false, anchoredResults = false } = {}) => {
-	const transferredInputs = requestedTransfers && !anchoredResults;
+export const ownedPhpCallRuntime = ({ transferredInputs: requestedTransfers = false, anchoredResults = false, wholeOwners = anchoredResults } = {}) => {
+	const transferredInputs = requestedTransfers && !wholeOwners;
 	return String.raw`
 final class OwnedCallFrame
 {
@@ -92,7 +93,7 @@ final class OwnedCalls
         return ResourceAccess::wrap($class, new NativeBinding($lease, $handle,
             fn(NativeBinding $binding) => ResourceAccess::binding($this->execute(OwnedCallTypes::RETAINS[$type], [ResourceAccess::wrap($class, $binding)])),
             isset(OwnedCallTypes::CLOSURES[$type])
-                ? fn(NativeBinding $binding, array $arguments) => $this->execute(OwnedCallTypes::CLOSURES[$type], [ResourceAccess::wrap($class, $binding), ...$arguments]) : null${anchoredResults ? ", fn(NativeBinding $left, NativeBinding $right) => $this->equal($type, $left, $right)" : ""}));
+                ? fn(NativeBinding $binding, array $arguments) => $this->execute(OwnedCallTypes::CLOSURES[$type], [ResourceAccess::wrap($class, $binding), ...$arguments]) : null${wholeOwners ? ", fn(NativeBinding $left, NativeBinding $right) => $this->equal($type, $left, $right)" : ""}));
     }
     private function decode(int $type, \FFI\CData $pointer, OwnedConversionScope $scope, \Closure $identity): mixed {
         try {
@@ -162,7 +163,7 @@ final class OwnedCalls
         $index = OwnedCallTypes::FUNCTIONS[$name] ?? throw new \TypeError('Unknown owned PHP export');
         return $this->execute($index, $arguments);
     }
-${anchoredResults ? String.raw`    private function equal(int $type, NativeBinding $left, NativeBinding $right): bool {
+${wholeOwners ? String.raw`    private function equal(int $type, NativeBinding $left, NativeBinding $right): bool {
         $state = $this->load()->current(); $pins = [];
         try {
             $pins[] = new OwnedPin($left->pin($state)); $pins[] = new OwnedPin($right->pin($state));
@@ -171,7 +172,7 @@ ${anchoredResults ? String.raw`    private function equal(int $type, NativeBindi
             return $result->cdata;
         } finally { OwnedPin::closeAll($pins); }
     }
-    private function copyTyped(int $type, mixed $value): @NAMESPACE@\Value {
+` : ""}${wholeOwners ? String.raw`    private function copyTyped(int $type, mixed $value): @NAMESPACE@\Value {
         return $this->execute(OwnedCallTypes::COPIES[$type], [$value], true);
     }
     public function copyValue(mixed $value, ?string $resultOf, ?array $parameterOf): @NAMESPACE@\Value {
@@ -189,8 +190,8 @@ ${anchoredResults ? String.raw`    private function equal(int $type, NativeBindi
         if ($value instanceof @NAMESPACE@\Value) { ValueAccess::snapshot($value, $type); return $value->retain(); }
         return $this->copyTyped($type, $value);
     }
-` : ""}    private function execute(int $index, array $arguments${anchoredResults ? ", bool $wholeCopy = false" : ""}): mixed {
-        $this->context(); $fn = OwnedCallTypes::CALLS[$index];${anchoredResults ? String.raw`
+` : ""}    private function execute(int $index, array $arguments${wholeOwners ? ", bool $wholeCopy = false" : ""}): mixed {
+        $this->context(); $fn = OwnedCallTypes::CALLS[$index];${wholeOwners ? String.raw`
         $wholeInputs = []; $inputLeases = []; $pins = []; $moves = [];
         foreach ($fn['parameters'] as $position => $parameter) {
             if (isset($parameter['transfer']) || isset($parameter['anchor'])) {
@@ -203,7 +204,7 @@ ${anchoredResults ? String.raw`    private function equal(int $type, NativeBindi
         $this->depth++; $scope = null; $frame = null; $owner = null;${transferredInputs ? " $moves = [];" : ""}
         try {
             $runtime = $this->load(); $state = $runtime->current(); $schema = $this->schema; $ffi = $runtime->ffi;
-${anchoredResults ? String.raw`            foreach ($inputLeases as $position => $lease) {
+${wholeOwners ? String.raw`            foreach ($inputLeases as $position => $lease) {
                 if ($lease->state !== $state) OwnedRuntime::checked(1);
                 $pins[] = new OwnedPin($lease);
                 if (isset($fn['parameters'][$position]['transfer'])) $moves[$position] = new OwnedInputGroup($lease);
@@ -223,7 +224,7 @@ ${transferredInputs ? String.raw`            $scope->inputGroup = null;
                 if (isset($moves[$index])) $arguments[] = $moves[$index]->owner();
             }
             $inputs = $arguments;
-` : anchoredResults ? String.raw`            $actual = [];
+` : wholeOwners ? String.raw`            $actual = [];
             foreach ($inputs as $position => $input) {
                 $actual[] = $input;
                 if (isset($moves[$position])) $actual[] = $moves[$position]->owner();
@@ -233,8 +234,8 @@ ${transferredInputs ? String.raw`            $scope->inputGroup = null;
             }
             $inputs = $actual;
 ` : ""}            $node = $schema->nodes[$fn['result']]; $output = $scope->allocate($node['size']); $owner = new OwnedOwner($state);
-${transferredInputs || anchoredResults ? "            OwnedInputGroup::armAll($moves);\n" : ""}            $status = $ffi->{$fn['symbol']}($state->requireOpen(), ...[...$inputs, $ffi->cast($node['pointerType'], $output), \FFI::addr($owner->value())]);
-${transferredInputs || anchoredResults ? "            OwnedInputGroup::finishAll($moves); $moves = [];\n" : ""}            if ($frame->failure !== null) throw $frame->failure;
+${transferredInputs || wholeOwners ? "            OwnedInputGroup::armAll($moves);\n" : ""}            $status = $ffi->{$fn['symbol']}($state->requireOpen(), ...[...$inputs, $ffi->cast($node['pointerType'], $output), \FFI::addr($owner->value())]);
+${transferredInputs || wholeOwners ? "            OwnedInputGroup::finishAll($moves); $moves = [];\n" : ""}            if ($frame->failure !== null) throw $frame->failure;
             // The public C API labels nonzero host replies as callback failure.
             // Preserve native snapshot failures recorded by our typed shim.
             foreach ($frame->descriptors as $descriptor) OwnedRuntime::checked($descriptor->native_status);
@@ -249,7 +250,7 @@ ${anchoredResults ? String.raw`            if ($fn['anchor'] !== null) {
 ` : ""}            // Inputs, every callback and the result consume the same budgets.
             $value = $this->decode($fn['result'], $output, $scope,
                 fn(int $type, \FFI\CData $handle) => $this->wrap($type, $handle, $owner->lease ?? $state->adopt($owner)));
-${anchoredResults ? String.raw`            if ($wholeCopy || $fn['whole']) {
+${wholeOwners ? String.raw`            if ($wholeCopy || $fn['whole']) {
                 $value = ValueAccess::wrap($owner->lease ?? $state->adopt($owner), $fn['result'], $value,
                     fn(mixed $payload) => $this->copyTyped($fn['result'], $payload));
             }
@@ -263,9 +264,9 @@ ${anchoredResults ? String.raw`            if ($wholeCopy || $fn['whole']) {
                 foreach ($frame->ids as $id) unset($this->contexts[$id]);
                 $frame->ids = []; $frame->descriptors = [];
             }
-${anchoredResults ? "            try {\n" : ""}${transferredInputs || anchoredResults ? "            try { OwnedInputGroup::finishAll($moves); } finally {\n" : ""}            try { $owner?->close(); }
+${wholeOwners ? "            try {\n" : ""}${transferredInputs || wholeOwners ? "            try { OwnedInputGroup::finishAll($moves); } finally {\n" : ""}            try { $owner?->close(); }
             finally { try { $scope?->close(); } finally { $this->depth--; } }
-${transferredInputs || anchoredResults ? "            }\n" : ""}${anchoredResults ? String.raw`            } finally {
+${transferredInputs || wholeOwners ? "            }\n" : ""}${wholeOwners ? String.raw`            } finally {
                 try { OwnedPin::closeAll($pins); }
                 finally { $pins = []; $inputLeases = []; $wholeInputs = []; }
             }
@@ -284,7 +285,7 @@ final class Native
         return (self::$engine ?? throw new \LogicException('Owned PHP package loader is not installed'))->call($name, $arguments);
     }
     public static function close(): void { self::$engine?->close(); }
-${anchoredResults ? String.raw`    public static function copyValue(mixed $value, ?string $resultOf, ?array $parameterOf): @NAMESPACE@\Value {
+${wholeOwners ? String.raw`    public static function copyValue(mixed $value, ?string $resultOf, ?array $parameterOf): @NAMESPACE@\Value {
         return (self::$engine ?? throw new \LogicException('Owned PHP package loader is not installed'))->copyValue($value, $resultOf, $parameterOf);
     }
 ` : ""}}

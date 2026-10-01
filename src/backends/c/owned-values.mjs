@@ -28,10 +28,12 @@ const nominal = name => {
  * @param options.transferredInputs - Admit explicit consumption of input owners.
  * @param options.anchoredResults - Preserve owner-scoped result views.
  * @param options.receiverExports - Preserve method and property receivers.
+ * @param options.identityEquality - Expose checked canonical identity comparison without result anchors.
  */
-export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
+export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, identityEquality = false } = {}) => {
 	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports });
 	const hasAnchors = native.functions.some(item => item.anchor !== undefined);
+	const hasEquality = hasAnchors || identityEquality;
 	const p = publicPrefix ?? cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");
 	const names = new Map();
@@ -55,7 +57,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 				: node.name ? `${p}_${node.kind === "primitive" ? "scalar_" : ""}${nominal(node.name)}_t`
 				: `${p}_value_${sha256(node.id).slice(0, 20)}_t`;
 		if(!integer && !scalar) claim(name, node.id);
-		if(identity) for(const suffix of ["handle", "retain", ...hasAnchors ? ["equal"] : [], ...node.kind === "callback" ? ["call"] : []]) claim(`${name}_${suffix}`, node.id);
+		if(identity) for(const suffix of ["handle", "retain", ...hasEquality ? ["equal"] : [], ...node.kind === "callback" ? ["call"] : []]) claim(`${name}_${suffix}`, node.id);
 		if(hostCallbacks && node.kind === "callback")
 		{
 			claim(`${name}_host`, node.id);
@@ -234,7 +236,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 		, parameters: [node.id], result: node.id, retain: true
 	}));
 	for(const item of retains) header.push(signature(item) + ";");
-	if(hasAnchors) for(const node of nodes.filter(node => node.identity))
+	if(hasEquality) for(const node of nodes.filter(node => node.identity))
 		header.push(`${p}_status ${node.cName}_equal(${p}_session *session, ${node.cName} left, ${node.cName} right, bool *out);`);
 	const copies = hostCallbacks ? nodes.filter(node => !node.identity).map(node => ({
 		id: node.id

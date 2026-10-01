@@ -587,8 +587,67 @@ Consuming calls invalidate the original whole owner and every borrowed
 descendant at the native handoff. Independent retained values survive. Validation
 failures before handoff preserve the owner; callback or conversion failures
 afterward do not restore it. A borrowed result must be retained before passing
-it to a consuming parameter. Receiver-anchored and callback-result-anchored
-lifetimes remain unsupported.
+it to a consuming parameter. Callback-result-anchored lifetimes remain
+unsupported.
+
+### Methods and properties
+
+Native PHP packages can expose methods and read-only properties on generated
+owner classes. For the [author example](publish/php.md#export-methods-and-properties),
+install `example/owned-values` and save this as `members.php`:
+
+```php
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Brick\Math\BigInteger;
+use LeanOwnedAggregates\{Bundle, Bytes, Payload, LeanBridgeError};
+use function LeanOwnedAggregates\{new_ticket, copy_value};
+
+$ticket = new_ticket(BigInteger::of(42), 'order');
+$owner = $view = $kept = null;
+try {
+    echo $ticket->serial, PHP_EOL;
+    $owner = copy_value(new Bundle($ticket->get(), null, [], [],
+        new Payload(BigInteger::of(7), Bytes::fromString('payload'))));
+    $view = $owner->callbackRecord(static fn(Bundle $value): Bundle => $value);
+    $kept = $view->retain();
+
+    $owner->close();
+    try {
+        $view->get();
+    } catch (LeanBridgeError $error) {
+        if ($error->getCode() !== 4) throw $error;
+        echo 'expired', PHP_EOL;
+    }
+    echo $kept->get()->primary->serial, PHP_EOL;
+} finally {
+    $kept?->close();
+    $view?->close();
+    $owner?->close();
+    $ticket->close();
+}
+```
+
+Run `php members.php`. It prints `42`, `expired`, then `42`. `$ticket` is a
+`TicketValue`; `$owner`, `$view`, and `$kept` are `BundleValue` owners. `get()`
+returns the PHP payload. Closing the original owner expires its borrowed
+results, while an independent `retain()` remains usable.
+
+Properties cannot be assigned or unset. Methods use camelCase names; the
+snake_case public functions remain available. `share()`, `retain()`, and
+`copy_value()` preserve the nominal class. A consuming method closes every
+alias of the original owner at handoff. Invalid arguments rejected before
+handoff leave that owner open.
+
+`equals()` compares structured payloads using native identity for resources.
+Independent retained wrappers for the same resource compare equal and produce
+the same `hashCode()`. Separate resources with identical fields remain distinct.
+Comparing a closed owner raises an exception.
+
+This section applies to native PHP. PHP-Wasm receiver members are still pending.
 
 ### Native callbacks and returned functions
 

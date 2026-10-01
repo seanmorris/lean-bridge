@@ -11,6 +11,7 @@ import { phpGraphScalars } from "./copied-graph-scalars.mjs";
 import { ownedPhpValueResources } from "./owned-value-resources.mjs";
 import { ownedPhpValueWalk } from "./owned-value-walk.mjs";
 import { ownedPhpBorrowValue, ownedPhpBorrowAccess } from "./owned-borrows.mjs";
+import { ownedPhpReceiverMembers, ownedPhpReceiverOwners } from "./owned-receivers.mjs";
 
 const literal = value => value === null ? "null" : typeof value === "number" ? String(value)
 	: typeof value === "string" ? `'${value.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}'`
@@ -29,14 +30,19 @@ const bigint = "\\Brick\\Math\\BigInteger";
  * @param options.wordBits - Lean machine-word width.
  * @param options.transferredInputs - Admit explicitly consuming arguments.
  * @param options.anchoredResults - Admit original-owner borrowed results.
+ * @param options.receiverExports - Admit checked methods and properties.
+ * @param options.hostCallbacks - Admit synchronous host callbacks and copied returns.
  */
-export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false, anchoredResults = false } = {}) => {
+export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
 	if(![32, 64].includes(integerBits) || ![32, 64].includes(wordBits)) throw new TypeError("PHP and Lean integer widths must be 32 or 64");
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults }), namespace = `Lean${pascal(c.prefix)}`;
+	const identityEquality = receiverExports && ir.declarations.some(item => item.receiver);
+	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports, identityEquality }), namespace = `Lean${pascal(c.prefix)}`;
 	anchoredResults = c.anchoredResults;
+	receiverExports = c.functions.some(fn => fn.receiver === 0);
+	const wholeOwners = Boolean(anchoredResults || receiverExports);
 	const fail = message => { throw new TypeError(`Invalid owned PHP values: ${message}`); };
 	const occupied = new Set([...reservedPhpNames, "some", "ok", "err", "withrecovery"]), names = new Map();
-	if(anchoredResults) occupied.add("value");
+	if(wholeOwners) occupied.add("value");
 	const claim = source => {
 		const name = phpClassName(source);
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || occupied.has(name.toLowerCase())) fail(`reserved or duplicate name: ${name}`);
@@ -91,6 +97,9 @@ export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = intege
 	const types = [...nodes.values()].map(node => ({ ...node, ...annotation(node.id)
 		, fields: ["option", "result", "tuple"].includes(node.kind) ? fields(node.fields, true) : fields(node.fields)
 		, cases: node.cases.map(branch => ({ ...branch, publicName: claim(names.get(node.id) + pascal(branch.sourceName)), fields: fields(branch.fields) })) }));
+	if(receiverExports) for(const node of types)
+		if(node.representation !== "copied" && (node.identity || ["record", "variant"].includes(node.kind)))
+			node.ownerType = claim(node.publicType + "Value");
 	const records = types.flatMap(node => node.kind === "record" ? [{ name: node.publicType, fields: node.fields, parent: null, index: node.index }]
 		: node.cases.map(branch => ({ name: branch.publicName, fields: branch.fields, parent: node.publicType, index: node.index })));
 	const functionNames = new Set(), declarations = new Map(ir.declarations.map(item => [item.id, item]));
@@ -98,7 +107,9 @@ export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = intege
 		const declaration = declarations.get(fn.id), publicName = phpClassName(fn.cName.slice(c.prefix.length + 1));
 		if(functionNames.has(publicName.toLowerCase())) fail(`duplicate function: ${publicName}`);
 		functionNames.add(publicName.toLowerCase()); const seen = new Set();
-		const publicParameters = declaration.parameters.map(parameter => {
+		let receiverName = "receiver";
+		while(declaration.parameters.some(parameter => phpFieldName(parameter.name, fail) === receiverName)) receiverName += "_";
+		const publicParameters = [...declaration.receiver ? [{ name: receiverName }] : [], ...declaration.parameters].map(parameter => {
 			const name = phpFieldName(parameter.name, fail);
 			if(seen.has(name)) fail(`duplicate parameter: ${name}`); seen.add(name); return name;
 		});
@@ -118,9 +129,10 @@ export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = intege
 			, classes: (node.identity || node.kind === "record" ? [node.publicType] : node.kind === "option" ? ["Some"] : node.kind === "result" ? ["Ok", "Err"] : node.cases.map(branch => branch.publicName)).map(qualified) });
 	const resources = types.filter(node => node.identity).map(node => {
 		const callback = c.callbacks.find(fn => fn.id === node.id), args = callback?.parameters.slice(1).map((_, index) => `$argument${index}`) ?? [];
-		return `final class ${node.publicType} extends Internal\\Resource
+		const members = receiverExports ? ownedPhpReceiverMembers(node, functions, types, true) : { doc: "", source: "" };
+		return `${members.doc}final class ${node.publicType} extends Internal\\Resource
 {
-${callback ? `    public function __invoke(${args.map(arg => `mixed ${arg}`).join(", ")}): mixed {
+${members.source}${callback ? `    public function __invoke(${args.map(arg => `mixed ${arg}`).join(", ")}): mixed {
         if (\\func_num_args() !== ${args.length}) throw new \\ArgumentCountError('Lean closure requires ${args.length} arguments');
         return Internal\\ResourceAccess::invoke($this, [${args.join(", ")}]);
     }\n` : ""}}`;
@@ -157,12 +169,17 @@ ${phpValueMethods}
 ${resources}
 `;
 	const files = { "src/Api.php": source
-		, "src/Internal/Values.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/GraphTypes.php';\n${ownedPhpValueResources}\n${phpGraphScalars.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied value", "Owned value")}\n${ownedPhpValueWalk(namespace, { anchoredResults })}`
+		, "src/Internal/Values.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/GraphTypes.php';\n${ownedPhpValueResources}\n${phpGraphScalars.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied value", "Owned value")}\n${ownedPhpValueWalk(namespace, { anchoredResults: wholeOwners })}`
 		, "src/Internal/GraphTypes.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class GraphTypes\n{\n    public const NODES = ${literal(catalog)};\n    public const CLASSES = ${literal(classes)};\n    public const IDENTITIES = ${literal(identities)};\n}\n` };
-	if(anchoredResults)
+	if(wholeOwners)
 	{
-		files["src/Api.php"] += ownedPhpBorrowValue;
-		files["src/Internal/Values.php"] += ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", `\\${namespace}`);
+		const owners = receiverExports ? ownedPhpReceiverOwners(namespace, types, functions)
+			: { value: ownedPhpBorrowValue, access: ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", `\\${namespace}`) };
+		files["src/Api.php"] += owners.value;
+		files["src/Internal/Values.php"] += owners.access;
+	}
+	if(wholeOwners)
+	{
 		files["src/Internal/Values.php"] = files["src/Internal/Values.php"].replace(
 			"    final public function close(): void { $this->binding->close(); }"
 			, String.raw`    final public function close(): void { $this->binding->close(); }
@@ -174,5 +191,5 @@ ${resources}
     }`);
 	}
 	if(Object.values(files).reduce((sum, contents) => sum + Buffer.byteLength(contents), 0) > 4 * 1024 * 1024) fail("PHP declarations exceed 4 MiB");
-	return { c, namespace, integerBits, wordBits, files, source: files["src/Api.php"], types, records, functions, aliases, publicFiles: ["src/Api.php"] };
+	return { c, namespace, integerBits, wordBits, files, source: files["src/Api.php"], types, records, functions, aliases, wholeOwners, receiverExports, hostCallbacks, publicFiles: ["src/Api.php"] };
 };

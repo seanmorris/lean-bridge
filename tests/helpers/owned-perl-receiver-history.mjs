@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPhpReceiver, ownedPhpReceiverChangedPaths } from "./owned-php-receiver-history.mjs";
 
 export const ownedPerlReceiverPath = "docs/evidence/owned-perl-receivers-20261001.json";
 export const ownedPerlReceiverBaseline = "2e9e748fc0354bfa309c2283de66ff8a917df349";
@@ -67,6 +68,7 @@ export const ownedPerlReceiverAddedPaths = [
 	, "tests/owned-perl-receiver-unanchored.test.mjs"
 ].sort();
 let cached;
+export const ownedPerlReceiverNormalizationPaths = [...new Set([...ownedPerlReceiverChangedPaths, ...ownedPhpReceiverChangedPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.
@@ -99,6 +101,7 @@ export const reverseOwnedPerlReceiverUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedPerlReceiver = (path, source, expected) => {
+	source = beforeOwnedPhpReceiver(path, source, expected);
 	if(!ownedPerlReceiverChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -125,5 +128,5 @@ export const beforeOwnedPerlReceiver = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedPerlReceiverHistoricalBytes = (path, bytes, expected) => ownedPerlReceiverChangedPaths.includes(path)
+export const ownedPerlReceiverHistoricalBytes = (path, bytes, expected) => ownedPerlReceiverNormalizationPaths.includes(path)
 	? beforeOwnedPerlReceiver(path, bytes.toString("utf8"), expected) : bytes;

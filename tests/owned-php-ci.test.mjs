@@ -33,7 +33,9 @@ test("owned PHP CI rejects skipped layers, missing reports and ignored failures"
 		, ["Consumer PHP must run without Xdebug.\\n\"); exit(1);", "Consumer PHP must run without Xdebug.\\n\"); exit(0);"]
 		, ["      - name: Disable host PHP debugging instrumentation\n", "      - name: Disable host PHP debugging instrumentation\n        if: false\n"]
 	]) {
-		const changed = source.replace(before, after); assert.notEqual(changed, source);
+		const position = source.indexOf(before, source.indexOf("  php-consumers:\n"));
+		assert.ok(position >= 0, before);
+		const changed = source.slice(0, position) + after + source.slice(position + before.length);
 		assert.throws(() => assertOwnedPhpCi(changed));
 	}
 });

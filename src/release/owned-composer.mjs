@@ -28,8 +28,11 @@ export const packageOwnedPhp = async options => {
 	const { model, receipt, evidence, adapter, libraryPaths } = await ownedPhpEvidence(options);
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
-	const generated = generateOwnedPhpPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults }), prefix = generated.c.prefix;
-	auditOwnedPhpPackage(model.bindingIr, generated.files, { transferredInputs, anchoredResults });
+	const capabilities = { transferredInputs, anchoredResults
+		, receiverExports: Boolean(model.ownedGraph.receiverExports)
+		, hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) };
+	const generated = generateOwnedPhpPackage(model.bindingIr, evidence, capabilities), prefix = generated.c.prefix;
+	auditOwnedPhpPackage(model.bindingIr, generated.files, capabilities);
 	const name = settings.name ?? `lean-bridge/${prefix.replaceAll("_", "-")}`;
 	const version = settings.version ?? (model.component.version === "0.0.0-local" ? "0.0.0" : model.component.version);
 	validateOrdinaryPhpSettings({ name, version });
@@ -38,7 +41,7 @@ export const packageOwnedPhp = async options => {
 	const copy = async (source, path) => save(path, await readFile(source));
 	for(const [path, source] of Object.entries(generated.files)) await save(path, source);
 	for(const [name, path] of Object.entries(libraryPaths)) await copy(path, `native/linux-x64/${name}`);
-	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json", "callbacks.c"])
+	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json", ...capabilities.hostCallbacks ? ["callbacks.c"] : []])
 		await copy(join(nativeRoot, path), `lean-bridge/component/${path}`);
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined)
 	{
