@@ -98,6 +98,19 @@ test("JVM borrow guides include executable Java/Kotlin examples and whole-owner 
 	assert.match(publisher, /version-3/u);
 });
 
+test("native PHP borrow guides explain whole roots and retain package-manager guidance", async () => {
+	const consumer = await readFile("docs/php.md", "utf8");
+	const publisher = await readFile("docs/publish/php.md", "utf8");
+	assert.match(consumer, /### Owner-anchored results/u);
+	assert.match(consumer, /\$owner = copy_value\(new Bundle\(\$ticket->get\(\)/u);
+	assert.match(consumer, /\$kept = \$view->retain\(\)/u);
+	assert.match(consumer, /last root expires its borrowed descendants/u);
+	assert.match(consumer, /currently applies to native PHP, not\nPHP-Wasm/u);
+	assert.match(publisher, /### Anchor a result to an input/u);
+	assert.match(publisher, /"scope": "parameter", "anchor": "arg0"/u);
+	assert.match(publisher, /### Publish to the private HTTPS repository/u);
+});
+
 test("native and managed borrow gates install ripgrep before inspecting TAP logs", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	for(const name of ["native-consumers", "managed-consumers"])
@@ -800,7 +813,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_php_native\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-php-native-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/recursive\/php-values\.json\n\s*build\/owned\/php-values\.json\n\s*build\/owned-php-runtime\/\n\s*build\/owned-php-conversions\/\n\s*build\/owned-php-calls\/\n\s*build\/owned-php-packaging\/\n\s*build\/owned-php-transfers\/\n\s*build\/owned-php-transfer-packaging\/\n\s*build\/recursive\/php-conversions\.json\n\s*build\/recursive\/php-native\.json\n\s*build\/recursive\/php-package-cold\.json\n\s*build\/recursive\/php-packages\.json\n\s*build\/recursive\/php-reproducibility\.json\n\s*build\/recursive\/php-composition\.json\n\s*build\/recursive\/php-conflicts\.json\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*build\/structured-callables\/php-native\.json\n\s*build\/recursive-callables\/php-recursive\.json\n\s*build\/recursive-callables\/php-mixed\.json\n\s*build\/compounds\/php-native\.json\n\s*build\/lists\/php-native\.json\n\s*build\/aliases\/php-native\.json\n\s*build\/variants\/php-native\.json\n\s*build\/collections\/php-native-conversions\.json\n\s*build\/equality\/php\.json\n\s*build\/collections\/php-native\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/recursive\/php-values\.json\n\s*build\/owned\/php-values\.json\n\s*build\/owned-php-runtime\/\n\s*build\/owned-php-conversions\/\n\s*build\/owned-php-calls\/\n\s*build\/owned-php-packaging\/\n\s*build\/owned-php-transfers\/\n\s*build\/owned-php-transfer-packaging\/\n\s*build\/owned-php-borrows\/\n\s*build\/owned-php-borrow-packaging\/\n\s*build\/recursive\/php-conversions\.json\n\s*build\/recursive\/php-native\.json\n\s*build\/recursive\/php-package-cold\.json\n\s*build\/recursive\/php-packages\.json\n\s*build\/recursive\/php-reproducibility\.json\n\s*build\/recursive\/php-composition\.json\n\s*build\/recursive\/php-conflicts\.json\n\s*build\/type-corpus\/php-native\.json\n\s*build\/type-corpus\/reviewed-native-php-native\.json\n\s*build\/char-native\/php-native\.json\n\s*build\/word-native\/php-native\.json\n\s*build\/callables\/php-native\.json\n\s*build\/structured-callables\/php-native\.json\n\s*build\/recursive-callables\/php-recursive\.json\n\s*build\/recursive-callables\/php-mixed\.json\n\s*build\/compounds\/php-native\.json\n\s*build\/lists\/php-native\.json\n\s*build\/aliases\/php-native\.json\n\s*build\/variants\/php-native\.json\n\s*build\/collections\/php-native-conversions\.json\n\s*build\/equality\/php\.json\n\s*build\/collections\/php-native\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_CALLABLE_TEST=1 node --test tests\/php-callables\.test\.mjs tests\/php-callable-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_COMPOUND_TEST=1 node --test tests\/php-compounds\.test\.mjs tests\/php-compound-contract\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_PHP_LIST_TEST=1 node --test tests\/php-lists\.test\.mjs tests\/php-list-contract\.test\.mjs/);

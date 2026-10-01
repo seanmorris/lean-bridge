@@ -10,6 +10,7 @@ import { phpValueMethods } from "./copied-equality.mjs";
 import { phpGraphScalars } from "./copied-graph-scalars.mjs";
 import { ownedPhpValueResources } from "./owned-value-resources.mjs";
 import { ownedPhpValueWalk } from "./owned-value-walk.mjs";
+import { ownedPhpBorrowValue, ownedPhpBorrowAccess } from "./owned-borrows.mjs";
 
 const literal = value => value === null ? "null" : typeof value === "number" ? String(value)
 	: typeof value === "string" ? `'${value.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}'`
@@ -27,12 +28,15 @@ const bigint = "\\Brick\\Math\\BigInteger";
  * @param options.integerBits - PHP integer width.
  * @param options.wordBits - Lean machine-word width.
  * @param options.transferredInputs - Admit explicitly consuming arguments.
+ * @param options.anchoredResults - Admit original-owner borrowed results.
  */
-export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false } = {}) => {
+export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false, anchoredResults = false } = {}) => {
 	if(![32, 64].includes(integerBits) || ![32, 64].includes(wordBits)) throw new TypeError("PHP and Lean integer widths must be 32 or 64");
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs }), namespace = `Lean${pascal(c.prefix)}`;
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults }), namespace = `Lean${pascal(c.prefix)}`;
+	anchoredResults = c.anchoredResults;
 	const fail = message => { throw new TypeError(`Invalid owned PHP values: ${message}`); };
 	const occupied = new Set([...reservedPhpNames, "some", "ok", "err", "withrecovery"]), names = new Map();
+	if(anchoredResults) occupied.add("value");
 	const claim = source => {
 		const name = phpClassName(source);
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || occupied.has(name.toLowerCase())) fail(`reserved or duplicate name: ${name}`);
@@ -153,8 +157,22 @@ ${phpValueMethods}
 ${resources}
 `;
 	const files = { "src/Api.php": source
-		, "src/Internal/Values.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/GraphTypes.php';\n${ownedPhpValueResources}\n${phpGraphScalars.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied value", "Owned value")}\n${ownedPhpValueWalk(namespace)}`
+		, "src/Internal/Values.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/GraphTypes.php';\n${ownedPhpValueResources}\n${phpGraphScalars.replaceAll("GRAPH_NAMESPACE", `\\${namespace}`).replaceAll("Copied value", "Owned value")}\n${ownedPhpValueWalk(namespace, { anchoredResults })}`
 		, "src/Internal/GraphTypes.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class GraphTypes\n{\n    public const NODES = ${literal(catalog)};\n    public const CLASSES = ${literal(classes)};\n    public const IDENTITIES = ${literal(identities)};\n}\n` };
+	if(anchoredResults)
+	{
+		files["src/Api.php"] += ownedPhpBorrowValue;
+		files["src/Internal/Values.php"] += ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", `\\${namespace}`);
+		files["src/Internal/Values.php"] = files["src/Internal/Values.php"].replace(
+			"    final public function close(): void { $this->binding->close(); }"
+			, String.raw`    final public function close(): void { $this->binding->close(); }
+    final public function sameIdentity(Resource $other): bool {
+        $left = ResourceAccess::binding($this); $right = ResourceAccess::binding($other);
+        if (static::class !== $other::class) return false;
+        if (!$left instanceof NativeBinding || !$right instanceof NativeBinding) throw new \TypeError('Expected native PHP resources');
+        return $left->sameIdentity($right);
+    }`);
+	}
 	if(Object.values(files).reduce((sum, contents) => sum + Buffer.byteLength(contents), 0) > 4 * 1024 * 1024) fail("PHP declarations exceed 4 MiB");
-	return { c, namespace, integerBits, wordBits, files, source, types, records, functions, aliases, publicFiles: ["src/Api.php"] };
+	return { c, namespace, integerBits, wordBits, files, source: files["src/Api.php"], types, records, functions, aliases, publicFiles: ["src/Api.php"] };
 };

@@ -9,8 +9,9 @@
  *
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Reserve identities during consuming conversion.
+ * @param options.anchoredResults - Pin storage separately from the whole root count.
  */
-export const ownedPhpConversionSupport = ({ transferredInputs = false } = {}) => String.raw`
+export const ownedPhpConversionSupport = ({ transferredInputs = false, anchoredResults = false } = {}) => String.raw`
 final class OwnedInvalidNative extends \RuntimeException
 {
     public function __construct(string $message) { parent::__construct($message, 9); }
@@ -95,14 +96,14 @@ final class OwnedConversionScope
     }
     public function pin(NativeBinding $binding): \FFI\CData {
         $this->storage->charge(32); $this->checkpoint();
-        $this->leases[] = ${transferredInputs ? "$lease = " : ""}$binding->pin($this->state);${transferredInputs ? "\n        $this->inputGroup?->reserve($lease);" : ""}
+        $this->leases[] = ${anchoredResults ? "new OwnedPin(" : transferredInputs ? "$lease = " : ""}$binding->pin($this->state)${anchoredResults ? ")" : ""};${transferredInputs ? "\n        $this->inputGroup?->reserve($lease);" : ""}
         return $binding->raw($this->state);
     }
     public function close(): void {
         if ($this->closed) return;
         $this->state->runtime->affinity();
         foreach ($this->integers as $slot) $this->schema->ffi->@PREFIX@_php_integer_free(\FFI::addr($slot));
-        $this->integers = []; $this->memory = []; $this->leases = []; $this->closed = true;
+${anchoredResults ? "        OwnedPin::closeAll($this->leases);\n" : ""}        $this->integers = []; $this->memory = []; $this->leases = []; $this->closed = true;
     }
     public function __destruct() { try { $this->close(); } catch (\Throwable) {} }
 }

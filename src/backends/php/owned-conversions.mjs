@@ -25,6 +25,7 @@ const literal = value => value === null ? "null" : typeof value === "boolean" ||
 export const generateOwnedPhpConversions = (ir, options = {}) => {
 	const model = generateOwnedPhpValues(ir, { ...options, integerBits: 64, wordBits: 64 });
 	const transferredInputs = model.functions.some(fn => fn.transfers?.length);
+	const anchoredResults = model.c.anchoredResults;
 	const { c, namespace } = model, nodes = new Map(model.types.map(node => [node.id, node]));
 	for(const name of ["lb_php_integer", "lb_php_owned_bytes", "lb_php_owned_slot"
 		, ...["new", "free", "text"].map(suffix => `${c.prefix}_php_integer_${suffix}`)])
@@ -65,7 +66,7 @@ ${c.prefix}_status ${c.prefix}_php_integer_new(const char *, size_t, mpz_srcptr 
 void ${c.prefix}_php_integer_free(mpz_srcptr *);
 ${c.prefix}_status ${c.prefix}_php_integer_text(mpz_srcptr, char *, size_t, size_t *);
 `;
-	const support = `${copiedPhpHelpers.slice(copiedPhpHelpers.indexOf("final class ScalarCodec"))}\n${ownedPhpConversionSupport({ transferredInputs })}\n${ownedPhpConversionTransfer}`
+	const support = `${copiedPhpHelpers.slice(copiedPhpHelpers.indexOf("final class ScalarCodec"))}\n${ownedPhpConversionSupport({ transferredInputs: transferredInputs && !anchoredResults, anchoredResults })}\n${ownedPhpConversionTransfer}`
 		.replaceAll("@PREFIX@", c.prefix).replaceAll("@NAMESPACE@", `\\${namespace}`);
 	const files = { ...model.files
 		, "src/Internal/OwnedNativeTypes.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class OwnedNativeTypes\n{\n    public const DEFINITIONS = <<<'CDEFS'\n${definitions}CDEFS;\n    public const NODES = ${literal(descriptors)};\n}\n`

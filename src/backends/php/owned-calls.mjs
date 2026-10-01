@@ -20,10 +20,12 @@ import { phpCallableLiteral as literal } from "./callable-graph-calls.mjs";
 export const generateOwnedPhpCalls = (ir, options = {}) => {
 	const model = generateOwnedPhpConversions(ir, options), { c, namespace } = model;
 	const transferredInputs = model.functions.some(fn => fn.transfers?.length);
+	const anchoredResults = c.anchoredResults;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const types = new Map(c.native.model.types.map(node => [node.id, node]));
-	if(model.functions.some(fn => fn.publicName.toLowerCase() === "with_recovery"))
-		throw new TypeError("Owned PHP function collides with with_recovery");
+	for(const helper of ["with_recovery", ...anchoredResults ? ["copy_value"] : []])
+		if(model.functions.some(fn => fn.publicName.toLowerCase() === helper))
+			throw new TypeError(`Owned PHP function collides with ${helper}`);
 	const claim = name => {
 		if(new RegExp(`\\b${name}\\b`, "u").test(c.header)) throw new TypeError(`Owned PHP native helper collides with ${name}`);
 		return name;
@@ -70,6 +72,7 @@ export const generateOwnedPhpCalls = (ir, options = {}) => {
 				if(!snapshot) throw new TypeError(`Missing PHP transfer snapshot for ${id}`);
 				parameter.transfer = snapshot.cName;
 			}
+			if(fn.anchor === index) parameter.anchor = true;
 			return parameter;
 		});
 		const result = nodes.get(fn.result), host = parameters.some(parameter => parameter.host);
@@ -80,6 +83,7 @@ export const generateOwnedPhpCalls = (ir, options = {}) => {
 				...parameters.flatMap((parameter, index) => [
 					`${parameter.host ? `${callbacks[parameter.type].ctype} *` : input(model.types[parameter.type])} a${index}`
 					, ...parameter.transfer ? [`${c.prefix}_result **a${index}_owner`] : []
+					, ...parameter.anchor ? [`${c.prefix}_result *a${index}_anchor`] : []
 				])
 				, `${result.cName} *out`, `${c.prefix}_result **owner`
 			].join(", ")})`;
@@ -98,22 +102,35 @@ export const generateOwnedPhpCalls = (ir, options = {}) => {
 			source.push(`  return ${fn.cName}(session, ${[...parameters.flatMap((parameter, index) => [
 				parameter.host ? `a${index} ? &host${index} : NULL` : `a${index}`
 				, ...parameter.transfer ? [`a${index}_owner`] : []
+				, ...parameter.anchor ? [`a${index}_anchor`] : []
 			])
 			, "out", "owner"].join(", ")});`, "}");
 		}
-		return { symbol, parameters, result: result.index };
+		return { symbol, parameters, result: result.index
+			, ...anchoredResults ? { whole: result.representation !== "copied" && !fn.retain && !fn.copy, anchor: fn.anchor ?? null } : {} };
 	});
 	const closures = Object.fromEntries(c.callbacks.map((fn, index) => [nodes.get(fn.id).index, c.functions.length + index]));
 	const retains = Object.fromEntries(c.retains.map((fn, index) => [nodes.get(fn.id).index, c.functions.length + c.callbacks.length + index]));
 	const functions = Object.fromEntries(model.functions.map((fn, index) => [fn.publicName, index]));
+	const copies = Object.fromEntries([...c.retains, ...c.copies].map((fn, index) => [nodes.get(fn.result).index, c.functions.length + c.callbacks.length + index]));
+	const nominals = Object.fromEntries(model.types.filter(node => node.representation !== "copied").flatMap(node =>
+		(node.identity || node.kind === "record" ? [node.publicType] : node.cases.map(branch => branch.publicName))
+			.map(name => [`${namespace}\\${name}`, node.index])));
+	const results = Object.fromEntries(model.functions.filter(fn => nodes.get(fn.result).representation !== "copied")
+		.map(fn => [fn.publicName, nodes.get(fn.result).index]));
+	const parameters = Object.fromEntries(model.functions.flatMap(fn => fn.parameters.flatMap((id, index) => nodes.get(id).representation === "copied" ? [] : [
+		[`${fn.publicName}/${index}`, nodes.get(id).index]
+		, [`${fn.publicName}/${fn.declaration.parameters[index].name}`, nodes.get(id).index]
+	])));
 	const definitions = model.definitions + "\n" + extra.join("\n") + "\nvoid lean_bridge_native_runtime_retire(void);\n";
 	const publicFunctions = model.functions.map(fn => {
 		const result = nodes.get(fn.result), parameters = fn.parameters.map(id => nodes.get(id));
+		const whole = anchoredResults && result.representation !== "copied";
 		return `/**
-${parameters.map((node, index) => ` * @param ${node.kind === "callback" && !fn.transfers?.includes(index) ? `callable|${node.docType}|WithRecovery` : node.docType} $${fn.publicParameters[index]}`).join("\n")}${fn.transfers?.length ? `\n * Consumes resource leases in ${fn.transfers.map(index => "$" + fn.publicParameters[index]).join(", ")} at the Lean call boundary.` : ""}
- * @return ${result.docType}
+${parameters.map((node, index) => ` * @param ${anchoredResults && (fn.anchor === index || fn.transfers?.includes(index)) ? `Value<${node.docType}>` : node.kind === "callback" && !fn.transfers?.includes(index) ? `callable|${node.docType}|WithRecovery` : node.docType} $${fn.publicParameters[index]}`).join("\n")}${fn.transfers?.length ? `\n * Consumes ${anchoredResults ? "original whole owners" : "resource leases"} in ${fn.transfers.map(index => "$" + fn.publicParameters[index]).join(", ")} at the Lean call boundary.` : ""}
+ * @return ${whole ? `Value<${result.docType}>` : result.docType}
  */
-function ${fn.publicName}(${fn.publicParameters.map(name => `mixed $${name}`).join(", ")}): ${result.publicType} {
+function ${fn.publicName}(${fn.publicParameters.map(name => `mixed $${name}`).join(", ")}): ${whole ? "Value" : result.publicType} {
     if (\\func_num_args() !== ${parameters.length}) throw new \\ArgumentCountError('${fn.publicName} requires exactly ${parameters.length} arguments');
     return Internal\\Native::call('${fn.publicName}', [${fn.publicParameters.map(name => `$${name}`).join(", ")}]);
 }
@@ -134,8 +151,20 @@ function with_recovery(mixed $callback, mixed $value): WithRecovery {
 require_once __DIR__ . '/Internal/OwnedCalls.php';
 ` + publicFunctions;
 	files["src/Internal/OwnedCallTypes.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class OwnedCallTypes\n{\n    public const DEFINITIONS = <<<'CDEFS'\n${definitions}CDEFS;\n    public const CALLS = ${literal(calls)};\n    public const CALLBACKS = ${literal(callbacks)};\n    public const FUNCTIONS = ${literal(functions)};\n    public const CLOSURES = ${literal(closures)};\n    public const RETAINS = ${literal(retains)};\n}\n`;
-	files["src/Internal/OwnedRuntime.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n${ownedPhpRuntime(c.prefix, { transferredInputs })}`;
-	files["src/Internal/OwnedCalls.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/OwnedRuntime.php';\nrequire_once __DIR__ . '/OwnedConversions.php';\nrequire_once __DIR__ . '/OwnedCallTypes.php';\n${ownedPhpCallRuntime({ transferredInputs }).replaceAll("@NAMESPACE@", `\\${namespace}`)}`;
+	if(anchoredResults)
+	{
+		files["src/Api.php"] += `
+function copy_value(mixed $value, mixed $resultOf = null, mixed $parameterOf = null): Value {
+    if (\\func_num_args() > 3) throw new \\ArgumentCountError('copy_value accepts a payload and optional selector');
+    if (($resultOf !== null && !\\is_string($resultOf)) || ($parameterOf !== null && !\\is_array($parameterOf)))
+        throw new \\TypeError('copy_value requires a string resultOf or an array parameterOf');
+    return Internal\\Native::copyValue($value, $resultOf, $parameterOf);
+}
+`;
+		files["src/Internal/OwnedCallTypes.php"] = files["src/Internal/OwnedCallTypes.php"].replace("    public const CALLS =", `    public const COPIES = ${literal(copies)};\n    public const NOMINALS = ${literal(nominals)};\n    public const RESULTS = ${literal(results)};\n    public const PARAMETERS = ${literal(parameters)};\n    public const EQUALITY = ${literal(Object.fromEntries(model.types.filter(node => node.identity).map(node => [node.index, node.cName + "_equal"])))};\n    public const CALLS =`);
+	}
+	files["src/Internal/OwnedRuntime.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n${ownedPhpRuntime(c.prefix, { transferredInputs, anchoredResults })}`;
+	files["src/Internal/OwnedCalls.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/OwnedRuntime.php';\nrequire_once __DIR__ . '/OwnedConversions.php';\nrequire_once __DIR__ . '/OwnedCallTypes.php';\n${ownedPhpCallRuntime({ transferredInputs, anchoredResults }).replaceAll("@NAMESPACE@", `\\${namespace}`)}`;
 	if(Object.values(files).reduce((sum, text) => sum + Buffer.byteLength(text), 0) > 16 * 1024 * 1024)
 		throw new TypeError("Owned PHP call sources exceed 16 MiB");
 	return { ...model, files, definitions, callbacks, calls, functionIndices: functions, closures, retains, nativeSource: source.join("\n") + "\n" };

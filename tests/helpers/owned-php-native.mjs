@@ -24,11 +24,12 @@ import { runCopied } from "./copied-fixture-install.mjs";
 export const compileOwnedPhpFixture = async (t, options = {}) => {
 	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
 	const transferredInputs = Boolean(options.transferredInputs);
+	const anchoredResults = Boolean(options.anchoredResults);
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component
-		, hostCallbacks: true, transferredInputs });
-	const model = generateOwnedPhpCalls(c.values.native.model.bindingIr, { transferredInputs });
+		, hostCallbacks: true, transferredInputs, anchoredResults });
+	const model = generateOwnedPhpCalls(c.values.native.model.bindingIr, { transferredInputs, anchoredResults });
 	const handoff = "static inline void oc_transfer_consume(void *context) {";
 	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const implementation = `#include <stdlib.h>
@@ -73,9 +74,10 @@ size_t owned_test_identities(void) {
 		, runtimeIdentity: sha256(canonicalJson(loadOrder.slice(0, 2).map(name => libraries[name])))
 		, identity: sha256(implementation) }));
 	const originalHelpers = await readFile("tests/fixtures/structured-types/owned-php-calls-probe.php", "utf8");
-	const helpers = transferredInputs ? originalHelpers
+	let helpers = transferredInputs ? originalHelpers
 		.replace("size_t owned_test_live(void);", "size_t owned_test_live(void);\\nsize_t owned_test_handoffs(void);")
 		.replace("global $model;", "global $model, $visited; $visited[$name] = true;") : originalHelpers;
+	if(anchoredResults) helpers = helpers.replace("$item instanceof Resource", "$item instanceof Resource || $item instanceof LeanOwnedAggregates\\Value");
 	await saveLakeFile(compiled.directory, "probe.php", helpers);
 	const execute = async (source, mode = "normal") => {
 		await saveLakeFile(compiled.directory, "consumer.php", source);

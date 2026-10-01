@@ -38,19 +38,32 @@ const checkEvidence = (model, contract, evidence) => {
  * @param evidence - Closed native identities, or null for source inspection.
  * @param options - Authenticated ownership capabilities.
  * @param options.transferredInputs - Enable consuming input leases.
+ * @param options.anchoredResults - Preserve whole owners for borrowed results.
  */
-export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs = false } = {}) => {
-	const model = generateOwnedPhpCalls(ir, { transferredInputs }), { namespace } = model, prefix = model.c.prefix;
+export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const model = generateOwnedPhpCalls(ir, { transferredInputs, anchoredResults }), { namespace } = model, prefix = model.c.prefix;
 	const transfers = model.functions.some(fn => fn.transfers?.length);
+	const anchors = Boolean(model.c.anchoredResults);
 	if(["gmp", "leanshared", "lean_bridge_native"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned PHP component name collides with a dependency or exceeds its name limit");
-	const contract = { schemaVersion: transfers ? 2 : 1
+	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
 		, language: "php-8.2-nts-cli"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
-			, arguments: "ordinary-values", consumption: "before-lean-call"
+			, arguments: anchors ? "whole-values" : "ordinary-values"
+			, consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"
 			, aliases: "shared-lease", borrowedInputs: "reject"
 			, independentRetains: "preserved" } } : {}
+		, ...anchors ? { resultAnchors: {
+			schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-result-owner"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved", aliases: "shared-owner"
+			, independentOwnership: "retain-or-copy_value"
+			, copyType: "nominal-or-resultOf-or-parameterOf"
+			, rawViews: "borrowed-from-whole-owner"
+			, resourceEquality: "canonical-identity", invalidEquality: "raise"
+			, transfers: "original-owner" } } : {}
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
 		, exactIntegers: "brick-math", integerDecimalDigits: 16384
@@ -112,7 +125,28 @@ them in a finally block. Destruction provides fallback cleanup. Calls from
 Fibers reject; cleanup deferred by Fiber destruction runs in the main context.
 Resource identities cannot be cloned or serialized.
 
-${transfers ? `Consuming parameters accept ordinary PHP values. Validation and snapshot
+${anchors ? `Resource-bearing results use Value owners, including empty containers and
+None. Call get() for the typed PHP payload. A borrowed result follows its
+declared original input owner, and its descendants expire with that owner.
+share() adds a root to the same owner; closing or destroying the last root
+expires raw resource views as well. retain() makes an independent whole owner.
+Resource sameIdentity() compares native identities. Value equals() and
+hashCode() compare structured values; expired operands raise.
+
+copy_value(payload) creates an independent owner for a nominal record,
+variant or resource. For containers, use copy_value(payload,
+resultOf: 'function_name') or parameterOf: ['function_name', 'parameter_name'].
+Parameter indices are also accepted. No constructor or native type indices
+are part of this API. Anchored and consuming parameters require Value owners.
+
+${transfers ? `Consuming calls pass the original native owner slot. Validation failures
+before handoff preserve it. At handoff, all shared roots and borrowed
+descendants expire, even for empty values. Later failures do not restore the
+owner. Independent retain() and copy_value() results remain usable. Borrowed
+results cannot be consumed directly; retain them first. An owner cannot be
+both a consumed input and the result anchor of the same call.
+
+` : ""}` : transfers ? `Consuming parameters accept ordinary PHP values. Validation and snapshot
 failures before Lean runs preserve their owners. At the native handoff, each
 consumed result owner closes all its resource and closure aliases, including
 sibling fields. Later callback or result-conversion failures do not restore
@@ -139,10 +173,11 @@ and invalid calls reject before loading native code.
 `;
 	const exports = ["Bytes", "LeanBridgeError", "Some", "Ok", "Err"
 		, "WithRecovery", "with_recovery"
+		, ...anchors ? ["Value", "copy_value"] : []
 		, ...model.types.filter(node => node.identity || node.kind === "variant").map(node => node.publicType)
 		, ...model.records.map(record => record.name)
 		, ...model.functions.map(fn => fn.publicName)].map(name => `${namespace}\\${name}`);
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: 1
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : 1
 		, generator: { id: "lean-wasm/php-owned", version: 1 }
 		, component: ir.component.id
 		, bindingIrSha256: model.c.native.model.bindingIrSha256

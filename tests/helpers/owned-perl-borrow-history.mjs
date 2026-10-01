@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPhpBorrow, ownedPhpBorrowChangedPaths } from "./owned-php-borrow-history.mjs";
 
 export const ownedPerlBorrowPath = "docs/evidence/owned-perl-borrows-20261001.json";
 export const ownedPerlBorrowBaseline = "85e684e746df8458e48f18ce2962b4a54ea3c989";
@@ -43,6 +44,7 @@ export const ownedPerlBorrowAddedPaths = [
 	, "tests/owned-perl-borrows.test.mjs"
 ].sort();
 let cached;
+export const ownedPerlBorrowNormalizationPaths = [...new Set([...ownedPerlBorrowChangedPaths, ...ownedPhpBorrowChangedPaths])].sort();
 
 /**
  * Reverse complete versions using exact ordered edits and both source digests.
@@ -75,6 +77,7 @@ export const reverseOwnedPerlBorrowUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedPerlBorrow = (path, source, expected) => {
+	source = beforeOwnedPhpBorrow(path, source, expected);
 	if(!ownedPerlBorrowChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(ownedPerlBorrowPath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "owned-perl-borrows");
@@ -92,5 +95,5 @@ export const beforeOwnedPerlBorrow = (path, source, expected) => {
  * @param bytes - Complete current source bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedPerlBorrowHistoricalBytes = (path, bytes, expected) => ownedPerlBorrowChangedPaths.includes(path)
+export const ownedPerlBorrowHistoricalBytes = (path, bytes, expected) => ownedPerlBorrowNormalizationPaths.includes(path)
 	? beforeOwnedPerlBorrow(path, bytes.toString("utf8"), expected) : bytes;

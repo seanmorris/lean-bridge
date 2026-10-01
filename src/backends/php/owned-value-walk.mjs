@@ -9,8 +9,10 @@
  * legal; array references and object identities detect path-local cycles.
  *
  * @param namespace - Validated generated component namespace.
+ * @param options - Explicit ownership comparison capability.
+ * @param options.anchoredResults - Compare identities through their native API.
  */
-export const ownedPhpValueWalk = namespace => String.raw`
+export const ownedPhpValueWalk = (namespace, { anchoredResults = false } = {}) => String.raw`
 final class Values
 {
     public static function check(int $type, mixed $value): void {
@@ -63,7 +65,7 @@ final class Values
                 ResourceAccess::binding($current);
                 if ($node !== null && (!in_array($node['kind'], ['resource', 'callback'], true)
                     || $node['classes'] !== [$current::class])) throw new \TypeError('Wrong nominal Lean identity');
-                yield ['r', $current::class . ':' . spl_object_id($current)];
+                yield ['r', ${anchoredResults ? "$current" : "$current::class . ':' . spl_object_id($current)"}];
                 continue;
             }
             if ($node !== null && $node['kind'] === 'primitive') GraphScalars::check($node, $current, $budget);
@@ -114,8 +116,14 @@ final class Values
         $a = self::walk($left, null, new GraphBudget()); $b = self::walk($right, null, new GraphBudget());
         $same = true;
         while ($a->valid() || $b->valid()) {
-            if (!$a->valid() || !$b->valid() || $a->current() !== $b->current()) $same = false;
-            if ($a->valid()) $a->next();
+${anchoredResults ? String.raw`            if (!$a->valid() || !$b->valid()) $same = false;
+            else {
+                $leftToken = $a->current(); $rightToken = $b->current();
+                if ($leftToken[0] === 'r' && $rightToken[0] === 'r') {
+                    if (!$leftToken[1]->sameIdentity($rightToken[1])) $same = false;
+                } elseif ($leftToken !== $rightToken) $same = false;
+            }
+` : "            if (!$a->valid() || !$b->valid() || $a->current() !== $b->current()) $same = false;\n"}            if ($a->valid()) $a->next();
             if ($b->valid()) $b->next();
         }
         return $same;
@@ -123,7 +131,7 @@ final class Values
     public static function hash(mixed $value): string {
         $hash = hash_init('sha256');
         foreach (self::walk($value, null, new GraphBudget()) as [$tag, $text]) {
-            hash_update($hash, $tag . pack('N', strlen($text))); hash_update($hash, $text);
+${anchoredResults ? "            if ($tag === 'r') $text = $text::class;\n" : ""}            hash_update($hash, $tag . pack('N', strlen($text))); hash_update($hash, $text);
         }
         return hash_final($hash);
     }

@@ -453,15 +453,18 @@ startup descriptor. First-use loading inside a synchronous Lean callback throws
 before downloading an extension; the peer remains usable from a normal call.
 After `php.refresh()`, require the autoloader again and initialize lazy peers
 outside callbacks. Do not reuse resource wrappers from an earlier request.
-Owner-anchored borrowed results and asynchronous callbacks remain unsupported
-in both PHP transports.
+Native packages also support [owner-anchored results](#owner-anchored-results).
+That result contract remains unavailable in PHP-Wasm. Asynchronous callbacks
+remain unsupported in both transports.
 
 ### Consuming inputs
 
 Native PHP and PHP-Wasm packages can expose functions that consume
 resource-containing arguments. The generated function documentation names those
 arguments. Pass the same PHP values you use for borrowed arguments; no transfer
-wrapper is needed.
+wrapper is needed for packages without owner-anchored results. In native
+packages with that result contract, consuming inputs use the
+[whole-value owners](#owner-anchored-results) described below.
 
 With the [consuming author configuration](publish/php.md#export-consuming-inputs),
 save this as `consume.php`:
@@ -511,6 +514,77 @@ throws or result conversion fails. This also closes sibling fields that share
 an owner. Two consuming parameters cannot share one owner. Resources borrowed
 inside a callback cannot be consumed; call `retain()` first. Records and arrays
 remain PHP values, but their consumed resource fields are no longer usable.
+
+### Owner-anchored results
+
+A native publisher can tie a function's result to an input's lifetime. In those
+packages, resource-containing results return a `Value`, including empty arrays,
+empty Lists and `None`. Use `get()` to access the PHP payload. Anchored and
+consuming parameters take the whole `Value`; ordinary borrowed parameters take
+its payload.
+
+With the [anchored author configuration](publish/php.md#anchor-a-result-to-an-input),
+save this as `borrowed.php` beside your installed `vendor` directory:
+
+```php
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Brick\Math\BigInteger;
+use LeanOwnedAggregates\{Bundle, Bytes, LeanBridgeError, Payload};
+use function LeanOwnedAggregates\{callback_record, copy_value, new_ticket, serial};
+
+$ticket = new_ticket(BigInteger::of(42), 'order');
+$owner = $view = $kept = null;
+try {
+    $owner = copy_value(new Bundle($ticket->get(), null, [], [],
+        new Payload(BigInteger::of(7), Bytes::fromString('payload'))));
+    $view = callback_record($owner, static fn(Bundle $value): Bundle => $value);
+    $kept = $view->retain();
+    echo serial($view->get()->primary), PHP_EOL;
+    $owner->close();
+    try {
+        $view->get();
+    } catch (LeanBridgeError $error) {
+        if ($error->getCode() !== 4) throw $error;
+        echo 'expired', PHP_EOL;
+    }
+    echo serial($kept->get()->primary), PHP_EOL;
+} finally {
+    $view?->close();
+    $kept?->close();
+    $owner?->close();
+    $ticket->close();
+}
+```
+
+Run `php borrowed.php`. It prints `42`, `expired`, then `42`. The retained result
+owns an independent lifetime. Composer handles loading and dependencies.
+
+`share()` creates another root for the same owner. Closing or destroying the
+last root expires its borrowed descendants. A saved resource from `get()` does
+not keep that root open. `close()` is idempotent; `closed()` reports expiration.
+Call `retain()` on a whole value or a resource leaf to keep an independent owner.
+`equals()` compares structured values using native resource identity, and equal
+values have equal `hashCode()` results. Expired values reject both operations.
+Resource `sameIdentity()` compares the underlying Lean identity, not PHP object
+identity or resource fields.
+
+`copy_value($payload)` infers nominal record, variant and resource types. For
+containers, select a declared function result with
+`copy_value([], resultOf: 'echo_array')`, or a parameter with
+`copy_value([], parameterOf: ['bundle', 2])`. A parameter selector also accepts
+the declared parameter name. These names come from the installed API; no native
+type identifiers are needed.
+
+Consuming calls invalidate the original whole owner and every borrowed
+descendant at the native handoff. Independent retained values survive. Validation
+failures before handoff preserve the owner; callback or conversion failures
+afterward do not restore it. A borrowed result must be retained before passing
+it to a consuming parameter. This API currently applies to native PHP, not
+PHP-Wasm.
 
 ### Native callbacks and returned functions
 

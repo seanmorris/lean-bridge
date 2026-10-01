@@ -145,8 +145,9 @@ Callback resource borrows expire when the callback returns. PHP consumers call
 borrowed PHP callback does not extend its lifetime. Conversions allow 128 value
 levels, 262,144 visits and separate 16 MiB storage budgets. Calls run in the main
 NTS CLI context, with checked process identity and deferred cleanup during active
-calls. Native packages also support [consuming inputs](#export-consuming-inputs).
-Owner-anchored borrowed results and asynchronous callbacks remain unsupported. The
+calls. Native packages also support [consuming inputs](#export-consuming-inputs)
+and [owner-anchored results](#anchor-a-result-to-an-input). Asynchronous callbacks
+remain unsupported. The
 [installed package checks](../evidence/owned-php-packages-20260928.md) cover native
 package loading, relocation, independent builds and mixed packages.
 
@@ -214,6 +215,42 @@ results survive. Callback borrows must be retained before they can be consumed.
 A combined release may select other transfer-capable targets such as C. Native
 PHP uses its 64-bit FFI adapter; PHP-Wasm compiles a separate 32-bit Zend
 extension and ships the matching npm descriptor and optional Composer package.
+
+### Anchor a result to an input
+
+For a native PHP release, add this `contracts` map to the
+[resource example's configuration](#export-resource-containing-values):
+
+```json
+{
+  "contracts": {
+    "Owned.callbackRecord": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg0" }
+      }
+    }
+  }
+}
+```
+
+Build with `--target php-native`. `arg0` names the first parameter in the
+compiler's ordinary contract. A reviewed contract uses its declared parameter
+name. The result follows that input's original owner, including when the input
+contains no resources at runtime. Closing or consuming the owner expires the
+result and its borrowed descendants.
+
+In a package with this contract, resource-containing results use generated
+`Value` owners. Anchored and consuming inputs take those owners; ordinary
+borrowed inputs still take the payload returned by `get()`. Consumers use
+`copy_value()` to own a constructed value and `retain()` for an independent
+result. The [installed example](../php.md#owner-anchored-results) prints `42`,
+`expired`, then `42`.
+
+Combine this target with another anchor-capable target, such as `--target c`,
+to reuse the native Lean build. PHP-Wasm does not yet accept this result
+contract. Keep publishing the native Composer ZIP and package-set receipt
+through the same [Composer repository procedure](#publish-to-the-private-https-repository).
 
 ### Export named copied aliases
 

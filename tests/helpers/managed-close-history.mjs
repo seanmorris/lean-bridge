@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPerlBorrow, ownedPerlBorrowChangedPaths } from "./owned-perl-borrow-history.mjs";
+import { beforeOwnedPerlBorrow, ownedPerlBorrowNormalizationPaths } from "./owned-perl-borrow-history.mjs";
 
 export const managedClosePath = "docs/evidence/managed-whole-close-repair-20260930.json";
 export const managedCloseBaseline = "86a41767fe33e3c12e4e8524d16d99f596c7f05f";
@@ -39,7 +39,7 @@ export const managedCloseAddedPaths = [
 	, "tests/managed-close-generated-history.test.mjs"
 ].sort();
 let cached;
-export const managedCloseNormalizationPaths = [...new Set([...managedCloseChangedPaths, ...ownedPerlBorrowChangedPaths])].sort();
+export const managedCloseNormalizationPaths = [...new Set([...managedCloseChangedPaths, ...ownedPerlBorrowNormalizationPaths])].sort();
 
 /**
  * Reverse authenticated complete-file versions through exact ordered edits.

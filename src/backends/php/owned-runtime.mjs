@@ -4,6 +4,7 @@
  * @file
  */
 import { ownedPhpInputTransfers } from "./owned-input-transfers.mjs";
+import { ownedPhpBorrowLease, ownedPhpBorrowTransfers } from "./owned-borrows.mjs";
 
 /**
  * The caller supplies authenticated FFI bindings. This runtime alone does not
@@ -12,11 +13,12 @@ import { ownedPhpInputTransfers } from "./owned-input-transfers.mjs";
  * @param prefix - Validated public C component identifier.
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Observe native consumption through shared leases.
+ * @param options.anchoredResults - Preserve whole roots and original owner slots.
  */
-export const ownedPhpRuntime = (prefix, { transferredInputs = false } = {}) => {
+export const ownedPhpRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
 	if(typeof prefix !== "string" || !/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned PHP prefix");
 	const namespace = "Lean" + prefix.split("_").filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("") + (prefix.match(/_+$/u)?.[0] ?? "");
-	return String.raw`
+	let source = String.raw`
 final class OwnedRuntime
 {
     private ?OwnedState $state = null;
@@ -155,7 +157,7 @@ final class OwnedOwner
     }
     public function publish(): void {
         if ($this->lease === null) { $this->close(); return; }
-        $this->lease->requireOpen();${transferredInputs ? "\n        $this->lease->published = true;" : ""}
+        $this->lease->requireOpen();${transferredInputs || anchoredResults ? "\n        $this->lease->published = true;" : ""}
         $this->slot = null; $this->lease = null;
     }
     public function close(): void {
@@ -198,7 +200,7 @@ final class OwnedBorrowFrame
 final class NativeBinding implements ResourceBinding
 {
     public function __construct(private ?OwnedLease $lease, private ?\FFI\CData $handle,
-        private ?\Closure $retainCall, private ?\Closure $invokeCall = null) {
+        private ?\Closure $retainCall, private ?\Closure $invokeCall = null${anchoredResults ? String.raw`, private ?\Closure $equalCall = null` : ""}) {
         $this->check(); $this->lease->state->runtime->checkpoint();
     }
     public function check(): void {
@@ -222,11 +224,25 @@ final class NativeBinding implements ResourceBinding
         if ($this->invokeCall === null) throw new \TypeError('This Lean identity is not callable');
         return ($this->invokeCall)($this, $arguments);
     }
-    public function close(): void {
+${anchoredResults ? String.raw`    public function sameIdentity(NativeBinding $other): bool {
+        $this->check(); $other->check();
+        if ($this->lease->state !== $other->lease->state) OwnedRuntime::checked(1);
+        if ($this->equalCall === null) throw new \LogicException('Missing native identity comparison');
+        return ($this->equalCall)($this, $other);
+    }
+` : ""}    public function close(): void {
         if ($this->lease === null) return;
         $this->lease->state->runtime->affinity();
-        $this->handle = null; $this->lease = null; $this->retainCall = null; $this->invokeCall = null;
+        $this->handle = null; $this->lease = null; $this->retainCall = null; $this->invokeCall = null;${anchoredResults ? " $this->equalCall = null;" : ""}
     }
 }
-${transferredInputs ? ownedPhpInputTransfers : ""}`.replaceAll("@PREFIX@", prefix).replaceAll("@NAMESPACE@", namespace);
+${anchoredResults ? ownedPhpBorrowTransfers : transferredInputs ? ownedPhpInputTransfers : ""}`;
+	if(anchoredResults)
+	{
+		const start = source.indexOf("final class OwnedLease\n");
+		const end = source.indexOf("final class OwnedBorrowFrame\n", start);
+		if(start < 0 || end <= start) throw new Error("Missing PHP ownership lease boundary");
+		source = source.slice(0, start) + ownedPhpBorrowLease + "\n" + source.slice(end);
+	}
+	return source.replaceAll("@PREFIX@", prefix).replaceAll("@NAMESPACE@", namespace);
 };

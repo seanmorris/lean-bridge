@@ -1586,8 +1586,33 @@ and native assets, reproduces both archives, and repeats relocated execution
 without producer sources, handoff archives or build tools. Reports go to
 `build/owned-perl-borrows/` and `build/owned-perl-borrow-packaging/`.
 
-Owner-anchored borrowed results in the remaining consumer bindings and owned
-Docker acceptance remain open.
+#### Installed native PHP borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-php-borrows
+```
+
+Use PHP 8.2 or newer, below PHP 9, with FFI and a matching Composer installation
+on Linux x86-64 NTS CLI. The runtime gate checks whole-value owners, empty
+containers, transitive expiration, shared roots, independent retention, canonical
+identity and original-slot consumption on both compiler paths. It exercises
+callback reentry, returned closures, allocation failures, retained exceptions,
+fork rejection and Fiber cleanup. Five syntactically valid lifetime mutations
+must fail the executed consumer assertions. Borrow-only APIs also run without
+consuming exports.
+
+The installed gate builds ordinary and reviewed Composer archives, rejects
+altered lifetime metadata and native libraries, and reproduces the archives.
+It removes producer sources and handoff files, installs offline with scripts
+and plugins disabled, relocates the application, and runs weak and strict PHP
+callers. A separate observer checks private GMP, shared initialization and
+automatic shutdown. The unchanged documentation example executes from a combined
+C/Composer release. Reports go to `build/owned-php-borrows/` and
+`build/owned-php-borrow-packaging/`.
+
+Owner-anchored borrowed results in PHP-Wasm, JavaScript/TypeScript and WIT/WASI,
+receiver and callback-result anchors, and owned Docker acceptance remain open.
 
 ### Staged WIT owned graphs
 
