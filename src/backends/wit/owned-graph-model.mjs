@@ -47,6 +47,7 @@ export const compileOwnedWitGraphModel = (ir, settings = {}, options = {}) => {
 	const layout = compileOwnedNativeValueLayout(ir, options), model = layout.model;
 	const transfers = layout.functions.filter(item => item.transfers?.length);
 	const anchors = layout.functions.filter(item => item.anchor !== undefined);
+	const receivers = model.declarations.filter(item => item.receiver);
 	const name = settings.name ?? `owned-h${model.bindingIrSha256.slice(0, 20)}`;
 	const version = settings.version ?? model.component.version;
 	validateOrdinaryWasiSettings({ name, version });
@@ -58,7 +59,18 @@ export const compileOwnedWitGraphModel = (ir, settings = {}, options = {}) => {
 			, parameters: parameters.map((site, index) => ({ witName: label(site.name ?? `arg${index}`, names), copy: graph.value(site.type, site.ownership === "transfer" ? "output" : "input") }))
 			, resultCopy: graph.value(result.type, "output") };
 	};
-	const functions = model.declarations.map(declaration => fn(declaration, declaration.name, declaration.parameters, declaration.result));
+	const functions = model.declarations.map(declaration => {
+		let parameters = declaration.parameters;
+		if(declaration.receiver)
+		{
+			const names = new Set();
+			parameters.forEach((site, index) => label(site.name ?? `arg${index + 1}`, names));
+			let name = "receiver", suffix = 0;
+			while(names.has(name)) name = `receiver-${++suffix}`;
+			parameters = [{ ...declaration.receiver, name }, ...parameters];
+		}
+		return fn(declaration, declaration.name, parameters, declaration.result);
+	});
 	for(const resource of graph.resources.filter(resource => resource.node.kind === "callback"))
 	{
 		const signature = resource.node.callable;
@@ -81,19 +93,23 @@ ${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(par
 		, assurance: model.assurance, assuranceScope: model.assuranceScope
 		, declarations: model.declarations.map((declaration, index) => ({ ...declaration
 			, witName: functions[index].witName
-			, parameters: declaration.parameters.map((site, position) => ({ ...site, witType: functions[index].parameters[position].copy.wit }))
+			, ...declaration.receiver ? { receiver: { ...declaration.receiver
+				, witName: functions[index].parameters[0].witName
+				, witType: functions[index].parameters[0].copy.wit } } : {}
+			, parameters: declaration.parameters.map((site, position) => ({ ...site, witType: functions[index].parameters[position + Number(Boolean(declaration.receiver))].copy.wit }))
 			, result: { ...declaration.result, witType: functions[index].resultCopy.wit } }))
-		, graph: { schemaVersion: anchors.length ? 2 : 1
+		, graph: { schemaVersion: receivers.length ? 3 : anchors.length ? 2 : 1
 			, representation: "owned-typed-node-tables-v1"
 			, layoutSha256: sha256(canonicalJson(layout)), limits: model.limits
 			, ...transfers.length ? { inputTransfers: transfers.map(fn => ({ bindingId: fn.id, parameters: fn.transfers })) } : {}
 			, ...anchors.length ? { resultAnchors: anchors.map(fn => ({ bindingId: fn.id, parameter: fn.anchor })) } : {}
+			, ...receivers.length ? { receiverExports: receivers.map(item => ({ bindingId: item.id, kind: item.kind, owner: item.owner, argument: 0 })) } : {}
 			, types: model.types
 			, resources: resources.map(resource => ({ id: resource.id, kind: resource.node.kind, witName: resource.witName }))
 			, values: [...graph.values].map(([key, copy]) => ({ key, witType: copy.wit
 				, tables: copy.tables.map(table => ({ type: table.node.id, field: table.field, rowType: table.row.wit })) })) }
 		, deferred: [...transfers.length ? [] : ["transferred-inputs"]
-			, ...anchors.length ? ["receiver-result-anchors", "callback-result-anchors"] : ["anchored-borrowed-results"]
+			, ...anchors.length ? [...receivers.length ? [] : ["receiver-result-anchors"], "callback-result-anchors"] : ["anchored-borrowed-results"]
 			, "retained-host-callbacks", "asynchronous-callables"] };
 	return { model, layout, graph, functions, types, resources, name, version, importName, exportName, wit, wat, manifest };
 };

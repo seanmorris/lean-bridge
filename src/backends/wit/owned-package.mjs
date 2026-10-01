@@ -24,10 +24,12 @@ export const generateOwnedWitPackage = (options, componentBytes, settings = {}) 
 		publicPrefix: ownedWitPublicPrefix
 		, transferredInputs: options.transferredInputs === true
 		, anchoredResults: options.anchoredResults === true
+		, receiverExports: options.receiverExports === true
 		, render: ({ generated }) => {
 			model = compileOwnedWitGraphModel(generated.layout.model.bindingIr, settings, {
 				transferredInputs: options.transferredInputs
 				, anchoredResults: options.anchoredResults
+				, receiverExports: options.receiverExports
 			});
 			if(generated.layout.header !== model.layout.header) throw new TypeError("Owned WIT and native value layouts must match");
 			return renderOwnedWitSession(model, componentBytes);

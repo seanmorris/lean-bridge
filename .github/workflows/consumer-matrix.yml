@@ -2402,6 +2402,87 @@ jobs:
         if: always() && (steps.consumer.outcome != 'success' || (matrix.profile == 'dotnet' && (steps.ordinary_dotnet.outcome != 'success' || steps.type_corpus_dotnet.outcome != 'success')) || (matrix.profile == 'jvm' && (steps.ordinary_jvm.outcome != 'success' || steps.type_corpus_jvm.outcome != 'success')) || (matrix.profile == 'ruby' && (steps.ordinary_ruby.outcome != 'success' || steps.type_corpus_ruby.outcome != 'success')))
         run: exit 1
 
+  owned-wit-receivers:
+    name: WIT receiver methods and properties
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Prepare the pinned WIT and native toolchains
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake pkg-config zstd ripgrep libgmp-dev
+          bash scripts/bootstrap-toolchains.sh --lean-only
+          bash scripts/bootstrap-toolchains.sh --wasm-tools-only
+          nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
+      - name: Execute WIT receiver acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+          source scripts/env.sh
+          npm run test:owned-wit-receivers 2>&1 | tee build/wit-owned-receivers.log
+          rg '^# tests 20$' build/wit-owned-receivers.log
+          rg '^# pass 20$' build/wit-owned-receivers.log
+          rg '^# fail 0$' build/wit-owned-receivers.log
+          rg '^# cancelled 0$' build/wit-owned-receivers.log
+          rg '^# skipped 0$' build/wit-owned-receivers.log
+          test -s build/owned-wit-receivers/ordinary.json
+          test -s build/owned-wit-receivers/ordinary-plain.json
+          test -s build/owned-wit-receivers/ordinary-consuming.json
+          test -s build/owned-wit-receivers/ordinary-unanchored.json
+          test -s build/owned-wit-receivers/ordinary-package.json
+          test -s build/owned-wit-receivers/ordinary-plain-package.json
+          test -s build/owned-wit-receivers/ordinary-consuming-package.json
+          test -s build/owned-wit-receivers/ordinary-unanchored-package.json
+          test -s build/owned-wit-receivers/reviewed.json
+          test -s build/owned-wit-receivers/reviewed-plain.json
+          test -s build/owned-wit-receivers/reviewed-consuming.json
+          test -s build/owned-wit-receivers/reviewed-unanchored.json
+          test -s build/owned-wit-receivers/reviewed-package.json
+          test -s build/owned-wit-receivers/reviewed-plain-package.json
+          test -s build/owned-wit-receivers/reviewed-consuming-package.json
+          test -s build/owned-wit-receivers/reviewed-unanchored-package.json
+      - name: Preserve WIT receiver execution
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-wit-receivers-${{ github.sha }}
+          path: |
+            build/wit-owned-receivers.log
+            build/owned-wit-receivers/ordinary.json
+            build/owned-wit-receivers/ordinary-plain.json
+            build/owned-wit-receivers/ordinary-consuming.json
+            build/owned-wit-receivers/ordinary-unanchored.json
+            build/owned-wit-receivers/ordinary-package.json
+            build/owned-wit-receivers/ordinary-plain-package.json
+            build/owned-wit-receivers/ordinary-consuming-package.json
+            build/owned-wit-receivers/ordinary-unanchored-package.json
+            build/owned-wit-receivers/reviewed.json
+            build/owned-wit-receivers/reviewed-plain.json
+            build/owned-wit-receivers/reviewed-consuming.json
+            build/owned-wit-receivers/reviewed-unanchored.json
+            build/owned-wit-receivers/reviewed-package.json
+            build/owned-wit-receivers/reviewed-plain-package.json
+            build/owned-wit-receivers/reviewed-consuming-package.json
+            build/owned-wit-receivers/reviewed-unanchored-package.json
+          if-no-files-found: error
+          retention-days: 30
+
   wasi-consumer:
     name: WIT and WASI Component Model
     runs-on: ubuntu-24.04
@@ -2764,6 +2845,7 @@ jobs:
       - managed-consumers
       - perl-consumer
       - wasi-consumer
+      - owned-wit-receivers
       - docker-engine
     runs-on: ubuntu-24.04
     steps:
@@ -2806,4 +2888,7 @@ jobs:
         run: exit 1
       - name: Enforce PHP-Wasm receiver acceptance
         if: needs.php-wasm-receivers.result != 'success'
+        run: exit 1
+      - name: Enforce WIT receiver acceptance
+        if: needs.owned-wit-receivers.result != 'success'
         run: exit 1

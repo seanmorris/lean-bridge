@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedJavaScriptReceiverExecution } from "./helpers/owned-javascript-receiver-evidence.mjs";
+import { beforeOwnedWitReceiver, ownedWitReceiverHistoricalBytes } from "./helpers/wit-owned-receiver-history.mjs";
 import { ownedJavaScriptReceiverPath, ownedJavaScriptReceiverBaseline, ownedJavaScriptReceiverPrevious
 	, ownedJavaScriptReceiverChangedPaths, ownedJavaScriptReceiverAddedPaths
 	, beforeOwnedJavaScriptReceiver, reverseOwnedJavaScriptReceiverUpdate } from "./helpers/owned-javascript-receiver-history.mjs";
@@ -23,13 +24,14 @@ test("JavaScript receiver history authenticates exact sources without inflating 
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedJavaScriptReceiverAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedWitReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJavaScriptReceiverChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedJavaScriptReceiver(update.path, source);
+		const source = beforeOwnedWitReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedJavaScriptReceiver(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJavaScriptReceiver(update.path, prior), prior);
 		assert.equal(beforeOwnedJavaScriptReceiver(update.path, source, update.currentSha256), source);
@@ -41,9 +43,9 @@ test("JavaScript receiver history authenticates exact sources without inflating 
 			, { ...update, path: "unknown.mjs" }])
 			assert.throws(() => reverseOwnedJavaScriptReceiverUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedWitReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedJavaScriptReceiver(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedWitReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["model", "package", "packaging", "resource-packaging", "unanchored", "gc", "mutants", "coexistence", "ci", "evidence"])
 		assert.equal(classifyRepositoryTest(`tests/owned-javascript-receiver-${name}.test.mjs`), "contract");

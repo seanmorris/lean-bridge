@@ -171,6 +171,12 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 	assert.equal(result.stderr, "");
 	const observation = fixture.parseResult?.(result.stdout);
 	if(!fixture.parseResult) assert.match(result.stdout.trim(), new RegExp(`^${fixture.success}:[0-9]+$`));
-	const checks = observation?.checks ?? Number(result.stdout.trim().split(":")[1]); assert.ok(checks >= 100);
+	const checks = observation?.checks ?? Number(result.stdout.trim().split(":")[1]);
+	if(fixture.expectedChecks !== undefined)
+	{
+		assert.ok(Number.isSafeInteger(fixture.expectedChecks) && fixture.expectedChecks > 0);
+		assert.equal(checks, fixture.expectedChecks);
+	}
+	else assert.ok(checks >= 100);
 	return { checks, ...(observation ? { result: observation } : {}), consumerSha256: sha256(source), command, offlineInstall: true, compilerFreePath: true };
 };

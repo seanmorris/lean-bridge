@@ -3286,8 +3286,31 @@ libraries and execute the consumer documentation example.
 
 CI requires all six JSON reports in `build/owned-wit-borrows/` and retains
 `build/wit-owned-borrows.log`. The [source-bound receipt](../evidence/wit-owned-borrows-20261001.md)
-keeps prior receipts unchanged. Receiver and callback-result anchors and the
-final Docker audit remain separate work.
+keeps prior receipts unchanged. Callback-result anchors and the final Docker
+audit remain separate work.
+
+## WIT/WASI receiver acceptance
+
+Run the method and property gate with the pinned Lean, native C, Wasmtime C API
+and wasm-tools dependencies available:
+
+```sh
+npm run test:owned-wit-receivers
+```
+
+The gate requires 20 passing tests and no skips. Both source paths execute
+receiver and remaining-parameter anchors, consuming methods, callbacks, returned
+closures and recursive values through real Component Model calls. Ten compiled
+broken adapters must fail semantic assertions. Resource-only and unanchored
+callable configurations also run independently, including Unit properties.
+ASan/UBSan checks compare an initialized cold Lean process against the exercised
+process; bridge allocation and identity counters must finish at zero.
+
+Installed tests use the public CLI, remove producer sources, install offline,
+relocate archives, compare independent rebuilds, reject altered receipts and
+verify loaded dependencies. The full package test executes the exact consumer
+documentation example. The separate CI job requires all 16 JSON reports in
+`build/owned-wit-receivers/` and retains `build/wit-owned-receivers.log`.
 
 ## C receiver acceptance
 

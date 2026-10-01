@@ -866,6 +866,7 @@
     "test:owned-javascript-borrows": "LEAN_BRIDGE_OWNED_JS_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-javascript-borrows.test.mjs tests/owned-javascript-borrow-package.test.mjs tests/owned-wasm-borrow-registry.test.mjs tests/owned-javascript-borrow-mutants.test.mjs tests/owned-javascript-borrow-coexistence.test.mjs tests/owned-javascript-borrow-packaging.test.mjs",
     "test:owned-wit-transfers": "LEAN_BRIDGE_WIT_OWNED_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/wit-owned-transfers.test.mjs tests/wit-owned-transfer-packaging.test.mjs",
     "test:owned-wit-borrows": "LEAN_BRIDGE_WIT_OWNED_BORROW_TEST=1 node --test --test-concurrency=1 tests/wit-owned-borrows.test.mjs tests/wit-owned-borrow-packaging.test.mjs",
+    "test:owned-wit-receivers": "LEAN_BRIDGE_WIT_OWNED_RECEIVER_TEST=1 node --test --test-concurrency=1 tests/wit-owned-receiver-model.test.mjs tests/wit-owned-receivers.test.mjs tests/wit-owned-receiver-resource.test.mjs tests/wit-owned-receiver-packaging.test.mjs tests/wit-owned-receiver-resource-packaging.test.mjs",
     "test:type-corpus": "node --test tests/type-corpus.test.mjs",
     "test:type-corpus:reviewed": "LEAN_BRIDGE_REVIEWED_CORPUS_TEST=1 node --test tests/type-corpus-reviewed.test.mjs",
     "test:type-corpus:reviewed-native": "LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp,dotnet,java,kotlin,perl,php-native,python,ruby,rust,wit-wasi node --test tests/type-corpus-reviewed-native.test.mjs",

@@ -225,7 +225,84 @@ until they return but cannot publish a result from that expired anchor.
 WIT uses owned handles for returned resources. The bundled host carries the
 original native owner through the Component Model call and checks it before
 publishing results. Those transport handles do not extend the source lifetime.
-Receiver and callback-result anchors are not yet supported.
+Callback-result anchors are not yet supported.
+
+### Methods and properties
+
+Methods and read-only properties use typed functions in the WIT contract and
+public C header. Pass the receiver first, followed by the remaining arguments.
+The manifest retains each member's Lean owner, kind and receiver type. The
+package's native host carries the original owner through every Component Model
+call, including calls on resource-containing records and recursive values.
+
+A receiver-anchored result takes the receiver's original result owner. A result
+anchored to another argument takes that argument's owner instead. This
+`owned-receivers` example calls `chooseTicket` on one ticket but borrows its result
+from a second ticket. Save it as `main.c`:
+
+```c
+#include "owned_aggregates_wasmtime.h"
+#include <stdio.h>
+
+int main(void)
+{
+    owned_aggregates_wasmtime_session *session = NULL;
+    owned_aggregates_wasmtime_result *receiver_owner = NULL, *source_owner = NULL;
+    owned_aggregates_wasmtime_result *view_owner = NULL, *kept_owner = NULL;
+    owned_aggregates_wasmtime_result *number_owner = NULL;
+    owned_aggregates_wasmtime_ticket_t receiver = NULL, source = NULL;
+    owned_aggregates_wasmtime_ticket_t view = NULL, kept = NULL;
+    mpz_t input;
+    mpz_init_set_ui(input, 42);
+    mpz_srcptr number = NULL;
+    int status = owned_aggregates_wasmtime_session_open(&session);
+    if (!status) status = owned_aggregates_wasmtime_new_ticket(
+        session, input,
+        (owned_aggregates_wasmtime_scalar_string_t){"receiver", 8},
+        &receiver, &receiver_owner);
+    mpz_set_ui(input, 99);
+    if (!status) status = owned_aggregates_wasmtime_new_ticket(
+        session, input,
+        (owned_aggregates_wasmtime_scalar_string_t){"source", 6},
+        &source, &source_owner);
+    if (!status) status = owned_aggregates_wasmtime_choose_ticket(
+        session, receiver, source, source_owner, &view, &view_owner);
+    owned_aggregates_wasmtime_result_release(&receiver_owner);
+    if (!status) status = owned_aggregates_wasmtime_ticket_t_retain(
+        session, view, &kept, &kept_owner);
+    if (!status) status = owned_aggregates_wasmtime_serial(
+        session, view, &number, &number_owner);
+    if (!status) gmp_printf("%Zd\n", number);
+    owned_aggregates_wasmtime_result_release(&number_owner);
+    owned_aggregates_wasmtime_result_release(&source_owner);
+    if (!status) {
+        if (owned_aggregates_wasmtime_result_validate(session, view_owner)
+            == OWNED_AGGREGATES_WASMTIME_CLOSED) puts("expired");
+        else status = 1;
+    }
+    if (!status) status = owned_aggregates_wasmtime_serial(
+        session, kept, &number, &number_owner);
+    if (!status) gmp_printf("%Zd\n", number);
+    owned_aggregates_wasmtime_result_release(&number_owner);
+    owned_aggregates_wasmtime_result_release(&kept_owner);
+    owned_aggregates_wasmtime_result_release(&view_owner);
+    owned_aggregates_wasmtime_session_close(&session);
+    mpz_clear(input);
+    return status ? 1 : 0;
+}
+```
+
+Compile with `pkg-config --cflags --libs owned-receivers-wit`. It prints `99`,
+`expired`, then `99`. Releasing the receiver leaves the result usable; releasing
+the selected source expires it. The independently retained ticket remains usable.
+`serial` is a read-only property getter that returns a copied `Nat`.
+
+Consuming methods take the receiver's owner slot by address and clear it at the
+handoff to Lean. The old owner becomes invalid and its borrowed descendants
+expire. A raw C resource handle denotes canonical identity; an independent owner
+can keep that identity usable. Do not read copied storage from a consumed owner.
+Methods, properties and Unit-valued getters also work in packages without
+callbacks or borrowed results; those packages return independent result owners.
 
 ### Consuming inputs
 

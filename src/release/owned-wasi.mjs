@@ -133,7 +133,7 @@ Use the generated retain/copy helpers to acquire independent ownership.${model.o
 
 ## Borrowed results
 
-A result declared borrowed names the input parameter that owns its lifetime.
+A result declared borrowed names ${model.ownedGraph.receiverExports ? "the receiver or input parameter" : "the input parameter"} that owns its lifetime.
 Pass that parameter's original result-owner pointer beside its typed value. The
 host checks the owner, session, generation and membership before entering Lean.
 Borrowed results expire when that owner is released or consumed, even if their
@@ -154,8 +154,21 @@ The Component Model returns owned transport handles. The bundled host passes
 the original native lifetime anchor through its trusted import and checks that
 anchor again before publishing the result. Transport handles do not extend the
 source lifetime. This contract belongs to the bundled public API, not arbitrary
-raw Wasmtime resource handles. Receiver and callback-result anchors are not yet
-supported.` : ""}${model.ownedGraph.inputTransfers ? `
+raw Wasmtime resource handles. ${model.ownedGraph.receiverExports ? "Callback-result anchors are not yet supported." : "Receiver and callback-result anchors are not yet\nsupported."}` : ""}${model.ownedGraph.receiverExports ? `
+
+## Methods and properties
+
+Methods and read-only properties are typed WIT and C functions with the receiver
+first. Remaining arguments keep their source order. binding-manifest.json records
+each member's original owner, kind and receiver type; ownedValues.receiverExports
+authenticates that calling convention. Properties are getter functions, including
+copied values and Unit. The API does not add setters or expose native identities.
+
+For a receiver-borrowed result, pass the receiver's original result owner. For a
+result anchored to another parameter, pass that parameter's owner instead. A
+consuming receiver takes its original owner slot by address and clears that slot
+before Lean runs. Methods also work without callbacks or borrowed results.
+Every member call crosses the bundled Component Model binary.` : ""}${model.ownedGraph.inputTransfers ? `
 
 ## Consuming inputs
 

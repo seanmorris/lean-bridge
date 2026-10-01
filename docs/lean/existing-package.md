@@ -179,7 +179,7 @@ npm leases use `dispose()` or `Symbol.dispose`. Perl, Python and Ruby leases use
 
 C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI packages accept [function results anchored to an input owner](../publish/c.md#anchor-a-result-to-an-input). Use `"ownership": "borrow"` with a `"parameter"` lifetime and an anchor such as `"arg0"`. The anchor must be an existing non-copied, non-transferred input.
 
-C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm and JavaScript/TypeScript builds also accept `"receiver": "method"` or `"receiver": "property"`, selecting
+C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI builds also accept `"receiver": "method"` or `"receiver": "property"`, selecting
 the first Lean runtime argument. It must be a declared resource or an owned
 record or variant; a property takes no additional arguments. A receiver-bound
 result uses `"scope": "receiver", "anchor": "receiver"`. Parameter anchors keep
@@ -194,7 +194,8 @@ and the [C++](../publish/cpp.md#export-methods-and-properties),
 [Perl](../publish/cpan.md#export-methods-and-properties),
 [native PHP and PHP-Wasm](../publish/php.md#export-methods-and-properties) and
 [JavaScript/TypeScript member APIs](../publish/npm.md#export-methods-and-properties).
-Other receiver projections, callback-result anchors,
+WIT/WASI exposes [typed functions with the receiver first](../publish/wit-wasi.md#export-methods-and-properties), preserving the member kind, owner and original parameter anchors.
+Callback-result anchors,
 `{ "constructor": "Library.checked" }` and additional effect labels still
 require their [type-family implementation](../architecture/cross-language-authoring.md#stages).
 

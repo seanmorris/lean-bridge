@@ -101,7 +101,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, ownedHostCallbacks: ownedGraphs
 			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
-			, ownedReceiverExports: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target))
+			, ownedReceiverExports: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)
@@ -118,7 +118,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					if(targets.includes("maven")) generateOwnedJvmPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
 					if(targets.includes("cpan")) generateOwnedPerlXs(model.bindingIr, ownedPerlNamespace(model.component, config.targets?.cpan), { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
 					if(targets.includes("php-native")) generateOwnedPhpPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
-					if(targets.includes("wit-wasi")) compileOwnedWitGraphModel(model.bindingIr, config.targets?.["wit-wasi"], { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors) });
+					if(targets.includes("wit-wasi")) compileOwnedWitGraphModel(model.bindingIr, config.targets?.["wit-wasi"], { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports) });
 					return;
 				}
 				if(model.copiedGraph)

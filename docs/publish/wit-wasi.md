@@ -163,8 +163,54 @@ rejects altered mappings, generated sources or dependency inventories. Combined
 C and WIT/WASI builds use the same Lean compilation and ownership declarations.
 
 The [consumer example](../consume/wit-wasi.md#borrowed-results) demonstrates
-expiration and independent retention. Receiver and callback-result anchors
-remain unsupported.
+expiration and independent retention. Callback-result anchors remain unsupported.
+
+### Export methods and properties
+
+Mark an export's first Lean argument as its receiver. The compiler determines
+the receiver's type; the configuration supplies the member and lifetime choices:
+
+```json
+{
+  "contracts": {
+    "Owned.serial": { "receiver": "property" },
+    "Owned.retainTicket": {
+      "receiver": "method",
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      }
+    },
+    "Owned.chooseTicket": {
+      "receiver": "method",
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg1" }
+      }
+    }
+  }
+}
+```
+
+Argument names retain their original Lean positions: `arg0` is the receiver and
+`arg1` is the first remaining argument. Use receiver scope to anchor a result to
+`arg0`; use parameter scope to name another original argument. Reviewed Binding
+IR uses its declared parameter names. A property has no arguments after its
+receiver and exposes a getter only. Resource and aggregate receivers are
+supported, including copied and Unit-valued property results.
+
+Generated WIT and C functions put the typed receiver first. The manifest keeps
+the original owner and member kind, while the authenticated
+`ownedValues.receiverExports` receipt records the receiver-first convention.
+Result-anchor metadata distinguishes the receiver from remaining parameters.
+Combined C and WIT/WASI builds use the same compiled Lean component.
+
+A consuming method declares transfer on its receiver. Consumption revokes the
+whole original owner before Lean runs; a later failure does not restore it.
+Receiver methods do not require callbacks, transfers or borrowed results unless
+their declarations use those capabilities. The
+[consumer example](../consume/wit-wasi.md#methods-and-properties) demonstrates
+receiver and parameter ownership through an installed package.
 
 ## Export structured callbacks
 
