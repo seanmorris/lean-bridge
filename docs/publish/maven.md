@@ -367,7 +367,49 @@ or explicit runtime setup. See the [Java](../consume/java.md#borrowed-results-an
 and [Kotlin](../consume/kotlin.md#borrowed-results-and-whole-owners) examples.
 
 A combined anchored-result build can select C, C++, Cargo, PyPI, RubyGems,
-NuGet and Maven. Receiver anchors and callback-result anchors are not yet admitted.
+NuGet and Maven. Callback-result anchors remain unsupported.
+
+### Export methods and properties
+
+Select the first Lean runtime argument with `"receiver": "method"` or
+`"receiver": "property"`. It must be a declared resource or an owned record or
+variant. Properties take only the receiver; methods may take other arguments.
+Keep the resource and aggregate policies from the previous example, and add
+the selected declarations to `exports` and `arities`:
+
+```json
+{
+  "contracts": {
+    "Owned.serial": { "receiver": "property" },
+    "Owned.retainTicket": {
+      "receiver": "method",
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      }
+    }
+  }
+}
+```
+
+Build with `lean-bridge build --project . --target maven`. Java receives
+`TicketValue.getSerial()` and `TicketValue.retainTicket()`; Kotlin receives
+`TicketValue.serial` and `TicketValue.retainTicket()`. The static `Api` calls
+remain available. Nominal owner classes extend `Value<T>` and keep the original
+receiver's ownership slot through borrows and consuming calls. Read-only
+properties have no setters. A method may instead anchor its result to another
+argument using that argument's original runtime index, such as `arg1`.
+
+Raw resource views expose only members that do not borrow from or consume the
+receiver. `share()` preserves the same owner and `retain()` creates an
+independent one. Both return the nominal owner type. Packages with receivers
+use `owned-jvm-v4`, version-4 JVM receipts and version-5 native ownership
+contracts. Packages without receiver declarations retain their existing format.
+
+Maven can share one receiver build with C, C++, Cargo, PyPI, RubyGems and NuGet.
+Other targets still reject receiver declarations. See the executable
+[Java](../consume/java.md#methods-and-properties) and
+[Kotlin](../consume/kotlin.md#methods-and-properties) examples.
 
 ## Build the repository layout
 

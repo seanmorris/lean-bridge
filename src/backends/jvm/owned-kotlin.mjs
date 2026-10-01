@@ -5,6 +5,7 @@
  */
 import { generateOwnedJvmConversions, ownedJvmDescriptorSource } from "./owned-conversions.mjs";
 import { jvmGraphEquality } from "./copied-graph-equality.mjs";
+import { ownedJvmOwnerName } from "./owned-receivers.mjs";
 
 const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
 const primitives = { boolean: "Boolean", byte: "Byte", short: "Short", int: "Int", long: "Long", float: "Float", double: "Double", String: "String" };
@@ -35,6 +36,7 @@ export const kotlinOwnedDescriptors = model => {
 export const generateOwnedKotlinValues = (ir, options = {}) => {
 	const model = generateOwnedJvmConversions(ir, options), namespace = `${model.namespace}.kotlin`;
 	const anchors = model.c.functions.some(fn => fn.anchor !== undefined);
+	const wholeOwners = anchors || model.c.functions.some(fn => fn.receiver === 0);
 	const nodes = new Map(model.types.map(node => [node.id, node])), names = new Map();
 	const type = id => {
 		if(names.has(id)) return names.get(id);
@@ -64,7 +66,7 @@ export const generateOwnedKotlinValues = (ir, options = {}) => {
     override fun hashCode(): kotlin.Int = ${operations}.hash(this)
     override fun toString(): kotlin.String = ${operations}.format(this)`;
 	add("Unit", `typealias Unit = ${quoted(model.namespace)}.Unit\n`);
-	if(anchors) add("Value", `typealias Value<T> = ${quoted(model.namespace)}.Value<T>\n`);
+	if(wholeOwners) add("Value", `typealias Value<T> = ${quoted(model.namespace)}.Value<T>\n`);
 	add("LeanBridgeException", `typealias LeanBridgeException = ${quoted(model.namespace)}.LeanBridgeException\n`);
 	for(const node of model.types.filter(node => node.kind === "variant"))
 		add(node.publicType, `sealed interface ${quoted(node.publicType)}\n`);
@@ -146,7 +148,9 @@ ${equality}
 	{
 		const name = identityName(node), callback = model.callbacks.find(fn => fn.id === node.id);
 		const returnType = callback ? nodes.get(callback.result).name === "unit" ? "kotlin.Unit" : type(callback.result) : null;
-		const publicReturn = callback && anchors && nodes.get(callback.result).representation !== "copied" ? `${quoted(model.namespace)}.Value<${returnType}>` : returnType;
+		const resultOwner = callback ? ownedJvmOwnerName(nodes.get(callback.result), true) : null;
+		const publicReturn = callback && wholeOwners && nodes.get(callback.result).representation !== "copied"
+			? resultOwner ? `${quoted(model.namespace)}.${resultOwner}` : `${quoted(model.namespace)}.Value<${returnType}>` : returnType;
 		const invokeTypes = callback?.parameters.slice(1).map(id => {
 			const child = nodes.get(id);
 			return child.kind === "callback" ? quoted(`${namespace}.${child.delegateType}`) : type(id);
@@ -159,8 +163,9 @@ ${equality}
 		files[path] = `package ${quoted(model.namespace)}
 
 class ${name} private constructor(
+${node.ownerType ? "    private val bindings: _OwnedBindings,\n" : ""}\
     handle: _OwnedRuntime.Handle,
-    private val retainValue: (_OwnedRuntime.Handle) -> ${name}${callback ? `,\n    private val invocation: ${functionType}` : ""}${anchors ? `,\n    equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>${callback ? `,\n    private val rawInvocation: ${rawFunction}` : ""}` : ""}
+    private val retainValue: (_OwnedRuntime.Handle) -> ${name}${callback ? `,\n    private val invocation: ${functionType}` : ""}${anchors ? ",\n    equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>" : ""}${wholeOwners && callback ? `,\n    private val rawInvocation: ${rawFunction}` : ""}
 ) : _OwnedKotlinValue(handle${anchors ? ", equal" : ""}) {
     fun retain(): ${name} = try { retainValue(handle) }
         finally { java.lang.ref.Reference.reachabilityFence(this) }
@@ -168,12 +173,13 @@ ${anchors ? `    fun sameIdentity(other: ${name}): kotlin.Boolean = equals(other
 ${callback ? `    fun invoke(${parameters}): ${publicReturn} = try { invocation(${invokeTypes.map((_, i) => `arg${i}`).join(", ")}) }
         finally { java.lang.ref.Reference.reachabilityFence(this) }
     fun asCallback(): ${quoted(`${namespace}.${node.delegateType}`)} =
-        ${quoted(`${namespace}.${node.delegateType}`)} { ${callback.parameters.slice(1).map((_, i) => `arg${i}`).join(", ")}${callback.parameters.length > 1 ? " -> " : ""}${anchors ? "rawInvocation" : "invoke"}(${callback.parameters.slice(1).map((id, i) => `arg${i}${nodes.get(id).kind === "callback" ? ".asCallback()" : ""}`).join(", ")}) }
-` : ""}    companion object {
+        ${quoted(`${namespace}.${node.delegateType}`)} { ${callback.parameters.slice(1).map((_, i) => `arg${i}`).join(", ")}${callback.parameters.length > 1 ? " -> " : ""}${wholeOwners ? "rawInvocation" : "invoke"}(${callback.parameters.slice(1).map((id, i) => `arg${i}${nodes.get(id).kind === "callback" ? ".asCallback()" : ""}`).join(", ")}) }
+` : ""}${node.ownerType ? "    /* CHECKED RECEIVER MEMBERS */\n" : ""}    companion object {
         @kotlin.jvm.JvmSynthetic internal fun create(
+${node.ownerType ? "            bindings: _OwnedBindings,\n" : ""}\
             handle: _OwnedRuntime.Handle,
-            retain: (_OwnedRuntime.Handle) -> ${name}${callback ? `,\n            invoke: ${functionType}` : ""}${anchors ? `,\n            equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>${callback ? `,\n            invokeRaw: ${rawFunction}` : ""}` : ""}
-        ): ${name} = ${name}(handle, retain${callback ? ", invoke" : ""}${anchors ? `, equal${callback ? ", invokeRaw" : ""}` : ""})
+            retain: (_OwnedRuntime.Handle) -> ${name}${callback ? `,\n            invoke: ${functionType}` : ""}${anchors ? ",\n            equal: java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle>" : ""}${wholeOwners && callback ? `,\n            invokeRaw: ${rawFunction}` : ""}
+        ): ${name} = ${name}(${node.ownerType ? "bindings, " : ""}handle, retain${callback ? ", invoke" : ""}${anchors ? ", equal" : ""}${wholeOwners && callback ? ", invokeRaw" : ""})
     }
 }
 `;

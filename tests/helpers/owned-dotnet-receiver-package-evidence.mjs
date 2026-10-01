@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedJvmReceiverHistoricalBytes } from "./owned-jvm-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedDotnetPackage } from "../../src/backends/dotnet/owned-package.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
@@ -31,7 +32,7 @@ export const assertOwnedDotnetReceiverPackages = async record => {
 	const guide = await readFile("docs/consume/dotnet.md", "utf8");
 	assert.equal(guide.split("```csharp file=dotnet/owned-receivers.cs\n")[1].split("\n```")[0] + "\n", example);
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
-	const cliConfig = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const cliConfig = JSON.parse(ownedJvmReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
 	for(const item of record.packages)
 	{
 		for(const field of ["compiledLean", "installedPackage", "installedNuget"
@@ -135,7 +136,8 @@ export const assertOwnedDotnetReceiverPackages = async record => {
 		assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 		for(const path of cliConfig.files)
 		{
-			const file = item.cli.files.find(value => value.path === path), bytes = await readFile(path);
+			const file = item.cli.files.find(value => value.path === path);
+			const bytes = Buffer.from(ownedJvmReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
 			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.cliBuilds.length, 2);

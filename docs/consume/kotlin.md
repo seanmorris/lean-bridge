@@ -456,7 +456,42 @@ whole owners. Borrowed results cannot be consumed; call `retain()` first when
 independent ownership is needed. Raw resource views do not keep their whole
 owner alive. Resource equality uses native identity and rejects expired views;
 owners and resources cannot be hash keys. The [Java lifetime rules](java.md#borrowed-results-and-whole-owners)
-also apply to Kotlin. Receiver and callback-result anchors remain separate work.
+also apply to Kotlin.
+
+#### Methods and properties
+
+Receiver declarations add methods and read-only properties to nominal owners
+such as `TicketValue` and `BundleValue`. Both extend `Value<T>`; `share()` and
+`retain()` preserve their nominal type. Static `Api` functions remain available.
+
+For the owned-aggregates package with `serial` declared as a property and
+`retainTicket` as a receiver-anchored method, save `OwnedReceiverExample.kt`:
+
+```kotlin file=kotlin/OwnedReceiverExample.kt
+import java.math.BigInteger
+import org.leanbridge.owned_aggregates.kotlin.Api
+
+fun main() {
+    Api.newTicket(BigInteger.valueOf(42), "order").use { owner ->
+        owner.retainTicket().use { view ->
+            view.retain().use { kept ->
+                println(owner.serial)
+                owner.close()
+                check(view.isClosed)
+                println(kept.serial)
+            }
+        }
+    }
+}
+```
+
+This prints `42` twice. The declared receiver anchor makes `view` expire with
+`owner`; the independently retained `kept` value survives. A method anchored to
+another argument follows that argument's lifetime. Raw resource views expose
+only members that do not borrow from or consume the receiver. Consuming methods
+invalidate the original owner and its aliases before Lean or its callbacks run.
+
+Callback results anchored to a callback argument remain unsupported.
 
 ### Alpha interoperability example
 

@@ -3388,3 +3388,38 @@ build also executes C++, Rust, Python and Ruby consumers of the shared Lean
 component. CI requires ten passes without skips and retains
 `build/owned-dotnet-receivers.log` and all eight reports under
 `build/owned-dotnet-receivers/`.
+
+## Java and Kotlin receiver acceptance
+
+Use JDK 22, Kotlin 2.2.0, Maven and the pinned native Lean toolchain. The reviewed
+combined build also needs C++, .NET 8, Rust 1.90, Python and MRI Ruby 3.3. Set
+their `LEAN_BRIDGE_*` tool paths as described in the installed consumer gates.
+On a glibc 2.36 host, set `LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`.
+
+```sh
+npm run test:owned-jvm-receivers
+```
+
+The fifteen-test gate exercises JavaBean getters, Kotlin read-only properties,
+nominal whole owners, receiver and other-argument anchors, consuming members,
+aggregate and recursive values, callbacks and typed closure results. It retains
+the allocation-failure, whole-owner garbage collection and thread-exit checks.
+Four compiled broken implementations must fail their semantic assertions before
+the restored implementation passes again. Separate cases exercise Unit
+properties, consuming and nonconsuming resource-only receivers, and callbacks
+without result anchors.
+
+Each source path uses an offline-installed CLI for two independent builds.
+The test compares every archive byte and rejects modified ownership metadata,
+generated sources and native libraries. After deleting producer sources and the
+CLI, it installs the Maven package into empty caches, compiles both languages
+and rejects twenty invalid clients. It then removes consumer sources, caches
+and handoff archives. Both consumers and both guide examples run from relocated
+JARs using a `java.base` runtime image with no compiler. The reviewed build also
+executes C++, Rust, Python, Ruby and C# consumers of the shared Lean component.
+The lower-level native build API also produces resource-only Maven packages
+with callback transport explicitly disabled, with and without consuming
+members. These packages install and run without callback artifacts. CI requires
+fifteen passes without skips and retains
+`build/owned-jvm-receivers.log` and twelve reports under
+`build/owned-jvm-receiver-core/`.

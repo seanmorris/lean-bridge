@@ -26,9 +26,11 @@ const memory = "java.lang.foreign.MemoryLayout", value = "java.lang.foreign.Valu
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Enable consuming input leases.
  * @param options.anchoredResults - Enable original-owner borrowed results.
+ * @param options.receiverExports - Enable compiler-authorized receiver declarations.
+ * @param options.hostCallbacks - Enable host callback transport independently.
  */
-export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
+export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, layoutName: `O${node.index}`
@@ -96,7 +98,7 @@ export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredR
 		}
 		declarations.push(`    static final ${memory} ${node.layoutName} = struct(${layout.join(", ")});`);
 	}
-	const callbackLayouts = c.callbacks.map(callback => ({
+	const callbackLayouts = (c.callbacks ?? []).map(callback => ({
 		id: callback.id, name: `${table.get(callback.id).cName}_host`
 		, layoutName: `H${table.get(callback.id).index}`, size: 32, alignment: 8
 		, fields: ["call", "context", "closure", "recovery"].map((name, index) => ({ name, offset: index * 8 }))

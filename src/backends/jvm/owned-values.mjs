@@ -35,10 +35,12 @@ const boxes = { boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer"
 export const generateOwnedJvmValues = (ir, options = {}) => {
 	const layout = compileOwnedJvmLayout(ir, options), c = layout.c;
 	const anchors = c.functions.some(fn => fn.anchor !== undefined);
+	const receivers = c.functions.some(fn => fn.receiver === 0);
+	const wholeOwners = anchors || receivers;
 	const fail = message => { throw new TypeError("Invalid owned JVM values: " + message); };
 	if(keywords.has(c.prefix)) fail("Java package name is a reserved word");
 	const occupied = new Set(reserved), names = new Map();
-	if(anchors) occupied.add("Value");
+	if(wholeOwners) occupied.add("Value");
 	const claim = name => {
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || occupied.has(name)) fail("reserved or duplicate name: " + name);
 		occupied.add(name); return name;
@@ -89,6 +91,8 @@ export const generateOwnedJvmValues = (ir, options = {}) => {
 		});
 	};
 	const types = layout.types.map(node => ({ ...node, publicType: type(node.id)
+		, ...receivers && ["resource", "record", "variant"].includes(node.kind) && node.representation !== "copied"
+			? { ownerType: claim(type(node.id) + "Value") } : {}
 		, delegateType: delegates.get(node.id) ?? null
 		, fields: fields(node.fields)
 		, cases: node.cases.map(branch => ({ ...branch
@@ -98,7 +102,8 @@ export const generateOwnedJvmValues = (ir, options = {}) => {
 	const functions = c.functions.map(fn => {
 		const publicName = camel(fn.cName.slice(c.prefix.length + 1));
 		if(methods.has(publicName) || keywords.has(publicName)) fail("reserved or duplicate function: " + publicName);
-		methods.add(publicName); return { ...fn, publicName };
+		methods.add(publicName); return { ...fn, publicName
+			, ...fn.receiver === 0 ? { receiverKind: ir.declarations.find(item => item.id === fn.id).kind } : {} };
 	});
 	const definitions = new Map(ir.types.map(node => [node.id, node]));
 	const contract = ref => ref.kind === "primitive" ? ref.name : ref.kind === "named"
@@ -106,7 +111,7 @@ export const generateOwnedJvmValues = (ir, options = {}) => {
 	const aliases = c.native.aliases.map(alias => ({ ...alias
 		, name: definitions.get(alias.id).name, managedType: type(alias.target)
 		, contractType: contract(definitions.get(alias.id).target) }));
-	const callbacks = c.callbacks.map(fn => ({ ...fn
+	const callbacks = (c.callbacks ?? []).map(fn => ({ ...fn
 		, publicType: type(fn.id), delegateType: delegates.get(fn.id)
 		, returnType: table.get(fn.result).name === "unit" ? "void" : type(fn.result)
 		, hostParameters: fn.parameters.slice(1).map(type)
@@ -122,7 +127,7 @@ export const generateOwnedJvmValues = (ir, options = {}) => {
 	const namespace = layout.namespace, prefix = `src/main/java/${namespace.replaceAll(".", "/")}`;
 	const files = {}, add = (name, source) => { files[`${prefix}/${name}.java`] = `package ${namespace};\n\n${source}`; };
 	add("Unit", "public enum Unit { INSTANCE }\n");
-	if(anchors) add("Value", ownedJvmWholeValue);
+	if(wholeOwners) add("Value", receivers ? ownedJvmWholeValue.replace("public final class Value<T>", "public class Value<T>") : ownedJvmWholeValue);
 	for(const [name, source] of Object.entries(jvmGraphCompoundTypes)) add(name, source);
 	for(const node of types.filter(node => node.kind === "variant"))
 		add(node.publicType, `public sealed interface ${node.publicType} permits ${node.cases.map(branch => branch.publicName).join(", ")} { }\n`);
@@ -167,18 +172,21 @@ ${access(record)}${jvmGraphValueMethods}
 	for(const node of types.filter(node => node.identity))
 	{
 		const name = node.publicType, fn = callbacks.find(fn => fn.id === node.id);
-		const returnType = fn && anchors && table.get(fn.result).representation !== "copied" ? `Value<${type(fn.result)}>` : fn?.returnType;
+		const returnType = fn && wholeOwners && table.get(fn.result).representation !== "copied"
+			? types.find(node => node.id === fn.result).ownerType ?? `Value<${type(fn.result)}>` : fn?.returnType;
 		const parameters = fn?.invokeParameters.map((type, index) => `${type} arg${index}`).join(", ");
 		add(name, `/** A thread-bound Lean ${fn ? "closure" : "resource"}. retain creates an independent owner. */
 public final class ${name} implements AutoCloseable, _OwnedValue {
     final _OwnedRuntime.Handle handle;
+${node.ownerType ? "    private final _OwnedBindings bindings;\n" : ""}\
     private final java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain;${anchors ? "\n    private final java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal;" : ""}
 ${fn ? `    @FunctionalInterface interface Invocation { ${returnType} invoke(${parameters}); }
     private final Invocation invocation;
-${anchors ? `    @FunctionalInterface interface RawInvocation { ${fn.returnType} invoke(${parameters}); }\n    private final RawInvocation rawInvocation;\n` : ""}\
-` : ""}    ${name}(_OwnedRuntime.Handle handle, java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain${fn ? ", Invocation invocation" : ""}${anchors ? `, java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal${fn ? ", RawInvocation rawInvocation" : ""}` : ""}) {
+${wholeOwners ? `    @FunctionalInterface interface RawInvocation { ${fn.returnType} invoke(${parameters}); }\n    private final RawInvocation rawInvocation;\n` : ""}\
+` : ""}    ${name}(${node.ownerType ? "_OwnedBindings bindings, " : ""}_OwnedRuntime.Handle handle, java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain${fn ? ", Invocation invocation" : ""}${anchors ? ", java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal" : ""}${wholeOwners && fn ? ", RawInvocation rawInvocation" : ""}) {
+${node.ownerType ? "        this.bindings = java.util.Objects.requireNonNull(bindings);\n" : ""}\
         this.handle = java.util.Objects.requireNonNull(handle);
-        this.retain = java.util.Objects.requireNonNull(retain);${fn ? "\n        this.invocation = java.util.Objects.requireNonNull(invocation);" : ""}${anchors ? `\n        this.equal = java.util.Objects.requireNonNull(equal);${fn ? "\n        this.rawInvocation = java.util.Objects.requireNonNull(rawInvocation);" : ""}` : ""}
+        this.retain = java.util.Objects.requireNonNull(retain);${fn ? "\n        this.invocation = java.util.Objects.requireNonNull(invocation);" : ""}${anchors ? "\n        this.equal = java.util.Objects.requireNonNull(equal);" : ""}${wholeOwners && fn ? "\n        this.rawInvocation = java.util.Objects.requireNonNull(rawInvocation);" : ""}
     }
     public boolean isClosed() { return handle.isClosed(); }
     @Override public void close() { handle.close(); }
@@ -203,10 +211,10 @@ ${fn ? `    public ${returnType} invoke(${parameters}) {
         finally { java.lang.ref.Reference.reachabilityFence(this); }
     }
     private ${fn.returnType} callFromHost(${fn.hostParameters.map((type, i) => `${type} arg${i}`).join(", ")}) {
-        ${fn.returnType === "void" ? "" : "return "}${anchors ? "rawInvocation.invoke" : "invoke"}(${fn.parameters.slice(1).map((id, i) => `arg${i}${delegates.has(id) ? ".asCallback()" : ""}`).join(", ")});
+        ${fn.returnType === "void" ? "" : "return "}${wholeOwners ? "rawInvocation.invoke" : "invoke"}(${fn.parameters.slice(1).map((id, i) => `arg${i}${delegates.has(id) ? ".asCallback()" : ""}`).join(", ")});
     }
     public ${fn.delegateType} asCallback() { return this::callFromHost; }
-` : ""}}
+` : ""}${node.ownerType ? "    /* CHECKED RECEIVER MEMBERS */\n" : ""}}
 `);
 	}
 	for(const fn of callbacks) add(fn.delegateType, `/** Synchronous host callback. Borrowed arguments expire when it returns. */
@@ -222,6 +230,7 @@ public interface ${fn.delegateType} {
 	add("GraphValues", equality);
 	if(Object.values(files).reduce((sum, source) => sum + source.length, 0) > 4 * 1024 * 1024) fail("generated Java declarations exceed 4 MiB");
 	return { ...layout, types, functions, callbacks, aliases, records, files
+		, wholeOwners
 		, publicFiles
 		, internalFiles: [`${prefix}/GraphValues.java`, `${prefix}/_OwnedValue.java`] };
 };

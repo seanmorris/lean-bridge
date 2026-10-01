@@ -44,7 +44,7 @@ export const ownedJvmCallFrame = `final class _OwnedCallFrame implements AutoClo
  */
 export const ownedJvmCallables = (model, calls, type) => {
 	const nodes = new Map(model.types.map(node => [node.id, node]));
-	const anchored = model.c.functions.some(fn => fn.anchor !== undefined);
+	const anchored = model.c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0);
 	const methods = [], wrappers = [], javaRecovery = [], kotlinRecovery = [], kotlinOps = [];
 	const delegate = (node, kotlin) => `${model.namespace}${kotlin ? ".kotlin" : ""}.${node.delegateType}`;
 	const layout = node => node.leaf ? node.valueLayout ?? `_OwnedLayouts.${node.layoutName}` : "ADDRESS";

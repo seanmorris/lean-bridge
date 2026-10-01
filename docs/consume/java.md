@@ -507,7 +507,44 @@ resource explicitly when it must outlive that owner. Resource `equals` and
 `sameIdentity` compare native identity and reject expired views. Whole owners
 and resources do not support hashing.
 
-Receiver anchors and callback-result anchors need separate lifetime support.
+#### Methods and properties
+
+When the Lean author declares receivers, the package exposes nominal owners
+such as `TicketValue` and `BundleValue`, each extending `Value<T>`. Methods use
+camel case; read-only properties use JavaBean getters. The static `Api`
+functions remain available.
+
+For the owned-aggregates package with `serial` declared as a property and
+`retainTicket` as a receiver-anchored method, save `OwnedReceiverExample.java`:
+
+```java file=java/OwnedReceiverExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.Api;
+
+@SuppressWarnings("try")
+public final class OwnedReceiverExample {
+    public static void main(String[] args) {
+        try (var owner = Api.newTicket(BigInteger.valueOf(42), "order");
+             var view = owner.retainTicket();
+             var kept = view.retain()) {
+            System.out.println(owner.getSerial());
+            owner.close();
+            if (!view.isClosed()) throw new AssertionError("Borrowed view is still open");
+            System.out.println(kept.getSerial());
+        }
+    }
+}
+```
+
+This prints `42` twice. The method's declared lifetime makes `view` borrow from
+`owner`; `retain()` creates the independent `kept` owner. `share()` and `retain()`
+preserve the nominal owner type. Raw resource views expose members that do not
+borrow from or consume the receiver. Use the whole owner for those operations.
+If a method borrows from another argument, that argument controls the result's
+lifetime. Consuming methods invalidate the original owner and its shared guards
+before Lean runs, including before a host callback executes.
+
+Callback results anchored to a callback argument remain unsupported.
 
 ### Alpha interoperability example
 

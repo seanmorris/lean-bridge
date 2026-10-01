@@ -21,8 +21,10 @@ export const rejectOwnedJvmPackageMutations = async (options, verified, compiled
 	const { adapterRoot, jvmRoot } = options;
 	const transfers = Boolean(verified.model.ownedGraph.inputTransfers);
 	const anchors = Boolean(verified.model.ownedGraph.resultAnchors);
+	const receivers = Boolean(verified.model.ownedGraph.receiverExports);
 	const mutations = [...transfers ? ["adapter-version", "contract-version", "consumption", "aliases", "native-transfers"] : []
 		, ...anchors ? ["native-anchors", "owned-version", "original-anchor", "borrow-expiry", "empty-owner", "canonical-equality", "raw-views", "copy-type", ...transfers ? ["whole-inputs"] : []] : []
+		, ...receivers ? ["native-receivers", ...["values", "members", "properties", "owners", "consumingReceivers", "exports"].map(field => "receiver-" + field)] : []
 		, "lifetime", "source", "guard", "gmp-receipt", "gmp-source", "library"
 		, "unrecorded"];
 	for(const mutation of mutations)
@@ -34,6 +36,8 @@ export const rejectOwnedJvmPackageMutations = async (options, verified, compiled
 		else if(mutation === "aliases") forged.jvmValues.inputTransfers.aliases = "wrapper-only";
 		else if(mutation === "native-transfers") delete forged.ownedValues.inputTransfers;
 		else if(mutation === "native-anchors") delete forged.ownedValues.resultAnchors;
+		else if(mutation === "native-receivers") delete forged.ownedValues.receiverExports;
+		else if(mutation.startsWith("receiver-")) forged.jvmValues.receiverExports[mutation.slice(9)] = "forged";
 		else if(mutation === "owned-version") forged.ownedValues.schemaVersion = 3;
 		else if(mutation === "original-anchor") forged.jvmValues.resultAnchors.anchor = "fresh-snapshot";
 		else if(mutation === "borrow-expiry") forged.jvmValues.resultAnchors.expiration = "wrapper-close";

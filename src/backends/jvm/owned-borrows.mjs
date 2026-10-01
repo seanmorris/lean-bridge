@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { ownedJvmOwnerName } from "./owned-receivers.mjs";
 
 export const ownedJvmWholeValue = `/** A complete Lean value with an explicitly checked original owner. */
 public final class Value<T> implements AutoCloseable {
@@ -168,16 +169,17 @@ export const ownedJvmAnchoredCall = (context, fn, index, kotlin) => {
 	const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 	const moving = fn.transfers ?? [], wraps = i => moving.includes(i) || fn.anchor === i;
 	const whole = result.representation !== "copied" && !fn.rawResult;
+	const ownerName = ownedJvmOwnerName(result, kotlin);
 	const copy = calls.find(call => call.wholeCopy && call.id === result.id);
 	if(whole && !copy) throw new TypeError(`Missing JVM whole-value copy for ${result.id}`);
 	const borrowed = fn.anchor !== undefined;
 	const write = (node, i, scope, check) => fn.handle && i === 0
 		? `MemorySegment.ofAddress(${scope}.root(arg${i}))`
-		: c.hostArgument(fn, i) ? `host${family}${node.index}(arg${i}, ${scope}, ${check ? "null" : "frame"})`
+		: c.hostArgument?.(fn, i) ? `host${family}${node.index}(arg${i}, ${scope}, ${check ? "null" : "frame"})`
 			: `_OwnedConvert.write(${catalog}, ${node.index}, ${wraps(i) ? `${scope}.whole(arg${i})` : `arg${i}`}, ${scope})`;
 	const arguments_ = ["session"
 		, ...parameters.flatMap((node, i) => [
-			fn.handle && i === 0 || c.hostArgument(fn, i) || node.aggregate ? `input${i}` : `input${i}.get(${node.valueLayout}, 0)`
+			fn.handle && i === 0 || c.hostArgument?.(fn, i) || node.aggregate ? `input${i}` : `input${i}.get(${node.valueLayout}, 0)`
 			, ...moving.includes(i) ? [`moves.owner(${moving.indexOf(i)})`] : []
 			, ...fn.anchor === i ? ["anchor"] : []
 		])
@@ -208,7 +210,7 @@ ${invoke}
             ready();
             var result = (${type(result.id, kotlin)})_OwnedConvert.read(${catalog}, ${result.index}, output, outputs);
 ${whole ? `            _OwnedRuntime.checkpoint();
-            var value = new Value<>(owner.adopt(${borrowed}, true), result, this::${name(copy, family)}, ${equality}::equal, ${kotlin});
+            var value = new ${ownerName ? `${ownerName}(this, ` : "Value<>("}owner.adopt(${borrowed}, true), result, this::${name(copy, family)}, ${equality}::equal${ownerName ? "" : `, ${kotlin}`});
             try { _OwnedRuntime.checkpoint(); ready(); outputs.complete(); owner.complete(); return value; }
             catch (Throwable error) { value.close(); throw error; }` : "            _OwnedRuntime.checkpoint(); ready(); outputs.complete(); owner.complete(); return result;"}
         } catch (_OwnedConvert.InvalidNative error) {

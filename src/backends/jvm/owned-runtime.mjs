@@ -23,8 +23,9 @@ export const ownedJvmException = `public final class LeanBridgeException extends
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Enable native handoff signals.
  * @param options.anchoredResults - Preserve original-owner borrowed results.
+ * @param options.wholeOwners - Keep complete owners without requiring result anchors.
  */
-export const ownedJvmRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
+export const ownedJvmRuntime = (prefix, { transferredInputs = false, anchoredResults = false, wholeOwners = anchoredResults } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned JVM prefix");
 	return `import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
@@ -165,7 +166,7 @@ ${anchoredResults ? `        validate = linker.downcallHandle(symbols.find("${pr
             drain();
         }
     }
-${anchoredResults ? ownedJvmWholeGuard : ""}\
+${wholeOwners ? ownedJvmWholeGuard : ""}\
     static final class BorrowScope { volatile boolean active = true; }
     static final class Lease {
         final State state;
@@ -173,7 +174,7 @@ ${anchoredResults ? ownedJvmWholeGuard : ""}\
         final BorrowScope scope;
         private final AtomicInteger references = new AtomicInteger();
         private volatile boolean revoked;${transferredInputs ? "\n        volatile _OwnedInputTransfers.Signal inputMove;" : ""}
-${anchoredResults ? `        final boolean borrowedResult, whole;
+${wholeOwners ? `        final boolean borrowedResult, whole;
         Lease(State state, Slot slot, BorrowScope scope) { this(state, slot, scope, false, false); }
         Lease(State state, Slot slot, BorrowScope scope, boolean borrowedResult, boolean whole) {
             this.state = state; this.slot = slot; this.scope = scope;
@@ -219,11 +220,11 @@ ${anchoredResults ? `        final boolean borrowedResult, whole;
             catch (Throwable error) { arena.close(); throw error; }
         }
         MemorySegment output() { state.require(); if (slot == null) check(4); if (captured) check(8); return out; }
-${anchoredResults ? "        Lease adopt() { return adopt(false, false); }\n        Lease adopt(boolean borrowedResult, boolean whole) {" : "        Lease adopt() {"}
+${wholeOwners ? "        Lease adopt() { return adopt(false, false); }\n        Lease adopt(boolean borrowedResult, boolean whole) {" : "        Lease adopt() {"}
             state.require(); if (slot == null) check(4);
             if (!captured) { slot.value = out.get(JAVA_LONG, 0); out.set(JAVA_LONG, 0, 0); captured = true; }
             if (slot.value == 0) check(9);
-            if (lease == null) { checkpoint(); lease = new Lease(state, slot, null${anchoredResults ? ", borrowedResult, whole" : ""}); }
+            if (lease == null) { checkpoint(); lease = new Lease(state, slot, null${wholeOwners ? ", borrowedResult, whole" : ""}); }
             return lease;
         }
         void complete() { state.require(); complete = true; }
@@ -248,7 +249,7 @@ ${anchoredResults ? "        Lease adopt() { return adopt(false, false); }\n    
         final Lease lease;
         final AtomicBoolean closed = new AtomicBoolean();
         Drop(Lease lease) { this.lease = lease; }
-        void close(boolean cleaning) { if (closed.compareAndSet(false, true)${anchoredResults ? " && !lease.whole" : ""}) lease.release(cleaning); }
+        void close(boolean cleaning) { if (closed.compareAndSet(false, true)${wholeOwners ? " && !lease.whole" : ""}) lease.release(cleaning); }
         @Override public void run() { close(true); }
     }
     static final class Handle implements AutoCloseable {
@@ -259,7 +260,7 @@ ${anchoredResults ? "        Lease adopt() { return adopt(false, false); }\n    
         Handle(Lease lease, long value) {
             if (value == 0) check(9);
             this.lease = lease; this.value = value; checkpoint(); drop = new Drop(lease);
-            ${anchoredResults ? "if (!lease.whole) " : ""}lease.acquire();
+            ${wholeOwners ? "if (!lease.whole) " : ""}lease.acquire();
             try { checkpoint(); cleanable = CLEANER.register(this, drop); }
             catch (Throwable error) { drop.close(false); throw error; }
         }

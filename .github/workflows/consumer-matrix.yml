@@ -1736,6 +1736,16 @@ jobs:
           if-no-files-found: error
           overwrite: true
           retention-days: 30
+      - name: Install C# for the combined Maven receiver build
+        if: matrix.profile == 'jvm'
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.424'
+      - name: Install Ruby for the combined Maven receiver build
+        if: matrix.profile == 'jvm'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
       - name: Install the ordinary Java compiler
         if: matrix.profile == 'jvm'
         uses: actions/setup-java@v4
@@ -1765,6 +1775,15 @@ jobs:
         id: type_corpus_jvm
         continue-on-error: true
         run: |
+          sudo apt-get install -y python3-venv pkg-config
+          bash scripts/bootstrap-rust-ci.sh
+          export LEAN_BRIDGE_RUSTC="$PWD/.toolchains/rust-1.90.0/bin/rustc"
+          export LEAN_BRIDGE_CARGO="$PWD/.toolchains/rust-1.90.0/bin/cargo"
+          export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
+          export LEAN_BRIDGE_PYTHON="$(command -v python3)"
+          export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+          export LEAN_BRIDGE_GEM="$(command -v gem)"
+          export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
           export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
           export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
           export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
@@ -1798,6 +1817,25 @@ jobs:
           test -s build/owned-jvm-borrows/borrow-only.json
           test -s build/owned-jvm-borrows/ordinary-installed.json
           test -s build/owned-jvm-borrows/reviewed-installed.json
+          npm run test:owned-jvm-receivers > build/owned-jvm-receivers.log 2>&1
+          cat build/owned-jvm-receivers.log
+          rg '^# tests 15$' build/owned-jvm-receivers.log
+          rg '^# pass 15$' build/owned-jvm-receivers.log
+          rg '^# fail 0$' build/owned-jvm-receivers.log
+          rg '^# cancelled 0$' build/owned-jvm-receivers.log
+          rg '^# skipped 0$' build/owned-jvm-receivers.log
+          test -s build/owned-jvm-receiver-core/ordinary.json
+          test -s build/owned-jvm-receiver-core/reviewed.json
+          test -s build/owned-jvm-receiver-core/ordinary-plain.json
+          test -s build/owned-jvm-receiver-core/reviewed-plain.json
+          test -s build/owned-jvm-receiver-core/ordinary-consuming.json
+          test -s build/owned-jvm-receiver-core/reviewed-consuming.json
+          test -s build/owned-jvm-receiver-core/ordinary-unanchored.json
+          test -s build/owned-jvm-receiver-core/reviewed-unanchored.json
+          test -s build/owned-jvm-receiver-core/ordinary-package.json
+          test -s build/owned-jvm-receiver-core/reviewed-package.json
+          test -s build/owned-jvm-receiver-core/ordinary-resource-package.json
+          test -s build/owned-jvm-receiver-core/reviewed-resource-package.json
           test -s build/owned-jvm-thread-exit/ordinary.json
           test -s build/owned-jvm-thread-exit/reviewed.json
           test -s build/owned-jvm-runtime/ordinary.json
@@ -1882,6 +1920,8 @@ jobs:
             build/owned-jvm-transfer-packaging/
             build/owned-jvm-borrows/
             build/owned-jvm-borrows.log
+            build/owned-jvm-receiver-core/
+            build/owned-jvm-receivers.log
             build/compounds/jvm.json
             build/lists/jvm.json
             build/aliases/jvm.json
@@ -2081,6 +2121,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-jvm-packaging.test.mjs tests/owned-jvm-coexistence.test.mjs tests/owned-jvm-documentation.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-jvm-transfers"
               consumer_command="$consumer_command && npm run test:owned-jvm-borrows"
+              consumer_command="$consumer_command && npm run test:owned-jvm-receivers"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"

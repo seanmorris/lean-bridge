@@ -205,11 +205,12 @@ Reviewed APIs store the receiver separately and use the remaining parameters'
 declared names.
 
 Build with `--target c`, `--target cpp`, `--target cargo`, `--target pypi`,
-`--target rubygems`, `--target nuget`, or a combination.
+`--target rubygems`, `--target nuget`, `--target maven`, or a combination.
 C++, [Rust](cargo.md#export-methods-and-properties),
 [Python](pypi.md#export-methods-and-properties),
-[Ruby](rubygems.md#export-methods-and-properties) and
-[C#](nuget.md#export-methods-and-properties) expose named receiver members. Combined builds
+[Ruby](rubygems.md#export-methods-and-properties),
+[C#](nuget.md#export-methods-and-properties) and
+[Java/Kotlin](maven.md#export-methods-and-properties) expose named receiver members. Combined builds
 with other consumer targets reject receiver exports. These packages use
 manifest version 6 and `ownedValues` version 5. Metadata records the
 receiver-first convention and distinguishes receiver anchors from parameter

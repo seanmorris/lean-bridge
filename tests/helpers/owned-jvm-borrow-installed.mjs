@@ -18,8 +18,10 @@ const section = (source, start, end) => {
  *
  * @param namespace - Prepared package namespace.
  * @param functions - Export names checked against an independent signature catalog.
+ * @param options - Optional nominal receiver signature capability.
+ * @param options.receiverExports - Include the public receiver fixture's exports.
  */
-export const ownedJvmBorrowInstalledFixture = async (namespace, functions) => {
+export const ownedJvmBorrowInstalledFixture = async (namespace, functions, { receiverExports = false } = {}) => {
 	const javaProbe = await readFile("tests/fixtures/structured-types/owned-jvm-borrows.java", "utf8");
 	const kotlinProbe = await readFile("tests/fixtures/structured-types/owned-kotlin-borrows.kt", "utf8");
 	assert.ok(javaProbe.startsWith(`package ${namespace};`));
@@ -32,7 +34,7 @@ public final class OwnedBorrowSupport {
 ${checks}
 }
 `;
-	const signatures = profile => ownedJvmInstalledSignatures(false, namespace, profile, functions, { anchoredResults: true });
+	const signatures = profile => ownedJvmInstalledSignatures(false, namespace, profile, functions, { anchoredResults: true, receiverExports });
 	const javaBody = section(javaProbe, "    static Bundle bundle", "    public static <T> int[] faults")
 		.replaceAll("OwnedBorrowProbe::", "Api::");
 	const java = `import ${namespace}.*;

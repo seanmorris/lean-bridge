@@ -97,24 +97,33 @@ const kotlin = type => {
  * @param options - Select the consuming-input fixture.
  * @param options.transferredInputs - Include the two closure transfers and mixed values.
  * @param options.anchoredResults - Check whole owners and mixed original-owner transfers.
+ * @param options.receiverExports - Check nominal whole results and argument-anchored members.
  */
-export const ownedJvmInstalledSignatures = (scalar, namespace, profile, functions, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const signatures = anchoredResults ? [
-			...callbackFunctions.slice(0, 22).map(([name, result, ...parameters]) => [
-				name
-				, ["serial", "label", "payload"].includes(name) ? result : `Value<${result}>`
-				, ...parameters.map((type, index) => !["newTicket", "serial", "label", "payload"].includes(name) && index === (name === "bundle" ? 2 : 0) ? `Value<${type}>` : type)
-			])
-			, ["transferTicket", "Value<Ticket>", "Value<Ticket>"]
-			, ["mixedTicket", "Value<Ticket>", "Value<Ticket>", "Value<Ticket>"]
-			, ["moveRecord", "Value<Bundle>", "Value<Bundle>", "CallbackRecordArgument1ClosureCallback"]
-			, ["moveArray", "Value<Ticket[]>", "Value<Ticket[]>"]
+export const ownedJvmInstalledSignatures = (scalar, namespace, profile, functions, { transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
+	let signatures = anchoredResults ? [
+		...callbackFunctions.slice(0, 22).map(([name, result, ...parameters]) => [
+			name
+			, ["serial", "label", "payload"].includes(name) ? result : `Value<${result}>`
+			, ...parameters.map((type, index) => !["newTicket", "serial", "label", "payload"].includes(name) && index === (name === "bundle" ? 2 : 0) ? `Value<${type}>` : type)
+		])
+		, ["transferTicket", "Value<Ticket>", "Value<Ticket>"]
+		, ["mixedTicket", "Value<Ticket>", "Value<Ticket>", "Value<Ticket>"]
+		, ["moveRecord", "Value<Bundle>", "Value<Bundle>", "CallbackRecordArgument1ClosureCallback"]
+		, ["moveArray", "Value<Ticket[]>", "Value<Ticket[]>"]
 	] : transferredInputs ? [
-			...callbackFunctions.slice(0, 22)
-			, ["newRecordCallback", "CallbackRecordArgument1Closure"]
-			, ["transferCallback", "CallbackRecordArgument1Closure", "CallbackRecordArgument1Closure"]
-			, ["echoChain", "Chain", "Chain"], ["echoMixed", "Mixed", "Mixed"]
-	] : scalar ? scalarFunctions : callbackFunctions, java = profile === "java";
+		...callbackFunctions.slice(0, 22)
+		, ["newRecordCallback", "CallbackRecordArgument1Closure"]
+		, ["transferCallback", "CallbackRecordArgument1Closure", "CallbackRecordArgument1Closure"]
+		, ["echoChain", "Chain", "Chain"], ["echoMixed", "Mixed", "Mixed"]
+	] : scalar ? scalarFunctions : callbackFunctions;
+	const java = profile === "java";
+	if(receiverExports)
+	{
+		assert.ok(anchoredResults);
+		const owners = { "Value<Ticket>": "TicketValue", "Value<Bundle>": "BundleValue", "Value<Choice>": "ChoiceValue", "Value<Tree>": "TreeValue" };
+		signatures = signatures.map(([name, result, ...parameters]) => [name, owners[result] ?? result, ...parameters]);
+		signatures.push(["chooseTicket", "TicketValue", "Ticket", "Value<Ticket>"]);
+	}
 	assert.deepEqual([...functions].sort(), signatures.map(([name]) => name).sort());
 	const literal = type => {
 		if(java) return erase(type) + ".class";

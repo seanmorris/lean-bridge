@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJvmReceiver, ownedJvmReceiverChangedPaths } from "./owned-jvm-receiver-history.mjs";
 
 export const ownedDotnetReceiverPath = "docs/evidence/owned-dotnet-receivers-20261001.json";
 export const ownedDotnetReceiverBaseline = "7f1a432b5cffb9a0cddfa2fef30440f9847afc39";
@@ -66,6 +67,7 @@ export const ownedDotnetReceiverAddedPaths = [
 	, "tests/owned-dotnet-receivers.test.mjs"
 ].sort();
 let cached;
+export const ownedDotnetReceiverNormalizationPaths = [...new Set([...ownedDotnetReceiverChangedPaths, ...ownedJvmReceiverChangedPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.
@@ -98,6 +100,7 @@ export const reverseOwnedDotnetReceiverUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedDotnetReceiver = (path, source, expected) => {
+	source = beforeOwnedJvmReceiver(path, source, expected);
 	if(!ownedDotnetReceiverChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -124,6 +127,5 @@ export const beforeOwnedDotnetReceiver = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedDotnetReceiverHistoricalBytes = (path, bytes, expected) => ownedDotnetReceiverChangedPaths.includes(path)
+export const ownedDotnetReceiverHistoricalBytes = (path, bytes, expected) => ownedDotnetReceiverNormalizationPaths.includes(path)
 	? beforeOwnedDotnetReceiver(path, bytes.toString("utf8"), expected) : bytes;
-

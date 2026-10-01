@@ -37,11 +37,14 @@ extern "C" size_t probe_exit_errors(void) { return exit_errors.load(); }
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Enable consuming input leases.
  * @param options.anchoredResults - Preserve original-owner borrowed results.
+ * @param options.receiverExports - Lower compiler-authorized receiver sites.
+ * @param options.hostCallbacks - Enable callback transport independently.
  */
-export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false, anchoredResults = false } = {}) => {
+export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
 	const input = { metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
-		, component: compiled.model.component, hostCallbacks: true
+		, component: compiled.model.component, hostCallbacks
+		, ...receiverExports ? { receiverExports: true } : {}
 		, ...transferredInputs ? { transferredInputs: true } : {}
 		, ...anchoredResults ? { anchoredResults: true } : {} };
 	const generated = ownedJvmCallNative(input), { c, cleanup, implementation } = generated;
@@ -106,7 +109,9 @@ export const ownedJvmCallProbeMethods = (model, kotlin = false) => model.functio
 	}
 	const types = fn.parameters.map((id, i) => model.c.hostArgument(fn, i)
 		? model.namespace + ".kotlin." + nodes.get(id).delegateType : anchored && (fn.anchor === i || fn.transfers?.includes(i)) ? `${model.namespace}.Value<${model.kotlin.publicTypes[id]}>` : model.kotlin.publicTypes[id]);
-	const result = anchored && nodes.get(fn.result).representation !== "copied" ? `${model.namespace}.Value<${model.kotlin.publicTypes[fn.result]}>` : model.kotlin.publicTypes[fn.result];
+	const result = anchored && nodes.get(fn.result).representation !== "copied"
+		? nodes.get(fn.result).ownerType ? `${model.namespace}._OwnedKotlin${nodes.get(fn.result).ownerType}`
+			: `${model.namespace}.Value<${model.kotlin.publicTypes[fn.result]}>` : model.kotlin.publicTypes[fn.result];
 	return `    private fun ${fn.publicName}(${types.map((type, i) => `arg${i}: ${type}`).join(", ")}): ${unit ? "kotlin.Unit" : result} {
         ${unit ? "" : "return "}bindings.call${family}${index}(${types.map((_, i) => `arg${i}`).join(", ")})
     }`;

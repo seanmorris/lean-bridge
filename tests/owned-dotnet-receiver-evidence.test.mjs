@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { beforeOwnedJvmReceiver, ownedJvmReceiverHistoricalBytes } from "./helpers/owned-jvm-receiver-history.mjs";
 import { assertOwnedDotnetReceiverExecution } from "./helpers/owned-dotnet-receiver-evidence.mjs";
 import { ownedDotnetReceiverPath, ownedDotnetReceiverBaseline, ownedDotnetReceiverPrevious
 	, ownedDotnetReceiverChangedPaths, ownedDotnetReceiverAddedPaths
@@ -23,12 +24,13 @@ test("C# receiver evidence binds exact sources without changing historical recei
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedDotnetReceiverAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedJvmReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(item => item.path), ownedDotnetReceiverChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]); assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedDotnetReceiver(update.path, source);
+		const source = beforeOwnedJvmReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedDotnetReceiver(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedDotnetReceiver(update.path, prior), prior);
 		assert.equal(beforeOwnedDotnetReceiver(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated edit */\n";
@@ -39,9 +41,9 @@ test("C# receiver evidence binds exact sources without changing historical recei
 			, { ...update, path: "unrelated.mjs" }])
 			assert.throws(() => reverseOwnedDotnetReceiverUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedJvmReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedDotnetReceiver(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJvmReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["owned-dotnet-receivers", "owned-dotnet-receiver-packaging"
 		, "owned-dotnet-receiver-plain", "owned-dotnet-receiver-contract"
@@ -95,4 +97,3 @@ test("C# receiver evidence rejects partial runs and inflated package claims", as
 		await assert.rejects(() => assertOwnedDotnetReceiverExecution(changed), undefined, mutate.toString());
 	}
 });
-

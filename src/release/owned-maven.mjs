@@ -34,15 +34,16 @@ export const packageOwnedMaven = async ({ working, jvmRoot, nativeRoot, runtimeR
 	const { model, projection, evidence, receipt, libraryPaths, adapter } = await ownedJvmEvidence({ nativeRoot, runtimeRoot, adapterRoot });
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
+	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const compiled = JSON.parse(await readFile(join(jvmRoot, "native-jvm.json"), "utf8"));
 	await verifyNativeFiles(jvmRoot, compiled.files);
 	validateKotlinCompilation(compiled.kotlin, projection.namespace, { ownedValues: true });
-	if(compiled.schemaVersion !== (anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
+	if(compiled.schemaVersion !== (receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.namespace !== projection.namespace || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| canonicalJson(compiled.ownedValues ?? null) !== canonicalJson(projection.contract)
 		|| !/^javac 22(?:[.+ -]|$)/.test(compiled.compiler)
 		|| (await nativeArtifactPaths(jvmRoot)).some(path => path !== "native-jvm.json" && !Object.hasOwn(compiled.files, path))) throw new Error("Compiled JVM projection differs from native evidence");
-	const sources = generateOwnedJvmPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults }).files;
+	const sources = generateOwnedJvmPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }).files;
 	for(const path of Object.keys(compiled.files))
 		if(!Object.hasOwn(sources, path) && !/^classes\/[A-Za-z0-9_.$/-]+\.(?:class|kotlin_module)$/u.test(path))
 			throw new Error("Unexpected compiled owned JVM file: " + path);
@@ -65,7 +66,7 @@ export const packageOwnedMaven = async ({ working, jvmRoot, nativeRoot, runtimeR
 	for(const path of Object.keys(compiled.files).filter(path => path.startsWith("src/") || path === "binding-manifest.json"))
 		await copy(join(jvmRoot, path), `META-INF/lean-bridge/jvm/${path}`);
 	await copy(join(jvmRoot, "native-jvm.json"), "META-INF/lean-bridge/native-jvm.json");
-	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json", "callbacks.c"])
+	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json", ...hostCallbacks ? ["callbacks.c"] : []])
 		await copy(join(nativeRoot, path), `META-INF/lean-bridge/component/${path}`);
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined)
 	{
@@ -89,7 +90,7 @@ export const packageOwnedMaven = async ({ working, jvmRoot, nativeRoot, runtimeR
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("META-INF/lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1, kind: "lean-bridge-owned-maven-package", ecosystem: "maven", name, version, component: model.component, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, namespace: projection.namespace, kotlin: { namespace: compiled.kotlin.namespace, standardLibraryVersion: compiled.kotlin.standardLibraryVersion }, compiledProjectionSha256: sha256(canonicalJson(compiled)), ownedValues: projection.contract, files: inventory }));
+	await save("META-INF/lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1, kind: "lean-bridge-owned-maven-package", ecosystem: "maven", name, version, component: model.component, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, namespace: projection.namespace, kotlin: { namespace: compiled.kotlin.namespace, standardLibraryVersion: compiled.kotlin.standardLibraryVersion }, compiledProjectionSha256: sha256(canonicalJson(compiled)), ownedValues: projection.contract, files: inventory }));
 	const jar = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 }), packages = [];
 	await mkdir(coordinateRoot, { recursive: true }); await mkdir(join(working, "archives"), { recursive: true });
 	for(const [extension, bytes] of [["jar", jar], ["pom", Buffer.from(pom)]])
@@ -100,5 +101,5 @@ export const packageOwnedMaven = async ({ working, jvmRoot, nativeRoot, runtimeR
 		await writeFile(join(coordinateRoot, `${archive}.sha256`), `${hash}\n`, { flag: "wx" });
 		packages.push({ archive, name, version, bytes: bytes.length, sha256: hash, compilerAccess: false });
 	}
-	return { ecosystem: "maven", backend: anchoredResults ? "owned-jvm-v3" : transferredInputs ? "owned-jvm-v2" : "owned-jvm-v1", runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion, namespace: projection.namespace, packages };
+	return { ecosystem: "maven", backend: projection.contract.backend, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion, namespace: projection.namespace, packages };
 };
