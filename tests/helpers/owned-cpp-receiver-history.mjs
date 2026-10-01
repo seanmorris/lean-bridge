@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedRustReceiver, ownedRustReceiverChangedPaths } from "./owned-rust-receiver-history.mjs";
+import { beforeOwnedRustReceiver, ownedRustReceiverNormalizationPaths } from "./owned-rust-receiver-history.mjs";
 
 export const ownedCppReceiverPath = "docs/evidence/owned-cpp-receivers-20261001.json";
 export const ownedCppReceiverBaseline = "a514c3516343740ea8b3ef9335fb82f2251b3435";
@@ -56,7 +56,7 @@ export const ownedCppReceiverAddedPaths = [
 	, "tests/owned-cpp-receivers.test.mjs"
 ].sort();
 let cached;
-export const ownedCppReceiverNormalizationPaths = [...new Set([...ownedCppReceiverChangedPaths, ...ownedRustReceiverChangedPaths])].sort();
+export const ownedCppReceiverNormalizationPaths = [...new Set([...ownedCppReceiverChangedPaths, ...ownedRustReceiverNormalizationPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.

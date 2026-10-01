@@ -195,7 +195,7 @@ export const ownedPythonAnchoredCall = (model, all, c) => {
 	const moving = model.transfers ?? [], anchored = model.anchor;
 	const wraps = index => anchored === index || moving.includes(index);
 	const signature = { ...model, parameters: parameters.map(node => node.id) };
-	const host = parameters.map((_, i) => c.hostArgument(signature, i));
+	const host = parameters.map((_, i) => c.hostArgument?.(signature, i));
 	const input = (node, i, checking) => host[i]
 		? `_owned_host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})`
 		: `_owned_input${node.index}(${wraps(i) ? `arg${i}.get()` : `arg${i}`}, ${checking ? "checked" : "scope"})`;

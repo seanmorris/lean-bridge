@@ -1264,6 +1264,22 @@ jobs:
           test -s build/owned-python-borrows/borrow-only.json
           test -s build/owned-python-borrow-packaging/ordinary.json
           test -s build/owned-python-borrow-packaging/reviewed.json
+          npm run test:owned-python-receivers > build/owned-python-receivers.log 2>&1
+          cat build/owned-python-receivers.log
+          rg '^# tests 11$' build/owned-python-receivers.log
+          rg '^# pass 11$' build/owned-python-receivers.log
+          rg '^# fail 0$' build/owned-python-receivers.log
+          rg '^# cancelled 0$' build/owned-python-receivers.log
+          rg '^# skipped 0$' build/owned-python-receivers.log
+          test -s build/owned-python-receivers/ordinary.json
+          test -s build/owned-python-receivers/reviewed.json
+          test -s build/owned-python-receivers/ordinary-package.json
+          test -s build/owned-python-receivers/reviewed-package.json
+          test -s build/owned-python-receivers/ordinary-plain.json
+          test -s build/owned-python-receivers/reviewed-plain.json
+          test -s build/owned-python-receivers/ordinary-consuming.json
+          test -s build/owned-python-receivers/reviewed-consuming.json
+          test -s build/owned-python-receivers/typing.json
           test -s build/owned-python-packaging/ordinary.json
           test -s build/owned-python-packaging/reviewed.json
           test -s build/owned-python-packaging/scalars-ordinary.json
@@ -1300,6 +1316,8 @@ jobs:
             build/owned-python-borrows/
             build/owned-python-borrow-packaging/
             build/owned-python-borrows.log
+            build/owned-python-receivers/
+            build/owned-python-receivers.log
             build/owned-python-packaging/
           if-no-files-found: error
           overwrite: true
@@ -1485,6 +1503,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-python-packaging.test.mjs tests/owned-python-scalar-packaging.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-python-transfers"
               consumer_command="$consumer_command && npm run test:owned-python-borrows"
+              consumer_command="$consumer_command && npm run test:owned-python-receivers"
               if [ "${{ steps.ordinary_python.outcome }}" != success ] || [ "${{ steps.type_corpus_python.outcome }}" != success ]; then
                 result=failed
                 installed=false

@@ -120,7 +120,7 @@ export const assertOwnedReceiverExecution = async record => {
 	const page = await readFile("docs/consume/c.md", "utf8");
 	const example = page.split("### Methods and properties\n")[1]?.split("```c\n")[1]?.split("```")[0];
 	assert.ok(example);
-	const cliConfig = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const cliConfig = JSON.parse(ownedCppReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
 	for(const item of record.packages)
 	{
 		flags(item, ["sourceRemovedBeforeInstall", "cliRemovedBeforeConsumerInstall"

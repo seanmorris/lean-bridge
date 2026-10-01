@@ -16,6 +16,7 @@ import { ownedRustReceiverSource, ownedRustReceiverProbe, ownedRustPlainReceiver
 import { ownedRustReceiverLinker } from "./owned-rust-receiver-fixture.mjs";
 import { ownedReceiverSource } from "./owned-receiver-fixture.mjs";
 import { assertOwnedRustReceiverCi } from "./owned-rust-receiver-ci.mjs";
+import { ownedPythonReceiverHistoricalBytes } from "./owned-python-receiver-history.mjs";
 
 export const ownedRustReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-rust-receivers";
 export const ownedRustReceiverScope = Object.freeze({
@@ -124,7 +125,7 @@ export const assertOwnedRustReceiverExecution = async record => {
 	}
 	const example = await readFile("tests/fixtures/documentation/consumers/rust/owned-receivers.rs", "utf8");
 	assert.equal((await readFile("docs/consume/rust.md", "utf8")).match(/```rust file=rust\/owned-receivers\.rs\n([\s\S]*?)```/u)?.[1], example);
-	const cliConfig = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const cliConfig = JSON.parse(ownedPythonReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
 	for(const item of record.packages)
 	{
 		trueFields(item, ["sourceRemovedBeforeInstall"
@@ -185,7 +186,8 @@ export const assertOwnedRustReceiverExecution = async record => {
 		assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 		for(const path of cliConfig.files)
 		{
-			const file = item.cli.files.find(file => file.path === path), bytes = await readFile(path);
+			const file = item.cli.files.find(file => file.path === path);
+			const bytes = Buffer.from(ownedPythonReceiverHistoricalBytes(path, await readFile(path), file.sha256));
 			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.builds.length, 2);

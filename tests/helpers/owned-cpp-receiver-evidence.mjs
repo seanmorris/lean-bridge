@@ -128,7 +128,7 @@ export const assertOwnedCppReceiverExecution = async record => {
 	const page = await readFile("docs/consume/cpp.md", "utf8");
 	const example = page.match(/```cpp file=cpp\/owned-receivers\.cpp\n([\s\S]*?)```/u)?.[1];
 	assert.ok(example);
-	const cliConfig = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const cliConfig = JSON.parse(ownedRustReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
 	for(const item of record.packages)
 	{
 		trueFields(item, ["sourceRemovedBeforeInstall"

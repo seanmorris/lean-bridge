@@ -3306,3 +3306,29 @@ dependencies. A relocated executable must still run after removing both source
 trees, the installed crate, the CLI and the handoff. CI keeps
 `build/owned-rust-receivers.log` and eight JSON reports under
 `build/owned-rust-receivers/`.
+
+## Python receiver acceptance
+
+Run the gate with the pinned Lean toolchain, Python interpreters, mypy and offline
+typing wheels described in [Owner-anchored Python results](#owner-anchored-python-results):
+
+```sh
+npm run test:owned-python-receivers
+```
+
+The gate requires eleven passing tests with no skips. Both source paths execute
+receiver methods, read-only properties, unbound class members, original-owner
+transfers and result anchors. Runtime checks retain the existing allocation,
+callback reentry, exception traceback and foreign-thread close regressions.
+Three broken implementations must fail the unchanged consumer assertions.
+Resource-only builds run with and without consuming receivers, independently of
+callback or result-anchor capabilities.
+
+Installed-wheel tests build twice with an offline-installed CLI and compare
+original archive bytes. They remove producer sources and tools, install through
+offline pip, execute public imports and strict type checks, then relocate each
+installation and run it again without the handoff. The documented example runs
+on Python 3.11 with both typing dependency bounds and Python 3.12 with standard
+typing. A reviewed combined build also executes C++ and Rust consumers from the
+same authenticated adapter. CI retains `build/owned-python-receivers.log` and
+nine reports in `build/owned-python-receivers/`.

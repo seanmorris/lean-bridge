@@ -48,7 +48,7 @@ def _owned_synchronous(value):
  */
 export const ownedPythonCallbacks = (c, nodes, models) => {
 	const lines = [support], layouts = [];
-	for(const callback of c.callbacks)
+	for(const callback of c.hostArgument ? c.callbacks : [])
 	{
 		const node = nodes.get(callback.id), result = nodes.get(callback.result), i = node.index;
 		const parameters = callback.parameters.slice(1).map(id => nodes.get(id));
@@ -62,7 +62,7 @@ export const ownedPythonCallbacks = (c, nodes, models) => {
 			, `class ${raw}(_c.Structure):`
 			, `    _fields_ = [("call", _OwnedFunction${i}), ("context", _c.c_void_p), ("closure", _c.c_void_p), ("recovery", _c.POINTER(${result.raw}))]`, ""
 			, `def _owned_host${i}(value, scope, frame=None):`
-			, ...c.anchoredResults ? ["    if type(value) is _R.Value: value = value.get()"] : []
+			, ...c.anchoredResults || c.functions.some(fn => fn.receiver === 0) ? ["    if type(value) is _R.Value: value = value.get()"] : []
 			, `    scope.enter(None, 0, ${raw})`
 			, `    if type(value) is _V.${node.publicType}:`
 			, `        handle = _owned_input${i}(value, scope)`

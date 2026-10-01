@@ -387,6 +387,33 @@ Python contracts from compiler metadata, including the original owner, transitiv
 expiration, empty values, copy selectors, equality and original-owner transfers.
 Packages without result anchors keep their prior API and contract versions.
 
+## Export methods and properties
+
+Select an owned nominal first argument as a receiver using the
+[shared receiver configuration](../lean/existing-package.md#declare-export-contracts).
+Use `"receiver": "method"` for a method, or `"receiver": "property"` for a
+zero-argument, read-only property. Reviewed IR declares the same owner and
+receiver explicitly. Methods use snake_case names on `Value[T]`; properties use
+attribute access, such as `owner.serial`. Generated `.pyi` files retain the
+nominal receiver and argument types.
+
+A result can borrow its receiver or another argument. Borrowed results expire
+when that original owner is released or transferred, including through empty
+containers and chained borrows. Consuming methods use the original owning slot;
+validation failures preserve the input, while failures after handoff leave it
+consumed. A method cannot consume its result's lifetime anchor.
+
+Receiver packages use Python contract version 4, the `owned-python-v4` backend,
+and wheel receipt version 5. The compiler-authenticated receiver descriptor is
+also included in the native component and adapter receipts. Package verification
+compares those descriptors and regenerates the public API and stubs before
+assembling the wheel. Receiver-only packages need no callback or borrowed-result
+capability. Older packages without receiver exports keep their existing formats.
+
+Execute the [consumer example](../consume/python.md#methods-and-properties)
+against the original prepared wheel before publishing. Callback-result lifetime
+anchors are separate from receiver-bound export results and remain unsupported.
+
 ## Choose the package name and platform
 
 This section describes the Alpha fixture's fixed coordinates.

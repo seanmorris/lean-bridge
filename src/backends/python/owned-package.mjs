@@ -17,14 +17,17 @@ import { ownedPythonRuntime } from "./owned-runtime.mjs";
  * @param options - Compiler-authenticated ownership capabilities.
  * @param options.transferredInputs - Enable explicitly consuming input leases.
  * @param options.anchoredResults - Preserve whole original owners for borrowed results.
+ * @param options.receiverExports - Expose checked nominal receiver members.
+ * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedPythonPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const generated = generateOwnedPythonConversions(ir, { transferredInputs, anchoredResults }), prefix = generated.c.prefix;
+export const generateOwnedPythonPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const generated = generateOwnedPythonConversions(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = generated.c.prefix;
 	const transfers = generated.c.functions.some(item => item.transfers?.length);
 	const anchors = Boolean(generated.c.anchoredResults);
+	const receivers = generated.functions.filter(item => item.receiver === 0), wholeOwners = anchors || receivers.length > 0;
 	const { packageDir } = generated;
 	const publicModule = `${packageDir}/__init__.py`, typeStub = `${packageDir}/__init__.pyi`;
-	const runtime = ownedPythonRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors });
+	const runtime = ownedPythonRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors, receiverExports: receivers.length > 0 });
 	const source = `${generated.source}\nfrom . import _assets as _Assets\n_bind(_R._OwnedRuntime(_Assets._LIBRARY, _Assets._ensure_process))\n`;
 	const abiHeader = `#pragma once
 #include "${prefix}.h"
@@ -34,12 +37,12 @@ _Static_assert(sizeof(__mpz_struct) == 16 && _Alignof(__mpz_struct) == 8 && offs
 _Static_assert(sizeof(${prefix}_status) == 4, "Owned Python status layout");
 ${generated.types.filter(node => node.kind === "variant").map(node => `_Static_assert(sizeof(${node.cName}_kind) == 4, "Owned Python variant layout");`).join("\n")}
 `;
-	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
+	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
 		, language: "python-3.11"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
-			, arguments: anchors ? "whole-values" : "ordinary-values"
+			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
 			, consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"
 			, aliases: "shared-lease", borrowedInputs: "reject"
@@ -52,6 +55,14 @@ ${generated.types.filter(node => node.kind === "variant").map(node => `_Static_a
 			, copyType: "nominal-or-result_of-or-parameter_of"
 			, resourceEquality: "canonical-identity", invalidEquality: "raise"
 			, transfers: "original-owner" } } : {}
+		, ...receivers.length ? { receiverExports: { schemaVersion: 1
+			, values: "checked-whole-result", members: "snake-case"
+			, properties: "read-only-properties"
+			, consumingReceivers: "original-owner-handoff"
+			, exports: receivers.map(item => ({ bindingId: item.id
+				, owner: ir.declarations.find(declaration => declaration.id === item.id).owner
+				, kind: item.receiverKind, member: item.publicName }))
+		} } : {}
 		, exactIntegers: "python-int", loader: "authenticated-bundled-native"
 		, publicSha256: sha256(generated.valuesSource)
 		, stubSha256: sha256(generated.stub)
@@ -104,7 +115,18 @@ records, variants and resources identify their own type. For containers and empt
 values, select the public result type with result_of=api.function, or an argument
 type with parameter_of=(api.function, "arg0"). These selectors do not call the
 function. Returned Lean closures use callable Value wrappers.
-` : ""}${transfers && anchors ? `
+` : ""}${receivers.length ? `
+Declared methods use snake_case names on Value owners. Properties are read-only
+attributes such as owner.serial. Record fields remain on owner.get(), so the
+exported property owner.primary is distinct from the record field
+owner.get().primary. Members check the nominal receiver type and its lifetime;
+generated type stubs also reject members used on the wrong Value type.
+Resource-containing results retain their whole original owner, even without
+borrowed-result exports. Value clones share immutable storage and ownership;
+close() releases this wrapper. Raw resources expose only members that do not
+require the whole owner. A borrowed result anchored to another argument expires
+with that argument. Free functions remain available.
+` : ""}${transfers && wholeOwners ? `
 Transferred inputs take Value roots and consume the original owner, including
 empty values. Validation and preparation failures preserve inputs. Handoff
 closes aliases and borrowed descendants before callbacks can reenter. Errors
@@ -119,7 +141,7 @@ Independently retained resources stay open. Callback-frame borrows cannot be
 transferred; call retain() first. Two transferred arguments cannot share a lease.
 Validation and preparation failures leave inputs usable; errors after handoff
 leave them consumed, including callback exceptions and result-conversion errors.
-` : ""}
+` : ""}${!receivers.length || hostCallbacks ? `
 Pass synchronous Python functions to callback parameters. Callback containers
 are independent values, but resource leaves borrow the callback frame and expire
 on return. Call retain() inside the callback to keep a resource. Callback-local
@@ -134,7 +156,7 @@ Async functions and awaitable replies are rejected. Failed output conversions
 revoke partial wrappers even when the caller retains the exception traceback.
 Malformed native values retire the runtime; ordinary validation and recoverable
 allocation failures leave it usable.
-
+` : ""}
 Conversions limit depth to 128, visits to 262,144, native conversion data to
 16 MiB and accounted Python conversion storage to another 16 MiB. A call shares
 these budgets across its inputs, callbacks and result. These limits do not bound
@@ -143,8 +165,8 @@ aliases use typing_extensions >=4.6,<5 on Python 3.11 and the standard library
 on Python 3.12+; pip installs the backport when needed.
 `
 	};
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : transfers ? 2 : 1
-		, backend: anchors ? "owned-python-v3" : transfers ? "owned-python-v2" : "owned-python-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+		, backend: receivers.length ? "owned-python-v4" : anchors ? "owned-python-v3" : transfers ? "owned-python-v2" : "owned-python-v1"
 		, component: ir.component.id
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, publicModule, typeStub, internalModule: `${packageDir}/_native.py`

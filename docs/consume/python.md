@@ -530,6 +530,45 @@ leave them consumed. A borrowed root cannot transfer, and a call cannot consume
 its result anchor or that anchor's ancestor. Retain a borrow first when independent
 ownership is needed. Packages without result anchors keep the API above.
 
+### Methods and properties
+
+Packages with [receiver exports](../publish/pypi.md#export-methods-and-properties)
+provide named methods and read-only properties on `Value[T]`. Lean's
+`retainTicket` becomes `retain_ticket()`, and the declared `serial` property
+becomes `owner.serial`.
+
+For the receiver acceptance wheel, save this as `owned-receivers.py`:
+
+```python file=python/owned-receivers.py
+import lean_owned_aggregates as api
+
+with api.new_ticket(42, "receiver") as owner:
+    view = owner.retain_ticket()
+    independent = view.retain()
+    print(view.serial)
+
+assert view.is_closed
+with independent:
+    print(independent.serial)
+```
+
+Run `./.venv/bin/python owned-receivers.py`. It prints `42` twice. The borrowed
+view expires when the original owner closes; the retained value stays usable.
+A method can instead anchor its result to another argument, whose lifetime then
+controls the result. Properties that return copied strings or numbers remain
+usable after the call.
+
+Record fields remain on the checked value: `record.get().primary` reads a field,
+while `record.primary` calls the exported property. Resource leaves expose only
+members that do not require the whole result owner. The generated stubs reject
+members used on the wrong `Value[T]`, and runtime dispatch checks the nominal
+type. Free functions remain available.
+
+A consuming method such as `owner.transfer_ticket()` consumes the original
+owner. Aliases and borrowed descendants become closed before a reentrant callback
+can use them. Retain a borrowed value before transferring it. Receiver packages
+preserve whole result owners even when they have no borrowed-result exports.
+
 ### Alpha resource example
 
 The remaining example uses the separate Alpha fixture and its fixed API.

@@ -25,18 +25,25 @@ const primitive = {
  * @param options - Explicit C transport capabilities.
  * @param options.transferredInputs - Admit consuming resource-containing inputs.
  * @param options.anchoredResults - Preserve whole original result owners.
+ * @param options.receiverExports - Expose nominal methods and properties.
+ * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedPythonValues = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
+export const generateOwnedPythonValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	const anchors = Boolean(c.anchoredResults);
+	const receivers = c.functions.some(fn => fn.receiver === 0), wholeOwners = anchors || receivers;
 	const occupied = new Set(reserved), names = new Map();
-	if(anchors) for(const name of ["Value", "copy_value"]) occupied.add(name);
+	if(wholeOwners) for(const name of ["Value", "copy_value"]) occupied.add(name);
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || occupied.has(name))
 			throw new TypeError(`Owned Python name is reserved or duplicated: ${name}`);
 		occupied.add(name); return name;
 	};
-	const functions = c.functions.map(fn => ({ ...fn, publicName: claim(fn.cName.slice(c.prefix.length + 1)) }));
+	const functions = c.functions.map(fn => ({ ...fn, publicName: claim(fn.cName.slice(c.prefix.length + 1))
+		, ...fn.receiver === 0 ? { receiverKind: ir.declarations.find(item => item.id === fn.id).kind } : {} }));
+	for(const fn of functions.filter(fn => fn.receiver === 0))
+		if(["get", "retain", "close", "is_closed", "copy_value", "same_identity"].includes(fn.publicName))
+			throw new TypeError(`Owned Python receiver member is reserved: ${fn.publicName}`);
 	for(const node of c.nodes) if(node.kind !== "primitive" && node.name) names.set(node.id, claim(node.name));
 	const definitions = new Map(ir.types.map(node => [node.id, node]));
 	for(const alias of c.native.aliases) names.set(alias.id, claim(definitions.get(alias.id).name));
@@ -70,14 +77,21 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 	const exports = [...pythonCompoundNames(compoundModel)
 		, ...types.filter(node => names.has(node.id)).flatMap(node => [node.publicType, ...node.cases.map(branch => branch.publicName)])
 		, ...c.native.aliases.map(alias => names.get(alias.id)), "LeanBridgeError"
-		, ...anchors ? ["Value", "copy_value"] : []
-		, ...c.callbacks.length ? ["WithRecovery", "with_recovery"] : []
+		, ...wholeOwners ? ["Value", "copy_value"] : []
+		, ...hostCallbacks && c.callbacks.length ? ["WithRecovery", "with_recovery"] : []
 		, ...functions.map(fn => fn.publicName)];
-	const parameterType = (fn, i) => c.hostArgument(fn, i)
-		? `_CallbackInput${table.get(fn.parameters[i]).index}` : anchors && (fn.anchor === i || fn.transfers?.includes(i))
+	const parameterType = (fn, i) => c.hostArgument?.(fn, i)
+		? `_CallbackInput${table.get(fn.parameters[i]).index}` : wholeOwners && (fn.anchor === i || fn.transfers?.includes(i))
 			? `Value[${table.get(fn.parameters[i]).publicType}]` : table.get(fn.parameters[i]).inputType;
-	const resultType = fn => anchors && table.get(fn.result).representation !== "copied"
+	const resultType = fn => wholeOwners && table.get(fn.result).representation !== "copied"
 		? `Value[${table.get(fn.result).publicType}]` : table.get(fn.result).publicType;
+	const member = (fn, stub, whole) => {
+		const node = table.get(fn.parameters[0]);
+		const arguments_ = fn.parameters.slice(1).map((_, i) => `arg${i + 1}`);
+		return [...fn.receiverKind === "property" ? ["    @property"] : []
+			, `    def ${fn.publicName}(self${whole ? `: Value[${node.publicType}]` : ""}${arguments_.map((name, i) => `, ${name}: ${parameterType(fn, i + 1)}`).join("")}) -> ${resultType(fn)}:`
+			, stub ? "        ..." : `        from . import _native\n        return _native._call${functions.indexOf(fn)}(self${arguments_.length ? ", " + arguments_.join(", ") : ""})`];
+	};
 	const annotation = (field, original) => original?.type.kind === "named" && names.has(original.type.id)
 		? names.get(original.type.id) : table.get(field.type).inputType;
 	const fields = (node, branch) => {
@@ -94,7 +108,7 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 		const lines = ["from __future__ import annotations"
 			, "from dataclasses import dataclass as _dataclass"
 			, "from typing import ClassVar as _ClassVar, Literal as _Literal, TypeAlias as _TypeAlias, Never as _Never"
-			, ...stub ? [] : [`from ._owned import _OwnedResource, LeanBridgeError${anchors ? ", Value" : ""}`
+			, ...stub ? [] : [`from ._owned import _OwnedResource, LeanBridgeError${wholeOwners ? ", Value" : ""}`
 				, ""
 				, ...containers.length ? ["try:", "    from typing import TypeAliasType as _TypeAliasType", "except ImportError:", "    from typing_extensions import TypeAliasType as _TypeAliasType"] : []]
 			, ""
@@ -103,7 +117,7 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 			, pythonCompoundPublic(compoundModel)];
 		if(stub) lines.push("class LeanBridgeError(RuntimeError):", "    status: int"
 			, "    def __init__(self, status: int, message: str | None = None) -> None: ...", "");
-		if(anchors)
+		if(wholeOwners)
 		{
 			lines.push("from typing import Any as _Any, Callable as _CopyCallable, Generic as _ValueGeneric, TypeVar as _ValueTypeVar, overload as _overload"
 				, '_ValueT = _ValueTypeVar("_ValueT")', "");
@@ -122,6 +136,7 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 					const node = table.get(callback.id);
 					lines.push(`    def __call__(self: Value[${node.publicType}]${callback.parameters.slice(1).map((_, i) => `, arg${i}: ${parameterType(callback, i + 1)}`).join("")}) -> ${resultType(callback)}: ...`);
 				}
+				for(const fn of functions.filter(fn => fn.receiver === 0)) lines.push(...member(fn, true, true));
 				lines.push("");
 			}
 			lines.push("@_overload"
@@ -132,7 +147,7 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 				, "    from . import _native"
 				, "    return _native._copy_value(value, result_of=result_of, parameter_of=parameter_of)", "");
 		}
-		if(c.callbacks.length) lines.push("from typing import Callable as _Callable, Generic as _Generic, ParamSpec as _ParamSpec, TypeVar as _TypeVar"
+		if(hostCallbacks && c.callbacks.length) lines.push("from typing import Callable as _Callable, Generic as _Generic, ParamSpec as _ParamSpec, TypeVar as _TypeVar"
 			, '_CallbackArgs = _ParamSpec("_CallbackArgs")', '_CallbackReturn = _TypeVar("_CallbackReturn")', ""
 			, "@_dataclass(frozen=True, slots=True)"
 			, "class WithRecovery(_Generic[_CallbackArgs, _CallbackReturn]):"
@@ -162,6 +177,8 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 					lines.push(`    def __call__(self${parameters.map((_, i) => `, arg${i}: ${parameterType(fn, i + 1)}`).join("")}) -> ${resultType(fn)}:`
 						, stub ? "        ..." : `        from . import _native\n        return _native._invoke${node.index}(self${parameters.map((_, i) => `, arg${i}`).join("")})`);
 				}
+				for(const fn of functions.filter(fn => fn.receiver === 0 && fn.parameters[0] === node.id
+					&& fn.anchor !== 0 && !fn.transfers?.includes(0))) lines.push(...member(fn, stub, false));
 				lines.push("");
 			}
 			else if(node.kind === "record") lines.push("@_dataclass(frozen=True, slots=True)", `class ${node.publicType}:`
@@ -179,12 +196,12 @@ export const generateOwnedPythonValues = (ir, { transferredInputs = false, ancho
 			lines.push(stub ? `${name}: _TypeAlias = ${expression}` : `${name} = _TypeAliasType(${JSON.stringify(name)}, ${expression})`);
 		}
 		for(const alias of c.native.aliases) lines.push(`${names.get(alias.id)}: _TypeAlias = ${table.get(alias.target).publicType}`);
-		for(const callback of c.callbacks)
+		if(hostCallbacks) for(const callback of c.callbacks)
 		{
 			const node = table.get(callback.id), result = table.get(callback.result);
 			const parameters = callback.parameters.slice(1).map((_, i) => JSON.stringify(parameterType(callback, i + 1))).join(", ");
 			const automatic = ownedCallbackRecovery(c.native.model, node, id => id) !== null;
-			lines.push(`_CallbackInput${node.index}: _TypeAlias = ${node.publicType}${anchors ? ` | Value[${node.publicType}]` : ""}${automatic ? ` | _Callable[[${parameters}], ${result.publicType}]` : ""} | WithRecovery[[${parameters}], ${result.publicType}]`);
+			lines.push(`_CallbackInput${node.index}: _TypeAlias = ${node.publicType}${wholeOwners ? ` | Value[${node.publicType}]` : ""}${automatic ? ` | _Callable[[${parameters}], ${result.publicType}]` : ""} | WithRecovery[[${parameters}], ${result.publicType}]`);
 		}
 		for(const [index, fn] of functions.entries()) lines.push(""
 			, `def ${fn.publicName}(${fn.parameters.map((_, i) => `arg${i}: ${parameterType(fn, i)}`).join(", ")}) -> ${resultType(fn)}:`

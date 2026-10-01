@@ -111,7 +111,7 @@ export const assertOwnedWitBorrowExecution = async record => {
 		assert.equal(inventorySha256, sha256(canonicalJson(inventory)));
 		digest(cliArchive.sha256); assert.ok(cliArchive.bytes > 0);
 		assert.equal(item.installedCli.filesVerified, report.files.length);
-		const cliConfig = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+		const cliConfig = JSON.parse(ownedReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
 		assert.deepEqual(report.package, { name: cliConfig.name, version: cliConfig.version });
 		assert.equal(report.files.length, cliConfig.files.length + 2);
 		assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);

@@ -7,6 +7,7 @@ import { generateOwnedPythonValues } from "./owned-values.mjs";
 import { ownedPythonCallbacks } from "./owned-callables.mjs";
 import { ownedPythonTransfers } from "./owned-transfers.mjs";
 import { ownedPythonAnchoredCall, ownedPythonAnchoredTransfers, ownedPythonValueCopies } from "./owned-borrows.mjs";
+import { ownedPythonReceiverMembers } from "./owned-receivers.mjs";
 
 const primitive = {
 	unit: "c_uint8", bool: "c_uint8", char: "c_uint32"
@@ -179,6 +180,7 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 	const values = generateOwnedPythonValues(ir, options), { c } = values;
 	const transfers = c.functions.some(fn => fn.transfers?.length);
 	const anchors = Boolean(c.anchoredResults);
+	const receivers = c.functions.some(fn => fn.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(values.types.map(node => [node.id, { ...node
 		, raw: node.identity || node.integer ? "_c.c_void_p" : node.scalar ? `_c.${primitive[node.name]}` : `_OwnedRaw${node.index}` }]));
 	const finite = new Set(); let changed = true;
@@ -238,7 +240,7 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		{
 			input.push(`if type(value) is not _V.${node.publicType}: raise TypeError("Expected ${node.publicType}")`
 				, "handle = value._raw(scope.state)", "scope.pin(value._lease)"
-				, ...transfers && !anchors ? ["if scope.moves is not None and scope.move_group is not None:", "    scope.moves.add(value._lease, scope.move_group, scope)"] : []
+				, ...transfers && !wholeOwners ? ["if scope.moves is not None and scope.move_group is not None:", "    scope.moves.add(value._lease, scope.move_group, scope)"] : []
 				, "return handle");
 			output.push('if not value: raise _OwnedInvalidNative("Missing native resource")'
 				, 'scope.charge("storage", 256)', `return _V.${node.publicType}._from_lease(output.hold(), value)`);
@@ -351,19 +353,19 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		const track = !node.leaf;
 		conversions.push(`def _owned_input${i}(value, scope, depth=0):`, `    key = ${track ? "_b.id(value)" : "None"}`
 			, `    scope.enter(key, depth, ${node.raw})`, "    try:", ...input.map(line => `        ${line}`), "    finally:", "        scope.leave(key)"
-			, ...anchors ? ["        value = child = memory = out = None"] : [], ""
+			, ...wholeOwners ? ["        value = child = memory = out = None"] : [], ""
 			, `def _owned_output${i}(value, scope, output, depth=0):`
 			, ...node.identity || node.integer || node.scalar ? [`    if type(value) is ${node.raw}: value = value.value`] : []
 			, `    key = ${track ? `(${i}, _c.addressof(value))` : "None"}`
 			, `    scope.enter(key, depth, ${node.raw}, True)`, "    try:", ...output.map(line => `        ${line}`), "    finally:", "        scope.leave(key)", "");
 	}
 	const calls = [], models = [], bindings = [];
-	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies];
-	for(const [group, functions] of [["call", c.functions], ["invoke", c.callbacks], ["retain", c.retains], ["copy", c.copies]]) for(const [index, fn] of functions.entries())
+	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies ?? []];
+	for(const [group, functions] of [["call", c.functions], ["invoke", c.callbacks], ["retain", c.retains], ["copy", c.copies ?? []]]) for(const [index, fn] of functions.entries())
 	{
 		const parameters = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 		const moving = fn.transfers ?? [];
-		const host = parameters.map((_, i) => c.hostArgument(fn, i));
+		const host = parameters.map((_, i) => c.hostArgument?.(fn, i));
 		const input = (node, i, checking) => host[i]
 			? `_owned_host${node.index}(arg${i}, ${checking ? "checked" : "scope, frame"})`
 			: `_owned_input${node.index}(arg${i}, ${checking ? "checked" : "scope"})`;
@@ -372,7 +374,7 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		bindings.push(`    ${native} = runtime.library[${JSON.stringify(fn.cName)}]`
 			, `    ${native}.argtypes = [_c.c_void_p, ${parameters.flatMap((node, i) => [host[i] ? `_c.POINTER(_OwnedHost${node.index})` : node.leaf ? node.raw : `_c.POINTER(${node.raw})`, ...moving.includes(i) ? ["_c.POINTER(_c.c_void_p)"] : [], ...fn.anchor === i ? ["_c.c_void_p"] : []]).join(", ")}${parameters.length ? ", " : ""}_c.POINTER(${result.raw}), _c.POINTER(_c.c_void_p)]`
 			, `    ${native}.restype = _c.c_uint32`);
-		if(anchors) calls.push(...ownedPythonAnchoredCall(models.at(-1), all, c));
+		if(wholeOwners) calls.push(...ownedPythonAnchoredCall(models.at(-1), all, c));
 		else calls.push(`def ${name}(${parameters.map((_, i) => `arg${i}`).join(", ")}):`, "    if _runtime is None: raise RuntimeError('Build the native adapter before calling this API')"
 			, "    state = _runtime.current_state()", "    checked = _OwnedScope(state, True)", "    try:"
 			, ...parameters.length ? parameters.map((node, i) => `        ${input(node, i, true)}`) : ["        pass"]
@@ -418,13 +420,14 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		, rawTypes: [...nodes.values()].map(node => ({ id: node.id, name: node.raw, index: node.index }))
 		, rawSource: raw.join("\n"), callModels: models
 		, callbackLayouts: callbacks.layouts
-		, source: [support(c.native.model.limits, transfers, anchors)
-			, ...transfers ? [anchors ? ownedPythonAnchoredTransfers : ownedPythonTransfers] : []
+		, source: [support(c.native.model.limits, transfers, wholeOwners)
+			, ...transfers ? [wholeOwners ? ownedPythonAnchoredTransfers : ownedPythonTransfers] : []
 			, ...raw, ...conversions
 			, callbacks.source
 			, "_runtime = None", "", "def _bind(runtime):"
 			, `    global _runtime${models.map(model => `, ${model.native}`).join("")}${equalityNames.map(name => `, ${name}`).join("")}`
 			, "    if _runtime is not None: raise RuntimeError('Native adapter is already bound')"
 			, ...bindings, "    _runtime = runtime", "", ...calls
-			, ...anchors ? [ownedPythonValueCopies(values, models)] : []].join("\n") };
+			, ...wholeOwners ? [ownedPythonValueCopies(values, models)] : []
+			, ...receivers ? [ownedPythonReceiverMembers(values)] : []].join("\n") };
 };

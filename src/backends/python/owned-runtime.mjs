@@ -13,9 +13,11 @@ import { ownedPythonAnchoredValues } from "./owned-borrows.mjs";
  * @param options - Explicit ownership capabilities.
  * @param options.transferredInputs - Observe the C consuming-input owner slots.
  * @param options.anchoredResults - Check whole owners and borrowed descendants.
+ * @param options.receiverExports - Retain whole owners for receiver members.
  */
-export const ownedPythonRuntime = (prefix, { transferredInputs = false, anchoredResults = false } = {}) => {
+export const ownedPythonRuntime = (prefix, { transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned Python prefix");
+	const wholeOwners = anchoredResults || receiverExports;
 	return `import ctypes as _c
 import os as _os
 import sys as _sys
@@ -99,10 +101,10 @@ class _OwnedScope:
         self.active = True
 
 class _OwnedLease:
-    def __init__(self, state, slot=None, scope=None${anchoredResults ? ", borrowed_result=False" : ""}):
+    def __init__(self, state, slot=None, scope=None${wholeOwners ? ", borrowed_result=False" : ""}):
         self.state = state
         self.slot = slot
-        self.scope = scope${transferredInputs ? "\n        self.input_move = None" : ""}${anchoredResults ? "\n        self.borrowed_result = borrowed_result" : ""}
+        self.scope = scope${transferredInputs ? "\n        self.input_move = None" : ""}${wholeOwners ? "\n        self.borrowed_result = borrowed_result" : ""}
 
     @property
     def closed(self):
@@ -116,14 +118,14 @@ class _OwnedLease:
         return self.state.runtime.result_validate(self.state.session, self.slot.value) != 0` : ""}
 
     def require(self):
-${anchoredResults ? `        try:
+${wholeOwners ? `        try:
             self.state.require()
             if self.closed:
                 raise LeanBridgeError(4)
         finally:
             self = None` : `        self.state.require()
         if self.closed:
-            raise LeanBridgeError(4)`}${anchoredResults ? `
+            raise LeanBridgeError(4)`}${wholeOwners ? `
     def owner(self, state):
         try:
             self.require()
@@ -192,13 +194,13 @@ class _OwnedState:
         self.drain()
         return self.session
 
-    def adopt(self, owner${anchoredResults ? ", borrowed_result=False" : ""}):
+    def adopt(self, owner${wholeOwners ? ", borrowed_result=False" : ""}):
         self.require()
         if (owner.state is not self or owner.slot is None
                 or owner.lease is not None or not owner.value.value):
             raise LeanBridgeError(1)
         _owned_checkpoint()
-        lease = _OwnedLease(self${anchoredResults ? ", borrowed_result=borrowed_result" : ""})
+        lease = _OwnedLease(self${wholeOwners ? ", borrowed_result=borrowed_result" : ""})
         _owned_checkpoint()
         lease.slot = owner.slot
         owner.lease = lease
@@ -332,7 +334,7 @@ class _OwnedResource:
         return result
 
     def _raw(self, state):
-${anchoredResults ? `        try:
+${wholeOwners ? `        try:
             if self._lease is None or not self._handle:
                 raise LeanBridgeError(4)
             self._lease.require()
@@ -382,5 +384,5 @@ ${anchoredResults ? `        try:
         return (type(self) is type(other) and self._handle == other._handle
                 and (self._lease is other._lease or (self._lease is not None
                      and other._lease is not None and self._lease.state is other._lease.state)))
-${anchoredResults ? ownedPythonAnchoredValues : ""}`;
+${wholeOwners ? ownedPythonAnchoredValues : ""}`;
 };
