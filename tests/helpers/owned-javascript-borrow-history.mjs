@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedWitBorrow, ownedWitBorrowChangedPaths } from "./wit-owned-borrow-history.mjs";
 
 export const ownedJavaScriptBorrowPath = "docs/evidence/owned-javascript-borrows-20261001.json";
 export const ownedJavaScriptBorrowBaseline = "49555c6612107ef8e6a3f8f7576312a5c32da894";
@@ -54,6 +55,7 @@ export const ownedJavaScriptBorrowAddedPaths = [
 	, "tests/owned-wasm-borrow-registry.test.mjs"
 ].sort();
 let cached;
+export const ownedJavaScriptBorrowNormalizationPaths = [...new Set([...ownedJavaScriptBorrowChangedPaths, ...ownedWitBorrowChangedPaths])].sort();
 
 /**
  * Reverse exact ordered edit spans, checking both complete source identities.
@@ -86,6 +88,7 @@ export const reverseOwnedJavaScriptBorrowUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedJavaScriptBorrow = (path, source, expected) => {
+	source = beforeOwnedWitBorrow(path, source, expected);
 	if(!ownedJavaScriptBorrowChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -113,5 +116,5 @@ export const beforeOwnedJavaScriptBorrow = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedJavaScriptBorrowHistoricalBytes = (path, bytes, expected) => ownedJavaScriptBorrowChangedPaths.includes(path)
+export const ownedJavaScriptBorrowHistoricalBytes = (path, bytes, expected) => ownedJavaScriptBorrowNormalizationPaths.includes(path)
 	? beforeOwnedJavaScriptBorrow(path, bytes.toString("utf8"), expected) : bytes;

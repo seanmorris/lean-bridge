@@ -39,6 +39,7 @@ export const guardOwnedWitHostSource = (generated, dependencies) => {
 	if(!/^[a-z][a-z0-9_]*_wasmtime$/u.test(p)) throw new TypeError("Invalid owned WIT host namespace");
 	const expected = new Set([`${p}_session_open`, `${p}_session_close`
 		, `${p}_result_release`
+		, ...values.anchoredResults ? [`${p}_result_validate`, ...values.nodes.filter(node => node.identity).map(node => `${node.cName}_equal`)] : []
 		, ...[...values.functions, ...values.callbacks, ...values.retains
 			, ...values.copies ?? []].map(item => item.cName)]);
 	const seen = new Set();

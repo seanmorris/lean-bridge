@@ -23,15 +23,16 @@ import { wasmtimeCapiIdentity } from "./native-wit-artifacts.mjs";
  */
 export const ownedWitEvidence = async ({ nativeRoot, runtimeRoot, settings = {} }) => {
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true });
 	if(!model.ownedGraph) throw new TypeError("Owned WIT requires an ownership-aware native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const inputs = { metadata, sourceIdentity: model.sourceIdentity
 		, component: model.component
 		, hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
-		, transferredInputs: Boolean(model.ownedGraph.inputTransfers) };
+		, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
+		, anchoredResults: Boolean(model.ownedGraph.resultAnchors) };
 	return { model, receipt, runtime, runtimeIdentity, inputs
-		, projection: compileOwnedWitGraphModel(model.bindingIr, settings, { transferredInputs: inputs.transferredInputs })
+		, projection: compileOwnedWitGraphModel(model.bindingIr, settings, { transferredInputs: inputs.transferredInputs, anchoredResults: inputs.anchoredResults })
 		, settings };
 };
 
@@ -88,9 +89,10 @@ export const readVerifiedOwnedWitHost = async options => {
 	const component = `component/${projection.name}.wasm`;
 	const sources = ownedWitSources(evidence, await readFile(join(witRoot, component)), compiled.wasmtime.files, compiled.gmp.files);
 	const p = sources.generated.values.prefix, library = `lib${p}.so`;
-	const contract = { schemaVersion: model.ownedGraph.inputTransfers ? 2 : 1
+	const contract = { schemaVersion: model.ownedGraph.resultAnchors ? 3 : model.ownedGraph.inputTransfers ? 2 : 1
 		, hostCallbacks: model.ownedGraph.hostCallbacks ?? null
 		, ...model.ownedGraph.inputTransfers ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
+		, ...model.ownedGraph.resultAnchors ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
 		, headerSha256: sha256(sources.generated.publicHeader)
 		, sourceSha256: sha256(sources.files[`src/${p}.c`]) };
 	if(compiled.schemaVersion !== 2 || compiled.profile !== "native-wit-v1"

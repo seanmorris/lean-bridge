@@ -334,6 +334,8 @@ const profileManifest = Object.freeze({
 		, "wit-owned-package-evidence", "wit-owned-build-repair-evidence"
 		, "wit-owned-transfers", "wit-owned-transfer-packaging"
 		, "wit-owned-transfer-evidence"
+		, "wit-owned-borrows", "wit-owned-borrow-packaging"
+		, "wit-owned-borrow-evidence"
 		, "owned-transfer-c-evidence"
 		, "wit-recursive-callable-model"
 		, "wit-recursive-callable-host"

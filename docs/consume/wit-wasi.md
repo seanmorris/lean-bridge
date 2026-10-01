@@ -154,8 +154,78 @@ cleanup return a process error; start a fresh consumer with `exec`.
 
 This API does not expose raw Wasmtime handles or custom caller-owned stores.
 The supplied component requires its native host, not a standalone WASI runtime.
-Owner-anchored borrowed results, retained host callbacks and asynchronous
-callbacks remain unsupported.
+Retained host callbacks and asynchronous callbacks remain unsupported.
+
+### Borrowed results
+
+An export can return a value whose lifetime follows one input owner. Its generated
+function takes that owner's handle beside the input. Releasing or consuming the
+owner expires the borrowed result, including nested resource views, empty arrays
+and absent options. `result_validate` checks the entire result's lifetime.
+
+The `owned-borrows` example declares `retainTicket` as a borrowed-result export.
+The generated `ticket_t_retain` helper instead creates independent ownership.
+Save this as `main.c`:
+
+```c
+#include "owned_aggregates_wasmtime.h"
+#include <stdio.h>
+
+int main(void)
+{
+    owned_aggregates_wasmtime_session *session = NULL;
+    owned_aggregates_wasmtime_result *root = NULL, *view_owner = NULL;
+    owned_aggregates_wasmtime_result *kept_owner = NULL, *number_owner = NULL;
+    owned_aggregates_wasmtime_ticket_t ticket = NULL, view = NULL, kept = NULL;
+    mpz_t input;
+    mpz_init_set_ui(input, 42);
+    mpz_srcptr number = NULL;
+    int status = owned_aggregates_wasmtime_session_open(&session);
+    if (!status) status = owned_aggregates_wasmtime_new_ticket(
+        session, input,
+        (owned_aggregates_wasmtime_scalar_string_t){"ticket", 6}, &ticket, &root);
+    if (!status) status = owned_aggregates_wasmtime_retain_ticket(
+        session, ticket, root, &view, &view_owner);
+    if (!status) status = owned_aggregates_wasmtime_ticket_t_retain(
+        session, view, &kept, &kept_owner);
+    if (!status) status = owned_aggregates_wasmtime_serial(
+        session, view, &number, &number_owner);
+    if (!status) gmp_printf("%Zd\n", number);
+    owned_aggregates_wasmtime_result_release(&number_owner);
+    owned_aggregates_wasmtime_result_release(&root);
+    if (!status) {
+        if (owned_aggregates_wasmtime_result_validate(session, view_owner)
+            == OWNED_AGGREGATES_WASMTIME_CLOSED) puts("expired");
+        else status = 1;
+    }
+    if (!status) status = owned_aggregates_wasmtime_serial(
+        session, kept, &number, &number_owner);
+    if (!status) gmp_printf("%Zd\n", number);
+    owned_aggregates_wasmtime_result_release(&number_owner);
+    owned_aggregates_wasmtime_result_release(&kept_owner);
+    owned_aggregates_wasmtime_result_release(&view_owner);
+    owned_aggregates_wasmtime_session_close(&session);
+    mpz_clear(input);
+    return status ? 1 : 0;
+}
+```
+
+Compile with `pkg-config --cflags --libs owned-borrows-wit` as above. It prints
+`42`, `expired`, then `42`: the view expires with its source; the independently
+retained resource remains usable. Use a generated typed `_copy` helper to retain
+an entire record or collection. Resource `_equal` helpers compare canonical
+identity, not view addresses.
+
+Release every returned result owner, including expired borrowed results. A result
+owner manages its copied storage but does not extend the source owner's lifetime.
+Borrowing from another borrowed result preserves the whole chain of lifetimes.
+If a callback releases or consumes the anchor, active calls keep storage pinned
+until they return but cannot publish a result from that expired anchor.
+
+WIT uses owned handles for returned resources. The bundled host carries the
+original native owner through the Component Model call and checks it before
+publishing results. Those transport handles do not extend the source lifetime.
+Receiver and callback-result anchors are not yet supported.
 
 ### Consuming inputs
 

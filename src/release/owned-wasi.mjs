@@ -127,10 +127,35 @@ standalone WASI command or a browser module. Raw Wasmtime resource handles and
 custom caller-owned stores are not part of this public API.
 
 Initialize each output owner to NULL. A successful call returns a typed value and
-an independent result owner. Release it with ${p}_result_release. Failure leaves
-both output slots unchanged. ${model.ownedGraph.inputTransfers ? "Inputs borrow unless their declaration specifies transfer." : "Inputs are borrowed for the call."} A result owns all
-its copied storage and resource leaves; aliases expire when that owner is released.
-Use the generated retain/copy helpers to acquire independent ownership.${model.ownedGraph.inputTransfers ? `
+${model.ownedGraph.resultAnchors ? "a result owner, either independent or anchored as declared below" : "an independent result owner"}. Release it with ${p}_result_release. Failure leaves
+both output slots unchanged. ${model.ownedGraph.inputTransfers ? "Inputs borrow unless their declaration specifies transfer." : "Inputs are borrowed for the call."} ${model.ownedGraph.resultAnchors ? "An independent result owns its copied storage and resource leases. Borrowed\nresults follow their source owners as described below." : "A result owns all\nits copied storage and resource leaves; aliases expire when that owner is released."}
+Use the generated retain/copy helpers to acquire independent ownership.${model.ownedGraph.resultAnchors ? `
+
+## Borrowed results
+
+A result declared borrowed names the input parameter that owns its lifetime.
+Pass that parameter's original result-owner pointer beside its typed value. The
+host checks the owner, session, generation and membership before entering Lean.
+Borrowed results expire when that owner is released or consumed, even if their
+resource views have been copied. Empty arrays and absent options keep the same
+anchor. Anchors compose through further borrowed results.
+
+The returned result owner holds the borrowed result's storage, but does not keep
+its source owner alive. Release every result owner, including expired borrowed
+results. Retain a resource or use a generated typed copy helper before expiry to
+create independent ownership. Canonical resource equality compares the underlying
+resource, not its wrapper or result-owner address.
+
+Releasing or consuming a source during a callback revokes its borrowed results
+immediately. Active calls pin storage until they unwind; they cannot publish a
+result anchored to an owner that expired during the call.
+
+The Component Model returns owned transport handles. The bundled host passes
+the original native lifetime anchor through its trusted import and checks that
+anchor again before publishing the result. Transport handles do not extend the
+source lifetime. This contract belongs to the bundled public API, not arbitrary
+raw Wasmtime resource handles. Receiver and callback-result anchors are not yet
+supported.` : ""}${model.ownedGraph.inputTransfers ? `
 
 ## Consuming inputs
 

@@ -28,7 +28,10 @@ export const generateOwnedCPackage = (options, backend = null) => {
 	const hasAnchors = generated.layout.functions.some(item => item.anchor !== undefined);
 	if(backend && hasTransfers && backend.transferredInputs !== true) throw new TypeError("Owned C transport does not support transferred inputs");
 	if(backend && hasAnchors && backend.anchoredResults !== true) throw new TypeError("Owned C transport does not support anchored results");
-	const publicPrefix = backend ? backend.publicPrefix(generated.layout.model.bindingIr, { transferredInputs: options.transferredInputs }) : options.publicPrefix;
+	const publicPrefix = backend ? backend.publicPrefix(generated.layout.model.bindingIr, {
+		transferredInputs: options.transferredInputs
+		, anchoredResults: options.anchoredResults
+	}) : options.publicPrefix;
 	const values = generateOwnedCValues(generated.layout.model.bindingIr, {
 		hostCallbacks: options.hostCallbacks
 		, publicPrefix

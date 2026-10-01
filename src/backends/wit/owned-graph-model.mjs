@@ -46,6 +46,7 @@ const witShape = copy => {
 export const compileOwnedWitGraphModel = (ir, settings = {}, options = {}) => {
 	const layout = compileOwnedNativeValueLayout(ir, options), model = layout.model;
 	const transfers = layout.functions.filter(item => item.transfers?.length);
+	const anchors = layout.functions.filter(item => item.anchor !== undefined);
 	const name = settings.name ?? `owned-h${model.bindingIrSha256.slice(0, 20)}`;
 	const version = settings.version ?? model.component.version;
 	validateOrdinaryWasiSettings({ name, version });
@@ -82,13 +83,17 @@ ${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(par
 			, witName: functions[index].witName
 			, parameters: declaration.parameters.map((site, position) => ({ ...site, witType: functions[index].parameters[position].copy.wit }))
 			, result: { ...declaration.result, witType: functions[index].resultCopy.wit } }))
-		, graph: { schemaVersion: 1, representation: "owned-typed-node-tables-v1"
+		, graph: { schemaVersion: anchors.length ? 2 : 1
+			, representation: "owned-typed-node-tables-v1"
 			, layoutSha256: sha256(canonicalJson(layout)), limits: model.limits
 			, ...transfers.length ? { inputTransfers: transfers.map(fn => ({ bindingId: fn.id, parameters: fn.transfers })) } : {}
+			, ...anchors.length ? { resultAnchors: anchors.map(fn => ({ bindingId: fn.id, parameter: fn.anchor })) } : {}
 			, types: model.types
 			, resources: resources.map(resource => ({ id: resource.id, kind: resource.node.kind, witName: resource.witName }))
 			, values: [...graph.values].map(([key, copy]) => ({ key, witType: copy.wit
 				, tables: copy.tables.map(table => ({ type: table.node.id, field: table.field, rowType: table.row.wit })) })) }
-		, deferred: [...transfers.length ? [] : ["transferred-inputs"], "anchored-borrowed-results", "retained-host-callbacks", "asynchronous-callables"] };
+		, deferred: [...transfers.length ? [] : ["transferred-inputs"]
+			, ...anchors.length ? ["receiver-result-anchors", "callback-result-anchors"] : ["anchored-borrowed-results"]
+			, "retained-host-callbacks", "asynchronous-callables"] };
 	return { model, layout, graph, functions, types, resources, name, version, importName, exportName, wit, wat, manifest };
 };

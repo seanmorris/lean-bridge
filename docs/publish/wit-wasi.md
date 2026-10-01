@@ -80,11 +80,12 @@ compiler and preserves its bytes.
 Ordinary source extraction and independently reviewed version-4 binding IR use
 the same ownership-aware build path. Inputs borrow resource-containing values
 unless an export contract declares a transfer;
-results own independent leases and copied storage. Typed synchronous callbacks
+results own independent leases and copied storage unless explicitly anchored
+to an input owner. Typed synchronous callbacks
 support resource arguments and replies, reentry and returned Lean closures.
 The [consumer API](../consume/wit-wasi.md#packages-containing-resources) keeps
-Wasmtime handles private. Retained host callbacks, owner-anchored borrowed
-results and asynchronous callbacks remain unsupported.
+Wasmtime handles private. Retained host callbacks and asynchronous callbacks
+remain unsupported.
 
 Ship the original archive and package-set receipt together. Consumers need a C11
 compiler, not Lean, Wasmtime headers from another installation, or a system GMP
@@ -124,6 +125,46 @@ Combined C and WIT/WASI builds use the same compiled Lean component and
 ownership contracts. The package records its transfer capability in the
 compiler-authenticated `ownedValues.inputTransfers` receipt. Keep that receipt
 and generated files unchanged when assembling or distributing the archive.
+
+### Anchor a result to an input
+
+Declare a borrowed result when its lifetime should follow one input's original
+owner. For example, select `Owned.retainTicket` and add:
+
+```json
+{
+  "contracts": {
+    "Owned.retainTicket": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg0" }
+      }
+    }
+  }
+}
+```
+
+Ordinary extraction uses `arg0`, `arg1`, and subsequent parameter positions.
+Reviewed Binding IR uses the declared parameter name. The selected anchor must
+be a non-copied input that the same call does not consume. Other inputs may
+transfer ownership; validation rejects a transfer that would consume the anchor
+or one of its ancestors.
+
+The generated public signature takes the original input-owner handle. Result
+owners, nested views, empty containers and absent options preserve that lifetime.
+The host passes the same native anchor through the Component Model import and
+checks it before publishing the result. WIT's owned return handles manage
+transport storage, not the source owner's lifetime. Keep the bundled public host
+and its component together.
+
+The compiler model and package's `ownedValues.resultAnchors` record the exact
+export-to-parameter mapping. Package assembly regenerates that contract and
+rejects altered mappings, generated sources or dependency inventories. Combined
+C and WIT/WASI builds use the same Lean compilation and ownership declarations.
+
+The [consumer example](../consume/wit-wasi.md#borrowed-results) demonstrates
+expiration and independent retention. Receiver and callback-result anchors
+remain unsupported.
 
 ## Export structured callbacks
 

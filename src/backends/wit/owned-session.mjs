@@ -161,10 +161,11 @@ static inline int ows_conversion_status(ow_native_conversion *conversion, int in
 ${functions.map(({ native, witName, index }) => {
 	const result = nodes.get(native.result), parameters = native.parameters.map(id => nodes.get(id));
 	return `static inline int ows_dispatch_${index}(ows_session *session,
-    ${parameters.map((node, i) => `const ${node.cName} *a${i}, `).join("")}${native.transfers?.length ? "ov_input_transfers *transfer, " : ""}${result.cName} *out, ov_result_owner *owner) {
+    ${parameters.map((node, i) => `const ${node.cName} *a${i}, `).join("")}${native.transfers?.length ? "ov_input_transfers *transfer, " : ""}${native.anchor !== undefined ? "const ov_input_anchor *anchor, " : ""}${result.cName} *out, ov_result_owner *owner) {
   ows_frame frame = {0}; int status = ows_frame_begin(session, &frame);
   if (status) return status;
 ${native.transfers?.length ? "  frame.host.input_transfers = transfer;\n" : ""}\
+${native.anchor !== undefined ? "  frame.host.input_anchor = anchor;\n" : ""}\
   ow_native_conversion input, output;
   ow_native_conversion_init(&input, &frame.host); ow_native_conversion_init(&output, &frame.host);
   input.scope.identities.write = ows_write_input; output.scope.identities.read = ows_read_output;
@@ -179,6 +180,7 @@ ${parameters.map((node, i) => `  if (!ow_encode_${node.index}_${native.transfers
     status = ows_conversion_status(&output, OV_RESULT); goto done;
   }
   status = ov_begin(&transaction, session->native, owner, ${JSON.stringify(model.model.component.id)});
+${native.anchor !== undefined ? "  if (!status) status = ov_anchor_prepare(&transaction, anchor);\n" : ""}\
   if (!status) {
     lean_object *value = NULL;
     status = ${result.walker}_in(&decoded, 0, 1, &transaction, &value);

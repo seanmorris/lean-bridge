@@ -42,7 +42,7 @@ ${native.parameters.map((id, i) => `  if (!ow_decode_${table.get(id).index}_${na
     (void)ow_native_status(host, input.scope.memory.failure ? (int)input.scope.memory.failure : LB_OWNED_INVALID);
     failure = wasmtime_error_new("Invalid owned WIT input, expired resource or conversion limit"); goto done;
   }`).join("\n")}
-  status = ${native.symbol}(host->native, ${[...native.parameters.map((_, i) => `&arg${i}`), ...native.transfers?.length ? ["host->input_transfers"] : [], "&value", "&owner"].join(", ")});
+  status = ${native.symbol}(host->native, ${[...native.parameters.map((_, i) => `&arg${i}`), ...native.transfers?.length ? ["host->input_transfers"] : [], ...native.anchor !== undefined ? ["host->input_anchor"] : [], "&value", "&owner"].join(", ")});
   if (status) {
     (void)ow_native_status(host, status);
     if (status == OV_RESULT) lean_bridge_native_runtime_retire();

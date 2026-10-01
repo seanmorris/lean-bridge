@@ -3211,3 +3211,25 @@ npm run test:release-receipt
 ```
 
 These tests use fixtures, temporary directories, and injected registry clients. They exercise rejection, retries, signatures, and exact archive checks without uploading packages. A passing test run does not establish that an actual sandbox accepted a release. Use the [sandbox publishing guide](sandbox-release.md#rehearse-a-registry-release) for an authorized registry transaction.
+
+## WIT/WASI borrowed-result acceptance
+
+Run the owner-anchored result gate with the pinned Lean, native C, Wasmtime C API
+and wasm-tools dependencies available:
+
+```sh
+npm run test:owned-wit-borrows
+```
+
+The gate requires eight passing tests and no skips. It tests both ordinary Lean
+source and reviewed IR, real Component Model dispatch, all 26 mixed-ownership
+exports, empty values without consuming exports, allocation failures, callback
+reentry and ASan/UBSan cleanup. Nine compiled broken adapters must fail semantic
+assertions. Installed tests build through the public CLI, remove producer trees,
+install offline, relocate packages, compare independent rebuilds, check loaded
+libraries and execute the consumer documentation example.
+
+CI requires all six JSON reports in `build/owned-wit-borrows/` and retains
+`build/wit-owned-borrows.log`. The [source-bound receipt](../evidence/wit-owned-borrows-20261001.md)
+keeps prior receipts unchanged. Receiver and callback-result anchors and the
+final Docker audit remain separate work.

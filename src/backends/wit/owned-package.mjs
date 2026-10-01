@@ -23,8 +23,12 @@ export const generateOwnedWitPackage = (options, componentBytes, settings = {}) 
 	const generated = generateOwnedCPackage(options, {
 		publicPrefix: ownedWitPublicPrefix
 		, transferredInputs: options.transferredInputs === true
+		, anchoredResults: options.anchoredResults === true
 		, render: ({ generated }) => {
-			model = compileOwnedWitGraphModel(generated.layout.model.bindingIr, settings, { transferredInputs: options.transferredInputs });
+			model = compileOwnedWitGraphModel(generated.layout.model.bindingIr, settings, {
+				transferredInputs: options.transferredInputs
+				, anchoredResults: options.anchoredResults
+			});
 			if(generated.layout.header !== model.layout.header) throw new TypeError("Owned WIT and native value layouts must match");
 			return renderOwnedWitSession(model, componentBytes);
 		}
