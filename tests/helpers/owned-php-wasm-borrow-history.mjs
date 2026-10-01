@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJavaScriptBorrow, ownedJavaScriptBorrowChangedPaths } from "./owned-javascript-borrow-history.mjs";
 
 export const ownedPhpWasmBorrowPath = "docs/evidence/owned-php-wasm-borrows-20261001.json";
 export const ownedPhpWasmBorrowBaseline = "3da93d67603c56529d9b4dce76f53ae60a8fdf51";
@@ -60,6 +61,7 @@ export const ownedPhpWasmBorrowAddedPaths = [
 	, "tests/owned-php-wasm-borrows.test.mjs"
 ].sort();
 let cached;
+export const ownedPhpWasmBorrowNormalizationPaths = [...new Set([...ownedPhpWasmBorrowChangedPaths, ...ownedJavaScriptBorrowChangedPaths])].sort();
 
 /**
  * Reverse exact ordered edit spans, checking both complete source identities.
@@ -92,6 +94,7 @@ export const reverseOwnedPhpWasmBorrowUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedPhpWasmBorrow = (path, source, expected) => {
+	source = beforeOwnedJavaScriptBorrow(path, source, expected);
 	if(!ownedPhpWasmBorrowChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -119,5 +122,5 @@ export const beforeOwnedPhpWasmBorrow = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedPhpWasmBorrowHistoricalBytes = (path, bytes, expected) => ownedPhpWasmBorrowChangedPaths.includes(path)
+export const ownedPhpWasmBorrowHistoricalBytes = (path, bytes, expected) => ownedPhpWasmBorrowNormalizationPaths.includes(path)
 	? beforeOwnedPhpWasmBorrow(path, bytes.toString("utf8"), expected) : bytes;

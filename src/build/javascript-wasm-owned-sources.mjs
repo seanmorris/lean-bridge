@@ -5,8 +5,8 @@
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generateOwnedNativeValueAdapters } from "../backends/native/owned-value-adapters.mjs";
-import { ownedAggregateLeaseSource } from "../backends/native/owned-aggregate-leases.mjs";
-import { ownedAggregateTransferLeaseSource } from "../backends/native/owned-aggregate-transfers.mjs";
+import { ownedAggregateLeaseRuntime } from "../backends/native/owned-aggregate-leases.mjs";
+import { ownedAggregateTransferRuntime } from "../backends/native/owned-aggregate-transfers.mjs";
 import { generateOwnedWasmComponent } from "../backends/javascript/owned-wasm-component.mjs";
 import { generateOwnedWasmBroker } from "../backends/javascript/owned-wasm-broker.mjs";
 import { nativeAllocationGuardHeader } from "./native-allocation-guard.mjs";
@@ -21,7 +21,8 @@ import { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters
  * @param adapters - Typed Lean code and C declarations selected for compilation.
  */
 export const generateCompiledJavaScriptWasmOwned = (model, metadata, adapters) => {
-	const inputs = { metadata, sourceIdentity: model.sourceIdentity, component: model.component };
+	const anchoredResults = Boolean(model.ownedGraph?.resultAnchors);
+	const inputs = { metadata, sourceIdentity: model.sourceIdentity, component: model.component, anchoredResults };
 	if(canonicalJson(createOwnedJavaScriptWasmModel(inputs)) !== canonicalJson(model)
 		|| canonicalJson(generateOwnedJavaScriptWasmLeanAdapters(model)) !== canonicalJson(adapters))
 		throw new TypeError("JavaScript ownership sources differ from compiler inputs");
@@ -33,7 +34,7 @@ export const generateCompiledJavaScriptWasmOwned = (model, metadata, adapters) =
 	const files = { "owned/carriers.h": adapters.header
 		, "owned/owned-values.h": native.typesHeader
 		, "owned/owned-values-codec.h": native.source
-		, "owned/owned-leases.h": transferredInputs ? ownedAggregateTransferLeaseSource : ownedAggregateLeaseSource
+		, "owned/owned-leases.h": transferredInputs ? ownedAggregateTransferRuntime({ anchoredResults }) : ownedAggregateLeaseRuntime({ anchoredResults })
 		, "owned/owned-js-layout.h": component.layout.assertions
 		, "owned/lean_bridge_native_runtime.h": generateOwnedWasmBroker().header
 		, "owned/callbacks.c": adapters.callbackSource
@@ -44,9 +45,10 @@ export const generateCompiledJavaScriptWasmOwned = (model, metadata, adapters) =
 		, metadataHash: component.metadataHash
 		, sources: ["owned/callbacks.c", "owned/component.c"]
 		, allocationGuard: "owned/allocation-guard.h"
-		, receipt: { schemaVersion: transferredInputs ? 2 : 1
+		, receipt: { schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
 			, transport: "owned-wasm32-control-v1"
 			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
+			, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
 			, layoutSha256: model.ownedGraph.layoutSha256
 			, metadataHash: component.metadataHash
 			, files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) } };

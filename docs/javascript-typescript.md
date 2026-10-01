@@ -245,7 +245,7 @@ select this profile through an [explicit ownership policy](publish/npm.md#build-
 It is separate from the copied-value mappings below; it does not reinterpret
 resources as plain copied objects.
 
-Import the generated API normally. Resource wrappers expose `dispose()`,
+For packages without anchored results, resource wrappers expose `dispose()`,
 `disposed` and `retain()`. Repeated references to the same live resource preserve
 JavaScript identity. Dispose each owned wrapper when finished. `retain()` gives
 you an independent lease that must also be disposed. Returned function leases
@@ -263,7 +263,55 @@ cover Node, strict TypeScript, Chromium, Firefox, WebKit, React and workers.
 Copied and owned packages built against the same runtime share its dependency
 automatically. Import order does not require configuration. Closing an owned
 API releases that component's leases without closing other loaded packages.
-Results borrowed from another object remain unsupported.
+
+### Borrowed results and whole-value owners
+
+When a package declares results borrowed from an input parameter, its owned
+results use `LeanValue<T>`. This includes resources, returned functions and
+structured values containing them. Copied scalar results stay ordinary values.
+
+`get()` reads the payload. `share()` adds a root to the same owner, while
+`retain()` creates an independent owner. Closing the last shared root, or
+consuming that owner, expires its borrowed descendants. Empty arrays, Lists
+and `None` follow the same rule.
+
+With `api` imported from a package whose `retainTicket` borrows from its input:
+
+```js
+const owner = api.newTicket(42n, "door");
+const borrowed = api.retainTicket(owner);
+const independent = borrowed.retain();
+try {
+  console.log(api.serial(borrowed)); // 42n
+  owner.dispose();
+  try {
+    borrowed.get();
+  } catch (error) {
+    if (!borrowed.disposed) throw error;
+    console.log("expired");
+  }
+  console.log(api.serial(independent)); // 42n
+} finally {
+  borrowed.dispose();
+  independent.dispose();
+  owner.dispose();
+}
+```
+
+Pass whole owners to anchored and consuming parameters. Other parameters
+accept payloads or their whole owners. A returned function is called through
+`owner.get()(arguments)`; its results use the same generated value types.
+
+To construct an owned aggregate from JavaScript data, use
+`copyValue(payload, { resultOf: "exportName" })` or
+`copyValue(payload, { parameterOf: ["exportName", 0] })`. The selector names an
+exported owned type. TypeScript checks its payload shape. This also lets an
+empty array acquire an owner before it is passed to a borrowing function.
+
+Nested resource views do not keep their whole owner alive. Their `retain()`
+method creates an independent `LeanValue`. Compare resource identity with
+`view.equals(otherView)`, including views obtained from different owners.
+Results anchored to receivers or callback results remain unsupported.
 
 ### Consuming inputs
 
@@ -291,12 +339,14 @@ try {
 }
 ```
 
-A consuming aggregate can contain handles from several owners. Repeated
+A consuming aggregate in an unanchored package can contain handles from several owners. Repeated
 references within one argument are allowed. Two consuming arguments cannot
 share an owner; retain a separate lease for the second argument. Callback
 arguments are borrowed and must be retained before passing them to a consuming
 export. Consuming function arguments require returned Lean function leases,
 not ordinary JavaScript functions. TypeScript checks that distinction.
+Packages with borrowed results require one whole owner per consuming argument.
+Use `copyValue` to gather payload views into an independent aggregate first.
 
 ### Type conversions
 
@@ -383,7 +433,7 @@ These mappings apply to the ordinary pure-function npm packages in Node.js, brow
 
 The bindings validate integer types and ranges before calling Lean. Text, bytes, and arbitrary-precision integer payloads have a 16 MiB per-value copy limit. Use decimal strings when serializing `bigint` values to JSON; converting to `number` can lose precision.
 
-The ordinary component build path accepts primitives, concrete copied aliases, nested arrays and Lists, copied records, concrete tagged variants (including bounded recursive values), `Option`, `Except`, nested products, and synchronous functions with primitive or copied arguments and results. Copied values, callbacks, and returned functions can share one component. Resources, `IO`, and `Task` remain unsupported. Richer prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
+The copied-value component path accepts primitives, concrete copied aliases, nested arrays and Lists, copied records, concrete tagged variants (including bounded recursive values), `Option`, `Except`, nested products, and synchronous functions with primitive or copied arguments and results. Copied values, callbacks, and returned functions can share one component. Resource-containing values use the [owned-value profile](#owned-resources-inside-structured-values). `IO` and `Task` remain unsupported. Prepared profiles, including Alpha, have their own generated APIs. The [runtime reference](consumers.md) identifies those packages; a mapping in another profile does not add exports to this one.
 
 ### Nested arrays
 

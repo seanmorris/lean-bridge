@@ -140,7 +140,7 @@ export const assembleComponentNpmRuntime = async ({ mainModule, mainWasm, runtim
 		, ["LICENSE", await readFile(new URL("../../LICENSE", import.meta.url))]
 	]);
 	const noticeRoot = new URL("../../notices/runtime/", import.meta.url);
-	for(const name of ["bindings", "callbacks", "calls", "component-runtime", "registry", "scalars", "values"])
+	for(const name of ["bindings", "borrow-registry", "callbacks", "calls", "component-runtime", "registry", "scalars", "values"])
 		runtimeFiles.set(`internal/owned-wasm-${name}.mjs`, relocate(await readFile(new URL(`./owned-wasm-${name}.mjs`, import.meta.url), "utf8")));
 	for(const name of ["component-owned-wasm", "owned-wasm-control"])
 		runtimeFiles.set(`internal/${name}.mjs`, relocate(await readFile(new URL(`../abi/${name}.mjs`, import.meta.url), "utf8")));

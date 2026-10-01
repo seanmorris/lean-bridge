@@ -43,7 +43,9 @@ const freeze = value => {
  * @param options - Whether the caller implements atomic input-owner transfers.
  */
 export const compileOwnedJavaScriptWasmLayout = (ir, options = {}) => {
-	const native = compileOwnedNativeValueLayout(ir, { wordBits: 32, transferredInputs: options.transferredInputs ?? false });
+	const native = compileOwnedNativeValueLayout(ir, { wordBits: 32
+		, transferredInputs: options.transferredInputs ?? false
+		, anchoredResults: options.anchoredResults ?? false });
 	const nodes = new Map(native.nodes.map(node => [node.id, node]));
 	const storage = new Map();
 	const fieldStorage = field => field.pointer ? pointer : storage.get(field.type);

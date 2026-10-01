@@ -4,8 +4,9 @@
  *
  * @file
  */
-import { ownedWasmControlBytes, ownedWasmControlOperations as op, ownedWasmControlVersion } from "../abi/owned-wasm-control.mjs";
+import { ownedWasmControlBytes, ownedWasmControlOperations, ownedWasmControlVersion, ownedWasmBorrowOperations } from "../abi/owned-wasm-control.mjs";
 import { assertOwnedWasmSpan } from "./owned-wasm-scalars.mjs";
+const op = { ...ownedWasmControlOperations, ...ownedWasmBorrowOperations };
 
 /**
  * Resolve no raw symbols or input-controlled code. One verified component entry
@@ -101,8 +102,11 @@ export const createOwnedWasmBindings = (module, operation, lifecycle, callbackKe
 		, releaseOwner: owner => invoke(op.release, [owner]).status
 		, claimAllocation: (owner, pointer, bytes) => value(op.claim, [owner, pointer, bytes])
 		, claimIdentity: (owner, type, token) => value(op.identity, [owner, type], token)
-		, dispatch: (index, args, out, owner, transfers = 0) => invoke(op.dispatch, [index, args, out, owner, ...transfers ? [transfers] : []]).status
+		, dispatch: (index, args, out, owner, transfers = 0, anchor = 0) => invoke(op.dispatch, [index, args, out, owner, ...anchor ? [transfers, anchor] : transfers ? [transfers] : []]).status
 		, retain: (type, token, out, owner) => invoke(op.retain, [type, out, owner], token).status
+		, copy: (type, input, out, owner) => invoke(op.copy, [type, input, out, owner]).status
+		, aliveOwner: owner => value(op.alive, [owner])
+		, revokeOwner: owner => invoke(op.revoke, [owner]).status
 		, close: () => {
 			const status = invoke(op.close).status;
 			if(!status) lifecycle.close?.();

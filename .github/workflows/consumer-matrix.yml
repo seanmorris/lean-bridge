@@ -173,6 +173,27 @@ jobs:
           test -s build/owned-javascript-transfers/ordinary.json
           test -s build/owned-javascript-transfers/reviewed.json
           test -s build/owned-javascript-transfer-packaging/report.json
+      - name: Verify owner-anchored JavaScript results
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-javascript-borrows 2>&1 | tee build/owned-javascript-wasm/borrows.log
+          rg '^# tests 25$' build/owned-javascript-wasm/borrows.log
+          rg '^# fail 0$' build/owned-javascript-wasm/borrows.log
+          rg '^# cancelled 0$' build/owned-javascript-wasm/borrows.log
+          rg '^# skipped 0$' build/owned-javascript-wasm/borrows.log
+          test -s build/owned-javascript-borrows/ordinary.json
+          test -s build/owned-javascript-borrows/ordinary-borrow-only.json
+          test -s build/owned-javascript-borrows/ordinary-mutants.json
+          test -s build/owned-javascript-borrows/ordinary-owned-first.json
+          test -s build/owned-javascript-borrows/ordinary-copied-first.json
+          test -s build/owned-javascript-borrows/reviewed.json
+          test -s build/owned-javascript-borrows/reviewed-borrow-only.json
+          test -s build/owned-javascript-borrows/reviewed-mutants.json
+          test -s build/owned-javascript-borrows/reviewed-owned-first.json
+          test -s build/owned-javascript-borrows/reviewed-copied-first.json
+          test -s build/owned-javascript-borrow-packaging/report.json
       - name: Verify installed copied and owned npm coexistence
         shell: bash
         run: |
@@ -235,6 +256,18 @@ jobs:
             build/owned-javascript-transfers/ordinary.json
             build/owned-javascript-transfers/reviewed.json
             build/owned-javascript-transfer-packaging/report.json
+            build/owned-javascript-wasm/borrows.log
+            build/owned-javascript-borrows/ordinary.json
+            build/owned-javascript-borrows/ordinary-borrow-only.json
+            build/owned-javascript-borrows/ordinary-mutants.json
+            build/owned-javascript-borrows/ordinary-owned-first.json
+            build/owned-javascript-borrows/ordinary-copied-first.json
+            build/owned-javascript-borrows/reviewed.json
+            build/owned-javascript-borrows/reviewed-borrow-only.json
+            build/owned-javascript-borrows/reviewed-mutants.json
+            build/owned-javascript-borrows/reviewed-owned-first.json
+            build/owned-javascript-borrows/reviewed-copied-first.json
+            build/owned-javascript-borrow-packaging/report.json
             build/owned-javascript-wasm/coexistence.log
             build/owned-javascript-wasm/analysis.log
             build/owned-javascript-wasm/engine.log

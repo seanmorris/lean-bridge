@@ -20,8 +20,10 @@ const description = value => `/** ${value.documentation.summary.replaceAll("*/",
  * @param document - Explicit compiler-derived or independently reviewed v4 IR.
  */
 export const compileOwnedJavaScriptPackageModel = document => {
-	const layout = compileOwnedJavaScriptWasmLayout(document, { transferredInputs: true }), model = layout.native.model;
+	const layout = compileOwnedJavaScriptWasmLayout(document, { transferredInputs: true, anchoredResults: true }), model = layout.native.model;
 	const ir = model.bindingIr, names = new Set(reserved);
+	const anchored = layout.native.functions.some(fn => fn.anchor !== undefined);
+	if(anchored) for(const name of ["LeanValue", "leanValue", "copyValue"]) names.add(name);
 	const claim = name => {
 		if(!/^[$\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*$/u.test(name) || name.startsWith("_") || names.has(name))
 			fail(`JavaScript public name is invalid or conflicts with another declaration: ${name}`);
@@ -46,7 +48,9 @@ export const compileOwnedJavaScriptPackageModel = document => {
 	}
 	if(ir.errors.some(error => error.category !== "boundary" || error.payload !== null))
 		fail("Owned JavaScript declarations cannot omit domain error translation");
-	return Object.freeze({ kind: "owned-javascript-package", ir, bindingIrSha256: model.bindingIrSha256 });
+	return Object.freeze({ kind: "owned-javascript-package", ir
+		, bindingIrSha256: model.bindingIrSha256
+		, ...anchored ? { anchored: true } : {} });
 };
 
 const typeText = (reference, direction, definitions) => {
@@ -68,13 +72,29 @@ const typeText = (reference, direction, definitions) => {
 	return `(Readonly<{ ok: ${values[0]} }> | Readonly<{ error: ${values[1]} }>)`;
 };
 
-const declarations = ir => {
+const declarations = (ir, anchored = false) => {
 	const definitions = new Map(ir.types.map(type => [type.id, type]));
 	const value = (reference, direction) => typeText(reference, direction, definitions);
-	const parameters = (items, direction) => items.map((item, index) => `arg${index}: ${value(item.type, item.ownership === "transfer" ? "output" : direction)}`).join(", ");
+	const delivered = result => anchored && result.ownership !== "copy"
+		? `LeanValue<${value(result.type, "output")}>` : value(result.type, "output");
+	const parameters = (items, direction, result = null) => items.map((item, index) => {
+		let type = value(item.type, item.ownership === "transfer" ? "output" : direction);
+		if(anchored && direction === "input" && item.ownership !== "copy")
+		{
+			const owner = `LeanValue<${value(item.type, "output")}>`;
+			type = item.ownership === "transfer" || result?.lifetime?.anchor === item.name ? owner : `(${type} | ${owner})`;
+		}
+		return `arg${index}: ${type}`;
+	}).join(", ");
 	const lines = ["declare const leanResource: unique symbol;", ""
 		, "export interface LeanLease {", "  readonly disposed: boolean;"
-		, "  dispose(): boolean;", "  retain(): this;", "}", ""];
+		, "  dispose(): boolean;"
+		, anchored ? "  retain(): LeanValue<this>;" : "  retain(): this;"
+		, ...anchored ? ["  equals(other: unknown): boolean;"] : [], "}", ""];
+	if(anchored) lines.push("declare const leanValue: unique symbol;", ""
+		, "export interface LeanValue<T> {", "  readonly [leanValue]: T;"
+		, "  readonly disposed: boolean;", "  get(): T;", "  dispose(): boolean;"
+		, "  share(): LeanValue<T>;", "  retain(): LeanValue<T>;", "}", "");
 	for(const type of ir.types)
 	{
 		lines.push(description(type));
@@ -91,7 +111,7 @@ const declarations = ir => {
 				// Host callbacks receive borrowed native values. Native callbacks
 				// accept host inputs and return explicitly disposable native values.
 				const input = direction === "input" ? "output" : "input";
-				const signature = `(${parameters(type.callable.parameters, input)}): ${value(type.callable.result.type, direction)};`;
+				const signature = `(${parameters(type.callable.parameters, input)}): ${anchored && direction === "output" ? delivered(type.callable.result) : value(type.callable.result.type, direction)};`;
 				lines.push(`export interface ${name}${direction === "output" ? " extends LeanLease" : ""} {`, `  ${signature}`, "}", "");
 			}
 			else if(type.kind === "alias") lines.push(`export type ${name} = ${value(type.target, direction)};`, "");
@@ -105,14 +125,56 @@ const declarations = ir => {
 		}
 	}
 	for(const declaration of ir.declarations) lines.push(description(declaration)
-		, `export function ${declaration.name}(${parameters(declaration.parameters, "input")}): ${value(declaration.result.type, "output")};`, "");
+		, `export function ${declaration.name}(${parameters(declaration.parameters, "input", declaration.result)}): ${delivered(declaration.result)};`, "");
+	if(anchored) for(const declaration of ir.declarations)
+	{
+		if(declaration.result.ownership !== "copy") lines.push(
+			`export function copyValue(value: ${value(declaration.result.type, "output")}, selector: Readonly<{ resultOf: ${JSON.stringify(declaration.name)} }>): ${delivered(declaration.result)};`);
+		for(const [index, parameter] of declaration.parameters.entries()) if(parameter.ownership !== "copy")
+			lines.push(`export function copyValue(value: ${value(parameter.type, "output")}, selector: Readonly<{ parameterOf: readonly [${JSON.stringify(declaration.name)}, ${index} | ${JSON.stringify(parameter.name)}] }>): LeanValue<${value(parameter.type, "output")}>;`);
+	}
 	lines.push("/** Release this component and invalidate its outstanding leases. */", "export function close(): boolean;"
 		, "/** Supply the typed fallback required by an uninhabited callback result. */"
 		, "export function withRecovery<Args extends readonly unknown[], Result>(operation: (...args: Args) => Result, recovery: Result): (...args: Args) => Result;"
 		, "", "declare const bindings: Readonly<{"
-		, ...[...ir.declarations.map(item => item.name), "close", "withRecovery"].map(name => `  ${name}: typeof ${name};`)
+		, ...[...ir.declarations.map(item => item.name), "close", "withRecovery", ...anchored ? ["copyValue"] : []].map(name => `  ${name}: typeof ${name};`)
 		, "}>;", "export default bindings;", "");
 	return lines.join("\n");
+};
+
+const copyEntry = ir => {
+	const layout = compileOwnedJavaScriptWasmLayout(ir, { transferredInputs: true, anchoredResults: true });
+	const owned = new Set(layout.types.filter(type => type.representation !== "copied").map(type => type.id));
+	const results = {}, parameters = {};
+	for(const fn of layout.native.functions)
+	{
+		const declaration = ir.declarations.find(item => item.id === fn.id);
+		if(owned.has(fn.result)) results[fn.name] = fn.result;
+		const names = {};
+		for(const [index, id] of fn.parameters.entries()) if(owned.has(id))
+		{ names[index] = id; names[declaration.parameters[index].name] = id; }
+		parameters[fn.name] = names;
+	}
+	return `const _copyResults = Object.freeze(${JSON.stringify(results)});
+const _copyParameters = Object.freeze(${JSON.stringify(parameters)});
+export function copyValue(value, selector) {
+  if (arguments.length !== 2 || !selector || typeof selector !== "object" || Array.isArray(selector))
+    throw new TypeError("copyValue expects a payload and a resultOf or parameterOf selector");
+  const fields = Object.getOwnPropertyDescriptors(selector), keys = Reflect.ownKeys(fields);
+  if (keys.length !== 1 || !["resultOf", "parameterOf"].includes(keys[0]) || !Object.hasOwn(fields[keys[0]], "value"))
+    throw new TypeError("copyValue requires exactly one data selector");
+  const selected = fields[keys[0]].value;
+  let type;
+  if (keys[0] === "resultOf") {
+    if (typeof selected === "string" && Object.hasOwn(_copyResults, selected)) type = _copyResults[selected];
+  } else if (Array.isArray(selected) && selected.length === 2 && typeof selected[0] === "string") {
+    const row = Object.hasOwn(_copyParameters, selected[0]) ? _copyParameters[selected[0]] : null;
+    if (row && (typeof selected[1] === "string" || Number.isSafeInteger(selected[1])) && Object.hasOwn(row, selected[1])) type = row[selected[1]];
+  }
+  if (!type) throw new TypeError("copyValue selector must name an owned exported result or parameter");
+  return runtime.copyValue(type, value);
+}
+`;
 };
 
 /**
@@ -121,9 +183,9 @@ const declarations = ir => {
  * @param model - Validated public ownership projection model.
  */
 export const renderOwnedJavaScriptPackageLayout = model => {
-	const { ir, bindingIrSha256 } = model;
+	const { ir, bindingIrSha256, anchored = false } = model;
 	const transfers = ir.declarations.filter(item => item.parameters.some(parameter => parameter.ownership === "transfer"));
-	const exports = [...ir.declarations.map(item => item.name), "close", "withRecovery"];
+	const exports = [...ir.declarations.map(item => item.name), "close", "withRecovery", ...anchored ? ["copyValue"] : []];
 	const entry = [`// Generated from Binding IR SHA-256 ${bindingIrSha256}.`
 		, 'import { runtime } from "./internal/runtime.mjs";', ""];
 	for(const declaration of ir.declarations)
@@ -132,20 +194,29 @@ export const renderOwnedJavaScriptPackageLayout = model => {
 		entry.push(description(declaration), `export function ${declaration.name}(${args}) {`
 			, `  return runtime.call(${JSON.stringify(declaration.id)}, Array.from(arguments));`, "}", "");
 	}
+	if(anchored) entry.push(copyEntry(ir));
 	entry.push("export function close() { return runtime.close(); }"
 		, "export function withRecovery(operation, recovery) { return runtime.withRecovery(operation, recovery); }"
 		, `export default Object.freeze({ ${exports.join(", ")} });`, "");
 	const paths = ["index.mjs", "index.d.ts", "README.md", "binding-manifest.json", "package.json"];
 	return Object.freeze({
-		"index.mjs": entry.join("\n"), "index.d.ts": declarations(ir)
+		"index.mjs": entry.join("\n"), "index.d.ts": declarations(ir, anchored)
 		, "README.md": [`# ${ir.component.name}`, "", ir.documentation.summary, ""
 			, "Call the named exports with JavaScript values. The package loads its shared runtime automatically."
 			, "Records use source field names. Variants use kind and named payload fields. Arrays and lists use arrays."
 			, 'Options use { tag: "none" } or { tag: "some", value }. Results use { ok } or { error }.'
 			, "Nat, Int, UInt64 and Int64 use bigint. Unit uses undefined; bytes use Uint8Array."
 			, "", "## Resource lifetime", ""
-			, "Resource values and returned functions expose dispose(), retain() and disposed. Dispose each distinct lease when finished."
-			, "retain() creates an independent lease. Repeated references within a result share one wrapper."
+			, ...anchored ? [
+				"Owned results are LeanValue objects. get() reads the payload; dispose() closes that root."
+				, "share() adds a root to the same owner. retain() copies the payload into an independent owner."
+				, "Closing the last root or consuming an owner expires all borrowed descendants, including empty values."
+				, "Pass whole owners to anchored and consuming parameters. Other inputs also accept their plain payloads."
+				, 'Create a typed owner with copyValue(payload, { resultOf: "exportName" }) or copyValue(payload, { parameterOf: ["exportName", 0] }).'
+				, "Nested resources and returned functions are non-owning views. Their retain() method creates an independent LeanValue."
+				, "Resource views compare canonical identity with equals(other); independent owners can refer to the same resource."
+			] : ["Resource values and returned functions expose dispose(), retain() and disposed. Dispose each distinct lease when finished."
+				, "retain() creates an independent lease. Repeated references within a result share one wrapper."]
 			, "Callback arguments expire when the callback returns. Retain a resource inside the callback to keep it."
 			, "close() releases the component and invalidates its outstanding leases. It does not close other packages."
 			, "A native trap retires the shared heap; all packages using that heap reject further calls."
@@ -185,6 +256,6 @@ export const auditOwnedJavaScriptPackage = (ir, files) => {
 	const model = compileOwnedJavaScriptPackageModel(ir), expected = renderOwnedJavaScriptPackageLayout(model);
 	if(canonicalizeJsonValue(files) !== canonicalizeJsonValue(expected)) fail("Owned JavaScript package differs from its checked public projection");
 	return Object.freeze({ schemaVersion: 1, bindingIrSha256: model.bindingIrSha256
-		, exports: Object.freeze([...ir.declarations.map(item => item.name), "close", "withRecovery"])
+		, exports: Object.freeze([...ir.declarations.map(item => item.name), "close", "withRecovery", ...model.anchored ? ["copyValue"] : []])
 		, publicEntry: ".", privateSubpaths: Object.freeze([]) });
 };

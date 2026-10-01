@@ -82,8 +82,37 @@ through the component engine. The engine verifies the captured source,
 generated inputs, export selection and output inventory. Nix acceptance builds
 ordinary and reviewed packages with unusable host SDK paths, then installs and
 executes them offline after removing their producer directories. The
-owned-specific Docker installed-package check remains open. Results borrowed
-from another object remain unsupported.
+owned-specific Docker installed-package check remains open.
+
+### Anchor a result to an input
+
+Declare the parameter that bounds a borrowed result's lifetime in `contracts`:
+
+```json
+{
+  "contracts": {
+    "Owned.retainTicket": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg0" }
+      }
+    }
+  }
+}
+```
+
+Use this alongside the project's `resources` and `ownedAggregates` policy.
+The ordinary compiler names this parameter `arg0`; a reviewed API uses its
+authored parameter name. The result follows the original input owner. Releasing
+its last root or transferring it expires borrowed descendants, including empty
+containers.
+
+Packages with these declarations expose owned results as `LeanValue<T>`.
+Consumers use `get()`, `share()`, `retain()` and `dispose()` without importing a
+runtime or handling owner identifiers. The [consumer example](../javascript-typescript.md#borrowed-results-and-whole-value-owners)
+shows the lifetime rules and typed aggregate construction. Copied results keep
+their ordinary JavaScript representation. Receiver and callback-result anchors
+remain unsupported.
 
 ### Publish the owned package
 

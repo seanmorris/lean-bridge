@@ -155,9 +155,12 @@ export const checkOwnedJavaScriptBrowsers = async ({ root, name, run, probeSourc
 						const first = await page.evaluate(() => globalThis.ownedResult);
 						assert.equal(first.error, undefined, first.error);
 						if(expected) assert.deepEqual(first.value, expected);
-						else assert.equal(first.value.checks, 16);
-						assert.equal(first.value.serial, (1n << 90n).toString());
-						assert.equal(first.value.borrowExpired, true); assert.equal(first.value.closureDisposed, true);
+						else
+						{
+							assert.equal(first.value.checks, 16);
+							assert.equal(first.value.serial, (1n << 90n).toString());
+							assert.equal(first.value.borrowExpired, true); assert.equal(first.value.closureDisposed, true);
+						}
 						for(let iteration = 0; iteration < 2; iteration++)
 						{
 							const sequence = await page.evaluate(() => globalThis.ownedResult.sequence);

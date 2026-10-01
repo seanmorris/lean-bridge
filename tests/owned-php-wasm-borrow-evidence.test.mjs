@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
+import { beforeOwnedJavaScriptBorrow, ownedJavaScriptBorrowHistoricalBytes } from "./helpers/owned-javascript-borrow-history.mjs";
 import { assertOwnedPhpWasmBorrowExecution } from "./helpers/owned-php-wasm-borrow-evidence.mjs";
 import { ownedPhpWasmBorrowPath, ownedPhpWasmBorrowBaseline, ownedPhpWasmBorrowPrevious
 	, ownedPhpWasmBorrowChangedPaths, ownedPhpWasmBorrowAddedPaths
@@ -23,13 +24,14 @@ test("PHP-Wasm borrowed-result history preserves authenticated predecessor versi
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedPhpWasmBorrowAddedPaths].sort());
-	for(const [path, identity] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), identity, path);
+	for(const [path, identity] of Object.entries(record.sources)) assert.equal(sha256(ownedJavaScriptBorrowHistoricalBytes(path, await readFile(path), identity)), identity, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedPhpWasmBorrowChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedPhpWasmBorrow(update.path, source);
+		const source = beforeOwnedJavaScriptBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedPhpWasmBorrow(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedPhpWasmBorrow(update.path, prior), prior);
 		assert.equal(beforeOwnedPhpWasmBorrow(update.path, source, update.currentSha256), source);
@@ -41,9 +43,9 @@ test("PHP-Wasm borrowed-result history preserves authenticated predecessor versi
 			, { ...update, edits: [...update.edits, update.edits[0]] }])
 			assert.throws(() => reverseOwnedPhpWasmBorrowUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedJavaScriptBorrow(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedPhpWasmBorrow(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedJavaScriptBorrowHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior, "Source refresh must not promote unrelated support cells");
 	for(const name of ["owned-php-wasm-borrows", "owned-php-wasm-borrow-evidence"
 		, "owned-php-wasm-borrow-packaging", "owned-php-wasm-borrow-documentation"])

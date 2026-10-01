@@ -3070,6 +3070,32 @@ CI requires zero skipped tests. It preserves
 `build/owned-javascript-transfer-packaging/report.json`, and
 `build/owned-javascript-wasm/transfers.log` in the ownership job's artifact.
 
+The borrowed-result gate checks whole-value owners, shared roots, independent
+copies and expiration through the original input owner. It includes empty values,
+atomic transfers, callback reentry, native and host allocation failures, the
+128-level borrow limit and the 4,096-wrapper limit. Eight deliberately broken
+JavaScript/native implementations must fail the original lifetime assertions.
+Copied Alpha handles and borrowed results run in one production runtime in both
+load orders, on both source paths.
+
+```sh
+source scripts/env.sh
+npm run test:owned-javascript-borrows
+```
+
+This gate also builds and independently rebuilds source-free npm releases through
+an installed CLI. It runs the consumer documentation example, strict TypeScript,
+and all browser contexts described above. CI requires 25 tests with zero failures,
+cancellations or skips. It retains ten reports in
+`build/owned-javascript-borrows/`, the installed-package report in
+`build/owned-javascript-borrow-packaging/report.json`, and
+`build/owned-javascript-wasm/borrows.log`.
+
+Receiver and callback-result anchors remain outside this gate. The final
+cross-language Docker audit is separate. The
+[borrowed-result receipt](../evidence/owned-javascript-borrows-20261001.md)
+records the executed scope and the source identities used for it.
+
 The coexistence gate builds a copied compound-value package and an owned package
 independently. Both must produce the same runtime archive byte for byte. It
 installs the archives offline, deletes producer files and tests owned-first,

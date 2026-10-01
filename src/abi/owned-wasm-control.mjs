@@ -12,3 +12,4 @@ export const ownedWasmControlOperations = Object.freeze({
 	, callbackBegin: 11, callbackEnd: 12, callbackValid: 13, callbackLive: 14
 	, metadata: 15
 });
+export const ownedWasmBorrowOperations = Object.freeze({ copy: 16, alive: 17, revoke: 18 });

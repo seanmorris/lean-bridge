@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPhpWasmBorrow, ownedPhpWasmBorrowChangedPaths } from "./owned-php-wasm-borrow-history.mjs";
+import { beforeOwnedPhpWasmBorrow, ownedPhpWasmBorrowNormalizationPaths } from "./owned-php-wasm-borrow-history.mjs";
 
 export const ownedPhpBorrowPath = "docs/evidence/owned-php-borrows-20261001.json";
 export const ownedPhpBorrowBaseline = "25745d5f3683a3919b40bbc8ce64f6140e615e39";
@@ -48,7 +48,7 @@ export const ownedPhpBorrowAddedPaths = [
 	, "tests/owned-php-borrows.test.mjs"
 ].sort();
 let cached;
-export const ownedPhpBorrowNormalizationPaths = [...new Set([...ownedPhpBorrowChangedPaths, ...ownedPhpWasmBorrowChangedPaths])].sort();
+export const ownedPhpBorrowNormalizationPaths = [...new Set([...ownedPhpBorrowChangedPaths, ...ownedPhpWasmBorrowNormalizationPaths])].sort();
 
 /**
  * Reverse only ordered, authenticated spans of registered source files.
