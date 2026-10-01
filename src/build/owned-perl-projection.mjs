@@ -31,10 +31,10 @@ export const ownedPerlNamespace = (component, settings = {}) => {
 export const projectOwnedPerl = async options => {
 	const { working, runtimeRoot, nativeRoot, settings = {}, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
+	const { model } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true });
 	if(!model.ownedGraph?.hostCallbacks) throw new TypeError("Owned Perl requires authenticated callback/copy support");
 	const moduleName = ownedPerlNamespace(model.component, settings);
-	generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs: Boolean(model.ownedGraph.inputTransfers) });
+	generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors) });
 	const ownedGmpRoot = join(working, "native/owned-perl-gmp");
 	await buildNativeGmp({ root: ownedGmpRoot, environment, signal, privateSoname: true });
 	return projectCpanPackages({ ...options, ownedGmpRoot, ownedModuleName: moduleName });

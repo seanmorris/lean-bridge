@@ -24,12 +24,13 @@ export const generateOwnedPerlPackage = ({ model, receipt, metadata, moduleName,
 	if(!model.ownedGraph?.hostCallbacks || !/^[0-9a-f]{64}$/u.test(gmpSha256))
 		throw new TypeError("Owned Perl requires authenticated callbacks and private GMP");
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
+	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const c = generateOwnedCPackage({ metadata
 		, sourceIdentity: model.sourceIdentity, component: model.component
-		, hostCallbacks: true, transferredInputs });
+		, hostCallbacks: true, transferredInputs, anchoredResults });
 	if(canonicalJson(c.layout.model.bindingIr) !== canonicalJson(model.bindingIr))
 		throw new TypeError("Perl ownership types differ from the compiled component");
-	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs });
+	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults });
 	if(generated.c.prefix !== c.values.prefix) throw new TypeError("Perl and C ownership prefixes differ");
 	const prefix = c.values.prefix, relative = moduleName.replaceAll("::", "/"), stem = moduleName.split("::").at(-1);
 	const gmpLibrary = "libgmp-lean-bridge.so.10", q = perlStringLiteral;
@@ -92,7 +93,23 @@ own independent native references. Close is idempotent; finalization releases
 unclosed owners. Closing an input during a call does not invalidate its active
 borrow. Callback arguments expire on return unless explicitly retained.
 
-${transferredInputs ? `Consuming arguments use ordinary Perl values. Validation and native snapshot
+${anchoredResults ? `Resource-bearing results use Value owners, including empty arrays and None.
+Call get to read a checked payload, share to share its original owner, retain
+for independent ownership, and close when finished. Resource leaves from get
+expire when the last whole owner closes. A declared borrowed result expires
+with its anchor, including through transitive borrows. Resource same_identity
+compares native identity across views and rejects expired inputs.
+
+Use copy_value to acquire a whole owner from a Perl value. Containers and empty
+values select their schema with result_of => 'function', or parameter_of =>
+['function', parameter_name_or_index]. Anchors and consuming parameters require
+whole Value owners. Transfers consume the original native owner, not a snapshot;
+shared owners and their borrowed results expire together. Independently retained
+owners remain valid. Borrowed results cannot be transferred without retain.
+Pre-handoff validation failures preserve ownership; callback and conversion
+failures after handoff do not restore consumed owners.
+
+` : transferredInputs ? `Consuming arguments use ordinary Perl values. Validation and native snapshot
 preparation happen before handoff. At the Lean call boundary, shared aliases and
 sibling resources using the same result owner close together. Independent
 retains survive. Retain callback borrows before transferring them. Two consuming
@@ -113,11 +130,17 @@ adapter with local Perl headers. Lean, Lake and Node are not required.
 
 =cut
 `;
-	const owned = { schemaVersion: transferredInputs ? 2 : 1, prefix, gmpLibrary
+	const owned = { schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
+		, prefix, gmpLibrary
 		, ...transferredInputs ? { inputTransfers: { ...model.ownedGraph.inputTransfers
-			, arguments: "ordinary-values", aliases: "shared-lease"
+			, arguments: anchoredResults ? "whole-values" : "ordinary-values"
+			, aliases: anchoredResults ? "shared-owner" : "shared-lease"
 			, borrowedInputs: "reject"
 			, independentRetains: "preserved" } } : {}
+		, ...anchoredResults ? { resultAnchors: { ...model.ownedGraph.resultAnchors
+			, arguments: "whole-values", results: "checked-whole-values"
+			, emptyValues: "owner-scoped", independentRetains: "preserved"
+			, identityEquality: "native-identity" } } : {}
 		, componentLibrary: receipt.library
 		, bindingIrSha256: model.bindingIrSha256
 		, publicHeaderSha256: sha256(c.publicHeader)
@@ -126,7 +149,8 @@ adapter with local Perl headers. Lean, Lake and Node are not required.
 		, "Component.xs": `#include "owned/src/${prefix}.c"\n#include "runtime.h"\n${generated.declarations}\n${generated.xs}`
 		, [`lib/${relative}.pm`]: pm
 		, "binding-manifest.json": canonicalJson({
-			schemaVersion: transferredInputs ? 2 : 1, backend: "perl"
+			schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
+			, backend: "perl"
 			, profile: "native-library-v1", owned
 			, runtimeIdentity: receipt.runtimeIdentity
 			, publicModule: `lib/${relative}.pm` }) };

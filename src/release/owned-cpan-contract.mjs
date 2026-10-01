@@ -1,5 +1,5 @@
 /**
- * Bind prepared CPAN consuming APIs to compiler metadata and generated sources.
+ * Bind prepared CPAN consuming and borrowed APIs to authenticated compiler input.
  *
  * @file
  */
@@ -26,21 +26,26 @@ export const verifyOwnedCpanTransfers = (manifest, files) => {
 	const hasTransfers = manifest.ownedValues?.schemaVersion === 2 || binding?.owned?.schemaVersion === 2
 		|| model?.schemaVersion === 8 || model?.ownedGraph?.inputTransfers
 		|| model?.bindingIr?.declarations?.some(fn => fn.parameters.some(site => site.ownership === "transfer"));
-	if(!hasTransfers) return;
+	const hasAnchors = manifest.ownedValues?.schemaVersion === 3 || binding?.owned?.schemaVersion === 3
+		|| manifest.ownedValues?.resultAnchors || binding?.owned?.resultAnchors
+		|| model?.schemaVersion === 9 || model?.ownedGraph?.resultAnchors
+		|| model?.bindingIr?.declarations?.some(fn => fn.result.ownership === "borrow");
+	if(!hasTransfers && !hasAnchors) return;
 	const fail = message => { throw new TypeError("Owned CPAN transfer contract differs from " + message); };
-	if(manifest.ownedValues?.schemaVersion !== 2 || binding?.schemaVersion !== 2
-		|| model?.schemaVersion !== 8 || !model.ownedGraph?.hostCallbacks) fail("its supported schema");
+	if(manifest.ownedValues?.schemaVersion !== (hasAnchors ? 3 : 2) || binding?.schemaVersion !== (hasAnchors ? 3 : 2)
+		|| model?.schemaVersion !== (hasAnchors ? 9 : 8) || !model.ownedGraph?.hostCallbacks) fail("its supported schema");
 	const receipt = json("native-component.json"), metadata = json("metadata.json");
 	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, sourceIdentity: receipt.sourceIdentity }
-		, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });
+		, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: Boolean(hasAnchors) });
 	const adapters = generateCompiledNativeLeanAdapters(reconstructed);
 	if(canonicalJson(model) !== canonicalJson(reconstructed)
-		|| receipt.schemaVersion !== 4 || receipt.profile !== "native-library-v1"
+		|| receipt.schemaVersion !== (hasAnchors ? 5 : 4) || receipt.profile !== "native-library-v1"
 		|| receipt.runtimeIdentity !== manifest.nativeRuntimeIdentity
 		|| receipt.modelSha256 !== sha256(canonicalJson(model))
 		|| receipt.bindingIrSha256 !== model.bindingIrSha256
 		|| canonicalJson(json("binding-ir.json")) !== canonicalJson(model.bindingIr)
-		|| canonicalJson(receipt.inputTransfers) !== canonicalJson(model.ownedGraph.inputTransfers)
+		|| canonicalJson(receipt.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)
+		|| canonicalJson(receipt.resultAnchors ?? null) !== canonicalJson(model.ownedGraph.resultAnchors ?? null)
 		|| receipt.metadataSha256 !== sha256(bytes("metadata.json"))
 		|| receipt.headerSha256 !== sha256(adapters.header) || bytes("component.h").toString() !== adapters.header
 		|| receipt.adaptersSha256 !== sha256(adapters.leanSource) || bytes("generated.lean").toString() !== adapters.leanSource

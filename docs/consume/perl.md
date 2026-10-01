@@ -463,14 +463,16 @@ into a successful result.
 
 Input, callback and result conversions share depth 128, 262,144 visits and a
 16 MiB native data budget, with a separate 16 MiB conversion-storage budget.
-Native reentry permits 64 active calls. Anchored results, retained host callbacks
-and asynchronous delivery remain unsupported.
+Native reentry permits 64 active calls. [Borrowed results](#borrowed-results)
+use whole-value owners. Retained host callbacks and asynchronous delivery remain
+unsupported.
 
 ### Consuming inputs
 
 An author can mark an argument as consuming. Its generated POD names that
-argument. Use the same Perl values; no ownership wrapper or native handle is
-required. Validation errors preserve inputs. Once Lean takes ownership, shared
+argument. Packages without borrowed results use the same Perl values; packages
+with borrowed results require a `Value` owner for each consuming argument.
+Validation errors preserve inputs. Once Lean takes ownership, shared
 aliases close even if a callback throws or converting the result fails.
 An independent `retain` survives that handoff.
 
@@ -514,6 +516,64 @@ Run `perl consume-owned.pl`. It prints `consumed`, `42`, and `42`. Resource leav
 from one returned aggregate can share an owner, so consuming one can close its
 siblings. Retain any resource you need independently. Callback arguments are
 borrowed and need an explicit `retain` before a consuming call.
+
+### Borrowed results
+
+An author can tie a result to an input owner's lifetime. In these packages,
+resource-containing results return a `Value` owner, including empty arrays and
+`None`. `get` checks that owner before exposing its Perl payload. `share` creates
+another wrapper for the same owner; `retain` creates independent ownership.
+Close owners explicitly when finished. Resource leaves from `get` expire when
+the last whole owner closes, even if a Perl reference to the leaf remains.
+
+For the [author's borrowed-result example](../publish/cpan.md#borrow-a-result-from-an-input),
+save `borrowed.pl`:
+
+```perl
+use strict;
+use warnings;
+use Math::BigInt;
+use LeanBridge::OwnedValues;
+
+my ($ticket, $owner, $view, $retained);
+my $ok = eval {
+  $ticket = LeanBridge::OwnedValues::new_ticket(Math::BigInt->new(42), 'receipt');
+  $owner = LeanBridge::OwnedValues::copy_value(
+    LeanBridge::OwnedValues::Bundle->new(
+      primary => $ticket->get, spare => undef, peers => [], history => [],
+      payload => LeanBridge::OwnedValues::Payload->new(
+        count => Math::BigInt->new(-7), bytes => "\0\xff"
+      )
+    )
+  );
+  $view = LeanBridge::OwnedValues::callback_record($owner, sub { $_[0] });
+  $retained = $view->retain;
+  print LeanBridge::OwnedValues::serial($view->get->primary)->bstr, "\n";
+  $owner->close;
+  print $view->closed ? "expired\n" : "unexpectedly open\n";
+  print LeanBridge::OwnedValues::serial($retained->get->primary)->bstr, "\n";
+  1;
+};
+my $error = $@;
+$_->close for grep { defined } ($ticket, $owner, $view, $retained);
+die $error unless $ok;
+```
+
+Run `perl borrowed.pl`. It prints `42`, `expired`, and `42`. An expired owner's
+`get` or `retain` raises a closed-resource error. Borrowing again from a borrowed
+result preserves the original dependency. Resources expose `same_identity` to
+compare native identity across different views; expired operands reject.
+
+Use `copy_value($value, result_of => 'function')` for a container whose schema
+cannot be inferred from its Perl class. `parameter_of => ['function', 0]`
+selects a parameter by index; its declared name also works. These selectors
+preserve the owners of empty containers and `None`.
+
+Consuming parameters in these packages take whole `Value` owners and consume
+their original native slots. Shared owners and borrowed descendants expire
+together. Independently retained owners survive. A borrowed result must be
+retained before it can be consumed. Packages without borrowed results keep the
+ordinary-value API described above.
 
 ## Values and cleanup
 

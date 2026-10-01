@@ -53,27 +53,42 @@ sub owned_values {
   return unless exists $manifest->{ownedValues};
   my $owned = $manifest->{ownedValues};
   die "Invalid owned Perl package contract\n" unless ref($owned) eq 'HASH'
-    && $manifest->{module} ne 'LeanBridge::Runtime' && ($owned->{schemaVersion} == 1 || $owned->{schemaVersion} == 2)
+    && $manifest->{module} ne 'LeanBridge::Runtime'
+    && ($owned->{schemaVersion} == 1 || $owned->{schemaVersion} == 2 || $owned->{schemaVersion} == 3)
     && $owned->{prefix} =~ /\A[A-Za-z_][A-Za-z0-9_]*\z/
     && $owned->{gmpLibrary} eq 'libgmp-lean-bridge.so.10'
     && $owned->{componentLibrary} =~ /\A[A-Za-z0-9_][A-Za-z0-9_.+-]*\.so\z/;
   my $model = read_json('model.json');
-  if ($owned->{schemaVersion} == 2 || $model->{schemaVersion} == 8) {
+  my $anchored = $owned->{schemaVersion} == 3 || $model->{schemaVersion} == 9
+    || exists($owned->{resultAnchors}) || exists($model->{ownedGraph}{resultAnchors});
+  if ($anchored || $owned->{schemaVersion} == 2 || $model->{schemaVersion} == 8) {
     my $binding = read_json('binding-manifest.json');
     my $native = $model->{ownedGraph}{inputTransfers};
     my $moves = $owned->{inputTransfers};
     my $json = JSON::PP->new->canonical;
-    die "Invalid owned Perl input-transfer contract\n"
-      unless $owned->{schemaVersion} == 2 && $model->{schemaVersion} == 8 && $binding->{schemaVersion} == 2
-        && ref($native) eq 'HASH' && ref($moves) eq 'HASH'
+    die "Invalid owned Perl lifetime contract\n"
+      unless $owned->{schemaVersion} == ($anchored ? 3 : 2)
+        && $model->{schemaVersion} == ($anchored ? 9 : 8)
+        && $binding->{schemaVersion} == ($anchored ? 3 : 2)
         && $json->encode($binding->{owned}) eq $json->encode($owned)
-        && $owned->{bindingIrSha256} eq $model->{bindingIrSha256}
-        && $moves->{arguments} eq 'ordinary-values' && $moves->{aliases} eq 'shared-lease'
-        && $moves->{borrowedInputs} eq 'reject' && $moves->{independentRetains} eq 'preserved';
-    my %expected = (%$native, arguments => 'ordinary-values', aliases => 'shared-lease',
-      borrowedInputs => 'reject', independentRetains => 'preserved');
-    die "Owned Perl input transfers differ from the native model\n"
-      unless $json->encode($moves) eq $json->encode(\%expected);
+        && $owned->{bindingIrSha256} eq $model->{bindingIrSha256};
+    if (!$anchored || defined($native) || defined($moves)) {
+      die "Invalid owned Perl input-transfer contract\n" unless ref($native) eq 'HASH' && ref($moves) eq 'HASH';
+      my %expected = (%$native, arguments => $anchored ? 'whole-values' : 'ordinary-values',
+        aliases => $anchored ? 'shared-owner' : 'shared-lease',
+        borrowedInputs => 'reject', independentRetains => 'preserved');
+      die "Owned Perl input transfers differ from the native model\n"
+        unless $json->encode($moves) eq $json->encode(\%expected);
+    }
+    if ($anchored) {
+      my $anchors = $model->{ownedGraph}{resultAnchors};
+      die "Invalid owned Perl borrowed-result contract\n"
+        unless ref($anchors) eq 'HASH' && ref($owned->{resultAnchors}) eq 'HASH';
+      my %expected = (%$anchors, arguments => 'whole-values', results => 'checked-whole-values',
+        emptyValues => 'owner-scoped', independentRetains => 'preserved', identityEquality => 'native-identity');
+      die "Owned Perl result anchors differ from the native model\n"
+        unless $json->encode($owned->{resultAnchors}) eq $json->encode(\%expected);
+    }
   }
   return $owned;
 }

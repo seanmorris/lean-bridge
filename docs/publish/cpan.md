@@ -467,8 +467,8 @@ inside these values and callback signatures.
 
 Host callbacks borrow for the call. A consumer can retain a resource from a
 callback using `retain`; that does not retain the host callback itself.
-Input transfers require the export contract below. Anchored results and
-asynchronous callbacks remain unsupported.
+Input transfers and borrowed results require the export contracts below.
+Asynchronous callbacks remain unsupported.
 
 The CPAN component bundles a private GMP 6.3.0 library and its source and license
 notices. Each XS variant includes the generated ownership adapter. Both
@@ -511,6 +511,39 @@ together. Retained owners remain independent. Callback or result-conversion
 errors after handoff do not restore the inputs. A callback borrow must be retained
 before a consuming call. Two consuming arguments cannot share one resource lease.
 See [the consuming Perl example](../consume/perl.md#consuming-inputs).
+
+## Borrow a result from an input
+
+For the `Owned.lean` example above, use this `contracts` entry instead of the
+transfer contract:
+
+```json
+{
+  "Owned.callbackRecord": {
+    "result": {
+      "ownership": "borrow",
+      "lifetime": { "scope": "parameter", "anchor": "arg0" }
+    }
+  }
+}
+```
+
+The ordinary compiler adapter names the first parameter `arg0`. Reviewed IR uses
+its authored parameter name. The anchor must be an ownership-bearing parameter
+that the same call does not consume. Closing or transferring its original owner
+expires the borrowed result, including empty values and transitive borrows.
+
+Build with `--target cpan`, or `--target c --target cpan` to share the native
+component. The version-3 CPAN ownership contract records the compiler-checked
+anchors and whole-value API. Package verification checks those declarations,
+native receipts, generated XS and Perl sources together.
+
+Resource-bearing results now return `Value` owners. Anchors and consuming
+parameters require those owners; ordinary non-anchoring parameters still take
+their Perl values. `get` checks the lifetime, `share` shares it, and `retain`
+creates independent ownership. Consumers use `copy_value` to acquire an owner
+for a Perl-built aggregate. Packages with no borrowed results keep their
+existing API. See the [Perl borrowed-result example](../consume/perl.md#borrowed-results).
 
 ## Verify the release candidate
 

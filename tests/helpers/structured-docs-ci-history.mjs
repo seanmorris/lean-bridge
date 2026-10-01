@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeManagedClose, managedCloseChangedPaths } from "./managed-close-history.mjs";
+import { beforeManagedClose, managedCloseNormalizationPaths } from "./managed-close-history.mjs";
 
 export const structuredDocsCiPath = "docs/evidence/structured-docs-ci-repair-20260930.json";
 export const structuredDocsCiBaseline = "f88043186b944a3f3bd0133d5e49efd5ff034c69";
@@ -31,7 +31,7 @@ export const structuredDocsCiAddedPaths = [
 	, "tests/structured-docs-ci-evidence.test.mjs"
 ].sort();
 let cached;
-export const structuredDocsCiNormalizationPaths = [...new Set([...structuredDocsCiChangedPaths, ...managedCloseChangedPaths])].sort();
+export const structuredDocsCiNormalizationPaths = [...new Set([...structuredDocsCiChangedPaths, ...managedCloseNormalizationPaths])].sort();
 
 /**
  * Reverse complete authenticated versions through exact ordered source edits.

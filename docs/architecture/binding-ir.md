@@ -124,8 +124,13 @@ cross consuming calls, and Cleaner cleanup queues release on the creator
 thread. The version-3 `jvmValues` contract authenticates canonical identity
 comparison, original-owner expiration and raw-view lifetimes; adapter, compiled
 JVM and Maven package receipts use version 3. Their native `ownedValues`
-transport uses version 4. Other consumer projections of result anchors remain
-unfinished.
+transport uses version 4. Perl's version-3 CPAN ownership contract uses checked
+whole `Value` owners, `get`, shared-owner `share`, independent `retain`, and
+declaration-selected `copy_value` factories. Raw resource views borrow the whole
+owner. A borrowed result remains tied to its anchor even when it contains no
+resource leaves. Consuming calls use the original owner's native slot. Generated XS checks anchor expiry
+and compares resource identity through the native adapter. Other consumer
+projections of result anchors remain unfinished.
 Existing version-3 backends reject the version-4 contract. Prepared Wasm ownership
 support is documented for [JavaScript](../consume/javascript.md),
 [PHP-Wasm](../php.md) and [WIT/WASI](../consume/wit-wasi.md).

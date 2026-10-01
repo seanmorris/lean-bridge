@@ -4,6 +4,7 @@
  * @file
  */
 import { generateOwnedPerlConversions } from "./owned-conversions.mjs";
+import { ownedPerlAnchoredCall, ownedPerlBorrowXs } from "./owned-borrows.mjs";
 
 const callbackRuntime = prefix => `
 typedef struct {
@@ -169,6 +170,7 @@ ${invoker}(...)
 `);
 	}
 	const render = (name, fn) => {
+		if(model.c.anchoredResults) return ownedPerlAnchoredCall(name, fn, model);
 		const inputs = fn.parameters.map(id => nodes.get(id)), result = nodes.get(fn.result);
 		const moving = fn.transfers ?? [];
 		const snapshots = moving.map((index, group) => {
@@ -224,6 +226,27 @@ closed(value)
     RETVAL
 `, render("retain", model.c.retains.find(fn => fn.id === node.id)));
 		if(node.kind === "callback") xs.push(render("call", model.c.callbacks.find(fn => fn.id === node.id)));
+		if(model.c.anchoredResults) xs.push(`int
+same_identity(value, other)
+    SV *value
+    SV *other
+  CODE:
+    ENTER;
+    lpo_enter_call(aTHX);
+    ${node.cName} left = (${node.cName})lpo_borrow(aTHX_ value, ${node.index});
+    ${node.cName} right = (${node.cName})lpo_borrow(aTHX_ other, ${node.index});
+    bool equal = false;
+    lpo_status(aTHX_ ${node.cName}_equal(lpo_state.session, left, right, &equal));
+    RETVAL = equal;
+    LEAVE;
+  OUTPUT:
+    RETVAL
+`);
+	}
+	if(model.c.anchoredResults)
+	{
+		const borrowed = ownedPerlBorrowXs(model);
+		declarations.push(borrowed.declarations); xs.push(borrowed.xs);
 	}
 	xs.push(`MODULE = ${moduleName} PACKAGE = ${moduleName}::Runtime
 

@@ -1564,7 +1564,29 @@ The exact author and consumer examples run in combined C/CPAN releases for both
 borrowed and consuming inputs. Reports go to `build/owned-perl-transfers/` and
 `build/owned-perl-transfer-packaging/`.
 
-The remaining consumer bindings, owner-anchored borrowed results and owned
+#### Installed Perl borrowed results
+
+```sh
+source scripts/env.sh
+npm run test:owned-perl-borrows
+```
+
+Use the same four Perl ABIs and glibc overrides as the transfer suite. The
+runtime probes check whole-value owners, empty values, transitive expiration,
+shared owners, independent retains, native identity equality, original-slot
+transfers and callback reentry. Allocation and exception sweeps retain errors
+while checking both sides of the native handoff. Fork and interpreter-thread
+rejections preserve the original process's owners. Five compiled mutations must
+fail the independent consumer assertions. Borrow-only packages also execute
+without enabling consuming inputs.
+
+The installed gate checks ordinary and reviewed CPAN archives on each ABI,
+using both `prebuilt-only` and `build-xs`. It rejects changed lifetime metadata
+and native assets, reproduces both archives, and repeats relocated execution
+without producer sources, handoff archives or build tools. Reports go to
+`build/owned-perl-borrows/` and `build/owned-perl-borrow-packaging/`.
+
+Owner-anchored borrowed results in the remaining consumer bindings and owned
 Docker acceptance remain open.
 
 ### Staged WIT owned graphs

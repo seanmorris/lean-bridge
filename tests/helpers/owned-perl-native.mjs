@@ -49,11 +49,12 @@ __attribute__((destructor)) static void probe_final(void) {
 export const prepareOwnedPerlNative = async (t, options) => {
 	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks: true });
 	const transferredInputs = Boolean(options.transferredInputs);
+	const anchoredResults = Boolean(options.anchoredResults);
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component, hostCallbacks: true
-		, transferredInputs });
-	const model = generateOwnedPerlXs(c.layout.model.bindingIr, "LeanBridge::OwnedProbe", { transferredInputs });
+		, transferredInputs, anchoredResults });
+	const model = generateOwnedPerlXs(c.layout.model.bindingIr, "LeanBridge::OwnedProbe", { transferredInputs, anchoredResults });
 	const handoff = "static inline void oc_transfer_consume(void *context) {";
 	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const native = `#include <stdlib.h>

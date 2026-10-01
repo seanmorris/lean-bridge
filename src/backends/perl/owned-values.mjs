@@ -5,6 +5,7 @@
  */
 import { generateOwnedCValues } from "../c/owned-values.mjs";
 import { projectPerlNames, perlStringLiteral } from "./naming.mjs";
+import { ownedPerlBorrowClasses } from "./owned-borrows.mjs";
 
 const reserved = new Set("new DESTROY CLONE CLONE_SKIP can isa DOES VERSION import unimport AUTOLOAD BEGIN UNITCHECK CHECK INIT END STORABLE_freeze STORABLE_thaw".split(" "));
 const identifier = name => typeof name === "string" && /^[A-Za-z][A-Za-z0-9_]*$/u.test(name);
@@ -45,20 +46,23 @@ ${fields.map(field => `# ${field.publicName}: ${field.contractType}\nsub ${field
  * @param moduleName - Validated public CPAN namespace.
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Enable consuming parameters.
+ * @param options.anchoredResults - Keep whole owners for borrowed results.
  */
-export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs });
+export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = false, anchoredResults = false } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
+	const anchored = c.anchoredResults === true;
 	const definitions = new Map(ir.types.map(type => [type.id, type]));
 	const projected = projectPerlNames(moduleName, ir.declarations.map(declaration => ({
 		...declaration, name: declaration.source.declaration
 	})));
 	const functions = c.functions.map(fn => {
 		const publicName = projected.find(item => item.id === fn.id)?.publicName;
-		if(!identifier(publicName) || reserved.has(publicName))
+		if(!identifier(publicName) || reserved.has(publicName) || (anchored && publicName === "copy_value"))
 			throw new TypeError(`Invalid or reserved owned Perl function: ${publicName}`);
 		return { ...fn, publicName };
 	});
 	const occupied = new Set(["Some", "Ok", "Err", "Owned", "Runtime"]), names = new Map();
+	if(anchored) occupied.add("Value");
 	const claim = name => {
 		if(!identifier(name) || reserved.has(name) || occupied.has(name))
 			throw new TypeError(`Invalid, reserved or duplicated owned Perl type: ${name}`);
@@ -136,9 +140,11 @@ sub new {
 sub value { $_[0]->{value} }
 `).join("\n")}
 ${declarations.join("\n")}
+${anchored ? ownedPerlBorrowClasses(moduleName, types, functions, ir) : ""}\
 1;
 `;
 	return { c, moduleName, types, functions, aliases, source
-		, publicTypes: [...wrappers.map(name => `${moduleName}::${name}`)
+		, publicTypes: [...anchored ? [`${moduleName}::Value`] : []
+			, ...wrappers.map(name => `${moduleName}::${name}`)
 			, ...nominal.flatMap(node => [node.publicType, ...node.cases.map(branch => branch.publicName)])] };
 };

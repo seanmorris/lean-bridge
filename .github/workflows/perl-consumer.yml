@@ -180,6 +180,7 @@ jobs:
           node --test --test-concurrency=1 tests/owned-perl-xs.test.mjs tests/owned-perl-scalars.test.mjs tests/owned-perl-loader.test.mjs
           node --test --test-concurrency=1 tests/owned-perl-package.test.mjs tests/owned-perl-coexistence.test.mjs
           npm run test:owned-perl-transfers
+          npm run test:owned-perl-borrows
           for report in ordinary reviewed complete-ordinary complete-reviewed; do
             test -s "build/owned-perl-runtime/$report.json"
             test -s "build/owned-perl-conversions/$report.json"
@@ -199,6 +200,12 @@ jobs:
           test -s build/owned-perl-transfer-packaging/ordinary.json
           test -s build/owned-perl-transfer-packaging/reviewed.json
           test -s build/owned-perl-transfer-packaging/documentation.json
+          test -s build/owned-perl-borrows/ordinary.json
+          test -s build/owned-perl-borrows/reviewed.json
+          test -s build/owned-perl-borrows/borrow-only.json
+          test -s build/owned-perl-borrow-packaging/ordinary.json
+          test -s build/owned-perl-borrow-packaging/reviewed.json
+          test -s build/owned-perl-borrow-packaging/documentation.json
       - name: Upload this configuration's real-Lean corpus report
         if: always()
         uses: actions/upload-artifact@v7
@@ -232,6 +239,8 @@ jobs:
             build/owned-perl-package/
             build/owned-perl-transfers/
             build/owned-perl-transfer-packaging/
+            build/owned-perl-borrows/
+            build/owned-perl-borrow-packaging/
           if-no-files-found: error
           overwrite: true
           retention-days: 30

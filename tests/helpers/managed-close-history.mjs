@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedPerlBorrow, ownedPerlBorrowChangedPaths } from "./owned-perl-borrow-history.mjs";
 
 export const managedClosePath = "docs/evidence/managed-whole-close-repair-20260930.json";
 export const managedCloseBaseline = "86a41767fe33e3c12e4e8524d16d99f596c7f05f";
@@ -38,6 +39,7 @@ export const managedCloseAddedPaths = [
 	, "tests/managed-close-generated-history.test.mjs"
 ].sort();
 let cached;
+export const managedCloseNormalizationPaths = [...new Set([...managedCloseChangedPaths, ...ownedPerlBorrowChangedPaths])].sort();
 
 /**
  * Reverse authenticated complete-file versions through exact ordered edits.
@@ -70,6 +72,7 @@ export const reverseManagedCloseUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeManagedClose = (path, source, expected) => {
+	source = beforeOwnedPerlBorrow(path, source, expected);
 	if(!managedCloseChangedPaths.includes(path) || sha256(source) === expected) return source;
 	const record = cached ??= JSON.parse(readFileSync(managedClosePath, "utf8"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.kind, "managed-whole-close-repair");
@@ -87,5 +90,5 @@ export const beforeManagedClose = (path, source, expected) => {
  * @param bytes - Complete current bytes.
  * @param expected - Optional stopping digest.
  */
-export const managedCloseHistoricalBytes = (path, bytes, expected) => managedCloseChangedPaths.includes(path)
+export const managedCloseHistoricalBytes = (path, bytes, expected) => managedCloseNormalizationPaths.includes(path)
 	? beforeManagedClose(path, bytes.toString("utf8"), expected) : bytes;
