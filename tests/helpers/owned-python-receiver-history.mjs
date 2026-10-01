@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedRubyReceiver, ownedRubyReceiverChangedPaths } from "./owned-ruby-receiver-history.mjs";
+import { beforeOwnedRubyReceiver, ownedRubyReceiverNormalizationPaths } from "./owned-ruby-receiver-history.mjs";
 
 export const ownedPythonReceiverPath = "docs/evidence/owned-python-receivers-20261001.json";
 export const ownedPythonReceiverBaseline = "18324f5a302fb99238b8a503114b3f5a5294d3cd";
@@ -67,7 +67,7 @@ export const ownedPythonReceiverAddedPaths = [
 	, "tests/owned-python-receivers.test.mjs"
 ].sort();
 let cached;
-export const ownedPythonReceiverNormalizationPaths = [...new Set([...ownedPythonReceiverChangedPaths, ...ownedRubyReceiverChangedPaths])].sort();
+export const ownedPythonReceiverNormalizationPaths = [...new Set([...ownedPythonReceiverChangedPaths, ...ownedRubyReceiverNormalizationPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.

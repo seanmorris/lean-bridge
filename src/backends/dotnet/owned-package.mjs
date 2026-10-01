@@ -17,21 +17,24 @@ import { verifiedDotnetAssets } from "./verified-assets.mjs";
  * @param options - Compiler-authenticated ownership capabilities.
  * @param options.transferredInputs - Enable consuming input leases.
  * @param options.anchoredResults - Preserve original whole-result owners.
+ * @param options.receiverExports - Generate nominal methods and properties.
+ * @param options.hostCallbacks - Admit synchronous host callbacks and copies.
  */
-export const generateOwnedDotnetPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const model = generateOwnedDotnetCalls(ir, { transferredInputs, anchoredResults }), prefix = model.c.prefix;
+export const generateOwnedDotnetPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const model = generateOwnedDotnetCalls(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = model.c.prefix;
 	const transfers = model.c.functions.some(fn => fn.transfers?.length);
 	const anchors = model.c.functions.some(fn => fn.anchor !== undefined);
+	const receivers = model.functions.filter(fn => fn.receiver === 0), wholeOwners = model.wholeOwners;
 	if(["gmp", "lean_bridge_native", "leanshared"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned C# component name collides with a dependency or exceeds its name limit");
 	if(evidence !== null && (evidence.componentId !== ir.component.id || evidence.library !== `lib${prefix}_dotnet.so`
 		|| !Object.hasOwn(evidence.libraries ?? {}, "libgmp-lean-bridge.so.10")))
 		throw new TypeError("Owned C# loading evidence differs from the component or private GMP dependency");
 	const cleanup = ownedDotnetThreadExit(prefix), path = `src/${model.assembly}`;
-	const contract = { schemaVersion: anchors ? 3 : transfers ? 2 : 1
-		, backend: anchors ? "owned-dotnet-v3" : transfers ? "owned-dotnet-v2" : "owned-dotnet-v1"
+	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+		, backend: receivers.length ? "owned-dotnet-v4" : anchors ? "owned-dotnet-v3" : transfers ? "owned-dotnet-v2" : "owned-dotnet-v1"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
-			, arguments: anchors ? "whole-values" : "ordinary-values"
+			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
 			, consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"
 			, aliases: "shared-lease", borrowedInputs: "reject"
@@ -46,6 +49,14 @@ export const generateOwnedDotnetPackage = (ir, evidence = null, { transferredInp
 			, rawViews: "borrowed-from-whole-owner"
 			, resourceEquality: "canonical-identity", invalidEquality: "throw"
 			, transfers: "original-owner" } } : {}
+		, ...receivers.length ? { receiverExports: { schemaVersion: 1
+			, values: "checked-whole-result", members: "pascal-case"
+			, properties: "read-only-properties", owners: "nominal-Value-subclasses"
+			, consumingReceivers: "original-owner-handoff"
+			, exports: receivers.map(fn => ({ bindingId: fn.id
+				, owner: ir.declarations.find(item => item.id === fn.id).owner
+				, kind: fn.receiverKind, member: fn.publicName }))
+		} } : {}
 		, bindingIrSha256: model.c.native.model.bindingIrSha256
 		, namespace: model.namespace, assembly: model.assembly
 		, loadingPolicy: "linux-x64-deepbind-v1", gmp: "libgmp-lean-bridge.so.10"
@@ -112,21 +123,21 @@ Install the prepared NuGet package and call ${model.namespace}.Api. The package 
 
 Records and variant cases are sealed C# records. Array and List use typed arrays. Nat and Int use BigInteger, Char uses Rune, String preserves Unicode and NUL, and ByteArray uses byte[]. Unit arguments use default(Unit); exported Unit results return void. Option and Result retain their branches, including nested Some(None) and Some(default(Unit)). Aliases retain their metadata without extra CLR wrappers. Negative Nat, invalid UTF-16, null payloads, cycles and invalid variant branches reject.
 
-${anchors ? "Resource-containing results use `Value<T>`, including empty arrays and variants. Get validates the whole owner and returns borrowed resource views. Keep the `Value<T>` alive while using those views. Share creates another guard for the same owner; disposing the last guard or transferring that owner expires borrowed descendants. Retain creates independent ownership. Api.CopyValue accepts unambiguous managed types; declaration-selected factories such as Api.CopyEchoArrayResult and Api.CopyBundleArg2 disambiguate Array/List representations. Anchoring and consuming arguments require `Value<T>`. Resource Equals and SameIdentity use canonical native identity and reject expired views; whole values and resources reject hashing. Raw resource Retain creates an independent IDisposable resource." : "Resource and returned-closure wrappers implement IDisposable. Use using or Dispose when finished. Retain creates an independent native owner. Resource leaves compare wrapper identity. A copied record or array does not implicitly retain its contained resource wrappers."} Calls and retention require the creator thread. Dispose on another thread queues release for the creator's next call or thread exit; finalizers never invoke thread-bound native code. Creator-thread exit drains native owners even if the managed Thread object and wrappers remain reachable.
+${anchors ? "Resource-containing results use `Value<T>`, including empty arrays and variants. Get validates the whole owner and returns borrowed resource views. Keep the `Value<T>` alive while using those views. Share creates another guard for the same owner; disposing the last guard or transferring that owner expires borrowed descendants. Retain creates independent ownership. Api.CopyValue accepts unambiguous managed types; declaration-selected factories such as Api.CopyEchoArrayResult and Api.CopyBundleArg2 disambiguate Array/List representations. Anchoring and consuming arguments require `Value<T>`. Resource Equals and SameIdentity use canonical native identity and reject expired views; whole values and resources reject hashing. Raw resource Retain creates an independent IDisposable resource." : receivers.length ? "Resource-containing results use checked `Value<T>` owners. Get returns borrowed views; keep the whole owner alive while using them. Share creates another guard for the same owner, and Retain creates independent ownership. Consuming arguments require the original whole owner. Use using or Dispose when finished. Raw resource leaves compare wrapper identity, and whole owners reject hashing." : "Resource and returned-closure wrappers implement IDisposable. Use using or Dispose when finished. Retain creates an independent native owner. Resource leaves compare wrapper identity. A copied record or array does not implicitly retain its contained resource wrappers."} Calls and retention require the creator thread. Dispose on another thread queues release for the creator's next call or thread exit; finalizers never invoke thread-bound native code. Creator-thread exit drains native owners even if the managed Thread object and wrappers remain reachable.
 
-${transfers ? `Transferred inputs use ${anchors ? "Value<T> and pass the original owner slot, including empty values" : "ordinary C# values"}. Generated XML documentation names consuming arguments. ${anchors ? "Validation precedes the Lean call boundary." : "Validation and snapshot preparation precede the Lean call boundary."} At handoff, shared aliases and sibling resources using the same result owner close together. Copied fields remain values; independent Retain owners survive. Retain callback borrows before transferring them. Two consuming arguments cannot share a resource lease. Pre-handoff errors preserve ownership; callback and conversion failures after handoff leave inputs consumed.
+${receivers.length ? "Exported methods and read-only properties appear on nominal owner classes such as `TicketValue : Value<Ticket>`. Share and Retain preserve that owner type, including calls through a generic base reference. Methods and properties validate the original owner at each call. Get exposes the underlying resource or record, so a record field remains distinct from an exported owner property. Raw resources expose only members that do not consume or anchor their receiver. A result anchored to another argument follows that argument's lifetime. Static Api functions remain available.\n\n" : ""}\
+${transfers ? `Transferred inputs use ${wholeOwners ? "Value<T> and pass the original owner slot, including empty values" : "ordinary C# values"}. Generated XML documentation names consuming arguments. ${wholeOwners ? "Validation precedes the Lean call boundary." : "Validation and snapshot preparation precede the Lean call boundary."} At handoff, shared aliases and sibling resources using the same result owner close together. Copied fields remain values; independent Retain owners survive. Retain callback borrows before transferring them. Two consuming arguments cannot share a resource lease. Pre-handoff errors preserve ownership; callback and conversion failures after handoff leave inputs consumed.
 
-` : ""}Callbacks are synchronous typed delegates. Borrowed resources and closures expire when the callback returns; call Retain inside that callback to keep them. AsCallback passes a returned Lean closure back with its native identity. Multicast delegates keep every invocation. Async delegates reject before execution. If a callback result has no safe default, use OwnedCallbacks.WithRecovery(callback, recoveryValue). A callback exception returns through the native frame and is rethrown as the original managed exception with its stack. Recovery values clean up native execution; they do not replace the exception visible to the caller.
+` : ""}${hostCallbacks ? "Callbacks are synchronous typed delegates. Borrowed resources and closures expire when the callback returns; call Retain inside that callback to keep them. AsCallback passes a returned Lean closure back with its native identity. Multicast delegates keep every invocation. Async delegates reject before execution. If a callback result has no safe default, use OwnedCallbacks.WithRecovery(callback, recoveryValue). A callback exception returns through the native frame and is rethrown as the original managed exception with its stack. Recovery values clean up native execution; they do not replace the exception visible to the caller.\n\n" : ""}\
+Conversions enforce depth 128, 262,144 visited values and separate 16 MiB native and accounted managed budgets.${hostCallbacks ? " Callback input and reply conversions share their enclosing call's budget." : ""} These limits do not bound Lean working memory or every CLR allocation overhead. Malformed native outputs retire the runtime; failed or retired calls do not publish partial wrappers.
 
-Conversions enforce depth 128, 262,144 visited values and separate 16 MiB native and accounted managed budgets. Callback input and reply conversions share their enclosing call's budget. These limits do not bound Lean working memory or every CLR allocation overhead. Malformed native outputs retire the runtime; failed or retired calls do not publish partial wrappers.
-
-The loader verifies every packaged native file before loading. It rejects conflicting runtime identities, conflicting builds, symbolic-link native assets and unverified preloads. Libraries remain loaded until process exit. Start a fresh process after fork.${anchors ? " Receiver anchors and callback-result anchors are not admitted." : ` This projection does not yet admit ${transfers ? "" : "transferred input ownership or "}anchored results.`}
+The loader verifies every packaged native file before loading. It rejects conflicting runtime identities, conflicting builds, symbolic-link native assets and unverified preloads. Libraries remain loaded until process exit. Start a fresh process after fork.${receivers.length ? " Callback-result anchors are not admitted." : anchors ? " Receiver anchors and callback-result anchors are not admitted." : ` This projection does not yet admit ${transfers ? "" : "transferred input ownership or "}anchored results.`}
 `;
 	const publicFiles = ["Values.cs", "Api.cs"].map(name => `${path}/${name}`);
 	const internalFiles = ["Conversions.cs", "Lifetime.cs", "Calls.cs", "Loader.cs"].map(name => `${path}/${name}`);
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: anchors ? 3 : transfers ? 2 : 1
-		, generator: anchors ? "dotnet-owned-values-v3" : transfers ? "dotnet-owned-values-v2" : "dotnet-owned-values-v1"
-		, backend: anchors ? "owned-dotnet-v3" : transfers ? "owned-dotnet-v2" : "owned-dotnet-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+		, generator: receivers.length ? "dotnet-owned-values-v4" : anchors ? "dotnet-owned-values-v3" : transfers ? "dotnet-owned-values-v2" : "dotnet-owned-values-v1"
+		, backend: contract.backend
 		, target: "dotnet"
 		, component: ir.component.id
 		, bindingIrSha256: model.c.native.model.bindingIrSha256
@@ -134,8 +145,8 @@ The loader verifies every packaged native file before loading. It rejects confli
 		, files: Object.keys(files), publicFiles, internalFiles
 		, packageFiles: [`${path}/${model.assembly}.csproj`, "NuGet.Config"]
 		, aliases: model.aliases, ownedValues: contract
-		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", "callbacks", "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : [], ...anchors ? ["original-owner-results"] : []]
-		, capabilityGaps: [anchors ? { feature: "receiver-and-callback-result-anchors", reason: "These anchors require separate lifetime contracts." } : transfers
+		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", ...hostCallbacks ? ["callbacks"] : [], "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : [], ...anchors ? ["original-owner-results"] : [], ...receivers.length ? ["receiver-methods", "receiver-properties"] : []]
+		, capabilityGaps: [receivers.length ? { feature: "callback-result-anchors", reason: "Callback results require separate lifetime contracts." } : anchors ? { feature: "receiver-and-callback-result-anchors", reason: "These anchors require separate lifetime contracts." } : transfers
 			? { feature: "anchored-ownership", reason: "Anchored results require their own lifetime projection." }
 			: { feature: "transferred-and-anchored-ownership", reason: "Transferred inputs and anchored results require their own lifetime projection." }
 		, { feature: "additional-platforms", reason: "Compiled releases target .NET 8 on Linux x86-64 with glibc." }] });

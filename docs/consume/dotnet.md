@@ -252,6 +252,47 @@ borrowed descendants before a reentrant callback runs. Borrowed results cannot
 be consumed directly; use `Retain()` first. Validation failures preserve inputs;
 failures after handoff leave them consumed.
 
+#### Methods and properties
+
+When the package declares receiver exports, its resource-containing results
+use nominal owners such as `TicketValue : Value<Ticket>`. Call methods on the
+owner and read properties directly. `Share()` and `Retain()` preserve the
+nominal owner type, including calls through a `Value<Ticket>` reference.
+
+For the receiver-enabled `Owned` package, save this as `Program.cs`:
+
+```csharp file=dotnet/owned-receivers.cs
+using System;
+using LeanBridge.OwnedAggregates;
+
+using var original = Api.NewTicket(42, "example");
+Console.WriteLine(original.Serial);
+
+using var borrowed = original.RetainTicket();
+using var independent = borrowed.Retain();
+original.Dispose();
+if (!borrowed.IsClosed)
+    throw new InvalidOperationException("The borrowed result must expire with its owner.");
+
+Console.WriteLine(independent.Serial);
+```
+
+This prints `42` twice. The exported `RetainTicket()` method returns a borrow
+in this package; the bridge's `Retain()` operation creates an independent owner.
+The package's generated signatures and ownership documentation distinguish them.
+
+Properties are read-only C# properties, not zero-argument methods. A property
+returning Lean `Unit` has C# type `Unit`; ordinary Unit-returning functions and
+methods return `void`. A property on a whole record owner is separate from a
+record field: `owner.Primary` calls Lean, while `owner.Get().Primary` reads the
+underlying record's field.
+
+Members check their original owner on every call and keep it alive until the
+call returns or throws. Consuming methods close shared aliases at the Lean
+call boundary. A result anchored to another argument follows that argument's
+lifetime, not the receiver's. Raw resource views expose only members that do
+not consume or anchor their receiver. Static `Api` functions remain available.
+
 ### Named aliases
 
 Copied Lean aliases use their target's C# values. A `Count` alias of `UInt32`

@@ -67,12 +67,12 @@ export const ownedDotnetCallables = (model, symbols) => {
 	const types = new Map(model.nativeTypes.map(node => [node.id, node.publicType]));
 	const raw = node => node.raw + (node.leaf ? "" : "*");
 	const definitions = [support], methods = [], recovery = [];
-	for(const callback of model.callbacks)
+	for(const callback of model.c.hostArgument ? model.callbacks : [])
 	{
 		const node = nodes.get(callback.id), result = nodes.get(callback.result), i = node.index;
 		const parameters = callback.parameters.slice(1).map(id => nodes.get(id));
 		const automatic = ownedCallbackRecovery(model.c.native.model, node, id => id) !== null;
-		const copy = [...model.c.retains, ...model.c.copies].find(fn => fn.id === result.id);
+		const copy = [...model.c.retains, ...model.c.copies ?? []].find(fn => fn.id === result.id);
 		const delegate = `_V.${callback.delegateType}`, publicResult = types.get(result.id);
 		const unit = result.name === "unit", returnType = unit ? "void" : publicResult;
 		const signature = ["nint context", "nint session", ...parameters.map((param, j) => `${raw(param)} arg${j}`), `${result.raw}* output`, "nint* owner"];

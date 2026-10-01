@@ -16,7 +16,7 @@ import { ownedDotnetScalar } from "./owned-scalars.mjs";
  */
 export const generateOwnedDotnetConversions = (ir, options = {}) => {
 	const model = generateOwnedDotnetValues(ir, options);
-	const runtime = ownedDotnetConversionSupport(model.c.functions.some(fn => fn.transfers?.length), model.c.functions.some(fn => fn.anchor !== undefined));
+	const runtime = ownedDotnetConversionSupport(model.c.functions.some(fn => fn.transfers?.length), model.wholeOwners);
 	const nodes = new Map(model.types.map(node => [node.id, node])), names = new Map();
 	const type = id => {
 		if(names.has(id)) return names.get(id);

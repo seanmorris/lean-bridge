@@ -26,15 +26,17 @@ export const packageOwnedNuget = async options => {
 	const { model, projection, evidence, receipt, libraryPaths, adapter } = await ownedDotnetEvidence(options);
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
+	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
+	const capabilities = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };
 	const compiled = JSON.parse(await readFile(join(dotnetRoot, "native-dotnet.json"), "utf8"));
 	await verifyNativeFiles(dotnetRoot, compiled.files);
-	if(compiled.schemaVersion !== (anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
+	if(compiled.schemaVersion !== (receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.assembly !== projection.assembly || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| canonicalJson(compiled.ownedValues ?? null) !== canonicalJson(projection.contract)
 		|| !/^8\.0\.\d+$/u.test(compiled.sdk)
 		|| (await nativeArtifactPaths(dotnetRoot)).some(path => path !== "native-dotnet.json" && !Object.hasOwn(compiled.files, path)))
 		throw new Error("Compiled owned C# projection differs from compiler-authenticated types or native evidence");
-	for(const [path, contents] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults }).files))
+	for(const [path, contents] of Object.entries(generateOwnedDotnetPackage(model.bindingIr, evidence, capabilities).files))
 		if(await readFile(join(dotnetRoot, path), "utf8") !== contents) throw new Error(`Generated owned C# source differs: ${path}`);
 	if(await readFile(join(dotnetRoot, "global.json"), "utf8") !== canonicalJson({ sdk: { version: compiled.sdk, rollForward: "disable", allowPrerelease: false } }))
 		throw new Error("Owned C# SDK selection differs from the compiled projection");
@@ -50,7 +52,7 @@ export const packageOwnedNuget = async options => {
 		await copy(join(dotnetRoot, path), `lean-bridge/dotnet/${path}`);
 	await copy(join(dotnetRoot, "native-dotnet.json"), "lean-bridge/native-dotnet.json");
 	await copy(join(dotnetRoot, "global.json"), "lean-bridge/dotnet/global.json");
-	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json", "callbacks.c"])
+	for(const path of ["native-component.json", "model.json", "metadata.json", "binding-ir.json", "generated.lean", "component.h", "allocation-guard.h", "artifacts.json", ...hostCallbacks ? ["callbacks.c"] : []])
 		await copy(join(nativeRoot, path), `lean-bridge/component/${path}`);
 	if(receipt.sourceIdentity.lakeDependencies?.generatedSourcesSha256 !== undefined)
 	{
@@ -74,7 +76,7 @@ export const packageOwnedNuget = async options => {
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: anchoredResults ? 3 : transferredInputs ? 2 : 1
+	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, kind: "lean-bridge-owned-nuget-package", ecosystem: "nuget", name, version
 		, component: model.component, bindingIrSha256: model.bindingIrSha256
 		, runtimeIdentity: evidence.runtimeIdentity
@@ -86,7 +88,7 @@ export const packageOwnedNuget = async options => {
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: "nuget"
-		, backend: anchoredResults ? "owned-dotnet-v3" : transferredInputs ? "owned-dotnet-v2" : "owned-dotnet-v1"
+		, backend: receiverExports ? "owned-dotnet-v4" : anchoredResults ? "owned-dotnet-v3" : transferredInputs ? "owned-dotnet-v2" : "owned-dotnet-v1"
 		, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion
 		, namespace: projection.namespace, assembly: projection.assembly
 		, packages: [{ archive, name, version, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
+import { ownedDotnetReceiverHistoricalBytes } from "./owned-dotnet-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { generateOwnedRubyPackage } from "../../src/backends/ruby/owned-package.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
@@ -145,7 +146,7 @@ export const assertOwnedRubyReceiverExecution = async record => {
 	const example = await readFile("tests/fixtures/documentation/consumers/ruby/owned-receivers.rb", "utf8");
 	assert.equal((await readFile("docs/consume/ruby.md", "utf8")).match(/```ruby file=ruby\/owned-receivers\.rb\n([\s\S]*?)```/u)?.[1], example);
 	const loader = await readFile("tests/fixtures/structured-types/owned-ruby-installed-loader.rb");
-	const cliConfig = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const cliConfig = JSON.parse(ownedDotnetReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
 	for(const item of record.packages)
 	{
 		trueFields(item, ["sourceRemovedBeforeInstall"
@@ -225,7 +226,8 @@ export const assertOwnedRubyReceiverExecution = async record => {
 		assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 		for(const path of cliConfig.files)
 		{
-			const file = item.cli.files.find(value => value.path === path), bytes = await readFile(path);
+			const file = item.cli.files.find(value => value.path === path);
+			const bytes = Buffer.from(ownedDotnetReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
 			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.builds.length, 2);

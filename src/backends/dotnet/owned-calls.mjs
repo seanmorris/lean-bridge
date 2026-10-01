@@ -21,25 +21,27 @@ export const generateOwnedDotnetCalls = (ir, options = {}) => {
 	const model = generateOwnedDotnetConversions(ir, options), { c } = model;
 	const transfers = c.functions.some(fn => fn.transfers?.length);
 	const anchored = c.functions.some(fn => fn.anchor !== undefined);
+	const wholeOwners = model.wholeOwners;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const names = new Map(model.nativeTypes.map(node => [node.id, node.publicType]));
 	const calls = [
 		...model.functions.map((fn, index) => ({ ...fn, method: `Call${index}` }))
-		, ...c.retains.map(fn => ({ ...fn, method: `Retain${nodes.get(fn.id).index}`, handle: true, ...anchored ? { rawResult: true } : {} }))
-		, ...c.copies.map(fn => ({ ...fn, method: `Copy${nodes.get(fn.id).index}`, ...anchored ? { rawResult: true } : {} }))
+		, ...c.retains.map(fn => ({ ...fn, method: `Retain${nodes.get(fn.id).index}`, handle: true, ...wholeOwners ? { rawResult: true } : {} }))
+		, ...(c.copies ?? []).map(fn => ({ ...fn, method: `Copy${nodes.get(fn.id).index}`, ...wholeOwners ? { rawResult: true } : {} }))
 		, ...c.callbacks.map(fn => ({ ...fn, method: `Invoke${nodes.get(fn.id).index}`, handle: true }))
-		, ...anchored ? [
+		, ...wholeOwners ? [
 			...c.callbacks.map(fn => ({ ...fn, method: `InvokeRaw${nodes.get(fn.id).index}`, handle: true, rawResult: true }))
-			, ...[...c.retains, ...c.copies].filter(fn => nodes.get(fn.id).representation !== "copied")
+			, ...[...c.retains, ...c.copies ?? []].filter(fn => nodes.get(fn.id).representation !== "copied")
 				.map(fn => ({ ...fn, method: `CopyWhole${nodes.get(fn.id).index}`, wholeCopy: true }))
 		] : []
 	];
 	const symbols = [...calls.map(fn => fn.cName), ...anchored ? model.types.filter(node => node.identity).map(node => `${node.cName}_equal`) : []];
 	const parameterType = (fn, index) => fn.handle && index === 0 ? "OwnedHandle"
-		: c.hostArgument(fn, index) ? `_V.${nodes.get(fn.parameters[index]).delegateType}`
-			: anchored && (fn.anchor === index || fn.transfers?.includes(index)) ? `_V.Value<${names.get(fn.parameters[index])}>` : names.get(fn.parameters[index]);
-	const returnType = fn => anchored && !fn.rawResult && nodes.get(fn.result).representation !== "copied"
-		? `_V.Value<${names.get(fn.result)}>` : names.get(fn.result);
+		: c.hostArgument?.(fn, index) ? `_V.${nodes.get(fn.parameters[index]).delegateType}`
+			: wholeOwners && (fn.anchor === index || fn.transfers?.includes(index)) ? `_V.Value<${names.get(fn.parameters[index])}>` : names.get(fn.parameters[index]);
+	const ownerType = id => nodes.get(id).ownerType ? `_V.${nodes.get(id).ownerType}` : `_V.Value<${names.get(id)}>`;
+	const returnType = fn => wholeOwners && !fn.rawResult && nodes.get(fn.result).representation !== "copied"
+		? ownerType(fn.result) : names.get(fn.result);
 	let budget = 16 * 1024 * 1024 - model.source.length - model.valuesSource.length;
 	for(const fn of calls)
 	{
@@ -49,13 +51,13 @@ export const generateOwnedDotnetCalls = (ir, options = {}) => {
 	}
 	const callback = ownedDotnetCallables(model, symbols);
 	const methods = calls.map(fn => {
-		if(anchored) return ownedDotnetAnchoredCall({ c, nodes, names, calls, symbols, parameterType, returnType }, fn);
+		if(wholeOwners) return ownedDotnetAnchoredCall({ c, nodes, names, calls, symbols, parameterType, returnType }, fn);
 		const result = nodes.get(fn.result), parameters = fn.parameters.map(id => nodes.get(id));
 		const moving = fn.transfers ?? [];
 		const write = (node, index, scope, checking) => fn.handle && index === 0 ? `${scope}.Root(arg${index})`
-			: c.hostArgument(fn, index) ? `Host${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
+			: c.hostArgument?.(fn, index) ? `Host${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
 				: `OwnedConvert.Write${node.index}(arg${index}, ${scope})`;
-		const nativeTypes = parameters.flatMap((node, index) => [c.hostArgument(fn, index)
+		const nativeTypes = parameters.flatMap((node, index) => [c.hostArgument?.(fn, index)
 			? `OwnedCallback${node.index}*` : node.raw + (node.leaf ? "" : "*")
 			, ...moving.includes(index) ? ["nint*"] : []]);
 		const pointer = `delegate* unmanaged[Cdecl]<${["nint", ...nativeTypes, `${result.raw}*`, "nint*", "uint"].join(", ")}>`;
@@ -64,7 +66,7 @@ export const generateOwnedDotnetCalls = (ir, options = {}) => {
 			, `        var input${index} = ${write(node, index, "inputs", false)};`
 		]).join("\n");
 		const snapshots = moving.flatMap((index, group) => {
-			const node = parameters[index], copy = [...c.retains, ...c.copies].find(item => item.id === node.id);
+			const node = parameters[index], copy = [...c.retains, ...c.copies ?? []].find(item => item.id === node.id);
 			if(!copy) throw new TypeError(`Missing owned C# input snapshot for ${node.id}`);
 			const signature = `delegate* unmanaged[Cdecl]<nint, ${node.raw}${node.leaf ? "" : "*"}, ${node.raw}*, nint*, uint>`;
 			return [`        var moved${index} = default(${node.raw});`
@@ -75,7 +77,7 @@ export const generateOwnedDotnetCalls = (ir, options = {}) => {
 		const arguments_ = [moving.length ? "session" : "state.Require()"
 			, ...parameters.flatMap((node, index) => moving.includes(index)
 				? [`${node.leaf ? "" : "&"}moved${index}`, `inputOwner${index}`]
-				: [`${c.hostArgument(fn, index) || !node.leaf ? "&" : ""}input${index}`])
+				: [`${c.hostArgument?.(fn, index) || !node.leaf ? "&" : ""}input${index}`])
 			, "&output", "resultOwner"].join(", ");
 		const invoke = moving.length ? `            var session = state.Require();
             moves.Arm();
@@ -123,7 +125,7 @@ ${invoke}
 	});
 	const identities = model.types.filter(node => node.identity), factories = identities.map(node => {
 		const fn = model.callbacks.find(fn => fn.id === node.id);
-		return `handle => new _V.${node.publicType}(handle, Retain${node.index}${fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => Invoke${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""}${anchored ? `, Equal${node.index}${fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => InvokeRaw${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""}` : ""})`;
+		return `handle => new _V.${node.publicType}(handle, Retain${node.index}${fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => Invoke${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""}${anchored ? `, Equal${node.index}` : ""}${wholeOwners && fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => InvokeRaw${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""})`;
 	});
 	if(anchored) for(const node of identities) methods.push(`    private bool Equal${node.index}(OwnedHandle left, OwnedHandle right)
     {
@@ -167,20 +169,20 @@ ${callback.methods}
 }
 `;
 	const copies = [];
-	if(anchored)
+	if(wholeOwners)
 	{
 		const claimed = new Set(model.functions.map(fn => fn.publicName));
 		const add = (name, id, overload = false) => {
 			if(!overload && claimed.has(name)) throw new TypeError(`C# whole-value copy name collides: ${name}`);
 			claimed.add(name);
 			const fn = calls.find(item => item.wholeCopy && item.id === id);
-			copies.push(`    public static _V.Value<${names.get(id)}> ${name}(${names.get(id)} value) => Interop.OwnedLoader.Bindings.${fn.method}(value);`);
+			copies.push(`    public static ${ownerType(id)} ${name}(${names.get(id)} value) => Interop.OwnedLoader.Bindings.${fn.method}(value);`);
 		};
 		for(const fn of model.functions)
 		{
 			if(nodes.get(fn.result).representation !== "copied") add(`Copy${fn.publicName}Result`, fn.result);
 			for(const [index, id] of fn.parameters.entries())
-				if(nodes.get(id).representation !== "copied" && !c.hostArgument(fn, index)) add(`Copy${fn.publicName}Arg${index}`, id);
+				if(nodes.get(id).representation !== "copied" && !c.hostArgument?.(fn, index)) add(`Copy${fn.publicName}Arg${index}`, id);
 		}
 		const typed = calls.filter(fn => fn.wholeCopy);
 		if(claimed.has("CopyValue")) throw new TypeError("C# whole-value copy name collides: CopyValue");
@@ -190,11 +192,11 @@ ${callback.methods}
 namespace ${model.namespace};
 public static class Api
 {
-${model.functions.map((fn, index) => `${fn.transfers?.length ? `    /// <summary>Consumes resource leases in ${fn.transfers.map(i => `arg${i}`).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership.</summary>\n` : ""}    public static ${nodes.get(fn.result).name === "unit" ? "void" : returnType(fn)} ${fn.publicName}(${fn.parameters.map((_, i) => `${parameterType(fn, i)} arg${i}`).join(", ")}) => Interop.OwnedLoader.Bindings.Call${index}(${fn.parameters.map((_, i) => `arg${i}`).join(", ")});`).join("\n")}${anchored ? "\n" + copies.join("\n") : ""}
+${model.functions.map((fn, index) => `${fn.transfers?.length ? `    /// <summary>Consumes resource leases in ${fn.transfers.map(i => `arg${i}`).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership.</summary>\n` : ""}    public static ${nodes.get(fn.result).name === "unit" ? "void" : returnType(fn)} ${fn.publicName}(${fn.parameters.map((_, i) => `${parameterType(fn, i)} arg${i}`).join(", ")}) => Interop.OwnedLoader.Bindings.Call${index}(${fn.parameters.map((_, i) => `arg${i}`).join(", ")});`).join("\n")}${wholeOwners ? "\n" + copies.join("\n") : ""}
 }
 ${callback.publicSource}
 `;
-	const runtime = `using ${model.namespace};\nnamespace ${model.namespace}.Interop;\n${ownedDotnetRuntime(c.prefix, { includeException: false, transferredInputs: transfers, anchoredResults: anchored })}${anchored ? ownedDotnetWholeGuard : ""}${transfers ? anchored ? ownedDotnetOriginalTransfers : ownedDotnetTransfers : ""}`;
+	const runtime = `using ${model.namespace};\nnamespace ${model.namespace}.Interop;\n${ownedDotnetRuntime(c.prefix, { includeException: false, transferredInputs: transfers, anchoredResults: anchored, wholeOwners })}${wholeOwners ? ownedDotnetWholeGuard : ""}${transfers ? wholeOwners ? ownedDotnetOriginalTransfers : ownedDotnetTransfers : ""}`;
 	if(source.length + api.length + runtime.length + model.source.length + model.valuesSource.length > 16 * 1024 * 1024)
 		throw new TypeError("Owned C# call bindings exceed 16 MiB");
 	return { ...model, calls, symbols

@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedDotnetReceiver, ownedDotnetReceiverChangedPaths } from "./owned-dotnet-receiver-history.mjs";
 
 export const ownedRubyReceiverPath = "docs/evidence/owned-ruby-receivers-20261001.json";
 export const ownedRubyReceiverBaseline = "5271f6b8c74d3e4295e6607cd13bd1271204a63e";
@@ -60,6 +61,7 @@ export const ownedRubyReceiverAddedPaths = [
 	, "tests/owned-ruby-receivers.test.mjs"
 ].sort();
 let cached;
+export const ownedRubyReceiverNormalizationPaths = [...new Set([...ownedRubyReceiverChangedPaths, ...ownedDotnetReceiverChangedPaths])].sort();
 
 /**
  * Reverse registered edit spans after checking both complete source identities.
@@ -92,6 +94,7 @@ export const reverseOwnedRubyReceiverUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedRubyReceiver = (path, source, expected) => {
+	source = beforeOwnedDotnetReceiver(path, source, expected);
 	if(!ownedRubyReceiverChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -118,5 +121,5 @@ export const beforeOwnedRubyReceiver = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping identity.
  */
-export const ownedRubyReceiverHistoricalBytes = (path, bytes, expected) => ownedRubyReceiverChangedPaths.includes(path)
+export const ownedRubyReceiverHistoricalBytes = (path, bytes, expected) => ownedRubyReceiverNormalizationPaths.includes(path)
 	? beforeOwnedRubyReceiver(path, bytes.toString("utf8"), expected) : bytes;

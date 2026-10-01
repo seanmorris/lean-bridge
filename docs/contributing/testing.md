@@ -3360,3 +3360,31 @@ concurrent require, fork affinity and changed or injected native libraries.
 The reviewed build also executes C++, Rust and Python prepared packages sharing
 the same Lean component. CI retains `build/owned-ruby-receivers.log` and all
 eight reports under `build/owned-ruby-receivers/`.
+
+## C# receiver acceptance
+
+Use .NET 8 and the pinned native Lean toolchain. The reviewed combined build
+also needs C++, Rust, Python, MRI Ruby 3.3 and the offline dependencies listed
+under [Installed .NET borrowed results](#installed-net-borrowed-results).
+
+```sh
+npm run test:owned-dotnet-receivers
+```
+
+The ten-test gate exercises nominal owner classes, actual read-only properties,
+receiver and other-argument anchors, consuming members and typed returned
+closures. It retains allocation-failure, foreign-close and optimized-GC checks.
+Four compiled broken implementations must fail their semantic assertions.
+Separate resource-only builds omit callbacks and result anchors and exercise
+Unit properties, with and without consuming receivers.
+
+Each source path builds through an offline-installed CLI. Two independent
+builds and package reassembly must reproduce the original archives. After
+removing the author sources and CLI, tests install the NuGet package, execute
+the public API and documented example, and reject 23 invalid C# clients.
+They remove the package handoff, cache and consumer sources, then relocate the
+assemblies and run them using a .NET runtime without the SDK. The reviewed
+build also executes C++, Rust, Python and Ruby consumers of the shared Lean
+component. CI requires ten passes without skips and retains
+`build/owned-dotnet-receivers.log` and all eight reports under
+`build/owned-dotnet-receivers/`.

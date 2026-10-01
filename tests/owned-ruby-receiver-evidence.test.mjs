@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedDotnetReceiver, ownedDotnetReceiverHistoricalBytes } from "./helpers/owned-dotnet-receiver-history.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedRubyReceiverExecution } from "./helpers/owned-ruby-receiver-evidence.mjs";
 import { ownedRubyReceiverPath, ownedRubyReceiverBaseline, ownedRubyReceiverPrevious
@@ -23,12 +24,13 @@ test("Ruby receiver evidence binds exact sources without changing historical rec
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedRubyReceiverAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(ownedDotnetReceiverHistoricalBytes(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(item => item.path), ownedRubyReceiverChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]); assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedRubyReceiver(update.path, source);
+		const source = beforeOwnedDotnetReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const prior = beforeOwnedRubyReceiver(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256); assert.equal(beforeOwnedRubyReceiver(update.path, prior), prior);
 		assert.equal(beforeOwnedRubyReceiver(update.path, source, update.currentSha256), source);
 		const unknown = source + "\n/* unrelated edit */\n";
@@ -39,9 +41,9 @@ test("Ruby receiver evidence binds exact sources without changing historical rec
 			, { ...update, path: "unrelated.mjs" }])
 			assert.throws(() => reverseOwnedRubyReceiverUpdate(source, changed));
 	}
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedDotnetReceiver(path, await readFile(path, "utf8"), record.sources[path]);
 	const prior = JSON.parse(beforeOwnedRubyReceiver(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(ownedDotnetReceiverHistoricalBytes(file.path, await readFile(file.path), record.sources[file.path]));
 	assert.deepEqual(JSON.parse(current), prior);
 	for(const name of ["owned-ruby-receivers", "owned-ruby-receiver-packaging"
 		, "owned-ruby-receiver-plain", "owned-ruby-receiver-contract"

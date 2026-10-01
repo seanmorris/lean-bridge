@@ -1643,6 +1643,21 @@ jobs:
           test -s build/owned-dotnet-borrows/borrow-only.json
           test -s build/owned-dotnet-borrow-packaging/ordinary.json
           test -s build/owned-dotnet-borrow-packaging/reviewed.json
+          npm run test:owned-dotnet-receivers > build/owned-dotnet-receivers.log 2>&1
+          cat build/owned-dotnet-receivers.log
+          rg '^# tests 10$' build/owned-dotnet-receivers.log
+          rg '^# pass 10$' build/owned-dotnet-receivers.log
+          rg '^# fail 0$' build/owned-dotnet-receivers.log
+          rg '^# cancelled 0$' build/owned-dotnet-receivers.log
+          rg '^# skipped 0$' build/owned-dotnet-receivers.log
+          test -s build/owned-dotnet-receivers/ordinary.json
+          test -s build/owned-dotnet-receivers/ordinary-package.json
+          test -s build/owned-dotnet-receivers/ordinary-plain.json
+          test -s build/owned-dotnet-receivers/ordinary-consuming.json
+          test -s build/owned-dotnet-receivers/reviewed.json
+          test -s build/owned-dotnet-receivers/reviewed-package.json
+          test -s build/owned-dotnet-receivers/reviewed-plain.json
+          test -s build/owned-dotnet-receivers/reviewed-consuming.json
           test -s build/owned-dotnet-transfers/ordinary.json
           test -s build/owned-dotnet-transfers/reviewed.json
           test -s build/owned-dotnet-transfer-packaging/ordinary.json
@@ -1716,6 +1731,8 @@ jobs:
             build/owned-dotnet-borrows/
             build/owned-dotnet-borrow-packaging/
             build/owned-dotnet-borrows.log
+            build/owned-dotnet-receivers/
+            build/owned-dotnet-receivers.log
           if-no-files-found: error
           overwrite: true
           retention-days: 30
@@ -2034,6 +2051,7 @@ jobs:
               consumer_command="$consumer_command && LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-dotnet-packaging.test.mjs tests/owned-dotnet-coexistence.test.mjs"
               consumer_command="$consumer_command && npm run test:owned-dotnet-transfers"
               consumer_command="$consumer_command && npm run test:owned-dotnet-borrows"
+              consumer_command="$consumer_command && npm run test:owned-dotnet-receivers"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_COMPOUND_TEST=1 node --test tests/dotnet-compounds.test.mjs tests/dotnet-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_LIST_TEST=1 node --test tests/dotnet-lists.test.mjs tests/dotnet-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_DOTNET_ALIAS_TEST=1 node --test tests/dotnet-aliases.test.mjs"

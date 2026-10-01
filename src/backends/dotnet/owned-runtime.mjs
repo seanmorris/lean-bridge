@@ -14,8 +14,9 @@ import { dotnetGraphException } from "./copied-graph-runtime.mjs";
  * @param options.includeException - Emit the standalone probe's exception type.
  * @param options.transferredInputs - Observe consuming-input handoff slots.
  * @param options.anchoredResults - Validate whole values and their original owners.
+ * @param options.wholeOwners - Keep complete owners for receiver-only APIs too.
  */
-export const ownedDotnetRuntime = (prefix, { includeException = true, transferredInputs = false, anchoredResults = false } = {}) => {
+export const ownedDotnetRuntime = (prefix, { includeException = true, transferredInputs = false, anchoredResults = false, wholeOwners = anchoredResults } = {}) => {
 	if(!/^[a-z][a-z0-9_]*$/u.test(prefix) || prefix.includes("__")) throw new TypeError("Invalid owned .NET prefix");
 	return `${includeException ? dotnetGraphException : ""}
 internal sealed unsafe partial class OwnedRuntime
@@ -159,10 +160,10 @@ internal sealed ${anchoredResults ? "unsafe " : ""}class OwnedLease
 {
     internal readonly OwnedState State;
     internal readonly OwnedSlot? Slot;
-    internal readonly OwnedBorrowScope? Scope;${transferredInputs ? "\n    internal OwnedSlot? InputMove;" : ""}${anchoredResults ? "\n    internal readonly bool BorrowedResult, Whole;" : ""}
+    internal readonly OwnedBorrowScope? Scope;${transferredInputs ? "\n    internal OwnedSlot? InputMove;" : ""}${wholeOwners ? "\n    internal readonly bool BorrowedResult, Whole;" : ""}
     private int references, revoked;
-    internal OwnedLease(OwnedState state, OwnedSlot? slot = null, OwnedBorrowScope? scope = null${anchoredResults ? ", bool borrowedResult = false, bool whole = false" : ""})
-    { State = state; Slot = slot; Scope = scope;${anchoredResults ? " BorrowedResult = borrowedResult; Whole = whole;" : ""} }
+    internal OwnedLease(OwnedState state, OwnedSlot? slot = null, OwnedBorrowScope? scope = null${wholeOwners ? ", bool borrowedResult = false, bool whole = false" : ""})
+    { State = state; Slot = slot; Scope = scope;${wholeOwners ? " BorrowedResult = borrowedResult; Whole = whole;" : ""} }
     internal bool IsClosed => State.IsClosed || global::System.Threading.Volatile.Read(ref revoked) != 0${transferredInputs ? "\n        || (InputMove is not null && InputMove.Value == 0)" : ""}
         || (Scope is not null ? !Scope.Active : Slot is null || Slot.Value == 0
             || global::System.Threading.Volatile.Read(ref Slot.Pending) != 0 || Slot.Releasing${anchoredResults ? "\n            || State.Runtime.Validate(State.Require(), Slot.Value) != 0" : ""});
@@ -218,13 +219,13 @@ internal sealed class OwnedResult : global::System.IDisposable
             return ref slot!.Value;
         }
     }
-    internal OwnedLease Adopt(${anchoredResults ? "bool borrowedResult = false, bool whole = false" : ""})
+    internal OwnedLease Adopt(${wholeOwners ? "bool borrowedResult = false, bool whole = false" : ""})
     {
         State.Require();
         if (slot is null || slot.Value == 0) OwnedRuntime.Check(9);
         if (lease is not null) return lease;
         OwnedRuntime.Checkpoint();
-        lease = new OwnedLease(State, slot${anchoredResults ? ", borrowedResult: borrowedResult, whole: whole" : ""});
+        lease = new OwnedLease(State, slot${wholeOwners ? ", borrowedResult: borrowedResult, whole: whole" : ""});
         return lease;
     }
     internal void Complete() { State.Require(); complete = true; }
@@ -263,7 +264,7 @@ internal sealed class OwnedHandle : global::System.IDisposable
     {
         if (value == 0) OwnedRuntime.Check(9);
         Lease = lease; this.value = value;
-        OwnedRuntime.Checkpoint();${anchoredResults ? "\n        if (!lease.Whole) { lease.Acquire(); acquired = true; }\n        else lease.Require();" : " lease.Acquire(); acquired = true;"}
+        OwnedRuntime.Checkpoint();${wholeOwners ? "\n        if (!lease.Whole) { lease.Acquire(); acquired = true; }\n        else lease.Require();" : " lease.Acquire(); acquired = true;"}
     }
     internal bool IsClosed => global::System.Threading.Volatile.Read(ref closed) != 0 || Lease.IsClosed;
     internal nint Raw(OwnedState state)

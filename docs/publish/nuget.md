@@ -330,8 +330,50 @@ for disposal and declaration-selected copy factories.
 
 Combined anchored builds can select C, C++, Cargo, PyPI, RubyGems and NuGet.
 C# retains its private thread-exit adapter and GMP while sharing the compiled
-Lean component and runtime. Receiver anchors and callback-result anchors remain
-separate work. Building the archive does not publish it.
+Lean component and runtime. Callback-result anchors remain separate work.
+Building the archive does not publish it.
+
+### Export methods and properties
+
+Select a first-argument receiver in `lean-bridge.exports.json`: use
+`"receiver": "method"` or `"receiver": "property"` on the export contract.
+Properties take only the receiver. The receiver must be a declared resource
+or owned record or variant. A receiver-anchored result uses
+`"lifetime": { "scope": "receiver", "anchor": "receiver" }` and
+`"ownership": "borrow"`. Other argument anchors keep their declared lifetimes.
+
+For example, contracts for the `Owned` fixture can include:
+
+```json
+{
+  "Owned.serial": { "receiver": "property" },
+  "Owned.retainTicket": {
+    "receiver": "method",
+    "result": {
+      "ownership": "borrow",
+      "lifetime": { "scope": "receiver", "anchor": "receiver" }
+    }
+  }
+}
+```
+
+Place these entries inside `contracts`, keep the normal `modules`, `exports`
+and `resources` selections, and build with `--target nuget`. Consumers receive
+nominal owners such as `TicketValue : Value<Ticket>`, PascalCase methods and
+read-only C# properties. Unit-valued properties return `Unit`; Unit-valued
+functions and methods return `void`. See the
+[consumer example](../consume/dotnet.md#methods-and-properties).
+
+Receiver-enabled packages use `owned-dotnet-v4` and contract version 4. The
+adapter, compiled managed receipt and NuGet receipt use version 4; the native
+owned-value description uses version 5. Packaging verifies the receiver
+declarations and generated member sources against compiler metadata. Packages
+without receiver exports retain their existing versions and generated APIs.
+
+A receiver-enabled build can select C, C++, Cargo, PyPI, RubyGems and NuGet
+together. Each package shares the compiled Lean component and compatible
+runtime. The C# package also includes its private GMP library and thread-exit
+cleanup adapter. Building the archive does not publish it.
 
 ## Build and inspect the package
 

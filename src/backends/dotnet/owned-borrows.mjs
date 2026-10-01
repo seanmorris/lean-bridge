@@ -187,23 +187,23 @@ export const ownedDotnetWholeScope = transfers => `
  * @param fn - One public function, copy, retain or closure invocation.
  */
 export const ownedDotnetAnchoredCall = (context, fn) => {
-	const { c, nodes, names, calls, symbols, parameterType, returnType } = context;
+	const { c, nodes, calls, symbols, parameterType, returnType } = context;
 	const result = nodes.get(fn.result), parameters = fn.parameters.map(id => nodes.get(id));
 	const moving = fn.transfers ?? [], wraps = index => moving.includes(index) || fn.anchor === index;
 	const whole = result.representation !== "copied" && !fn.rawResult;
 	const copy = calls.find(item => item.wholeCopy && item.id === result.id);
 	if(whole && !copy) throw new TypeError(`Missing C# whole-value copy for ${result.id}`);
 	const write = (node, index, scope, checking) => fn.handle && index === 0 ? `${scope}.Root(arg${index})`
-		: c.hostArgument(fn, index) ? `Host${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
+		: c.hostArgument?.(fn, index) ? `Host${node.index}(arg${index}, ${scope}${checking ? "" : ", frame"})`
 			: `OwnedConvert.Write${node.index}(${wraps(index) ? `${scope}.Whole(arg${index})` : `arg${index}`}, ${scope})`;
 	const nativeTypes = parameters.flatMap((node, index) => [
-		c.hostArgument(fn, index) ? `OwnedCallback${node.index}*` : node.raw + (node.leaf ? "" : "*")
+		c.hostArgument?.(fn, index) ? `OwnedCallback${node.index}*` : node.raw + (node.leaf ? "" : "*")
 		, ...moving.includes(index) ? ["nint*"] : []
 		, ...fn.anchor === index ? ["nint"] : []
 	]);
 	const pointer = `delegate* unmanaged[Cdecl]<${["nint", ...nativeTypes, `${result.raw}*`, "nint*", "uint"].join(", ")}>`;
 	const nativeArguments = parameters.flatMap((node, index) => [
-		`${c.hostArgument(fn, index) || !node.leaf ? "&" : ""}input${index}`
+		`${c.hostArgument?.(fn, index) || !node.leaf ? "&" : ""}input${index}`
 		, ...moving.includes(index) ? [`inputOwner${index}`] : []
 		, ...fn.anchor === index ? ["anchor"] : []
 	]);
@@ -243,7 +243,7 @@ ${invoke}
             Ready();
             var result = OwnedConvert.Read${result.index}(&output, outputs);
 ${whole ? `            OwnedRuntime.Checkpoint();
-            var value = new _V.Value<${names.get(result.id)}>(owner.Adopt(${fn.anchor === undefined ? "false" : "true"}, true), result, ${copy.method});
+            var value = new ${returnType(fn)}(owner.Adopt(${fn.anchor === undefined ? "false" : "true"}, true), result, ${copy.method});
             try { OwnedRuntime.Checkpoint(); Ready(); owner.Complete(); return value; }
             catch { value.Dispose(); throw; }` : "            OwnedRuntime.Checkpoint(); Ready(); owner.Complete(); return result;"}
         }

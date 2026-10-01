@@ -23,9 +23,11 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Admit consuming input leases.
  * @param options.anchoredResults - Admit original-owner result borrows.
+ * @param options.receiverExports - Admit nominal methods and properties.
+ * @param options.hostCallbacks - Admit synchronous host callback descriptors.
  */
-export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchoredResults = false } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks: true, transferredInputs, anchoredResults });
+export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, raw: node.identity || node.integer ? "nint" : node.scalar ? primitives[node.name][0] : `OwnedRaw${node.index}`
@@ -95,7 +97,7 @@ export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchor
 		}
 		lines.push("}");
 	}
-	const callbackLayouts = c.callbacks.map(callback => ({
+	const callbackLayouts = (c.hostArgument ? c.callbacks : []).map(callback => ({
 		id: callback.id, name: `${table.get(callback.id).cName}_host`
 		, raw: `OwnedCallback${table.get(callback.id).index}`, size: 32, alignment: 8
 		, fields: ["call", "context", "closure", "recovery"].map((name, index) => ({
