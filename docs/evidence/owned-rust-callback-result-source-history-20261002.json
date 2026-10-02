@@ -1,0 +1,618 @@
+{
+  "baselineRevision": "93589825d4b4c028724390e4c8d886213cbc92d8",
+  "kind": "owned-rust-callback-result-source-history",
+  "previous": {
+    "path": "docs/evidence/owned-cpp-callback-result-source-history-20261002.json",
+    "sha256": "27523ee8d12ad0159405769b1478f7934f39c927a839e91711960737f48933ff"
+  },
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "c122e8970723b38626483dbfff52c00238ff111e7f987bbe4bad26b4e933a3c5",
+      "edits": [
+        {
+          "current": "  owned-rust-callback-results:\n    name: Callback-result lifetimes in installed Rust packages\n    runs-on: ubuntu-24.04\n    timeout-minutes: 150\n    env:\n      EMCC_CORES: \"2\"\n    steps:\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Install callback acceptance tools\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3 ripgrep zstd\n          npm ci --ignore-scripts --no-audit --no-fund\n          bash scripts/bootstrap-toolchains.sh\n      - name: Install all callback browser engines\n        run: npx playwright install --with-deps chromium firefox webkit\n      - name: Build the callback shared runtime\n        shell: bash\n        run: |\n          set -euo pipefail\n          mkdir -p build\n          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-rust-callback-result-runtime.log\n          test -s build/lean-link-spike/lazy/main.wasm\n      - name: Verify Rust callback-result lifetimes\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          npm run test:owned-rust-callback-results 2>&1 | tee build/owned-rust-callback-results.log\n          rg '^# tests 13$' build/owned-rust-callback-results.log\n          rg '^# pass 13$' build/owned-rust-callback-results.log\n          rg '^# fail 0$' build/owned-rust-callback-results.log\n          rg '^# cancelled 0$' build/owned-rust-callback-results.log\n          rg '^# skipped 0$' build/owned-rust-callback-results.log\n          test -s build/owned-rust-callback-results/ordinary-no-host.json\n          test -s build/owned-rust-callback-results/ordinary-host.json\n          test -s build/owned-rust-callback-results/ordinary-combined.json\n          test -s build/owned-rust-callback-results/ordinary-no-host-package.json\n          test -s build/owned-rust-callback-results/ordinary-combined-package.json\n          test -s build/owned-rust-callback-results/ordinary-combined-release.json\n          test -s build/owned-rust-callback-results/reviewed-no-host.json\n          test -s build/owned-rust-callback-results/reviewed-host.json\n          test -s build/owned-rust-callback-results/reviewed-combined.json\n          test -s build/owned-rust-callback-results/reviewed-no-host-package.json\n          test -s build/owned-rust-callback-results/reviewed-combined-package.json\n          test -s build/owned-rust-callback-results/reviewed-combined-release.json\n      - name: Preserve Rust callback-result acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: rust-callback-results-${{ github.sha }}\n          path: |\n            build/owned-rust-callback-results/\n            build/owned-rust-callback-results.log\n            build/owned-rust-callback-result-runtime.log\n          if-no-files-found: error\n          retention-days: 30\n\n",
+          "previous": "",
+          "start": 16307
+        },
+        {
+          "current": "      - owned-rust-callback-results\n",
+          "previous": "",
+          "start": 185299
+        },
+        {
+          "current": "      - name: Enforce Rust callback-result acceptance\n        if: needs.owned-rust-callback-results.result != 'success'\n        run: exit 1\n",
+          "previous": "",
+          "start": 186954
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "ad2dece5a55c29b23e8d1e7134c3c629230b4a56f48fb221649d86278528c666",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "31f0e06a389b31f64760ea0ae52132646bc0382b37bb5d1aa70458a6602032fd",
+      "edits": [
+        {
+          "current": "### Borrowed callback results\n\nA returned Lean closure can borrow its result from one of its call arguments.\nPass `&Value<T>` for that argument. The result expires with that argument's\noriginal owner, even when the closure returns a value from its captured state.\nThe closure itself does not keep the argument owner alive. Empty constructors\nand nested borrowed results follow the same rule.\n\nFor the `owned-callback-results` example crate, save this as `src/main.rs`:\n\n```rust file=rust/owned-callback-results.rs\nuse owned_callback_results::{\n    echo_record, make_record, new_ticket, serial, BigInt, BigUint,\n    Bundle, Error, Payload,\n};\n\nfn main() -> Result<(), Error> {\n    let ticket = new_ticket(&BigUint::from(42u32), \"order\")?;\n    let input = Bundle {\n        primary: ticket.get()?.clone(), spare: None, peers: vec![], history: vec![],\n        payload: Payload { count: BigInt::from(42), bytes: vec![] },\n    };\n    let mut owner = echo_record(&input)?;\n    let choose = make_record(owner.get()?)?;\n    let borrowed = choose.call(false, &owner)?;\n    let independent = borrowed.retain()?;\n    owner.close();\n    assert_eq!(borrowed.get(), Err(Error::Closed));\n    println!(\"{}\", serial(&independent.get()?.primary)?);\n    Ok(())\n}\n```\n\nHost callbacks with these result contracts can return either the exact raw\nvalue or its `Value<T>` owner. The bridge validates and copies the reply before\nthe callback's argument borrows expire. `with_recovery` accepts the same forms.\nClosed whole-value replies fail, including empty containers. Returned Lean\nclosures can also be passed back as callable arguments, by value or reference.\n\nRetain a borrowed result before releasing or transferring its original owner.\nNeither whole values nor resource wrappers are `Send` or `Sync`. The callback\nresult contract does not permit asynchronous or retained Rust callbacks.\n\n",
+          "previous": "",
+          "start": 26660
+        }
+      ],
+      "path": "docs/consume/rust.md",
+      "previousSha256": "23246cad84e3a05e48d8f1fdfc5b09c2608bf11df445cf6a095ee7077190b665",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "91906b199a5c187e8c2b28f32d4edfffd718eaaa2127f8d0335e5d2eb0aa5d2c",
+      "edits": [
+        {
+          "current": "## Rust callback-result lifetimes\n\nRun `npm run test:owned-rust-callback-results` with the pinned Lean, Rust and\nEmscripten toolchains, native build tools, and all three Playwright browsers.\nThe gate requires 13 passing tests without skips and twelve reports under\n`build/owned-rust-callback-results/`.\n\nThe six runtime cases cover ordinary source and reviewed IR, each with no host\ncallbacks, with host callbacks, and with receivers and transfers. They check\noriginal argument owners, empty and recursive values, independent retains,\nraw and whole-owner host replies, returned Lean closures passed back as\ncallbacks, panic identity, fork rejection, and allocation failures before and\nafter handoff. Compile-negative cases reject raw anchors, wrong reply owners,\ncustom reply wrappers, and `Send`/`Sync` uses.\n\nThe native C boundary runs under address and undefined-behavior sanitizers.\nThe harness compares exercised leaks with a cold Lean startup and deliberately\ninjects a buffer overflow and invalid shift to verify the detectors. Rust owns\nits test threads' alternate signal stacks. Seven compiled ownership mutations\nmust fail the public API assertions; restored sources must reproduce the baseline.\n\nFour Cargo package cases cover both source paths with and without host callbacks.\nThey independently rebuild archives, reject forged contracts and generated\nsources, install offline into an empty Cargo home, execute the documented\nexample, then run relocated executables after removing source and package trees.\nThe combined release case checks C, C++, Cargo and npm together, including\nstrict TypeScript and page, React and worker contexts in three browser engines.\n\nThe required `owned-rust-callback-results` CI job checks every report, preserves\nlogs even on failure, and propagates failure to the consumer summary. Runtime\nreports are reconstructed from current compiler metadata and generated sources.\n\n",
+          "previous": "",
+          "start": 217840
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "e5512b055431da4bcd705f4fa25a957e5b3d146495b946d0428bf9b83e6398cc",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "e3c3534e88e9748917214487a13641bc14175e4fc7093bd3448dd8c253c3a6c8",
+      "edits": [
+        {
+          "current": "Installed C, C++, Cargo and npm acceptance passes on both authoring paths.\nRust's complete enabled gate passes all 13 tests without skips. Its six runtime\nconfigurations, four installed Cargo cases and two combined releases preserve\nthe selected callback owner. The support matrix has not been promoted.\n",
+          "previous": "Installed C and npm acceptance passes on both authoring paths. The remaining\nlanguage projections and full regression integration are pending. The support\nmatrix has not been promoted.\n",
+          "start": 195
+        },
+        {
+          "current": "The C/npm milestone, packaging repair and C++ milestone are committed and pushed. C++ has a\n[complete acceptance record](owned-cpp-callback-results-20261002.json), with all\n12 enabled tests passing. Its final repository-wide regression passed 2,994\ntests, with 668 explicitly gated skips and no failures.\n\nRust's [acceptance record](owned-rust-callback-results-20261002.json) preserves\nall 12 reports and the complete 13-test gate. Both source paths build one\nC/C++/Cargo/npm release with 118 Rust, 76 C++, 219 C and 40 JavaScript public\nchecks, strict TypeScript and nine browser contexts. Cargo consumers install\noffline and run after producer sources, the CLI and package sources are removed.\nRuntime checks include address/undefined sanitizers, allocation failures, Rust\npanics and compiled semantic mutations. Final repository-wide regression and\ncommit remain separate from this acceptance record.\n\nImplement and verify Python, Ruby, C#,\nJava/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI callback-result projections.\nUpdate each guide and acceptance record from installed results, then complete\nthe package/container checks and support-matrix audit. Run the required CI jobs\nafter committing each milestone.\n",
+          "previous": "Run the full regression suite and commit the C/npm milestone. Implement and\nverify the C++, Rust, Python,\nRuby, C#, Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI projections. Update\ntheir guides and acceptance evidence from installed results, then complete the\nsupport-matrix audit. Run the required CI jobs after committing each milestone.\n",
+          "start": 8140
+        }
+      ],
+      "path": "docs/evidence/owned-callback-result-progress-20261002.md",
+      "previousSha256": "8f6647645b8071b036eb058449a545fc2f100cd34b602fb687391f7fd7727f22",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "6c5a2d50ccd11484176804d052ee12775b4289f174b9f870bf798229ec1a1bfa",
+      "edits": [
+        {
+          "current": "For C, C++, Rust and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\n",
+          "previous": "For C, C++ and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\n",
+          "start": 32553
+        },
+        {
+          "current": "Rust callers pass a checked [`Value<T>` owner](../consume/rust.md#borrowed-callback-results)\nfor the selected argument. Host replies may return the declared payload or its\nwhole owner; the bridge checks and converts either form before the callback ends.\n",
+          "previous": "",
+          "start": 32985
+        }
+      ],
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "73b1ae29a2fc26d51d96c505c97893a543ffeae7e76535ed79eac0256e657b66",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "047e33c507605f67f398fdd3c54ba977f048e3ceb31268ed91da8bb79049df08",
+      "edits": [
+        {
+          "current": "## Anchor a callback result to an argument\n\nDeclare the borrowed result inside the callable contract. Anchor indices count\nthe callback's own runtime parameters, excluding its closure and any enclosing\nexport's arguments. For `makeRecord : Bundle → Bool → Bundle → Bundle`, export\none argument and describe the returned closure's result:\n\n```json\n{\n  \"arities\": { \"Owned.makeRecord\": 1 },\n  \"contracts\": {\n    \"Owned.makeRecord\": {\n      \"result\": {\n        \"ownership\": \"lease\",\n        \"lifetime\": { \"scope\": \"explicit\", \"anchor\": null },\n        \"callable\": {\n          \"result\": {\n            \"ownership\": \"borrow\",\n            \"lifetime\": { \"scope\": \"parameter\", \"anchor\": \"arg1\" }\n          }\n        }\n      }\n    }\n  }\n}\n```\n\nMerge these entries into the package's existing configuration. Keep its module,\nexport, resource and owned-aggregate declarations. `arg1` selects the closure's\n`Bundle` argument after its `Bool` argument. Rust callers supply `&Value<Bundle>`;\nthe returned value expires with that argument's original owner, even if Lean\nreturns the captured bundle. Both ordinary source and reviewed contracts receive\nfresh compiler checks.\n\nHost callback results use the same nested `callable.result` declaration on the\ncallback parameter. Rust accepts the exact raw reply or its `Value<T>` owner,\nvalidates it, and copies it before the callback's argument borrows expire.\nRecovery values follow the same rule. Returned Lean closures can be passed back\nas callable arguments. See the [consumer example](../consume/rust.md#borrowed-callback-results).\n\nThese crates use `owned-rust-v5`, Rust ownership contract version 5, and compiled\nRust/package receipts version 6. The native model records the callback-local\nanchor separately from export anchors, receivers and transfers. Packaging\nregenerates the source and ownership contracts before accepting the archive.\nThe producer API can omit host callback support while preserving returned\nclosure owners and independent `retain()` copies. The CLI enables host callbacks.\nEvery target in a combined build must accept the complete contract.\n\n",
+          "previous": "",
+          "start": 19705
+        }
+      ],
+      "path": "docs/publish/cargo.md",
+      "previousSha256": "70abfc7e600847edfcb56456f63955c6e7c0c761a4ad12977a015ef6ededf62a",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "95612719f969e45e95bd9ebeabcaf19079ef1fa0667beb40d0291635f3793297",
+      "edits": [
+        {
+          "count": 18,
+          "current": "\"65ee9cab528ba91b1abb5020628e9dec5a5040d75cbb880aeeea158a74f07368\"",
+          "previous": "\"5410d43293e54aa302433a82729bf3eaac3548f62739d0c7360e74bb1630dd04\""
+        },
+        {
+          "count": 93,
+          "current": "\"9a13fd2e55f430628b070301e1b28553a0eb2a0290b4974a23881281039ad56f\"",
+          "previous": "\"36a374a5cb5e8e6c4fbb417098671459418e65ba75d0d6f734b9e20839e6ad09\""
+        },
+        {
+          "count": 83,
+          "current": "\"f7a3fd0e5103a0f73c480440c2b260e4a7571bc1b035953171712b5dda5c7a0d\"",
+          "previous": "\"6b8f79efb209a88c6c353c4676226058d38f87ddc5bce30715e2c8da5f7ce4c6\""
+        },
+        {
+          "count": 75,
+          "current": "\"9c465cf1e238007bfe8747db5104e6effc7dd02c0b7385247b0d1d709c49c8cb\"",
+          "previous": "\"87b19d42f8d106d5c5bac5e2298fd5744c7f6a697d5cc85d74cbbe403ae1ce88\""
+        },
+        {
+          "count": 89,
+          "current": "\"c122e8970723b38626483dbfff52c00238ff111e7f987bbe4bad26b4e933a3c5\"",
+          "previous": "\"ad2dece5a55c29b23e8d1e7134c3c629230b4a56f48fb221649d86278528c666\""
+        },
+        {
+          "count": 1,
+          "current": "\"31f0e06a389b31f64760ea0ae52132646bc0382b37bb5d1aa70458a6602032fd\"",
+          "previous": "\"23246cad84e3a05e48d8f1fdfc5b09c2608bf11df445cf6a095ee7077190b665\""
+        },
+        {
+          "count": 3,
+          "current": "\"047e33c507605f67f398fdd3c54ba977f048e3ceb31268ed91da8bb79049df08\"",
+          "previous": "\"70abfc7e600847edfcb56456f63955c6e7c0c761a4ad12977a015ef6ededf62a\""
+        },
+        {
+          "count": 7,
+          "current": "\"d4f968f6cd0509a82c49d46bb0669191708104c3506df594c53ccd7552f48c8d\"",
+          "previous": "\"f3c90b953d84552e7974224bc47ea053381f51319afca193c3357054477ce3a8\""
+        },
+        {
+          "count": 22,
+          "current": "\"6c5a2d50ccd11484176804d052ee12775b4289f174b9f870bf798229ec1a1bfa\"",
+          "previous": "\"73b1ae29a2fc26d51d96c505c97893a543ffeae7e76535ed79eac0256e657b66\""
+        },
+        {
+          "count": 11,
+          "current": "\"91906b199a5c187e8c2b28f32d4edfffd718eaaa2127f8d0335e5d2eb0aa5d2c\"",
+          "previous": "\"e5512b055431da4bcd705f4fa25a957e5b3d146495b946d0428bf9b83e6398cc\""
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "3d4bc74c7bb1a42671385e002eaf838e9597a3df9ae848dbaf2c688ed6d9e4e1",
+      "strategy": "replacements"
+    },
+    {
+      "currentSha256": "65ee9cab528ba91b1abb5020628e9dec5a5040d75cbb880aeeea158a74f07368",
+      "edits": [
+        {
+          "current": "    \"test:owned-rust-callback-results\": \"LEAN_BRIDGE_OWNED_RUST_CALLBACK_RESULT_TEST=1 node --test --test-concurrency=1 tests/owned-rust-callback-results.test.mjs tests/owned-rust-callback-result-runtime.test.mjs tests/owned-rust-callback-result-packaging.test.mjs tests/owned-rust-callback-result-combined-packaging.test.mjs\",\n",
+          "previous": "",
+          "start": 45600
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "5410d43293e54aa302433a82729bf3eaac3548f62739d0c7360e74bb1630dd04",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "9a13fd2e55f430628b070301e1b28553a0eb2a0290b4974a23881281039ad56f",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-rust-callback-results\"\n\t\t, \"owned-rust-callback-result-runtime\"\n\t\t, \"owned-rust-callback-result-packaging\"\n\t\t, \"owned-rust-callback-result-combined-packaging\"\n\t\t, \"owned-rust-callback-result-ci\"\n\t\t, \"owned-rust-callback-result-history\"\n\t\t, \"owned-rust-callback-result-evidence\"\n",
+          "previous": "",
+          "start": 1202
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "36a374a5cb5e8e6c4fbb417098671459418e65ba75d0d6f734b9e20839e6ad09",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "97c0f33fd5492e8a2652a094793428acfffd4618977df1806f07ad59bfaf587b",
+      "edits": [
+        {
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": "",
+          "start": 2101
+        },
+        {
+          "current": "export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst conversions = generateOwnedRustConversions(ir, { dynamic, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), { c } = conversions;\n",
+          "previous": "export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst conversions = generateOwnedRustConversions(ir, { dynamic, transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = conversions;\n",
+          "start": 2272
+        },
+        {
+          "current": "\tconst callbackAnchors = c.callbacks.some(item => item.anchor !== undefined);\n",
+          "previous": "",
+          "start": 2705
+        },
+        {
+          "current": "\tif(hostCallbacks && callbackAnchors) traits.push(\n\t\t\"mod owned_callback_reply_sealed {\"\n\t\t, \"    pub trait Sealed<T> {}\"\n\t\t, \"    impl<T> Sealed<T> for T {}\"\n\t\t, \"    impl<T: super::ValueType> Sealed<T> for super::Value<T> {}\"\n\t\t, \"}\"\n\t\t, \"#[doc(hidden)] pub trait OwnedCallbackReply<T>: Clone + owned_callback_reply_sealed::Sealed<T> { fn owned_reply(&self) -> Result<&T, Error>; }\"\n\t\t, \"impl<T: Clone> OwnedCallbackReply<T> for T { fn owned_reply(&self) -> Result<&T, Error> { Ok(self) } }\"\n\t\t, \"impl<T: ValueType> OwnedCallbackReply<T> for Value<T> { fn owned_reply(&self) -> Result<&T, Error> { self.get() } }\"\n\t);\n",
+          "previous": "",
+          "start": 3376
+        },
+        {
+          "current": "\t\tconst borrowed = callback.anchor !== undefined;\n\t\tconst replyType = borrowed ? \"Self::Reply\" : result.hostName;\n\t\tconst bound = `FnMut(${params.map(param => param.hostName).join(\", \")}) -> Result<${borrowed ? \"R\" : result.hostName}, Error>`;\n\t\tconst generic = borrowed ? `F: ${bound}, R: OwnedCallbackReply<${result.hostName}>` : `F: ${bound}`;\n",
+          "previous": "\t\tconst bound = `FnMut(${params.map(param => param.hostName).join(\", \")}) -> Result<${result.hostName}, Error>`;\n",
+          "start": 6917
+        },
+        {
+          "current": "\t\t\t, ...borrowed ? [`    type Reply: OwnedCallbackReply<${result.hostName}>;`] : []\n\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${replyType}, Error>;`\n",
+          "previous": "\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${result.hostName}, Error>;`\n",
+          "start": 7328
+        },
+        {
+          "current": "\t\t\t, `    fn recovery(&self) -> Option<&${replyType}> { None }`\n",
+          "previous": "\t\t\t, `    fn recovery(&self) -> Option<&${result.hostName}> { None }`\n",
+          "start": 7581
+        },
+        {
+          "current": "\t\tif(automatic) traits.push(`impl<${generic}> OwnedCallback${i} for F {`\n\t\t\t, ...borrowed ? [\"    type Reply = R;\"] : []\n\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${replyType}, Error> { self(${arguments_}) }`, \"}\");\n\t\ttraits.push(`impl<${generic}> OwnedCallback${i} for WithRecovery<F, ${borrowed ? \"R\" : result.hostName}> {`\n\t\t\t, ...borrowed ? [\"    type Reply = R;\"] : []\n\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${replyType}, Error> { (self.function)(${arguments_}) }`\n\t\t\t, `    fn recovery(&self) -> Option<&${replyType}> { Some(&self.recovery) }`, \"}\");\n\t\t// Native closures use the closure descriptor below. Raw host arguments\n\t\t// cannot supply an original whole-value anchor to the host-only invoke.\n\t\tconst unavailable = `let _ = (${arguments_},); Err(Error::InvalidArgument)`;\n",
+          "previous": "\t\tif(automatic) traits.push(`impl<F: ${bound}> OwnedCallback${i} for F {`\n\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${result.hostName}, Error> { self(${arguments_}) }`, \"}\");\n\t\ttraits.push(`impl<F: ${bound}> OwnedCallback${i} for WithRecovery<F, ${result.hostName}> {`\n\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${result.hostName}, Error> { (self.function)(${arguments_}) }`\n\t\t\t, `    fn recovery(&self) -> Option<&${result.hostName}> { Some(&self.recovery) }`, \"}\");\n",
+          "start": 7738
+        },
+        {
+          "current": "\t\t\t, ...borrowed ? [`    type Reply = ${result.hostName};`] : []\n\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${replyType}, Error> { ${borrowed ? unavailable : `${wrappedResult(callback) ? \"let value = \" : \"\"}self.call(${params.map((param, index) => `${param.scalar ? \"\" : \"&\"}a${index}`).join(\", \")})${wrappedResult(callback) ? \"?; Ok(value.get()?.clone())\" : \"\"}`} }`\n",
+          "previous": "\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${result.hostName}, Error> { ${wrappedResult(callback) ? \"let value = \" : \"\"}self.call(${params.map((param, index) => `${param.scalar ? \"\" : \"&\"}a${index}`).join(\", \")})${wrappedResult(callback) ? \"?; Ok(value.get()?.clone())\" : \"\"} }`\n",
+          "start": 8717
+        },
+        {
+          "current": "\t\t\t, ...borrowed ? [`    type Reply = ${result.hostName};`] : []\n\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${replyType}, Error> { ${borrowed ? `self.get()?; ${unavailable}` : `${wrappedResult(callback) ? \"let value = \" : \"\"}self.get()?.call(${params.map((param, index) => `${param.scalar ? \"\" : \"&\"}a${index}`).join(\", \")})${wrappedResult(callback) ? \"?; Ok(value.get()?.clone())\" : \"\"}`} }`\n",
+          "previous": "\t\t\t, `    fn invoke(&mut self${parameters ? `, ${parameters}` : \"\"}) -> Result<${result.hostName}, Error> { ${wrappedResult(callback) ? \"let value = \" : \"\"}self.get()?.call(${params.map((param, index) => `${param.scalar ? \"\" : \"&\"}a${index}`).join(\", \")})${wrappedResult(callback) ? \"?; Ok(value.get()?.clone())\" : \"\"} }`\n",
+          "start": 9353
+        },
+        {
+          "current": "\t\t\t, ...borrowed ? [\"        let reply = reply.owned_reply()?;\"] : []\n",
+          "previous": "",
+          "start": 11880
+        },
+        {
+          "current": "\t\t\t, `    if let Some(recovery) = function.recovery() { owned_check${result.index}(${borrowed ? \"recovery.owned_reply()?\" : \"recovery\"}, 0, budget, state)?; }`, \"    Ok(())\", \"}\");\n",
+          "previous": "\t\t\t, `    if let Some(recovery) = function.recovery() { owned_check${result.index}(recovery, 0, budget, state)?; }`, \"    Ok(())\", \"}\");\n",
+          "start": 13513
+        },
+        {
+          "current": "\t\t\t\t\t, `    let recovery_view${i} = recovery${i}.as_ref().map(|value| owned_to${result.index}(${callback.anchor !== undefined ? \"value.owned_reply()?\" : \"value\"}, &mut scope, &state)).transpose()?;`\n",
+          "previous": "\t\t\t\t\t, `    let recovery_view${i} = recovery${i}.as_ref().map(|value| owned_to${result.index}(value, &mut scope, &state)).transpose()?;`\n",
+          "start": 15031
+        },
+        {
+          "current": "\t\t, ...((!receivers && !callbackAnchors) || (hostCallbacks && c.callbacks.length)) ? [\"/// A typed failure-path value for Lean cleanup, never a successful callback reply.\"\n",
+          "previous": "\t\t, ...(!receivers || (hostCallbacks && c.callbacks.length)) ? [\"/// A typed failure-path value for Lean cleanup, never a successful callback reply.\"\n",
+          "start": 22117
+        }
+      ],
+      "path": "src/backends/rust/owned-callables.mjs",
+      "previousSha256": "8014eecf05de6d04ab7ecc2059922efd499fae497407fe23c7ecd180ee17a8a8",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "c163b488e9e6af2cbb3da1cb62f4fe3863ae081837bbeb3b7ba5b9e43de456bc",
+      "edits": [
+        {
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": "",
+          "start": 3187
+        },
+        {
+          "current": "export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });\n",
+          "previous": "export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs, anchoredResults, receiverExports, hostCallbacks });\n",
+          "start": 3358
+        },
+        {
+          "current": "\tconst anchors = generated.c.functions.some(item => item.anchor !== undefined);\n\tconst callbackAnchors = generated.c.callbacks.filter(item => item.anchor !== undefined);\n\tconst receivers = generated.c.functions.filter(item => item.receiver === 0), wholeOwners = anchors || callbackAnchors.length > 0 || receivers.length > 0;\n",
+          "previous": "\tconst anchors = Boolean(generated.c.anchoredResults);\n\tconst receivers = generated.c.functions.filter(item => item.receiver === 0), wholeOwners = anchors || receivers.length > 0;\n",
+          "start": 3819
+        },
+        {
+          "current": "${anchors || callbackAnchors.length ? `\n",
+          "previous": "${anchors ? `\n",
+          "start": 6391
+        },
+        {
+          "current": "` : \"\"}${callbackAnchors.length ? `\nReturned closures number anchor parameters locally, excluding the closure itself.\nPass &Value<T> for the selected argument. Its original owner controls the lifetime\nof the result and every descendant, not the closure's captured owner. Releasing or\ntransferring that owner expires empty and populated results alike. retain() and\ncopy_value create independent ownership before the original owner expires.\n${hostCallbacks ? `Host callbacks can return the exact raw result or Value<T>. The bridge checks\nand copies that reply before the callback borrow expires. Recovery values follow\nthe same rule. Expired whole-value replies reject, including empty containers.\n` : \"\"}` : \"\"}${receivers.length ? `\n",
+          "previous": "` : \"\"}${receivers.length ? `\n",
+          "start": 7217
+        },
+        {
+          "current": "` : \"\"}${hostCallbacks || (!receivers.length && !callbackAnchors.length) ? `\n",
+          "previous": "` : \"\"}${!receivers.length || hostCallbacks ? `\n",
+          "start": 9754
+        },
+        {
+          "current": "\tconst schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;\n\tconst contract = { schemaVersion\n",
+          "previous": "\tconst contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1\n",
+          "start": 10942
+        },
+        {
+          "current": "\t\t, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1\n\t\t\t, values: \"checked-whole-result\", anchor: \"original-argument-owner\"\n\t\t\t, parameterNumbering: \"callback-local\"\n\t\t\t, expiration: \"owner-release-or-transfer\", descendants: \"transitive\"\n\t\t\t, emptyValues: \"owner-preserved\"\n\t\t\t, independentOwnership: \"retain-or-copy_value\"\n\t\t\t, hostReply: \"value-or-whole-owner\"\n\t\t\t, hostResultHandoff: \"before-callback-frame-expires\"\n\t\t\t, signatures: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1 }))\n\t\t} } : {}\n",
+          "previous": "",
+          "start": 11254
+        },
+        {
+          "current": "\tfiles[\"binding-manifest.json\"] = canonicalJson({ schemaVersion\n\t\t, backend: `owned-rust-v${schemaVersion}`\n",
+          "previous": "\tfiles[\"binding-manifest.json\"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1\n\t\t, backend: receivers.length ? \"owned-rust-v4\" : anchors ? \"owned-rust-v3\" : transfers ? \"owned-rust-v2\" : \"owned-rust-v1\"\n",
+          "start": 13280
+        }
+      ],
+      "path": "src/backends/rust/owned-package.mjs",
+      "previousSha256": "d506ac685e1fb6394c52e9daa4543c52ef1ce5ac8b824370d8f73199e1332907",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "02f9e8292656e740cfbf8600b77b50361797eaf3787f92c653fbb4cfb81ec6e6",
+      "edits": [
+        {
+          "current": "\tconst callbackResultAnchors = options.callbackResultAnchors ?? false;\n\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n",
+          "previous": "",
+          "start": 1755
+        },
+        {
+          "current": "\t\t, valueCopies, callbackResultAnchors\n",
+          "previous": "",
+          "start": 2051
+        },
+        {
+          "current": "\tconst anchors = Boolean(c.anchoredResults);\n",
+          "previous": "\tconst anchors = c.functions.some(item => item.anchor !== undefined);\n",
+          "start": 2260
+        },
+        {
+          "current": "\tif(c.callbacks.some(item => item.anchor !== undefined) && (options.hostCallbacks ?? true)) occupied.add(\"owned_callback_reply_sealed\");\n",
+          "previous": "",
+          "start": 2888
+        }
+      ],
+      "path": "src/backends/rust/owned-values.mjs",
+      "previousSha256": "f7a0bf76ce3e3ba0db54e3452b25802af5b308886fb267862068174122185e88",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "d4f968f6cd0509a82c49d46bb0669191708104c3506df594c53ccd7552f48c8d",
+      "edits": [
+        {
+          "current": "\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => [\"c\", \"cpp\", \"cargo\"].includes(target)) });\n",
+          "previous": "\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => [\"c\", \"cpp\"].includes(target)) });\n",
+          "start": 11775
+        }
+      ],
+      "path": "src/build/multi-profile-project.mjs",
+      "previousSha256": "f3c90b953d84552e7974224bc47ea053381f51319afca193c3357054477ce3a8",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "f7a3fd0e5103a0f73c480440c2b260e4a7571bc1b035953171712b5dda5c7a0d",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\"].includes(target)) });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\"].includes(target)) });\n",
+          "start": 3646
+        }
+      ],
+      "path": "src/build/native-c-projection.mjs",
+      "previousSha256": "6b8f79efb209a88c6c353c4676226058d38f87ddc5bce30715e2c8da5f7ce4c6",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "9c465cf1e238007bfe8747db5104e6effc7dd02c0b7385247b0d1d709c49c8cb",
+      "edits": [
+        {
+          "current": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\"].includes(target))\n",
+          "previous": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\"].includes(target))\n",
+          "start": 7832
+        },
+        {
+          "current": "\t\t\t\t\tif(targets.includes(\"cargo\")) generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });\n",
+          "previous": "\t\t\t\t\tif(targets.includes(\"cargo\")) generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });\n",
+          "start": 8915
+        }
+      ],
+      "path": "src/build/native-project.mjs",
+      "previousSha256": "87b19d42f8d106d5c5bac5e2298fd5744c7f6a697d5cc85d74cbbe403ae1ce88",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "3b6c93ddc13befa8b43e463f34f6277e75c1103d8d6ebefafbe31e7689758eea",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\"].includes(target)) });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\"].includes(target)) });\n",
+          "start": 2247
+        },
+        {
+          "current": "\tconst valueCopies = (targets.includes(\"cpp\") || targets.includes(\"cargo\")) && callbackResultAnchors;\n",
+          "previous": "\tconst valueCopies = targets.includes(\"cpp\") && callbackResultAnchors;\n",
+          "start": 3474
+        },
+        {
+          "current": "\tconst rust = targets.includes(\"cargo\") ? generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n\tif(rust && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError(\"Owned Rust projection requires authenticated callback/copy support\");\n",
+          "previous": "\tconst rust = targets.includes(\"cargo\") ? generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;\n\tif(rust && !hostCallbacks && !receiverExports) throw new TypeError(\"Owned Rust projection requires authenticated callback/copy support\");\n",
+          "start": 3985
+        }
+      ],
+      "path": "src/build/owned-c-projection.mjs",
+      "previousSha256": "ddd471a3417361df9f423828a33636d9f09050bdccc80ef4a856e4963b9439c1",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "b64c8b5a8a559b19e229f7a6fba119c903e9617ae54611cc6546aaf15e7227df",
+      "edits": [
+        {
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Rust requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports) throw new TypeError(\"Owned Rust requires authenticated callback/copy or receiver support\");\n",
+          "start": 1198
+        },
+        {
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies: callbackResultAnchors, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst rust = generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), prefix = c.values.prefix;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports });\n\tconst rust = generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = c.values.prefix;\n",
+          "start": 2027
+        },
+        {
+          "current": "\tconst cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n",
+          "previous": "\tconst cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;\n",
+          "start": 2633
+        },
+        {
+          "current": "\tif(adapter.schemaVersion !== (callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== identity\n",
+          "previous": "\tif(adapter.schemaVersion !== (receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== identity\n",
+          "start": 3033
+        },
+        {
+          "current": "\t\t|| adapter.library !== `lib${prefix}.so` || adapter.gmp?.version !== \"6.3.0\" || adapter.ownedValues?.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)\n",
+          "previous": "\t\t|| adapter.library !== `lib${prefix}.so` || adapter.gmp?.version !== \"6.3.0\" || adapter.ownedValues?.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)\n",
+          "start": 3390
+        },
+        {
+          "current": "\t\t|| canonicalJson(adapter.ownedValues.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null)\n",
+          "previous": "",
+          "start": 3997
+        }
+      ],
+      "path": "src/build/owned-rust-artifacts.mjs",
+      "previousSha256": "d69f359a6311b9baa7766bb1bc256c542ddc3977190a13e0e6f8e477231a88b9",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "b4364d3cdab4b3cfb1f4a6619fbbaa4b1df61fae2ae81397650d1b650c61a489",
+      "edits": [
+        {
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });\n",
+          "previous": "\tconst generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults, receiverExports, hostCallbacks });\n",
+          "start": 1588
+        },
+        {
+          "current": "\tawait save(\"native-rust.json\", canonicalJson({ schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2\n",
+          "previous": "\tawait save(\"native-rust.json\", canonicalJson({ schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2\n",
+          "start": 3487
+        }
+      ],
+      "path": "src/build/owned-rust-projection.mjs",
+      "previousSha256": "9b8bec80a3d21c10ccd33b27b0b3b527a4467161a2d1b32ff0c2b37a3f4d46db",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "b040992d04c08bb37221c0100bca18f92a5976de591a14c641824c27f83e486a",
+      "edits": [
+        {
+          "current": "import { generateOwnedRustPackage } from \"../backends/rust/owned-package.mjs\";\n",
+          "previous": "",
+          "start": 473
+        },
+        {
+          "current": "\tconst valueCopies = Boolean(adapter.cppValues || adapter.rustValues) && callbackResultAnchors;\n",
+          "previous": "\tconst valueCopies = Boolean(adapter.cppValues) && callbackResultAnchors;\n",
+          "start": 3022
+        },
+        {
+          "current": "\tconst rust = adapter.rustValues ? generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n\tif(canonicalJson(adapter.rustValues ?? null) !== canonicalJson(rust?.contract ?? null))\n\t\tthrow new Error(\"Owned Rust adapter differs from compiler-authenticated types or lifetime rules\");\n",
+          "previous": "",
+          "start": 3557
+        },
+        {
+          "current": "\tfor(const [path, source] of Object.entries({ ...generated.files, ...cpp?.files\n\t\t, ...rust ? { \"internal/rust-abi.h\": rust.abiHeader } : {} }))\n",
+          "previous": "\tfor(const [path, source] of Object.entries({ ...generated.files, ...cpp?.files }))\n",
+          "start": 5865
+        }
+      ],
+      "path": "src/release/owned-c-package.mjs",
+      "previousSha256": "721da5d5ac4ab50b6c8a08afdb93400f843409208e096c8a448cfcc60ad16650",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "7376102a20bc392d0341ee79ccb4e67838d180d62cfa55b329ad19884081ff1f",
+      "edits": [
+        {
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });\n",
+          "previous": "\tconst generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults, receiverExports, hostCallbacks });\n",
+          "start": 1839
+        },
+        {
+          "current": "\tif(compiled.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2) || compiled.profile !== \"native-library-v1\" || compiled.bindingIrSha256 !== model.bindingIrSha256\n",
+          "previous": "\tif(compiled.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2) || compiled.profile !== \"native-library-v1\" || compiled.bindingIrSha256 !== model.bindingIrSha256\n",
+          "start": 2214
+        },
+        {
+          "current": "\tawait save(\"lean-bridge/package-receipt.json\", canonicalJson({ schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2\n",
+          "previous": "\tawait save(\"lean-bridge/package-receipt.json\", canonicalJson({ schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2\n",
+          "start": 5550
+        },
+        {
+          "current": "\t\t, backend: callbackResultAnchors ? \"owned-rust-v5\" : receiverExports ? \"owned-rust-v4\" : anchoredResults ? \"owned-rust-v3\" : transferredInputs ? \"owned-rust-v2\" : \"owned-rust-v1\"\n",
+          "previous": "\t\t, backend: receiverExports ? \"owned-rust-v4\" : anchoredResults ? \"owned-rust-v3\" : transferredInputs ? \"owned-rust-v2\" : \"owned-rust-v1\"\n",
+          "start": 6427
+        }
+      ],
+      "path": "src/release/owned-cargo.mjs",
+      "previousSha256": "b3713c417c568147a1742c450b8e131665addaa145c6d1dbbcc90db247b64274",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "e4da84b1961d4604715bcf1cf00e27d6e86db1a2feee8f82fa19b3b62f2bf85f",
+      "edits": [
+        {
+          "current": "import { ownedRustCallbackChangedPaths } from \"./owned-rust-callback-result-history.mjs\";\n",
+          "previous": "",
+          "start": 527
+        },
+        {
+          "current": "\t, ...ownedRustCallbackChangedPaths\n",
+          "previous": "",
+          "start": 1513
+        }
+      ],
+      "path": "tests/helpers/copied-fixture-source-history.mjs",
+      "previousSha256": "a3364486c6aa0bb5aaf2981a8deeab4413f40bcdfdbfbda7ae2273fa7debf224",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "d38c95489285eb69bab70d15095a59b14955921b88ae91e1f64e4dd9ae441f47",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRustCallbackResults } from \"./owned-rust-callback-result-history.mjs\";\n",
+          "previous": "",
+          "start": 1276
+        },
+        {
+          "current": "\t\tconst file = report.files.find(entry => entry.path === path);\n\t\tassert.ok(file, path);\n\t\tconst bytes = Buffer.from(beforeOwnedRustCallbackResults(path, await readFile(path), file.sha256));\n\t\tassert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "previous": "\t\tconst file = report.files.find(entry => entry.path === path), bytes = await readFile(path);\n\t\tassert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "start": 6875
+        },
+        {
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(beforeOwnedRustCallbackResults(path, await readFile(path), digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);\n",
+          "start": 21393
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-callback-result-evidence.mjs",
+      "previousSha256": "c38fb471df0357c22353b0a37deb912fe2c5d239c7cb3af6c15cc5ca4da8d534",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "1805e206fc362a109edb5200878a8bebd63cefd0de6d43a2904eb7eab06de184",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRustCallbackResults } from \"./owned-rust-callback-result-history.mjs\";\n",
+          "previous": "",
+          "start": 233
+        },
+        {
+          "current": "\tsource = beforeOwnedRustCallbackResults(path, source, expected);\n",
+          "previous": "",
+          "start": 3818
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-callback-result-history.mjs",
+      "previousSha256": "f7580f64bda2357414b34c3b7681f6e8a83e8c4c06114f5b49ec492e3bcbfe52",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "b3fd58c086599c6ce388a128d14b6e76eccd0ff42b8089d71db1328b51cf32ae",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRustCallbackResults } from \"./helpers/owned-rust-callback-result-history.mjs\";\n",
+          "previous": "",
+          "start": 266
+        },
+        {
+          "current": "\t\tconst current = beforeOwnedRustCallbackResults(update.path, await readFile(update.path)), prior = beforeOwnedCppCallbackResults(update.path, current);\n",
+          "previous": "\t\tconst current = await readFile(update.path), prior = beforeOwnedCppCallbackResults(update.path, current);\n",
+          "start": 1167
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedRustCallbackResults(path, await readFile(path, \"utf8\"));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = await readFile(path, \"utf8\");\n",
+          "start": 2360
+        },
+        {
+          "current": "\t\tfile.sha256 = sha256(beforeOwnedRustCallbackResults(file.path, await readFile(file.path)));\n",
+          "previous": "\t\tfile.sha256 = sha256(await readFile(file.path));\n",
+          "start": 2633
+        }
+      ],
+      "path": "tests/owned-cpp-callback-result-history.test.mjs",
+      "previousSha256": "c10de4a87d188f9188b689d1d859e748a5b2602eeeeef6c2d64361e5d3ac910e",
+      "strategy": "spans"
+    }
+  ]
+}

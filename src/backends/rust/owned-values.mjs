@@ -27,11 +27,14 @@ const scalars = {
  * @param options - Prepared-package runtime policy.
  */
 export const generateOwnedRustValues = (ir, options = {}) => {
+	const callbackResultAnchors = options.callbackResultAnchors ?? false;
+	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
 	const c = generateOwnedCValues(ir, { hostCallbacks: options.hostCallbacks ?? true
+		, valueCopies, callbackResultAnchors
 		, transferredInputs: options.transferredInputs ?? false
 		, anchoredResults: options.anchoredResults ?? false
 		, receiverExports: options.receiverExports ?? false });
-	const anchors = c.functions.some(item => item.anchor !== undefined);
+	const anchors = Boolean(c.anchoredResults);
 	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node
 		, aggregate: !node.leaf
@@ -40,6 +43,7 @@ export const generateOwnedRustValues = (ir, options = {}) => {
 	}]));
 	const layout = planNativeGraphStorage(nodes), occupied = new Set(reserved);
 	if(wholeOwners) for(const name of ["Value", "ValueType", "OwnedValueStorage", "copy_value"]) occupied.add(name);
+	if(c.callbacks.some(item => item.anchor !== undefined) && (options.hostCallbacks ?? true)) occupied.add("owned_callback_reply_sealed");
 	const claim = name => {
 		if(typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || name.includes("__") || occupied.has(name)
 			|| /^Owned(?:Identity|Raw|Union|Case|Callback)/u.test(name)) throw new TypeError(`Owned Rust name is reserved or duplicated: ${name}`);

@@ -43,17 +43,29 @@ impl OwnedCall {
  * @param options.transferredInputs - Enable explicit mutable input consumption.
  * @param options.anchoredResults - Preserve original owners and borrowed views.
  * @param options.receiverExports - Expose nominal methods and property accessors.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const conversions = generateOwnedRustConversions(ir, { dynamic, transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = conversions;
+export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const conversions = generateOwnedRustConversions(ir, { dynamic, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), { c } = conversions;
 	const anchors = Boolean(c.anchoredResults);
+	const callbackAnchors = c.callbacks.some(item => item.anchor !== undefined);
 	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(conversions.types.map(node => [node.id, node]));
 	const all = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies ?? []];
 	const wrappedResult = item => wholeOwners && !item.retain && !item.copy && nodes.get(item.result).representation !== "copied";
 	const returnType = item => wrappedResult(item) ? `Value<${nodes.get(item.result).hostName}>` : nodes.get(item.result).hostName;
 	const raw = [], helpers = [], traits = [], publicCalls = [], nativeEntries = [];
+	if(hostCallbacks && callbackAnchors) traits.push(
+		"mod owned_callback_reply_sealed {"
+		, "    pub trait Sealed<T> {}"
+		, "    impl<T> Sealed<T> for T {}"
+		, "    impl<T: super::ValueType> Sealed<T> for super::Value<T> {}"
+		, "}"
+		, "#[doc(hidden)] pub trait OwnedCallbackReply<T>: Clone + owned_callback_reply_sealed::Sealed<T> { fn owned_reply(&self) -> Result<&T, Error>; }"
+		, "impl<T: Clone> OwnedCallbackReply<T> for T { fn owned_reply(&self) -> Result<&T, Error> { Ok(self) } }"
+		, "impl<T: ValueType> OwnedCallbackReply<T> for Value<T> { fn owned_reply(&self) -> Result<&T, Error> { self.get() } }"
+	);
 	const signature = (item, offset = 0) => {
 		const params = item.parameters.map(id => nodes.get(id));
 		const host = params.map((_, index) => Boolean(c.hostArgument?.(item, index)));
@@ -85,22 +97,33 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		const copyIndex = all.findIndex(item => (item.retain || item.copy) && item.id === result.id);
 		const arguments_ = params.map((_, index) => `a${index}`).join(", ");
 		const parameters = params.map((param, index) => `a${index}: ${param.hostName}`).join(", ");
-		const bound = `FnMut(${params.map(param => param.hostName).join(", ")}) -> Result<${result.hostName}, Error>`;
+		const borrowed = callback.anchor !== undefined;
+		const replyType = borrowed ? "Self::Reply" : result.hostName;
+		const bound = `FnMut(${params.map(param => param.hostName).join(", ")}) -> Result<${borrowed ? "R" : result.hostName}, Error>`;
+		const generic = borrowed ? `F: ${bound}, R: OwnedCallbackReply<${result.hostName}>` : `F: ${bound}`;
 		traits.push("#[doc(hidden)]", `pub trait OwnedCallback${i} {`
-			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error>;`
+			, ...borrowed ? [`    type Reply: OwnedCallbackReply<${result.hostName}>;`] : []
+			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${replyType}, Error>;`
 			, `    fn closure(&self) -> Option<&${node.hostName}> { None }`
-			, `    fn recovery(&self) -> Option<&${result.hostName}> { None }`
+			, `    fn recovery(&self) -> Option<&${replyType}> { None }`
 			, ...wholeOwners ? ["    fn validate(&self) -> Result<(), Error> { Ok(()) }"] : [], "}");
-		if(automatic) traits.push(`impl<F: ${bound}> OwnedCallback${i} for F {`
-			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error> { self(${arguments_}) }`, "}");
-		traits.push(`impl<F: ${bound}> OwnedCallback${i} for WithRecovery<F, ${result.hostName}> {`
-			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error> { (self.function)(${arguments_}) }`
-			, `    fn recovery(&self) -> Option<&${result.hostName}> { Some(&self.recovery) }`, "}");
+		if(automatic) traits.push(`impl<${generic}> OwnedCallback${i} for F {`
+			, ...borrowed ? ["    type Reply = R;"] : []
+			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${replyType}, Error> { self(${arguments_}) }`, "}");
+		traits.push(`impl<${generic}> OwnedCallback${i} for WithRecovery<F, ${borrowed ? "R" : result.hostName}> {`
+			, ...borrowed ? ["    type Reply = R;"] : []
+			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${replyType}, Error> { (self.function)(${arguments_}) }`
+			, `    fn recovery(&self) -> Option<&${replyType}> { Some(&self.recovery) }`, "}");
+		// Native closures use the closure descriptor below. Raw host arguments
+		// cannot supply an original whole-value anchor to the host-only invoke.
+		const unavailable = `let _ = (${arguments_},); Err(Error::InvalidArgument)`;
 		for(const receiver of [node.hostName, `&${node.hostName}`]) traits.push(`impl OwnedCallback${i} for ${receiver} {`
-			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error> { ${wrappedResult(callback) ? "let value = " : ""}self.call(${params.map((param, index) => `${param.scalar ? "" : "&"}a${index}`).join(", ")})${wrappedResult(callback) ? "?; Ok(value.get()?.clone())" : ""} }`
+			, ...borrowed ? [`    type Reply = ${result.hostName};`] : []
+			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${replyType}, Error> { ${borrowed ? unavailable : `${wrappedResult(callback) ? "let value = " : ""}self.call(${params.map((param, index) => `${param.scalar ? "" : "&"}a${index}`).join(", ")})${wrappedResult(callback) ? "?; Ok(value.get()?.clone())" : ""}`} }`
 			, `    fn closure(&self) -> Option<&${node.hostName}> { Some(self) }`, "}");
 		if(wholeOwners) for(const receiver of [`Value<${node.hostName}>`, `&Value<${node.hostName}>`]) traits.push(`impl OwnedCallback${i} for ${receiver} {`
-			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${result.hostName}, Error> { ${wrappedResult(callback) ? "let value = " : ""}self.get()?.call(${params.map((param, index) => `${param.scalar ? "" : "&"}a${index}`).join(", ")})${wrappedResult(callback) ? "?; Ok(value.get()?.clone())" : ""} }`
+			, ...borrowed ? [`    type Reply = ${result.hostName};`] : []
+			, `    fn invoke(&mut self${parameters ? `, ${parameters}` : ""}) -> Result<${replyType}, Error> { ${borrowed ? `self.get()?; ${unavailable}` : `${wrappedResult(callback) ? "let value = " : ""}self.get()?.call(${params.map((param, index) => `${param.scalar ? "" : "&"}a${index}`).join(", ")})${wrappedResult(callback) ? "?; Ok(value.get()?.clone())" : ""}`} }`
 			, `    fn closure(&self) -> Option<&${node.hostName}> { self.get().ok() }`
 			, "    fn validate(&self) -> Result<(), Error> { self.get().map(|_| ()) }", "}");
 		raw.push("#[repr(C)]", `struct OwnedHost${i} {`
@@ -119,6 +142,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 			, ...params.map((param, index) => `        let argument${index} = unsafe { owned_from${param.index}(${param.leaf ? `&a${index}` : `owned_read(a${index})?`}, 0, &mut input_scope, &mut borrowed)? };`)
 			, "        context.call.budget.replace(input_scope.budget.clone());"
 			, `        let reply = context.function.try_borrow_mut().map_err(|_| Error::CallOrder)?.invoke(${params.map((_, index) => `argument${index}`).join(", ")})?;`
+			, ...borrowed ? ["        let reply = reply.owned_reply()?;"] : []
 			, "        let mut reply_scope = OwnedScope::new(context.call.budget.borrow().clone());"
 			, `        owned_check${result.index}(&reply, 0, &mut reply_scope.budget, &context.call.state)?;`
 			, `        let view = owned_to${result.index}(&reply, &mut reply_scope, &context.call.state)?;`
@@ -134,7 +158,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 			, `    if let Some(closure) = function.closure() { return owned_check${i}(closure, 0, budget, state); }`
 			, `    budget.enter(0)?; budget.native(1, std::mem::size_of::<OwnedHost${i}>())?;`
 			, ...automatic ? [] : ["    if function.recovery().is_none() { return Err(Error::InvalidArgument); }"]
-			, `    if let Some(recovery) = function.recovery() { owned_check${result.index}(recovery, 0, budget, state)?; }`, "    Ok(())", "}");
+			, `    if let Some(recovery) = function.recovery() { owned_check${result.index}(${borrowed ? "recovery.owned_reply()?" : "recovery"}, 0, budget, state)?; }`, "    Ok(())", "}");
 	}
 	all.forEach((item, index) => {
 		const sig = signature(item), result = nodes.get(item.result);
@@ -152,7 +176,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 				const callback = c.callbacks.find(item => item.id === param.id), result = nodes.get(callback.result);
 				helpers.push(`    let closure${i} = a${i}.closure().map(|value| value.raw(&state)).transpose()?;`
 					, `    let recovery${i} = if closure${i}.is_none() { a${i}.recovery().cloned() } else { None };`
-					, `    let recovery_view${i} = recovery${i}.as_ref().map(|value| owned_to${result.index}(value, &mut scope, &state)).transpose()?;`
+					, `    let recovery_view${i} = recovery${i}.as_ref().map(|value| owned_to${result.index}(${callback.anchor !== undefined ? "value.owned_reply()?" : "value"}, &mut scope, &state)).transpose()?;`
 					, `    let mut context${i} = OwnedContext${param.index} { function: std::cell::RefCell::new(&mut a${i}), call: &call };`
 					, `    let view${i} = OwnedHost${param.index} {`
 					, `        call: if closure${i}.is_none() { Some(owned_callback${param.index}::<F${i}>) } else { None },`
@@ -241,7 +265,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		publicCalls.push(...copies.publicCalls); helpers.push(...copies.helpers);
 	}
 	const apiSource = [conversions.valuesSource
-		, ...(!receivers || (hostCallbacks && c.callbacks.length)) ? ["/// A typed failure-path value for Lean cleanup, never a successful callback reply."
+		, ...((!receivers && !callbackAnchors) || (hostCallbacks && c.callbacks.length)) ? ["/// A typed failure-path value for Lean cleanup, never a successful callback reply."
 			, "pub struct WithRecovery<F, R> { function: F, recovery: R }"
 			, "pub fn with_recovery<F, R>(function: F, recovery: R) -> WithRecovery<F, R> { WithRecovery { function, recovery } }"] : []
 		, ...traits, ...publicCalls, ""].join("\n");

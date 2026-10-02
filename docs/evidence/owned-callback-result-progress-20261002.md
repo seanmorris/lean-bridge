@@ -2,9 +2,10 @@
 
 VO task 1219. This work extends the explicit ownership profile so a returned
 Lean function can borrow its result from one of that function's arguments.
-Installed C and npm acceptance passes on both authoring paths. The remaining
-language projections and full regression integration are pending. The support
-matrix has not been promoted.
+Installed C, C++, Cargo and npm acceptance passes on both authoring paths.
+Rust's complete enabled gate passes all 13 tests without skips. Its six runtime
+configurations, four installed Cargo cases and two combined releases preserve
+the selected callback owner. The support matrix has not been promoted.
 
 ## Author contract
 
@@ -132,11 +133,25 @@ receiver mutant checks now reconstruct their original authenticated sources.
 
 ## Remaining acceptance
 
-Run the full regression suite and commit the C/npm milestone. Implement and
-verify the C++, Rust, Python,
-Ruby, C#, Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI projections. Update
-their guides and acceptance evidence from installed results, then complete the
-support-matrix audit. Run the required CI jobs after committing each milestone.
+The C/npm milestone, packaging repair and C++ milestone are committed and pushed. C++ has a
+[complete acceptance record](owned-cpp-callback-results-20261002.json), with all
+12 enabled tests passing. Its final repository-wide regression passed 2,994
+tests, with 668 explicitly gated skips and no failures.
+
+Rust's [acceptance record](owned-rust-callback-results-20261002.json) preserves
+all 12 reports and the complete 13-test gate. Both source paths build one
+C/C++/Cargo/npm release with 118 Rust, 76 C++, 219 C and 40 JavaScript public
+checks, strict TypeScript and nine browser contexts. Cargo consumers install
+offline and run after producer sources, the CLI and package sources are removed.
+Runtime checks include address/undefined sanitizers, allocation failures, Rust
+panics and compiled semantic mutations. Final repository-wide regression and
+commit remain separate from this acceptance record.
+
+Implement and verify Python, Ruby, C#,
+Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI callback-result projections.
+Update each guide and acceptance record from installed results, then complete
+the package/container checks and support-matrix audit. Run the required CI jobs
+after committing each milestone.
 
 This capability does not enable retained host callbacks, asynchronous delivery,
 or callback input ownership transfers.

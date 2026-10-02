@@ -27,7 +27,8 @@ export const projectOwnedRust = async options => {
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
-	const generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults, receiverExports, hostCallbacks });
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
 	const root = join(working, "native/rust"), scratch = join(working, "rust-compiler");
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	for(const [path, source] of Object.entries(generated.files)) await save(path, source);
@@ -46,7 +47,7 @@ export const projectOwnedRust = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("native-rust.json", canonicalJson({ schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2
+	await save("native-rust.json", canonicalJson({ schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2
 		, profile: "native-library-v1"
 		, bindingIrSha256: model.bindingIrSha256, evidence, rustc, name, version
 		, ownedValues: generated.contract, files }));

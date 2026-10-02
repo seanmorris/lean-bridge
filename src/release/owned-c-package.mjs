@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { generateOwnedCPackage } from "../backends/c/owned-package.mjs";
 import { generateOwnedCppPackage } from "../backends/cpp/owned-package.mjs";
+import { generateOwnedRustPackage } from "../backends/rust/owned-package.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from "../build/native-artifacts.mjs";
 import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
@@ -41,10 +42,13 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	const receiverExports = Boolean(model.ownedGraph.receiverExports);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
-	const valueCopies = Boolean(adapter.cppValues) && callbackResultAnchors;
+	const valueCopies = Boolean(adapter.cppValues || adapter.rustValues) && callbackResultAnchors;
 	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const p = generated.values.prefix;
 	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
+	const rust = adapter.rustValues ? generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
+	if(canonicalJson(adapter.rustValues ?? null) !== canonicalJson(rust?.contract ?? null))
+		throw new Error("Owned Rust adapter differs from compiler-authenticated types or lifetime rules");
 	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
 		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
@@ -59,7 +63,8 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 		|| adapter.ownedValues.headerSha256 !== sha256(generated.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(generated.source)
 		|| (await nativeArtifactPaths(adapterRoot)).some(path => path !== "native-c-adapter.json" && !Object.hasOwn(adapter.files, path)))
 		throw new Error("Owned C adapter differs from compiler-authenticated types or runtime");
-	for(const [path, source] of Object.entries({ ...generated.files, ...cpp?.files }))
+	for(const [path, source] of Object.entries({ ...generated.files, ...cpp?.files
+		, ...rust ? { "internal/rust-abi.h": rust.abiHeader } : {} }))
 		if(source !== await readFile(join(adapterRoot, path), "utf8")) throw new Error(`Owned C generated source differs: ${path}`);
 	const name = settings.name ?? p.replaceAll("_", "-"), version = settings.version ?? model.component.version;
 	validateNativeCSettings({ name, version });

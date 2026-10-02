@@ -29,9 +29,10 @@ export const packageOwnedCargo = async options => {
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
-	const generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults, receiverExports, hostCallbacks });
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const generated = generateOwnedRustPackage(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
 	await verifyNativeFiles(rustRoot, compiled.files);
-	if(compiled.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
+	if(compiled.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.name !== name || compiled.version !== version || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| canonicalJson(compiled.ownedValues) !== canonicalJson(generated.contract)
 		|| !/^rustc 1\.(?:9\d|[1-9]\d{2,})\.\d+ /u.test(compiled.rustc)
@@ -67,7 +68,7 @@ export const packageOwnedCargo = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2
+	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2
 		, kind: "lean-bridge-owned-cargo-package"
 		, ecosystem: "cargo", name, version, component: model.component
 		, bindingIrSha256: model.bindingIrSha256
@@ -79,7 +80,7 @@ export const packageOwnedCargo = async options => {
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: "cargo"
-		, backend: receiverExports ? "owned-rust-v4" : anchoredResults ? "owned-rust-v3" : transferredInputs ? "owned-rust-v2" : "owned-rust-v1"
+		, backend: callbackResultAnchors ? "owned-rust-v5" : receiverExports ? "owned-rust-v4" : anchoredResults ? "owned-rust-v3" : transferredInputs ? "owned-rust-v2" : "owned-rust-v1"
 		, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion
 		, packages: [{ archive, name, version, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };
 };

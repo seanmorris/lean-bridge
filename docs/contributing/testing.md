@@ -3527,6 +3527,38 @@ without skips. CI retains `build/owned-jvm-receiver-gc.log` and both reports in
 `build/owned-jvm-receiver-gc/`. These checks exercise generated bindings directly;
 the installed Maven package checks remain in the receiver gate above.
 
+## Rust callback-result lifetimes
+
+Run `npm run test:owned-rust-callback-results` with the pinned Lean, Rust and
+Emscripten toolchains, native build tools, and all three Playwright browsers.
+The gate requires 13 passing tests without skips and twelve reports under
+`build/owned-rust-callback-results/`.
+
+The six runtime cases cover ordinary source and reviewed IR, each with no host
+callbacks, with host callbacks, and with receivers and transfers. They check
+original argument owners, empty and recursive values, independent retains,
+raw and whole-owner host replies, returned Lean closures passed back as
+callbacks, panic identity, fork rejection, and allocation failures before and
+after handoff. Compile-negative cases reject raw anchors, wrong reply owners,
+custom reply wrappers, and `Send`/`Sync` uses.
+
+The native C boundary runs under address and undefined-behavior sanitizers.
+The harness compares exercised leaks with a cold Lean startup and deliberately
+injects a buffer overflow and invalid shift to verify the detectors. Rust owns
+its test threads' alternate signal stacks. Seven compiled ownership mutations
+must fail the public API assertions; restored sources must reproduce the baseline.
+
+Four Cargo package cases cover both source paths with and without host callbacks.
+They independently rebuild archives, reject forged contracts and generated
+sources, install offline into an empty Cargo home, execute the documented
+example, then run relocated executables after removing source and package trees.
+The combined release case checks C, C++, Cargo and npm together, including
+strict TypeScript and page, React and worker contexts in three browser engines.
+
+The required `owned-rust-callback-results` CI job checks every report, preserves
+logs even on failure, and propagates failure to the consumer summary. Runtime
+reports are reconstructed from current compiler metadata and generated sources.
+
 ## C and npm callback-result lifetimes
 
 Run the callback-result gate with the pinned Lean toolchain, native C build

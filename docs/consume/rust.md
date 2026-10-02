@@ -521,6 +521,49 @@ Aliases and borrowed descendants expire before callback reentry. A call cannot
 consume its result anchor or an ancestor of it. Packages without anchored results or receiver contracts
 keep the APIs described above. See the [author contract](../publish/cargo.md#anchor-a-result-to-an-input).
 
+### Borrowed callback results
+
+A returned Lean closure can borrow its result from one of its call arguments.
+Pass `&Value<T>` for that argument. The result expires with that argument's
+original owner, even when the closure returns a value from its captured state.
+The closure itself does not keep the argument owner alive. Empty constructors
+and nested borrowed results follow the same rule.
+
+For the `owned-callback-results` example crate, save this as `src/main.rs`:
+
+```rust file=rust/owned-callback-results.rs
+use owned_callback_results::{
+    echo_record, make_record, new_ticket, serial, BigInt, BigUint,
+    Bundle, Error, Payload,
+};
+
+fn main() -> Result<(), Error> {
+    let ticket = new_ticket(&BigUint::from(42u32), "order")?;
+    let input = Bundle {
+        primary: ticket.get()?.clone(), spare: None, peers: vec![], history: vec![],
+        payload: Payload { count: BigInt::from(42), bytes: vec![] },
+    };
+    let mut owner = echo_record(&input)?;
+    let choose = make_record(owner.get()?)?;
+    let borrowed = choose.call(false, &owner)?;
+    let independent = borrowed.retain()?;
+    owner.close();
+    assert_eq!(borrowed.get(), Err(Error::Closed));
+    println!("{}", serial(&independent.get()?.primary)?);
+    Ok(())
+}
+```
+
+Host callbacks with these result contracts can return either the exact raw
+value or its `Value<T>` owner. The bridge validates and copies the reply before
+the callback's argument borrows expire. `with_recovery` accepts the same forms.
+Closed whole-value replies fail, including empty containers. Returned Lean
+closures can also be passed back as callable arguments, by value or reference.
+
+Retain a borrowed result before releasing or transferring its original owner.
+Neither whole values nor resource wrappers are `Send` or `Sync`. The callback
+result contract does not permit asynchronous or retained Rust callbacks.
+
 ### Methods and properties
 
 Declared receivers expose snake-case methods on `Value<NominalType>`. Properties

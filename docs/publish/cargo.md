@@ -308,6 +308,54 @@ the compiler-derived result-anchor contract. Packaging regenerates the native
 and Rust sources before accepting an archive. Every target in a combined build
 must accept the complete ownership contract.
 
+## Anchor a callback result to an argument
+
+Declare the borrowed result inside the callable contract. Anchor indices count
+the callback's own runtime parameters, excluding its closure and any enclosing
+export's arguments. For `makeRecord : Bundle → Bool → Bundle → Bundle`, export
+one argument and describe the returned closure's result:
+
+```json
+{
+  "arities": { "Owned.makeRecord": 1 },
+  "contracts": {
+    "Owned.makeRecord": {
+      "result": {
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null },
+        "callable": {
+          "result": {
+            "ownership": "borrow",
+            "lifetime": { "scope": "parameter", "anchor": "arg1" }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Merge these entries into the package's existing configuration. Keep its module,
+export, resource and owned-aggregate declarations. `arg1` selects the closure's
+`Bundle` argument after its `Bool` argument. Rust callers supply `&Value<Bundle>`;
+the returned value expires with that argument's original owner, even if Lean
+returns the captured bundle. Both ordinary source and reviewed contracts receive
+fresh compiler checks.
+
+Host callback results use the same nested `callable.result` declaration on the
+callback parameter. Rust accepts the exact raw reply or its `Value<T>` owner,
+validates it, and copies it before the callback's argument borrows expire.
+Recovery values follow the same rule. Returned Lean closures can be passed back
+as callable arguments. See the [consumer example](../consume/rust.md#borrowed-callback-results).
+
+These crates use `owned-rust-v5`, Rust ownership contract version 5, and compiled
+Rust/package receipts version 6. The native model records the callback-local
+anchor separately from export anchors, receivers and transfers. Packaging
+regenerates the source and ownership contracts before accepting the archive.
+The producer API can omit host callback support while preserving returned
+closure owners and independent `retain()` copies. The CLI enables host callbacks.
+Every target in a combined build must accept the complete contract.
+
 ## Export methods and properties
 
 Use the [shared receiver configuration](c.md#export-methods-and-properties) to

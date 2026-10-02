@@ -16,6 +16,7 @@ import { ownedCppCallbackBaseline, ownedCppCallbackChangedPaths
 	, ownedCppCallbackHistoryPath, ownedCppCallbackHistorySha256 } from "./owned-cpp-callback-result-history.mjs";
 import { assertOwnedCppCallbackResultCi, ownedCppCallbackResultReports } from "./owned-cpp-callback-result-ci.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
+import { beforeOwnedRustCallbackResults } from "./owned-rust-callback-result-history.mjs";
 
 export const ownedCppCallbackEvidencePath = "docs/evidence/owned-cpp-callback-results-20261002.json";
 export const ownedCppCallbackPrevious = Object.freeze({
@@ -101,8 +102,10 @@ const cli = async report => {
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)
 	{
-		const file = report.files.find(entry => entry.path === path), bytes = await readFile(path);
-		assert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
+		const file = report.files.find(entry => entry.path === path);
+		assert.ok(file, path);
+		const bytes = Buffer.from(beforeOwnedRustCallbackResults(path, await readFile(path), file.sha256));
+		assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 };
 const mutations = (cpp, combined) => {
@@ -293,7 +296,7 @@ export const assertOwnedCppCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedCppCallbackHistoryPath, sha256: ownedCppCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedCppCallbackSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(beforeOwnedRustCallbackResults(path, await readFile(path), digest)), digest, path);
 	assert.equal(record.run.command, "npm run test:owned-cpp-callback-results"); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, count] of Object.entries({ tests: 12, pass: 12, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))

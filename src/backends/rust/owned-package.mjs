@@ -56,13 +56,15 @@ ${entries.map(entry => `            ${entry.field}: symbol!("${entry.symbol}", $
  * @param options.transferredInputs - Enable explicit mutable input consumption.
  * @param options.anchoredResults - Keep whole original owners for borrowed results.
  * @param options.receiverExports - Expose checked nominal receiver members.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs, anchoredResults, receiverExports, hostCallbacks });
+export const generateOwnedRustPackage = (ir, evidence = null, settings = {}, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const generated = generateOwnedRustCallables(ir, { dynamic: true, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
 	const transfers = generated.c.functions.some(item => item.transfers?.length);
-	const anchors = Boolean(generated.c.anchoredResults);
-	const receivers = generated.c.functions.filter(item => item.receiver === 0), wholeOwners = anchors || receivers.length > 0;
+	const anchors = generated.c.functions.some(item => item.anchor !== undefined);
+	const callbackAnchors = generated.c.callbacks.filter(item => item.anchor !== undefined);
+	const receivers = generated.c.functions.filter(item => item.receiver === 0), wholeOwners = anchors || callbackAnchors.length > 0 || receivers.length > 0;
 	const name = settings.name ?? `lean_bridge_${generated.c.prefix}`, version = settings.version ?? ir.component.version;
 	validateOrdinaryCargoSettings({ name, version });
 	const source = nativeSource(generated);
@@ -94,7 +96,7 @@ wrapper; other owning clones remain usable. retain() creates independent native
 ownership. Resources and returned Lean closures are neither Send nor Sync.
 Calls reject closed and inherited post-fork resources. Drop releases their owners
 on the creating thread; a fresh process is required after fork.
-${anchors ? `
+${anchors || callbackAnchors.length ? `
 This package has input-anchored borrowed results. Resource-containing results use
 Value<T>, including empty containers and constructors. get() checks the whole
 owner and returns Result<&T, Error>. Clones share immutable storage and ownership;
@@ -105,7 +107,16 @@ Previously extracted references do not revalidate ordinary copied field reads;
 resource operations still validate their own lifetime. try_equal() and resource
 same_identity() return errors for expired values. PartialEq returns false on an
 invalid lifetime and compares canonical resource identity for valid values.
-` : ""}${receivers.length ? `
+` : ""}${callbackAnchors.length ? `
+Returned closures number anchor parameters locally, excluding the closure itself.
+Pass &Value<T> for the selected argument. Its original owner controls the lifetime
+of the result and every descendant, not the closure's captured owner. Releasing or
+transferring that owner expires empty and populated results alike. retain() and
+copy_value create independent ownership before the original owner expires.
+${hostCallbacks ? `Host callbacks can return the exact raw result or Value<T>. The bridge checks
+and copies that reply before the callback borrow expires. Recovery values follow
+the same rule. Expired whole-value replies reject, including empty containers.
+` : ""}` : ""}${receivers.length ? `
 Declared methods and properties are snake_case methods on Value<NominalType>.
 Properties are zero-argument accessors such as owner.serial(). Copied fields remain
 fields of the value returned by get(). Non-consuming receivers take &self;
@@ -131,7 +142,7 @@ remain ordinary Rust values. Independently retained resources stay usable.
 Callback-frame borrows cannot be transferred; retain them first. Two transferred
 arguments cannot consume the same lease. After handoff, errors and panics leave
 the inputs consumed; validation or preparation failures leave them usable.
-` : ""}${!receivers.length || hostCallbacks ? `
+` : ""}${hostCallbacks || (!receivers.length && !callbackAnchors.length) ? `
 Callbacks accept synchronous FnMut functions returning Result. Callback arguments
 own their copied storage, while resource leaves borrow the callback frame. Those
 borrows expire on return, including cloned wrappers. Call retain() inside the
@@ -150,10 +161,21 @@ These budgets do not bound Lean algorithm memory or every allocator overhead.
 Rust and GMP retain their normal fatal allocator-exhaustion policies.
 `
 	};
-	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+	const schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;
+	const contract = { schemaVersion
 		, language: "rust-1.90"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "resume-after-native-return"
+		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-argument-owner"
+			, parameterNumbering: "callback-local"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved"
+			, independentOwnership: "retain-or-copy_value"
+			, hostReply: "value-or-whole-owner"
+			, hostResultHandoff: "before-callback-frame-expires"
+			, signatures: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1 }))
+		} } : {}
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
 			, arguments: "mutable-references", consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"
@@ -181,8 +203,8 @@ Rust and GMP retain their normal fatal allocator-exhaustion policies.
 		, exactIntegers: "num-bigint-0.4.6", loader: "authenticated-embedded-native"
 		, apiSha256: sha256(generated.apiSource), conversionsSha256: sha256(source)
 		, limits: generated.c.native.model.limits };
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
-		, backend: receivers.length ? "owned-rust-v4" : anchors ? "owned-rust-v3" : transfers ? "owned-rust-v2" : "owned-rust-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion
+		, backend: `owned-rust-v${schemaVersion}`
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, component: ir.component, contract, evidence
 		, publicModule: "src/lib.rs", files: Object.keys(files).sort()
