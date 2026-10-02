@@ -558,6 +558,139 @@ including after JIT optimization. A bound method reference also keeps its
 receiver reachable until you release that reference. The cleaner queues native
 releases for the creating thread. Use `try`-with-resources for prompt cleanup.
 
+#### Callback-result owners (unreleased)
+
+This profile is under development. These examples target the callback-result
+owned-aggregates fixture, whose returned callable borrows its result from the
+whole invocation argument. Use the package and generated API for that contract;
+ordinary leased callback results have different signatures.
+
+Pass the original whole owner to the returned native closure. Closing that owner
+expires the callback result and its borrowed descendants. Retain the result
+before closing the original when an independent lifetime is needed.
+
+```java file=java/OwnedCallbackResultExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.*;
+
+@SuppressWarnings("try")
+public final class OwnedCallbackResultExample {
+    public static void main(String[] args) {
+        try (var seed = Api.newTicket(BigInteger.valueOf(42), "callback-owner")) {
+            var input = new Bundle(seed.get(), Option.none(), new Ticket[0], new Ticket[0],
+                new Payload(BigInteger.ZERO, new byte[0]));
+            try (var original = Api.echoRecord(input);
+                 var closureOwner = Api.makeRecordCallback(input);
+                 var borrowed = closureOwner.get().invoke(original);
+                 var independent = borrowed.retain()) {
+                original.close();
+                if (!borrowed.isClosed() || independent.isClosed()) throw new AssertionError("Owner lifetime");
+                if (Api.serial(independent.get().primary()).intValueExact() != 42)
+                    throw new AssertionError("Retained callback result");
+                try {
+                    borrowed.get();
+                    throw new AssertionError("Expired callback result was accepted");
+                } catch (LeanBridgeException error) {
+                    if (error.status() != 4) throw error;
+                }
+            }
+        }
+        System.out.println("callback-result-retained");
+    }
+}
+```
+
+Host-enabled packages accept `CallbackResult.value(raw)` or
+`CallbackResult.owner(wholeOwner)` from synchronous callbacks. The bridge copies
+the reply before the callback argument frame expires. This host-reply example
+requires the host-enabled profile; the native-only profile omits those callback
+interfaces and `CallbackResult`.
+
+```java file=java/OwnedCallbackReplyExample.java
+import java.math.BigInteger;
+import org.leanbridge.owned_aggregates.*;
+
+@SuppressWarnings("try")
+public final class OwnedCallbackReplyExample {
+    public static void main(String[] args) {
+        try (var seed = Api.newTicket(BigInteger.valueOf(42), "callback-reply")) {
+            var input = new Bundle(seed.get(), Option.none(), new Ticket[0], new Ticket[0],
+                new Payload(BigInteger.ZERO, new byte[0]));
+            try (var replyOwner = Api.echoRecord(input);
+                 var raw = Api.callbackRecord(input,
+                     (ApplyTwiceArgument1ClosureCallback)value -> CallbackResult.value(value));
+                 var whole = Api.callbackRecord(input,
+                     (ApplyTwiceArgument1ClosureCallback)value -> CallbackResult.owner(replyOwner))) {
+                replyOwner.close();
+                if (Api.serial(raw.get().primary()).intValueExact() != 42
+                    || Api.serial(whole.get().primary()).intValueExact() != 42)
+                    throw new AssertionError("Callback reply was not copied before expiry");
+            }
+        }
+        System.out.println("callback-replies-copied");
+    }
+}
+```
+
+#### Callback owners and creator-thread exit (unreleased)
+
+Callback-result owners and independent retains still belong to their creating
+platform thread. The next example keeps all wrappers and the `Thread` reachable
+after that thread exits, checks `isClosed`, and verifies status 4 on later reads.
+It uses only the installed public API.
+
+```java file=java/OwnedCallbackThreadExample.java
+import java.lang.ref.Reference;
+import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import org.leanbridge.owned_aggregates.*;
+
+public final class OwnedCallbackThreadExample {
+    public static void main(String[] args) throws InterruptedException {
+        var held = new AtomicReference<Value<?>[]>();
+        var failure = new AtomicReference<Throwable>();
+        var worker = new Thread(() -> {
+            try {
+                var seed = Api.newTicket(BigInteger.valueOf(42), "callback-thread");
+                var input = new Bundle(seed.get(), Option.none(), new Ticket[0], new Ticket[0],
+                    new Payload(BigInteger.ZERO, new byte[0]));
+                var original = Api.echoRecord(input);
+                var closureOwner = Api.makeRecordCallback(input);
+                var borrowed = closureOwner.get().invoke(original);
+                var descendant = closureOwner.get().invoke(borrowed);
+                var independent = descendant.retain();
+                held.set(new Value<?>[] { seed, original, closureOwner, borrowed, descendant, independent });
+            } catch (Throwable error) { failure.set(error); }
+        });
+        worker.start(); worker.join(10000);
+        if (worker.isAlive()) throw new AssertionError("Worker did not exit");
+        if (failure.get() != null) throw new AssertionError(failure.get());
+        var owners = held.get();
+        long deadline = System.nanoTime() + 5_000_000_000L;
+        while (java.util.Arrays.stream(owners).anyMatch(owner -> !owner.isClosed())
+            && System.nanoTime() < deadline) Thread.sleep(5);
+        for (var owner : owners) {
+            if (!owner.isClosed()) throw new AssertionError("Creator-thread owner remains open");
+            try {
+                owner.get();
+                throw new AssertionError("Dead-thread owner was accepted");
+            } catch (LeanBridgeException error) {
+                if (error.status() != 4) throw error;
+            }
+        }
+        Reference.reachabilityFence(owners); Reference.reachabilityFence(worker);
+        System.out.println("callback-thread-owners-closed");
+    }
+}
+```
+
+These public checks establish wrapper expiry. Neither thread joining nor
+`isClosed` proves completion of native TLS cleanup. The direct JVM process probes
+wait for the native exit counter and check restored allocation and identity
+counts separately. Installed packages expose no runtime-retirement operation;
+retirement checks use private test instrumentation. These checks make no general
+JVM fork-support claim.
+
 ### Alpha interoperability example
 
 The remaining example uses the separate `org.leanbridge:lean-alpha:0.0.0` fixture API. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the authenticated Alpha release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`.

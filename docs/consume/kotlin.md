@@ -505,6 +505,135 @@ captures an owner keeps it reachable until you release the callable.
 Use `use` for prompt cleanup. The [Java garbage-collection rules](java.md#receiver-lifetimes-and-garbage-collection)
 also apply to Kotlin owners and their creating threads.
 
+#### Callback-result owners (unreleased)
+
+This profile is under development. These examples target the callback-result
+owned-aggregates fixture, whose returned callable borrows its result from the
+whole invocation argument. Use the package and generated API for that contract;
+ordinary leased callback results have different signatures.
+
+Pass the original whole owner to the returned native closure. Closing that owner
+expires the callback result and its borrowed descendants. Retain the result
+before closing the original when an independent lifetime is needed.
+
+```kotlin file=kotlin/OwnedCallbackResultExample.kt
+import java.math.BigInteger
+import org.leanbridge.owned_aggregates.kotlin.*
+
+fun main() {
+    Api.newTicket(BigInteger.valueOf(42), "callback-owner").use { seed ->
+        val input = Bundle(seed.get(), Option.none(), emptyArray(), emptyArray(),
+            Payload(BigInteger.ZERO, byteArrayOf()))
+        Api.echoRecord(input).use { original ->
+            Api.makeRecordCallback(input).use { closureOwner ->
+                closureOwner.get().invoke(original).use { borrowed ->
+                    borrowed.retain().use { independent ->
+                        original.close()
+                        check(borrowed.isClosed && !independent.isClosed)
+                        check(Api.serial(independent.get().primary).intValueExact() == 42)
+                        try {
+                            borrowed.get()
+                            error("Expired callback result was accepted")
+                        } catch (failure: LeanBridgeException) {
+                            check(failure.status() == 4)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    println("callback-result-retained")
+}
+```
+
+Host-enabled packages accept `CallbackResult.value(raw)` or
+`CallbackResult.owner(wholeOwner)` from synchronous callbacks. The bridge copies
+the reply before the callback argument frame expires. This host-reply example
+requires the host-enabled profile; the native-only profile omits those callback
+interfaces and `CallbackResult`.
+
+```kotlin file=kotlin/OwnedCallbackReplyExample.kt
+import java.math.BigInteger
+import org.leanbridge.owned_aggregates.kotlin.*
+
+fun main() {
+    Api.newTicket(BigInteger.valueOf(42), "callback-reply").use { seed ->
+        val input = Bundle(seed.get(), Option.none(), emptyArray(), emptyArray(),
+            Payload(BigInteger.ZERO, byteArrayOf()))
+        Api.echoRecord(input).use { replyOwner ->
+            Api.callbackRecord(input, ApplyTwiceArgument1ClosureCallback {
+                CallbackResult.value(it)
+            }).use { raw ->
+                Api.callbackRecord(input, ApplyTwiceArgument1ClosureCallback {
+                    CallbackResult.owner(replyOwner)
+                }).use { whole ->
+                    replyOwner.close()
+                    check(Api.serial(raw.get().primary).intValueExact() == 42)
+                    check(Api.serial(whole.get().primary).intValueExact() == 42)
+                }
+            }
+        }
+    }
+    println("callback-replies-copied")
+}
+```
+
+#### Callback owners and creator-thread exit (unreleased)
+
+Callback-result owners and independent retains still belong to their creating
+platform thread. The next example keeps all wrappers and the `Thread` reachable
+after that thread exits, checks `isClosed`, and verifies status 4 on later reads.
+It uses only the installed public API.
+
+```kotlin file=kotlin/OwnedCallbackThreadExample.kt
+import java.lang.ref.Reference
+import java.math.BigInteger
+import java.util.concurrent.atomic.AtomicReference
+import org.leanbridge.owned_aggregates.kotlin.*
+
+fun main() {
+    val held = AtomicReference<Array<Value<*>>>()
+    val failure = AtomicReference<Throwable>()
+    val worker = Thread {
+        try {
+            val seed = Api.newTicket(BigInteger.valueOf(42), "callback-thread")
+            val input = Bundle(seed.get(), Option.none(), emptyArray(), emptyArray(),
+                Payload(BigInteger.ZERO, byteArrayOf()))
+            val original = Api.echoRecord(input)
+            val closureOwner = Api.makeRecordCallback(input)
+            val borrowed = closureOwner.get().invoke(original)
+            val descendant = closureOwner.get().invoke(borrowed)
+            val independent = descendant.retain()
+            held.set(arrayOf(seed, original, closureOwner, borrowed, descendant, independent))
+        } catch (error: Throwable) { failure.set(error) }
+    }
+    worker.start(); worker.join(10000)
+    check(!worker.isAlive)
+    failure.get()?.let { throw AssertionError(it) }
+    val owners = held.get()
+    val deadline = System.nanoTime() + 5_000_000_000L
+    while (owners.any { !it.isClosed } && System.nanoTime() < deadline) Thread.sleep(5)
+    for (owner in owners) {
+        check(owner.isClosed)
+        try {
+            owner.get()
+            error("Dead-thread owner was accepted")
+        } catch (error: LeanBridgeException) {
+            check(error.status() == 4)
+        }
+    }
+    Reference.reachabilityFence(owners); Reference.reachabilityFence(worker)
+    println("callback-thread-owners-closed")
+}
+```
+
+These public checks establish wrapper expiry. Neither thread joining nor
+`isClosed` proves completion of native TLS cleanup. The direct JVM process probes
+wait for the native exit counter and check restored allocation and identity
+counts separately. Installed packages expose no runtime-retirement operation;
+retirement checks use private test instrumentation. These checks make no general
+JVM fork-support claim.
+
 ### Alpha interoperability example
 
 The remaining example uses the separate authenticated `org.leanbridge:lean-alpha:0.0.0` fixture API. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the Alpha release directory containing `repository/`.

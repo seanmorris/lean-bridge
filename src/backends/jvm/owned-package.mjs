@@ -185,7 +185,7 @@ its success or error branch. Pair retains binary nesting. Aliases retain their
 metadata without adding JVM wrappers. Null payloads, negative Nat, malformed
 Unicode, cycles and invalid branches reject.
 
-	${anchors || callbackAnchors.length ? `Resource-bearing results use Value<T>, including empty arrays, absent options and
+${callbackAnchors.length ? "\t" : ""}${anchors || callbackAnchors.length ? `Resource-bearing results use Value<T>, including empty arrays, absent options and
 payload-free constructors. Use get() to inspect a value, share() for another
 guard on the same owner, and retain() for an independent copy. The last shared
 guard's close expires borrowed descendants. Raw resource views from get() do
@@ -245,9 +245,9 @@ If a callback has no automatic recovery value, use
 OwnedCallbacks.withRecovery(callback, recoveryValue). Java lambdas that match
 several recovery overloads need an explicit callback type. Host exceptions keep
 their identity after native cleanup. Recovery values allow cleanup, not successful
-	results. Host callbacks do not remain usable after their originating call ends.
+${callbackAnchors.length ? "\t" : ""}results. Host callbacks do not remain usable after their originating call ends.
 
-	` : ""}${callbackAnchors.length ? `Callbacks whose results borrow an argument return CallbackResult<T>. Use
+${callbackAnchors.length ? "\t" : ""}` : ""}${callbackAnchors.length ? `Callbacks whose results borrow an argument return CallbackResult<T>. Use
 CallbackResult.value(value) for an ordinary reply or CallbackResult.owner(value)
 to return a checked Value<T> with its original owner. The binding copies the reply
 before callback arguments expire. Generated overloads accept returned Lean closures
@@ -263,7 +263,7 @@ runtime identities, conflicting library builds and unverified preloads.
 Compatible packages share loaded dependencies. Native libraries stay loaded
 until process exit so native thread destructors remain valid. Extracted files
 are removed at normal JVM shutdown. Start a fresh process after fork.
-${callbackAnchors.length ? "Retained host callbacks and callback input transfers" : receivers.length ? "Callback-result anchors" : anchors ? "Receiver anchors and callback-result anchors" : transfers ? "Anchored results" : "Transferred inputs and anchored results"} and asynchronous delivery require separate
+${callbackAnchors.length ? "Retained host callbacks and callback input transfers" : receivers.length ? "Callback-result anchors" : anchors ? "Receiver anchors, callback-result anchors" : transfers ? "Anchored results" : "Transferred inputs, anchored results"} and asynchronous delivery require separate
 lifetime support.
 `;
 	files["binding-manifest.json"] = canonicalJson({ schemaVersion: contract.schemaVersion

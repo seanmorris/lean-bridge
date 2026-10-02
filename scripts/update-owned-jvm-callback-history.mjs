@@ -18,6 +18,7 @@ const previous = {
 };
 const allowed = new Set([
 	".github/workflows/consumer-matrix.yml"
+	, "docs/consume/java.md", "docs/consume/kotlin.md"
 	, "config/checked-javascript.json", "config/cli-package.v1.json"
 	, "docs/type-surface.v1.json", "nix/perl-engine-source-boundary.json"
 	, "package.json", "src/adoption/test-profiles.mjs"
@@ -30,6 +31,9 @@ const allowed = new Set([
 	, "src/release/owned-maven.mjs"
 	, "tests/helpers/owned-jvm-call-fixture.mjs"
 	, "tests/helpers/owned-jvm-package-tamper.mjs"
+	, "tests/helpers/owned-jvm-installed-assets.mjs"
+	, "tests/helpers/type-corpus-jvm.mjs"
+	, "tests/helpers/owned-callback-combined-release.mjs"
 	, "tests/helpers/copied-fixture-source-history.mjs"
 	, "tests/helpers/owned-dotnet-callback-result-history.mjs"
 	, "tests/helpers/owned-dotnet-callback-result-acceptance.mjs"

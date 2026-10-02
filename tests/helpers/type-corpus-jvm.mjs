@@ -205,7 +205,7 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	const runtimeJava = join(runtime, "bin/java"), runtimeEnv = { ...clean, JAVA_HOME: runtime };
 	jvm.runtimeModules = (await jvmRun(runtimeJava, ["--list-modules"], deployment, runtimeEnv)).stdout.trim().split("\n");
 	assert.equal(jvm.runtimeModules.length, 1); assert.match(jvm.runtimeModules[0], /^java\.base@22(?:\.|$)/);
-	const temp = join(deployment, "native-temp"), observations = [];
+	const temp = join(deployment, "native-temp"), observations = [], runtimeExecutions = [];
 	await mkdir(temp);
 	if(examples.length)
 	{
@@ -225,10 +225,17 @@ export const installedJvmCorpus = async ({ library, profile, consumer, handoff, 
 	for(let i = 0; i < 2; ++i)
 	{
 		assert.deepEqual(await readdir(temp), []);
-		observations.push(JSON.parse((await jvmRun(runtimeJava, ["--enable-native-access=ALL-UNNAMED", `-Djava.io.tmpdir=${temp}`, "-classpath", runtimeClasspath.join(delimiter), javaProfile ? "Consumer" : "ConsumerKt"], deployment, runtimeEnv)).stdout));
+		const execution = await jvmRun(runtimeJava, ["--enable-native-access=ALL-UNNAMED", `-Djava.io.tmpdir=${temp}`, "-classpath", runtimeClasspath.join(delimiter), javaProfile ? "Consumer" : "ConsumerKt"], deployment, runtimeEnv);
+		observations.push(JSON.parse(execution.stdout));
+		if(fixture?.captureRuntimeExecutions)
+		{
+			assert.equal(execution.stderr, "");
+			runtimeExecutions.push({ ...execution, observation: structuredClone(observations.at(-1)) });
+		}
 		assert.deepEqual(await readdir(temp), [], "Normal exit must remove extracted native assets");
 	}
 	assert.deepEqual(observations[0], observations[1]);
+	if(fixture?.captureRuntimeExecutions) jvm.runtimeExecutions = runtimeExecutions;
 	if(metadataSource)
 	{
 		const result = observations[0].results.find(result => result.id === "kotlin-metadata/assertions");

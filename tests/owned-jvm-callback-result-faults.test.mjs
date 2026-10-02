@@ -49,7 +49,7 @@ final class _OwnedLoader {
 `;
 	files["OwnedCallbackResultFaultProbe.java"] = await readFile("tests/fixtures/structured-types/owned-jvm-callback-result-faults.java", "utf8");
 	files["KotlinCallbackResultFaultProbe.kt"] = await readFile("tests/fixtures/structured-types/owned-kotlin-callback-result-faults.kt", "utf8");
-	let observed;
+	let observed, execution;
 	try
 	{
 		const tools = await compileOwnedJvmCallSources(compiled.directory, files);
@@ -57,7 +57,7 @@ final class _OwnedLoader {
 			, "-cp", "classes:" + tools.stdlib
 			, model.namespace + ".OwnedCallbackResultFaultProbe"
 			, join(compiled.directory, "libprobe.so")], compiled.directory);
-		assert.equal(run.stderr, ""); observed = JSON.parse(run.stdout.trim());
+		assert.equal(run.stderr, ""); observed = JSON.parse(run.stdout.trim()); execution = run;
 	}
 	catch(error)
 	{ throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); }
@@ -79,13 +79,18 @@ final class _OwnedLoader {
 	}
 	await saveLakeFile("build/owned-jvm-callback-result-faults", mode + ".json", canonicalJson({
 		schemaVersion: 1, mode, actualLean: true, installedPackage: false
-		, explicitCleanupWithoutGc: true, input: native.input, observed
+		, explicitCleanupWithoutGc: true, input: native.input, observed, execution
 		, generated: Object.fromEntries(Object.entries(model.files).map(([path, source]) => [path, sha256(source)]))
 		, instrumentedRuntimeSha256: sha256(files[runtime])
 		, instrumentedBindingsSha256: sha256(files[bindings])
 		, javaProbeSha256: sha256(files["OwnedCallbackResultFaultProbe.java"])
 		, kotlinProbeSha256: sha256(files["KotlinCallbackResultFaultProbe.kt"])
 		, nativeProbeSha256: sha256(native.implementation)
+		, sourceHashes: Object.fromEntries(await Promise.all([
+			"tests/owned-jvm-callback-result-faults.test.mjs"
+			, "tests/fixtures/structured-types/owned-jvm-callback-result-faults.java"
+			, "tests/fixtures/structured-types/owned-kotlin-callback-result-faults.kt"
+		].map(async path => [path, sha256(await readFile(path))])))
 	}));
 	t.diagnostic(JSON.stringify({ mode, ...observed }));
 });

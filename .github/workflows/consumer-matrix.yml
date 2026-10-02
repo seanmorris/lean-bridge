@@ -477,6 +477,8 @@ jobs:
     name: Callback-result lifetimes in installed Maven packages
     runs-on: ubuntu-24.04
     timeout-minutes: 240
+    env:
+      EMCC_CORES: "2"
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -492,20 +494,55 @@ jobs:
         with:
           distribution: temurin
           java-version: '22.0.2'
+      - name: Select Python 3.11 for backported type aliases
+        id: jvm_callback_python311
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Select Python 3.12 for standard-library type aliases
+        id: jvm_callback_python312
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Select Ruby 3.3
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Select .NET 8 SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.424'
       - name: Install native tools, Maven, Lean and Kotlin
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 maven pkg-config ripgrep unzip zstd
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 maven pkg-config python3-venv ripgrep unzip zstd
           npm ci --ignore-scripts --no-audit --no-fund
-          bash scripts/bootstrap-toolchains.sh --lean-only
+          bash scripts/bootstrap-toolchains.sh
+          bash scripts/bootstrap-rust-ci.sh
+          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.6.0 typing_extensions==4.6.0
+          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
+          python3 -m venv build/python-collection-typecheck
+          build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
           mkdir -p build
           curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
           echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
           unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+      - name: Install all callback browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Build the callback shared runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-jvm-callback-result-runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
       - name: Verify JVM callback-result lifetimes and installed consumers
         shell: bash
+        env:
+          LEAN_BRIDGE_PYTHON: ${{ steps.jvm_callback_python311.outputs.python-path }}
+          LEAN_BRIDGE_COLLECTION_PYTHONS: '["${{ steps.jvm_callback_python311.outputs.python-path }}", "${{ steps.jvm_callback_python312.outputs.python-path }}"]'
         run: |
           set -euo pipefail
           source scripts/env.sh
@@ -513,9 +550,12 @@ jobs:
           export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
           export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
           export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+          export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
+          export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+          export LEAN_BRIDGE_GEM="$(command -v gem)"
           npm run test:owned-jvm-callback-results 2>&1 | tee build/owned-jvm-callback-results.log
-          rg '^# tests 14$' build/owned-jvm-callback-results.log
-          rg '^# pass 14$' build/owned-jvm-callback-results.log
+          rg '^# tests 28$' build/owned-jvm-callback-results.log
+          rg '^# pass 28$' build/owned-jvm-callback-results.log
           rg '^# fail 0$' build/owned-jvm-callback-results.log
           rg '^# cancelled 0$' build/owned-jvm-callback-results.log
           rg '^# skipped 0$' build/owned-jvm-callback-results.log
@@ -525,6 +565,34 @@ jobs:
           test -s build/owned-jvm-callback-results/reviewed-combined-package.json
           test -s build/owned-jvm-callback-result-faults/ordinary.json
           test -s build/owned-jvm-callback-result-faults/reviewed.json
+          test -s build/owned-jvm-callback-result-gc/ordinary.json
+          test -s build/owned-jvm-callback-result-gc/reviewed.json
+          test -s build/owned-jvm-callback-results/ordinary-host-runtime.json
+          test -s build/owned-jvm-callback-results/ordinary-no-host-runtime.json
+          test -s build/owned-jvm-callback-results/ordinary-combined-runtime.json
+          test -s build/owned-jvm-callback-results/reviewed-host-runtime.json
+          test -s build/owned-jvm-callback-results/reviewed-no-host-runtime.json
+          test -s build/owned-jvm-callback-results/reviewed-combined-runtime.json
+          test -s build/owned-jvm-callback-results/ordinary-process.json
+          test -s build/owned-jvm-callback-results/reviewed-process.json
+          test -s build/owned-jvm-callback-results/ordinary-no-host-process.json
+          test -s build/owned-jvm-callback-results/reviewed-no-host-process.json
+          test -s build/owned-jvm-callback-results/ordinary-no-host-sanitizers.json
+          test -s build/owned-jvm-callback-results/ordinary-combined-sanitizers.json
+          test -s build/owned-jvm-callback-results/reviewed-no-host-sanitizers.json
+          test -s build/owned-jvm-callback-results/reviewed-combined-sanitizers.json
+          test -s build/owned-jvm-callback-results/ordinary-combined-release.json
+          test -s build/owned-jvm-callback-results/reviewed-combined-release.json
+      - name: Reconstruct JVM callback execution evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run test:owned-jvm-callback-evidence 2>&1 | tee build/owned-jvm-callback-evidence.log
+          rg '^# tests 10$' build/owned-jvm-callback-evidence.log
+          rg '^# pass 10$' build/owned-jvm-callback-evidence.log
+          rg '^# fail 0$' build/owned-jvm-callback-evidence.log
+          rg '^# cancelled 0$' build/owned-jvm-callback-evidence.log
+          rg '^# skipped 0$' build/owned-jvm-callback-evidence.log
       - name: Preserve JVM callback-result acceptance
         if: always()
         uses: actions/upload-artifact@v7
@@ -533,7 +601,10 @@ jobs:
           path: |
             build/owned-jvm-callback-results/
             build/owned-jvm-callback-result-faults/
+            build/owned-jvm-callback-result-gc/
             build/owned-jvm-callback-results.log
+            build/owned-jvm-callback-evidence.log
+            build/owned-jvm-callback-result-runtime.log
           if-no-files-found: error
           retention-days: 30
 

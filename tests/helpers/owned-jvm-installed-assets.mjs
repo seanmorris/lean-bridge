@@ -30,7 +30,7 @@ export const inspectOwnedJvmInstalledAssets = async ({ project, extracted, insta
 	const temp = join(root, "native-temp"), runtime = join(root, "runtime-only");
 	await mkdir(temp, { recursive: true });
 	let probe = await readFile("tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java", "utf8");
-	if(receipt.ownedValues?.resultAnchors || receipt.ownedValues?.receiverExports)
+	if(receipt.ownedValues?.resultAnchors || receipt.ownedValues?.receiverExports || receipt.ownedValues?.callbackResultAnchors)
 	{
 		const before = '        var ticketType = create.getReturnType();\n        Object ticket = create.invoke(null, BigInteger.valueOf(42), "installed");';
 		assert.equal(probe.split(before).length, 2);

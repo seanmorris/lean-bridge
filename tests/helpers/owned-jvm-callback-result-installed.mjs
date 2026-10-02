@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { ownedJvmCallbackResultExamples } from "./owned-jvm-callback-result-examples.mjs";
 
 const nativeCallback = "ApplyTwiceArgument1Closure";
 const hostCallback = nativeCallback + "Callback";
@@ -434,7 +435,10 @@ fun main(args: Array<String>) {
 	];
 	for(const source of [java, kotlin]) assert.doesNotMatch(source, /_Owned|\.foreign\b|SymbolLookup|\.bindings\b/u);
 	return { packageKind: "lean-bridge-owned-maven-package"
+		, captureRuntimeExecutions: true
 		, removeHandoffBeforeExecution: true
 		, source: profile => profile === "java" ? java : kotlin
-		, signatures, rejections, examples: () => [], javaSupport: {} };
+		, signatures, rejections
+		, examples: profile => ownedJvmCallbackResultExamples(namespace, combined, profile)
+		, javaSupport: {} };
 };

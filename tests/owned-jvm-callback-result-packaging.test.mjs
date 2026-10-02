@@ -25,6 +25,7 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareJvmCorpusDependencies } from "./helpers/type-corpus-jvm-tools.mjs";
 import { installedJvmCorpus } from "./helpers/type-corpus-jvm.mjs";
 import { ownedJvmCallbackResultInstalledFixture } from "./helpers/owned-jvm-callback-result-installed.mjs";
+import { inspectOwnedJvmInstalledAssets } from "./helpers/owned-jvm-installed-assets.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -98,9 +99,16 @@ test(`installed Maven callback-result owners (${mode}, ${combined ? "combined" :
 	const incapable = ["ownedCallbackResultAnchors"
 		, ...combined ? ["ownedHostCallbacks", "ownedInputTransfers"
 			, "ownedAnchoredResults", "ownedReceiverExports"] : []];
+	const capabilityErrors = {
+		ownedCallbackResultAnchors: "native-owned-callback-anchors-unavailable"
+		, ownedHostCallbacks: "native-owned-callbacks-unavailable"
+		, ownedInputTransfers: "native-owned-transfers-unavailable"
+		, ownedAnchoredResults: "native-owned-anchors-unavailable"
+		, ownedReceiverExports: "native-owned-receivers-unavailable"
+	};
 	for(const key of incapable)
 		await assert.rejects(readVerifiedNativeComponent(nativeRoot, verified.evidence.runtimeIdentity
-			, { ...capabilities, [key]: false }));
+			, { ...capabilities, [key]: false }), { code: capabilityErrors[key] });
 	const packageOptions = { working: root, jvmRoot, nativeRoot
 		, runtimeRoot, adapterRoot, leanPrefix
 		, settings: { name: "org.leanbridge:owned-callback-results", version: "1.2.3" }
@@ -112,6 +120,16 @@ test(`installed Maven callback-result owners (${mode}, ${combined ? "combined" :
 		assert.deepEqual(await readFile(join(reassembledRoot, "archives", pkg.archive))
 			, await readFile(join(working, "archives", pkg.archive)));
 	await rm(reassembledRoot, { recursive: true });
+	t.diagnostic(`${mode}/${combined ? "combined" : "no-host"}: independent producer rebuild`);
+	const independent = join(root, "independent"), second = await build(independent);
+	assert.deepEqual(second.packages, built.packages);
+	const independentPackageSetReceipt = await json(join(independent, "package-set-receipt.json"));
+	assert.deepEqual(independentPackageSetReceipt
+		, await json(join(working, "package-set-receipt.json")));
+	for(const pkg of built.packages)
+		assert.deepEqual(await readFile(join(independent, "archives", pkg.archive))
+			, await readFile(join(working, "archives", pkg.archive)));
+	await rm(independent, { recursive: true });
 	const tamperRejections = await rejectOwnedJvmPackageMutations(packageOptions, verified, compiled);
 	assert.equal(tamperRejections.length, combined ? 51 : 30);
 	const metadata = await json(join(nativeRoot, "metadata.json"));
@@ -130,12 +148,18 @@ test(`installed Maven callback-result owners (${mode}, ${combined ? "combined" :
 		t.diagnostic(`${mode}/${profile}: offline Maven installation and runtime-only relocation`);
 		const result = await installedJvmCorpus({ library: { jvmModule: projection.namespace }
 			, profile, consumer, handoff: join(root, "handoff-" + profile), pkg
-			, dependencies, environment, clean: copiedCleanEnvironment, fixture })
+			, dependencies, environment, clean: copiedCleanEnvironment
+			, fixture: { ...fixture, ...profile === "java" ? { inspectInstalled: inspectOwnedJvmInstalledAssets } : {} } })
 			.catch(error => { throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); });
 		assert.deepEqual(result.observation.errors, []);
 		assert.equal(result.jvm.packageReceiptSha256, sha256(canonicalJson(manifest)));
 		const checks = Number(result.observation.results.find(item => item.id === "owned/callback-result-checks").observed.integer);
-		assert.ok(checks > 10);
+		assert.equal(checks, combined ? 47 : 22);
+		if(profile === "java")
+		{
+			assert.equal(result.jvm.inspection.scenarios.length, 40);
+			assert.ok(result.jvm.inspection.scenarios.every(item => item.rejected));
+		}
 		assert.equal(result.observation.results.filter(item => item.status === "rejected-at-compile-time").length
 			, fixture.rejections(profile).length);
 		observations.push({ profile, checks, ...result });
@@ -153,6 +177,8 @@ test(`installed Maven callback-result owners (${mode}, ${combined ? "combined" :
 		, builds: context.builds
 		, verification
 		, sourceRemovedBeforeInstallation: true, deterministicReassembly: true
+		, independentProducerBuild: true
+		, independentPackageSetReceipt
 		, incapableReadersRejected: incapable
 		, tamperRejections
 		, dependencies

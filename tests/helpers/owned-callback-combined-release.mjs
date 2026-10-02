@@ -28,6 +28,7 @@ import { ownedPythonInstalledProbe } from "./owned-python-installed-probes.mjs";
 
 import { installOwnedRubyCallbackCombined } from "./owned-ruby-callback-result-combined-install.mjs";
 import { installOwnedDotnetCallbackCombined } from "./owned-dotnet-callback-result-combined-install.mjs";
+import { prepareOwnedJvmCallbackCombined } from "./owned-jvm-callback-result-combined-install.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -41,7 +42,8 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 	const { configuration: ownedCallbackResultCombinedConfiguration
 		, reviewedIr: ownedCallbackResultCombinedReviewedIr
 		, source: ownedCallbackResultCombinedSource, reportDirectory } = options;
-	const dotnet = options.dotnet === true;
+	const dotnet = options.dotnet === true, jvm = options.jvm === true;
+	assert.ok(!jvm || dotnet, "JVM peers use the complete callback fixture with NuGet");
 	const buildTimeoutMs = options.buildTimeoutMs ?? 900000;
 	assert.ok(Number.isSafeInteger(buildTimeoutMs) && buildTimeoutMs > 0 && buildTimeoutMs <= 3600000);
 	// Check offline consumer prerequisites before compiling seven releases.
@@ -50,7 +52,7 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 		const path = resolve(process.env.LEAN_BRIDGE_PYTHON_TYPING_WHEELS ?? "build/python-typing-wheels", version, `typing_extensions-${version}-py3-none-any.whl`);
 		assert.equal(sha256(await readFile(path)), expected, "Pinned offline Python wheel");
 	}
-	const root = await mkdtemp(join(tmpdir(), `lean-${dotnet ? "dotnet" : "ruby"}-callback-combined-installed-`));
+	const root = await mkdtemp(join(tmpdir(), `lean-${jvm ? "jvm" : dotnet ? "dotnet" : "ruby"}-callback-combined-installed-`));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const runtimeRoot = resolve(process.env.LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT ?? "build/lean-link-spike", "lazy");
 	const inputs = await buildJavaScriptWasmCompilerInputs({ outputRoot: join(root, "inputs")
@@ -61,7 +63,7 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 	await rm(candidate.output, { recursive: true }); await rm(inputs.output, { recursive: true });
 	const interpreters = JSON.parse(process.env.LEAN_BRIDGE_COLLECTION_PYTHONS ?? JSON.stringify([resolve(".toolchains/python311/bin/python3.11"), resolve(".toolchains/python312/bin/python3.12")]));
 	assert.equal(interpreters.length, 2);
-	const environment = { ...nativeFixtureEnvironment(["c", "cpp", "rust", "python", "ruby", ...dotnet ? ["dotnet"] : []])
+	const environment = { ...nativeFixtureEnvironment(["c", "cpp", "rust", "python", "ruby", ...dotnet ? ["dotnet"] : [], ...jvm ? ["java", "kotlin"] : []])
 		, LEAN_BRIDGE_BUILD_BACKEND: "auto", LEAN_BRIDGE_PYTHON: interpreters[0]
 		, LEAN_BRIDGE_RUBY: resolve(process.env.LEAN_BRIDGE_RUBY ?? ".toolchains/ruby33/bin/ruby")
 		, LEAN_BRIDGE_GEM: resolve(process.env.LEAN_BRIDGE_GEM ?? ".toolchains/ruby33/bin/gem")
@@ -118,19 +120,37 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 			, rubygems: { name: "owned-callback-results", version: "1.2.3" }
 			, npm: { name: `@owned/${mode}-callback-combinations`, version: "1.2.3" } };
 		if(dotnet) configuration.targets.nuget = { name: "Owned.CallbackResults", version: "1.2.3" };
+		if(jvm) configuration.targets.maven = { name: "org.leanbridge:owned-callback-results", version: "1.2.3" };
 		await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(mode === "reviewed") await saveLakeFile(project, "reviewed.binding-ir.json", canonicalJson(ownedCallbackResultCombinedReviewedIr()));
 		const before = await lakeInputState(project);
-		t.diagnostic(`${mode}: installed CLI builds one C/C++/Cargo/PyPI/RubyGems/${dotnet ? "NuGet/" : ""}npm release with all four capabilities`);
+		t.diagnostic(`${mode}: installed CLI builds one C/C++/Cargo/PyPI/RubyGems/${dotnet ? "NuGet/" : ""}${jvm ? "Maven/" : ""}npm release with all four capabilities`);
 		const arguments_ = ["build", "--project", project
 			, "--target", "c", "--target", "cpp", "--target", "cargo"
 			, "--target", "pypi", "--target", "rubygems", "--target", "npm"
 			, ...dotnet ? ["--target", "nuget"] : []
+			, ...jvm ? ["--target", "maven"] : []
 			, "--output", output, "--json"];
 		const built = JSON.parse((await run(join(author, "node_modules/.bin/lean-bridge"), arguments_, author
 			, environment, buildTimeoutMs)).stdout);
 		assert.equal(built.status, "ok"); assert.deepEqual(await lakeInputState(project), before);
 		const checked = await readVerifiedPackageSetReceipt({ receiptPath: join(output, "package-set-receipt.json") });
+		let independentBuild, independentPackageSetReceipt;
+		if(jvm)
+		{
+			const independent = join(root, mode + "-independent-release");
+			const args = [...arguments_]; args[args.indexOf("--output") + 1] = independent;
+			t.diagnostic(`${mode}: independent eight-target producer rebuild`);
+			independentBuild = JSON.parse((await run(join(author, "node_modules/.bin/lean-bridge"), args, author
+				, environment, buildTimeoutMs)).stdout);
+			assert.equal(independentBuild.status, "ok"); assert.deepEqual(await lakeInputState(project), before);
+			const second = await readVerifiedPackageSetReceipt({ receiptPath: join(independent, "package-set-receipt.json") });
+			independentPackageSetReceipt = second.receipt;
+			assert.deepEqual(second.receipt, checked.receipt);
+			for(const pkg of checked.receipt.packages) for(const artifact of pkg.artifacts)
+				assert.deepEqual(await readFile(join(independent, artifact.path)), await readFile(join(output, artifact.path)));
+			await rm(independent, { recursive: true });
+		}
 		const nativeRoot = join(output, "profiles/native/native/component");
 		const { identity, manifest: nativeRuntime } = await readVerifiedNativeRuntime(join(output, "profiles/native/native/runtime"));
 		const native = await readVerifiedNativeComponent(nativeRoot, identity, {
@@ -163,10 +183,12 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 		const dotnetCompiled = dotnet ? await json(join(output, "profiles/native/native/dotnet/native-dotnet.json")) : null;
 		const receipt = await copyPackageSetHandoff(output, handoff);
 		assert.deepEqual(receipt, checked.receipt);
-		assert.deepEqual(receipt.packages.map(item => item.target).sort(), ["c", "cargo", "cpp", "npm", "npm", ...dotnet ? ["nuget"] : [], "pypi", "rubygems"]);
+		assert.deepEqual(receipt.packages.map(item => item.target).sort(), ["c", "cargo", "cpp", ...jvm ? ["maven"] : [], "npm", "npm", ...dotnet ? ["nuget"] : [], "pypi", "rubygems"]);
 		const dependencies = await prepareRustCorpusDependencies({
 			rustRoot: join(output, "profiles/native/native/rust")
 			, directory: join(root, mode + "-dependencies"), handoff, environment });
+		const managedJvm = jvm ? await prepareOwnedJvmCallbackCombined({
+			root, mode, output, author, handoff, receipt, environment, native }) : null;
 		for(const path of [author, project, output])
 		{ await rm(path, { recursive: true }); await assert.rejects(access(path), { code: "ENOENT" }); }
 		const cPackages = receipt.packages.filter(item => item.target === "c");
@@ -330,6 +352,7 @@ target_compile_options(consumer PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 		const consume = (command, args) => run(command, args, jsRoot, consumerEnvironment, 180000);
 		await consume("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", ...npm.map(item => join(handoff, item.artifacts[0].path))]);
 		await rm(handoff, { recursive: true }); await assert.rejects(access(handoff), { code: "ENOENT" });
+		if(managedJvm) await managedJvm.execute(consumer);
 
 		await ruby.relocate();
 		if(managed) await managed.relocate();
@@ -410,6 +433,7 @@ api.close();
 			, rustManifest, installedRust, installedPython
 			, rubyAdapter, nativeRuntime, installedRuby: ruby.report
 			, ...managed ? { installedDotnet: managed.report } : {}
+			, ...managedJvm ? { installedJvm: managedJvm.report, independentBuild, independentPackageSetReceipt, independentProducerBuild: true } : {}
 			, rustDocumentation: { sourceSha256: sha256(rustExample), output: rustDocumented.stdout }
 			, observed, inventory, browser, installedTypeScript: true
 			, cliFilesVerified: candidate.report.files.length, sourceUnchanged: true
