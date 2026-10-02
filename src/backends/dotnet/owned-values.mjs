@@ -32,7 +32,7 @@ const scalar = {
  */
 export const generateOwnedDotnetValues = (ir, options = {}) => {
 	const layout = compileOwnedDotnetLayout(ir, options), c = layout.c;
-	const anchored = c.functions.some(fn => fn.anchor !== undefined);
+	const anchored = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
 	const receivers = c.functions.some(fn => fn.receiver === 0), wholeOwners = anchored || receivers;
 	const component = pascal(c.prefix), names = new Map();
 	const occupied = new Set(reserved), fail = message => { throw new TypeError(`Invalid owned C# values: ${message}`); };
@@ -115,7 +115,8 @@ export const generateOwnedDotnetValues = (ir, options = {}) => {
 		, returnType: table.get(fn.result).name === "unit" ? "void" : type(fn.result)
 		, ...wholeOwners ? { invokeReturnType: table.get(fn.result).representation !== "copied" ? types.find(node => node.id === fn.result).ownerType ?? `Value<${type(fn.result)}>` : table.get(fn.result).name === "unit" ? "void" : type(fn.result) } : {}
 		, hostParameters: fn.parameters.slice(1).map(type)
-		, invokeParameters: fn.parameters.slice(1).map((id, index) => c.hostArgument?.(fn, index + 1) ? delegates.get(id) : type(id)) }));
+		, invokeParameters: fn.parameters.slice(1).map((id, index) => c.hostArgument?.(fn, index + 1) ? delegates.get(id)
+			: fn.anchor === index + 1 ? `Value<${type(id)}>` : type(id)) }));
 	let budget = 4 * 1024 * 1024 - dotnetGraphCompoundTypes.length - dotnetGraphEquality.length;
 	const reserve = count => { budget -= count; if(budget < 0) fail("generated declarations exceed 4 MiB"); };
 	for(const node of types)
@@ -143,7 +144,7 @@ ${values.map((field, index) => `        ${index} => ${field.publicName},`).join(
 		const name = node.publicType;
 		if(node.identity)
 		{
-			const fn = callbacks.find(fn => fn.id === node.id);
+			const fn = callbacks.find(fn => fn.id === node.id), rawBridge = wholeOwners && fn && fn.anchor === undefined;
 			const params = fn?.invokeParameters.map((type, index) => `${type} arg${index}`).join(", ");
 			return `/// <summary>A thread-bound Lean ${fn ? "closure" : "resource"}. Retain creates an independent owner.</summary>
 public sealed class ${name} : global::System.IDisposable, IOwnedValue
@@ -152,10 +153,10 @@ public sealed class ${name} : global::System.IDisposable, IOwnedValue
     private readonly global::System.Func<Interop.OwnedHandle, ${name}> retain;${anchored ? "\n    private readonly global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal;" : ""}
 ${fn ? `    internal delegate ${fn.invokeReturnType ?? fn.returnType} Invocation(${params});
     private readonly Invocation invoke;
-${wholeOwners ? `    internal delegate ${fn.returnType} RawInvocation(${params});
+${rawBridge ? `    internal delegate ${fn.returnType} RawInvocation(${params});
     private readonly RawInvocation rawInvoke;
-` : ""}` : ""}    internal ${name}(Interop.OwnedHandle handle, global::System.Func<Interop.OwnedHandle, ${name}> retain${fn ? ", Invocation invoke" : ""}${anchored ? ", global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal" : ""}${wholeOwners && fn ? ", RawInvocation rawInvoke" : ""})
-    { Handle = handle; this.retain = retain;${fn ? " this.invoke = invoke;" : ""}${anchored ? " this.equal = equal;" : ""}${wholeOwners && fn ? " this.rawInvoke = rawInvoke;" : ""} }
+` : ""}` : ""}    internal ${name}(Interop.OwnedHandle handle, global::System.Func<Interop.OwnedHandle, ${name}> retain${fn ? ", Invocation invoke" : ""}${anchored ? ", global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal" : ""}${rawBridge ? ", RawInvocation rawInvoke" : ""})
+    { Handle = handle; this.retain = retain;${fn ? " this.invoke = invoke;" : ""}${anchored ? " this.equal = equal;" : ""}${rawBridge ? " this.rawInvoke = rawInvoke;" : ""} }
     public bool IsClosed => Handle.IsClosed;
     public void Dispose() => Handle.Dispose();
     public ${name} Retain() => retain(Handle);
@@ -173,8 +174,10 @@ ${anchored ? `    public bool SameIdentity(${name} other)
     public override int GetHashCode() => throw new global::System.NotSupportedException("Lean resources cannot be dictionary keys");
 ` : ""}\
 ${fn ? `    public ${fn.invokeReturnType ?? fn.returnType} Invoke(${params}) => invoke(${fn.invokeParameters.map((_, i) => `arg${i}`).join(", ")});
+${fn.anchor === undefined ? `\
     private ${fn.returnType} CallFromHost(${fn.hostParameters.map((type, i) => `${type} arg${i}`).join(", ")}) => ${wholeOwners ? "rawInvoke" : "Invoke"}(${fn.parameters.slice(1).map((id, i) => `arg${i}${c.hostArgument?.(fn, i + 1) ? ".AsCallback" : ""}`).join(", ")});
     public ${fn.delegateType} AsCallback => CallFromHost;
+` : ""}\
 ` : ""}${receiverDeclarations.raw.get(node.id) ?? ""}}`;
 		}
 		if(node.kind === "record") return record(name, node.fields);

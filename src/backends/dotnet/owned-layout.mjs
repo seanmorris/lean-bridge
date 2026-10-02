@@ -24,10 +24,13 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param options.transferredInputs - Admit consuming input leases.
  * @param options.anchoredResults - Admit original-owner result borrows.
  * @param options.receiverExports - Admit nominal methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Admit synchronous host callback descriptors.
  */
-export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
+	if(valueCopies && hostCallbacks) throw new TypeError("Owned C# callback-result host transport is not implemented");
+	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, raw: node.identity || node.integer ? "nint" : node.scalar ? primitives[node.name][0] : `OwnedRaw${node.index}`

@@ -20,7 +20,7 @@ import { ownedDotnetAnchoredCall, ownedDotnetOriginalTransfers, ownedDotnetWhole
 export const generateOwnedDotnetCalls = (ir, options = {}) => {
 	const model = generateOwnedDotnetConversions(ir, options), { c } = model;
 	const transfers = c.functions.some(fn => fn.transfers?.length);
-	const anchored = c.functions.some(fn => fn.anchor !== undefined);
+	const anchored = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
 	const wholeOwners = model.wholeOwners;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const names = new Map(model.nativeTypes.map(node => [node.id, node.publicType]));
@@ -30,7 +30,7 @@ export const generateOwnedDotnetCalls = (ir, options = {}) => {
 		, ...(c.copies ?? []).map(fn => ({ ...fn, method: `Copy${nodes.get(fn.id).index}`, ...wholeOwners ? { rawResult: true } : {} }))
 		, ...c.callbacks.map(fn => ({ ...fn, method: `Invoke${nodes.get(fn.id).index}`, handle: true }))
 		, ...wholeOwners ? [
-			...c.callbacks.map(fn => ({ ...fn, method: `InvokeRaw${nodes.get(fn.id).index}`, handle: true, rawResult: true }))
+			...c.callbacks.filter(fn => fn.anchor === undefined).map(fn => ({ ...fn, method: `InvokeRaw${nodes.get(fn.id).index}`, handle: true, rawResult: true }))
 			, ...[...c.retains, ...c.copies ?? []].filter(fn => nodes.get(fn.id).representation !== "copied")
 				.map(fn => ({ ...fn, method: `CopyWhole${nodes.get(fn.id).index}`, wholeCopy: true }))
 		] : []
@@ -125,7 +125,7 @@ ${invoke}
 	});
 	const identities = model.types.filter(node => node.identity), factories = identities.map(node => {
 		const fn = model.callbacks.find(fn => fn.id === node.id);
-		return `handle => new _V.${node.publicType}(handle, Retain${node.index}${fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => Invoke${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""}${anchored ? `, Equal${node.index}` : ""}${wholeOwners && fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => InvokeRaw${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""})`;
+		return `handle => new _V.${node.publicType}(handle, Retain${node.index}${fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => Invoke${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""}${anchored ? `, Equal${node.index}` : ""}${wholeOwners && fn && fn.anchor === undefined ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => InvokeRaw${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""})`;
 	});
 	if(anchored) for(const node of identities) methods.push(`    private bool Equal${node.index}(OwnedHandle left, OwnedHandle right)
     {

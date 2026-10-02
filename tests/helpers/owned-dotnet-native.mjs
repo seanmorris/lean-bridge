@@ -65,13 +65,15 @@ internal static class OwnedLoader
 export const compileOwnedDotnetFixture = async (t, options = {}) => {
 	const transferredInputs = options.transferredInputs === true;
 	const anchoredResults = options.anchoredResults === true;
+	const callbackResultAnchors = options.callbackResultAnchors === true;
 	const receiverExports = options.receiverExports === true, hostCallbacks = options.hostCallbacks !== false;
 	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks });
-	const model = generateOwnedDotnetCalls(compiled.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, hostCallbacks });
+	const model = generateOwnedDotnetCalls(compiled.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component, hostCallbacks
-		, transferredInputs, anchoredResults, receiverExports });
+		, transferredInputs, anchoredResults, receiverExports
+		, callbackResultAnchors, valueCopies: callbackResultAnchors });
 	const cleanup = ownedDotnetThreadExit(c.values.prefix);
 	const implementation = ownedDotnetNativeProbe(c, transferredInputs);
 	for(const [path, content] of Object.entries(c.files))

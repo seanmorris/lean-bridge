@@ -511,6 +511,7 @@ const profileManifest = Object.freeze({
 		, "owned-dotnet-conversions", "owned-dotnet-callables"
 		, "owned-dotnet-transfers", "owned-dotnet-transfer-packaging"
 		, "owned-dotnet-borrows", "owned-dotnet-borrow-packaging"
+		, "owned-dotnet-callback-results"
 		, "owned-dotnet-receivers", "owned-dotnet-receiver-packaging"
 		, "owned-dotnet-receiver-plain"
 		, "owned-dotnet-callback-signatures", "owned-dotnet-package"
