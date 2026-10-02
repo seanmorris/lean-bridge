@@ -57,6 +57,7 @@ const profileManifest = Object.freeze({
 		, "owned-jvm-callback-results"
 		, "owned-jvm-callback-mixed-signatures"
 		, "owned-jvm-callback-result-packaging"
+		, "owned-jvm-callback-result-faults"
 		, "owned-jvm-callback-result-history"
 		, "owned-aggregate-evidence"
 		, "owned-borrow-evidence"

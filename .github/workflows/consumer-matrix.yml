@@ -514,8 +514,8 @@ jobs:
           export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
           export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
           npm run test:owned-jvm-callback-results 2>&1 | tee build/owned-jvm-callback-results.log
-          rg '^# tests 12$' build/owned-jvm-callback-results.log
-          rg '^# pass 12$' build/owned-jvm-callback-results.log
+          rg '^# tests 14$' build/owned-jvm-callback-results.log
+          rg '^# pass 14$' build/owned-jvm-callback-results.log
           rg '^# fail 0$' build/owned-jvm-callback-results.log
           rg '^# cancelled 0$' build/owned-jvm-callback-results.log
           rg '^# skipped 0$' build/owned-jvm-callback-results.log
@@ -523,6 +523,8 @@ jobs:
           test -s build/owned-jvm-callback-results/ordinary-combined-package.json
           test -s build/owned-jvm-callback-results/reviewed-no-host-package.json
           test -s build/owned-jvm-callback-results/reviewed-combined-package.json
+          test -s build/owned-jvm-callback-result-faults/ordinary.json
+          test -s build/owned-jvm-callback-result-faults/reviewed.json
       - name: Preserve JVM callback-result acceptance
         if: always()
         uses: actions/upload-artifact@v7
@@ -530,6 +532,7 @@ jobs:
           name: jvm-callback-results-${{ github.sha }}
           path: |
             build/owned-jvm-callback-results/
+            build/owned-jvm-callback-result-faults/
             build/owned-jvm-callback-results.log
           if-no-files-found: error
           retention-days: 30

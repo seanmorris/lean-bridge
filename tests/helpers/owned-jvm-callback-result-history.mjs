@@ -8,7 +8,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 export const ownedJvmCallbackHistoryPath = "docs/evidence/owned-jvm-callback-result-source-history-20261002.json";
-export const ownedJvmCallbackHistorySha256 = "5d2e47d95f9e72833e4645b21636fd235610989d13bc4ee1f50af5523c4d4d91";
+export const ownedJvmCallbackHistorySha256 = "18a948fe5e791ad6039322eeccdfb81be42dd97f4f83c6cc72ed89cfd5a20433";
 export const ownedJvmCallbackBaseline = "72d123d69917f1145ec03d8624b6a08c3b2be6bc";
 let history;
 /** Authenticate the staged ledger and unchanged completed predecessor. */

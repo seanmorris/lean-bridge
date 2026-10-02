@@ -57,21 +57,36 @@ Each native-only consumer executes 22 ownership checks, and each combined consum
 executes 47. Each also checks its public signatures and rejects invalid typed
 calls. Both language consumers execute twice after the handoff is removed.
 
-The dedicated CI job requires all 12 execution and compilation tests to pass
-without skips, requires all four installed-package reports, and preserves the
-reports and execution log as artifacts.
+The dedicated CI job requires all 14 execution, compilation, and fault tests to
+pass without skips, requires all four installed-package reports and both fault
+reports, and preserves the reports and execution log as artifacts.
 
-Full callback lifetime fault, garbage collection, process cleanup, multi-target
-release, and frozen acceptance evidence still need completion. This staging
-milestone does not change the published type-support inventory or publish a
-registry package.
+## Allocation-failure checks
+
+Both ordinary and reviewed inputs pass 11,263 assertions each. Java and Kotlin
+each exercise native anchored closure results, raw host replies, whole-owner host
+replies, and a consuming receiver with whole-owner recovery. Every case injects
+managed and native allocation failures until the call succeeds.
+
+The sweeps reach failures after native callback-result copying and, for consuming
+receivers, before and after ownership transfer. Input aliases follow the actual
+transfer; independent retains and reply owners remain usable. Explicit cleanup
+restores the active-session counters after every attempt while the wrappers and
+exceptions remain reachable. Final session shutdown leaves zero native allocation
+and identity counters. These checks do not depend on garbage collection.
+
+Callback-specific garbage collection, creator-thread and process cleanup,
+multi-target release, and frozen acceptance evidence still need completion. This
+staging milestone does not change the published type-support inventory or publish
+a registry package.
 
 ## Commands
 
 ```sh
 LEAN_BRIDGE_OWNED_JVM_CALLBACK_RESULT_TEST=1 node --test --test-concurrency=1 \
   tests/owned-jvm-callback-results.test.mjs \
-  tests/owned-jvm-callback-mixed-signatures.test.mjs
+  tests/owned-jvm-callback-mixed-signatures.test.mjs \
+  tests/owned-jvm-callback-result-faults.test.mjs
 
 LEAN_BRIDGE_OWNED_JVM_CALLBACK_RESULT_PACKAGE_TEST=1 node --test --test-concurrency=1 \
   tests/owned-jvm-callback-result-packaging.test.mjs
