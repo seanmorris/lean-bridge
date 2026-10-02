@@ -1,30 +1,29 @@
 /**
- * Authenticate Rust callback-owner changes without rewriting earlier evidence.
+ * Authenticate Python callback-owner changes without rewriting earlier evidence.
  *
  * @file
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedPythonCallbackResults } from "./owned-python-callback-result-history.mjs";
 
-export const ownedRustCallbackHistoryPath = "docs/evidence/owned-rust-callback-result-source-history-20261002.json";
-export const ownedRustCallbackHistorySha256 = "793dc2d6c6d0331561586184671305c3407f29ea7779d1b630c246aae06c1078";
-export const ownedRustCallbackBaseline = "93589825d4b4c028724390e4c8d886213cbc92d8";
+export const ownedPythonCallbackHistoryPath = "docs/evidence/owned-python-callback-result-source-history-20261002.json";
+export const ownedPythonCallbackHistorySha256 = "31082b5c541fe8536eef8d416fff51b46ed2bb4befa1d2c397ce048578754c10";
+export const ownedPythonCallbackBaseline = "a3100134f1853102fc2cbf0c2f12839ac480af12";
 let history;
 /** Authenticate the complete ledger and its immutable predecessor. */
-export const readOwnedRustCallbackHistory = () => {
+export const readOwnedPythonCallbackHistory = () => {
 	if(!history)
 	{
-		const bytes = readFileSync(ownedRustCallbackHistoryPath);
-		assert.equal(sha256(bytes), ownedRustCallbackHistorySha256);
+		const bytes = readFileSync(ownedPythonCallbackHistoryPath);
+		assert.equal(sha256(bytes), ownedPythonCallbackHistorySha256);
 		history = JSON.parse(bytes);
 		assert.equal(history.schemaVersion, 1);
-		assert.equal(history.kind, "owned-rust-callback-result-source-history");
-		assert.equal(history.baselineRevision, ownedRustCallbackBaseline);
+		assert.equal(history.kind, "owned-python-callback-result-source-history");
+		assert.equal(history.baselineRevision, ownedPythonCallbackBaseline);
 		assert.deepEqual(history.previous, {
-			path: "docs/evidence/owned-cpp-callback-result-source-history-20261002.json"
-			, sha256: "27523ee8d12ad0159405769b1478f7934f39c927a839e91711960737f48933ff"
+			path: "docs/evidence/owned-rust-callback-result-source-history-20261002.json"
+			, sha256: "793dc2d6c6d0331561586184671305c3407f29ea7779d1b630c246aae06c1078"
 		});
 		assert.equal(sha256(readFileSync(history.previous.path)), history.previous.sha256);
 		const paths = history.updates.map(update => update.path);
@@ -32,7 +31,7 @@ export const readOwnedRustCallbackHistory = () => {
 	}
 	return history;
 };
-export const ownedRustCallbackChangedPaths = Object.freeze(readOwnedRustCallbackHistory().updates.map(update => update.path));
+export const ownedPythonCallbackChangedPaths = Object.freeze(readOwnedPythonCallbackHistory().updates.map(update => update.path));
 
 /**
  * Reverse an exact whole-source transition, never an unrecognized partial edit.
@@ -40,8 +39,8 @@ export const ownedRustCallbackChangedPaths = Object.freeze(readOwnedRustCallback
  * @param source - Complete current source bytes or text.
  * @param update - Pinned path, complete identities and ordered reverse edits.
  */
-export const reverseOwnedRustCallbackUpdate = (source, update) => {
-	assert.ok(ownedRustCallbackChangedPaths.includes(update.path), update.path);
+export const reverseOwnedPythonCallbackUpdate = (source, update) => {
+	assert.ok(ownedPythonCallbackChangedPaths.includes(update.path), update.path);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	if(update.strategy === "replacements")
@@ -78,10 +77,9 @@ export const reverseOwnedRustCallbackUpdate = (source, update) => {
  * @param source - Complete current or historical source.
  * @param expected - Optional stopping identity.
  */
-export const beforeOwnedRustCallbackResults = (path, source, expected) => {
-	source = beforeOwnedPythonCallbackResults(path, source, expected);
-	const update = readOwnedRustCallbackHistory().updates.find(item => item.path === path);
+export const beforeOwnedPythonCallbackResults = (path, source, expected) => {
+	const update = readOwnedPythonCallbackHistory().updates.find(item => item.path === path);
 	const digest = sha256(source);
 	return update && digest !== expected && digest === update.currentSha256
-		? reverseOwnedRustCallbackUpdate(source, update) : source;
+		? reverseOwnedPythonCallbackUpdate(source, update) : source;
 };

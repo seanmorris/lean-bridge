@@ -530,6 +530,57 @@ leave them consumed. A borrowed root cannot transfer, and a call cannot consume
 its result anchor or that anchor's ancestor. Retain a borrow first when independent
 ownership is needed. Packages without result anchors keep the API above.
 
+### Callback results borrowed from an argument
+
+A returned Lean function can declare that its result borrows one of its own
+arguments. Pass that argument as a `Value[T]`. The callback returns a checked
+`Value[T]` view that expires with the selected argument's original owner, even
+when Lean returns captured data. Closing the closure does not close that view.
+Retain or copy the result to give it independent ownership.
+
+For the callback-result acceptance wheel, save this as `owned-callback-results.py`:
+
+```python file=python/owned-callback-results.py
+import lean_owned_aggregates as api
+
+ticket = api.new_ticket(42, "ready")
+bundle = api.Bundle(ticket.get(), None, (), (), api.Payload(0, b""))
+owner = api.copy_value(bundle)
+callback = api.make_record(bundle)
+
+# The callback result borrows its second argument, not its captured bundle.
+view = callback(False, owner)
+print(api.serial(view.get().primary))
+independent = view.retain()
+
+owner.close()
+assert view.is_closed
+print(api.serial(independent.get().primary))
+
+view.close()
+independent.close()
+callback.close()
+ticket.close()
+```
+
+Run `./.venv/bin/python owned-callback-results.py`. It prints `42` twice.
+Borrowed descendants and empty recursive constructors keep the same lifetime
+checks. A shallow copy shares its owner; `retain()` creates an independent one.
+Passing a returned closure back into Lean accepts either the `Value` wrapper or
+its checked `get()` result, including packages with host callbacks disabled.
+
+When a package enables synchronous Python callbacks, their arguments remain raw
+generated Python values. A borrowed callback reply or explicit recovery value
+can be a raw value or a whole `Value[T]`. The adapter checks and copies it before
+the callback frame expires. Escaped argument resources expire on return unless
+retained inside the callback. Recovery does not turn an exception into success;
+the caller receives the original exception after native cleanup.
+
+Consuming methods expire aliases and borrowed descendants before callback
+reentry. Validation failures leave the input open; errors after handoff leave
+it consumed. Retaining an exception traceback does not retain hidden result
+owners. These contracts do not enable retained host callbacks or async replies.
+
 ### Methods and properties
 
 Packages with [receiver exports](../publish/pypi.md#export-methods-and-properties)

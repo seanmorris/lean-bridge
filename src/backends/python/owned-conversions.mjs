@@ -238,6 +238,8 @@ export const generateOwnedPythonConversions = (ir, options = {}) => {
 		{ input.push('raise ValueError("The declared type has no finite value")'); output.push('raise _OwnedInvalidNative("Uninhabited native value")'); }
 		else if(node.identity)
 		{
+			if(node.kind === "callback" && c.callbacks.some(item => item.anchor !== undefined))
+				input.push("if type(value) is _R.Value: value = value.get()");
 			input.push(`if type(value) is not _V.${node.publicType}: raise TypeError("Expected ${node.publicType}")`
 				, "handle = value._raw(scope.state)", "scope.pin(value._lease)"
 				, ...transfers && !wholeOwners ? ["if scope.moves is not None and scope.move_group is not None:", "    scope.moves.add(value._lease, scope.move_group, scope)"] : []

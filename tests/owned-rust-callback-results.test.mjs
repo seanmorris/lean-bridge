@@ -50,7 +50,10 @@ test("Rust callback-result owners stay independent of host and export capabiliti
 	assert.deepEqual(generateOwnedRustPackage(base, null, {}, { callbackResultAnchors: true }).files, generateOwnedRustPackage(base).files);
 });
 
-test("Rust callback-result APIs compile raw and whole-owner replies without host admission leaks", { timeout: 300000 }, async t => {
+test("Rust callback-result APIs compile raw and whole-owner replies without host admission leaks", {
+	skip: process.env.LEAN_BRIDGE_OWNED_RUST_CALLBACK_RESULT_TEST !== "1"
+	, timeout: 300000
+}, async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-rust-callback-result-types-"));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const environment = { PATH: "/usr/bin:/bin"
@@ -103,7 +106,7 @@ fn combined(mut root: Value<Bundle>) -> Result<(), Error> {
 		try
 		{ await runCopied(cargo, ["check", "--offline", "--all-targets"], directory, environment); }
 		catch(error)
-		{ throw new Error(`${variant.name}: ${JSON.stringify(error.details)}`, { cause: error }); }
+		{ throw new Error(`${variant.name}: ${error.message}`, { cause: error }); }
 		t.diagnostic(variant.name + ": checked whole-value anchors and typed replies");
 		for(const [name, invalid] of [
 			["raw-anchor", "fn wrong(root: &Value<Bundle>) -> Result<(), Error> { let closure = make_record(root.get()?)?; let _ = closure.get()?.call(false, root.get()?); Ok(()) }"]

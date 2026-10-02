@@ -22,25 +22,27 @@ import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRun
  */
 export const ownedPythonEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });
-	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports) throw new TypeError("Owned Python requires authenticated callback/copy or receiver support");
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
+	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned Python requires authenticated callback/copy, receiver or callback-result support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
-	const options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...options });
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const options = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...options });
 	const python = generateOwnedPythonPackage(model.bindingIr, null, options), prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, options) : null;
 	const rust = adapter.rustValues ? generateOwnedRustPackage(model.bindingIr, null, {}, options) : null;
 	await verifyNativeFiles(adapterRoot, adapter.files);
-	if(adapter.schemaVersion !== (receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : 3) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
+	if(adapter.schemaVersion !== (callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
 		|| adapter.bindingIrSha256 !== model.bindingIrSha256 || adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt))
-		|| adapter.library !== `lib${prefix}.so` || adapter.gmp?.version !== "6.3.0" || adapter.ownedValues?.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2)
+		|| adapter.library !== `lib${prefix}.so` || adapter.gmp?.version !== "6.3.0" || adapter.ownedValues?.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)
 		|| canonicalJson(adapter.ownedValues.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)
 		|| canonicalJson(adapter.ownedValues.resultAnchors ?? null) !== canonicalJson(model.ownedGraph.resultAnchors ?? null)
 		|| canonicalJson(adapter.ownedValues.receiverExports ?? null) !== canonicalJson(model.ownedGraph.receiverExports ?? null)
+		|| canonicalJson(adapter.ownedValues.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null)
 		|| canonicalJson(adapter.ownedValues.hostCallbacks ?? null) !== canonicalJson(model.ownedGraph.hostCallbacks ?? null)
 		|| adapter.ownedValues.headerSha256 !== sha256(c.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(c.source)
 		|| canonicalJson(adapter.pythonValues ?? null) !== canonicalJson(python.contract)

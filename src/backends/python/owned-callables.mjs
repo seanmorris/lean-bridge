@@ -53,11 +53,13 @@ export const ownedPythonCallbacks = (c, nodes, models) => {
 		const node = nodes.get(callback.id), result = nodes.get(callback.result), i = node.index;
 		const parameters = callback.parameters.slice(1).map(id => nodes.get(id));
 		const automatic = ownedCallbackRecovery(c.native.model, node, id => id) !== null;
+		const borrowed = callback.anchor !== undefined;
 		const copy = models.find(fn => (fn.retain || fn.copy) && fn.id === result.id);
 		const raw = `_OwnedHost${i}`, pointer = node => node.leaf ? node.raw : `_c.POINTER(${node.raw})`;
 		const arguments_ = ["_c.c_void_p", "_c.c_void_p", ...parameters.map(pointer)
 			, `_c.POINTER(${result.raw})`, "_c.POINTER(_c.c_void_p)"];
 		layouts.push({ name: `${node.cName}_host`, raw, fields: ["call", "context", "closure", "recovery"] });
+		const start = lines.length;
 		lines.push(`_OwnedFunction${i} = _c.CFUNCTYPE(_c.c_uint32, ${arguments_.join(", ")})`
 			, `class ${raw}(_c.Structure):`
 			, `    _fields_ = [("call", _OwnedFunction${i}), ("context", _c.c_void_p), ("closure", _c.c_void_p), ("recovery", _c.POINTER(${result.raw}))]`, ""
@@ -72,7 +74,9 @@ export const ownedPythonCallbacks = (c, nodes, models) => {
 			, "    if wrapped:", "        function, recovery = value.function, value.recovery"
 			, "    else:", "        function = value", "    _owned_require_callback(function)"
 			, ...automatic ? [] : ['    if not wrapped: raise TypeError("This callback requires with_recovery(function, value)")']
-			, "    if wrapped:", `        recovery = _owned_input${result.index}(recovery, scope)`
+			, "    if wrapped:"
+			, ...borrowed ? ["        if type(recovery) is _R.Value: recovery = recovery.get()"] : []
+			, `        recovery = _owned_input${result.index}(recovery, scope)`
 			, "    if scope.check_only: return None", `    descriptor = scope.value(${raw})`
 			, "    if wrapped:", ...result.leaf ? [`        recovery = scope.value(${result.raw}, recovery)`] : []
 			, "        descriptor.recovery = _c.pointer(recovery)"
@@ -87,6 +91,7 @@ export const ownedPythonCallbacks = (c, nodes, models) => {
 			, "                borrowed_output = _OwnedOutput(None, borrowed.lease)"
 			, ...parameters.map((parameter, j) => `                value${j} = _owned_output${parameter.index}(${parameter.leaf ? `arg${j}` : `_owned_read(_c.cast(arg${j}, _c.c_void_p).value, ${parameter.raw})`}, incoming, borrowed_output)`)
 			, `                reply = _owned_synchronous(function(${parameters.map((_, j) => `value${j}`).join(", ")}))`
+			, ...borrowed ? ["                if type(reply) is _R.Value: reply = reply.get()"] : []
 			, "                reply_scope = _OwnedScope(state, budget=scope.budget)"
 			, `                converted = _owned_input${result.index}(reply, reply_scope)`
 			, "                # C owns this reply slot even when Python raises after publication."
@@ -97,8 +102,20 @@ export const ownedPythonCallbacks = (c, nodes, models) => {
 			, "            if frame.failure is None: frame.failure = failure", "            return 10"
 			, "        finally:", "            if reply_scope is not None: reply_scope.close()"
 			, "            if incoming is not None: incoming.close()"
+			, ...borrowed ? [
+				"            reply = converted = borrowed_output = incoming = reply_scope = borrowed = None"
+				, ...parameters.map((_, j) => `            value${j} = None`)
+			] : []
 			, "    _R._owned_checkpoint()", `    native = _OwnedFunction${i}(invoke)`
 			, "    scope.pin(native)", "    descriptor.call = native", "    return descriptor", "");
+		if(borrowed)
+		{
+			const header = lines.indexOf(`def _owned_host${i}(value, scope, frame=None):`, start);
+			const body = lines.splice(header + 1);
+			lines.push("    try:", ...body.slice(0, -1).map(line => "    " + line)
+				, "    except BaseException:", "        function = frame = None", "        raise"
+				, "    finally:", "        value = recovery = descriptor = native = None", "");
+		}
 	}
 	return { source: lines.join("\n"), layouts };
 };

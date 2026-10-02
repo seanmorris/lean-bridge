@@ -37,7 +37,7 @@ test("source intake describes new and existing libraries without widening target
 	for(const link of ["lean/first-component.md", "lean/existing-package.md", "publishing.md", "consume.md"])
 		assert.ok(hub.includes(`](${link}`), link);
 	const exports = await readFile("docs/lean/export-decisions.md", "utf8");
-	assert.match(exports, /produce unsupported diagnostics in this profile/);
+	assert.match(exports, /`IO`, `Task` and unsupported collection constructors produce diagnostics that retain their elaborated types for inspection\./u);
 	assert.match(exports, /## Native Perl exports/);
 	assert.match(exports, /\[locked Lake dependencies\]\(\.\.\/publish\/cpan\.md#build-with-locked-lake-dependencies\)/);
 	assert.match(exports, /Open generics, dependent signatures, asynchronous operations and retained host callbacks require further work/);

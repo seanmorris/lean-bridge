@@ -32,6 +32,7 @@ export const assertOwnedRustCallbackResultCi = (workflow, manifest) => {
 	assert.match(job, /^ {4}timeout-minutes: 150$/mu);
 	assert.match(job, /sudo apt-get install -y [^\n]*\bm4\b[^\n]*\bripgrep\b/u);
 	assert.match(job, /bash scripts\/bootstrap-toolchains\.sh/u);
+	assert.match(job, /bash scripts\/bootstrap-rust-ci\.sh/u);
 	assert.match(job, /bash scripts\/build-lean-link-spike\.sh/u);
 	assert.match(job, /npx playwright install --with-deps chromium firefox webkit/u);
 	const step = job.split("      - name: Verify Rust callback-result lifetimes\n")[1]?.split("      - name: ")[0];

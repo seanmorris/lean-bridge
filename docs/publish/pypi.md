@@ -322,8 +322,8 @@ arrays, Lists, options, results, binary products and recursive values. All
 nineteen primitive fields keep their ordinary Python conversions. Synchronous
 host callbacks borrow resource leaves for one invocation; `retain()` explicitly
 extends ownership. Returned Lean closures can receive typed callbacks and serve
-as callback arguments themselves. Input transfer requires the explicit contract
-below. Owner-anchored borrowed results remain unimplemented.
+as callback arguments themselves. Input transfers, owner-anchored results and
+callback-result borrows use the explicit contracts below.
 
 The wheel includes GMP and the shared Lean runtime with their licenses and
 source notices. Import verifies the bundled libraries, shares compatible loaded
@@ -370,8 +370,8 @@ Building a wheel does not upload it.
 The [C author example](c.md#anchor-a-result-to-an-input) declares a result borrowed
 from a particular input owner. Keep its resource and `ownedAggregates` declarations
 and select `targets.pypi` for a Python wheel. Ordinary source and reviewed IR use
-the same compiler-checked lifetime contract. Anchored packages can share a build
-with C, C++ and Cargo; other projections still reject result anchors.
+the same compiler-checked lifetime contract. Combined builds require each selected
+target to support the same exports and lifetime decisions.
 
 Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
 Consumers receive `Value[T]` roots with checked access, shared shallow copies and
@@ -412,7 +412,54 @@ capability. Older packages without receiver exports keep their existing formats.
 
 Execute the [consumer example](../consume/python.md#methods-and-properties)
 against the original prepared wheel before publishing. Callback-result lifetime
-anchors are separate from receiver-bound export results and remain unsupported.
+anchors are separate from receiver-bound export results.
+
+## Anchor a callback result to its argument
+
+A returned Lean function can borrow its result from one of its own arguments.
+Keep the resource and `ownedAggregates` declarations, and select the export's
+outer arity. For `makeRecord : Bundle → Bool → Bundle → Bundle`, an outer arity
+of one returns a function with two arguments. Put this decision under
+`contracts["Owned.makeRecord"]`:
+
+```json
+{
+  "result": {
+    "ownership": "lease",
+    "lifetime": { "scope": "explicit", "anchor": null },
+    "callable": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg1" }
+      }
+    }
+  }
+}
+```
+
+`arg1` selects the returned function's second argument. It does not count the
+outer `Bundle` argument or a private closure handle. Reviewed IR states the
+same decision using the callback parameter name; compilation checks the type
+and position against Lean metadata.
+
+Build with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.
+The selected callback argument takes a `Value[T]`, and the result borrows its
+original owner. Empty values and borrowed descendants keep that lifetime.
+Python host callbacks still receive raw generated values. Their reply and
+explicit recovery value can be raw or a whole `Value[T]`; conversion finishes
+before the callback frame expires. A callback exception remains an exception.
+
+These wheels use `owned-python-v5`, Python contract version 5 and package receipt
+version 6. The shared C adapter uses version 7 with `ownedValues` version 6.
+Verification reconstructs callback-local numbering, owner selection, transitive
+expiration and reply handoff from compiler metadata. The capability does not
+require host callbacks or export-result anchors. Without an actual callback
+result borrow, existing package formats remain unchanged.
+
+Combine PyPI with C, C++, Cargo and npm when the selected exports are accepted by
+every target. Run the [consumer example](../consume/python.md#callback-results-borrowed-from-an-argument)
+against the original wheel before upload. Retained host callbacks, asynchronous
+delivery and ownership transfers into callbacks remain outside this contract.
 
 ## Choose the package name and platform
 

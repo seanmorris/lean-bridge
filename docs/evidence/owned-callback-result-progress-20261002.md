@@ -144,10 +144,52 @@ C/C++/Cargo/npm release with 118 Rust, 76 C++, 219 C and 40 JavaScript public
 checks, strict TypeScript and nine browser contexts. Cargo consumers install
 offline and run after producer sources, the CLI and package sources are removed.
 Runtime checks include address/undefined sanitizers, allocation failures, Rust
-panics and compiled semantic mutations. Final repository-wide regression and
-commit remain separate from this acceptance record.
+panics and compiled semantic mutations. The final repository regression passed
+3,002 tests, with 679 explicitly gated skips and no failures. Commit `a310013`
+is pushed.
 
-Implement and verify Python, Ruby, C#,
+Core CI exposed a missing opt-in guard on Rust's compiler-only test. The core
+job does not install the pinned Cargo toolchain. The corrected test uses the
+same explicit flag as the other Rust runtime and package checks. A regression
+requires enabled execution to fail when Cargo is missing; all three typed API
+variants still pass with Cargo. The required Rust job continues to require all
+13 tests with zero skips. The site workflow test now checks the current
+`IO`/`Task` diagnostic wording in the export guide.
+
+The downstream Rust callback job also omitted its pinned compiler installation.
+Both the Rust job and the new Python job now invoke the existing Rust bootstrap;
+the Python combined-release test also consumes Cargo packages. Regression checks
+reject either job if that installation is removed.
+
+Python's six runtime configurations pass on three interpreter and typing setups.
+The probes use the actual malloc allocator, compare complete cold and exercised
+leak reports, execute all five sanitizer controls, and reject lifetime and
+report mutations. All four standalone wheel cases pass installation, strict
+typing, automatic shared loading and source-free relocated execution. Both
+source paths also install one C/C++/Cargo/PyPI/npm release, with 407 Python
+checks per interpreter, 118 Rust, 76 C++, 219 C and 40 JavaScript checks, plus
+nine browser contexts. The first complete Python gate passed 12 of 13 tests;
+GCC 12's dynamic-TLS
+tracking crashed in the remaining sanitizer case. The
+[TLS diagnosis](python-callback-sanitizer-tls-20261002.md) records the unmapped
+range and the repair. The repaired case passes on all three interpreter setups,
+including controls that preserve dynamic-TLS reachability and detect a leak
+after clearing its only TLS pointer. The repaired complete gate passes all 13
+tests with no failures, skips or cancellation in 2,637 seconds. Its
+[acceptance record](owned-python-callback-results-20261002.json) preserves all
+13 reports and the complete execution log. The verifier reconstructs the
+generated sources and rejects 41 forged reports. Repository-wide regressions
+and CI are separate from this acceptance record.
+
+Ruby's isolated generator and compiled probes now pass all six source/capability
+configurations. They exercise GC, bounded borrow ancestry, thread and fork
+affinity, close races, nonlocal callback exits, interrupted callbacks and
+allocation failures before and after consuming handoff. Five no-host and nine
+host-capable source mutations fail their semantic checks; restored sources
+reproduce the original results. Installed gems and final Ruby acceptance remain
+unfinished.
+
+Finish Python acceptance, then implement and verify Ruby, C#,
 Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI callback-result projections.
 Update each guide and acceptance record from installed results, then complete
 the package/container checks and support-matrix audit. Run the required CI jobs

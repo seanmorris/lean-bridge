@@ -3527,6 +3527,51 @@ without skips. CI retains `build/owned-jvm-receiver-gc.log` and both reports in
 `build/owned-jvm-receiver-gc/`. These checks exercise generated bindings directly;
 the installed Maven package checks remain in the receiver gate above.
 
+## Python callback-result lifetimes
+
+Run `npm run test:owned-python-callback-results` with the pinned Lean, Rust and
+Emscripten tools, native build tools, and all three Playwright browsers. The
+Python setup above supplies CPython 3.11 and 3.12, mypy 2.3.1, and the offline
+`typing_extensions` 4.6.0 and 4.16.0 wheels. The gate requires 13 passing tests
+without skips and 13 reports under `build/owned-python-callback-results/`.
+
+Six runtime cases cover ordinary source and reviewed IR, with host callbacks
+disabled, enabled, and combined with receivers and transfers. Each runs on
+three interpreter and typing configurations. They check original argument
+owners, transitive and empty borrows, native closure passback, raw and whole-owner
+host replies and recovery, retained exceptions, reentry, and allocation failures
+before and after ownership handoff. Strict typing rejects raw anchors, wrong
+owner types and callback signatures that require an owner instead of a payload.
+
+The native boundary runs under address and undefined-behavior sanitizers.
+Sanitized Python uses an allowlisted environment, disabled user-site imports
+and a safe import path, while honoring `PYTHONMALLOC=malloc`. The probe checks
+the actual allocator; Python's `-I` flag would ignore this setting. Each run
+must match its interpreter's cold leak baseline. Deliberate buffer overflow,
+invalid shift and memory leak probes verify all three detectors. Lifetime
+mutations must fail named public assertions; restored code must reproduce the
+original checks and finish with zero live bridge allocations and identities.
+
+The harness disables GCC's obsolete `__tls_get_addr` interceptor, which can
+misread glibc allocation metadata and give LeakSanitizer an unmapped scan range.
+Static TLS and loader-allocated roots remain enabled. Two additional controls
+hold an allocation exclusively in dynamic TLS, then clear that pointer: the
+first must match the cold baseline, and the second must report an 89-byte leak.
+See the [diagnosis and coverage checks](../evidence/python-callback-sanitizer-tls-20261002.md).
+
+Four wheel cases cover both source paths with and without host callbacks.
+They compare independent rebuilds and reassembly, reject forged receipts and
+generated files, remove producer sources and the CLI, install original wheels
+offline, execute the documentation example, and rerun after relocation. The
+combined release test installs C, C++, Cargo, PyPI and npm from one build and
+also exercises strict TypeScript and nine browser contexts.
+
+The required `owned-python-callback-results` CI job retains all reports and
+logs and propagates failures to the consumer summary. On a local host with
+glibc older than the default 2.38 package floor, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR` to the tested floor, such as `2.36`.
+The builder rejects any bundled library that requires a newer glibc symbol.
+
 ## Rust callback-result lifetimes
 
 Run `npm run test:owned-rust-callback-results` with the pinned Lean, Rust and

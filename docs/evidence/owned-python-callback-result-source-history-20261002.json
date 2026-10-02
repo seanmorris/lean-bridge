@@ -1,0 +1,741 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-python-callback-result-source-history",
+  "baselineRevision": "a3100134f1853102fc2cbf0c2f12839ac480af12",
+  "previous": {
+    "path": "docs/evidence/owned-rust-callback-result-source-history-20261002.json",
+    "sha256": "793dc2d6c6d0331561586184671305c3407f29ea7779d1b630c246aae06c1078"
+  },
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "c122e8970723b38626483dbfff52c00238ff111e7f987bbe4bad26b4e933a3c5",
+      "currentSha256": "e99330a1542e75035d6ec79769a7ae1e90d7d1982172de2e759d971c5884c4c7",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 16307,
+          "current": "  owned-python-callback-results:\n    name: Callback-result lifetimes in installed Python wheels\n    runs-on: ubuntu-24.04\n    timeout-minutes: 180\n    env:\n      EMCC_CORES: \"2\"\n    steps:\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Select Python 3.11 for backported type aliases\n        id: callback_python311\n        uses: actions/setup-python@v7\n        with:\n          python-version: \"3.11\"\n      - name: Select Python 3.12 for standard-library type aliases\n        id: callback_python312\n        uses: actions/setup-python@v7\n        with:\n          python-version: \"3.12\"\n      - name: Install callback acceptance tools\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3-venv ripgrep zstd\n          npm ci --ignore-scripts --no-audit --no-fund\n          bash scripts/bootstrap-toolchains.sh\n          bash scripts/bootstrap-rust-ci.sh\n          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.6.0 typing_extensions==4.6.0\n          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0\n          python3 -m venv build/python-collection-typecheck\n          build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2\n      - name: Install all callback browser engines\n        run: npx playwright install --with-deps chromium firefox webkit\n      - name: Build the callback shared runtime\n        shell: bash\n        run: |\n          set -euo pipefail\n          mkdir -p build\n          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-python-callback-result-runtime.log\n          test -s build/lean-link-spike/lazy/main.wasm\n      - name: Verify Python callback-result lifetimes\n        shell: bash\n        env:\n          LEAN_BRIDGE_PYTHON: ${{ steps.callback_python311.outputs.python-path }}\n          LEAN_BRIDGE_COLLECTION_PYTHONS: '[\"${{ steps.callback_python311.outputs.python-path }}\", \"${{ steps.callback_python312.outputs.python-path }}\"]'\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          npm run test:owned-python-callback-results 2>&1 | tee build/owned-python-callback-results.log\n          rg '^# tests 13$' build/owned-python-callback-results.log\n          rg '^# pass 13$' build/owned-python-callback-results.log\n          rg '^# fail 0$' build/owned-python-callback-results.log\n          rg '^# cancelled 0$' build/owned-python-callback-results.log\n          rg '^# skipped 0$' build/owned-python-callback-results.log\n          test -s build/owned-python-callback-results/typing.json\n          test -s build/owned-python-callback-results/runtime-ordinary-no-host.json\n          test -s build/owned-python-callback-results/runtime-ordinary-host.json\n          test -s build/owned-python-callback-results/runtime-ordinary-combined.json\n          test -s build/owned-python-callback-results/ordinary-no-host-package.json\n          test -s build/owned-python-callback-results/ordinary-combined-package.json\n          test -s build/owned-python-callback-results/ordinary-combined-release.json\n          test -s build/owned-python-callback-results/runtime-reviewed-no-host.json\n          test -s build/owned-python-callback-results/runtime-reviewed-host.json\n          test -s build/owned-python-callback-results/runtime-reviewed-combined.json\n          test -s build/owned-python-callback-results/reviewed-no-host-package.json\n          test -s build/owned-python-callback-results/reviewed-combined-package.json\n          test -s build/owned-python-callback-results/reviewed-combined-release.json\n      - name: Preserve Python callback-result acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: python-callback-results-${{ github.sha }}\n          path: |\n            build/owned-python-callback-results/\n            build/owned-python-callback-results.log\n            build/owned-python-callback-result-runtime.log\n          if-no-files-found: error\n          retention-days: 30\n\n",
+          "previous": ""
+        },
+        {
+          "start": 21596,
+          "current": "          bash scripts/bootstrap-rust-ci.sh\n",
+          "previous": ""
+        },
+        {
+          "start": 189853,
+          "current": "      - owned-python-callback-results\n",
+          "previous": ""
+        },
+        {
+          "start": 191546,
+          "current": "      - name: Enforce Python callback-result acceptance\n        if: needs.owned-python-callback-results.result != 'success'\n        run: exit 1\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/python.md",
+      "previousSha256": "bb25453c0de64a25fd437e1c93a884a91f1ae056b734d4a62f0b0ca6a0d9474c",
+      "currentSha256": "9a74f75a528bcdf3f934136146b9dd2a920a401aecc6694b72141ee28f2b2999",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 26676,
+          "current": "### Callback results borrowed from an argument\n\nA returned Lean function can declare that its result borrows one of its own\narguments. Pass that argument as a `Value[T]`. The callback returns a checked\n`Value[T]` view that expires with the selected argument's original owner, even\nwhen Lean returns captured data. Closing the closure does not close that view.\nRetain or copy the result to give it independent ownership.\n\nFor the callback-result acceptance wheel, save this as `owned-callback-results.py`:\n\n```python file=python/owned-callback-results.py\nimport lean_owned_aggregates as api\n\nticket = api.new_ticket(42, \"ready\")\nbundle = api.Bundle(ticket.get(), None, (), (), api.Payload(0, b\"\"))\nowner = api.copy_value(bundle)\ncallback = api.make_record(bundle)\n\n# The callback result borrows its second argument, not its captured bundle.\nview = callback(False, owner)\nprint(api.serial(view.get().primary))\nindependent = view.retain()\n\nowner.close()\nassert view.is_closed\nprint(api.serial(independent.get().primary))\n\nview.close()\nindependent.close()\ncallback.close()\nticket.close()\n```\n\nRun `./.venv/bin/python owned-callback-results.py`. It prints `42` twice.\nBorrowed descendants and empty recursive constructors keep the same lifetime\nchecks. A shallow copy shares its owner; `retain()` creates an independent one.\nPassing a returned closure back into Lean accepts either the `Value` wrapper or\nits checked `get()` result, including packages with host callbacks disabled.\n\nWhen a package enables synchronous Python callbacks, their arguments remain raw\ngenerated Python values. A borrowed callback reply or explicit recovery value\ncan be a raw value or a whole `Value[T]`. The adapter checks and copies it before\nthe callback frame expires. Escaped argument resources expire on return unless\nretained inside the callback. Recovery does not turn an exception into success;\nthe caller receives the original exception after native cleanup.\n\nConsuming methods expire aliases and borrowed descendants before callback\nreentry. Validation failures leave the input open; errors after handoff leave\nit consumed. Retaining an exception traceback does not retain hidden result\nowners. These contracts do not enable retained host callbacks or async replies.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "91906b199a5c187e8c2b28f32d4edfffd718eaaa2127f8d0335e5d2eb0aa5d2c",
+      "currentSha256": "8f18da55975fa03e90526389003c1f8a1aa9983e7011fce56020a6983af26579",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 217840,
+          "current": "## Python callback-result lifetimes\n\nRun `npm run test:owned-python-callback-results` with the pinned Lean, Rust and\nEmscripten tools, native build tools, and all three Playwright browsers. The\nPython setup above supplies CPython 3.11 and 3.12, mypy 2.3.1, and the offline\n`typing_extensions` 4.6.0 and 4.16.0 wheels. The gate requires 13 passing tests\nwithout skips and 13 reports under `build/owned-python-callback-results/`.\n\nSix runtime cases cover ordinary source and reviewed IR, with host callbacks\ndisabled, enabled, and combined with receivers and transfers. Each runs on\nthree interpreter and typing configurations. They check original argument\nowners, transitive and empty borrows, native closure passback, raw and whole-owner\nhost replies and recovery, retained exceptions, reentry, and allocation failures\nbefore and after ownership handoff. Strict typing rejects raw anchors, wrong\nowner types and callback signatures that require an owner instead of a payload.\n\nThe native boundary runs under address and undefined-behavior sanitizers.\nSanitized Python uses an allowlisted environment, disabled user-site imports\nand a safe import path, while honoring `PYTHONMALLOC=malloc`. The probe checks\nthe actual allocator; Python's `-I` flag would ignore this setting. Each run\nmust match its interpreter's cold leak baseline. Deliberate buffer overflow,\ninvalid shift and memory leak probes verify all three detectors. Lifetime\nmutations must fail named public assertions; restored code must reproduce the\noriginal checks and finish with zero live bridge allocations and identities.\n\nThe harness disables GCC's obsolete `__tls_get_addr` interceptor, which can\nmisread glibc allocation metadata and give LeakSanitizer an unmapped scan range.\nStatic TLS and loader-allocated roots remain enabled. Two additional controls\nhold an allocation exclusively in dynamic TLS, then clear that pointer: the\nfirst must match the cold baseline, and the second must report an 89-byte leak.\nSee the [diagnosis and coverage checks](../evidence/python-callback-sanitizer-tls-20261002.md).\n\nFour wheel cases cover both source paths with and without host callbacks.\nThey compare independent rebuilds and reassembly, reject forged receipts and\ngenerated files, remove producer sources and the CLI, install original wheels\noffline, execute the documentation example, and rerun after relocation. The\ncombined release test installs C, C++, Cargo, PyPI and npm from one build and\nalso exercises strict TypeScript and nine browser contexts.\n\nThe required `owned-python-callback-results` CI job retains all reports and\nlogs and propagates failures to the consumer summary. On a local host with\nglibc older than the default 2.38 package floor, set\n`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR` to the tested floor, such as `2.36`.\nThe builder rejects any bundled library that requires a newer glibc symbol.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/owned-callback-result-progress-20261002.md",
+      "previousSha256": "e3c3534e88e9748917214487a13641bc14175e4fc7093bd3448dd8c253c3a6c8",
+      "currentSha256": "a552e6357713b01273b7fb4ce15628f2464aa587c6d43fcfd3b20745f1ef5e31",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 8915,
+          "current": "panics and compiled semantic mutations. The final repository regression passed\n3,002 tests, with 679 explicitly gated skips and no failures. Commit `a310013`\nis pushed.\n\nCore CI exposed a missing opt-in guard on Rust's compiler-only test. The core\njob does not install the pinned Cargo toolchain. The corrected test uses the\nsame explicit flag as the other Rust runtime and package checks. A regression\nrequires enabled execution to fail when Cargo is missing; all three typed API\nvariants still pass with Cargo. The required Rust job continues to require all\n13 tests with zero skips. The site workflow test now checks the current\n`IO`/`Task` diagnostic wording in the export guide.\n\nThe downstream Rust callback job also omitted its pinned compiler installation.\nBoth the Rust job and the new Python job now invoke the existing Rust bootstrap;\nthe Python combined-release test also consumes Cargo packages. Regression checks\nreject either job if that installation is removed.\n\nPython's six runtime configurations pass on three interpreter and typing setups.\nThe probes use the actual malloc allocator, compare complete cold and exercised\nleak reports, execute all five sanitizer controls, and reject lifetime and\nreport mutations. All four standalone wheel cases pass installation, strict\ntyping, automatic shared loading and source-free relocated execution. Both\nsource paths also install one C/C++/Cargo/PyPI/npm release, with 407 Python\nchecks per interpreter, 118 Rust, 76 C++, 219 C and 40 JavaScript checks, plus\nnine browser contexts. The first complete Python gate passed 12 of 13 tests;\nGCC 12's dynamic-TLS\ntracking crashed in the remaining sanitizer case. The\n[TLS diagnosis](python-callback-sanitizer-tls-20261002.md) records the unmapped\nrange and the repair. The repaired case passes on all three interpreter setups,\nincluding controls that preserve dynamic-TLS reachability and detect a leak\nafter clearing its only TLS pointer. The repaired complete gate passes all 13\ntests with no failures, skips or cancellation in 2,637 seconds. Its\n[acceptance record](owned-python-callback-results-20261002.json) preserves all\n13 reports and the complete execution log. The verifier reconstructs the\ngenerated sources and rejects 41 forged reports. Repository-wide regressions\nand CI are separate from this acceptance record.\n\nRuby's isolated generator and compiled probes now pass all six source/capability\nconfigurations. They exercise GC, bounded borrow ancestry, thread and fork\naffinity, close races, nonlocal callback exits, interrupted callbacks and\nallocation failures before and after consuming handoff. Five no-host and nine\nhost-capable source mutations fail their semantic checks; restored sources\nreproduce the original results. Installed gems and final Ruby acceptance remain\nunfinished.\n\nFinish Python acceptance, then implement and verify Ruby, C#,\n",
+          "previous": "panics and compiled semantic mutations. Final repository-wide regression and\ncommit remain separate from this acceptance record.\n\nImplement and verify Python, Ruby, C#,\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "e4d655962015c6766c5b899420ef185e68bb0347703fb6246ee9539b3d9ca74d",
+      "currentSha256": "47650c3f5956b8eec23ae53d5216e16d869d7ec2caebf6ef6d7f184ef1f20688",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 23240,
+          "current": "C, C++, Rust, Python and npm also accept [callback-result anchors](../publish/c.md#anchor-a-callback-result-to-its-argument).\nConfigure them inside `callable.result`; argument names are local to that\ncallback, and the selected argument's original owner controls expiration.\nPython's [publisher guide](../publish/pypi.md#anchor-a-callback-result-to-its-argument)\nshows the nested contract and its checked `Value[T]` consumer argument.\nOther callback-result targets, `{ \"constructor\": \"Library.checked\" }` and additional effect labels still\n",
+          "previous": "Callback-result anchors,\n`{ \"constructor\": \"Library.checked\" }` and additional effect labels still\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "6c5a2d50ccd11484176804d052ee12775b4289f174b9f870bf798229ec1a1bfa",
+      "currentSha256": "5f4eeec0c501c764ef31e0114306c0507ae69df0076b2f83f2f4f5776c4028af",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 32553,
+          "current": "For C, C++, Rust, Python and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\n",
+          "previous": "For C, C++, Rust and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\n"
+        },
+        {
+          "start": 32993,
+          "current": "Rust callers pass a checked [`Value<T>` owner](../consume/rust.md#borrowed-callback-results),\nand Python callers pass a [`Value[T]` owner](../consume/python.md#callback-results-borrowed-from-an-argument),\n",
+          "previous": "Rust callers pass a checked [`Value<T>` owner](../consume/rust.md#borrowed-callback-results)\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/publish/pypi.md",
+      "previousSha256": "7d34acf53eb1caa18bc66d1bf8133624dbe7ddc9c7938f921842cab4900bc836",
+      "currentSha256": "f7a7a56f13ed8dedc4fe808db6236a0c77557d97649c9dab0738ce900e402437",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 17940,
+          "current": "as callback arguments themselves. Input transfers, owner-anchored results and\ncallback-result borrows use the explicit contracts below.\n",
+          "previous": "as callback arguments themselves. Input transfer requires the explicit contract\nbelow. Owner-anchored borrowed results remain unimplemented.\n"
+        },
+        {
+          "start": 20769,
+          "current": "the same compiler-checked lifetime contract. Combined builds require each selected\ntarget to support the same exports and lifetime decisions.\n",
+          "previous": "the same compiler-checked lifetime contract. Anchored packages can share a build\nwith C, C++ and Cargo; other projections still reject result anchors.\n"
+        },
+        {
+          "start": 23382,
+          "current": "anchors are separate from receiver-bound export results.\n\n## Anchor a callback result to its argument\n\nA returned Lean function can borrow its result from one of its own arguments.\nKeep the resource and `ownedAggregates` declarations, and select the export's\nouter arity. For `makeRecord : Bundle → Bool → Bundle → Bundle`, an outer arity\nof one returns a function with two arguments. Put this decision under\n`contracts[\"Owned.makeRecord\"]`:\n\n```json\n{\n  \"result\": {\n    \"ownership\": \"lease\",\n    \"lifetime\": { \"scope\": \"explicit\", \"anchor\": null },\n    \"callable\": {\n      \"result\": {\n        \"ownership\": \"borrow\",\n        \"lifetime\": { \"scope\": \"parameter\", \"anchor\": \"arg1\" }\n      }\n    }\n  }\n}\n```\n\n`arg1` selects the returned function's second argument. It does not count the\nouter `Bundle` argument or a private closure handle. Reviewed IR states the\nsame decision using the callback parameter name; compilation checks the type\nand position against Lean metadata.\n\nBuild with `lean-bridge build --project ./owned --target pypi --output ./release-owned`.\nThe selected callback argument takes a `Value[T]`, and the result borrows its\noriginal owner. Empty values and borrowed descendants keep that lifetime.\nPython host callbacks still receive raw generated values. Their reply and\nexplicit recovery value can be raw or a whole `Value[T]`; conversion finishes\nbefore the callback frame expires. A callback exception remains an exception.\n\nThese wheels use `owned-python-v5`, Python contract version 5 and package receipt\nversion 6. The shared C adapter uses version 7 with `ownedValues` version 6.\nVerification reconstructs callback-local numbering, owner selection, transitive\nexpiration and reply handoff from compiler metadata. The capability does not\nrequire host callbacks or export-result anchors. Without an actual callback\nresult borrow, existing package formats remain unchanged.\n\nCombine PyPI with C, C++, Cargo and npm when the selected exports are accepted by\nevery target. Run the [consumer example](../consume/python.md#callback-results-borrowed-from-an-argument)\nagainst the original wheel before upload. Retained host callbacks, asynchronous\ndelivery and ownership transfers into callbacks remain outside this contract.\n",
+          "previous": "anchors are separate from receiver-bound export results and remain unsupported.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "95612719f969e45e95bd9ebeabcaf19079ef1fa0667beb40d0291635f3793297",
+      "currentSha256": "e33eb048e1673af43c338b0d49e4faa47b8d503d9d1936bc5b8078d82442f7e0",
+      "strategy": "replacements",
+      "edits": [
+        {
+          "current": "\"61858f7878e9170e78276d584e5cdfcbaee3daa563f2b02c39b9e9f19a8f41e8\"",
+          "previous": "\"65ee9cab528ba91b1abb5020628e9dec5a5040d75cbb880aeeea158a74f07368\"",
+          "count": 18
+        },
+        {
+          "current": "\"c3ddfb6c7dd37d7b1ed0b107a78b0c976d0ba16127f5d840013cb0c537b5585b\"",
+          "previous": "\"9a13fd2e55f430628b070301e1b28553a0eb2a0290b4974a23881281039ad56f\"",
+          "count": 93
+        },
+        {
+          "current": "\"28d656822012e010772e8d320d3dffc8dccd7b57988d85e10478c5d7bea807c3\"",
+          "previous": "\"f7a3fd0e5103a0f73c480440c2b260e4a7571bc1b035953171712b5dda5c7a0d\"",
+          "count": 83
+        },
+        {
+          "current": "\"f16f696e16750a523fb8bd509315434e69f8fe7a2677355867ab407e2c88104f\"",
+          "previous": "\"9c465cf1e238007bfe8747db5104e6effc7dd02c0b7385247b0d1d709c49c8cb\"",
+          "count": 75
+        },
+        {
+          "current": "\"e99330a1542e75035d6ec79769a7ae1e90d7d1982172de2e759d971c5884c4c7\"",
+          "previous": "\"c122e8970723b38626483dbfff52c00238ff111e7f987bbe4bad26b4e933a3c5\"",
+          "count": 89
+        },
+        {
+          "current": "\"9a74f75a528bcdf3f934136146b9dd2a920a401aecc6694b72141ee28f2b2999\"",
+          "previous": "\"bb25453c0de64a25fd437e1c93a884a91f1ae056b734d4a62f0b0ca6a0d9474c\"",
+          "count": 1
+        },
+        {
+          "current": "\"f7a7a56f13ed8dedc4fe808db6236a0c77557d97649c9dab0738ce900e402437\"",
+          "previous": "\"7d34acf53eb1caa18bc66d1bf8133624dbe7ddc9c7938f921842cab4900bc836\"",
+          "count": 3
+        },
+        {
+          "current": "\"7d8a407ba7aed2f1cd3385c6cc0d02ee316a816bd25e580ac6169752176b45da\"",
+          "previous": "\"d4f968f6cd0509a82c49d46bb0669191708104c3506df594c53ccd7552f48c8d\"",
+          "count": 7
+        },
+        {
+          "current": "\"47650c3f5956b8eec23ae53d5216e16d869d7ec2caebf6ef6d7f184ef1f20688\"",
+          "previous": "\"e4d655962015c6766c5b899420ef185e68bb0347703fb6246ee9539b3d9ca74d\"",
+          "count": 18
+        },
+        {
+          "current": "\"5f4eeec0c501c764ef31e0114306c0507ae69df0076b2f83f2f4f5776c4028af\"",
+          "previous": "\"6c5a2d50ccd11484176804d052ee12775b4289f174b9f870bf798229ec1a1bfa\"",
+          "count": 22
+        },
+        {
+          "current": "\"7202a6992a392f38471b2a9815c47149a40e2adea0b0982756e83fce0dcbb208\"",
+          "previous": "\"a3ec0219da69539bd648b07e1cd80ce80f1dfd3b775fc71d64d780164664bd43\"",
+          "count": 3
+        },
+        {
+          "current": "\"8f18da55975fa03e90526389003c1f8a1aa9983e7011fce56020a6983af26579\"",
+          "previous": "\"91906b199a5c187e8c2b28f32d4edfffd718eaaa2127f8d0335e5d2eb0aa5d2c\"",
+          "count": 11
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "65ee9cab528ba91b1abb5020628e9dec5a5040d75cbb880aeeea158a74f07368",
+      "currentSha256": "61858f7878e9170e78276d584e5cdfcbaee3daa563f2b02c39b9e9f19a8f41e8",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 45928,
+          "current": "    \"test:owned-python-callback-results\": \"LEAN_BRIDGE_OWNED_PYTHON_CALLBACK_RESULT_TEST=1 node --test --test-concurrency=1 tests/owned-python-callback-results.test.mjs tests/owned-python-callback-result-runtime.test.mjs tests/owned-python-callback-result-packaging.test.mjs tests/owned-python-callback-result-combined-packaging.test.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "site/workflows.test.mjs",
+      "previousSha256": "a3ec0219da69539bd648b07e1cd80ce80f1dfd3b775fc71d64d780164664bd43",
+      "currentSha256": "7202a6992a392f38471b2a9815c47149a40e2adea0b0982756e83fce0dcbb208",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2220,
+          "current": "\tassert.match(exports, /`IO`, `Task` and unsupported collection constructors produce diagnostics that retain their elaborated types for inspection\\./u);\n",
+          "previous": "\tassert.match(exports, /produce unsupported diagnostics in this profile/);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "9a13fd2e55f430628b070301e1b28553a0eb2a0290b4974a23881281039ad56f",
+      "currentSha256": "c3ddfb6c7dd37d7b1ed0b107a78b0c976d0ba16127f5d840013cb0c537b5585b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1491,
+          "current": "\t\t, \"owned-python-callback-results\"\n\t\t, \"owned-python-callback-result-runtime\"\n\t\t, \"owned-python-callback-result-packaging\"\n\t\t, \"owned-python-callback-result-combined-packaging\"\n\t\t, \"owned-python-callback-result-ci\"\n\t\t, \"owned-python-callback-result-history\"\n\t\t, \"owned-python-callback-result-evidence\"\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/python/owned-callables.mjs",
+      "previousSha256": "40de6b9bcb94d9261776d422f60b868d166e51babf9d12817ab22994af98a411",
+      "currentSha256": "636c963211910bece0b419d8d2928488420d5ba5ff1a7015f691b82e2f4b016c",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1930,
+          "current": "\t\tconst borrowed = callback.anchor !== undefined;\n",
+          "previous": ""
+        },
+        {
+          "start": 2407,
+          "current": "\t\tconst start = lines.length;\n",
+          "previous": ""
+        },
+        {
+          "start": 3578,
+          "current": "\t\t\t, \"    if wrapped:\"\n\t\t\t, ...borrowed ? [\"        if type(recovery) is _R.Value: recovery = recovery.get()\"] : []\n\t\t\t, `        recovery = _owned_input${result.index}(recovery, scope)`\n",
+          "previous": "\t\t\t, \"    if wrapped:\", `        recovery = _owned_input${result.index}(recovery, scope)`\n"
+        },
+        {
+          "start": 5050,
+          "current": "\t\t\t, ...borrowed ? [\"                if type(reply) is _R.Value: reply = reply.get()\"] : []\n",
+          "previous": ""
+        },
+        {
+          "start": 5990,
+          "current": "\t\t\t, ...borrowed ? [\n\t\t\t\t\"            reply = converted = borrowed_output = incoming = reply_scope = borrowed = None\"\n\t\t\t\t, ...parameters.map((_, j) => `            value${j} = None`)\n\t\t\t] : []\n",
+          "previous": ""
+        },
+        {
+          "start": 6353,
+          "current": "\t\tif(borrowed)\n\t\t{\n\t\t\tconst header = lines.indexOf(`def _owned_host${i}(value, scope, frame=None):`, start);\n\t\t\tconst body = lines.splice(header + 1);\n\t\t\tlines.push(\"    try:\", ...body.slice(0, -1).map(line => \"    \" + line)\n\t\t\t\t, \"    except BaseException:\", \"        function = frame = None\", \"        raise\"\n\t\t\t\t, \"    finally:\", \"        value = recovery = descriptor = native = None\", \"\");\n\t\t}\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/python/owned-conversions.mjs",
+      "previousSha256": "deb2fe64b1ab5ccf389ca161427c9fc857222168b1b65d58274642598f595d78",
+      "currentSha256": "b38ee2d094a312e9f85a763ab3bf254ddb9d7baca09a304d50fe352dad116b4d",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 9990,
+          "current": "\t\t\tif(node.kind === \"callback\" && c.callbacks.some(item => item.anchor !== undefined))\n\t\t\t\tinput.push(\"if type(value) is _R.Value: value = value.get()\");\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/python/owned-package.mjs",
+      "previousSha256": "7a4137be7ea33a3b7946d2d82e254a7a0648561cb5cc61b790c28570f2d41c48",
+      "currentSha256": "34bf51955a99c9584fefc074554485cfbc880bed07e0f43570e4d7d14078bf09",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 967,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 1138,
+          "current": "export const generateOwnedPythonPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst generated = generateOwnedPythonConversions(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), prefix = generated.c.prefix;\n",
+          "previous": "export const generateOwnedPythonPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst generated = generateOwnedPythonConversions(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = generated.c.prefix;\n"
+        },
+        {
+          "start": 1604,
+          "current": "\tconst anchors = generated.c.functions.some(item => item.anchor !== undefined);\n\tconst callbackAnchors = generated.c.callbacks.filter(item => item.anchor !== undefined);\n\tconst receivers = generated.functions.filter(item => item.receiver === 0), wholeOwners = anchors || callbackAnchors.length > 0 || receivers.length > 0;\n",
+          "previous": "\tconst anchors = Boolean(generated.c.anchoredResults);\n\tconst receivers = generated.functions.filter(item => item.receiver === 0), wholeOwners = anchors || receivers.length > 0;\n"
+        },
+        {
+          "start": 2054,
+          "current": "\tconst runtime = ownedPythonRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors || callbackAnchors.length > 0, receiverExports: receivers.length > 0 });\n",
+          "previous": "\tconst runtime = ownedPythonRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors, receiverExports: receivers.length > 0 });\n"
+        },
+        {
+          "start": 3158,
+          "current": "\tconst schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;\n\tconst contract = { schemaVersion\n",
+          "previous": "\tconst contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1\n"
+        },
+        {
+          "start": 3471,
+          "current": "\t\t, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1\n\t\t\t, values: \"checked-whole-result\", anchor: \"original-argument-owner\"\n\t\t\t, parameterNumbering: \"callback-local\"\n\t\t\t, expiration: \"owner-release-or-transfer\", descendants: \"transitive\"\n\t\t\t, emptyValues: \"owner-preserved\"\n\t\t\t, independentOwnership: \"retain-or-copy_value\"\n\t\t\t, hostReply: \"value-or-whole-owner\"\n\t\t\t, hostResultHandoff: \"before-callback-frame-expires\"\n\t\t\t, signatures: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1 }))\n\t\t} } : {}\n",
+          "previous": ""
+        },
+        {
+          "start": 7347,
+          "current": "${anchors || callbackAnchors.length ? `\n",
+          "previous": "${anchors ? `\n"
+        },
+        {
+          "start": 8400,
+          "current": "` : \"\"}${callbackAnchors.length ? `\nCallback anchor parameters are local to the returned function. Pass Value[T]\nfor the selected argument. The original argument owner controls the result and\nits descendants, including empty constructors, even when Lean returns captured\ndata. Releasing or transferring that owner expires the borrowed result.\nretain() and copy_value create independent ownership.\n${hostCallbacks ? `Host callbacks receive ordinary typed arguments and can return the declared\npayload or Value[T]. The bridge validates and copies either reply before the\ncallback's borrowed arguments expire. Recovery values follow the same rule.\nExpired whole-value replies reject, including empty values.\n` : \"\"}` : \"\"}${receivers.length ? `\n",
+          "previous": "` : \"\"}${receivers.length ? `\n"
+        },
+        {
+          "start": 10951,
+          "current": "` : \"\"}${hostCallbacks || (!receivers.length && !callbackAnchors.length) ? `\n",
+          "previous": "` : \"\"}${!receivers.length || hostCallbacks ? `\n"
+        },
+        {
+          "start": 12484,
+          "current": "\tfiles[\"binding-manifest.json\"] = canonicalJson({ schemaVersion\n\t\t, backend: `owned-python-v${schemaVersion}`\n",
+          "previous": "\tfiles[\"binding-manifest.json\"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1\n\t\t, backend: receivers.length ? \"owned-python-v4\" : anchors ? \"owned-python-v3\" : transfers ? \"owned-python-v2\" : \"owned-python-v1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/python/owned-values.mjs",
+      "previousSha256": "9b691660b0e9724e224a4bd4c996c0793ca250561853581e74e29ab4f9d17c67",
+      "currentSha256": "e0422b76ab5d80aa28dfb5dadb21c1bdaec7e336be05531bf15c25748f1ce202",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1778,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 1949,
+          "current": "export const generateOwnedPythonValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "previous": "export const generateOwnedPythonValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });\n"
+        },
+        {
+          "start": 2471,
+          "current": "\tconst callbackAnchors = c.callbacks.some(item => item.anchor !== undefined);\n",
+          "previous": ""
+        },
+        {
+          "start": 6017,
+          "current": "\t\t\t? `Value[${table.get(fn.parameters[i]).publicType}]` : callbackAnchors && table.get(fn.parameters[i]).kind === \"callback\"\n\t\t\t\t? `${table.get(fn.parameters[i]).publicType} | Value[${table.get(fn.parameters[i]).publicType}]` : table.get(fn.parameters[i]).inputType;\n",
+          "previous": "\t\t\t? `Value[${table.get(fn.parameters[i]).publicType}]` : table.get(fn.parameters[i]).inputType;\n"
+        },
+        {
+          "start": 6457,
+          "current": "\tconst forward = (expression, arguments_, indentation) => {\n\t\tconst pad = \" \".repeat(indentation);\n\t\treturn callbackAnchors ? [\n\t\t\t`${pad}from . import _native`, `${pad}try:`\n\t\t\t, `${pad}    return ${expression}`, `${pad}finally:`\n\t\t\t, `${pad}    ${arguments_.length ? arguments_.join(\" = \") + \" = None\" : \"pass\"}`\n\t\t].join(\"\\n\") : `${pad}from . import _native\\n${pad}return ${expression}`;\n\t};\n",
+          "previous": ""
+        },
+        {
+          "start": 7264,
+          "current": "\t\t\t, stub ? \"        ...\" : forward(`_native._call${functions.indexOf(fn)}(self${arguments_.length ? \", \" + arguments_.join(\", \") : \"\"})`, [\"self\", ...arguments_], 8)];\n",
+          "previous": "\t\t\t, stub ? \"        ...\" : `        from . import _native\\n        return _native._call${functions.indexOf(fn)}(self${arguments_.length ? \", \" + arguments_.join(\", \") : \"\"})`];\n"
+        },
+        {
+          "start": 10831,
+          "current": "\t\t\t\t, forward(\"_native._copy_value(value, result_of=result_of, parameter_of=parameter_of)\", [\"value\", \"result_of\", \"parameter_of\"], 4), \"\");\n",
+          "previous": "\t\t\t\t, \"    from . import _native\"\n\t\t\t\t, \"    return _native._copy_value(value, result_of=result_of, parameter_of=parameter_of)\", \"\");\n"
+        },
+        {
+          "start": 11243,
+          "current": "\t\t\t, ...callbackAnchors ? ['_CallbackRecovery = _TypeVar(\"_CallbackRecovery\")', \"\"] : []\n",
+          "previous": ""
+        },
+        {
+          "start": 11545,
+          "current": "\t\t\t, callbackAnchors\n\t\t\t\t? \"def with_recovery(function: _Callable[_CallbackArgs, _CallbackReturn], recovery: _CallbackRecovery) -> WithRecovery[_CallbackArgs, _CallbackReturn | _CallbackRecovery]:\"\n\t\t\t\t: \"def with_recovery(function: _Callable[_CallbackArgs, _CallbackReturn], recovery: _CallbackReturn) -> WithRecovery[_CallbackArgs, _CallbackReturn]:\"\n",
+          "previous": "\t\t\t, \"def with_recovery(function: _Callable[_CallbackArgs, _CallbackReturn], recovery: _CallbackReturn) -> WithRecovery[_CallbackArgs, _CallbackReturn]:\"\n"
+        },
+        {
+          "start": 12499,
+          "current": "\t\t\t\t\t, stub ? \"        ...\" : forward(`_native._retain${node.index}(self)`, [\"self\"], 8));\n",
+          "previous": "\t\t\t\t\t, stub ? \"        ...\" : `        from . import _native\\n        return _native._retain${node.index}(self)`);\n"
+        },
+        {
+          "start": 12683,
+          "current": "\t\t\t\t\t, stub ? \"        ...\" : forward(`_native._equal${node.index}(self, other)`, [\"self\", \"other\"], 8)\n",
+          "previous": "\t\t\t\t\t, stub ? \"        ...\" : `        from . import _native\\n        return _native._equal${node.index}(self, other)`\n"
+        },
+        {
+          "start": 13282,
+          "current": "\t\t\t\t\t\t, stub ? \"        ...\" : forward(`_native._invoke${node.index}(self${parameters.map((_, i) => `, arg${i}`).join(\"\")})`, [\"self\", ...parameters.map((_, i) => `arg${i}`)], 8));\n",
+          "previous": "\t\t\t\t\t\t, stub ? \"        ...\" : `        from . import _native\\n        return _native._invoke${node.index}(self${parameters.map((_, i) => `, arg${i}`).join(\"\")})`);\n"
+        },
+        {
+          "start": 14928,
+          "current": "\t\t\tconst borrowed = callback.anchor !== undefined;\n\t\t\tconst parameters = callback.parameters.slice(1).map((id, i) => JSON.stringify(borrowed ? table.get(id).publicType : parameterType(callback, i + 1))).join(\", \");\n",
+          "previous": "\t\t\tconst parameters = callback.parameters.slice(1).map((_, i) => JSON.stringify(parameterType(callback, i + 1))).join(\", \");\n"
+        },
+        {
+          "start": 15228,
+          "current": "\t\t\tconst reply = borrowed ? `${result.publicType} | Value[${result.publicType}]` : result.publicType;\n\t\t\tconst recoveries = (borrowed ? [result.publicType, `Value[${result.publicType}]`, reply] : [reply])\n\t\t\t\t.map(type => `WithRecovery[[${parameters}], ${type}]`).join(\" | \");\n\t\t\tlines.push(`_CallbackInput${node.index}: _TypeAlias = ${node.publicType}${wholeOwners ? ` | Value[${node.publicType}]` : \"\"}${automatic ? ` | _Callable[[${parameters}], ${reply}]` : \"\"} | ${recoveries}`);\n",
+          "previous": "\t\t\tlines.push(`_CallbackInput${node.index}: _TypeAlias = ${node.publicType}${wholeOwners ? ` | Value[${node.publicType}]` : \"\"}${automatic ? ` | _Callable[[${parameters}], ${result.publicType}]` : \"\"} | WithRecovery[[${parameters}], ${result.publicType}]`);\n"
+        },
+        {
+          "start": 16296,
+          "current": "\t\t\t, stub ? \"    ...\" : forward(`_native._call${index}(${fn.parameters.map((_, i) => `arg${i}`).join(\", \")})`, fn.parameters.map((_, i) => `arg${i}`), 4));\n",
+          "previous": "\t\t\t, stub ? \"    ...\" : `    from . import _native\\n    return _native._call${index}(${fn.parameters.map((_, i) => `arg${i}`).join(\", \")})`);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/multi-profile-project.mjs",
+      "previousSha256": "d4f968f6cd0509a82c49d46bb0669191708104c3506df594c53ccd7552f48c8d",
+      "currentSha256": "7d8a407ba7aed2f1cd3385c6cc0d02ee316a816bd25e580ac6169752176b45da",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 11775,
+          "current": "\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)) });\n",
+          "previous": "\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => [\"c\", \"cpp\", \"cargo\"].includes(target)) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "previousSha256": "f7a3fd0e5103a0f73c480440c2b260e4a7571bc1b035953171712b5dda5c7a0d",
+      "currentSha256": "28d656822012e010772e8d320d3dffc8dccd7b57988d85e10478c5d7bea807c3",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 3646,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)) });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\"].includes(target)) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-project.mjs",
+      "previousSha256": "9c465cf1e238007bfe8747db5104e6effc7dd02c0b7385247b0d1d709c49c8cb",
+      "currentSha256": "f16f696e16750a523fb8bd509315434e69f8fe7a2677355867ab407e2c88104f",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 7832,
+          "current": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target))\n",
+          "previous": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\"].includes(target))\n"
+        },
+        {
+          "start": 9322,
+          "current": "\t\t\t\t\tif(targets.includes(\"pypi\")) generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });\n",
+          "previous": "\t\t\t\t\tif(targets.includes(\"pypi\")) generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-c-projection.mjs",
+      "previousSha256": "3b6c93ddc13befa8b43e463f34f6277e75c1103d8d6ebefafbe31e7689758eea",
+      "currentSha256": "e62cfa5d080085ab513ac7350f5aec4bb458656c97c446e6fb361446eab4f42f",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2247,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)) });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\"].includes(target)) });\n"
+        },
+        {
+          "start": 3482,
+          "current": "\tconst valueCopies = targets.some(target => [\"cpp\", \"cargo\", \"pypi\"].includes(target)) && callbackResultAnchors;\n",
+          "previous": "\tconst valueCopies = (targets.includes(\"cpp\") || targets.includes(\"cargo\")) && callbackResultAnchors;\n"
+        },
+        {
+          "start": 4366,
+          "current": "\tconst python = targets.includes(\"pypi\") ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n\tif(python && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError(\"Owned Python projection requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "previous": "\tconst python = targets.includes(\"pypi\") ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;\n\tif(python && !hostCallbacks && !receiverExports) throw new TypeError(\"Owned Python projection requires authenticated callback/copy or receiver support\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-python-artifacts.mjs",
+      "previousSha256": "637b7cd661267d84b93fefd23919d976e19b696c4db47cc43c5f60b4daaeb3c8",
+      "currentSha256": "3870d4325b33abca2f9fa938f625454e983407bc4128439e7d5e7a0699bab861",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1220,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Python requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports) throw new TypeError(\"Owned Python requires authenticated callback/copy or receiver support\");\n"
+        },
+        {
+          "start": 2051,
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst options = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };\n\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...options });\n",
+          "previous": "\tconst options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };\n\tconst c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...options });\n"
+        },
+        {
+          "start": 2853,
+          "current": "\tif(adapter.schemaVersion !== (callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== identity\n",
+          "previous": "\tif(adapter.schemaVersion !== (receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : 3) || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== identity\n"
+        },
+        {
+          "start": 3210,
+          "current": "\t\t|| adapter.library !== `lib${prefix}.so` || adapter.gmp?.version !== \"6.3.0\" || adapter.ownedValues?.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)\n",
+          "previous": "\t\t|| adapter.library !== `lib${prefix}.so` || adapter.gmp?.version !== \"6.3.0\" || adapter.ownedValues?.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2)\n"
+        },
+        {
+          "start": 3817,
+          "current": "\t\t|| canonicalJson(adapter.ownedValues.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null)\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-rust-artifacts.mjs",
+      "previousSha256": "b64c8b5a8a559b19e229f7a6fba119c903e9617ae54611cc6546aaf15e7227df",
+      "currentSha256": "f8c9e99a50179a27a2272c97bb1b6b68e095d4b2a84a0fd64e70f28a7957f383",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2810,
+          "current": "\tconst python = adapter.pythonValues ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n",
+          "previous": "\tconst python = adapter.pythonValues ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/owned-c-package.mjs",
+      "previousSha256": "b040992d04c08bb37221c0100bca18f92a5976de591a14c641824c27f83e486a",
+      "currentSha256": "1ee621075db2d4e2713f26bc4001b4c9c77bf95ffb4416aed33e1b1cfcedf9ba",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 552,
+          "current": "import { generateOwnedPythonPackage } from \"../backends/python/owned-package.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 3105,
+          "current": "\tconst valueCopies = Boolean(adapter.cppValues || adapter.rustValues || adapter.pythonValues) && callbackResultAnchors;\n",
+          "previous": "\tconst valueCopies = Boolean(adapter.cppValues || adapter.rustValues) && callbackResultAnchors;\n"
+        },
+        {
+          "start": 3854,
+          "current": "\tconst python = adapter.pythonValues ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;\n\tif(canonicalJson(adapter.pythonValues ?? null) !== canonicalJson(python?.contract ?? null))\n\t\tthrow new Error(\"Owned Python adapter differs from compiler-authenticated types or lifetime rules\");\n",
+          "previous": ""
+        },
+        {
+          "start": 6440,
+          "current": "\t\t, ...rust ? { \"internal/rust-abi.h\": rust.abiHeader } : {}\n\t\t, ...python ? { \"internal/python-abi.h\": python.abiHeader } : {} }))\n",
+          "previous": "\t\t, ...rust ? { \"internal/rust-abi.h\": rust.abiHeader } : {} }))\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/owned-pypi.mjs",
+      "previousSha256": "55be1fee9d0e08ec0777383f0151ee7e70d70e802e6bdbb1cbe2874da318bca9",
+      "currentSha256": "57d1bc025d7d556d560a1f15949dea9ce032013eb44f0ee48e9302b7191a0f32",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2009,
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst generated = generateOwnedPythonPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), moduleName = generated.packageDir;\n",
+          "previous": "\tconst generated = generateOwnedPythonPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), moduleName = generated.packageDir;\n"
+        },
+        {
+          "start": 5492,
+          "current": "\tawait save(`${distInfo}/WHEEL`, `Wheel-Version: 1.0\\nGenerator: lean-bridge-python-owned/${callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1}\\nRoot-Is-Purelib: false\\nTag: ${tag}\\n`);\n",
+          "previous": "\tawait save(`${distInfo}/WHEEL`, `Wheel-Version: 1.0\\nGenerator: lean-bridge-python-owned/${receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1}\\nRoot-Is-Purelib: false\\nTag: ${tag}\\n`);\n"
+        },
+        {
+          "start": 6437,
+          "current": "\tawait save(`${metadataRoot}/package-receipt.json`, canonicalJson({ schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2\n",
+          "previous": "\tawait save(`${metadataRoot}/package-receipt.json`, canonicalJson({ schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2\n"
+        },
+        {
+          "start": 7586,
+          "current": "\t\t, backend: callbackResultAnchors ? \"owned-python-v5\" : receiverExports ? \"owned-python-v4\" : anchoredResults ? \"owned-python-v3\" : transferredInputs ? \"owned-python-v2\" : \"owned-python-v1\"\n",
+          "previous": "\t\t, backend: receiverExports ? \"owned-python-v4\" : anchoredResults ? \"owned-python-v3\" : transferredInputs ? \"owned-python-v2\" : \"owned-python-v1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/copied-fixture-source-history.mjs",
+      "previousSha256": "e4da84b1961d4604715bcf1cf00e27d6e86db1a2feee8f82fa19b3b62f2bf85f",
+      "currentSha256": "ab63c0a9bfd04141c524e2aa2f6f9ef9e8062ecfe3bcab58667c8a8bce33f086",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 617,
+          "current": "import { ownedPythonCallbackChangedPaths } from \"./owned-python-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1643,
+          "current": "\t, ...ownedPythonCallbackChangedPaths\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-rust-callback-result-acceptance.mjs",
+      "previousSha256": "b80085ba5bdc7ae5cf85bd750321db2265d0caf7e1a9eff7e7976c0f4af1d55e",
+      "currentSha256": "c573620a0d086f34fa716d9d2f4f1e89c9c1b84d7601b93c493270c0d98c6d6f",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1779,
+          "current": "import { beforeOwnedPythonCallbackResults } from \"./owned-python-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 7755,
+          "current": "\t\tconst file = report.files.find(entry => entry.path === path);\n\t\tassert.ok(file, path);\n\t\tconst bytes = Buffer.from(beforeOwnedPythonCallbackResults(path, await readFile(path), file.sha256));\n",
+          "previous": "\t\tconst file = report.files.find(entry => entry.path === path), bytes = await readFile(path);\n"
+        },
+        {
+          "start": 26742,
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(beforeOwnedPythonCallbackResults(path, await readFile(path), digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-rust-callback-result-ci.mjs",
+      "previousSha256": "f8d508ac47466f0eb633ec06200c86d125fa0a3f259b2f5733477396eee74d51",
+      "currentSha256": "fdad782421e8810f0ee465e5002823739edb0e52727a9a219da668e22dc1bee6",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1695,
+          "current": "\tassert.match(job, /bash scripts\\/bootstrap-rust-ci\\.sh/u);\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-rust-callback-result-history.mjs",
+      "previousSha256": "b5281435fc3efbe299bb65120fdd1f88df67dac81705bc600962e715b2c1e935",
+      "currentSha256": "ad488ec6873c16f3504495c79eb25716eed6095c4608cb3796c4a3871b87f7a3",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 234,
+          "current": "import { beforeOwnedPythonCallbackResults } from \"./owned-python-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 3846,
+          "current": "\tsource = beforeOwnedPythonCallbackResults(path, source, expected);\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-rust-callback-result-ci.test.mjs",
+      "previousSha256": "2212070a6eaf851a1528f502159221e4d86ace45f0ef0b1cfaee7fce11a67dcc",
+      "currentSha256": "6ca14dfee69bc1bb53dcb5201a70531b555c4f8f301082ec4e3fc6e55eb1af8b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 131,
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 414,
+          "current": "import { runCopied } from \"./helpers/copied-fixture-install.mjs\";\n\ntest(\"Rust callback compile checks require opt-in and fail when enabled without Cargo\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-rust-callback-gate-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = { PATH: \"/usr/bin:/bin\"\n\t\t, LEAN_BRIDGE_CARGO: join(root, \"missing-cargo\")\n\t\t, LEAN_BRIDGE_RUSTC: join(root, \"missing-rustc\") };\n\tconst args = [\"--test\", \"tests/owned-rust-callback-results.test.mjs\"];\n\tconst disabled = await runCopied(process.execPath, args, process.cwd(), environment);\n\tassert.match(disabled.stdout, /^# pass 1$/mu);\n\tassert.match(disabled.stdout, /^# fail 0$/mu);\n\tassert.match(disabled.stdout, /^# skipped 1$/mu);\n\tawait assert.rejects(runCopied(process.execPath, args, process.cwd(), {\n\t\t...environment, LEAN_BRIDGE_OWNED_RUST_CALLBACK_RESULT_TEST: \"1\"\n\t}), error => {\n\t\tassert.equal(error.code, \"build-command-failed\");\n\t\tassert.match(error.details.stdout, /^# fail 1$/mu);\n\t\tassert.match(error.details.stdout, /^# skipped 0$/mu);\n\t\tassert.ok(error.details.stdout.includes(environment.LEAN_BRIDGE_CARGO + \" ENOENT\"));\n\t\treturn true;\n\t});\n});\n",
+          "previous": ""
+        },
+        {
+          "start": 2008,
+          "current": "\tconst missingRust = workflow.replace(/( {2}owned-rust-callback-results:\\n[\\s\\S]*?) {10}bash scripts\\/bootstrap-rust-ci\\.sh\\n/u, \"$1\");\n\tassert.notEqual(missingRust, workflow);\n\tassert.throws(() => assertOwnedRustCallbackResultCi(missingRust, manifest));\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-rust-callback-result-history.test.mjs",
+      "previousSha256": "69c92aa77f48bbeb1c7635a9182f70fb5c974e4ff177d2ccd3a053c9a2eed0aa",
+      "currentSha256": "811e0317444b87f6399723376f5a1eda8e2ba92b866b50fa1086c3085147ef85",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 267,
+          "current": "import { beforeOwnedPythonCallbackResults } from \"./helpers/owned-python-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1184,
+          "current": "\t\tconst current = Buffer.from(beforeOwnedPythonCallbackResults(update.path, await readFile(update.path)));\n\t\tconst prior = beforeOwnedRustCallbackResults(update.path, current);\n",
+          "previous": "\t\tconst current = await readFile(update.path), prior = beforeOwnedRustCallbackResults(update.path, current);\n"
+        },
+        {
+          "start": 2408,
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedPythonCallbackResults(path, await readFile(path, \"utf8\"));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = await readFile(path, \"utf8\");\n"
+        },
+        {
+          "start": 2684,
+          "current": "\t\tfile.sha256 = sha256(beforeOwnedPythonCallbackResults(file.path, await readFile(file.path)));\n",
+          "previous": "\t\tfile.sha256 = sha256(await readFile(file.path));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-rust-callback-results.test.mjs",
+      "previousSha256": "bd6faa831d3b8e089a470af7706114e9839440ad5218e833722fb15b52e4572f",
+      "currentSha256": "f2b50ee06573f56f6b2e93a92b01b810be6794f3cee6293ae6e0258b36236846",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2893,
+          "current": "test(\"Rust callback-result APIs compile raw and whole-owner replies without host admission leaks\", {\n\tskip: process.env.LEAN_BRIDGE_OWNED_RUST_CALLBACK_RESULT_TEST !== \"1\"\n\t, timeout: 300000\n}, async t => {\n",
+          "previous": "test(\"Rust callback-result APIs compile raw and whole-owner replies without host admission leaks\", { timeout: 300000 }, async t => {\n"
+        },
+        {
+          "start": 5676,
+          "current": "\t\t{ throw new Error(`${variant.name}: ${error.message}`, { cause: error }); }\n",
+          "previous": "\t\t{ throw new Error(`${variant.name}: ${JSON.stringify(error.details)}`, { cause: error }); }\n"
+        }
+      ]
+    }
+  ]
+}
