@@ -32,25 +32,27 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	if(!["c", "cpp"].includes(target)) throw new TypeError("Owned native packaging requires c or cpp");
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: target === "c" });
 	if(!model.ownedGraph) throw new TypeError("Owned C packaging requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports);
-	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
 	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;
 	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks && !receiverExports) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
 		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
-	if(adapter.schemaVersion !== (receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
+	if(adapter.schemaVersion !== (callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
 		|| adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt)) || adapter.bindingIrSha256 !== model.bindingIrSha256
-		|| adapter.library !== `lib${p}.so` || adapter.ownedValues?.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1) || adapter.gmp?.version !== "6.3.0"
+		|| adapter.library !== `lib${p}.so` || adapter.ownedValues?.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1) || adapter.gmp?.version !== "6.3.0"
 		|| canonicalJson(adapter.ownedValues.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)
 		|| canonicalJson(adapter.ownedValues.resultAnchors ?? null) !== canonicalJson(model.ownedGraph.resultAnchors ?? null)
 		|| canonicalJson(adapter.ownedValues.receiverExports ?? null) !== canonicalJson(model.ownedGraph.receiverExports ?? null)
+		|| canonicalJson(adapter.ownedValues.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null)
 		|| canonicalJson(adapter.ownedValues.hostCallbacks ?? null) !== canonicalJson(model.ownedGraph.hostCallbacks ?? null)
 		|| adapter.ownedValues.headerSha256 !== sha256(generated.publicHeader) || adapter.ownedValues.sourceSha256 !== sha256(generated.source)
 		|| (await nativeArtifactPaths(adapterRoot)).some(path => path !== "native-c-adapter.json" && !Object.hasOwn(adapter.files, path)))
@@ -237,7 +239,7 @@ each entire owner and sets its slot to NULL, including owners of empty values.
 Failures before consumption preserve all input owners; later failures leave them
 consumed. Do not reuse old views after the call returns. Independently retained
 owners remain valid. Owner slots must not overlap output values or output owners.
-` : ""}${anchoredResults ? `
+` : ""}${anchoredResults || callbackResultAnchors ? `
 Borrowed results take an additional input-owner handle after their anchor argument.
 The returned owner depends on that exact input owner, even when the result has no
 resources. Releasing or consuming the input owner expires every dependent result.
@@ -246,7 +248,14 @@ perform validation. Keep its result owner until all view storage is no longer us
 then release it, including after expiration. Calls reject expired resource handles.
 Generated _retain and _copy operations create independent ownership while a view is
 valid. Independent aliases cannot revive an expired view. Compare resources with
-their generated _equal operation; different view handles may identify one resource.
+their generated _equal operation; different view handles may identify one resource.${callbackResultAnchors ? `
+
+A returned Lean closure can anchor its result to one of its own arguments. Its
+typed _call operation takes the selected argument's original owner immediately
+after that argument, not the closure's owner. The selected owner controls the
+result lifetime even when the closure returns captured data. Host callback replies
+are converted before callback argument owners expire.
+` : ""}
 ` : ""}
 
 Records use named fields, variants use named KIND enums and named payloads, and
@@ -281,7 +290,7 @@ ${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n"
 `);
 	const files = [];
 	for(const path of await nativeArtifactPaths(root)) files.push({ path, bytes: await readFile(join(root, path)), mode: 0o644 });
-	const manifest = { schemaVersion: receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2
+	const manifest = { schemaVersion: callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2
 		, kind: `lean-bridge-native-${target}-package`
 		, ecosystem: target, name, version, component: model.component
 		, profile: "native-library-v1"
@@ -301,7 +310,7 @@ ${generated.values.functions.map(item => `- ${item.name}: ${item.id}`).join("\n"
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: target
-		, backend: `native-${target}-owned-v${receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1}`
+		, backend: `native-${target}-owned-v${callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1}`
 		, runtimeIdentity
 		, glibcMinimumVersion
 		, packages: [{ archive, sha256: sha256(bytes), bytes: bytes.length, name, version, compilerAccess: false }]

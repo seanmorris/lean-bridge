@@ -11,6 +11,7 @@ import { copiedFixtureReaderHistoryPath, copiedFixtureReaderHistorySha256
 	, beforeCopiedFixtureReaders, copiedFixtureHistoricalBytes
 	, reverseCopiedFixtureReaderUpdate } from "./helpers/copied-fixture-source-history.mjs";
 import { beforeOwnedJvmReceiverGc } from "./helpers/owned-jvm-receiver-gc-history.mjs";
+import { beforeOwnedCallbackResults } from "./helpers/owned-callback-result-history.mjs";
 import { assertDotnetVariantSourceHash } from "./helpers/dotnet-source-history.mjs";
 import { assertRubyVariantSourceHash } from "./helpers/ruby-source-history.mjs";
 
@@ -48,7 +49,8 @@ test("copied fixture readers reconstruct exact predecessor bytes and reject drif
 	assert.equal(new Set(record.updates.map(update => update.path)).size, record.updates.length);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path), prior = beforeCopiedFixtureReaders(update.path, current);
+		const current = beforeOwnedCallbackResults(update.path, await readFile(update.path), update.currentSha256);
+		const prior = beforeCopiedFixtureReaders(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeCopiedFixtureReaders(update.path, current, update.currentSha256), current);

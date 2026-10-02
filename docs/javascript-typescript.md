@@ -311,7 +311,45 @@ empty array acquire an owner before it is passed to a borrowing function.
 Nested resource views do not keep their whole owner alive. Their `retain()`
 method creates an independent `LeanValue`. Compare resource identity with
 `view.equals(otherView)`, including views obtained from different owners.
-Results anchored to callback results remain unsupported.
+Returned functions can also borrow results from their own arguments.
+
+### Borrowed callback results
+
+Pass the selected argument as a whole owner, without calling `get()` on it.
+The callback returns another whole owner. Its payload can contain resources,
+records or finite recursive values, including empty values.
+
+With `api` imported from a package whose `makeRecord` returns a
+`Bool → Bundle → Bundle` function that borrows its second argument:
+
+```js
+const ticket = api.newTicket(42n, "callback");
+const input = api.echoRecord({
+  primary: ticket.get(), spare: { tag: "none" }, peers: [], history: [],
+  payload: { count: 7n, bytes: new Uint8Array([42]) }
+});
+const closure = api.makeRecord(input);
+const view = closure.get()(false, input);
+const retained = view.retain();
+try {
+  console.log(api.serial(view.get().primary)); // 42n
+  input.dispose();
+  console.log(view.disposed); // true
+  console.log(api.serial(retained.get().primary)); // 42n
+} finally {
+  for (const value of [retained, view, closure, input, ticket]) value.dispose();
+}
+```
+
+Releasing the selected argument's last shared root, or consuming that owner,
+expires the result and its borrowed descendants. This rule holds even when the
+closure returns captured data. TypeScript requires the selected argument's whole
+owner and preserves generated receiver methods on the returned owner.
+
+A host callback may return its borrowed payload or a whole owner of the declared
+result type. The bridge converts the reply before the callback frame expires;
+escaped argument views expire when the callback returns. Callback-result
+lifetimes do not permit asynchronous callbacks or retained host callbacks.
 
 ### Methods and properties
 

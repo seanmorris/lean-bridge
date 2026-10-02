@@ -57,7 +57,8 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 	const hostCallbacks = options.hostCallbacks ?? false;
 	const transferredInputs = options.transferredInputs ?? false;
 	const anchoredResults = options.anchoredResults ?? false;
-	const receiverExports = options.receiverExports ?? false, wholeOwners = anchoredResults || receiverExports;
+	const callbackResultAnchors = options.callbackResultAnchors ?? false;
+	const receiverExports = options.receiverExports ?? false, wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
 	const native = await compileOwnedAggregateFixture(t, { fixture
 		, witness: "import Owned\n", hostCallbacks
 		, ...options.fixtureOptions
@@ -65,8 +66,9 @@ export const compileOwnedJavaScriptWasmFixture = async (t, fixture = "owned-aggr
 	const generated = generateOwnedNativeValueAdapters({ metadata: native.metadata
 		, sourceIdentity: native.sourceIdentity
 		, component: native.model.component, wordBits: 32
-		, hostCallbacks, transferredInputs, anchoredResults, receiverExports });
-	const layout = compileOwnedJavaScriptWasmLayout(generated.layout.model.bindingIr, { transferredInputs, anchoredResults, receiverExports }), directory = native.directory;
+		, hostCallbacks, transferredInputs, anchoredResults, receiverExports
+		, callbackResultAnchors });
+	const layout = compileOwnedJavaScriptWasmLayout(generated.layout.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors }), directory = native.directory;
 	const component = generateOwnedWasmComponent(generated), callbacks = component.callbacks;
 	const sharedBroker = options.sharedRuntime ? generateOwnedWasmBroker() : null;
 	assert.equal(generated.carriers.leanSource, native.leanSource);

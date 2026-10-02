@@ -8,6 +8,7 @@ import { validateBindingIr, validateOwnedAggregateBindingIr } from "../binding-i
 import { hashBindingIr, canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 import { validateElaboratedMetadata } from "./elaborated-metadata.mjs";
 import { exportContractFor, exportContractOwnership, exportContractEffects } from "./export-configuration.mjs";
+import { callbackSemanticSignature } from "./callback-signature.mjs";
 
 const doc = summary => ({ summary, details: "" });
 const source = declaration => ({ producer: "lean", declaration, extensions: {} });
@@ -105,9 +106,10 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		remember(projection.result);
 	}
 	const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
-	const site = (type, result = false) => ({ type: reference(type), ...exportContractOwnership(type, result) });
-	const parameter = (type, index) => ({ name: `arg${index}`, ...site(type), mutability: "immutable", optional: false, default: null });
-	const reference = type => {
+	const site = (type, result = false, decision) => ({ type: reference(type, decision?.callable), ...exportContractOwnership(type, result)
+		, ...decision ? { ownership: decision.ownership, lifetime: structuredClone(decision.lifetime) } : {} });
+	const parameter = (type, index, decision) => ({ name: `arg${index}`, ...site(type, false, decision), mutability: "immutable", optional: false, default: null });
+	const reference = (type, decision) => {
 		if(["graph", "owned-graph"].includes(type.kind)) return reference(type.root);
 		if(type.kind === "reference")
 		{
@@ -117,9 +119,13 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		if(type.kind === "primitive") return { kind: "primitive", name: type.name };
 		if(["array", "list", "option"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: [reference(type.element)] };
-		if(["result", "tuple"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: type.arguments.map(reference) };
+		if(["result", "tuple"].includes(type.kind)) return { kind: "apply", constructor: type.kind, arguments: type.arguments.map(value => reference(value)) };
 		// Callback identity describes its semantic signature, not native boxing or C layout.
-		const signature = type.kind === "callback" ? { parameters: type.parameters.map(reference), result: reference(type.result) } : null;
+		const callable = type.kind === "callback" ? {
+			parameters: type.parameters.map((type, index) => parameter(type, index, decision?.parameters?.[index]))
+			, result: site(type.result, true, decision?.result)
+		} : null;
+		const signature = callable && callbackSemanticSignature(callable);
 		const callbackName = signature && `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
 		const id = callbackName ? `bridge:${callbackName}` : `lean:${type.name}`;
 		if(!definitions.has(id))
@@ -140,7 +146,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 				, documentation: doc(item.name) }));
 			if(type.kind === "resource") definition.resource = { kindId: `resource:${type.name}`, disposal: "required", fallback: "queued-finalizer", cycles: "explicit-cut" };
 			if(type.kind === "callback") definition.callable = {
-				parameters: type.parameters.map(parameter), result: site(type.result, true)
+				...callable
 				, effects: ["host-call", "fails"], failure: callbackFailure
 				, resultMode: "value", invocation: "many", reentry: "same-agent"
 				, selfDisposal: "defer" };
@@ -151,18 +157,14 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		const { projection } = item;
 		const contract = exportContractFor(request.contracts, item.identity);
 		const hasCallback = projection.parameters.some(parameter => parameter.type.kind === "callback");
-		const parameters = projection.parameters.map((p, i) => ({ ...parameter(p.type, i)
-			, ...contract?.parameters ? { ownership: contract.parameters[i].ownership
-				, lifetime: structuredClone(contract.parameters[i].lifetime) } : {} }));
+		const parameters = projection.parameters.map((p, i) => parameter(p.type, i, contract?.parameters?.[i]));
 		const receiver = contract?.receiver ? (({ type, ownership, lifetime, mutability }) =>
 			({ type, ownership, lifetime, mutability }))(parameters.shift()) : null;
 		return { id: `lean:${item.identity}`, name: item.identity.split(".").at(-1)
 			, kind: contract?.receiver ?? "function", owner: receiver?.type.id ?? null
 			, overloadKey: item.identity
 			, typeParameters: [], receiver, parameters
-			, result: { ...site(projection.result, true)
-				, ...contract?.result ? { ownership: contract.result.ownership
-					, lifetime: structuredClone(contract.result.lifetime) } : {} }
+			, result: site(projection.result, true, contract?.result)
 			, mutability: "immutable"
 			, effects: exportContractEffects(projection, ownedAggregates)
 			, failure: hasCallback ? callbackFailure : { mode: "none", errors: [], unexpected: "poison-runtime" }

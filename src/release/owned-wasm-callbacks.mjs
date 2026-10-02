@@ -114,9 +114,11 @@ export const createOwnedWasmCallbacks = (module, layout, bindings, controls) => 
 						, fromToken: state.borrow.project
 					}, frame.budget));
 			}, frame);
-			const result = Reflect.apply(callback.value, undefined, args);
+			let result = Reflect.apply(callback.value, undefined, args);
 			registry.assertOpen();
 			if(frame.callbackFailed || callback.frame.callbackFailed) return 10;
+			if(callback.type.callable.result.ownership === "borrow")
+				result = state.scope.unwrap(callback.type.callable.result.type, result);
 			codec.write(module, callback.type.callable.result.type, reply, result, {
 				allocate: bytes => frame.allocate(bytes, state.allocations)
 				, toToken: (type, value) => toToken(type, value, frame, state.scope)

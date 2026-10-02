@@ -22,10 +22,11 @@ const memberReserved = new Set(["constructor", "prototype", "__proto__", "then",
  * @param document - Explicit compiler-derived or independently reviewed v4 IR.
  */
 export const compileOwnedJavaScriptPackageModel = document => {
-	const layout = compileOwnedJavaScriptWasmLayout(document, { transferredInputs: true, anchoredResults: true, receiverExports: true }), model = layout.native.model;
+	const layout = compileOwnedJavaScriptWasmLayout(document, { transferredInputs: true, anchoredResults: true, receiverExports: true, callbackResultAnchors: true }), model = layout.native.model;
 	const ir = model.bindingIr, names = new Set(reserved);
 	const receivers = layout.native.functions.some(fn => fn.receiver === 0);
-	const anchored = receivers || layout.native.functions.some(fn => fn.anchor !== undefined);
+	const callbackResultAnchors = layout.native.callbacks.some(fn => fn.anchor !== undefined);
+	const anchored = receivers || callbackResultAnchors || layout.native.functions.some(fn => fn.anchor !== undefined);
 	const ownerTypes = receivers ? ir.types.filter(type => type.kind !== "alias" && layout.types.find(node => node.id === type.id)?.representation !== "copied").map(type => type.id) : [];
 	if(anchored) for(const name of ["LeanValue", "leanValue", "copyValue"]) names.add(name);
 	if(receivers) names.add("LeanOwner");
@@ -59,6 +60,7 @@ export const compileOwnedJavaScriptPackageModel = document => {
 	return Object.freeze({ kind: "owned-javascript-package", ir
 		, bindingIrSha256: model.bindingIrSha256
 		, ...anchored ? { anchored: true } : {}
+		, ...callbackResultAnchors ? { callbackResultAnchors: true } : {}
 		, ...receivers ? { receivers: true, ownerTypes } : {} });
 };
 
@@ -134,7 +136,10 @@ const declarations = (ir, anchored = false, ownerTypes = []) => {
 				// Host callbacks receive borrowed native values. Native callbacks
 				// accept host inputs and return explicitly disposable native values.
 				const input = direction === "input" ? "output" : "input";
-				const signature = `(${parameters(type.callable.parameters, input)}): ${anchored && direction === "output" ? delivered(type.callable.result) : value(type.callable.result.type, direction)};`;
+				const result = type.callable.result, borrowing = result.ownership === "borrow";
+				const returned = anchored && direction === "output" ? delivered(result)
+					: borrowing ? `(${value(result.type, direction)} | ${owner(result.type)})` : value(result.type, direction);
+				const signature = `(${parameters(type.callable.parameters, input, borrowing ? result : null)}): ${returned};`;
 				lines.push(`export interface ${name}${direction === "output" ? " extends LeanLease" : ""} {`, `  ${signature}`, ...direction === "output" ? members(type, true) : [], "}", "");
 			}
 			else if(type.kind === "alias") lines.push(`export type ${name} = ${value(type.target, direction)};`, "");
@@ -167,7 +172,7 @@ const declarations = (ir, anchored = false, ownerTypes = []) => {
 };
 
 const copyEntry = (ir, receiverExports = false) => {
-	const layout = compileOwnedJavaScriptWasmLayout(ir, { transferredInputs: true, anchoredResults: true, receiverExports });
+	const layout = compileOwnedJavaScriptWasmLayout(ir, { transferredInputs: true, anchoredResults: true, receiverExports, callbackResultAnchors: true });
 	const owned = new Set(layout.types.filter(type => type.representation !== "copied").map(type => type.id));
 	const results = {}, parameters = {}, receivers = {};
 	for(const fn of layout.native.functions)
@@ -215,7 +220,7 @@ export function copyValue(value, selector) {
  * @param model - Validated public ownership projection model.
  */
 export const renderOwnedJavaScriptPackageLayout = model => {
-	const { ir, bindingIrSha256, anchored = false, receivers = false, ownerTypes = [] } = model;
+	const { ir, bindingIrSha256, anchored = false, receivers = false, ownerTypes = [], callbackResultAnchors = false } = model;
 	const transfers = ir.declarations.filter(item => inputs(item).some(parameter => parameter.ownership === "transfer"));
 	const exports = [...ir.declarations.map(item => item.name), "close", "withRecovery", ...anchored ? ["copyValue"] : []];
 	const entry = [`// Generated from Binding IR SHA-256 ${bindingIrSha256}.`
@@ -258,6 +263,11 @@ export const renderOwnedJavaScriptPackageLayout = model => {
 			] : ["Resource values and returned functions expose dispose(), retain() and disposed. Dispose each distinct lease when finished."
 				, "retain() creates an independent lease. Repeated references within a result share one wrapper."]
 			, "Callback arguments expire when the callback returns. Retain a resource inside the callback to keep it."
+			, ...callbackResultAnchors ? [
+				"A returned Lean function may borrow its result from one of its arguments. Pass that argument's whole owner; the result expires when that owner closes or is consumed."
+				, "The declared argument owns the borrow even when the function returns captured data. Retain the result to keep an independent copy."
+				, "A host callback can return its borrowed argument or a whole owner of the declared result type. The bridge converts that reply before the callback frame expires."
+			] : []
 			, "close() releases the component and invalidates its outstanding leases. It does not close other packages."
 			, "A native trap retires the shared heap; all packages using that heap reject further calls."
 			, ...transfers.length ? ["", "## Consuming arguments", ""

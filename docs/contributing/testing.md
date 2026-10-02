@@ -3527,6 +3527,34 @@ without skips. CI retains `build/owned-jvm-receiver-gc.log` and both reports in
 `build/owned-jvm-receiver-gc/`. These checks exercise generated bindings directly;
 the installed Maven package checks remain in the receiver gate above.
 
+## C and npm callback-result lifetimes
+
+Run the callback-result gate with the pinned Lean toolchain, native C build
+dependencies, Emscripten and the prepared JavaScript runtime:
+
+```sh
+npm run test:owned-callback-results
+```
+
+This gate requires 33 passing tests without skips and retains 23 JSON reports
+under `build/owned-callback-results/`. Both ordinary-source and reviewed-IR
+paths compile callback-local argument anchors. The C runtime checks normal and
+sanitized execution, allocation failures, malformed owners and transitive
+expiration. Wasm checks add host callback reentry, failed result publication,
+six deliberately broken implementations and shared-loader coexistence with
+the earlier Alpha API.
+
+Installed acceptance removes the author source and build output before
+consumption. C callers use pkg-config and relocated CMake packages. npm callers
+use Node, strict TypeScript, and Chromium, Firefox and WebKit pages, React and
+workers. Separate combined C/npm releases check callback anchors together with
+export-result anchors, receiver methods and ownership transfers. The JavaScript
+consumer example runs against those installed packages.
+
+The CI job `owned-callback-results` requires every report and propagates failure
+through the consumer summary. C and npm acceptance does not establish this
+capability for the remaining language adapters.
+
 ## Native PHP receiver acceptance
 
 Use PHP CLI 8.2 or later, Composer, the FFI extension and the pinned native

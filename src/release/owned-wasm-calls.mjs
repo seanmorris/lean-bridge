@@ -30,7 +30,7 @@ export const createOwnedWasmCalls = (module, suppliedLayout, bindings, options =
 	const types = new Map(layout.types.map(type => [type.id, type]));
 	for(const alias of layout.native.aliases) types.set(alias.id, types.get(alias.target));
 	const signatures = [...layout.native.functions, ...layout.native.callbacks];
-	const anchored = layout.native.functions.some(signature => signature.anchor !== undefined || signature.receiver === 0);
+	const anchored = signatures.some(signature => signature.anchor !== undefined || signature.receiver === 0);
 	const exports = new Map(layout.native.functions.map((signature, index) => [signature.id, index]));
 	for(const name of ["assertOpen", "openOwner", "validOwner", "releaseOwner", "claimAllocation", "claimIdentity", "dispatch", "retain", "close", "poison"])
 		if(typeof bindings[name] !== "function") throw new TypeError(`Owned wasm32 calls require native ${name}`);

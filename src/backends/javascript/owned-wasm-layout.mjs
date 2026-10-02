@@ -46,6 +46,7 @@ export const compileOwnedJavaScriptWasmLayout = (ir, options = {}) => {
 	const native = compileOwnedNativeValueLayout(ir, { wordBits: 32
 		, transferredInputs: options.transferredInputs ?? false
 		, anchoredResults: options.anchoredResults ?? false
+		, callbackResultAnchors: options.callbackResultAnchors === undefined ? false : options.callbackResultAnchors
 		, receiverExports: options.receiverExports ?? false });
 	const nodes = new Map(native.nodes.map(node => [node.id, node]));
 	const storage = new Map();

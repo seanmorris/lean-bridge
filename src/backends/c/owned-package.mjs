@@ -25,15 +25,19 @@ import { ownedCInputTransfers } from "./owned-transfers.mjs";
 export const generateOwnedCPackage = (options, backend = null) => {
 	const generated = generateOwnedNativeValueAdapters(options);
 	const hasTransfers = generated.layout.functions.some(item => item.transfers?.length);
-	const hasAnchors = generated.layout.functions.some(item => item.anchor !== undefined);
+	const hasExportAnchors = generated.layout.functions.some(item => item.anchor !== undefined);
+	const hasCallbackAnchors = generated.layout.callbacks.some(item => item.anchor !== undefined);
+	const hasAnchors = hasExportAnchors || hasCallbackAnchors;
 	if(backend && generated.layout.functions.some(item => item.receiver === 0) && backend.receiverExports !== true)
 		throw new TypeError("Owned C transport does not support receiver exports");
 	if(backend && hasTransfers && backend.transferredInputs !== true) throw new TypeError("Owned C transport does not support transferred inputs");
-	if(backend && hasAnchors && backend.anchoredResults !== true) throw new TypeError("Owned C transport does not support anchored results");
+	if(backend && hasExportAnchors && backend.anchoredResults !== true) throw new TypeError("Owned C transport does not support anchored results");
+	if(backend && hasCallbackAnchors && backend.callbackResultAnchors !== true) throw new TypeError("Owned C transport does not support callback result anchors");
 	const publicPrefix = backend ? backend.publicPrefix(generated.layout.model.bindingIr, {
 		transferredInputs: options.transferredInputs
 		, anchoredResults: options.anchoredResults
 		, receiverExports: options.receiverExports
+		, callbackResultAnchors: options.callbackResultAnchors
 	}) : options.publicPrefix;
 	const values = generateOwnedCValues(generated.layout.model.bindingIr, {
 		hostCallbacks: options.hostCallbacks
@@ -41,6 +45,7 @@ export const generateOwnedCPackage = (options, backend = null) => {
 		, transferredInputs: options.transferredInputs
 		, anchoredResults: options.anchoredResults
 		, receiverExports: options.receiverExports
+		, callbackResultAnchors: options.callbackResultAnchors
 		, identityEquality: options.identityEquality
 	});
 	const p = values.prefix;

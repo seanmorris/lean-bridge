@@ -1,0 +1,1260 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-callback-result-source-history",
+  "baselineRevision": "ac6b9d4c7bbb2c2b3fc6919ef7b1b85bbb89f4ad",
+  "previous": {
+    "path": "docs/evidence/copied-fixture-reader-repair-20261002.json",
+    "sha256": "767d1d2958676ed9018e7a690a96f49be5c709494aa8316b9dc7d09401601dee"
+  },
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "c049b3c8efd762db82c454fa9e8964b08b4dd1c2a59985b771d1762ce153dabf",
+      "currentSha256": "a1eebf5894916518c34d3281b9d5665200009acd904a5916e2bb18e58da061bf",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 16307,
+          "current": "  owned-callback-results:\n    name: Callback-result lifetimes in installed C and npm packages\n    runs-on: ubuntu-24.04\n    timeout-minutes: 150\n    env:\n      EMCC_CORES: \"2\"\n    steps:\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Install callback acceptance tools\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3 ripgrep zstd\n          npm ci --ignore-scripts --no-audit --no-fund\n          bash scripts/bootstrap-toolchains.sh\n      - name: Install all callback browser engines\n        run: npx playwright install --with-deps chromium firefox webkit\n      - name: Build the callback shared runtime\n        shell: bash\n        run: |\n          set -euo pipefail\n          mkdir -p build\n          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-callback-result-runtime.log\n          test -s build/lean-link-spike/lazy/main.wasm\n      - name: Verify callback-result lifetimes\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          npm run test:owned-callback-results 2>&1 | tee build/owned-callback-results.log\n          rg '^# tests 33$' build/owned-callback-results.log\n          rg '^# pass 33$' build/owned-callback-results.log\n          rg '^# fail 0$' build/owned-callback-results.log\n          rg '^# cancelled 0$' build/owned-callback-results.log\n          rg '^# skipped 0$' build/owned-callback-results.log\n          test -s build/owned-callback-results/metadata-ordinary.json\n          test -s build/owned-callback-results/runtime-ordinary-false.json\n          test -s build/owned-callback-results/runtime-ordinary-true.json\n          test -s build/owned-callback-results/wasm-ordinary-false.json\n          test -s build/owned-callback-results/wasm-ordinary-true.json\n          test -s build/owned-callback-results/coexistence-ordinary-false.json\n          test -s build/owned-callback-results/coexistence-ordinary-true.json\n          test -s build/owned-callback-results/wasm-ordinary-mutants.json\n          test -s build/owned-callback-results/wasm-ordinary-combinations.json\n          test -s build/owned-callback-results/ordinary-c-package.json\n          test -s build/owned-callback-results/ordinary-combined-package.json\n          test -s build/owned-callback-results/metadata-reviewed.json\n          test -s build/owned-callback-results/runtime-reviewed-false.json\n          test -s build/owned-callback-results/runtime-reviewed-true.json\n          test -s build/owned-callback-results/wasm-reviewed-false.json\n          test -s build/owned-callback-results/wasm-reviewed-true.json\n          test -s build/owned-callback-results/coexistence-reviewed-false.json\n          test -s build/owned-callback-results/coexistence-reviewed-true.json\n          test -s build/owned-callback-results/wasm-reviewed-mutants.json\n          test -s build/owned-callback-results/wasm-reviewed-combinations.json\n          test -s build/owned-callback-results/reviewed-c-package.json\n          test -s build/owned-callback-results/reviewed-combined-package.json\n          test -s build/owned-callback-results/npm-package.json\n      - name: Preserve callback-result acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: callback-results-${{ github.sha }}\n          path: |\n            build/owned-callback-results/\n            build/owned-callback-results.log\n            build/owned-callback-result-runtime.log\n          if-no-files-found: error\n          retention-days: 30\n\n",
+          "previous": ""
+        },
+        {
+          "start": 179039,
+          "current": "      - owned-callback-results\n",
+          "previous": ""
+        },
+        {
+          "start": 180623,
+          "current": "      - name: Enforce callback-result acceptance\n        if: needs.owned-callback-results.result != 'success'\n        run: exit 1\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "config/checked-javascript.json",
+      "previousSha256": "2b3b06e5f40d86b205644c9b5e2ab00546a1bb5cc9113843f52e4523597ccc61",
+      "currentSha256": "3a8debd3c6987817c7419df085c5f7d62fb4015026941ae66fd0a871043988a5",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 115,
+          "current": "\t\t\"src/analyze/callback-signature.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "c3182285276c59bd63be0efd208f5bebe9f5852f9a0e114480b77c885869f031",
+      "currentSha256": "2fd1a24e47382215658889a7da956fe6b60a4522e67a9efa254aa62b8909369a",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 6875,
+          "current": "    \"src/analyze/callback-signature.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/c.md",
+      "previousSha256": "366671930f0f12ee888cf67822669534b39987526cdfa3185990a02425945c71",
+      "currentSha256": "6ca58793e77ee436abdb88e3931aa0c3133b6ce3104135adcc67879512926538",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 25140,
+          "current": "### Borrowed callback results\n\nA returned Lean function can borrow its result from one of its own arguments.\nThe generated `_call` function then takes that argument's original result owner\nimmediately after the argument. Pass the argument owner, not the closure owner.\nFor example, a `Bool → Bundle → Bundle` closure whose result borrows its second\nargument has this call shape:\n\n```c\nowned_aggregates_make_record_result_t_call(\n    session, closure, false, &input, input_owner, &view, &view_owner);\n```\n\nCheck the returned status before using `view`. Releasing or consuming\n`input_owner` expires `view_owner` and all descendants borrowed from it. This\nalso applies when the function returns its captured data instead of `input`.\nAn unrelated closure or capture owner does not control that result's lifetime.\nCopy the result or retain its resources while valid if they must outlive the\nanchor. Release `view_owner` even after it has expired; do not free the view's\nindividual fields.\n\nA host callback may return a borrowed argument. Leave its result-owner output\nempty when returning borrowed storage, or supply the owner of an independent\ncopy. The bridge converts the reply before expiring the callback argument frame.\nAn escaped callback argument is invalid after the callback returns.\n\nThe [installed C probe](../../tests/fixtures/structured-types/owned-installed-callback-results.c)\ncovers these lifetimes, empty recursive values and failure cleanup. The\n[combined probe](../../tests/fixtures/structured-types/owned-installed-callback-combinations.c)\nalso checks receiver borrows and ownership transfers.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "ef4657915f7747033ece49309187dcc31ec2b1d7e34ed78a80037d2dbdac8361",
+      "currentSha256": "6ea163edc8227234215361d4209f117293715306504e862fd510dd56bc2386bb",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 217840,
+          "current": "## C and npm callback-result lifetimes\n\nRun the callback-result gate with the pinned Lean toolchain, native C build\ndependencies, Emscripten and the prepared JavaScript runtime:\n\n```sh\nnpm run test:owned-callback-results\n```\n\nThis gate requires 33 passing tests without skips and retains 23 JSON reports\nunder `build/owned-callback-results/`. Both ordinary-source and reviewed-IR\npaths compile callback-local argument anchors. The C runtime checks normal and\nsanitized execution, allocation failures, malformed owners and transitive\nexpiration. Wasm checks add host callback reentry, failed result publication,\nsix deliberately broken implementations and shared-loader coexistence with\nthe earlier Alpha API.\n\nInstalled acceptance removes the author source and build output before\nconsumption. C callers use pkg-config and relocated CMake packages. npm callers\nuse Node, strict TypeScript, and Chromium, Firefox and WebKit pages, React and\nworkers. Separate combined C/npm releases check callback anchors together with\nexport-result anchors, receiver methods and ownership transfers. The JavaScript\nconsumer example runs against those installed packages.\n\nThe CI job `owned-callback-results` requires every report and propagates failure\nthrough the consumer summary. C and npm acceptance does not establish this\ncapability for the remaining language adapters.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "12ebb45c13922a7dc13f5cde08975e4ab5c00e3ba0bd31df761629424f720ac1",
+      "currentSha256": "08a318f306d940eb87bc2310365a7eddde9650cb75db1e8ab59471ea613acafa",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 13564,
+          "current": "Returned functions can also borrow results from their own arguments.\n\n### Borrowed callback results\n\nPass the selected argument as a whole owner, without calling `get()` on it.\nThe callback returns another whole owner. Its payload can contain resources,\nrecords or finite recursive values, including empty values.\n\nWith `api` imported from a package whose `makeRecord` returns a\n`Bool → Bundle → Bundle` function that borrows its second argument:\n\n```js\nconst ticket = api.newTicket(42n, \"callback\");\nconst input = api.echoRecord({\n  primary: ticket.get(), spare: { tag: \"none\" }, peers: [], history: [],\n  payload: { count: 7n, bytes: new Uint8Array([42]) }\n});\nconst closure = api.makeRecord(input);\nconst view = closure.get()(false, input);\nconst retained = view.retain();\ntry {\n  console.log(api.serial(view.get().primary)); // 42n\n  input.dispose();\n  console.log(view.disposed); // true\n  console.log(api.serial(retained.get().primary)); // 42n\n} finally {\n  for (const value of [retained, view, closure, input, ticket]) value.dispose();\n}\n```\n\nReleasing the selected argument's last shared root, or consuming that owner,\nexpires the result and its borrowed descendants. This rule holds even when the\nclosure returns captured data. TypeScript requires the selected argument's whole\nowner and preserves generated receiver methods on the returned owner.\n\nA host callback may return its borrowed payload or a whole owner of the declared\nresult type. The bridge converts the reply before the callback frame expires;\nescaped argument views expire when the callback returns. Callback-result\nlifetimes do not permit asynchronous callbacks or retained host callbacks.\n",
+          "previous": "Results anchored to callback results remain unsupported.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "9d9f9fc76e0159d01b009e352d4bbc77f9f843d2fe84640fcfe96d5cf23d3bd6",
+      "currentSha256": "79320d975e5bf92158cd4829e7c4439c8d6351ceee3ae86b42575ec66c40b2ca",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 32553,
+          "current": "For C and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\ncan borrow a callback's result from one of that callback's arguments. Argument\nnames are local to each callable. The selected argument's original owner\ncontrols expiration; outer export parameters and receiver anchors cannot stand\nin for callback arguments. Other targets still reject callback-result anchors.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/publish/c.md",
+      "previousSha256": "7ffe1a56d1b2362ba3472a4af0e1b9ac531577e0aa4712908ded8da4353538df",
+      "currentSha256": "17eb3a74694e6abe27437f1eb269328e86e53b3f53e13cd9e045a898130cd7e8",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 9449,
+          "current": "also covers empty results and returned Lean closures. To give a returned\nfunction its own argument-anchored result, use a nested callable contract below.\n",
+          "previous": "also covers empty results and returned Lean closures. Parameter-anchored\ncallback-result contracts remain unsupported.\n"
+        },
+        {
+          "start": 9934,
+          "current": "### Anchor a callback result to its argument\n\nFor `--target c` and `--target npm`, put the callback's result decision under\n`callable`. For a function `makeRecord (captured : Bundle) : Bool → Bundle → Bundle`,\nselect one outer argument with `arities`, then anchor each invocation's result\nto that invocation's `Bundle` argument:\n\n```json\n{\n  \"arities\": { \"Owned.makeRecord\": 1 },\n  \"contracts\": {\n    \"Owned.makeRecord\": {\n      \"result\": {\n        \"ownership\": \"lease\",\n        \"lifetime\": { \"scope\": \"explicit\", \"anchor\": null },\n        \"callable\": {\n          \"result\": {\n            \"ownership\": \"borrow\",\n            \"lifetime\": { \"scope\": \"parameter\", \"anchor\": \"arg1\" }\n          }\n        }\n      }\n    }\n  }\n}\n```\n\nKeep the package's exports, resource declarations and `ownedAggregates` policy.\nThe callback counts its own arguments from zero: `Bool` is `arg0` and `Bundle`\nis `arg1`. The outer `captured` parameter and private closure handle do not count.\nA reviewed contract uses the callback's local parameter names. Lean checks that\nthe selected argument has an owned representation and is borrowed, not copied\nor transferred. A callback cannot select an outer parameter or receiver anchor.\n\nThe result expires when the selected argument's original owner is released or\nconsumed, even if Lean returned captured data. Retaining or copying while the\nresult is valid creates independent ownership. For host callbacks, the same\n`callable` object goes on the callback's entry in `parameters`. Host replies\ncross into Lean before their borrowed argument frame expires.\n\nC packages record these local indices separately in\n`ownedValues.callbackResultAnchors`, using manifest version 7 and `ownedValues`\nversion 6. Existing APIs without this capability keep their earlier format.\nOther consumer targets reject this capability until their adapters implement it.\nSee [C callback-result cleanup](../consume/c.md#borrowed-callback-results) and\nthe [npm author recipe](npm.md#anchor-a-callback-result).\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/publish/npm.md",
+      "previousSha256": "c5a92c1c2e5c1e0d72b3f43d66c3d5eb578180b73d74139f6df9deacdb0738a5",
+      "currentSha256": "74a314917352d2ab5ade6762b03159f9385abed4fd74d9882ccd8298e2a3643c",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 9944,
+          "current": "their ordinary JavaScript representation. Returned functions can also declare\ntheir own argument-anchored results as described below.\n\n### Anchor a callback result\n\nPut a nested `callable.result` decision on the returned function or host-callback\nparameter. The [shared author configuration](c.md#anchor-a-callback-result-to-its-argument)\nshows the complete syntax. Argument numbering starts over inside each callback;\nthe selected argument's original owner bounds that invocation's result.\n\nConsumers pass the selected argument as a whole `LeanValue<T>` and receive a\nwhole owner for the borrowed result. Other borrowed callback arguments keep\ntheir usual input forms. Host callbacks may return a borrowed payload or a\nwhole owner of the declared result type. The bridge converts that reply before\nexpiring the host argument frame. The [consumer example](../javascript-typescript.md#borrowed-callback-results)\nshows disposal and independent retention.\n\nCallback-result lifetimes are independent of export-result anchors, receiver\nmethods and consuming inputs. A combined C/npm build checks the same declared\nlifetimes against its native and wasm32 models. Selecting another consumer\ntarget that does not implement this capability rejects the build.\nRetained host callbacks, asynchronous invocation and callback input transfers\nremain unsupported.\n",
+          "previous": "their ordinary JavaScript representation. Callback-result anchors remain\nunsupported.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "40ad5ad1d9130457bfdafd1974c2e69bb075551f30aa41b4c9d98eae80e623cd",
+      "currentSha256": "9013cb21cda958572c8b53249e24f2c48cb9718439e78546b8b8b8c403b3515c",
+      "strategy": "replacements",
+      "edits": [
+        {
+          "current": "\"3a8debd3c6987817c7419df085c5f7d62fb4015026941ae66fd0a871043988a5\"",
+          "previous": "\"2b3b06e5f40d86b205644c9b5e2ab00546a1bb5cc9113843f52e4523597ccc61\"",
+          "count": 18
+        },
+        {
+          "current": "\"2fd1a24e47382215658889a7da956fe6b60a4522e67a9efa254aa62b8909369a\"",
+          "previous": "\"c3182285276c59bd63be0efd208f5bebe9f5852f9a0e114480b77c885869f031\"",
+          "count": 19
+        },
+        {
+          "current": "\"aee839601b4f311bc937f84d2a0cf95f0849b818460e3f9db520105867c82b86\"",
+          "previous": "\"323b1b7cf053445ffd5c3371ba58d67679da5417217b561da93f6c587e308881\"",
+          "count": 18
+        },
+        {
+          "current": "\"9b0c5a0d0a4143ccac0fa4bb7056ab41d8624c7fa482db760ed9ebcd9e437b16\"",
+          "previous": "\"9afc36c6e2a25eaf169cbcbb19f350aa47e3e4e1cffb5341196e501cec65ed35\"",
+          "count": 18
+        },
+        {
+          "current": "\"c8b44b7afb78e60fbdf01481a4256f13a0ee72bb9591889f6d3c0f96f05d692d\"",
+          "previous": "\"450ecf4e85dc93bbe9270459a7b3b7914aa9794c729daf11ef9cc048ba586179\"",
+          "count": 93
+        },
+        {
+          "current": "\"9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764\"",
+          "previous": "\"99f2934236553e13b7fa9d956f52dd33d8ac899e8a9b9ec7ec5af0cc9e2ba08a\"",
+          "count": 75
+        },
+        {
+          "current": "\"88ee704bd1352ff7e1a6a2c906ebe86473c82aed083a5a81eaeeec01d3468fb9\"",
+          "previous": "\"871baeec7e85ea6bb5a6e421298a7dca889f54f797fe6e9ed3250708395bbe9f\"",
+          "count": 46
+        },
+        {
+          "current": "\"3c6a8b5ed9740f276a3a76b25e89ff95cee16fcbb4c4c3e4c749b613e5cf22f8\"",
+          "previous": "\"cbb63999030117711fc03aeb2b5f3ff57575a2a658febd3123b6eeffb60098cd\"",
+          "count": 14
+        },
+        {
+          "current": "\"e67fd342828b4173f287da1082b018757e0e0219b6231e3b83d88eff8c108948\"",
+          "previous": "\"80e39b0224758720aeeb632aa5a3c5081ea9a1b29d2d676ce244fae7862465f7\"",
+          "count": 83
+        },
+        {
+          "current": "\"7e5727b22e10db947e8e1884159737bc0e9f205ddc3a5ea14ed46197a2d4c1e2\"",
+          "previous": "\"85d4a0a3b28ffd2b7d6c5e93386ed3b2718086ac6ff28ae7f8b5db1441e8252a\"",
+          "count": 35
+        },
+        {
+          "current": "\"0e010d0f72cba983be945d958e92f1dbeef75d67791e7a752429970be427dee1\"",
+          "previous": "\"e5e2d9727d6801fb1b6ad81ebc79985faea7f8ff0b530017a4ddb328ef6f0af4\"",
+          "count": 12
+        },
+        {
+          "current": "\"3ec12e5a53ada6182188ed22e9fc32a5daab12f2dfc25d58110177d7e260d4d7\"",
+          "previous": "\"456a593b65ef0a8f278dea4f19a950c514841c33358b09eaff4bdc437d6cf739\"",
+          "count": 75
+        },
+        {
+          "current": "\"a1eebf5894916518c34d3281b9d5665200009acd904a5916e2bb18e58da061bf\"",
+          "previous": "\"c049b3c8efd762db82c454fa9e8964b08b4dd1c2a59985b771d1762ce153dabf\"",
+          "count": 89
+        },
+        {
+          "current": "\"efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f\"",
+          "previous": "\"9b1423d884b23a617b009cc204784bd297a07904880d9501b412b5fbd55b1437\"",
+          "count": 10
+        },
+        {
+          "current": "\"6ca58793e77ee436abdb88e3931aa0c3133b6ce3104135adcc67879512926538\"",
+          "previous": "\"366671930f0f12ee888cf67822669534b39987526cdfa3185990a02425945c71\"",
+          "count": 1
+        },
+        {
+          "current": "\"17eb3a74694e6abe27437f1eb269328e86e53b3f53e13cd9e045a898130cd7e8\"",
+          "previous": "\"7ffe1a56d1b2362ba3472a4af0e1b9ac531577e0aa4712908ded8da4353538df\"",
+          "count": 8
+        },
+        {
+          "current": "\"89c1aac3b8075d6ac250fbd3676ae1bb1154cb6cdff81652bb0047943a72e457\"",
+          "previous": "\"7733527b59f93de6e68b59990120ce7e4d16d6c33499474659a92c86e683f488\"",
+          "count": 7
+        },
+        {
+          "current": "\"21b1c8c8436a4619801ec8248989fc9635180f3cca1a3b2126a081d5799b614d\"",
+          "previous": "\"83e25f3c075882b1c9f42680ad40b4edbdb1f19083272569cd84107b7aaf264d\"",
+          "count": 2
+        },
+        {
+          "current": "\"2e92dbb9b286edb6d00e66747b8a85b588361df4c853b6f53e7ed67b0644cf3b\"",
+          "previous": "\"eed92b47cb1ee58ed40461f6d912897499e4335ef6f729a286dd4727a8524920\"",
+          "count": 1
+        },
+        {
+          "current": "\"79320d975e5bf92158cd4829e7c4439c8d6351ceee3ae86b42575ec66c40b2ca\"",
+          "previous": "\"9d9f9fc76e0159d01b009e352d4bbc77f9f843d2fe84640fcfe96d5cf23d3bd6\"",
+          "count": 22
+        },
+        {
+          "current": "\"74a314917352d2ab5ade6762b03159f9385abed4fd74d9882ccd8298e2a3643c\"",
+          "previous": "\"c5a92c1c2e5c1e0d72b3f43d66c3d5eb578180b73d74139f6df9deacdb0738a5\"",
+          "count": 1
+        },
+        {
+          "current": "\"6ea163edc8227234215361d4209f117293715306504e862fd510dd56bc2386bb\"",
+          "previous": "\"ef4657915f7747033ece49309187dcc31ec2b1d7e34ed78a80037d2dbdac8361\"",
+          "count": 11
+        }
+      ]
+    },
+    {
+      "path": "jsconfig.checked.json",
+      "previousSha256": "49e759b3eca07b557ad847d27c16ad73410ec77f8cd1de24a017b6083327a2a1",
+      "currentSha256": "2b6fa56d0d1962d84ccc215fcfdb3aa35e44e8ebb719a772fa8750fd4ac17d9e",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 448,
+          "current": "\t\t\"src/analyze/callback-signature.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "323b1b7cf053445ffd5c3371ba58d67679da5417217b561da93f6c587e308881",
+      "currentSha256": "aee839601b4f311bc937f84d2a0cf95f0849b818460e3f9db520105867c82b86",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 569,
+          "current": "    \"src/analyze/callback-signature.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "9afc36c6e2a25eaf169cbcbb19f350aa47e3e4e1cffb5341196e501cec65ed35",
+      "currentSha256": "9b0c5a0d0a4143ccac0fa4bb7056ab41d8624c7fa482db760ed9ebcd9e437b16",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 44913,
+          "current": "    \"test:owned-callback-results\": \"LEAN_BRIDGE_OWNED_CALLBACK_RESULT_TEST=1 node --test --test-concurrency=1 tests/owned-callback-result-contract.test.mjs tests/owned-callback-result-metadata.test.mjs tests/owned-callback-result-layout.test.mjs tests/owned-callback-result-runtime.test.mjs tests/owned-callback-result-c-packaging.test.mjs tests/owned-callback-result-wasm.test.mjs tests/owned-callback-result-wasm-coexistence.test.mjs tests/owned-callback-result-wasm-mutants.test.mjs tests/owned-callback-result-combinations.test.mjs tests/owned-callback-result-npm-packaging.test.mjs tests/owned-callback-result-combined-packaging.test.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "schema/lean-export-configuration.schema.json",
+      "previousSha256": "eed92b47cb1ee58ed40461f6d912897499e4335ef6f729a286dd4727a8524920",
+      "currentSha256": "2e92dbb9b286edb6d00e66747b8a85b588361df4c853b6f53e7ed67b0644cf3b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 7011,
+          "current": "        \"callable\": {\"$ref\": \"#/$defs/callableContract\"},\n",
+          "previous": ""
+        },
+        {
+          "start": 7526,
+          "current": "    \"callableContract\": {\n      \"type\": \"object\", \"additionalProperties\": false, \"minProperties\": 1,\n      \"properties\": {\n        \"parameters\": {\"type\": \"array\", \"maxItems\": 16, \"items\": {\"$ref\": \"#/$defs/contractSite\"}},\n        \"result\": {\"$ref\": \"#/$defs/contractSite\"}\n      }\n    },\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/abi/component-owned-wasm.mjs",
+      "previousSha256": "1fd9589acef3a6e4b3d71ae78eb51852c25ffa6a294ebf78c549b41f535cea4b",
+      "currentSha256": "c861c6bc4c219a13aca990234a08dd001a004fad86f9c15b350b1bb02faf6741",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 492,
+          "current": "export const componentOwnedWasmCallbackResultAbi = 14;\n",
+          "previous": ""
+        },
+        {
+          "start": 1000,
+          "current": "\tconst callbackResults = abi?.version === componentOwnedWasmCallbackResultAbi;\n\tconst receivers = abi?.version === componentOwnedWasmReceiverAbi || (callbackResults && Object.hasOwn(abi, \"receiverExports\"));\n\tconst anchored = abi?.version === componentOwnedWasmBorrowAbi || ((callbackResults || receivers) && Object.hasOwn(abi, \"resultAnchors\"));\n\tconst transfers = abi?.version === componentOwnedWasmTransferAbi || ((callbackResults || receivers || anchored) && Object.hasOwn(abi, \"inputTransfers\"));\n",
+          "previous": "\tconst receivers = abi?.version === componentOwnedWasmReceiverAbi;\n\tconst anchored = abi?.version === componentOwnedWasmBorrowAbi || (receivers && Object.hasOwn(abi, \"resultAnchors\"));\n\tconst transfers = abi?.version === componentOwnedWasmTransferAbi || ((receivers || anchored) && Object.hasOwn(abi, \"inputTransfers\"));\n"
+        },
+        {
+          "start": 1639,
+          "current": "\tif(callbackResults) fields.push(\"callbackResultAnchors\");\n",
+          "previous": ""
+        },
+        {
+          "start": 1798,
+          "current": "\t\t|| ![componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi].includes(abi.version) || abi.dispatch !== \"owned-wasm32-control-v1\"\n",
+          "previous": "\t\t|| ![componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi].includes(abi.version) || abi.dispatch !== \"owned-wasm32-control-v1\"\n"
+        },
+        {
+          "start": 4669,
+          "current": "\tconst callbacks = bindingIr.types.filter(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\").map(type => ({\n\t\tid: type.id\n\t\t, parameter: type.callable.result.lifetime?.scope === \"parameter\"\n\t\t\t? type.callable.parameters.findIndex(parameter => parameter.name === type.callable.result.lifetime.anchor) : -1\n\t}));\n\tconst expectedCallbacks = { schemaVersion: 1, anchor: \"original-argument-owner\"\n\t\t, maximumDepth: 128, signatures: callbacks };\n\tif(Boolean(callbacks.length) !== callbackResults || (callbackResults && (callbacks.some(value => value.parameter < 0)\n\t\t|| canonicalizeJsonValue(abi.callbackResultAnchors) !== canonicalizeJsonValue(expectedCallbacks))))\n\t\tthrow new TypeError(\"Owned Wasm callback result-anchor capability mismatch\");\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "450ecf4e85dc93bbe9270459a7b3b7914aa9794c729daf11ef9cc048ba586179",
+      "currentSha256": "c8b44b7afb78e60fbdf01481a4256f13a0ee72bb9591889f6d3c0f96f05d692d",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 387,
+          "current": "\t\t, \"owned-callback-result-contract\", \"owned-callback-result-metadata\"\n\t\t, \"owned-callback-result-layout\"\n\t\t, \"owned-callback-result-runtime\"\n\t\t, \"owned-callback-result-wasm\"\n\t\t, \"owned-callback-result-wasm-coexistence\"\n\t\t, \"owned-callback-result-c-packaging\"\n\t\t, \"owned-callback-result-npm-packaging\"\n\t\t, \"owned-callback-result-wasm-mutants\"\n\t\t, \"owned-callback-result-combinations\"\n\t\t, \"owned-callback-result-combined-packaging\"\n\t\t, \"owned-callback-result-ci\"\n\t\t, \"owned-callback-result-history\"\n\t\t, \"owned-callback-result-evidence\"\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "99f2934236553e13b7fa9d956f52dd33d8ac899e8a9b9ec7ec5af0cc9e2ba08a",
+      "currentSha256": "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 30140,
+          "current": "partial def contractProblem (contract projection : Json) (owned : Bool := false) : Option String := Id.run do\n",
+          "previous": "def contractProblem (contract projection : Json) (owned : Bool := false) : Option String := Id.run do\n"
+        },
+        {
+          "start": 34524,
+          "current": "  let mut sites : Array (Json × Json × String) := #[]\n  if let .ok choices := contract.getObjValAs? (Array Json) \"parameters\" then\n    for index in [:choices.size] do\n      sites := sites.push (choices[index]!, (parameters[index]!.getObjVal? \"type\").toOption.getD Json.null, s!\"arg{index}\")\n  if let .ok site := contract.getObjVal? \"result\" then\n    sites := sites.push (site, (projection.getObjVal? \"result\").toOption.getD Json.null, \"result\")\n  for (site, type, label) in sites do\n    if let .ok choice := site.getObjVal? \"callable\" then\n      if (type.getObjValAs? String \"kind\").toOption != some \"callback\" then\n        return some s!\"{label}: callable decisions require a compiler-checked callback type\"\n      let choices := (choice.getObjValAs? (Array Json) \"parameters\").toOption.getD #[]\n      if choices.any (fun value => (value.getObjValAs? String \"ownership\").toOption == some \"transfer\") then\n        return some s!\"{label}: callback inputs require call-scoped borrows or copied values\"\n      let arguments := (type.getObjValAs? (Array Json) \"parameters\").toOption.getD #[]\n      let nested := obj [(\"status\", str \"supported\"),\n        (\"parameters\", toJson (arguments.map fun type => obj [(\"type\", type)])),\n        (\"result\", (type.getObjVal? \"result\").toOption.getD Json.null)]\n      if let some problem := contractProblem choice nested owned then\n        return some s!\"{label}.callable: {problem}\"\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/export-configuration.mjs",
+      "previousSha256": "83e25f3c075882b1c9f42680ad40b4edbdb1f19083272569cd84107b7aaf264d",
+      "currentSha256": "21b1c8c8436a4619801ec8248989fc9635180f3cca1a3b2126a081d5799b614d",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 4800,
+          "current": "\t\t\tconst sites = (contract.parameters ?? []).map(site => ({ site, parameters: contract.parameters, depth: 0 }));\n\t\t\tif(contract.result !== undefined) sites.push({ site: contract.result, parameters: contract.parameters, depth: 0 });\n\t\t\tfor(let cursor = 0; cursor < sites.length; ++cursor)\n",
+          "previous": "\t\t\tconst sites = [...(contract.parameters ?? [])];\n\t\t\tif(contract.result !== undefined) sites.push(contract.result);\n\t\t\tfor(const site of sites)\n"
+        },
+        {
+          "start": 5093,
+          "current": "\t\t\t\tconst { site, parameters, depth } = sites[cursor];\n\t\t\t\tclosed(site, [\"ownership\", \"lifetime\", \"refinement\", \"callable\"], `Contract ${name} site`);\n",
+          "previous": "\t\t\t\tclosed(site, [\"ownership\", \"lifetime\", \"refinement\"], `Contract ${name} site`);\n"
+        },
+        {
+          "start": 6125,
+          "current": "\t\t\t\t\tif(scope === \"parameter\" && parameters && Number(anchor.slice(3)) >= parameters.length)\n",
+          "previous": "\t\t\t\t\tif(scope === \"parameter\" && contract.parameters && Number(anchor.slice(3)) >= contract.parameters.length)\n"
+        },
+        {
+          "start": 6720,
+          "current": "\t\t\t\tif(site.callable !== undefined)\n\t\t\t\t{\n\t\t\t\t\tclosed(site.callable, [\"parameters\", \"result\"], `Contract ${name} callable`);\n\t\t\t\t\tif(!Object.keys(site.callable).length || depth >= 32)\n\t\t\t\t\t\tfail(\"invalid-export-configuration\", `Contract ${name} requires a callable decision within 32 nested signatures`);\n\t\t\t\t\tconst { parameters, result } = site.callable;\n\t\t\t\t\tif(parameters !== undefined && (!Array.isArray(parameters) || parameters.length > 16))\n\t\t\t\t\t\tfail(\"invalid-export-configuration\", `Contract ${name} callable requires at most 16 ordered parameter sites`);\n\t\t\t\t\tfor(const site of parameters ?? []) sites.push({ site, parameters, depth: depth + 1 });\n\t\t\t\t\tif(result !== undefined) sites.push({ site: result, parameters, depth: depth + 1 });\n\t\t\t\t}\n",
+          "previous": ""
+        },
+        {
+          "start": 16847,
+          "current": "\t\tif(site.callable !== undefined)\n\t\t{\n\t\t\tif(type.kind !== \"callback\") return `${label}: callable decisions require a compiler-checked callback type`;\n\t\t\tif(site.callable.parameters?.some(value => value.ownership === \"transfer\"))\n\t\t\t\treturn `${label}: callback inputs require call-scoped borrows or copied values`;\n\t\t\tconst problem = exportContractProblem(site.callable, {\n\t\t\t\tstatus: \"supported\", parameters: type.parameters.map(type => ({ type }))\n\t\t\t\t, result: type.result\n\t\t\t}, ownedAggregates);\n\t\t\tif(problem) return `${label}.callable: ${problem}`;\n\t\t}\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/reviewed-owned-source.mjs",
+      "previousSha256": "a74d5f4de91902709b20c188770407016396c16090fe3693e3c8a3c63b46f66f",
+      "currentSha256": "cb25d914ebcc8d30707789c1f39941dc6965fe2b4d5a728f76b7e94f8586c528",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 640,
+          "current": "import { callbackSemanticSignature } from \"./callback-signature.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 5136,
+          "current": "\t\t\tconst signature = callbackSemanticSignature(callable);\n",
+          "previous": "\t\t\tconst signature = { parameters: callable.parameters.map(value => value.type), result: callable.result.type };\n"
+        },
+        {
+          "start": 5747,
+          "current": "\t\t\tsite(callable.result, `${definition.id}.result`, true, false, true);\n",
+          "previous": "\t\t\tsite(callable.result, `${definition.id}.result`, true);\n"
+        },
+        {
+          "start": 8591,
+          "current": "\tconst types = new Map(document.types.map(type => [type.id, type]));\n\tconst selected = new Map(), active = new Set();\n\tconst decision = (value, inputs, callable) => ({ ownership: value.ownership\n\t\t, lifetime: value.lifetime?.scope === \"parameter\" ? { scope: \"parameter\"\n\t\t\t, anchor: `arg${inputs.findIndex(input => input.name === value.lifetime.anchor)}` } : structuredClone(value.lifetime)\n\t\t, ...callable ? { callable } : {} });\n\tconst callableDecision = type => {\n\t\tif(type.kind !== \"named\" || !callbacks.has(type.id)) return undefined;\n\t\tif(selected.has(type.id)) return selected.get(type.id);\n\t\tif(active.has(type.id)) unsupported(\"Recursive callable signatures require a finite compiler signature\", { type: type.id });\n\t\tactive.add(type.id);\n\t\tconst callable = types.get(type.id).callable;\n\t\tconst parameters = callable.parameters.map(value => callableDecision(value.type));\n\t\tconst result = callableDecision(callable.result.type);\n\t\tconst value = parameters.some(Boolean) || result || callable.result.ownership === \"borrow\" ? {\n\t\t\t...parameters.some(Boolean) ? { parameters: callable.parameters.map((value, index) => decision(value, callable.parameters, parameters[index])) } : {}\n\t\t\t, ...result || callable.result.ownership === \"borrow\" ? { result: decision(callable.result, callable.parameters, result) } : {}\n\t\t} : undefined;\n\t\tactive.delete(type.id); selected.set(type.id, value); return value;\n\t};\n\tconst contracts = Object.fromEntries(document.declarations\n",
+          "previous": "\tconst contracts = Object.fromEntries(document.declarations.filter(item => item.receiver || item.result.ownership === \"borrow\" || item.parameters.some(value => value.ownership === \"transfer\"))\n"
+        },
+        {
+          "start": 10159,
+          "current": "\t\t\tconst parameters = inputs.map(value => callableDecision(value.type));\n\t\t\tconst result = callableDecision(item.result.type);\n",
+          "previous": ""
+        },
+        {
+          "start": 10376,
+          "current": "\t\t\t\t, ...parameters.some(Boolean) || inputs.some(value => value.ownership === \"transfer\")\n\t\t\t\t\t? { parameters: inputs.map((value, index) => decision(value, inputs, parameters[index])) } : {}\n\t\t\t\t, ...item.result.ownership === \"borrow\" || result ? { result: decision(item.result, inputs, result) } : {}\n",
+          "previous": "\t\t\t\t, ...inputs.some(value => value.ownership === \"transfer\")\n\t\t\t\t\t? { parameters: inputs.map(({ ownership, lifetime }) => ({ ownership, lifetime: structuredClone(lifetime) })) } : {}\n\t\t\t\t, ...item.result.ownership === \"borrow\" ? { result: { ownership: \"borrow\"\n\t\t\t\t\t, lifetime: item.result.lifetime.scope === \"receiver\" ? { scope: \"receiver\", anchor: \"receiver\" }\n\t\t\t\t\t\t: { scope: \"parameter\", anchor: `arg${inputs.findIndex(value => value.name === item.result.lifetime.anchor)}` } } } : {}\n"
+        },
+        {
+          "start": 10690,
+          "current": "\t\t.filter(([, contract]) => Object.keys(contract).length)\n",
+          "previous": ""
+        },
+        {
+          "start": 14766,
+          "current": "\t, types: document.types.map(item => item.callable ? { ...item, callable: { ...item.callable, effects: item.callable.effects.toSorted()\n\t\t, result: item.callable.result.ownership === \"borrow\" && item.callable.result.lifetime.scope === \"parameter\"\n\t\t\t? { ...item.callable.result, lifetime: { scope: \"parameter\"\n\t\t\t\t, anchor: `arg${item.callable.parameters.findIndex(value => value.name === item.callable.result.lifetime.anchor)}` } } : item.callable.result\n\t} } : item) });\n",
+          "previous": "\t, types: document.types.map(item => item.callable ? { ...item, callable: { ...item.callable, effects: item.callable.effects.toSorted() } } : item) });\n"
+        },
+        {
+          "start": 16956,
+          "current": "\t\t\t\t, callable: item.callable ? { ...item.callable, parameters: parameters(item.callable.parameters, author.callable.parameters)\n\t\t\t\t\t, result: result(item.callable, author.callable) } : null };\n",
+          "previous": "\t\t\t\t, callable: item.callable ? { ...item.callable, parameters: parameters(item.callable.parameters, author.callable.parameters) } : null };\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/semantic-model.mjs",
+      "previousSha256": "871baeec7e85ea6bb5a6e421298a7dca889f54f797fe6e9ed3250708395bbe9f",
+      "currentSha256": "88ee704bd1352ff7e1a6a2c906ebe86473c82aed083a5a81eaeeec01d3468fb9",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 519,
+          "current": "import { callbackSemanticSignature } from \"./callback-signature.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 6215,
+          "current": "\tconst site = (type, result = false, decision) => ({ type: reference(type, decision?.callable), ...exportContractOwnership(type, result)\n\t\t, ...decision ? { ownership: decision.ownership, lifetime: structuredClone(decision.lifetime) } : {} });\n\tconst parameter = (type, index, decision) => ({ name: `arg${index}`, ...site(type, false, decision), mutability: \"immutable\", optional: false, default: null });\n\tconst reference = (type, decision) => {\n",
+          "previous": "\tconst site = (type, result = false) => ({ type: reference(type), ...exportContractOwnership(type, result) });\n\tconst parameter = (type, index) => ({ name: `arg${index}`, ...site(type), mutability: \"immutable\", optional: false, default: null });\n\tconst reference = type => {\n"
+        },
+        {
+          "start": 7163,
+          "current": "\t\tif([\"result\", \"tuple\"].includes(type.kind)) return { kind: \"apply\", constructor: type.kind, arguments: type.arguments.map(value => reference(value)) };\n",
+          "previous": "\t\tif([\"result\", \"tuple\"].includes(type.kind)) return { kind: \"apply\", constructor: type.kind, arguments: type.arguments.map(reference) };\n"
+        },
+        {
+          "start": 7405,
+          "current": "\t\tconst callable = type.kind === \"callback\" ? {\n\t\t\tparameters: type.parameters.map((type, index) => parameter(type, index, decision?.parameters?.[index]))\n\t\t\t, result: site(type.result, true, decision?.result)\n\t\t} : null;\n\t\tconst signature = callable && callbackSemanticSignature(callable);\n",
+          "previous": "\t\tconst signature = type.kind === \"callback\" ? { parameters: type.parameters.map(reference), result: reference(type.result) } : null;\n"
+        },
+        {
+          "start": 9249,
+          "current": "\t\t\t\t...callable\n",
+          "previous": "\t\t\t\tparameters: type.parameters.map(parameter), result: site(type.result, true)\n"
+        },
+        {
+          "start": 9716,
+          "current": "\t\tconst parameters = projection.parameters.map((p, i) => parameter(p.type, i, contract?.parameters?.[i]));\n",
+          "previous": "\t\tconst parameters = projection.parameters.map((p, i) => ({ ...parameter(p.type, i)\n\t\t\t, ...contract?.parameters ? { ownership: contract.parameters[i].ownership\n\t\t\t\t, lifetime: structuredClone(contract.parameters[i].lifetime) } : {} }));\n"
+        },
+        {
+          "start": 10221,
+          "current": "\t\t\t, result: site(projection.result, true, contract?.result)\n",
+          "previous": "\t\t\t, result: { ...site(projection.result, true)\n\t\t\t\t, ...contract?.result ? { ownership: contract.result.ownership\n\t\t\t\t\t, lifetime: structuredClone(contract.result.lifetime) } : {} }\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/owned-package.mjs",
+      "previousSha256": "e0004db0419d2ba155c99ade37ed8f49da024bc4459a2c3ecba31a144333e823",
+      "currentSha256": "44edb26ffded82ec8b879d3294618744e0392933e60c6ab2e2fdf0d897c5b07a",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1521,
+          "current": "\tconst hasExportAnchors = generated.layout.functions.some(item => item.anchor !== undefined);\n\tconst hasCallbackAnchors = generated.layout.callbacks.some(item => item.anchor !== undefined);\n\tconst hasAnchors = hasExportAnchors || hasCallbackAnchors;\n",
+          "previous": "\tconst hasAnchors = generated.layout.functions.some(item => item.anchor !== undefined);\n"
+        },
+        {
+          "start": 2107,
+          "current": "\tif(backend && hasExportAnchors && backend.anchoredResults !== true) throw new TypeError(\"Owned C transport does not support anchored results\");\n\tif(backend && hasCallbackAnchors && backend.callbackResultAnchors !== true) throw new TypeError(\"Owned C transport does not support callback result anchors\");\n",
+          "previous": "\tif(backend && hasAnchors && backend.anchoredResults !== true) throw new TypeError(\"Owned C transport does not support anchored results\");\n"
+        },
+        {
+          "start": 2638,
+          "current": "\t\t, callbackResultAnchors: options.callbackResultAnchors\n",
+          "previous": ""
+        },
+        {
+          "start": 2991,
+          "current": "\t\t, callbackResultAnchors: options.callbackResultAnchors\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/owned-values.mjs",
+      "previousSha256": "dffae18e490a99cc9280c46f5c9113d3d1e380e401fb8c4bf926adc1c7c881dc",
+      "currentSha256": "6a7e9fde5e9293633cc059bbe442c1bc335f6eee594a96c04671aad3ec2b8c78",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1606,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 1797,
+          "current": "export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, identityEquality = false } = {}) => {\n\tconst native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst hasAnchors = [...native.functions, ...native.callbacks].some(item => item.anchor !== undefined);\n",
+          "previous": "export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, identityEquality = false } = {}) => {\n\tconst native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports });\n\tconst hasAnchors = native.functions.some(item => item.anchor !== undefined);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/owned-package.mjs",
+      "previousSha256": "660bdacb6710152906716c73a9dec8bc98eaebb290c6229c9436c3dce5ddeedd",
+      "currentSha256": "ee69d294a96a4ff23d6c17bfde15604c0a744cde3c1fa3e4cf8f7479b302c437",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2009,
+          "current": "\tconst layout = compileOwnedJavaScriptWasmLayout(document, { transferredInputs: true, anchoredResults: true, receiverExports: true, callbackResultAnchors: true }), model = layout.native.model;\n",
+          "previous": "\tconst layout = compileOwnedJavaScriptWasmLayout(document, { transferredInputs: true, anchoredResults: true, receiverExports: true }), model = layout.native.model;\n"
+        },
+        {
+          "start": 2332,
+          "current": "\tconst callbackResultAnchors = layout.native.callbacks.some(fn => fn.anchor !== undefined);\n\tconst anchored = receivers || callbackResultAnchors || layout.native.functions.some(fn => fn.anchor !== undefined);\n",
+          "previous": "\tconst anchored = receivers || layout.native.functions.some(fn => fn.anchor !== undefined);\n"
+        },
+        {
+          "start": 4638,
+          "current": "\t\t, ...callbackResultAnchors ? { callbackResultAnchors: true } : {}\n",
+          "previous": ""
+        },
+        {
+          "start": 9002,
+          "current": "\t\t\t\tconst result = type.callable.result, borrowing = result.ownership === \"borrow\";\n\t\t\t\tconst returned = anchored && direction === \"output\" ? delivered(result)\n\t\t\t\t\t: borrowing ? `(${value(result.type, direction)} | ${owner(result.type)})` : value(result.type, direction);\n\t\t\t\tconst signature = `(${parameters(type.callable.parameters, input, borrowing ? result : null)}): ${returned};`;\n",
+          "previous": "\t\t\t\tconst signature = `(${parameters(type.callable.parameters, input)}): ${anchored && direction === \"output\" ? delivered(type.callable.result) : value(type.callable.result.type, direction)};`;\n"
+        },
+        {
+          "start": 12001,
+          "current": "\tconst layout = compileOwnedJavaScriptWasmLayout(ir, { transferredInputs: true, anchoredResults: true, receiverExports, callbackResultAnchors: true });\n",
+          "previous": "\tconst layout = compileOwnedJavaScriptWasmLayout(ir, { transferredInputs: true, anchoredResults: true, receiverExports });\n"
+        },
+        {
+          "start": 14738,
+          "current": "\tconst { ir, bindingIrSha256, anchored = false, receivers = false, ownerTypes = [], callbackResultAnchors = false } = model;\n",
+          "previous": "\tconst { ir, bindingIrSha256, anchored = false, receivers = false, ownerTypes = [] } = model;\n"
+        },
+        {
+          "start": 18433,
+          "current": "\t\t\t, ...callbackResultAnchors ? [\n\t\t\t\t\"A returned Lean function may borrow its result from one of its arguments. Pass that argument's whole owner; the result expires when that owner closes or is consumed.\"\n\t\t\t\t, \"The declared argument owns the borrow even when the function returns captured data. Retain the result to keep an independent copy.\"\n\t\t\t\t, \"A host callback can return its borrowed argument or a whole owner of the declared result type. The bridge converts that reply before the callback frame expires.\"\n\t\t\t] : []\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/owned-wasm-component.mjs",
+      "previousSha256": "33ade1a431f24105adde493848f1e666398d895623edb1ffc0cc1a0e273f8860",
+      "currentSha256": "30a593548308481ec5ed1e1eb660e2f1763a6ab071a74d4252d960177b3cb5c4",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 478,
+          "current": "import { assertComponentOwnedWasmBindings, componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi } from \"../../abi/component-owned-wasm.mjs\";\n",
+          "previous": "import { assertComponentOwnedWasmBindings, componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi } from \"../../abi/component-owned-wasm.mjs\";\n"
+        },
+        {
+          "start": 1607,
+          "current": "\tconst callbackAnchors = native.callbacks.some(fn => fn.anchor !== undefined);\n",
+          "previous": ""
+        },
+        {
+          "start": 1753,
+          "current": "\tconst anchors = declaredAnchors || receivers || callbackAnchors, tracked = transfers || anchors;\n\tconst layout = compileOwnedJavaScriptWasmLayout(native.model.bindingIr, { transferredInputs: transfers, anchoredResults: declaredAnchors, receiverExports: receivers, callbackResultAnchors: callbackAnchors });\n",
+          "previous": "\tconst anchors = declaredAnchors || receivers, tracked = transfers || anchors;\n\tconst layout = compileOwnedJavaScriptWasmLayout(native.model.bindingIr, { transferredInputs: transfers, anchoredResults: declaredAnchors, receiverExports: receivers });\n"
+        },
+        {
+          "start": 3239,
+          "current": "\tconst privateAbi = Object.freeze({ version: callbackAnchors ? componentOwnedWasmCallbackResultAbi : receivers ? componentOwnedWasmReceiverAbi : anchors ? componentOwnedWasmBorrowAbi : transfers ? componentOwnedWasmTransferAbi : componentOwnedWasmAbi\n",
+          "previous": "\tconst privateAbi = Object.freeze({ version: receivers ? componentOwnedWasmReceiverAbi : anchors ? componentOwnedWasmBorrowAbi : transfers ? componentOwnedWasmTransferAbi : componentOwnedWasmAbi\n"
+        },
+        {
+          "start": 3659,
+          "current": "\t\t, ...callbackAnchors ? { callbackResultAnchors: {\n\t\t\tschemaVersion: 1, anchor: \"original-argument-owner\", maximumDepth: 128\n\t\t\t, signatures: native.callbacks.filter(fn => fn.anchor !== undefined).map(fn => ({ id: fn.id, parameter: fn.anchor - 1 })) } } : {}\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/owned-wasm-layout.mjs",
+      "previousSha256": "12f8ee5ac7bc01b346b892793113d4bf2484517370cfbcae1de351695e52bde6",
+      "currentSha256": "972cd62984f32816ab9025e482d1ffb222a9844d844624df52ed93881611f166",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1781,
+          "current": "\t\t, callbackResultAnchors: options.callbackResultAnchors === undefined ? false : options.callbackResultAnchors\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/native/owned-value-adapters.mjs",
+      "previousSha256": "b2bd01de437e6d4bb48d9b3778c3607ba06733fe41f9a0df9e5939d4bb1e5801",
+      "currentSha256": "5582c63a7a26cdc5c11096c534ebd79e054c8bbf4cf9343aa205a0b5946d3aa9",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1133,
+          "current": "\tconst { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false } = options;\n",
+          "previous": "\tconst { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false } = options;\n"
+        },
+        {
+          "start": 1336,
+          "current": "\tconst layout = compileOwnedNativeValueLayout(carriers.model.bindingIr, { wordBits, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "previous": "\tconst layout = compileOwnedNativeValueLayout(carriers.model.bindingIr, { wordBits, transferredInputs, anchoredResults, receiverExports });\n"
+        },
+        {
+          "start": 1576,
+          "current": "\tconst hasAnchors = [...layout.functions, ...layout.callbacks].some(item => item.anchor !== undefined);\n",
+          "previous": "\tconst hasAnchors = layout.functions.some(item => item.anchor !== undefined);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/native/owned-value-layout.mjs",
+      "previousSha256": "5ea4ed8d5056a023ab9491e5895826d247e47a61bd9af1f76eda538edb46243d",
+      "currentSha256": "cb428c90f352222f93d922338d02cac24111e20a3bdcdc086384b184ccb6c140",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1410,
+          "current": " * @param options.callbackResultAnchors - Caller preserves callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 1503,
+          "current": "export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false } = {}) => {\n",
+          "previous": "export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {\n"
+        },
+        {
+          "start": 1857,
+          "current": "\tif(typeof callbackResultAnchors !== \"boolean\") fail(\"callback result anchor capability must be explicit\");\n",
+          "previous": ""
+        },
+        {
+          "start": 4051,
+          "current": "\tconst site = (value, result = false, transfers = false, callback = false) => {\n",
+          "previous": "\tconst site = (value, result = false, transfers = false) => {\n"
+        },
+        {
+          "start": 4667,
+          "current": "\t\tif(callbackResultAnchors && callback && !copied && result && value.ownership === \"borrow\"\n\t\t\t&& value.lifetime?.scope === \"parameter\") return resolve(value.type);\n",
+          "previous": ""
+        },
+        {
+          "start": 6563,
+          "current": "\t\t, ...node.callable.result.ownership === \"borrow\" ? {\n\t\t\tanchor: 1 + node.callable.parameters.findIndex(value => value.name === node.callable.result.lifetime.anchor)\n\t\t} : {}\n\t\t, result: site(node.callable.result, true, false, true)\n",
+          "previous": "\t\t, result: site(node.callable.result, true)\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/javascript-wasm-owned-artifacts.mjs",
+      "previousSha256": "1f0a94229be16f234afb74e055bd0d0940b5920825f378aeff80d713a3ac7289",
+      "currentSha256": "52bd8ea7b88b12d4c61005a0d9dbf2af17181a62e0db38936ac613d8ef3c851b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 5596,
+          "current": "\t\t, callbackResultAnchors: Boolean(model.ownedGraph?.callbackResultAnchors)\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/build/javascript-wasm-owned-component.mjs",
+      "previousSha256": "acbb4e9e31de775447faae73e68edc9e5074b38c29d87842f87d48c50525ae77",
+      "currentSha256": "c5b7532c7d693bc2a652295764e0a0fc06ff60e89c290503ad74400edbc3a7d4",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 4397,
+          "current": "\t\t\t, callbackResultAnchors: options.callbackResultAnchors === undefined ? true : options.callbackResultAnchors\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/build/javascript-wasm-owned-model.mjs",
+      "previousSha256": "6ca1bb6ce668a0bad62d58facae6994290ca3ecc82ebd39c80b0a09f048d0aa2",
+      "currentSha256": "6fa843ff2f3477c136f4a61fb934e16d8eada580e46c565eb543f2fb5586cc6a",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 483,
+          "current": "const layoutHash = (ir, transferredInputs, anchoredResults = false, receiverExports = false, callbackResultAnchors = false) => sha256(canonicalJson(compileOwnedJavaScriptWasmLayout(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors })));\n",
+          "previous": "const layoutHash = (ir, transferredInputs, anchoredResults = false, receiverExports = false) => sha256(canonicalJson(compileOwnedJavaScriptWasmLayout(ir, { transferredInputs, anchoredResults, receiverExports })));\n"
+        },
+        {
+          "start": 1344,
+          "current": "\t\t, ownedGraph: { ...native.ownedGraph, transport, layoutSha256: layoutHash(native.bindingIr, Boolean(native.ownedGraph.inputTransfers), Boolean(native.ownedGraph.resultAnchors), Boolean(native.ownedGraph.receiverExports), Boolean(native.ownedGraph.callbackResultAnchors)) } });\n",
+          "previous": "\t\t, ownedGraph: { ...native.ownedGraph, transport, layoutSha256: layoutHash(native.bindingIr, Boolean(native.ownedGraph.inputTransfers), Boolean(native.ownedGraph.resultAnchors), Boolean(native.ownedGraph.receiverExports)) } });\n"
+        },
+        {
+          "start": 1850,
+          "current": "\tconst callbackResults = model.schemaVersion === 11;\n\tconst receivers = model.schemaVersion === 10 || (callbackResults && model.ownedGraph?.receiverExports !== undefined);\n\tconst anchoredResults = model.schemaVersion === 9 || ((callbackResults || receivers) && model.ownedGraph?.resultAnchors !== undefined);\n\tconst transferredInputs = model.schemaVersion === 8 || ((callbackResults || receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);\n\tconst hostCallbacks = model.schemaVersion === 7 || ((callbackResults || receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);\n",
+          "previous": "\tconst receivers = model.schemaVersion === 10;\n\tconst anchoredResults = model.schemaVersion === 9 || (receivers && model.ownedGraph?.resultAnchors !== undefined);\n\tconst transferredInputs = model.schemaVersion === 8 || ((receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);\n\tconst hostCallbacks = model.schemaVersion === 7 || ((receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);\n"
+        },
+        {
+          "start": 2602,
+          "current": "\t\t|| ![6, 7, 8, 9, 10, 11].includes(model.schemaVersion) || model.ownedGraph?.schemaVersion !== (callbackResults ? 6 : receivers ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)\n\t\t|| model.ownedGraph.transport !== transport || model.ownedGraph.layoutSha256 !== layoutHash(model.bindingIr, transferredInputs, anchoredResults, receivers, callbackResults))\n",
+          "previous": "\t\t|| ![6, 7, 8, 9, 10].includes(model.schemaVersion) || model.ownedGraph?.schemaVersion !== (receivers ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)\n\t\t|| model.ownedGraph.transport !== transport || model.ownedGraph.layoutSha256 !== layoutHash(model.bindingIr, transferredInputs, anchoredResults, receivers))\n"
+        },
+        {
+          "start": 3184,
+          "current": "\tif(canonicalJson(Object.keys(ownedGraph).sort()) !== canonicalJson([\"schemaVersion\", \"module\", \"metadataSha256\", \"symbols\", ...hostCallbacks ? [\"hostCallbacks\"] : [], ...transferredInputs ? [\"inputTransfers\"] : [], ...anchoredResults ? [\"resultAnchors\"] : [], ...receivers ? [\"receiverExports\"] : [], ...callbackResults ? [\"callbackResultAnchors\"] : []].sort()))\n",
+          "previous": "\tif(canonicalJson(Object.keys(ownedGraph).sort()) !== canonicalJson([\"schemaVersion\", \"module\", \"metadataSha256\", \"symbols\", ...hostCallbacks ? [\"hostCallbacks\"] : [], ...transferredInputs ? [\"inputTransfers\"] : [], ...anchoredResults ? [\"resultAnchors\"] : [], ...receivers ? [\"receiverExports\"] : []].sort()))\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/javascript-wasm-owned-sources.mjs",
+      "previousSha256": "11df47b864b98c796df56a01a3920bac77836b522b751be4579201c351f9f311",
+      "currentSha256": "9d56cabcec252c734b0bcf4eb2e82d4041bc6d4d78b726783b3eb62e08e110aa",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1338,
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph?.callbackResultAnchors);\n\tconst receiverExports = Boolean(model.ownedGraph?.receiverExports), wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;\n",
+          "previous": "\tconst receiverExports = Boolean(model.ownedGraph?.receiverExports), wholeOwners = anchoredResults || receiverExports;\n"
+        },
+        {
+          "start": 1787,
+          "current": "\t\t, anchoredResults, receiverExports, hostCallbacks, transferredInputs\n\t\t, callbackResultAnchors };\n",
+          "previous": "\t\t, anchoredResults, receiverExports, hostCallbacks, transferredInputs };\n"
+        },
+        {
+          "start": 3373,
+          "current": "\t\t, receipt: { schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1\n",
+          "previous": "\t\t, receipt: { schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1\n"
+        },
+        {
+          "start": 3794,
+          "current": "\t\t\t, ...callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {}\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/build/multi-profile-project.mjs",
+      "previousSha256": "7733527b59f93de6e68b59990120ce7e4d16d6c33499474659a92c86e683f488",
+      "currentSha256": "89c1aac3b8075d6ac250fbd3676ae1bb1154cb6cdff81652bb0047943a72e457",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 11700,
+          "current": "\t\t\t\t, ownedAnchoredResults: ownedGraphs, ownedReceiverExports: ownedGraphs\n\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => target === \"c\") });\n",
+          "previous": "\t\t\t\t, ownedAnchoredResults: ownedGraphs, ownedReceiverExports: ownedGraphs });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-artifacts.mjs",
+      "previousSha256": "cbb63999030117711fc03aeb2b5f3ff57575a2a658febd3123b6eeffb60098cd",
+      "currentSha256": "3c6a8b5ed9740f276a3a76b25e89ff95cee16fcbb4c4c3e4c749b613e5cf22f8",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 5257,
+          "current": " * @param options.ownedCallbackResultAnchors - The caller preserves callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 5359,
+          "current": "export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false } = {})\n",
+          "previous": "export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false } = {})\n"
+        },
+        {
+          "start": 6124,
+          "current": "\tconst callbackResults = model.schemaVersion === 11;\n\tconst receivers = model.schemaVersion === 10 || (callbackResults && model.ownedGraph?.receiverExports !== undefined);\n\tconst anchoredResults = model.schemaVersion === 9 || ((callbackResults || receivers) && model.ownedGraph?.resultAnchors !== undefined);\n\tconst transferredInputs = model.schemaVersion === 8 || ((callbackResults || receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);\n\tconst hostCallbacks = model.schemaVersion === 7 || ((callbackResults || receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);\n\tif(callbackResults && (!ownedGraphs || ownedCallbackResultAnchors !== true))\n\t\tthrow Object.assign(new TypeError(\"This native component requires a callback-result lifetime consumer adapter\"), { code: \"native-owned-callback-anchors-unavailable\" });\n",
+          "previous": "\tconst receivers = model.schemaVersion === 10;\n\tconst anchoredResults = model.schemaVersion === 9 || (receivers && model.ownedGraph?.resultAnchors !== undefined);\n\tconst transferredInputs = model.schemaVersion === 8 || ((receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);\n\tconst hostCallbacks = model.schemaVersion === 7 || ((receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);\n"
+        },
+        {
+          "start": 7916,
+          "current": "\tconst reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: transferredInputs, ownedAnchoredResults: anchoredResults, ownedReceiverExports: receivers, ownedCallbackResultAnchors: callbackResults });\n",
+          "previous": "\tconst reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: transferredInputs, ownedAnchoredResults: anchoredResults, ownedReceiverExports: receivers });\n"
+        },
+        {
+          "start": 8356,
+          "current": "\tif(receipt.profile !== \"native-library-v1\" || receipt.schemaVersion !== (callbackResults ? 7 : receivers ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2)\n",
+          "previous": "\tif(receipt.profile !== \"native-library-v1\" || receipt.schemaVersion !== (receivers ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2)\n"
+        },
+        {
+          "start": 8870,
+          "current": "\t\t|| canonicalJson(receipt.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph?.callbackResultAnchors ?? null)\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "previousSha256": "80e39b0224758720aeeb632aa5a3c5081ea9a1b29d2d676ce244fae7862465f7",
+      "currentSha256": "e67fd342828b4173f287da1082b018757e0e0219b6231e3b83d88eff8c108948",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 3646,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => target === \"c\") });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-component.mjs",
+      "previousSha256": "85d4a0a3b28ffd2b7d6c5e93386ed3b2718086ac6ff28ae7f8b5db1441e8252a",
+      "currentSha256": "7e5727b22e10db947e8e1884159737bc0e9f205ddc3a5ea14ed46197a2d4c1e2",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 6416,
+          "current": "\tconst { runtimeRoot, leanPrefix, cc = \"cc\", signal, copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false } = options;\n",
+          "previous": "\tconst { runtimeRoot, leanPrefix, cc = \"cc\", signal, copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false } = options;\n"
+        },
+        {
+          "start": 6930,
+          "current": "\t\tconst model = createCompiledNativeModel(input, { ownedGraphs, ownedHostCallbacks, ownedInputTransfers, ownedAnchoredResults, ownedReceiverExports, ownedCallbackResultAnchors });\n",
+          "previous": "\t\tconst model = createCompiledNativeModel(input, { ownedGraphs, ownedHostCallbacks, ownedInputTransfers, ownedAnchoredResults, ownedReceiverExports });\n"
+        },
+        {
+          "start": 10096,
+          "current": "\t\t\tconst receipt = { schemaVersion: model.ownedGraph?.callbackResultAnchors ? 7 : model.ownedGraph?.receiverExports ? 6 : model.ownedGraph?.resultAnchors ? 5 : model.ownedGraph?.inputTransfers ? 4 : model.ownedGraph?.hostCallbacks ? 3 : 2\n",
+          "previous": "\t\t\tconst receipt = { schemaVersion: model.ownedGraph?.receiverExports ? 6 : model.ownedGraph?.resultAnchors ? 5 : model.ownedGraph?.inputTransfers ? 4 : model.ownedGraph?.hostCallbacks ? 3 : 2\n"
+        },
+        {
+          "start": 10644,
+          "current": "\t\t\t\t, ...(model.ownedGraph?.callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {})\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-graph-model.mjs",
+      "previousSha256": "e5e2d9727d6801fb1b6ad81ebc79985faea7f8ff0b530017a4ddb328ef6f0af4",
+      "currentSha256": "0e010d0f72cba983be945d958e92f1dbeef75d67791e7a752429970be427dee1",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 4463,
+          "current": " * @param root0.ownedCallbackResultAnchors - Admit callback-local result ownership anchors.\n",
+          "previous": ""
+        },
+        {
+          "start": 4559,
+          "current": "export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false } = {}) => {\n",
+          "previous": "export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false } = {}) => {\n"
+        },
+        {
+          "start": 5354,
+          "current": "\tif(typeof ownedCallbackResultAnchors !== \"boolean\") throw new TypeError(\"Owned callback result anchor capability must be explicit\");\n\tif(ownedCallbackResultAnchors && !ownedGraphs) throw new TypeError(\"Owned callback result anchors require an ownership-aware transport\");\n",
+          "previous": ""
+        },
+        {
+          "start": 5700,
+          "current": "\t\treturn createOwnedCompiledNativeModel({ ...options, hostCallbacks: ownedHostCallbacks, transferredInputs: ownedInputTransfers, anchoredResults: ownedAnchoredResults, receiverExports: ownedReceiverExports, callbackResultAnchors: ownedCallbackResultAnchors });\n",
+          "previous": "\t\treturn createOwnedCompiledNativeModel({ ...options, hostCallbacks: ownedHostCallbacks, transferredInputs: ownedInputTransfers, anchoredResults: ownedAnchoredResults, receiverExports: ownedReceiverExports });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-project.mjs",
+      "previousSha256": "456a593b65ef0a8f278dea4f19a950c514841c33358b09eaff4bdc437d6cf739",
+      "currentSha256": "3ec12e5a53ada6182188ed22e9fc32a5daab12f2dfc25d58110177d7e260d4d7",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 7832,
+          "current": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => target === \"c\")\n",
+          "previous": ""
+        },
+        {
+          "start": 8355,
+          "current": "\t\t\t\t\t\t, receiverExports: Boolean(model.ownedGraph.receiverExports)\n\t\t\t\t\t\t, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors) });\n",
+          "previous": "\t\t\t\t\t\t, receiverExports: Boolean(model.ownedGraph.receiverExports) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-c-projection.mjs",
+      "previousSha256": "70f6ebed61c7774bec9a35588120b97b8347a476db52f9636b30c4a7880baf1b",
+      "currentSha256": "ac009a07634a72a18a3c495158b80fa802b5b4f7914017a8092d0fca920cef63",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2247,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => target === \"c\") });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)) });\n"
+        },
+        {
+          "start": 3187,
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n",
+          "previous": ""
+        },
+        {
+          "start": 3424,
+          "current": "\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "previous": "\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports });\n"
+        },
+        {
+          "start": 7240,
+          "current": "\tconst adapter = { schemaVersion: callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2\n",
+          "previous": "\tconst adapter = { schemaVersion: receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2\n"
+        },
+        {
+          "start": 7566,
+          "current": "\t\t, ownedValues: { schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1\n",
+          "previous": "\t\t, ownedValues: { schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1\n"
+        },
+        {
+          "start": 7975,
+          "current": "\t\t\t, ...(callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {})\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-native-model.mjs",
+      "previousSha256": "575db643d0572b664c1afa8bb9202d193ad92f3d9341d495602e747e6b3fd252",
+      "currentSha256": "658b370775befe1f17e6b76450978fab5d43591932311f62bb8cc99abb556034",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 749,
+          "current": "const inputTransferCapability = (ir, enabled, anchoredResults = false, receiverExports = false, callbackResultAnchors = false) => {\n",
+          "previous": "const inputTransferCapability = (ir, enabled, anchoredResults = false, receiverExports = false) => {\n"
+        },
+        {
+          "start": 1216,
+          "current": "\tconst layout = compileOwnedNativeValueLayout(ir, { transferredInputs: true, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "previous": "\tconst layout = compileOwnedNativeValueLayout(ir, { transferredInputs: true, anchoredResults, receiverExports });\n"
+        },
+        {
+          "start": 1703,
+          "current": "const anchoredResultCapability = (ir, enabled, transferredInputs, receiverExports = false, callbackResultAnchors = false) => {\n",
+          "previous": "const anchoredResultCapability = (ir, enabled, transferredInputs, receiverExports = false) => {\n"
+        },
+        {
+          "start": 2086,
+          "current": "\tconst layout = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults: true, receiverExports, callbackResultAnchors });\n",
+          "previous": "\tconst layout = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults: true, receiverExports });\n"
+        },
+        {
+          "start": 2889,
+          "current": "const receiverCapability = (ir, enabled, transferredInputs, anchoredResults, callbackResultAnchors = false) => {\n",
+          "previous": "const receiverCapability = (ir, enabled, transferredInputs, anchoredResults) => {\n"
+        },
+        {
+          "start": 3233,
+          "current": "\tcompileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports: true, callbackResultAnchors });\n",
+          "previous": "\tcompileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports: true });\n"
+        },
+        {
+          "start": 3578,
+          "current": "const callbackResultCapability = (ir, enabled, transferredInputs, anchoredResults, receiverExports) => {\n\tif(!ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\")) return null;\n\tif(!enabled) throw Object.assign(new TypeError(\"This native component requires a callback-result lifetime consumer adapter\"), { code: \"native-owned-callback-anchors-unavailable\" });\n\tconst layout = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors: true });\n\treturn { schemaVersion: 1, ownership: \"borrow\", lifetime: \"parameter\"\n\t\t, anchor: \"original-argument-owner\", expiration: \"owner-release-or-transfer\"\n\t\t, descendants: \"transitive\", validation: \"generation-and-owner-tree\"\n\t\t, independentOwnership: \"explicit-retain-or-copy\", maximumDepth: 128\n\t\t, hostResultHandoff: \"before-callback-frame-expires\"\n\t\t, signatures: layout.callbacks.filter(item => item.anchor !== undefined)\n\t\t\t.map(item => ({ id: item.id, parameter: item.anchor - 1 })) };\n};\n\n",
+          "previous": ""
+        },
+        {
+          "start": 5708,
+          "current": "\tconst callbackResults = options.callbackResultAnchors === undefined ? false : options.callbackResultAnchors;\n\tif(typeof callbackResults !== \"boolean\") throw new TypeError(\"Owned callback result anchor capability must be explicit\");\n",
+          "previous": ""
+        },
+        {
+          "start": 6112,
+          "current": "\tconst callbackResultAnchors = callbackResultCapability(carriers.model.bindingIr, callbackResults, transferredInputs, anchoredResults, receivers);\n\tconst receiverExports = receiverCapability(carriers.model.bindingIr, receivers, transferredInputs, anchoredResults, callbackResults);\n\tconst resultAnchors = anchoredResultCapability(carriers.model.bindingIr, anchoredResults, transferredInputs, receivers, callbackResults);\n\tconst inputTransfers = inputTransferCapability(carriers.model.bindingIr, transferredInputs, anchoredResults, receivers, callbackResults);\n\treturn Object.freeze({ schemaVersion: callbackResultAnchors ? 11 : receiverExports ? 10 : resultAnchors ? 9 : inputTransfers ? 8 : hostCallbacks ? 7 : 6\n",
+          "previous": "\tconst receiverExports = receiverCapability(carriers.model.bindingIr, receivers, transferredInputs, anchoredResults);\n\tconst resultAnchors = anchoredResultCapability(carriers.model.bindingIr, anchoredResults, transferredInputs, receivers);\n\tconst inputTransfers = inputTransferCapability(carriers.model.bindingIr, transferredInputs, anchoredResults, receivers);\n\treturn Object.freeze({ schemaVersion: receiverExports ? 10 : resultAnchors ? 9 : inputTransfers ? 8 : hostCallbacks ? 7 : 6\n"
+        },
+        {
+          "start": 7478,
+          "current": "\t\t, ownedGraph: { schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : resultAnchors ? 4 : inputTransfers ? 3 : hostCallbacks ? 2 : 1\n",
+          "previous": "\t\t, ownedGraph: { schemaVersion: receiverExports ? 5 : resultAnchors ? 4 : inputTransfers ? 3 : hostCallbacks ? 2 : 1\n"
+        },
+        {
+          "start": 7872,
+          "current": "\t\t\t, ...(callbackResultAnchors ? { callbackResultAnchors } : {})\n",
+          "previous": ""
+        },
+        {
+          "start": 8255,
+          "current": "\tconst callbackResults = model.schemaVersion === 11;\n\tconst receivers = model.schemaVersion === 10 || (callbackResults && model.ownedGraph?.receiverExports !== undefined);\n\tconst anchoredResults = model.schemaVersion === 9 || ((callbackResults || receivers) && model.ownedGraph?.resultAnchors !== undefined);\n\tconst transferredInputs = model.schemaVersion === 8 || ((callbackResults || receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);\n\tconst hostCallbacks = model.schemaVersion === 7 || ((callbackResults || receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);\n\tif(![6, 7, 8, 9, 10, 11].includes(model.schemaVersion) || model.profile !== \"native-library-v1\"\n\t\t|| model.pointerBits !== 64 || model.byteOrder !== \"little\" || model.ownedGraph?.schemaVersion !== (callbackResults ? 6 : receivers ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)\n\t\t|| (!callbackResults && model.ownedGraph.callbackResultAnchors !== undefined)\n",
+          "previous": "\tconst receivers = model.schemaVersion === 10;\n\tconst anchoredResults = model.schemaVersion === 9 || (receivers && model.ownedGraph?.resultAnchors !== undefined);\n\tconst transferredInputs = model.schemaVersion === 8 || ((receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);\n\tconst hostCallbacks = model.schemaVersion === 7 || ((receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);\n\tif(![6, 7, 8, 9, 10].includes(model.schemaVersion) || model.profile !== \"native-library-v1\"\n\t\t|| model.pointerBits !== 64 || model.byteOrder !== \"little\" || model.ownedGraph?.schemaVersion !== (receivers ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)\n"
+        },
+        {
+          "start": 9441,
+          "current": "\tconst callbackResultAnchors = callbackResultCapability(model.bindingIr, callbackResults, transferredInputs, anchoredResults, receivers);\n\tif(Boolean(callbackResultAnchors) !== callbackResults\n\t\t|| canonicalJson(callbackResultAnchors) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null))\n\t\tthrow new TypeError(\"Owned native callback result anchors differ from the checked contract\");\n\tconst receiverExports = receiverCapability(model.bindingIr, receivers, transferredInputs, anchoredResults, callbackResults);\n",
+          "previous": "\tconst receiverExports = receiverCapability(model.bindingIr, receivers, transferredInputs, anchoredResults);\n"
+        },
+        {
+          "start": 10194,
+          "current": "\tconst resultAnchors = anchoredResultCapability(model.bindingIr, anchoredResults, transferredInputs, receivers, callbackResults);\n",
+          "previous": "\tconst resultAnchors = anchoredResultCapability(model.bindingIr, anchoredResults, transferredInputs, receivers);\n"
+        },
+        {
+          "start": 10551,
+          "current": "\tconst inputTransfers = inputTransferCapability(model.bindingIr, transferredInputs, anchoredResults, receivers, callbackResults);\n",
+          "previous": "\tconst inputTransfers = inputTransferCapability(model.bindingIr, transferredInputs, anchoredResults, receivers);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/component-runtime.mjs",
+      "previousSha256": "9b1423d884b23a617b009cc204784bd297a07904880d9501b412b5fbd55b1437",
+      "currentSha256": "efd9d252e0f4cd48a850cfa5657ce61ce2357d5d5c66cd8e090e12e69a11789f",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1159,
+          "current": "import { componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi, assertComponentOwnedWasmBindings } from \"../abi/component-owned-wasm.mjs\";\n",
+          "previous": "import { componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, assertComponentOwnedWasmBindings } from \"../abi/component-owned-wasm.mjs\";\n"
+        },
+        {
+          "start": 8147,
+          "current": "\t\t\tconst owned = [componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi, componentOwnedWasmCallbackResultAbi].includes(descriptor.privateAbi.version);\n",
+          "previous": "\t\t\tconst owned = [componentOwnedWasmAbi, componentOwnedWasmTransferAbi, componentOwnedWasmBorrowAbi, componentOwnedWasmReceiverAbi].includes(descriptor.privateAbi.version);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/owned-c-package.mjs",
+      "previousSha256": "5fe62be34306c5aeea39219e77945bff54f3474d86d6eccd105bf9057b1e683c",
+      "currentSha256": "34910101899a89a6795e1bd3db93f9006e5d40fea7b2ab11082d0f0778b68125",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2056,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: target === \"c\" });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });\n"
+        },
+        {
+          "start": 2776,
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n",
+          "previous": "\tconst generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports });\n"
+        },
+        {
+          "start": 3667,
+          "current": "\tif(adapter.schemaVersion !== (callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== runtimeIdentity\n",
+          "previous": "\tif(adapter.schemaVersion !== (receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== runtimeIdentity\n"
+        },
+        {
+          "start": 4031,
+          "current": "\t\t|| adapter.library !== `lib${p}.so` || adapter.ownedValues?.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1) || adapter.gmp?.version !== \"6.3.0\"\n",
+          "previous": "\t\t|| adapter.library !== `lib${p}.so` || adapter.ownedValues?.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1) || adapter.gmp?.version !== \"6.3.0\"\n"
+        },
+        {
+          "start": 4633,
+          "current": "\t\t|| canonicalJson(adapter.ownedValues.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null)\n",
+          "previous": ""
+        },
+        {
+          "start": 18136,
+          "current": "` : \"\"}${anchoredResults || callbackResultAnchors ? `\n",
+          "previous": "` : \"\"}${anchoredResults ? `\n"
+        },
+        {
+          "start": 18855,
+          "current": "their generated _equal operation; different view handles may identify one resource.${callbackResultAnchors ? `\n\nA returned Lean closure can anchor its result to one of its own arguments. Its\ntyped _call operation takes the selected argument's original owner immediately\nafter that argument, not the closure's owner. The selected owner controls the\nresult lifetime even when the closure returns captured data. Host callback replies\nare converted before callback argument owners expire.\n` : \"\"}\n",
+          "previous": "their generated _equal operation; different view handles may identify one resource.\n"
+        },
+        {
+          "start": 21643,
+          "current": "\tconst manifest = { schemaVersion: callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2\n",
+          "previous": "\tconst manifest = { schemaVersion: receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2\n"
+        },
+        {
+          "start": 23106,
+          "current": "\t\t, backend: `native-${target}-owned-v${callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1}`\n",
+          "previous": "\t\t, backend: `native-${target}-owned-v${receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1}`\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/owned-wasm-callbacks.mjs",
+      "previousSha256": "39eeaf7ece60b93d583ef6be0d6e8ffccec41e372c6c5694290864519cc0166c",
+      "currentSha256": "14d28bc1b0d92191bb7567f7fb3a6eca35c57e9fdf824666b39318ef51ddc7ab",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 5734,
+          "current": "\t\t\tlet result = Reflect.apply(callback.value, undefined, args);\n",
+          "previous": "\t\t\tconst result = Reflect.apply(callback.value, undefined, args);\n"
+        },
+        {
+          "start": 5896,
+          "current": "\t\t\tif(callback.type.callable.result.ownership === \"borrow\")\n\t\t\t\tresult = state.scope.unwrap(callback.type.callable.result.type, result);\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/release/owned-wasm-calls.mjs",
+      "previousSha256": "eca267ab77b5cab0d57da4afca9db7e531280b6166631a8b5ba82ef113e5d0ec",
+      "currentSha256": "af3671bee249f9a49f50160e4cf3f24e217e6727b1af1849fde39065dd94814c",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1890,
+          "current": "\tconst anchored = signatures.some(signature => signature.anchor !== undefined || signature.receiver === 0);\n",
+          "previous": "\tconst anchored = layout.native.functions.some(signature => signature.anchor !== undefined || signature.receiver === 0);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/copied-fixture-source-history.test.mjs",
+      "previousSha256": "f29bed4aadf2cac7992dddd1a7f45a0b4f1bbb8b22f289b3705de0323dfd852a",
+      "currentSha256": "2e40aaa15fd2cd349f88b5c89d2e8aa1a6a82f7d4ffd083ac3c6db0b1aa3261b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 575,
+          "current": "import { beforeOwnedCallbackResults } from \"./helpers/owned-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 2837,
+          "current": "\t\tconst current = beforeOwnedCallbackResults(update.path, await readFile(update.path), update.currentSha256);\n\t\tconst prior = beforeCopiedFixtureReaders(update.path, current);\n",
+          "previous": "\t\tconst current = await readFile(update.path), prior = beforeCopiedFixtureReaders(update.path, current);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/copied-fixture-source-history.mjs",
+      "previousSha256": "8924551f047ded78500e88b75ed07335b93775e5af78ddec57cb54788c25ddce",
+      "currentSha256": "1d4fe428f38530c5fd10b74524cc447c1d1a7e317cae97499d51f580caf60ade",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 237,
+          "current": "import { beforeOwnedCallbackResults, ownedCallbackResultChangedPaths } from \"./owned-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1019,
+          "current": "export const copiedFixtureReaderPaths = Object.freeze([...new Set([\n\t...readHistory().updates.map(update => update.path)\n\t, ...ownedCallbackResultChangedPaths\n])].sort());\n",
+          "previous": "export const copiedFixtureReaderPaths = Object.freeze(readHistory().updates.map(update => update.path));\n"
+        },
+        {
+          "start": 2565,
+          "current": "\tsource = beforeOwnedCallbackResults(path, source, expected);\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-javascript-receiver-evidence.mjs",
+      "previousSha256": "68071326e3dde9893edf6e13e3cc047cbab2d66945a5c8079d96e6e05f90df17",
+      "currentSha256": "f53d37a168ed43b8dcf5dfe6885398fcfdec64b099e4300fb769fcf01a467708",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1407,
+          "current": "import { beforeOwnedCallbackResults } from \"./owned-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 7600,
+          "current": "\t\tconst sourcePath = `src/release/${path}.mjs`;\n\t\tlet source = beforeOwnedCallbackResults(sourcePath, await readFile(sourcePath, \"utf8\"));\n",
+          "previous": "\t\tlet source = await readFile(`src/release/${path}.mjs`, \"utf8\");\n"
+        },
+        {
+          "start": 12875,
+          "current": "\t\t\t\t? ownedAggregateTransferRuntime({ anchoredResults: true }) : beforeOwnedCallbackResults(path, await readFile(path, \"utf8\"));\n",
+          "previous": "\t\t\t\t? ownedAggregateTransferRuntime({ anchoredResults: true }) : await readFile(path, \"utf8\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-javascript-wasm-native.mjs",
+      "previousSha256": "57925ee10e537868016425e5e302c576976ca749b24bb3488cf65121077bd700",
+      "currentSha256": "2b201d76fdb26be887c0e6f42ca381c2ee8c98b24daa3c5e49a4f62f1f23ac32",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 3327,
+          "current": "\tconst callbackResultAnchors = options.callbackResultAnchors ?? false;\n\tconst receiverExports = options.receiverExports ?? false, wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;\n",
+          "previous": "\tconst receiverExports = options.receiverExports ?? false, wholeOwners = anchoredResults || receiverExports;\n"
+        },
+        {
+          "start": 3917,
+          "current": "\t\t, hostCallbacks, transferredInputs, anchoredResults, receiverExports\n\t\t, callbackResultAnchors });\n\tconst layout = compileOwnedJavaScriptWasmLayout(generated.layout.model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors }), directory = native.directory;\n",
+          "previous": "\t\t, hostCallbacks, transferredInputs, anchoredResults, receiverExports });\n\tconst layout = compileOwnedJavaScriptWasmLayout(generated.layout.model.bindingIr, { transferredInputs, anchoredResults, receiverExports }), directory = native.directory;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/wit-owned-receiver-evidence.mjs",
+      "previousSha256": "cc2b969b0e0be1206d03559075d987c81275581b83b63ed39c2eb83c383213a1",
+      "currentSha256": "d63104d747bd2983edcad5fe9a8e82c63c64eb692cc09445f1d78cbf44240d3b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1117,
+          "current": "import { beforeOwnedCallbackResults } from \"./owned-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 5299,
+          "current": "\tconst configPath = \"config/cli-package.v1.json\";\n\tconst config = JSON.parse(beforeOwnedCallbackResults(configPath, await readFile(configPath, \"utf8\")));\n",
+          "previous": "\tconst config = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n"
+        },
+        {
+          "start": 5720,
+          "current": "\t\tconst file = report.files.find(entry => entry.path === path);\n\t\tconst bytes = Buffer.from(beforeOwnedCallbackResults(path, await readFile(path)));\n",
+          "previous": "\t\tconst file = report.files.find(entry => entry.path === path), bytes = await readFile(path);\n"
+        }
+      ]
+    }
+  ]
+}

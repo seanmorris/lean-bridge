@@ -24,10 +24,12 @@ const fail = message => { throw new TypeError(`Owned native values: ${message}`)
  * @param options.transferredInputs - Caller implements atomic input-owner consumption.
  * @param options.anchoredResults - Caller preserves exact borrowed-result owners.
  * @param options.receiverExports - Caller implements typed receiver exports.
+ * @param options.callbackResultAnchors - Caller preserves callback-local result owners.
  */
-export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false } = {}) => {
+export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false } = {}) => {
 	if(![32, 64].includes(wordBits)) fail("machine-word width must be 32 or 64");
 	if(typeof receiverExports !== "boolean") fail("receiver capability must be explicit");
+	if(typeof callbackResultAnchors !== "boolean") fail("callback result anchor capability must be explicit");
 	const targetScalars = { ...scalars, usize: `uint${wordBits}_t`, isize: `int${wordBits}_t` };
 	const model = compileOwnedAggregateModel(ir);
 	const prefix = `lbov_${model.bindingIrSha256.slice(0, 20)}`;
@@ -70,13 +72,15 @@ export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredIn
 		else if(node.kind === "resource") node.identityKind = type.resource.kindId;
 		else if(node.kind === "callback") node.identityKind = `callable:${model.component.id}:${type.id}`;
 	}
-	const site = (value, result = false, transfers = false) => {
+	const site = (value, result = false, transfers = false, callback = false) => {
 		const copied = value.representation === "copied";
 		if(transferredInputs && transfers && !copied && !result && value.ownership === "transfer"
 			&& !value.optional && value.default == null
 			&& ["call", "explicit"].includes(value.lifetime?.scope) && value.lifetime.anchor === null) return resolve(value.type);
 		if(anchoredResults && transfers && !copied && result && value.ownership === "borrow"
 			&& (value.lifetime?.scope === "parameter" || (receiverExports && value.lifetime?.scope === "receiver"))) return resolve(value.type);
+		if(callbackResultAnchors && callback && !copied && result && value.ownership === "borrow"
+			&& value.lifetime?.scope === "parameter") return resolve(value.type);
 		if(value.optional || value.default != null || value.ownership !== (copied ? "copy" : result ? "lease" : "borrow")
 			|| (copied ? value.lifetime !== null : value.lifetime?.scope !== (result ? "explicit" : "call") || value.lifetime?.anchor !== null))
 			fail("this transport requires copied values, call-scoped input borrows and explicit output leases");
@@ -102,7 +106,10 @@ export const compileOwnedNativeValueLayout = (ir, { wordBits = 64, transferredIn
 		id: node.id
 		, symbol: `${node.walker}_apply`
 		, parameters: [node.id, ...node.callable.parameters.map(value => site(value))]
-		, result: site(node.callable.result, true)
+		, ...node.callable.result.ownership === "borrow" ? {
+			anchor: 1 + node.callable.parameters.findIndex(value => value.name === node.callable.result.lifetime.anchor)
+		} : {}
+		, result: site(node.callable.result, true, false, true)
 	}));
 	const aliases = model.types.filter(type => type.kind === "alias").map(type => ({
 		id: type.id, target: resolve(type.id)

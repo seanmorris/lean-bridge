@@ -353,6 +353,83 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  owned-callback-results:
+    name: Callback-result lifetimes in installed C and npm packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    env:
+      EMCC_CORES: "2"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install callback acceptance tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3 ripgrep zstd
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh
+      - name: Install all callback browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Build the callback shared runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-callback-result-runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Verify callback-result lifetimes
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-callback-results 2>&1 | tee build/owned-callback-results.log
+          rg '^# tests 33$' build/owned-callback-results.log
+          rg '^# pass 33$' build/owned-callback-results.log
+          rg '^# fail 0$' build/owned-callback-results.log
+          rg '^# cancelled 0$' build/owned-callback-results.log
+          rg '^# skipped 0$' build/owned-callback-results.log
+          test -s build/owned-callback-results/metadata-ordinary.json
+          test -s build/owned-callback-results/runtime-ordinary-false.json
+          test -s build/owned-callback-results/runtime-ordinary-true.json
+          test -s build/owned-callback-results/wasm-ordinary-false.json
+          test -s build/owned-callback-results/wasm-ordinary-true.json
+          test -s build/owned-callback-results/coexistence-ordinary-false.json
+          test -s build/owned-callback-results/coexistence-ordinary-true.json
+          test -s build/owned-callback-results/wasm-ordinary-mutants.json
+          test -s build/owned-callback-results/wasm-ordinary-combinations.json
+          test -s build/owned-callback-results/ordinary-c-package.json
+          test -s build/owned-callback-results/ordinary-combined-package.json
+          test -s build/owned-callback-results/metadata-reviewed.json
+          test -s build/owned-callback-results/runtime-reviewed-false.json
+          test -s build/owned-callback-results/runtime-reviewed-true.json
+          test -s build/owned-callback-results/wasm-reviewed-false.json
+          test -s build/owned-callback-results/wasm-reviewed-true.json
+          test -s build/owned-callback-results/coexistence-reviewed-false.json
+          test -s build/owned-callback-results/coexistence-reviewed-true.json
+          test -s build/owned-callback-results/wasm-reviewed-mutants.json
+          test -s build/owned-callback-results/wasm-reviewed-combinations.json
+          test -s build/owned-callback-results/reviewed-c-package.json
+          test -s build/owned-callback-results/reviewed-combined-package.json
+          test -s build/owned-callback-results/npm-package.json
+      - name: Preserve callback-result acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: callback-results-${{ github.sha }}
+          path: |
+            build/owned-callback-results/
+            build/owned-callback-results.log
+            build/owned-callback-result-runtime.log
+          if-no-files-found: error
+          retention-days: 30
+
   node-consumers:
     name: Node and browser npm consumers
     runs-on: ubuntu-24.04
@@ -2849,6 +2926,7 @@ jobs:
       - node-consumers
       - owned-javascript-wasm
       - owned-javascript-receivers
+      - owned-callback-results
       - browser-consumer
       - php-consumers
       - php-receivers
@@ -2891,6 +2969,9 @@ jobs:
         run: exit 1
       - name: Enforce JavaScript receiver acceptance
         if: needs.owned-javascript-receivers.result != 'success'
+        run: exit 1
+      - name: Enforce callback-result acceptance
+        if: needs.owned-callback-results.result != 'success'
         run: exit 1
       - name: Enforce real Nix owned npm acceptance
         if: needs.node-consumers.result != 'success'

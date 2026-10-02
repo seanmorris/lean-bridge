@@ -134,6 +134,7 @@
       "properties": {
         "ownership": {"enum": ["copy", "borrow", "lease", "transfer"]},
         "lifetime": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/contractLifetime"}]},
+        "callable": {"$ref": "#/$defs/callableContract"},
         "refinement": {"oneOf": [
           {"const": "reject"},
           {"type": "object", "additionalProperties": false, "required": ["constructor"], "properties": {"constructor": {"$ref": "#/$defs/specializationName"}}}
@@ -142,6 +143,13 @@
       "if": {"properties": {"ownership": {"const": "copy"}}},
       "then": {"properties": {"lifetime": {"type": "null"}}},
       "else": {"properties": {"lifetime": {"$ref": "#/$defs/contractLifetime"}}}
+    },
+    "callableContract": {
+      "type": "object", "additionalProperties": false, "minProperties": 1,
+      "properties": {
+        "parameters": {"type": "array", "maxItems": 16, "items": {"$ref": "#/$defs/contractSite"}},
+        "result": {"$ref": "#/$defs/contractSite"}
+      }
     },
     "contractLifetime": {
       "type": "object", "additionalProperties": false, "required": ["scope", "anchor"],

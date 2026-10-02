@@ -18,6 +18,7 @@ import { ownedJavaScriptReceiverMutations } from "./owned-javascript-receiver-mu
 import { assertOwnedJavaScriptReceiverCi } from "./owned-javascript-receiver-ci.mjs";
 import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
 import { ownedJvmPlainReceiverSource } from "./owned-jvm-receiver-fixture.mjs";
+import { beforeOwnedCallbackResults } from "./owned-callback-result-history.mjs";
 
 export const ownedJavaScriptReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-javascript-receivers";
 export const ownedJavaScriptReceiverScope = Object.freeze({
@@ -104,7 +105,8 @@ const installed = async (item, name, lean, kind = "full") => {
 	for(const path of ["index.mjs", "index.d.ts"]) assert.equal(item.inventory[name + "/" + path].sha256, sha256(publicFiles[path]));
 	for(const path of ["component-runtime", "owned-wasm-calls", "owned-wasm-borrow-registry"])
 	{
-		let source = await readFile(`src/release/${path}.mjs`, "utf8");
+		const sourcePath = `src/release/${path}.mjs`;
+		let source = beforeOwnedCallbackResults(sourcePath, await readFile(sourcePath, "utf8"));
 		// The installed runtime puts ABI modules beside the runtime sources.
 		for(const module of ["component-scalars", "component-callables"
 			, "component-copied", "component-records", "component-recursive"
@@ -194,7 +196,7 @@ export const assertOwnedJavaScriptReceiverExecution = async record => {
 		for(const [name, path, before, after] of ownedJavaScriptReceiverMutations)
 		{
 			const original = path === "probe.c" ? source : path === "owned-leases.h"
-				? ownedAggregateTransferRuntime({ anchoredResults: true }) : await readFile(path, "utf8");
+				? ownedAggregateTransferRuntime({ anchoredResults: true }) : beforeOwnedCallbackResults(path, await readFile(path, "utf8"));
 			assert.equal(original.split(before).length, 2, name);
 			expected.push({ name, path, sourceSha256: sha256(original.replace(before, after)), parsed: true, semanticRejection: true });
 		}

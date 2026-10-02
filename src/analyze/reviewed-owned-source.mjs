@@ -11,6 +11,7 @@ import { canonicalizeJsonValue, BindingIrCanonicalError } from "../binding-ir/ca
 import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { compileOwnedAggregateModel } from "../abi/owned-aggregate-model.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
+import { callbackSemanticSignature } from "./callback-signature.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
 import { assertReviewedSourceConfiguration, validateReviewedSourceIdentity, reviewedContractDifference, readReviewedSource } from "./reviewed-source.mjs";
 
@@ -83,13 +84,13 @@ const checkReview = document => {
 		if(definition.kind === "callback")
 		{
 			const callable = definition.callable;
-			const signature = { parameters: callable.parameters.map(value => value.type), result: callable.result.type };
+			const signature = callbackSemanticSignature(callable);
 			source(definition, `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`);
 			reject(callable.invocation !== "many" || callable.reentry !== "same-agent" || callable.selfDisposal !== "defer"
 				|| callable.resultMode !== "value" || !same(callable.effects.toSorted(), ["fails", "host-call"])
 				|| !same(callable.failure, callbackFailure) || !callable.parameters.length || callable.parameters.length > 16, `${definition.id}.callable`);
 			callable.parameters.forEach((value, index) => parameter(value, `${definition.id}.parameters[${index}]`));
-			site(callable.result, `${definition.id}.result`, true);
+			site(callable.result, `${definition.id}.result`, true, false, true);
 			continue;
 		}
 		source(definition);
@@ -147,18 +148,39 @@ export const validateReviewedOwnedSource = review => {
 export const reviewedOwnedSourceSelection = review => {
 	const document = validateReviewedOwnedSource(review);
 	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
-	const contracts = Object.fromEntries(document.declarations.filter(item => item.receiver || item.result.ownership === "borrow" || item.parameters.some(value => value.ownership === "transfer"))
+	const types = new Map(document.types.map(type => [type.id, type]));
+	const selected = new Map(), active = new Set();
+	const decision = (value, inputs, callable) => ({ ownership: value.ownership
+		, lifetime: value.lifetime?.scope === "parameter" ? { scope: "parameter"
+			, anchor: `arg${inputs.findIndex(input => input.name === value.lifetime.anchor)}` } : structuredClone(value.lifetime)
+		, ...callable ? { callable } : {} });
+	const callableDecision = type => {
+		if(type.kind !== "named" || !callbacks.has(type.id)) return undefined;
+		if(selected.has(type.id)) return selected.get(type.id);
+		if(active.has(type.id)) unsupported("Recursive callable signatures require a finite compiler signature", { type: type.id });
+		active.add(type.id);
+		const callable = types.get(type.id).callable;
+		const parameters = callable.parameters.map(value => callableDecision(value.type));
+		const result = callableDecision(callable.result.type);
+		const value = parameters.some(Boolean) || result || callable.result.ownership === "borrow" ? {
+			...parameters.some(Boolean) ? { parameters: callable.parameters.map((value, index) => decision(value, callable.parameters, parameters[index])) } : {}
+			, ...result || callable.result.ownership === "borrow" ? { result: decision(callable.result, callable.parameters, result) } : {}
+		} : undefined;
+		active.delete(type.id); selected.set(type.id, value); return value;
+	};
+	const contracts = Object.fromEntries(document.declarations
 		.map(item => {
 			const inputs = [...item.receiver ? [item.receiver] : [], ...item.parameters];
+			const parameters = inputs.map(value => callableDecision(value.type));
+			const result = callableDecision(item.result.type);
 			return [item.source.declaration, {
 				...item.receiver ? { receiver: item.kind } : {}
-				, ...inputs.some(value => value.ownership === "transfer")
-					? { parameters: inputs.map(({ ownership, lifetime }) => ({ ownership, lifetime: structuredClone(lifetime) })) } : {}
-				, ...item.result.ownership === "borrow" ? { result: { ownership: "borrow"
-					, lifetime: item.result.lifetime.scope === "receiver" ? { scope: "receiver", anchor: "receiver" }
-						: { scope: "parameter", anchor: `arg${inputs.findIndex(value => value.name === item.result.lifetime.anchor)}` } } } : {}
+				, ...parameters.some(Boolean) || inputs.some(value => value.ownership === "transfer")
+					? { parameters: inputs.map((value, index) => decision(value, inputs, parameters[index])) } : {}
+				, ...item.result.ownership === "borrow" || result ? { result: decision(item.result, inputs, result) } : {}
 			}];
 		})
+		.filter(([, contract]) => Object.keys(contract).length)
 		.sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0));
 	return { exports: document.declarations.map(item => item.source.declaration).sort()
 		, resources: document.types.filter(type => type.kind === "resource").map(item => item.source.declaration).sort()
@@ -230,7 +252,11 @@ const normalizeEffects = document => ({ ...document
 	, declarations: document.declarations.map(item => ({ ...item, effects: item.effects.toSorted()
 		, result: item.result.ownership === "borrow" && item.result.lifetime.scope === "parameter"
 			? { ...item.result, lifetime: { scope: "parameter", anchor: `arg${item.parameters.findIndex(value => value.name === item.result.lifetime.anchor) + Number(item.receiver !== null)}` } } : item.result }))
-	, types: document.types.map(item => item.callable ? { ...item, callable: { ...item.callable, effects: item.callable.effects.toSorted() } } : item) });
+	, types: document.types.map(item => item.callable ? { ...item, callable: { ...item.callable, effects: item.callable.effects.toSorted()
+		, result: item.callable.result.ownership === "borrow" && item.callable.result.lifetime.scope === "parameter"
+			? { ...item.callable.result, lifetime: { scope: "parameter"
+				, anchor: `arg${item.callable.parameters.findIndex(value => value.name === item.callable.result.lifetime.anchor)}` } } : item.callable.result
+	} } : item) });
 
 const retainAnnotations = (reviewed, compiled) => {
 	const declarations = new Map(reviewed.declarations.map(item => [item.id, item]));
@@ -253,7 +279,8 @@ const retainAnnotations = (reviewed, compiled) => {
 				, fields: fields(item.fields, author.fields)
 				, cases: item.cases.map((branch, index) => ({ ...branch, documentation: structuredClone(author.cases[index].documentation)
 					, fields: fields(branch.fields, author.cases[index].fields) }))
-				, callable: item.callable ? { ...item.callable, parameters: parameters(item.callable.parameters, author.callable.parameters) } : null };
+				, callable: item.callable ? { ...item.callable, parameters: parameters(item.callable.parameters, author.callable.parameters)
+					, result: result(item.callable, author.callable) } : null };
 		})
 	};
 };

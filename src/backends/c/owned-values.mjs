@@ -28,11 +28,12 @@ const nominal = name => {
  * @param options.transferredInputs - Admit explicit consumption of input owners.
  * @param options.anchoredResults - Preserve owner-scoped result views.
  * @param options.receiverExports - Preserve method and property receivers.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.identityEquality - Expose checked canonical identity comparison without result anchors.
  */
-export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, identityEquality = false } = {}) => {
-	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports });
-	const hasAnchors = native.functions.some(item => item.anchor !== undefined);
+export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, identityEquality = false } = {}) => {
+	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const hasAnchors = [...native.functions, ...native.callbacks].some(item => item.anchor !== undefined);
 	const hasEquality = hasAnchors || identityEquality;
 	const p = publicPrefix ?? cIdentifier(ir.component.id.slice(0, ir.component.id.lastIndexOf("@")).split("/").at(-1));
 	if(!safe(p) || ["gmp", "lean_bridge_native", "leanshared"].includes(p)) fail("invalid package name");

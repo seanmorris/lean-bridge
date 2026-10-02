@@ -74,15 +74,18 @@ export const nativeGraphCarrierAbi = model => {
  * @param root0.ownedInputTransfers - Admit consumption of explicitly supplied input owners.
  * @param root0.ownedAnchoredResults - Admit results that expire with an input owner.
  * @param root0.ownedReceiverExports - Admit methods and properties with typed receivers.
+ * @param root0.ownedCallbackResultAnchors - Admit callback-local result ownership anchors.
  */
-export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false } = {}) => {
+export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false } = {}) => {
 	const { metadata, component, moduleName, sourceIdentity } = options;
 	if(ownedHostCallbacks && !ownedGraphs) throw new TypeError("Owned callbacks require an ownership-aware transport");
 	if(ownedInputTransfers && !ownedGraphs) throw new TypeError("Owned input transfers require an ownership-aware transport");
 	if(ownedAnchoredResults && !ownedGraphs) throw new TypeError("Owned anchored results require an ownership-aware transport");
 	if(ownedReceiverExports && !ownedGraphs) throw new TypeError("Owned receivers require an ownership-aware transport");
+	if(typeof ownedCallbackResultAnchors !== "boolean") throw new TypeError("Owned callback result anchor capability must be explicit");
+	if(ownedCallbackResultAnchors && !ownedGraphs) throw new TypeError("Owned callback result anchors require an ownership-aware transport");
 	if(ownedGraphs && sourceIdentity.request.ownedAggregates !== undefined)
-		return createOwnedCompiledNativeModel({ ...options, hostCallbacks: ownedHostCallbacks, transferredInputs: ownedInputTransfers, anchoredResults: ownedAnchoredResults, receiverExports: ownedReceiverExports });
+		return createOwnedCompiledNativeModel({ ...options, hostCallbacks: ownedHostCallbacks, transferredInputs: ownedInputTransfers, anchoredResults: ownedAnchoredResults, receiverExports: ownedReceiverExports, callbackResultAnchors: ownedCallbackResultAnchors });
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true });
 	if(!elaborated.declarations.some(containsGraph)) return createNativeModel(options);
 	const semantic = createElaboratedSemanticModel({ metadata

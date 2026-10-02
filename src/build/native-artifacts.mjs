@@ -96,18 +96,22 @@ export async function readVerifiedNativeRuntime(root)
  * @param options.ownedInputTransfers - The caller consumes validated input owners atomically.
  * @param options.ownedAnchoredResults - The caller validates original-owner result lifetimes.
  * @param options.ownedReceiverExports - The caller preserves receiver signatures and ownership.
+ * @param options.ownedCallbackResultAnchors - The caller preserves callback-local result owners.
  */
-export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false } = {})
+export async function readVerifiedNativeComponent(root, runtimeIdentity, { copiedGraphs = false, ownedGraphs = false, ownedHostCallbacks = false, ownedInputTransfers = false, ownedAnchoredResults = false, ownedReceiverExports = false, ownedCallbackResultAnchors = false } = {})
 {
 	const read = async path => JSON.parse(await readFile(join(root, path), "utf8"));
 	const inventory = await read("artifacts.json"), receipt = await read("native-component.json"), model = await read("model.json");
 	await verifyNativeFiles(root, inventory.files);
 	if((await nativeArtifactPaths(root)).some(path => path !== "artifacts.json" && !Object.hasOwn(inventory.files, path))) throw new Error("unrecorded native component artifact");
 	const metadata = await read("metadata.json");
-	const receivers = model.schemaVersion === 10;
-	const anchoredResults = model.schemaVersion === 9 || (receivers && model.ownedGraph?.resultAnchors !== undefined);
-	const transferredInputs = model.schemaVersion === 8 || ((receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);
-	const hostCallbacks = model.schemaVersion === 7 || ((receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);
+	const callbackResults = model.schemaVersion === 11;
+	const receivers = model.schemaVersion === 10 || (callbackResults && model.ownedGraph?.receiverExports !== undefined);
+	const anchoredResults = model.schemaVersion === 9 || ((callbackResults || receivers) && model.ownedGraph?.resultAnchors !== undefined);
+	const transferredInputs = model.schemaVersion === 8 || ((callbackResults || receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);
+	const hostCallbacks = model.schemaVersion === 7 || ((callbackResults || receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);
+	if(callbackResults && (!ownedGraphs || ownedCallbackResultAnchors !== true))
+		throw Object.assign(new TypeError("This native component requires a callback-result lifetime consumer adapter"), { code: "native-owned-callback-anchors-unavailable" });
 	if(receivers && (!ownedGraphs || ownedReceiverExports !== true))
 		throw Object.assign(new TypeError("This native component requires a receiver-capable consumer adapter"), { code: "native-owned-receivers-unavailable" });
 	if(anchoredResults && (!ownedGraphs || ownedAnchoredResults !== true))
@@ -116,12 +120,13 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity, { copie
 		throw Object.assign(new TypeError("This native component requires an owned input-transfer consumer adapter"), { code: "native-owned-transfers-unavailable" });
 	if(hostCallbacks && (!ownedGraphs || !ownedHostCallbacks))
 		throw Object.assign(new TypeError("This native component requires an owned host-callback consumer adapter"), { code: "native-owned-callbacks-unavailable" });
-	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: transferredInputs, ownedAnchoredResults: anchoredResults, ownedReceiverExports: receivers });
+	const reconstructed = createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }, { ownedGraphs, ownedHostCallbacks: hostCallbacks, ownedInputTransfers: transferredInputs, ownedAnchoredResults: anchoredResults, ownedReceiverExports: receivers, ownedCallbackResultAnchors: callbackResults });
 	const adapters = generateCompiledNativeLeanAdapters(reconstructed);
-	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== (receivers ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2)
+	if(receipt.profile !== "native-library-v1" || receipt.schemaVersion !== (callbackResults ? 7 : receivers ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2)
 		|| canonicalJson(receipt.inputTransfers ?? null) !== canonicalJson(model.ownedGraph?.inputTransfers ?? null)
 		|| canonicalJson(receipt.resultAnchors ?? null) !== canonicalJson(model.ownedGraph?.resultAnchors ?? null)
 		|| canonicalJson(receipt.receiverExports ?? null) !== canonicalJson(model.ownedGraph?.receiverExports ?? null)
+		|| canonicalJson(receipt.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph?.callbackResultAnchors ?? null)
 		|| receipt.runtimeIdentity !== runtimeIdentity
 		|| canonicalJson(model) !== canonicalJson(reconstructed)
 		|| receipt.modelSha256 !== sha256(canonicalJson(model))

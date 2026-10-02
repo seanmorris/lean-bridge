@@ -102,6 +102,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedReceiverExports: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
+			, ownedCallbackResultAnchors: targets.every(target => target === "c")
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)
@@ -109,7 +110,8 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					generateOwnedCValues(model.bindingIr, { hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
 						, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 						, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
-						, receiverExports: Boolean(model.ownedGraph.receiverExports) });
+						, receiverExports: Boolean(model.ownedGraph.receiverExports)
+						, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors) });
 					if(targets.includes("cpp")) generateOwnedCppPackage(model.bindingIr, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
 					if(targets.includes("cargo")) generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
 					if(targets.includes("pypi")) generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });

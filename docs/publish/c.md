@@ -161,14 +161,61 @@ copied or transferred. The function can still consume a different input.
 
 Releasing or consuming the anchor expires the result and every view borrowed
 from it. Retain or copy explicitly to create independent ownership. This contract
-also covers empty results and returned Lean closures. Parameter-anchored
-callback-result contracts remain unsupported.
+also covers empty results and returned Lean closures. To give a returned
+function its own argument-anchored result, use a nested callable contract below.
 
 The C package records the checked parameter indices under
 `ownedValues.resultAnchors`; its manifest uses version 5 and `ownedValues`
 version 4. Builds selecting a consumer that does not implement result anchors
 reject the contract. See [C borrowed results](../consume/c.md#borrowed-results)
 for validation, equality and cleanup.
+
+### Anchor a callback result to its argument
+
+For `--target c` and `--target npm`, put the callback's result decision under
+`callable`. For a function `makeRecord (captured : Bundle) : Bool → Bundle → Bundle`,
+select one outer argument with `arities`, then anchor each invocation's result
+to that invocation's `Bundle` argument:
+
+```json
+{
+  "arities": { "Owned.makeRecord": 1 },
+  "contracts": {
+    "Owned.makeRecord": {
+      "result": {
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null },
+        "callable": {
+          "result": {
+            "ownership": "borrow",
+            "lifetime": { "scope": "parameter", "anchor": "arg1" }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Keep the package's exports, resource declarations and `ownedAggregates` policy.
+The callback counts its own arguments from zero: `Bool` is `arg0` and `Bundle`
+is `arg1`. The outer `captured` parameter and private closure handle do not count.
+A reviewed contract uses the callback's local parameter names. Lean checks that
+the selected argument has an owned representation and is borrowed, not copied
+or transferred. A callback cannot select an outer parameter or receiver anchor.
+
+The result expires when the selected argument's original owner is released or
+consumed, even if Lean returned captured data. Retaining or copying while the
+result is valid creates independent ownership. For host callbacks, the same
+`callable` object goes on the callback's entry in `parameters`. Host replies
+cross into Lean before their borrowed argument frame expires.
+
+C packages record these local indices separately in
+`ownedValues.callbackResultAnchors`, using manifest version 7 and `ownedValues`
+version 6. Existing APIs without this capability keep their earlier format.
+Other consumer targets reject this capability until their adapters implement it.
+See [C callback-result cleanup](../consume/c.md#borrowed-callback-results) and
+the [npm author recipe](npm.md#anchor-a-callback-result).
 
 ### Export methods and properties
 

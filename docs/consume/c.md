@@ -515,6 +515,37 @@ The [installed callback caller](../../tests/fixtures/structured-types/owned-inst
 shows borrowed replies, owning copies, new resources, recursive values, reentry,
 failure recovery and session closure during callbacks.
 
+### Borrowed callback results
+
+A returned Lean function can borrow its result from one of its own arguments.
+The generated `_call` function then takes that argument's original result owner
+immediately after the argument. Pass the argument owner, not the closure owner.
+For example, a `Bool → Bundle → Bundle` closure whose result borrows its second
+argument has this call shape:
+
+```c
+owned_aggregates_make_record_result_t_call(
+    session, closure, false, &input, input_owner, &view, &view_owner);
+```
+
+Check the returned status before using `view`. Releasing or consuming
+`input_owner` expires `view_owner` and all descendants borrowed from it. This
+also applies when the function returns its captured data instead of `input`.
+An unrelated closure or capture owner does not control that result's lifetime.
+Copy the result or retain its resources while valid if they must outlive the
+anchor. Release `view_owner` even after it has expired; do not free the view's
+individual fields.
+
+A host callback may return a borrowed argument. Leave its result-owner output
+empty when returning borrowed storage, or supply the owner of an independent
+copy. The bridge converts the reply before expiring the callback argument frame.
+An escaped callback argument is invalid after the callback returns.
+
+The [installed C probe](../../tests/fixtures/structured-types/owned-installed-callback-results.c)
+covers these lifetimes, empty recursive values and failure cleanup. The
+[combined probe](../../tests/fixtures/structured-types/owned-installed-callback-combinations.c)
+also checks receiver borrows and ownership transfers.
+
 ## Exact integers
 
 Prepared C packages expose Lean `Nat` and `Int` as GMP `mpz_t`, including array elements and record fields. The archive supplies GMP 6.3.0 and configures it through CMake and pkg-config. You do not install a separate dependency or construct limb buffers.

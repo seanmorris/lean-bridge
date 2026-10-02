@@ -17,6 +17,7 @@ import { ownedWitBorrowMutations } from "./wit-owned-borrow-mutants.mjs";
 import { ownedWitReceiverProbe } from "./wit-owned-receiver-probe.mjs";
 import { ownedWitReceiverResourceProbe } from "./wit-owned-receiver-resource-probe.mjs";
 import { assertOwnedWitReceiverCi } from "./wit-owned-receiver-ci.mjs";
+import { beforeOwnedCallbackResults } from "./owned-callback-result-history.mjs";
 
 export const ownedWitReceiverCommand = "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-wit-receivers";
 export const ownedWitReceiverScope = Object.freeze({
@@ -78,13 +79,15 @@ const checkCli = async item => {
 	assert.equal(inventorySha256, sha256(canonicalJson(inventory)));
 	digest(archive.sha256); assert.ok(archive.bytes > 0);
 	assert.equal(item.installedCli.filesVerified, report.files.length);
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const configPath = "config/cli-package.v1.json";
+	const config = JSON.parse(beforeOwnedCallbackResults(configPath, await readFile(configPath, "utf8")));
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(report.files.length, config.files.length + 2);
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)
 	{
-		const file = report.files.find(entry => entry.path === path), bytes = await readFile(path);
+		const file = report.files.find(entry => entry.path === path);
+		const bytes = Buffer.from(beforeOwnedCallbackResults(path, await readFile(path)));
 		assert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 	assert.deepEqual(item.targets, item.mode === "ordinary" ? ["wit-wasi"] : ["wit-wasi", "c"]);

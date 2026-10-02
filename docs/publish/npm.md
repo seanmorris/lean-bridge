@@ -111,8 +111,29 @@ Packages with these declarations expose owned results as `LeanValue<T>`.
 Consumers use `get()`, `share()`, `retain()` and `dispose()` without importing a
 runtime or handling owner identifiers. The [consumer example](../javascript-typescript.md#borrowed-results-and-whole-value-owners)
 shows the lifetime rules and typed aggregate construction. Copied results keep
-their ordinary JavaScript representation. Callback-result anchors remain
-unsupported.
+their ordinary JavaScript representation. Returned functions can also declare
+their own argument-anchored results as described below.
+
+### Anchor a callback result
+
+Put a nested `callable.result` decision on the returned function or host-callback
+parameter. The [shared author configuration](c.md#anchor-a-callback-result-to-its-argument)
+shows the complete syntax. Argument numbering starts over inside each callback;
+the selected argument's original owner bounds that invocation's result.
+
+Consumers pass the selected argument as a whole `LeanValue<T>` and receive a
+whole owner for the borrowed result. Other borrowed callback arguments keep
+their usual input forms. Host callbacks may return a borrowed payload or a
+whole owner of the declared result type. The bridge converts that reply before
+expiring the host argument frame. The [consumer example](../javascript-typescript.md#borrowed-callback-results)
+shows disposal and independent retention.
+
+Callback-result lifetimes are independent of export-result anchors, receiver
+methods and consuming inputs. A combined C/npm build checks the same declared
+lifetimes against its native and wasm32 models. Selecting another consumer
+target that does not implement this capability rejects the build.
+Retained host callbacks, asynchronous invocation and callback input transfers
+remain unsupported.
 
 ### Export methods and properties
 

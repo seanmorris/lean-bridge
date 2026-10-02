@@ -14,10 +14,10 @@ const callbackCapability = carriers => ({ schemaVersion: 1
 	, signatures: carriers.hostCallbacks
 	, trampolineSha256: sha256(callbackSource(carriers)) });
 
-const inputTransferCapability = (ir, enabled, anchoredResults = false, receiverExports = false) => {
+const inputTransferCapability = (ir, enabled, anchoredResults = false, receiverExports = false, callbackResultAnchors = false) => {
 	if(!ir.declarations.some(item => item.receiver?.ownership === "transfer" || item.parameters.some(parameter => parameter.ownership === "transfer"))) return null;
 	if(!enabled) throw Object.assign(new TypeError("This native component requires an owned input-transfer consumer adapter"), { code: "native-owned-transfers-unavailable" });
-	const layout = compileOwnedNativeValueLayout(ir, { transferredInputs: true, anchoredResults, receiverExports });
+	const layout = compileOwnedNativeValueLayout(ir, { transferredInputs: true, anchoredResults, receiverExports, callbackResultAnchors });
 	return { schemaVersion: 1, ownership: "whole-result-owner"
 		, validation: "before-consumption", consumption: "before-lean-call"
 		, failure: "consumed-after-handoff", viewLifetime: "until-call-returns"
@@ -25,10 +25,10 @@ const inputTransferCapability = (ir, enabled, anchoredResults = false, receiverE
 			.map(item => ({ bindingId: item.id, parameters: item.transfers })) };
 };
 
-const anchoredResultCapability = (ir, enabled, transferredInputs, receiverExports = false) => {
+const anchoredResultCapability = (ir, enabled, transferredInputs, receiverExports = false, callbackResultAnchors = false) => {
 	if(!ir.declarations.some(item => item.result.ownership === "borrow")) return null;
 	if(!enabled) throw Object.assign(new TypeError("This native component requires an owner-anchored result consumer adapter"), { code: "native-owned-anchors-unavailable" });
-	const layout = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults: true, receiverExports });
+	const layout = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults: true, receiverExports, callbackResultAnchors });
 	const receiver = ir.declarations.some(item => item.receiver);
 	return { schemaVersion: receiver ? 2 : 1, ownership: "borrow"
 		, lifetime: receiver ? "receiver-or-parameter" : "parameter"
@@ -41,15 +41,28 @@ const anchoredResultCapability = (ir, enabled, transferredInputs, receiverExport
 					: { parameter: item.anchor - Number(item.receiver === 0) }) })) };
 };
 
-const receiverCapability = (ir, enabled, transferredInputs, anchoredResults) => {
+const receiverCapability = (ir, enabled, transferredInputs, anchoredResults, callbackResultAnchors = false) => {
 	if(!ir.declarations.some(item => item.receiver)) return null;
 	if(!enabled) throw Object.assign(new TypeError("This native component requires a receiver-capable consumer adapter"), { code: "native-owned-receivers-unavailable" });
-	compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports: true });
+	compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports: true, callbackResultAnchors });
 	return { schemaVersion: 1, callingConvention: "receiver-first"
 		, exports: ir.declarations.filter(item => item.receiver).map(item => ({
 			bindingId: item.id, kind: item.kind, owner: item.owner, argument: 0
 		}))
 	};
+};
+
+const callbackResultCapability = (ir, enabled, transferredInputs, anchoredResults, receiverExports) => {
+	if(!ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow")) return null;
+	if(!enabled) throw Object.assign(new TypeError("This native component requires a callback-result lifetime consumer adapter"), { code: "native-owned-callback-anchors-unavailable" });
+	const layout = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors: true });
+	return { schemaVersion: 1, ownership: "borrow", lifetime: "parameter"
+		, anchor: "original-argument-owner", expiration: "owner-release-or-transfer"
+		, descendants: "transitive", validation: "generation-and-owner-tree"
+		, independentOwnership: "explicit-retain-or-copy", maximumDepth: 128
+		, hostResultHandoff: "before-callback-frame-expires"
+		, signatures: layout.callbacks.filter(item => item.anchor !== undefined)
+			.map(item => ({ id: item.id, parameter: item.anchor - 1 })) };
 };
 
 /**
@@ -68,12 +81,15 @@ export const createOwnedCompiledNativeModel = options => {
 	if(typeof anchoredResults !== "boolean") throw new TypeError("Owned anchored result capability must be explicit");
 	const receivers = options.receiverExports ?? false;
 	if(typeof receivers !== "boolean") throw new TypeError("Owned receiver capability must be explicit");
+	const callbackResults = options.callbackResultAnchors === undefined ? false : options.callbackResultAnchors;
+	if(typeof callbackResults !== "boolean") throw new TypeError("Owned callback result anchor capability must be explicit");
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, ownedGraphs: true });
 	const carriers = generateOwnedAggregateCarriers(options);
-	const receiverExports = receiverCapability(carriers.model.bindingIr, receivers, transferredInputs, anchoredResults);
-	const resultAnchors = anchoredResultCapability(carriers.model.bindingIr, anchoredResults, transferredInputs, receivers);
-	const inputTransfers = inputTransferCapability(carriers.model.bindingIr, transferredInputs, anchoredResults, receivers);
-	return Object.freeze({ schemaVersion: receiverExports ? 10 : resultAnchors ? 9 : inputTransfers ? 8 : hostCallbacks ? 7 : 6
+	const callbackResultAnchors = callbackResultCapability(carriers.model.bindingIr, callbackResults, transferredInputs, anchoredResults, receivers);
+	const receiverExports = receiverCapability(carriers.model.bindingIr, receivers, transferredInputs, anchoredResults, callbackResults);
+	const resultAnchors = anchoredResultCapability(carriers.model.bindingIr, anchoredResults, transferredInputs, receivers, callbackResults);
+	const inputTransfers = inputTransferCapability(carriers.model.bindingIr, transferredInputs, anchoredResults, receivers, callbackResults);
+	return Object.freeze({ schemaVersion: callbackResultAnchors ? 11 : receiverExports ? 10 : resultAnchors ? 9 : inputTransfers ? 8 : hostCallbacks ? 7 : 6
 		, profile: "native-library-v1"
 		, pointerBits: 64, byteOrder: "little", component
 		, bindingIr: carriers.model.bindingIr
@@ -85,12 +101,13 @@ export const createOwnedCompiledNativeModel = options => {
 			if(!declaration) throw new TypeError("Owned native export lacks a compiler-selected declaration");
 			return { ...item, bindingId: declaration.id, symbol: carriers.symbols.exports[declaration.id] };
 		})
-		, ownedGraph: { schemaVersion: receiverExports ? 5 : resultAnchors ? 4 : inputTransfers ? 3 : hostCallbacks ? 2 : 1
+		, ownedGraph: { schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : resultAnchors ? 4 : inputTransfers ? 3 : hostCallbacks ? 2 : 1
 			, module: carriers.module
 			, metadataSha256: elaborated.sha256, symbols: carriers.symbols
 			, ...(inputTransfers ? { inputTransfers } : {})
 			, ...(resultAnchors ? { resultAnchors } : {})
 			, ...(receiverExports ? { receiverExports } : {})
+			, ...(callbackResultAnchors ? { callbackResultAnchors } : {})
 			, ...(hostCallbacks ? { hostCallbacks: callbackCapability(carriers) } : {}) } });
 };
 
@@ -100,23 +117,29 @@ export const createOwnedCompiledNativeModel = options => {
  * @param model - Independently authenticated native model, never a copied graph.
  */
 export const generateOwnedNativeLeanAdapters = model => {
-	const receivers = model.schemaVersion === 10;
-	const anchoredResults = model.schemaVersion === 9 || (receivers && model.ownedGraph?.resultAnchors !== undefined);
-	const transferredInputs = model.schemaVersion === 8 || ((receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);
-	const hostCallbacks = model.schemaVersion === 7 || ((receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);
-	if(![6, 7, 8, 9, 10].includes(model.schemaVersion) || model.profile !== "native-library-v1"
-		|| model.pointerBits !== 64 || model.byteOrder !== "little" || model.ownedGraph?.schemaVersion !== (receivers ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)
+	const callbackResults = model.schemaVersion === 11;
+	const receivers = model.schemaVersion === 10 || (callbackResults && model.ownedGraph?.receiverExports !== undefined);
+	const anchoredResults = model.schemaVersion === 9 || ((callbackResults || receivers) && model.ownedGraph?.resultAnchors !== undefined);
+	const transferredInputs = model.schemaVersion === 8 || ((callbackResults || receivers || anchoredResults) && model.ownedGraph?.inputTransfers !== undefined);
+	const hostCallbacks = model.schemaVersion === 7 || ((callbackResults || receivers || transferredInputs || anchoredResults) && model.ownedGraph?.hostCallbacks !== undefined);
+	if(![6, 7, 8, 9, 10, 11].includes(model.schemaVersion) || model.profile !== "native-library-v1"
+		|| model.pointerBits !== 64 || model.byteOrder !== "little" || model.ownedGraph?.schemaVersion !== (callbackResults ? 6 : receivers ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : hostCallbacks ? 2 : 1)
+		|| (!callbackResults && model.ownedGraph.callbackResultAnchors !== undefined)
 		|| (!hostCallbacks && model.ownedGraph.hostCallbacks !== undefined))
 		throw new TypeError("Owned native component differs from the supported transport");
-	const receiverExports = receiverCapability(model.bindingIr, receivers, transferredInputs, anchoredResults);
+	const callbackResultAnchors = callbackResultCapability(model.bindingIr, callbackResults, transferredInputs, anchoredResults, receivers);
+	if(Boolean(callbackResultAnchors) !== callbackResults
+		|| canonicalJson(callbackResultAnchors) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null))
+		throw new TypeError("Owned native callback result anchors differ from the checked contract");
+	const receiverExports = receiverCapability(model.bindingIr, receivers, transferredInputs, anchoredResults, callbackResults);
 	if(Boolean(receiverExports) !== receivers
 		|| canonicalJson(receiverExports) !== canonicalJson(model.ownedGraph.receiverExports ?? null))
 		throw new TypeError("Owned native receiver exports differ from the checked contract");
-	const resultAnchors = anchoredResultCapability(model.bindingIr, anchoredResults, transferredInputs, receivers);
+	const resultAnchors = anchoredResultCapability(model.bindingIr, anchoredResults, transferredInputs, receivers, callbackResults);
 	if(Boolean(resultAnchors) !== anchoredResults
 		|| canonicalJson(resultAnchors) !== canonicalJson(model.ownedGraph.resultAnchors ?? null))
 		throw new TypeError("Owned native result anchors differ from the checked contract");
-	const inputTransfers = inputTransferCapability(model.bindingIr, transferredInputs, anchoredResults, receivers);
+	const inputTransfers = inputTransferCapability(model.bindingIr, transferredInputs, anchoredResults, receivers, callbackResults);
 	if(Boolean(inputTransfers) !== transferredInputs
 		|| canonicalJson(inputTransfers) !== canonicalJson(model.ownedGraph.inputTransfers ?? null))
 		throw new TypeError("Owned native input transfers differ from the checked contract");

@@ -22,11 +22,13 @@ import { createOwnedJavaScriptWasmModel, generateOwnedJavaScriptWasmLeanAdapters
  */
 export const generateCompiledJavaScriptWasmOwned = (model, metadata, adapters) => {
 	const anchoredResults = Boolean(model.ownedGraph?.resultAnchors);
-	const receiverExports = Boolean(model.ownedGraph?.receiverExports), wholeOwners = anchoredResults || receiverExports;
+	const callbackResultAnchors = Boolean(model.ownedGraph?.callbackResultAnchors);
+	const receiverExports = Boolean(model.ownedGraph?.receiverExports), wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
 	const hostCallbacks = Boolean(model.ownedGraph?.hostCallbacks), transferredInputs = Boolean(model.ownedGraph?.inputTransfers);
 	const inputs = { metadata, sourceIdentity: model.sourceIdentity
 		, component: model.component
-		, anchoredResults, receiverExports, hostCallbacks, transferredInputs };
+		, anchoredResults, receiverExports, hostCallbacks, transferredInputs
+		, callbackResultAnchors };
 	if(canonicalJson(createOwnedJavaScriptWasmModel(inputs)) !== canonicalJson(model)
 		|| canonicalJson(generateOwnedJavaScriptWasmLeanAdapters(model)) !== canonicalJson(adapters))
 		throw new TypeError("JavaScript ownership sources differ from compiler inputs");
@@ -48,11 +50,12 @@ export const generateCompiledJavaScriptWasmOwned = (model, metadata, adapters) =
 		, metadataHash: component.metadataHash
 		, sources: [...hostCallbacks ? ["owned/callbacks.c"] : [], "owned/component.c"]
 		, allocationGuard: "owned/allocation-guard.h"
-		, receipt: { schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
+		, receipt: { schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 			, transport: "owned-wasm32-control-v1"
 			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
 			, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
 			, ...receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
+			, ...callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {}
 			, layoutSha256: model.ownedGraph.layoutSha256
 			, metadataHash: component.metadataHash
 			, files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) } };

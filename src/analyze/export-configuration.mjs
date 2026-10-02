@@ -95,11 +95,12 @@ export const validateExportConfiguration = configuration => {
 				fail("invalid-export-configuration", `Contract ${name} has invalid or duplicate effects`);
 			if(contract.parameters !== undefined && (!Array.isArray(contract.parameters) || contract.parameters.length > 1024))
 				fail("invalid-export-configuration", `Contract ${name} requires an ordered array of at most 1024 parameter sites`);
-			const sites = [...(contract.parameters ?? [])];
-			if(contract.result !== undefined) sites.push(contract.result);
-			for(const site of sites)
+			const sites = (contract.parameters ?? []).map(site => ({ site, parameters: contract.parameters, depth: 0 }));
+			if(contract.result !== undefined) sites.push({ site: contract.result, parameters: contract.parameters, depth: 0 });
+			for(let cursor = 0; cursor < sites.length; ++cursor)
 			{
-				closed(site, ["ownership", "lifetime", "refinement"], `Contract ${name} site`);
+				const { site, parameters, depth } = sites[cursor];
+				closed(site, ["ownership", "lifetime", "refinement", "callable"], `Contract ${name} site`);
 				if(!["copy", "borrow", "lease", "transfer"].includes(site.ownership) || site.lifetime === undefined)
 					fail("invalid-export-configuration", `Contract ${name} sites require ownership and lifetime`);
 				if(site.ownership === "copy")
@@ -114,7 +115,7 @@ export const validateExportConfiguration = configuration => {
 						|| (scope === "parameter" ? typeof anchor !== "string" || !/^arg(?:0|[1-9][0-9]*)$(?![\s\S])/.test(anchor)
 							: anchor !== (scope === "receiver" ? "receiver" : null)))
 						fail("invalid-export-configuration", `Contract ${name} has an invalid lifetime or parameter anchor`);
-					if(scope === "parameter" && contract.parameters && Number(anchor.slice(3)) >= contract.parameters.length)
+					if(scope === "parameter" && parameters && Number(anchor.slice(3)) >= parameters.length)
 						fail("invalid-export-configuration", `Contract ${name} lifetime anchor is outside its parameters`);
 				}
 				if(site.refinement !== undefined && site.refinement !== "reject")
@@ -122,6 +123,17 @@ export const validateExportConfiguration = configuration => {
 					closed(site.refinement, ["constructor"], `Contract ${name} checked refinement`);
 					if(typeof site.refinement.constructor !== "string" || !specializationName.test(site.refinement.constructor))
 						fail("invalid-export-configuration", `Contract ${name} refinement needs a checked constructor name`);
+				}
+				if(site.callable !== undefined)
+				{
+					closed(site.callable, ["parameters", "result"], `Contract ${name} callable`);
+					if(!Object.keys(site.callable).length || depth >= 32)
+						fail("invalid-export-configuration", `Contract ${name} requires a callable decision within 32 nested signatures`);
+					const { parameters, result } = site.callable;
+					if(parameters !== undefined && (!Array.isArray(parameters) || parameters.length > 16))
+						fail("invalid-export-configuration", `Contract ${name} callable requires at most 16 ordered parameter sites`);
+					for(const site of parameters ?? []) sites.push({ site, parameters, depth: depth + 1 });
+					if(result !== undefined) sites.push({ site: result, parameters, depth: depth + 1 });
 				}
 			}
 		}
@@ -306,6 +318,17 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 	for(const { site, type, result, label } of sites)
 	{
 		if(site.refinement !== undefined && site.refinement !== "reject") return `${label}: checked refinement constructors are not implemented by this profile`;
+		if(site.callable !== undefined)
+		{
+			if(type.kind !== "callback") return `${label}: callable decisions require a compiler-checked callback type`;
+			if(site.callable.parameters?.some(value => value.ownership === "transfer"))
+				return `${label}: callback inputs require call-scoped borrows or copied values`;
+			const problem = exportContractProblem(site.callable, {
+				status: "supported", parameters: type.parameters.map(type => ({ type }))
+				, result: type.result
+			}, ownedAggregates);
+			if(problem) return `${label}.callable: ${problem}`;
+		}
 		if(ownedAggregates && !result && site.ownership === "transfer"
 			&& exportContractOwnership(type).ownership !== "copy"
 			&& ["call", "explicit"].includes(site.lifetime?.scope) && site.lifetime.anchor === null) continue;

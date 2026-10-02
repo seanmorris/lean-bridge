@@ -525,7 +525,7 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String)
     return some s!"{label}: ownership or lifetime differs from the implemented adapter"
   return none
 
-def contractProblem (contract projection : Json) (owned : Bool := false) : Option String := Id.run do
+partial def contractProblem (contract projection : Json) (owned : Bool := false) : Option String := Id.run do
   let parameters := (projection.getObjValAs? (Array Json) "parameters").toOption.getD #[]
   let receiverKind := (contract.getObjValAs? String "receiver").toOption
   if let some kind := receiverKind then
@@ -583,6 +583,25 @@ def contractProblem (contract projection : Json) (owned : Bool := false) : Optio
             return some "result: borrowed results cannot use a transferred input as their anchor"
       else
         return some "result: borrowed results require a retained identity or aggregate anchor"
+  let mut sites : Array (Json × Json × String) := #[]
+  if let .ok choices := contract.getObjValAs? (Array Json) "parameters" then
+    for index in [:choices.size] do
+      sites := sites.push (choices[index]!, (parameters[index]!.getObjVal? "type").toOption.getD Json.null, s!"arg{index}")
+  if let .ok site := contract.getObjVal? "result" then
+    sites := sites.push (site, (projection.getObjVal? "result").toOption.getD Json.null, "result")
+  for (site, type, label) in sites do
+    if let .ok choice := site.getObjVal? "callable" then
+      if (type.getObjValAs? String "kind").toOption != some "callback" then
+        return some s!"{label}: callable decisions require a compiler-checked callback type"
+      let choices := (choice.getObjValAs? (Array Json) "parameters").toOption.getD #[]
+      if choices.any (fun value => (value.getObjValAs? String "ownership").toOption == some "transfer") then
+        return some s!"{label}: callback inputs require call-scoped borrows or copied values"
+      let arguments := (type.getObjValAs? (Array Json) "parameters").toOption.getD #[]
+      let nested := obj [("status", str "supported"),
+        ("parameters", toJson (arguments.map fun type => obj [("type", type)])),
+        ("result", (type.getObjVal? "result").toOption.getD Json.null)]
+      if let some problem := contractProblem choice nested owned then
+        return some s!"{label}.callable: {problem}"
   return none
 
 def constrainProjection (request : Request) (name : String) (projection : Json) : Json := Id.run do

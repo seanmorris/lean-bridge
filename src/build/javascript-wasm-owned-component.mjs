@@ -55,6 +55,7 @@ export const buildOwnedJavaScriptWasmComponent = async options => {
 			, hostCallbacks: options.hostCallbacks ?? true
 			, transferredInputs: options.transferredInputs ?? true
 			, anchoredResults: options.anchoredResults ?? true
+			, callbackResultAnchors: options.callbackResultAnchors === undefined ? true : options.callbackResultAnchors
 			, receiverExports: options.receiverExports ?? true })
 		, createAdapters: generateOwnedJavaScriptWasmLeanAdapters
 		, validateModel: model => { compileOwnedJavaScriptPackageModel(model.bindingIr); options.validateModel?.(model); }

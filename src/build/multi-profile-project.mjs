@@ -178,7 +178,8 @@ export const buildMultiProfileProject = async ({
 				, component: nativeModel.component, moduleName: nativeModel.moduleName
 				, sourceIdentity: nativeReceipt.sourceIdentity }, { ownedGraphs
 				, ownedHostCallbacks: ownedGraphs, ownedInputTransfers: ownedGraphs
-				, ownedAnchoredResults: ownedGraphs, ownedReceiverExports: ownedGraphs });
+				, ownedAnchoredResults: ownedGraphs, ownedReceiverExports: ownedGraphs
+				, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => target === "c") });
 			if(canonicalJson(reconstructed) !== canonicalJson(nativeModel) || sha256(canonicalJson(nativeModel)) !== nativeReceipt.modelSha256) fail("Native model changed after compilation");
 			models.push(nativeModel);
 		}

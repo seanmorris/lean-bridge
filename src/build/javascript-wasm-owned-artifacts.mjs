@@ -77,6 +77,7 @@ export const readVerifiedOwnedJavaScriptWasmComponent = async root => {
 		, hostCallbacks: Boolean(model.ownedGraph?.hostCallbacks)
 		, transferredInputs: Boolean(model.ownedGraph?.inputTransfers)
 		, anchoredResults: Boolean(model.ownedGraph?.resultAnchors)
+		, callbackResultAnchors: Boolean(model.ownedGraph?.callbackResultAnchors)
 		, receiverExports: Boolean(model.ownedGraph?.receiverExports) });
 	const adapters = generateOwnedJavaScriptWasmLeanAdapters(reconstructed);
 	const generated = generateCompiledJavaScriptWasmOwned(reconstructed, metadata, adapters);

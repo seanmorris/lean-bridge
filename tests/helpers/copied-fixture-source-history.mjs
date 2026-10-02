@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedCallbackResults, ownedCallbackResultChangedPaths } from "./owned-callback-result-history.mjs";
 
 export const copiedFixtureReaderHistoryPath = "docs/evidence/copied-fixture-reader-repair-20261002.json";
 export const copiedFixtureReaderHistorySha256 = "767d1d2958676ed9018e7a690a96f49be5c709494aa8316b9dc7d09401601dee";
@@ -22,7 +23,10 @@ const readHistory = () => {
 	}
 	return history;
 };
-export const copiedFixtureReaderPaths = Object.freeze(readHistory().updates.map(update => update.path));
+export const copiedFixtureReaderPaths = Object.freeze([...new Set([
+	...readHistory().updates.map(update => update.path)
+	, ...ownedCallbackResultChangedPaths
+])].sort());
 
 /**
  * Reverse reviewed reader edits only when both complete source identities match.
@@ -56,6 +60,7 @@ export const reverseCopiedFixtureReaderUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeCopiedFixtureReaders = (path, source, expected) => {
+	source = beforeOwnedCallbackResults(path, source, expected);
 	const update = readHistory().updates.find(entry => entry.path === path);
 	if(!update) return source;
 	const digest = sha256(source);
