@@ -21,6 +21,7 @@ import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReview
 import { ownedDotnetCallbackInstalledProbe, rejectOwnedDotnetCallbackConsumers
 	, checkOwnedDotnetCallbackDocumentation } from "./helpers/owned-dotnet-callback-result-installed.mjs";
 import { ownedDotnetRuntimeOnly } from "./helpers/owned-dotnet-installed.mjs";
+import { prepareOwnedDotnetCallbackInstalledProcess, runOwnedDotnetCallbackInstalledProcess } from "./helpers/owned-dotnet-callback-result-installed-process.mjs";
 import { ownedDotnetBorrowProject } from "./helpers/owned-dotnet-borrow-installed.mjs";
 import { rejectOwnedDotnetCallbackContracts } from "./helpers/owned-dotnet-callback-result-authenticity.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
@@ -142,6 +143,7 @@ test(`installed NuGet callback-result owners (${mode}, ${combined ? "combined" :
 		, model: verified.projection, hostCallbacks: combined };
 	const invalidConsumers = await rejectOwnedDotnetCallbackConsumers(consumerOptions);
 	const documentation = await checkOwnedDotnetCallbackDocumentation(consumerOptions);
+	const installedProcess = await prepareOwnedDotnetCallbackInstalledProcess({ ...consumerOptions, combined });
 	const library = join(consumer, "out/runtimes/linux-x64/native", adapter.library);
 	const libraryBytes = await readFile(library), corrupt = Buffer.from(libraryBytes); corrupt[0] ^= 1;
 	await saveLakeFile(dirname(library), adapter.library, corrupt);
@@ -154,11 +156,16 @@ test(`installed NuGet callback-result owners (${mode}, ${combined ? "combined" :
 	{ await rm(path, { recursive: true }); await assert.rejects(access(path), { code: "ENOENT" }); }
 	await rename(join(consumer, "out"), join(consumer, "relocated"));
 	await rename(join(consumer, "examples"), join(consumer, "relocated-examples"));
-	for(const name of ["Program.cs", "Consumer.csproj", "NuGet.Config", "Invalid.cs", "Invalid.csproj", "Example.cs", "Example.csproj"])
+	await rename(join(consumer, "process"), join(consumer, "relocated-process"));
+	for(const name of ["Program.cs", "Consumer.csproj", "NuGet.Config", "Invalid.cs", "Invalid.csproj", "Example.cs", "Example.csproj", "Process.cs", "Process.csproj", "process-fork.c"])
 	{ await rm(join(consumer, name)); await assert.rejects(access(join(consumer, name)), { code: "ENOENT" }); }
 	const runtime = await ownedDotnetRuntimeOnly(join(directory, "runtime-only"), command);
 	const moved = await runCopied(runtime.executable, ["relocated/Consumer.dll"], consumer, runtime.env);
 	assert.deepEqual(moved, result);
+	const relocatedProcess = await runOwnedDotnetCallbackInstalledProcess({
+		consumer, command: runtime.executable, env: runtime.env, combined
+		, output: "relocated-process" });
+	assert.deepEqual(relocatedProcess, installedProcess.observations);
 	const relocatedDocumentation = [];
 	for(const { name, sourceSha256, ...expected } of documentation.observed)
 	{
@@ -179,6 +186,7 @@ test(`installed NuGet callback-result owners (${mode}, ${combined ? "combined" :
 		, loaderRejected: ["changed-library", "symlink-library"]
 		, consumerSha256: sha256(source), observation
 		, invalidConsumers, documentation, relocatedDocumentation
+		, installedProcess, relocatedProcess
 		, relocatedObservation: JSON.parse(moved.stdout), manifest
 		, input: { metadata, sourceIdentity: model.sourceIdentity, component: model.component }
 		, componentReceipt: receipt, adapterReceipt: adapter

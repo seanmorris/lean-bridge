@@ -525,6 +525,7 @@ const profileManifest = Object.freeze({
 		, "owned-dotnet-callback-sanitizers"
 		, "owned-dotnet-callback-process"
 		, "owned-dotnet-callback-runtime-evidence"
+		, "owned-dotnet-callback-package-evidence"
 		, "owned-dotnet-receivers", "owned-dotnet-receiver-packaging"
 		, "owned-dotnet-receiver-plain"
 		, "owned-dotnet-callback-signatures", "owned-dotnet-package"

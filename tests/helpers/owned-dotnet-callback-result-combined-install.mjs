@@ -14,6 +14,7 @@ import { ownedDotnetCallbackInstalledProbe, checkOwnedDotnetCallbackDocumentatio
 	, rejectOwnedDotnetCallbackConsumers } from "./owned-dotnet-callback-result-installed.mjs";
 import { ownedDotnetBorrowProject } from "./owned-dotnet-borrow-installed.mjs";
 import { ownedDotnetRuntimeOnly } from "./owned-dotnet-installed.mjs";
+import { prepareOwnedDotnetCallbackInstalledProcess, runOwnedDotnetCallbackInstalledProcess } from "./owned-dotnet-callback-result-installed-process.mjs";
 
 /**
  * Build public consumers from the archive, then defer SDK-free relocation.
@@ -54,8 +55,10 @@ export const installOwnedDotnetCallbackCombined = async options => {
 		, model: verified.projection, hostCallbacks: true };
 	const invalidConsumers = await rejectOwnedDotnetCallbackConsumers(consumerOptions);
 	const documentation = await checkOwnedDotnetCallbackDocumentation(consumerOptions);
+	const installedProcess = await prepareOwnedDotnetCallbackInstalledProcess({ ...consumerOptions, combined: true });
 	const report = { manifest, observation, checks: observation.checks
 		, consumerSha256: sha256(source), invalidConsumers, documentation
+		, installedProcess
 		, adapterReceipt: verified.adapter, compiledProjection: compiled
 		, sourceFreeInstallation: true, cliRemovedBeforeConsumerInstall: true
 		, offlineInstall: true };
@@ -63,20 +66,25 @@ export const installOwnedDotnetCallbackCombined = async options => {
 		await assert.rejects(access(handoff), { code: "ENOENT" });
 		for(const name of ["feed", "packages", "obj"])
 		{ await rm(join(root, name), { recursive: true }); await assert.rejects(access(join(root, name)), { code: "ENOENT" }); }
-		for(const name of ["Program.cs", "Consumer.csproj", "NuGet.Config", "Example.cs", "Example.csproj", "Invalid.cs", "Invalid.csproj"])
+		for(const name of ["Program.cs", "Consumer.csproj", "NuGet.Config", "Example.cs", "Example.csproj", "Invalid.cs", "Invalid.csproj", "Process.cs", "Process.csproj", "process-fork.c"])
 		{ await rm(join(root, name)); await assert.rejects(access(join(root, name)), { code: "ENOENT" }); }
 		await rename(join(root, "out"), join(root, "relocated"));
 		await rename(join(root, "examples"), join(root, "relocated-examples"));
+		await rename(join(root, "process"), join(root, "relocated-process"));
 		const runtime = await ownedDotnetRuntimeOnly(join(root, "runtime-only"), command);
 		const moved = await runCopied(runtime.executable, ["relocated/Consumer.dll"], root, runtime.env);
 		assert.deepEqual(moved, executed);
+		const relocatedProcess = await runOwnedDotnetCallbackInstalledProcess({
+			consumer: root, command: runtime.executable, env: runtime.env
+			, combined: true, output: "relocated-process" });
+		assert.deepEqual(relocatedProcess, installedProcess.observations);
 		for(const { name, code, stdout, stderr } of documentation.observed)
 			assert.deepEqual(await runCopied(runtime.executable, [`relocated-examples/${name}/Example.dll`], root, runtime.env), { code, stdout, stderr });
 		Object.assign(report, { relocatedChecks: observation.checks
 			, sourceFreeRelocatedExecution: true, consumerSourceRemoved: true
 			, handoffRemovedBeforeRelocatedExecution: true
 			, packageCacheRemoved: true, sdkFreeExecution: true
-			, relocatedDocumentation: documentation.observed });
+			, relocatedDocumentation: documentation.observed, relocatedProcess });
 	};
 	return { report, relocate };
 };
