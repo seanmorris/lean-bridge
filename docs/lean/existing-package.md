@@ -195,7 +195,7 @@ and the [C++](../publish/cpp.md#export-methods-and-properties),
 [native PHP and PHP-Wasm](../publish/php.md#export-methods-and-properties) and
 [JavaScript/TypeScript member APIs](../publish/npm.md#export-methods-and-properties).
 WIT/WASI exposes [typed functions with the receiver first](../publish/wit-wasi.md#export-methods-and-properties), preserving the member kind, owner and original parameter anchors.
-C, C++, Rust, Python, Ruby and npm also accept [callback-result anchors](../publish/c.md#anchor-a-callback-result-to-its-argument).
+C, C++, Rust, Python, Ruby, C# and npm also accept [callback-result anchors](../publish/c.md#anchor-a-callback-result-to-its-argument).
 Configure them inside `callable.result`; argument names are local to that
 callback, and the selected argument's original owner controls expiration.
 Python's [publisher guide](../publish/pypi.md#anchor-a-callback-result-to-its-argument)
@@ -203,6 +203,8 @@ shows the nested contract and its checked `Value[T]` consumer argument.
 Ruby uses the same contract with a checked `Value`; its
 [publisher guide](../publish/rubygems.md#anchor-a-callback-result-to-its-argument)
 also describes thread exit and host reply conversion.
+C# uses a checked `Value<T>` argument and typed `CallbackResult<T>` host replies;
+see the [NuGet guide](../publish/nuget.md#anchor-a-callback-result-to-its-argument).
 Other callback-result targets, `{ "constructor": "Library.checked" }` and additional effect labels still
 require their [type-family implementation](../architecture/cross-language-authoring.md#stages).
 

@@ -96,6 +96,7 @@ const profileManifest = Object.freeze({
 		, "owned-python-evidence", "owned-python-package"
 		, "owned-ruby-conversion-evidence", "owned-ruby-evidence"
 		, "owned-dotnet-callback-evidence", "owned-dotnet-loading-evidence"
+		, "owned-dotnet-callback-result-history"
 		, "owned-dotnet-evidence", "owned-dotnet-process-evidence"
 		, "owned-jvm-runtime-evidence", "owned-jvm-conversion-evidence"
 		, "owned-jvm-call-evidence", "owned-jvm-ci", "owned-jvm-package-evidence"

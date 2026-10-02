@@ -2883,7 +2883,9 @@ jobs:
   wasi-consumer:
     name: WIT and WASI Component Model
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    # Copied, recursive, owned and original-owner installed-package gates
+    # share this job. The full sequence exceeds two hours on hosted runners.
+    timeout-minutes: 240
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6

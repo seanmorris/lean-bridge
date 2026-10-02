@@ -18,9 +18,11 @@ import { prepareOwnedReceiverCli } from "./helpers/owned-receiver-cli.mjs";
 import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReviewedIr
 	, ownedDotnetCallbackResultSource, ownedDotnetCallbackResultCombinedConfiguration
 	, ownedDotnetCallbackResultCombinedReviewedIr, ownedDotnetCallbackResultCombinedSource } from "./helpers/owned-dotnet-callback-result-fixture.mjs";
-import { ownedDotnetCallbackInstalledProbe } from "./helpers/owned-dotnet-callback-result-installed.mjs";
+import { ownedDotnetCallbackInstalledProbe, rejectOwnedDotnetCallbackConsumers
+	, checkOwnedDotnetCallbackDocumentation } from "./helpers/owned-dotnet-callback-result-installed.mjs";
 import { ownedDotnetRuntimeOnly } from "./helpers/owned-dotnet-installed.mjs";
 import { ownedDotnetBorrowProject } from "./helpers/owned-dotnet-borrow-installed.mjs";
+import { rejectOwnedDotnetCallbackContracts } from "./helpers/owned-dotnet-callback-result-authenticity.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -98,18 +100,7 @@ test(`installed NuGet callback-result owners (${mode}, ${combined ? "combined" :
 	assert.deepEqual(secondProjection.packages, projection.packages);
 	assert.deepEqual(await readFile(join(independent, "archives", projection.packages[0].archive)), original);
 	await rm(independent, { recursive: true });
-	const rejected = [];
-	for(const section of ["ownedValues", "dotnetValues"])
-		for(const field of Object.keys(adapter[section].callbackResultAnchors))
-		{
-			const changed = structuredClone(adapter); changed[section].callbackResultAnchors[field] = "forged";
-			await saveLakeFile(adapterRoot, "native-dotnet-adapter.json", canonicalJson(changed));
-			try
-			{ await assert.rejects(packageOwnedNuget({ ...packageOptions, working: join(directory, `forged-${rejected.length}`) }), /compiler-authenticated/u); }
-			finally
-			{ await saveLakeFile(adapterRoot, "native-dotnet-adapter.json", canonicalJson(adapter)); }
-			rejected.push(`${section}.${field}`);
-		}
+	const rejected = await rejectOwnedDotnetCallbackContracts({ adapter, compiled, packageOptions, directory });
 	const apiPath = `src/${verified.projection.assembly}/Api.cs`;
 	const originalApi = await readFile(join(dotnetRoot, apiPath));
 	const changedApi = Buffer.concat([originalApi, Buffer.from("\n// changed callback ownership API\n")]);
@@ -147,6 +138,10 @@ test(`installed NuGet callback-result owners (${mode}, ${combined ? "combined" :
 	const result = await runCopied(command, ["out/Consumer.dll"], consumer, env);
 	assert.equal(result.stderr, ""); const observation = JSON.parse(result.stdout);
 	assert.equal(observation.safePublicApi, true); assert.ok(observation.checks > 20);
+	const consumerOptions = { consumer, pkg, command, env
+		, model: verified.projection, hostCallbacks: combined };
+	const invalidConsumers = await rejectOwnedDotnetCallbackConsumers(consumerOptions);
+	const documentation = await checkOwnedDotnetCallbackDocumentation(consumerOptions);
 	const library = join(consumer, "out/runtimes/linux-x64/native", adapter.library);
 	const libraryBytes = await readFile(library), corrupt = Buffer.from(libraryBytes); corrupt[0] ^= 1;
 	await saveLakeFile(dirname(library), adapter.library, corrupt);
@@ -158,10 +153,19 @@ test(`installed NuGet callback-result owners (${mode}, ${combined ? "combined" :
 	for(const path of [handoff, join(consumer, "feed"), join(consumer, "packages"), join(consumer, "obj")])
 	{ await rm(path, { recursive: true }); await assert.rejects(access(path), { code: "ENOENT" }); }
 	await rename(join(consumer, "out"), join(consumer, "relocated"));
-	for(const name of ["Program.cs", "Consumer.csproj", "NuGet.Config"]) await rm(join(consumer, name));
+	await rename(join(consumer, "examples"), join(consumer, "relocated-examples"));
+	for(const name of ["Program.cs", "Consumer.csproj", "NuGet.Config", "Invalid.cs", "Invalid.csproj", "Example.cs", "Example.csproj"])
+	{ await rm(join(consumer, name)); await assert.rejects(access(join(consumer, name)), { code: "ENOENT" }); }
 	const runtime = await ownedDotnetRuntimeOnly(join(directory, "runtime-only"), command);
 	const moved = await runCopied(runtime.executable, ["relocated/Consumer.dll"], consumer, runtime.env);
 	assert.deepEqual(moved, result);
+	const relocatedDocumentation = [];
+	for(const { name, sourceSha256, ...expected } of documentation.observed)
+	{
+		const actual = await runCopied(runtime.executable, [`relocated-examples/${name}/Example.dll`], consumer, runtime.env);
+		assert.deepEqual(actual, expected);
+		relocatedDocumentation.push({ name, sourceSha256, ...actual });
+	}
 	await saveLakeFile("build/owned-dotnet-callback-results", `${mode}-${combined ? "combined" : "no-host"}-package.json`, canonicalJson({
 		schemaVersion: 1, planNode: 1219, mode, combined, compiledLean: true
 		, installedPackage: true, installedNuget: true, sourceUnchanged: true
@@ -174,6 +178,7 @@ test(`installed NuGet callback-result owners (${mode}, ${combined ? "combined" :
 		, tamperRejected: rejected, incapableReadersRejected: incapable
 		, loaderRejected: ["changed-library", "symlink-library"]
 		, consumerSha256: sha256(source), observation
+		, invalidConsumers, documentation, relocatedDocumentation
 		, relocatedObservation: JSON.parse(moved.stdout), manifest
 		, input: { metadata, sourceIdentity: model.sourceIdentity, component: model.component }
 		, componentReceipt: receipt, adapterReceipt: adapter

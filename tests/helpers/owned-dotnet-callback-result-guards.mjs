@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { ownedDotnetReceiverProject } from "./owned-dotnet-receiver-fixture.mjs";
+import { ownedDotnetCallbackInvalidPrograms } from "./owned-dotnet-callback-result-installed.mjs";
 
 /**
  * Verify C# rejects incompatible owner types and catches removed runtime guards.
@@ -28,21 +29,7 @@ export const checkOwnedDotnetCallbackResultGuards = async (compiled, probe, base
 		catch(error)
 		{ throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); }
 	};
-	const record = compiled.model.functions.find(fn => fn.name === "callbackRecord");
-	const callback = compiled.model.callbacks.find(fn => fn.id === record.parameters[1]);
-	const native = callback.publicType, delegate = callback.delegateType;
-	const invalid = [
-		["raw-anchor", `void Invalid(${native} closure, Bundle value) { closure.Invoke(value); }`, /CS1503/u]
-		, ["wrong-whole-owner", `void Invalid(${native} closure, Value<Tree> value) { closure.Invoke(value); }`, /CS1503/u]
-		, ["missing-owner-argument", `void Invalid(${native} closure) { closure.Invoke(); }`, /CS7036/u]
-		, ["native-is-not-raw-delegate", `void Invalid(${native} closure) { ${delegate} callback = closure.AsCallback; _ = callback; }`, /CS0029/u]
-		, ...hostCallbacks ? [
-			["host-input-is-raw", `${delegate} Invalid() => (Value<Bundle> value) => value;`, /CS1661|CS1678/u]
-			, ["wrong-host-result", `${delegate} Invalid() => value => 42;`, /CS0029|CS1662/u]
-			, ["wrong-whole-reply", "CallbackResult<Tree> Invalid(Value<Bundle> value) => value;", /CS0029/u]
-			, ["async-host-callback", `${delegate} Invalid() => async value => { await System.Threading.Tasks.Task.Yield(); return value; };`, /CS4010/u]
-		] : []
-	];
+	const invalid = ownedDotnetCallbackInvalidPrograms(compiled.model, hostCallbacks);
 	const rejected = [];
 	for(const [name, statement, diagnostic] of invalid)
 	{

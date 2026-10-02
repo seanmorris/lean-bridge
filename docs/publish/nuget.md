@@ -330,7 +330,8 @@ for disposal and declaration-selected copy factories.
 
 Combined anchored builds can select C, C++, Cargo, PyPI, RubyGems and NuGet.
 C# retains its private thread-exit adapter and GMP while sharing the compiled
-Lean component and runtime. Callback-result anchors remain separate work.
+Lean component and runtime. [Callback-result anchors](#anchor-a-callback-result-to-its-argument)
+use their own nested contracts.
 Building the archive does not publish it.
 
 ### Export methods and properties
@@ -374,6 +375,55 @@ A receiver-enabled build can select C, C++, Cargo, PyPI, RubyGems and NuGet
 together. Each package shares the compiled Lean component and compatible
 runtime. The C# package also includes its private GMP library and thread-exit
 cleanup adapter. Building the archive does not publish it.
+
+### Anchor a callback result to its argument
+
+Keep `resources` and `ownedAggregates`, and place the lifetime inside the
+export's `callable.result` contract. For `Owned.makeRecord` with type
+`Bundle → Bool → Bundle → Bundle`, select one outer argument with
+`"arities": { "Owned.makeRecord": 1 }`. The returned function takes two
+arguments. Place this object under `contracts["Owned.makeRecord"]` to anchor
+its result to its second argument:
+
+```json
+{
+  "result": {
+    "ownership": "lease",
+    "lifetime": { "scope": "explicit", "anchor": null },
+    "callable": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg1" }
+      }
+    }
+  }
+}
+```
+
+Argument names belong to the returned function, not the outer export or its
+private closure handle. Reviewed Binding IR records the same decision on the
+callable result; both authoring paths pass through the Lean compiler.
+
+C# callers pass `Value<Bundle>` for the selected argument. Its original owner
+controls the result's lifetime even when the function returns captured data.
+The result and borrowed descendants expire together, including empty values.
+`Retain()` and `Api.CopyValue` create independent owners. See the
+[consumer examples](../consume/dotnet.md#callback-results-borrowed-from-an-argument).
+
+Host delegates receive raw borrowed arguments and return `CallbackResult<T>`.
+An implicit conversion accepts a raw reply or a whole `Value<T>`, including a
+recovery reply. The bridge checks and converts the reply before the borrowed
+frame expires. Native closures use typed overloads that preserve their original
+identity; their anchored `Invoke` still requires the selected whole owner.
+Callback storage remains call-scoped. This contract does not enable asynchronous
+delivery or transfer callback inputs.
+
+Build with `--target nuget`. These packages use `owned-dotnet-v5`, managed
+ownership contract and NuGet receipt version 5, and native ownership model
+version 6. Packaging reconstructs the callback contracts and generated C# from
+compiler-authenticated metadata. Callback-result anchors do not require
+export-result anchors, receiver members, consuming inputs or host callbacks.
+Packages without callback-result anchors retain their existing receipt versions.
 
 ## Build and inspect the package
 

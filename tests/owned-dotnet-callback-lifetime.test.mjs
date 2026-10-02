@@ -81,7 +81,8 @@ test(`C# callback-result lifetime stress (${mode}, ${variant})`, {
 			, sourceIdentity: compiled.sourceIdentity
 			, component: compiled.model.c.native.model.component }
 		, generated: Object.fromEntries(Object.entries(compiled.model.files).map(([path, source]) => [path, sha256(source)]))
-		, nativeProbeSha256: sha256(compiled.implementation), probeSha256: sha256(probe)
+		, nativeProbeSha256: sha256(compiled.implementation)
+		, probeSha256: sha256(probe)
 		, optimizedProject: ownedDotnetReceiverProject
 	}));
 });

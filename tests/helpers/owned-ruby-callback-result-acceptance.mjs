@@ -15,6 +15,7 @@ import { assertOwnedRubyCallbackResultCi, ownedRubyCallbackResultReports } from 
 import { ownedRubyCallbackBaseline, ownedRubyCallbackChangedPaths
 	, ownedRubyCallbackHistoryPath, ownedRubyCallbackHistorySha256 } from "./owned-ruby-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
+import { beforeOwnedDotnetCallbackResults } from "./owned-dotnet-callback-result-history.mjs";
 
 export const ownedRubyCallbackEvidencePath = "docs/evidence/owned-ruby-callback-results-20261002.json";
 export const ownedRubyCallbackPrevious = Object.freeze({
@@ -134,7 +135,8 @@ export const assertOwnedRubyCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedRubyCallbackHistoryPath, sha256: ownedRubyCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedRubyCallbackSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(beforeOwnedDotnetCallbackResults(path, await readFile(path), digest)), digest, path);
 	assert.equal(record.run.command, "npm run test:owned-ruby-callback-results"); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, count] of Object.entries({ tests: 12, pass: 12, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))
