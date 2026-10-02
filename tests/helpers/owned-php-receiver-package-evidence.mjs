@@ -22,7 +22,9 @@ const identity = source => ({ bytes: Buffer.byteLength(source), sha256: sha256(s
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 
 const assertCli = async item => {
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8")), cli = item.cliPackage;
+	const config = JSON.parse(ownedPhpWasmReceiverHistoricalBytes(
+		"config/cli-package.v1.json", await readFile("config/cli-package.v1.json")).toString());
+	const cli = item.cliPackage;
 	const { archive, inventorySha256, externalRegistryWrites, ...inventory } = cli;
 	assert.equal(cli.kind, "lean-bridge-cli-package");
 	assert.equal(inventorySha256, sha256(canonicalJson(inventory)));

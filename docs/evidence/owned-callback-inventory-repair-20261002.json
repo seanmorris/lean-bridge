@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-callback-inventory-repair",
+  "baselineRevision": "44c6789c830869b9923245cb38c29d4215da1433",
+  "previous": {
+    "path": "docs/evidence/owned-callback-results-20261002.json",
+    "sha256": "f1e30c443a9f0b6c34035008cb5f7831a646b6f49f038d0ccbfa4edc440adb75"
+  },
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9013cb21cda958572c8b53249e24f2c48cb9718439e78546b8b8b8c403b3515c",
+      "currentSha256": "178dd24fd7e81e1379a345d624a81eba5acc6881369fdc8db5d16a633b70b562",
+      "strategy": "replacements",
+      "edits": [
+        {
+          "current": "\"f49ab47a35baed7bd9510efc59e5d0caf8575e32cdb8e475a1c8b5234cb95a88\"",
+          "previous": "\"9b0c5a0d0a4143ccac0fa4bb7056ab41d8624c7fa482db760ed9ebcd9e437b16\"",
+          "count": 18
+        },
+        {
+          "current": "\"46017cdacc77a54b27c798603a052f4e2d7a203e9645e712567a51f6272e1ed2\"",
+          "previous": "\"c8b44b7afb78e60fbdf01481a4256f13a0ee72bb9591889f6d3c0f96f05d692d\"",
+          "count": 93
+        },
+        {
+          "current": "\"bfdb692bf749478f76e563c33c51aa212a664657415b7013b616d20f7a81eef1\"",
+          "previous": "\"e784ce7546c8a0fccf9c9f999a991e4a6157ee8c64dbde1c9461ad7a38980faf\"",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "path": "nix/component-engine-source-boundary.json",
+      "previousSha256": "e784ce7546c8a0fccf9c9f999a991e4a6157ee8c64dbde1c9461ad7a38980faf",
+      "currentSha256": "bfdb692bf749478f76e563c33c51aa212a664657415b7013b616d20f7a81eef1",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 3078,
+          "current": "    \"src/analyze/callback-signature.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "9b0c5a0d0a4143ccac0fa4bb7056ab41d8624c7fa482db760ed9ebcd9e437b16",
+      "currentSha256": "f49ab47a35baed7bd9510efc59e5d0caf8575e32cdb8e475a1c8b5234cb95a88",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 6754,
+          "current": "    \"src/analyze/callback-signature.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c8b44b7afb78e60fbdf01481a4256f13a0ee72bb9591889f6d3c0f96f05d692d",
+      "currentSha256": "46017cdacc77a54b27c798603a052f4e2d7a203e9645e712567a51f6272e1ed2",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 922,
+          "current": "\t\t, \"owned-callback-inventory-repair\"\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/copied-fixture-source-history.mjs",
+      "previousSha256": "1d4fe428f38530c5fd10b74524cc447c1d1a7e317cae97499d51f580caf60ade",
+      "currentSha256": "dc272b72df635c5f6a4e44d0b4b5c22b133996b50bd5fd1bee89cf9d483a9988",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 352,
+          "current": "import { callbackInventoryRepairPaths } from \"./owned-callback-inventory-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1265,
+          "current": "\t, ...callbackInventoryRepairPaths\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-callback-result-evidence.mjs",
+      "previousSha256": "2e1ec306f7e7262d2d9a444be4e26046b14f3b3888fcb109cb9dfc52255b2864",
+      "currentSha256": "b5dac0fa27c6ce73e76f2bd1ec9abb2435047ab04433b2de4863a337fd6c9d26",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 185,
+          "current": "import { beforeCallbackInventoryRepair } from \"./owned-callback-inventory-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 10622,
+          "current": "\t\tconst file = report.files.find(entry => entry.path === path); assert.ok(file, path);\n\t\tconst bytes = Buffer.from(beforeCallbackInventoryRepair(path, await readFile(path), file.sha256));\n\t\tassert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);\n",
+          "previous": "\t\tconst file = report.files.find(entry => entry.path === path), bytes = await readFile(path);\n\t\tassert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);\n"
+        },
+        {
+          "start": 26740,
+          "current": "\tfor(const [path, value] of Object.entries(record.sources)) assert.equal(sha256(beforeCallbackInventoryRepair(path, await readFile(path), value)), value, path);\n",
+          "previous": "\tfor(const [path, value] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), value, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-callback-result-history.mjs",
+      "previousSha256": "14d8b1e90e7dd824df3f6389f13e5666030e5bf0d18d09b2d2189633ee58a0b6",
+      "currentSha256": "97893212e86ab5f72cfe82b82423d73322b0c1d1c4718bfae8263a7e7d409e2c",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 236,
+          "current": "import { beforeCallbackInventoryRepair } from \"./owned-callback-inventory-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 3734,
+          "current": "\tsource = beforeCallbackInventoryRepair(path, source, expected);\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-jvm-receiver-package-evidence.mjs",
+      "previousSha256": "3c329bfa8ea7f5deb33e170b0cb16eb76ef09e3e0e2554ec0397f28191e194fc",
+      "currentSha256": "2cff98954134ec2e85731b23913d267d95d8fdd1da7b83002d1e2767f48b5d76",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 10449,
+          "current": "\tassert.equal(model.sourceIdentity.extractorSha256, sha256(ownedPerlReceiverHistoricalBytes(\n\t\t\"src/analyze/NativeExports.lean\", await readFile(\"src/analyze/NativeExports.lean\"))));\n",
+          "previous": "\tassert.equal(model.sourceIdentity.extractorSha256, sha256(await readFile(\"src/analyze/NativeExports.lean\")));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-php-receiver-evidence.mjs",
+      "previousSha256": "43256047f89db0865b56eccf9a840f7d83dd0d148de07ba63a65841c6853e274",
+      "currentSha256": "ebcce547371c027fcad3ae1eb889e80698736cf9efe55fd05824c9254cab0472",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 808,
+          "current": "import { ownedPhpWasmReceiverHistoricalBytes } from \"./owned-php-wasm-receiver-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 3237,
+          "current": "\tassert.equal(item.input.sourceIdentity.extractorSha256, sha256(ownedPhpWasmReceiverHistoricalBytes(\n\t\t\"src/analyze/NativeExports.lean\", await readFile(\"src/analyze/NativeExports.lean\"))));\n",
+          "previous": "\tassert.equal(item.input.sourceIdentity.extractorSha256, sha256(await readFile(\"src/analyze/NativeExports.lean\")));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-php-receiver-package-evidence.mjs",
+      "previousSha256": "8e41a6ad74eeb0387268326f3b9bfd1517b83327bca29a82547e4ac394d007ed",
+      "currentSha256": "54cb6699b8475303410632837d20dbe6e0fb7c13d035cafea5d8bfcd2e2ddcfd",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1470,
+          "current": "\tconst config = JSON.parse(ownedPhpWasmReceiverHistoricalBytes(\n\t\t\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\")).toString());\n\tconst cli = item.cliPackage;\n",
+          "previous": "\tconst config = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\")), cli = item.cliPackage;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-callback-result-history.test.mjs",
+      "previousSha256": "74606b007bfd71c41881a466e16082300e4c560ae952e4d452f22446548f40da",
+      "currentSha256": "7f1a8322e30a0d003fb3a612fbcb54eb4384f3cae3ef6bdb2e34cc1fcf18003a",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 266,
+          "current": "import { beforeCallbackInventoryRepair } from \"./helpers/owned-callback-inventory-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1167,
+          "current": "\t\tconst current = beforeCallbackInventoryRepair(update.path, await readFile(update.path)), prior = beforeOwnedCallbackResults(update.path, current);\n",
+          "previous": "\t\tconst current = await readFile(update.path), prior = beforeOwnedCallbackResults(update.path, current);\n"
+        },
+        {
+          "start": 2508,
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = beforeCallbackInventoryRepair(path, await readFile(path, \"utf8\"));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = await readFile(path, \"utf8\");\n"
+        },
+        {
+          "start": 2777,
+          "current": "\t\tfile.sha256 = sha256(beforeCallbackInventoryRepair(file.path, await readFile(file.path)));\n",
+          "previous": "\t\tfile.sha256 = sha256(await readFile(file.path));\n"
+        }
+      ]
+    }
+  ]
+}

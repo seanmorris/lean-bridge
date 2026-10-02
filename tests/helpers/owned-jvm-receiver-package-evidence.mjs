@@ -157,7 +157,8 @@ export const assertOwnedJvmReceiverPackage = async (item, { plain = false, run: 
 		, "deterministicReassembly", "receiptVerifiedWithoutProducer"]);
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), item.mode === "reviewed");
 	assert.equal(model.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256, sha256(lean + (plain ? ownedJvmPlainReceiverSource : ownedRustReceiverSource)));
-	assert.equal(model.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(model.sourceIdentity.extractorSha256, sha256(ownedPerlReceiverHistoricalBytes(
+		"src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"))));
 	assert.equal(model.schemaVersion, 10); assert.equal(model.ownedGraph.schemaVersion, 5);
 	assert.equal(model.exports.length, plain ? item.consuming ? 5 : 4 : 27);
 	if(plain)

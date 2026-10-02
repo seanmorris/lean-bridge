@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeOwnedCallbackResults, ownedCallbackResultChangedPaths } from "./owned-callback-result-history.mjs";
+import { callbackInventoryRepairPaths } from "./owned-callback-inventory-history.mjs";
 
 export const copiedFixtureReaderHistoryPath = "docs/evidence/copied-fixture-reader-repair-20261002.json";
 export const copiedFixtureReaderHistorySha256 = "767d1d2958676ed9018e7a690a96f49be5c709494aa8316b9dc7d09401601dee";
@@ -26,6 +27,7 @@ const readHistory = () => {
 export const copiedFixtureReaderPaths = Object.freeze([...new Set([
 	...readHistory().updates.map(update => update.path)
 	, ...ownedCallbackResultChangedPaths
+	, ...callbackInventoryRepairPaths
 ])].sort());
 
 /**

@@ -12,6 +12,7 @@ import { generateOwnedPhpCalls } from "../../src/backends/php/owned-calls.mjs";
 import { ownedRustReceiverSource } from "./owned-rust-receiver-fixture.mjs";
 import { ownedJvmPlainReceiverSource } from "./owned-jvm-receiver-fixture.mjs";
 import { ownedPhpReceiverProbe, ownedPhpPlainReceiverProbe, ownedPhpRetiredIdentityProbe, ownedPhpUnanchoredReceiverProbe } from "./owned-php-receiver-fixture.mjs";
+import { ownedPhpWasmReceiverHistoricalBytes } from "./owned-php-wasm-receiver-history.mjs";
 
 export const ownedPhpReceiverCommand = "npm run test:owned-php-receivers";
 export const ownedPhpReceiverScope = Object.freeze({
@@ -51,7 +52,8 @@ export const ownedPhpReceiverModel = async (item, { plain = false, unanchored = 
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(item.input.sourceIdentity.modules.find(module => module.module === "Owned").source.sha256
 		, sha256(lean + (plain ? ownedJvmPlainReceiverSource : ownedRustReceiverSource)));
-	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
+	assert.equal(item.input.sourceIdentity.extractorSha256, sha256(ownedPhpWasmReceiverHistoricalBytes(
+		"src/analyze/NativeExports.lean", await readFile("src/analyze/NativeExports.lean"))));
 	const capabilities = { receiverExports: true, hostCallbacks: !plain
 		, transferredInputs: consuming, anchoredResults: !plain && !unanchored };
 	const model = createCompiledNativeModel(item.input, {

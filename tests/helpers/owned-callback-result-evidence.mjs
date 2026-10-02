@@ -5,6 +5,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { beforeCallbackInventoryRepair } from "./owned-callback-inventory-history.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
@@ -183,8 +184,9 @@ const cli = async report => {
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)
 	{
-		const file = report.files.find(entry => entry.path === path), bytes = await readFile(path);
-		assert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
+		const file = report.files.find(entry => entry.path === path); assert.ok(file, path);
+		const bytes = Buffer.from(beforeCallbackInventoryRepair(path, await readFile(path), file.sha256));
+		assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 };
 const installedWasm = async (item, combined = false) => {
@@ -416,7 +418,7 @@ export const assertOwnedCallbackResultAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedCallbackResultHistoryPath, sha256: ownedCallbackResultHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedCallbackResultSourcePaths());
-	for(const [path, value] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), value, path);
+	for(const [path, value] of Object.entries(record.sources)) assert.equal(sha256(beforeCallbackInventoryRepair(path, await readFile(path), value)), value, path);
 	run(record.run, "npm run test:owned-callback-results", 33);
 	run(record.combinedRun, "LEAN_BRIDGE_OWNED_CALLBACK_RESULT_TEST=1 node --test tests/owned-callback-result-combined-packaging.test.mjs", 1);
 	const reports = unpackOwnedCallbackReports(record.archive);

@@ -26,6 +26,7 @@ const profileManifest = Object.freeze({
 		, "owned-callback-result-ci"
 		, "owned-callback-result-history"
 		, "owned-callback-result-evidence"
+		, "owned-callback-inventory-repair"
 		, "owned-aggregate-evidence"
 		, "owned-borrow-evidence"
 		, "owned-receiver-evidence"
