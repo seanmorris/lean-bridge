@@ -22,12 +22,14 @@ const keywords = new Set("_ abstract assert boolean break byte case catch char c
  * @param options.transferredInputs - Enable consuming input leases.
  * @param options.anchoredResults - Preserve original whole-result owners.
  * @param options.receiverExports - Generate nominal methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Enable synchronous callback transport independently.
  */
-export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const model = generateOwnedJvmCalls(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = model.c.prefix;
+export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const model = generateOwnedJvmCalls(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), prefix = model.c.prefix;
 	const transfers = model.c.functions.some(fn => fn.transfers?.length);
 	const anchors = model.c.functions.some(fn => fn.anchor !== undefined);
+	const callbackAnchors = model.c.callbacks.filter(fn => fn.anchor !== undefined);
 	const receivers = model.functions.filter(fn => fn.receiver === 0), wholeOwners = model.wholeOwners;
 	if(["gmp", "lean_bridge_native", "leanshared"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned JVM component name collides with a dependency or exceeds its name limit");
@@ -35,7 +37,7 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 		|| !Object.hasOwn(evidence.libraries ?? {}, "libgmp-lean-bridge.so.10")))
 		throw new TypeError("Owned JVM loading evidence differs from the component or private GMP dependency");
 	const declarations = new Map(ir.declarations.map(fn => [fn.id, fn]));
-	const functions = model.functions.map(fn => {
+	const functions = model.exportCalls.map(fn => {
 		const names = declarations.get(fn.id).parameters.map(site => keywords.has(site.name) ? site.name + "_" : site.name);
 		if(fn.receiver === 0)
 		{
@@ -48,8 +50,20 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 		return { ...fn, parameterNames: names };
 	});
 	const cleanup = ownedJvmThreadExit(prefix);
-	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
-		, backend: receivers.length ? "owned-jvm-v4" : anchors ? "owned-jvm-v3" : transfers ? "owned-jvm-v2" : "owned-jvm-v1"
+	const schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;
+	const contract = { schemaVersion
+		, backend: callbackAnchors.length ? "owned-jvm-v5" : receivers.length ? "owned-jvm-v4" : anchors ? "owned-jvm-v3" : transfers ? "owned-jvm-v2" : "owned-jvm-v1"
+		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-argument-owner"
+			, parameterNumbering: "callback-local"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved"
+			, independentOwnership: "retain-or-copyValue"
+			, hostArguments: "borrowed-raw-values", hostReply: "value-or-whole-owner"
+			, hostResultHandoff: "before-callback-frame-expires"
+			, nativeInputs: "typed-overloads", nativeClosures: "identity-preserved"
+			, signatures: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1, result: item.result }))
+		} } : {}
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
 			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
 			, consumption: "before-lean-call"
@@ -98,8 +112,8 @@ export const generateOwnedJvmPackage = (ir, evidence = null, { transferredInputs
 /** The functions selected by the Lean package author. */
 public final class Api {
     private Api() { }
-${functions.map((fn, index) => `${fn.transfers?.length ? `    /** Consumes resource leases in ${fn.transfers.map(i => fn.parameterNames[i]).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership. */\n` : ""}    public static ${unit(fn.result) ? "void" : wholeOwners ? model.returnType(fn, false) : model.type(fn.result, false)} ${fn.publicName}(${fn.parameters.map((id, i) => `${javaType(fn, id, i)} ${fn.parameterNames[i]}`).join(", ")}) {
-        ${unit(fn.result) ? "" : "return "}_OwnedLoader.bindings().callJava${index}(${fn.parameterNames.join(", ")});
+${functions.map(fn => `${fn.transfers?.length ? `    /** Consumes resource leases in ${fn.transfers.map(i => fn.parameterNames[i]).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership. */\n` : ""}    public static ${unit(fn.result) ? "void" : wholeOwners ? model.returnType(fn, false) : model.type(fn.result, false)} ${fn.publicName}(${fn.parameters.map((id, i) => `${javaType(fn, id, i)} ${fn.parameterNames[i]}`).join(", ")}) {
+        ${unit(fn.result) ? "" : "return "}_OwnedLoader.bindings().${model.methodName(fn, "Java")}(${fn.parameterNames.join(", ")});
     }`).join("\n")}${wholeOwners ? "\n" + model.wholeCopies.map(copy => `    public static ${receivers.length ? model.returnType(copy.call, false) : `Value<${model.type(copy.id, false)}>`} ${copy.publicName}(${model.type(copy.id, false)} value) {
         return _OwnedLoader.bindings().${model.methodName(copy.call, "Java")}(value);
     }`).join("\n") : ""}
@@ -109,7 +123,7 @@ ${functions.map((fn, index) => `${fn.transfers?.length ? `    /** Consumes resou
 
 internal object _KotlinOwnedApiCalls {
 ${functions.map((fn, index) => `    @kotlin.jvm.JvmSynthetic fun call${index}(${fn.parameters.map((id, i) => `arg${i}: ${kotlinType(fn, id, i)}`).join(", ")}): ${kotlinResult(fn)} {
-        ${unit(fn.result) ? "" : "return "}_OwnedLoader.bindings().callKotlin${index}(${fn.parameterNames.map((_, i) => `arg${i}`).join(", ")})
+        ${unit(fn.result) ? "" : "return "}_OwnedLoader.bindings().${model.methodName(fn, "Kotlin")}(${fn.parameterNames.map((_, i) => `arg${i}`).join(", ")})
     }`).join("\n")}${wholeOwners ? "\n" + model.wholeCopies.map((copy, index) => `    @kotlin.jvm.JvmSynthetic fun copy${index}(value: ${model.kotlin.publicTypes[copy.id]}): ${kotlinResult(copy.call)} =
         _OwnedLoader.bindings().${model.methodName(copy.call, "Kotlin")}(value)`).join("\n") : ""}
 }
@@ -171,7 +185,7 @@ its success or error branch. Pair retains binary nesting. Aliases retain their
 metadata without adding JVM wrappers. Null payloads, negative Nat, malformed
 Unicode, cycles and invalid branches reject.
 
-${anchors ? `Resource-bearing results use Value<T>, including empty arrays, absent options and
+	${anchors || callbackAnchors.length ? `Resource-bearing results use Value<T>, including empty arrays, absent options and
 payload-free constructors. Use get() to inspect a value, share() for another
 guard on the same owner, and retain() for an independent copy. The last shared
 guard's close expires borrowed descendants. Raw resource views from get() do
@@ -231,7 +245,13 @@ If a callback has no automatic recovery value, use
 OwnedCallbacks.withRecovery(callback, recoveryValue). Java lambdas that match
 several recovery overloads need an explicit callback type. Host exceptions keep
 their identity after native cleanup. Recovery values allow cleanup, not successful
-results. Host callbacks do not remain usable after their originating call ends.
+	results. Host callbacks do not remain usable after their originating call ends.
+
+	` : ""}${callbackAnchors.length ? `Callbacks whose results borrow an argument return CallbackResult<T>. Use
+CallbackResult.value(value) for an ordinary reply or CallbackResult.owner(value)
+to return a checked Value<T> with its original owner. The binding copies the reply
+before callback arguments expire. Generated overloads accept returned Lean closures
+directly without converting them to raw-input host callbacks.
 
 ` : ""}Inputs, ${hostCallbacks ? "callbacks and " : ""}results share depth 128, 262,144 visits, a 16 MiB native-copy
 budget and a separate 16 MiB accounted Java-storage budget within each call.
@@ -243,11 +263,11 @@ runtime identities, conflicting library builds and unverified preloads.
 Compatible packages share loaded dependencies. Native libraries stay loaded
 until process exit so native thread destructors remain valid. Extracted files
 are removed at normal JVM shutdown. Start a fresh process after fork.
-${receivers.length ? "Callback-result anchors" : anchors ? "Receiver anchors, callback-result anchors" : transfers ? "Anchored results" : "Transferred inputs, anchored results"} and asynchronous delivery require separate
+${callbackAnchors.length ? "Retained host callbacks and callback input transfers" : receivers.length ? "Callback-result anchors" : anchors ? "Receiver anchors and callback-result anchors" : transfers ? "Anchored results" : "Transferred inputs and anchored results"} and asynchronous delivery require separate
 lifetime support.
 `;
 	files["binding-manifest.json"] = canonicalJson({ schemaVersion: contract.schemaVersion
-		, generator: receivers.length ? "jvm-owned-values-v4" : anchors ? "jvm-owned-values-v3" : transfers ? "jvm-owned-values-v2" : "jvm-owned-values-v1"
+		, generator: callbackAnchors.length ? "jvm-owned-values-v5" : receivers.length ? "jvm-owned-values-v4" : anchors ? "jvm-owned-values-v3" : transfers ? "jvm-owned-values-v2" : "jvm-owned-values-v1"
 		, backend: contract.backend
 		, target: "jvm"
 		, component: ir.component.id
@@ -256,8 +276,8 @@ lifetime support.
 		, publicFiles, internalFiles, packageFiles: [], aliases: model.aliases
 		, ownedValues: contract
 		, kotlin: { namespace: model.kotlin.namespace, metadataVersion: "2.2.0" }
-		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", ...hostCallbacks ? ["callbacks"] : [], "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : [], ...anchors ? ["parameter-anchored-results", "whole-value-owners", "canonical-resource-equality"] : [], ...receivers.length ? ["receiver-methods", "receiver-properties", ...anchors ? [] : ["whole-value-owners"]] : []]
-		, capabilityGaps: [receivers.length ? { feature: "callback-result-anchors", reason: "Callback results require separate lifetime contracts." } : anchors ? { feature: "receiver-and-callback-result-anchors", reason: "These anchors require separate lifetime contracts." } : transfers
+		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "resources", ...hostCallbacks ? ["callbacks"] : [], "closures", "deterministic-close", ...transfers ? ["transferred-inputs"] : [], ...anchors ? ["parameter-anchored-results", "whole-value-owners", "canonical-resource-equality"] : [], ...receivers.length ? ["receiver-methods", "receiver-properties", ...anchors ? [] : ["whole-value-owners"]] : [], ...callbackAnchors.length ? ["callback-result-anchors", ...anchors || receivers.length ? [] : ["whole-value-owners", "canonical-resource-equality"]] : []]
+		, capabilityGaps: [callbackAnchors.length ? { feature: "retained-host-callbacks-and-callback-input-transfers", reason: "This projection admits call-scoped host callbacks and callback-result anchors." } : receivers.length ? { feature: "callback-result-anchors", reason: "Callback results require separate lifetime contracts." } : anchors ? { feature: "receiver-and-callback-result-anchors", reason: "These anchors require separate lifetime contracts." } : transfers
 			? { feature: "anchored-ownership", reason: "Anchored results require their own lifetime projection." }
 			: { feature: "transferred-and-anchored-ownership", reason: "Transferred inputs and anchored results require their own lifetime projection." }
 		, { feature: "additional-platforms", reason: "Compiled releases target Java 22 on Linux x86-64 with glibc." }] });

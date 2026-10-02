@@ -38,15 +38,17 @@ extern "C" size_t probe_exit_errors(void) { return exit_errors.load(); }
  * @param options.transferredInputs - Enable consuming input leases.
  * @param options.anchoredResults - Preserve original-owner borrowed results.
  * @param options.receiverExports - Lower compiler-authorized receiver sites.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Enable callback transport independently.
  */
-export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+export const compileOwnedJvmCallNative = async (compiled, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
 	const input = { metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component, hostCallbacks
 		, ...receiverExports ? { receiverExports: true } : {}
 		, ...transferredInputs ? { transferredInputs: true } : {}
-		, ...anchoredResults ? { anchoredResults: true } : {} };
+		, ...anchoredResults ? { anchoredResults: true } : {}
+		, ...callbackResultAnchors ? { callbackResultAnchors: true, valueCopies: true } : {} };
 	const generated = ownedJvmCallNative(input), { c, cleanup, implementation } = generated;
 	for(const [path, source] of Object.entries(c.files))
 		await saveLakeFile(compiled.directory, path.startsWith("src/") ? "api.c" : path.split("/").at(-1), path.startsWith("src/") ? implementation : source);

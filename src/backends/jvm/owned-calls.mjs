@@ -8,6 +8,7 @@ import { ownedJvmCallables, ownedJvmCallFrame } from "./owned-callables.mjs";
 import { ownedJvmTransfers } from "./owned-transfers.mjs";
 import { ownedJvmAnchoredCall, ownedJvmOriginalTransfers } from "./owned-borrows.mjs";
 import { ownedJvmOwnerName, ownedJvmReceiverOwner, ownedJvmReceiverMembers, ownedKotlinReceiverMembers } from "./owned-receivers.mjs";
+import { ownedJvmCallbackArguments } from "./owned-callback-arguments.mjs";
 
 const boxes = { boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer", long: "Long", float: "Float", double: "Double" };
 const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
@@ -22,8 +23,8 @@ const quoted = name => name.split(".").map(part => `\`${part}\``).join(".");
 export const generateOwnedJvmCalls = (ir, options = {}) => {
 	const kotlin = generateOwnedKotlinValues(ir, options), model = { ...kotlin.model, kotlin }, { c } = model;
 	const transfers = c.functions.some(fn => fn.transfers?.length);
-	const anchored = c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0);
-	const canonicalEquality = c.functions.some(fn => fn.anchor !== undefined);
+	const anchored = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined) || c.functions.some(fn => fn.receiver === 0);
+	const canonicalEquality = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const cache = new Map();
 	const type = (id, k) => {
@@ -36,20 +37,31 @@ export const generateOwnedJvmCalls = (ir, options = {}) => {
 						: `${namespace}.${{ option: "Option", result: "Result", tuple: "Pair" }[node.kind]}<${node.fields.map(field => boxes[type(field.type, k)] ?? type(field.type, k)).join(", ")}>`;
 		cache.set(key, value); return value;
 	};
+	const exportCalls = [];
+	for(const [index, fn] of model.functions.entries())
+		for(const [overload, variant] of ownedJvmCallbackArguments(c, fn).entries())
+		{
+			const method = `call${index}${overload ? `Native${overload}` : ""}`;
+			exportCalls.push({ ...variant, originalIndex: index, overload, method, operation: "export" });
+		}
 	const calls = [
-		...model.functions.map((fn, index) => ({ ...fn, method: `call${index}`, operation: "export" }))
+		...exportCalls
 		, ...c.retains.map(fn => ({ ...fn, method: `retain${nodes.get(fn.id).index}`, operation: "retain", handle: true, ...anchored ? { rawResult: true } : {} }))
 		, ...(c.copies ?? []).map(fn => ({ ...fn, method: `copy${nodes.get(fn.id).index}`, operation: "copy", ...anchored ? { rawResult: true } : {} }))
-		, ...(c.callbacks ?? []).map(fn => ({ ...fn, method: `invoke${nodes.get(fn.id).index}`, operation: "invoke", handle: true }))
+		, ...model.callbacks.flatMap(fn => fn.invocations.map(invocation => ({ ...invocation.fn
+			, method: `invoke${nodes.get(fn.id).index}${invocation.suffix}`
+			, operation: "invoke", handle: true })))
 		, ...anchored ? [
-			...(c.callbacks ?? []).map(fn => ({ ...fn, method: `invokeRaw${nodes.get(fn.id).index}`, operation: "invoke", handle: true, rawResult: true }))
+			...model.callbacks.filter(fn => fn.anchor === undefined).map(fn => ({ ...fn.invocations.at(-1).fn
+				, method: `invokeRaw${nodes.get(fn.id).index}`
+				, operation: "invoke", handle: true, rawResult: true }))
 			, ...[...c.retains, ...(c.copies ?? [])].filter(fn => nodes.get(fn.id).representation !== "copied")
 				.map(fn => ({ ...fn, method: `copyWhole${nodes.get(fn.id).index}`, operation: "copy", wholeCopy: true }))
 		] : []
 	];
-	const name = (fn, family) => fn.method.replace(/(\d+)$/u, family + "$1");
+	const name = (fn, family) => fn.method.replace(/^([A-Za-z]+)(\d+)/u, `$1${family}$2`);
 	const parameterType = (fn, i, k) => fn.handle && i === 0 ? "_OwnedRuntime.Handle"
-		: c.hostArgument?.(fn, i) ? `${model.namespace}${k ? ".kotlin" : ""}.${nodes.get(fn.parameters[i]).delegateType}`
+		: c.hostArgument?.(fn, i) && !fn.nativeCallbacks?.includes(i) ? `${model.namespace}${k ? ".kotlin" : ""}.${nodes.get(fn.parameters[i]).delegateType}`
 			: anchored && (fn.anchor === i || fn.transfers?.includes(i)) ? `${model.namespace}.Value<${type(fn.parameters[i], k)}>` : type(fn.parameters[i], k);
 	const returnType = (fn, k) => anchored && !fn.rawResult && nodes.get(fn.result).representation !== "copied"
 		? nodes.get(fn.result).ownerType ? `${model.namespace}.${ownedJvmOwnerName(nodes.get(fn.result), k)}`
@@ -142,7 +154,7 @@ ${invoke}
     }`);
 	const factory = identities.map(node => {
 		const fn = model.callbacks.find(fn => fn.id === node.id);
-		return `            case ${node.index} -> new ${node.publicType}(${node.ownerType ? "this, " : ""}handle, this::retainJava${node.index}${fn ? `, (${fn.invokeParameters.map((_, i) => `arg${i}`).join(", ")}) -> invokeJava${node.index}(handle${fn.invokeParameters.map((_, i) => `, arg${i}`).join("")})` : ""}${canonicalEquality ? `, this::equal${node.index}` : ""}${anchored && fn ? `, (${fn.invokeParameters.map((_, i) => `arg${i}`).join(", ")}) -> invokeRawJava${node.index}(handle${fn.invokeParameters.map((_, i) => `, arg${i}`).join("")})` : ""});`;
+		return `            case ${node.index} -> new ${node.publicType}(${node.ownerType ? "this, " : ""}handle, this::retainJava${node.index}${fn ? fn.invocations.map(invocation => `, (${invocation.parameters.map((_, i) => `arg${i}`).join(", ")}) -> invokeJava${node.index}${invocation.suffix}(handle${invocation.parameters.map((_, i) => `, arg${i}`).join("")})`).join("") : ""}${canonicalEquality ? `, this::equal${node.index}` : ""}${anchored && fn && fn.anchor === undefined ? `, (${fn.invocations.at(-1).parameters.map((_, i) => `arg${i}`).join(", ")}) -> invokeRawJava${node.index}(handle${fn.invocations.at(-1).parameters.map((_, i) => `, arg${i}`).join("")})` : ""});`;
 	});
 	const imports = `import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
@@ -191,7 +203,7 @@ ${callbacks.methods}
 ${identities.map(node => {
 	const fn = model.callbacks.find(fn => fn.id === node.id);
 	return `            ${node.index} -> _OwnedKotlin${node.publicType}.create(${node.ownerType ? "bindings, " : ""}handle, { kept -> bindings.retainKotlin${node.index}(kept) }${fn
-		? `, { ${fn.invokeParameters.map((_, i) => `arg${i}`).join(", ")}${fn.invokeParameters.length ? " -> " : ""}bindings.invokeKotlin${node.index}(handle${fn.invokeParameters.map((_, i) => `, arg${i}`).join("")});${fn.returnType === "void" ? " kotlin.Unit" : ""} }` : ""}${canonicalEquality ? `, { left, right -> bindings.equal${node.index}(left, right) }` : ""}${anchored && fn ? `, { ${fn.invokeParameters.map((_, i) => `arg${i}`).join(", ")}${fn.invokeParameters.length ? " -> " : ""}bindings.invokeRawKotlin${node.index}(handle${fn.invokeParameters.map((_, i) => `, arg${i}`).join("")});${fn.returnType === "void" ? " kotlin.Unit" : ""} }` : ""})`;
+		? fn.invocations.map(invocation => `, { ${invocation.parameters.map((_, i) => `arg${i}`).join(", ")}${invocation.parameters.length ? " -> " : ""}bindings.invokeKotlin${node.index}${invocation.suffix}(handle${invocation.parameters.map((_, i) => `, arg${i}`).join("")});${fn.invokeReturnType === "void" ? " kotlin.Unit" : ""} }`).join("") : ""}${canonicalEquality ? `, { left, right -> bindings.equal${node.index}(left, right) }` : ""}${anchored && fn && fn.anchor === undefined ? `, { ${fn.invocations.at(-1).parameters.map((_, i) => `arg${i}`).join(", ")}${fn.invocations.at(-1).parameters.length ? " -> " : ""}bindings.invokeRawKotlin${node.index}(handle${fn.invocations.at(-1).parameters.map((_, i) => `, arg${i}`).join("")});${fn.returnType === "void" ? " kotlin.Unit" : ""} }` : ""})`;
 }).join("\n")}
             else -> throw _OwnedConvert.InvalidNative("Unknown native identity type")
         }
@@ -207,7 +219,7 @@ ${identities.map(node => {
 	for(const node of model.types.filter(node => node.ownerType)) for(const k of [false, true])
 	{
 		const owner = ownedJvmOwnerName(node, k);
-		add(`${java}/${owner}.java`, ownedJvmReceiverOwner({ ...model, type, parameterType, returnType }, node, k), true);
+		add(`${java}/${owner}.java`, ownedJvmReceiverOwner({ ...model, exportCalls, methodName: name, type, parameterType, returnType }, node, k), true);
 		if(k) add(`${kt}/kotlin/${node.ownerType}.kt`, `package ${quoted(kotlin.namespace)}\n\ntypealias ${node.ownerType} = ${quoted(model.namespace)}.${owner}\n`, true);
 	}
 	for(const node of identities.filter(node => node.ownerType)) for(const k of [false, true])
@@ -215,8 +227,9 @@ ${identities.map(node => {
 		const path = k ? `${kt}/_OwnedKotlin${node.publicType}.kt` : `${java}/${node.publicType}.java`;
 		const marker = "    /* CHECKED RECEIVER MEMBERS */\n";
 		if(files[path].split(marker).length !== 2) throw new TypeError("Missing JVM raw receiver member insertion point");
-		files[path] = files[path].replace(marker, () => k ? ownedKotlinReceiverMembers(model, node)
-			: ownedJvmReceiverMembers({ ...model, type, parameterType, returnType }, node, false, true));
+		const receiverModel = { ...model, exportCalls, methodName: name, type, parameterType, returnType };
+		files[path] = files[path].replace(marker, () => k ? ownedKotlinReceiverMembers(receiverModel, node)
+			: ownedJvmReceiverMembers(receiverModel, node, false, true));
 	}
 	for(const [name, body] of Object.entries({ _OwnedBindings: source, _OwnedCallbacks: callbacks.wrappers, _OwnedCallFrame: ownedJvmCallFrame, OwnedCallbacks: callbacks.javaRecovery }))
 		add(`${java}/${name}.java`, `package ${model.namespace};\n\n${body}`, name === "OwnedCallbacks");
@@ -226,6 +239,8 @@ ${identities.map(node => {
 	add(`${kt}/kotlin/OwnedCallbacks.kt`, `package ${quoted(kotlin.namespace)}\n\n${callbacks.kotlinRecovery}`, true);
 	for(const node of identities.filter(node => node.kind === "callback"))
 	{
+		const callback = model.callbacks.find(fn => fn.id === node.id);
+		if(!c.hostArgument || callback.anchor !== undefined) continue;
 		const path = `${java}/${node.publicType}.java`, target = "return this::callFromHost;";
 		if(files[path].split(target).length !== 2) throw new TypeError("Missing Java callback bridge");
 		files[path] = files[path].replace(target, `return _OwnedCallbacks.nativeJava${node.index}(this${anchored ? ", this::callFromHost" : ""});`);
@@ -257,5 +272,5 @@ ${identities.map(node => {
 		if(claimed.has("copyValue")) throw new TypeError("JVM whole-value copy name collides: copyValue");
 		for(const fn of typed) if(typed.filter(other => erased(other) === erased(fn)).length === 1) add("copyValue", fn.id, true);
 	}
-	return { ...model, files, publicFiles, internalFiles, calls, type, methodName: name, parameterType, returnType, wholeCopies };
+	return { ...model, files, publicFiles, internalFiles, calls, exportCalls, type, methodName: name, parameterType, returnType, wholeCopies };
 };

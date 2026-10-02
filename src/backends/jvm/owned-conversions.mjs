@@ -153,7 +153,7 @@ ${descriptors.join(",\n")}
 export const generateOwnedJvmConversions = (ir, options = {}) => {
 	const model = generateOwnedJvmValues(ir, options), typesSource = ownedJvmDescriptorSource(model);
 	const transferredInputs = model.c.functions.some(fn => fn.transfers?.length);
-	const anchoredResults = model.c.functions.some(fn => fn.anchor !== undefined);
+	const anchoredResults = [...model.c.functions, ...model.c.callbacks].some(fn => fn.anchor !== undefined);
 	const wholeOwners = anchoredResults || model.c.functions.some(fn => fn.receiver === 0);
 	const prefix = `src/main/java/${model.namespace.replaceAll(".", "/")}`;
 	const internal = { _OwnedLayouts: model.layoutSource, _OwnedTypes: typesSource

@@ -27,10 +27,12 @@ const memory = "java.lang.foreign.MemoryLayout", value = "java.lang.foreign.Valu
  * @param options.transferredInputs - Enable consuming input leases.
  * @param options.anchoredResults - Enable original-owner borrowed results.
  * @param options.receiverExports - Enable compiler-authorized receiver declarations.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Enable host callback transport independently.
  */
-export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
+	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, layoutName: `O${node.index}`

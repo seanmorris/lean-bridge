@@ -6,6 +6,7 @@
 import { compileOwnedJvmLayout } from "./owned-layout.mjs";
 import { jvmGraphCompoundTypes, jvmGraphEquality, jvmGraphValueMethods } from "./copied-graph-equality.mjs";
 import { ownedJvmWholeValue } from "./owned-borrows.mjs";
+import { ownedJvmCallbackArguments, ownedJvmCallbackResult } from "./owned-callback-arguments.mjs";
 
 const pascal = name => name.split(/[^A-Za-z0-9]+/u).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
 const camel = name => { const value = pascal(name); return value[0].toLowerCase() + value.slice(1); };
@@ -34,13 +35,15 @@ const boxes = { boolean: "Boolean", byte: "Byte", short: "Short", int: "Integer"
  */
 export const generateOwnedJvmValues = (ir, options = {}) => {
 	const layout = compileOwnedJvmLayout(ir, options), c = layout.c;
-	const anchors = c.functions.some(fn => fn.anchor !== undefined);
+	const anchors = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
+	const callbackReplies = Boolean(c.hostArgument) && c.callbacks.some(fn => fn.anchor !== undefined);
 	const receivers = c.functions.some(fn => fn.receiver === 0);
 	const wholeOwners = anchors || receivers;
 	const fail = message => { throw new TypeError("Invalid owned JVM values: " + message); };
 	if(keywords.has(c.prefix)) fail("Java package name is a reserved word");
 	const occupied = new Set(reserved), names = new Map();
 	if(wholeOwners) occupied.add("Value");
+	if(callbackReplies) occupied.add("CallbackResult");
 	const claim = name => {
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/u.test(name) || occupied.has(name)) fail("reserved or duplicate name: " + name);
 		occupied.add(name); return name;
@@ -111,11 +114,22 @@ export const generateOwnedJvmValues = (ir, options = {}) => {
 	const aliases = c.native.aliases.map(alias => ({ ...alias
 		, name: definitions.get(alias.id).name, managedType: type(alias.target)
 		, contractType: contract(definitions.get(alias.id).target) }));
-	const callbacks = (c.callbacks ?? []).map(fn => ({ ...fn
-		, publicType: type(fn.id), delegateType: delegates.get(fn.id)
-		, returnType: table.get(fn.result).name === "unit" ? "void" : type(fn.result)
-		, hostParameters: fn.parameters.slice(1).map(type)
-		, invokeParameters: fn.parameters.slice(1).map(id => delegates.get(id) ?? type(id)) }));
+	const callbacks = (c.callbacks ?? []).map(fn => {
+		const invocations = ownedJvmCallbackArguments(c, fn).map((variant, index) => ({
+			fn: variant, suffix: index ? `Native${index}` : ""
+			, parameters: fn.parameters.slice(1).map((id, position) => c.hostArgument?.(fn, position + 1) && !variant.nativeCallbacks?.includes(position + 1)
+				? delegates.get(id) : fn.anchor === position + 1 ? `Value<${type(id)}>` : type(id))
+		}));
+		const result = table.get(fn.result), rawResult = result.name === "unit" ? "void" : type(fn.result);
+		return { ...fn
+			, publicType: type(fn.id), delegateType: delegates.get(fn.id)
+			, returnType: rawResult
+			, hostReturnType: callbackReplies && fn.anchor !== undefined ? `CallbackResult<${boxes[type(fn.result)] ?? type(fn.result)}>` : rawResult
+			, invokeReturnType: wholeOwners && result.representation !== "copied"
+				? types.find(node => node.id === fn.result).ownerType ?? `Value<${type(fn.result)}>` : rawResult
+			, hostParameters: fn.parameters.slice(1).map(type)
+			, invokeParameters: invocations[0].parameters, invocations };
+	});
 	const records = types.flatMap(node => node.kind === "record" ? [{ name: node.publicType, fields: node.fields, parent: null }]
 		: node.kind === "variant" ? node.cases.map(branch => ({ name: branch.publicName, fields: branch.fields, parent: node.publicType })) : []);
 	for(const record of records) record.builder = record.fields.reduce((sum, field) => sum + (["long", "double"].includes(field.publicType) ? 2 : 1), 0) > 254;
@@ -128,6 +142,7 @@ export const generateOwnedJvmValues = (ir, options = {}) => {
 	const files = {}, add = (name, source) => { files[`${prefix}/${name}.java`] = `package ${namespace};\n\n${source}`; };
 	add("Unit", "public enum Unit { INSTANCE }\n");
 	if(wholeOwners) add("Value", receivers ? ownedJvmWholeValue.replace("public final class Value<T>", "public class Value<T>") : ownedJvmWholeValue);
+	if(callbackReplies) add("CallbackResult", ownedJvmCallbackResult);
 	for(const [name, source] of Object.entries(jvmGraphCompoundTypes)) add(name, source);
 	for(const node of types.filter(node => node.kind === "variant"))
 		add(node.publicType, `public sealed interface ${node.publicType} permits ${node.cases.map(branch => branch.publicName).join(", ")} { }\n`);
@@ -172,21 +187,17 @@ ${access(record)}${jvmGraphValueMethods}
 	for(const node of types.filter(node => node.identity))
 	{
 		const name = node.publicType, fn = callbacks.find(fn => fn.id === node.id);
-		const returnType = fn && wholeOwners && table.get(fn.result).representation !== "copied"
-			? types.find(node => node.id === fn.result).ownerType ?? `Value<${type(fn.result)}>` : fn?.returnType;
-		const parameters = fn?.invokeParameters.map((type, index) => `${type} arg${index}`).join(", ");
+		const returnType = fn?.invokeReturnType;
 		add(name, `/** A thread-bound Lean ${fn ? "closure" : "resource"}. retain creates an independent owner. */
 public final class ${name} implements AutoCloseable, _OwnedValue {
     final _OwnedRuntime.Handle handle;
 ${node.ownerType ? "    private final _OwnedBindings bindings;\n" : ""}\
     private final java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain;${anchors ? "\n    private final java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal;" : ""}
-${fn ? `    @FunctionalInterface interface Invocation { ${returnType} invoke(${parameters}); }
-    private final Invocation invocation;
-${wholeOwners ? `    @FunctionalInterface interface RawInvocation { ${fn.returnType} invoke(${parameters}); }\n    private final RawInvocation rawInvocation;\n` : ""}\
-` : ""}    ${name}(${node.ownerType ? "_OwnedBindings bindings, " : ""}_OwnedRuntime.Handle handle, java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain${fn ? ", Invocation invocation" : ""}${anchors ? ", java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal" : ""}${wholeOwners && fn ? ", RawInvocation rawInvocation" : ""}) {
+${fn ? `${fn.invocations.map(invocation => `    @FunctionalInterface interface Invocation${invocation.suffix} { ${returnType} invoke(${invocation.parameters.map((type, index) => `${type} arg${index}`).join(", ")}); }\n    private final Invocation${invocation.suffix} invocation${invocation.suffix};\n`).join("")}${wholeOwners && fn.anchor === undefined ? `    @FunctionalInterface interface RawInvocation { ${fn.returnType} invoke(${fn.invocations.at(-1).parameters.map((type, index) => `${type} arg${index}`).join(", ")}); }\n    private final RawInvocation rawInvocation;\n` : ""}\
+` : ""}    ${name}(${node.ownerType ? "_OwnedBindings bindings, " : ""}_OwnedRuntime.Handle handle, java.util.function.Function<_OwnedRuntime.Handle, ${name}> retain${fn ? fn.invocations.map(invocation => `, Invocation${invocation.suffix} invocation${invocation.suffix}`).join("") : ""}${anchors ? ", java.util.function.BiPredicate<_OwnedRuntime.Handle, _OwnedRuntime.Handle> equal" : ""}${wholeOwners && fn && fn.anchor === undefined ? ", RawInvocation rawInvocation" : ""}) {
 ${node.ownerType ? "        this.bindings = java.util.Objects.requireNonNull(bindings);\n" : ""}\
         this.handle = java.util.Objects.requireNonNull(handle);
-        this.retain = java.util.Objects.requireNonNull(retain);${fn ? "\n        this.invocation = java.util.Objects.requireNonNull(invocation);" : ""}${anchors ? "\n        this.equal = java.util.Objects.requireNonNull(equal);" : ""}${wholeOwners && fn ? "\n        this.rawInvocation = java.util.Objects.requireNonNull(rawInvocation);" : ""}
+        this.retain = java.util.Objects.requireNonNull(retain);${fn ? fn.invocations.map(invocation => `\n        this.invocation${invocation.suffix} = java.util.Objects.requireNonNull(invocation${invocation.suffix});`).join("") : ""}${anchors ? "\n        this.equal = java.util.Objects.requireNonNull(equal);" : ""}${wholeOwners && fn && fn.anchor === undefined ? "\n        this.rawInvocation = java.util.Objects.requireNonNull(rawInvocation);" : ""}
     }
     public boolean isClosed() { return handle.isClosed(); }
     @Override public void close() { handle.close(); }
@@ -206,21 +217,23 @@ ${anchors ? `    public boolean sameIdentity(${name} other) {
     @Override public int hashCode() { throw new UnsupportedOperationException("Lean resources cannot be dictionary keys"); }
     @Override public String toString() { return "${name}[" + (isClosed() ? "closed" : "live") + "]"; }
 ` : ""}\
-${fn ? `    public ${returnType} invoke(${parameters}) {
-        try { ${fn.returnType === "void" ? "" : "return "}invocation.invoke(${fn.invokeParameters.map((_, i) => `arg${i}`).join(", ")}); }
+${fn ? `${fn.invocations.map(invocation => `    public ${returnType} invoke(${invocation.parameters.map((type, index) => `${type} arg${index}`).join(", ")}) {
+        try { ${returnType === "void" ? "" : "return "}invocation${invocation.suffix}.invoke(${invocation.parameters.map((_, i) => `arg${i}`).join(", ")}); }
         finally { java.lang.ref.Reference.reachabilityFence(this); }
-    }
+    }`).join("\n")}
+${fn.anchor === undefined ? `\
     private ${fn.returnType} callFromHost(${fn.hostParameters.map((type, i) => `${type} arg${i}`).join(", ")}) {
         ${fn.returnType === "void" ? "" : "return "}${wholeOwners ? "rawInvocation.invoke" : "invoke"}(${fn.parameters.slice(1).map((id, i) => `arg${i}${delegates.has(id) ? ".asCallback()" : ""}`).join(", ")});
     }
     public ${fn.delegateType} asCallback() { return this::callFromHost; }
+` : `    public ${name} asCallback() { return this; }\n`}\
 ` : ""}${node.ownerType ? "    /* CHECKED RECEIVER MEMBERS */\n" : ""}}
 `);
 	}
 	for(const fn of callbacks) add(fn.delegateType, `/** Synchronous host callback. Borrowed arguments expire when it returns. */
 @FunctionalInterface
 public interface ${fn.delegateType} {
-    ${fn.returnType} invoke(${fn.hostParameters.map((type, index) => `${type} arg${index}`).join(", ")});
+    ${fn.hostReturnType} invoke(${fn.hostParameters.map((type, index) => `${type} arg${index}`).join(", ")});
 }
 `);
 	const publicFiles = Object.keys(files);
