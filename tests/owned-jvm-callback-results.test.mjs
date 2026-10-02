@@ -211,6 +211,69 @@ ${kotlinMethods(model)}
 }
 `;
 
+const nativeJavaProbe = model => `package ${model.namespace};
+
+import java.lang.foreign.*;
+import java.lang.invoke.MethodHandle;
+import java.math.BigInteger;
+import static java.lang.foreign.ValueLayout.*;
+
+public final class OwnedJvmNativeCallbackResultProbe {
+    private static _OwnedBindings bindings;
+    private static MethodHandle live, identities;
+    private static int checks;
+    private static void check(boolean value, String message) {
+        if (!value) throw new AssertionError(message); checks++;
+    }
+    private static long count(MethodHandle function) {
+        try { return (long)function.invokeExact(); }
+        catch (Throwable error) { throw _OwnedRuntime.rethrow(error); }
+    }
+${javaMethods(model)}
+    private static Bundle bundle(Ticket ticket) {
+        return new Bundle(ticket, Option.some(ticket), new Ticket[] { ticket }, new Ticket[0],
+            new Payload(BigInteger.valueOf(-21), new byte[] { 0, -1 }));
+    }
+    public static void main(String[] args) {
+        try (var library = Arena.ofShared()) {
+            var symbols = SymbolLookup.libraryLookup(args[0], library); var linker = Linker.nativeLinker();
+            bindings = new _OwnedBindings(symbols, () -> { });
+            live = linker.downcallHandle(symbols.find("probe_live").orElseThrow(), FunctionDescriptor.of(JAVA_LONG));
+            identities = linker.downcallHandle(symbols.find("probe_identities").orElseThrow(), FunctionDescriptor.of(JAVA_LONG));
+            bindings.runtime.current().require();
+            try (var ticketOwner = newTicket(BigInteger.valueOf(61), "native-callback")) {
+                var ticket = ticketOwner.get(); var input = bundle(ticket);
+                try (var original = echoRecord(input); var closureOwner = makeRecordCallback(input)) {
+                    var closure = closureOwner.get();
+                    try (var direct = callbackRecord(input, closure);
+                         var invoked = closure.invoke(original);
+                         var twice = applyTwice(input, closure, closure);
+                         var dispatchOwner = dispatch(input);
+                         var dispatched = dispatchOwner.get().invoke(closure)) {
+                        check(serial(direct.get().primary()).intValueExact() == 61, "native callback export");
+                        check(serial(invoked.get().primary()).intValueExact() == 61, "native callback whole argument");
+                        check(serial(twice.get().primary()).intValueExact() == 61, "two native callback arguments");
+                        check(serial(dispatched.get().primary()).intValueExact() == 61, "higher-order native callback");
+                    }
+                }
+                Tree tree = new TreeBranch(new Tree[] { new TreeLeaf(ticket), new TreeBranch(new Tree[0]) });
+                try (var originalTree = echoRecursive(tree); var closureOwner = makeTreeCallback(tree);
+                     var directTree = callbackRecursive(tree, closureOwner.get());
+                     var invokedTree = closureOwner.get().invoke(originalTree)) {
+                    check(directTree.get() instanceof TreeBranch, "recursive native callback export");
+                    check(invokedTree.get() instanceof TreeBranch, "recursive native callback whole argument");
+                }
+            }
+            bindings.runtime.current().close();
+            check(count(live) == 0 && count(identities) == 0, "all native callback owners released");
+            System.out.println("{" + (char)34 + "checks" + (char)34 + ":" + checks
+                + "," + (char)34 + "live" + (char)34 + ":" + count(live)
+                + "," + (char)34 + "identities" + (char)34 + ":" + count(identities) + "}");
+        }
+    }
+}
+`;
+
 test("JVM callback-result owners require capability and retain native closure identity", () => {
 	const ir = ownedDotnetCallbackResultReviewedIr(), original = structuredClone(ir);
 	assert.throws(() => generateOwnedJvmPackage(ir), /explicit output leases/u);
@@ -279,4 +342,36 @@ test("Java callback replies copy raw and whole values before their frame expires
 	}
 	assert.ok(observed.checks >= 9); assert.ok(observed.kotlinChecks >= 9);
 	assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
+});
+
+test("JVM native closures preserve callback-result owners without host upcalls", {
+	skip: process.env.LEAN_BRIDGE_OWNED_JVM_CALLBACK_RESULT_TEST !== "1"
+	, timeout: 900000
+}, async t => {
+	const options = { ...capability, hostCallbacks: false };
+	const compiled = await compileOwnedAggregateFixture(t, {
+		reviewedIr: ownedDotnetCallbackResultReviewedIr(), hostCallbacks: false
+		, sourceSuffix: ownedDotnetCallbackResultSource
+		, evidenceName: "jvm-callback-results-reviewed-native-inputs.json"
+	});
+	await compileOwnedJvmCallNative(compiled, options);
+	const model = generateOwnedJvmCalls(compiled.model.bindingIr, options);
+	const files = { ...model.files
+		, "OwnedJvmNativeCallbackResultProbe.java": nativeJavaProbe(model) };
+	let observed;
+	try
+	{
+		const toolchain = await compileOwnedJvmCallSources(compiled.directory, files);
+		const args = ["--enable-native-access=ALL-UNNAMED"
+			, "-cp", "classes:" + toolchain.stdlib
+			, model.namespace + ".OwnedJvmNativeCallbackResultProbe"
+			, join(compiled.directory, "libprobe.so")];
+		const run = await runCopied(toolchain.java, args, compiled.directory);
+		assert.equal(run.stderr, ""); observed = JSON.parse(run.stdout.trim());
+	}
+	catch(error)
+	{
+		throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error });
+	}
+	assert.ok(observed.checks >= 7); assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 });
