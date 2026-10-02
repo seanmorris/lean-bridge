@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedDotnetCalls } from "../src/backends/dotnet/owned-calls.mjs";
@@ -15,6 +14,7 @@ import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReview
 import { compileOwnedDotnetFixture } from "./helpers/owned-dotnet-native.mjs";
 import { checkOwnedDotnetCallbackResultGuards } from "./helpers/owned-dotnet-callback-result-guards.mjs";
 import { ownedDotnetReceiverProject } from "./helpers/owned-dotnet-receiver-fixture.mjs";
+import { ownedDotnetCallbackResultProbe } from "./helpers/owned-dotnet-callback-result-probes.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const options = { callbackResultAnchors: true, hostCallbacks: false };
@@ -60,21 +60,7 @@ for(const mode of ["ordinary", "reviewed"]) for(const variant of ["no-host", "ho
 			: { reviewedIr: (combined ? ownedDotnetCallbackResultCombinedReviewedIr : ownedDotnetCallbackResultReviewedIr)() }
 		, evidenceName: `dotnet-callback-results-${mode}-${variant}-inputs.json`
 	});
-	let probe = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-results.cs", "utf8");
-	if(hostCallbacks)
-	{
-		const host = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-host-results.cs", "utf8");
-		probe = probe.replace("    private static void Main", host + "\n    private static void Main")
-			.replace("OriginalOwners(); EmptyOwners();", "OriginalOwners(); EmptyOwners(); HostReplies();")
-			.replace("int managedFaults =", "var hostFaults = new[] { HostFaults(true, false), HostFaults(false, false), HostFaults(true, true), HostFaults(false, true) };\n        int managedFaults =")
-			.replace("new { checks,", "new { hostFaults, checks,");
-	}
-	if(combined)
-	{
-		const methods = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-combined-results.cs", "utf8");
-		probe = probe.replace("    private static void Main", methods + "\n    private static void Main")
-			.replace("HostReplies();", "HostReplies(); CombinedOwners();");
-	}
+	const probe = await ownedDotnetCallbackResultProbe(hostCallbacks, combined);
 	let observed, execution;
 	try
 	{
