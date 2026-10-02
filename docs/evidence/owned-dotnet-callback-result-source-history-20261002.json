@@ -119,6 +119,19 @@
       "strategy": "spans"
     },
     {
+      "currentSha256": "d9f9dbd1d387d1ce4d8d4d829cdd526ebf260a23c5880c8e2c3c92aa64463bdb",
+      "edits": [
+        {
+          "current": "    \"src/backends/dotnet/owned-callback-arguments.mjs\",\n",
+          "previous": "",
+          "start": 3951
+        }
+      ],
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "aee839601b4f311bc937f84d2a0cf95f0849b818460e3f9db520105867c82b86",
+      "strategy": "spans"
+    },
+    {
       "currentSha256": "4c8d084e24042bf33ad980dcb6be5e7e36b2363248267c7f98e9ca7de832876d",
       "edits": [
         {
@@ -602,6 +615,50 @@
       "strategy": "spans"
     },
     {
+      "currentSha256": "ee4567e6c2a9edfec3501f8faad60746513752b9613874e239eea353ffaa5b92",
+      "edits": [
+        {
+          "current": "import { ownedDotnetCallbackChangedPaths } from \"./owned-dotnet-callback-result-history.mjs\";\n",
+          "previous": "",
+          "start": 352
+        },
+        {
+          "current": "\t, ...ownedDotnetCallbackChangedPaths\n",
+          "previous": "",
+          "start": 1721
+        }
+      ],
+      "path": "tests/helpers/copied-fixture-source-history.mjs",
+      "previousSha256": "9142bdd972adc4bbd38c14e9a835aa7c0940d53e8dfaa57699222ead5cd9ca99",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "bbddff0c4d423e20a5fa709badc53ae1b0830b1ec8da065da68b3eccc8f54ff8",
+      "edits": [
+        {
+          "current": "\tconst configPath = \"config/cli-package.v1.json\";\n\tconst config = JSON.parse(beforeCallbackInventoryRepair(configPath, await readFile(configPath, \"utf8\")));\n",
+          "previous": "\tconst config = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n",
+          "start": 10334
+        }
+      ],
+      "path": "tests/helpers/owned-callback-result-evidence.mjs",
+      "previousSha256": "b5dac0fa27c6ce73e76f2bd1ec9abb2435047ab04433b2de4863a337fd6c9d26",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "594d6caa045c520a54b3aeaae22d9fae0e397b2a6aea1a6fef096058978c9df9",
+      "edits": [
+        {
+          "current": "\tconst configPath = \"config/cli-package.v1.json\";\n\tconst config = JSON.parse(beforeOwnedRustCallbackResults(configPath, await readFile(configPath, \"utf8\")));\n",
+          "previous": "\tconst config = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n",
+          "start": 6587
+        }
+      ],
+      "path": "tests/helpers/owned-cpp-callback-result-evidence.mjs",
+      "previousSha256": "d38c95489285eb69bab70d15095a59b14955921b88ae91e1f64e4dd9ae441f47",
+      "strategy": "spans"
+    },
+    {
       "currentSha256": "1db0317677966144093cca01a1a81be13001e9cc5406d70a7a9f7cda9b5ec14f",
       "edits": [
         {
@@ -622,6 +679,19 @@
       ],
       "path": "tests/helpers/owned-dotnet-native.mjs",
       "previousSha256": "2367a6b65067bb818abd0f8f62fb3ba7285aebf2951925252de7e5b664a88eb7",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "2552bfc07c44772aee640959fa12b0ab8ecf3f3925387d68eb8ca4775d3881e5",
+      "edits": [
+        {
+          "current": "\tconst configPath = \"config/cli-package.v1.json\";\n\tconst config = JSON.parse(beforeOwnedRubyCallbackResults(configPath, await readFile(configPath, \"utf8\")));\n",
+          "previous": "\tconst config = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n",
+          "start": 8573
+        }
+      ],
+      "path": "tests/helpers/owned-python-callback-result-acceptance.mjs",
+      "previousSha256": "00eee84c9f3d0acc9fe36d3158bb3e4eeffee5f619ac754782771c0377d6303b",
       "strategy": "spans"
     },
     {
@@ -661,7 +731,43 @@
       "strategy": "spans"
     },
     {
-      "currentSha256": "0f95429cb481602450cb8b8bbb0147eddf8a40a7626851c4f0987e27aad3bdd0",
+      "currentSha256": "9a3e3927304c79b4c6cce4e779f4bf9b9cd2651859db1f0f153d8d92a1ddcc1c",
+      "edits": [
+        {
+          "current": "import { beforeOwnedDotnetCallbackResults } from \"./owned-dotnet-callback-result-history.mjs\";\n",
+          "previous": "",
+          "start": 936
+        },
+        {
+          "current": "\tconst configPath = \"config/cli-package.v1.json\";\n\tconst config = JSON.parse(beforeOwnedDotnetCallbackResults(configPath, await readFile(configPath, \"utf8\")));\n",
+          "previous": "\tconst config = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n",
+          "start": 11933
+        },
+        {
+          "current": "\t\tconst file = item.cli.files.find(value => value.path === path);\n\t\tassert.ok(file, path);\n\t\tconst bytes = Buffer.from(beforeOwnedDotnetCallbackResults(path, await readFile(path), file.sha256));\n",
+          "previous": "\t\tconst file = item.cli.files.find(value => value.path === path), bytes = await readFile(path);\n",
+          "start": 12410
+        }
+      ],
+      "path": "tests/helpers/owned-ruby-callback-result-package-evidence.mjs",
+      "previousSha256": "cc1e47a1b81598cbcd79d523e86e347a0604026bbea422f67a348e537be96661",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "4bffa6505f1a7ec3e31bce9476d1332d14732c8af614b1ced549d0b3e4d5bef8",
+      "edits": [
+        {
+          "current": "\tconst configPath = \"config/cli-package.v1.json\";\n\tconst config = JSON.parse(beforeOwnedPythonCallbackResults(configPath, await readFile(configPath, \"utf8\")));\n",
+          "previous": "\tconst config = JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\"));\n",
+          "start": 7467
+        }
+      ],
+      "path": "tests/helpers/owned-rust-callback-result-acceptance.mjs",
+      "previousSha256": "c573620a0d086f34fa716d9d2f4f1e89c9c1b84d7601b93c493270c0d98c6d6f",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "a64d4a1906103448957885bc58ff998eeb5a72189c6398fed909bf7e8f7fabc2",
       "edits": [
         {
           "current": "import { beforeOwnedDotnetCallbackResults } from \"./helpers/owned-dotnet-callback-result-history.mjs\";\n",
@@ -672,10 +778,33 @@
           "current": "\t\tconst current = Buffer.from(beforeOwnedDotnetCallbackResults(update.path, await readFile(update.path)));\n\t\tconst prior = beforeOwnedRubyCallbackResults(update.path, current);\n",
           "previous": "\t\tconst current = await readFile(update.path), prior = beforeOwnedRubyCallbackResults(update.path, current);\n",
           "start": 1557
+        },
+        {
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedDotnetCallbackResults(path, await readFile(path, \"utf8\"));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = await readFile(path, \"utf8\");\n",
+          "start": 3829
+        },
+        {
+          "current": "\t\tfile.sha256 = sha256(beforeOwnedDotnetCallbackResults(file.path, await readFile(file.path)));\n",
+          "previous": "\t\tfile.sha256 = sha256(await readFile(file.path));\n",
+          "start": 4105
         }
       ],
       "path": "tests/owned-ruby-callback-result-history.test.mjs",
       "previousSha256": "a998e2ec7b08d284bc5b58c2887e58e2b5d1b50b040835b59755cc9b861bfe78",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "5c602d38e98733d1d78dc389f21517612c13384d51d0429c68a6d0396276098e",
+      "edits": [
+        {
+          "current": "\tfor(const path of [\"src/analyze/reviewed-owned-source.mjs\", \"src/backends/dotnet/owned-callback-arguments.mjs\"])\n\t{\n\t\tawait rm(join(directory, path));\n\t\tassert.throws(run, error => error.stderr.includes(\"ERR_MODULE_NOT_FOUND\")\n\t\t\t&& error.stderr.includes(path.split(\"/\").at(-1)));\n\t\tawait copyFile(path, join(directory, path));\n\t\tassert.equal(run(), \"filtered-engine-ready\\n\");\n\t}\n",
+          "previous": "\tawait rm(join(directory, \"src/analyze/reviewed-owned-source.mjs\"));\n\tassert.throws(run, error => error.stderr.includes(\"ERR_MODULE_NOT_FOUND\")\n\t\t&& error.stderr.includes(\"reviewed-owned-source.mjs\"));\n",
+          "start": 38153
+        }
+      ],
+      "path": "tests/perl-contract.test.mjs",
+      "previousSha256": "0a918f7b09b97e2739e58e0332f125c726ba564c5fb4ba5e03548db6ef9d37a0",
       "strategy": "spans"
     }
   ]

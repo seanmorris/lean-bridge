@@ -13,6 +13,7 @@ import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mj
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { ownedRubyCallbackResultSource, ownedRubyCallbackResultCombinedSource } from "./owned-ruby-callback-result-fixture.mjs";
 import { ownedRubyCallbackInstalledProbe } from "./owned-ruby-callback-result-installed.mjs";
+import { beforeOwnedDotnetCallbackResults } from "./owned-dotnet-callback-result-history.mjs";
 
 const hash = value => sha256(canonicalJson(value));
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
@@ -179,14 +180,17 @@ export const assertOwnedRubyCallbackPackage = async item => {
 	assert.equal(item.cli.kind, "lean-bridge-cli-package"); assert.equal(item.cli.productionApproved, false);
 	assert.equal(externalRegistryWrites, false); assert.equal(inventorySha256, hash(inventory));
 	assert.match(archive.sha256, /^[a-f0-9]{64}$/u); assert.ok(archive.bytes > 0);
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const configPath = "config/cli-package.v1.json";
+	const config = JSON.parse(beforeOwnedDotnetCallbackResults(configPath, await readFile(configPath, "utf8")));
 	assert.equal(item.cli.schemaVersion, 1);
 	assert.deepEqual(item.cli.package, { name: config.name, version: config.version });
 	assert.equal(item.cli.files.length, config.files.length + 2);
 	assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 	for(const path of config.files)
 	{
-		const file = item.cli.files.find(value => value.path === path), bytes = await readFile(path);
+		const file = item.cli.files.find(value => value.path === path);
+		assert.ok(file, path);
+		const bytes = Buffer.from(beforeOwnedDotnetCallbackResults(path, await readFile(path), file.sha256));
 		assert.equal(file?.bytes, bytes.length, path); assert.equal(file?.sha256, sha256(bytes), path);
 	}
 };

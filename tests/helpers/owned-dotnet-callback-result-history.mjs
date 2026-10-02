@@ -8,7 +8,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 export const ownedDotnetCallbackHistoryPath = "docs/evidence/owned-dotnet-callback-result-source-history-20261002.json";
-export const ownedDotnetCallbackHistorySha256 = "86af89979b831de6b4190c9adb3f7e68893bb6189986384ae33e13e58d6bbbed";
+export const ownedDotnetCallbackHistorySha256 = "af077b0128e66150bfec367ac8411a5c77a3493ebc58df0784658f23755d09b9";
 export const ownedDotnetCallbackBaseline = "2dae24728fa2ac81677f6c76b674dbe5c3be3f73";
 let history;
 /** Authenticate the complete ledger and its immutable predecessor. */

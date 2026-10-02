@@ -97,7 +97,8 @@ const cli = async report => {
 	assert.equal(report.schemaVersion, 1); assert.equal(report.kind, "lean-bridge-cli-package");
 	assert.equal(report.productionApproved, false); assert.equal(externalRegistryWrites, false);
 	assert.equal(inventorySha256, hash(inventory)); digest(archive.sha256); assert.ok(archive.bytes > 0);
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const configPath = "config/cli-package.v1.json";
+	const config = JSON.parse(beforeOwnedRustCallbackResults(configPath, await readFile(configPath, "utf8")));
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)

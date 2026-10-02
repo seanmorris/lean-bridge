@@ -592,7 +592,12 @@ test("the filtered Perl engine loads without undeclared checkout modules", async
 		cwd: directory, encoding: "utf8", env: { PATH: "/unavailable" }, stdio: "pipe"
 	});
 	assert.equal(run(), "filtered-engine-ready\n");
-	await rm(join(directory, "src/analyze/reviewed-owned-source.mjs"));
-	assert.throws(run, error => error.stderr.includes("ERR_MODULE_NOT_FOUND")
-		&& error.stderr.includes("reviewed-owned-source.mjs"));
+	for(const path of ["src/analyze/reviewed-owned-source.mjs", "src/backends/dotnet/owned-callback-arguments.mjs"])
+	{
+		await rm(join(directory, path));
+		assert.throws(run, error => error.stderr.includes("ERR_MODULE_NOT_FOUND")
+			&& error.stderr.includes(path.split("/").at(-1)));
+		await copyFile(path, join(directory, path));
+		assert.equal(run(), "filtered-engine-ready\n");
+	}
 });

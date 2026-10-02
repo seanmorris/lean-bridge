@@ -61,10 +61,10 @@ test("Ruby historical generation preserves exact legacy files and rejects callba
 });
 
 test("Ruby callback source identities do not promote unrelated type-surface cells", async () => {
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedDotnetCallbackResults(path, await readFile(path, "utf8"));
 	const previous = JSON.parse(beforeOwnedRubyCallbackResults(path, current));
 	for(const evidence of previous.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(await readFile(file.path));
+		file.sha256 = sha256(beforeOwnedDotnetCallbackResults(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), previous);
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(beforeOwnedRubyCallbackResults("unrelated.bin", binary), binary);
