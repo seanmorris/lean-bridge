@@ -31,13 +31,14 @@ export const ownedRubyAdapterSources = (c, ruby) => ({ ...c.files
  */
 export const ownedRubyEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });
-	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports) throw new TypeError("Owned Ruby requires authenticated callback/copy or receiver support");
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
+	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned Ruby requires authenticated callback/copy, receiver or callback-result support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
-	const options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors, valueCopies: callbackResultAnchors };
 	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...options });
 	const ruby = generateOwnedRubyPackage(model.bindingIr, null, options), prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-ruby-adapter.json"), "utf8"));
@@ -48,9 +49,10 @@ export const ownedRubyEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }
 		, "share/lean-bridge/sources/gmp-6.3.0.tar.xz"
 		, ...["COPYING", "COPYING.LESSERv3", "COPYINGv2", "COPYINGv3"].map(name => `share/lean-bridge/licenses/GMP-${name}`)];
 	const expectedPaths = [...Object.keys(sources), `lib/lib${prefix}_ruby.so`, ...gmpFiles.map(path => `gmp/${path}`)].sort();
-	if(adapter.schemaVersion !== (receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
+	if(adapter.schemaVersion !== (callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== identity
 		|| adapter.bindingIrSha256 !== model.bindingIrSha256 || adapter.componentReceiptSha256 !== sha256(canonicalJson(receipt))
-		|| adapter.library !== `lib${prefix}_ruby.so` || adapter.ownedValues?.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2)
+		|| adapter.library !== `lib${prefix}_ruby.so` || adapter.ownedValues?.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2)
+		|| canonicalJson(adapter.ownedValues.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null)
 		|| canonicalJson(adapter.ownedValues.receiverExports ?? null) !== canonicalJson(model.ownedGraph.receiverExports ?? null)
 		|| canonicalJson(adapter.ownedValues.resultAnchors ?? null) !== canonicalJson(model.ownedGraph.resultAnchors ?? null)
 		|| canonicalJson(adapter.ownedValues.inputTransfers ?? null) !== canonicalJson(model.ownedGraph.inputTransfers ?? null)

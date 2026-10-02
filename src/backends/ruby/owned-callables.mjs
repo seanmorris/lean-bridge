@@ -58,11 +58,12 @@ export const ownedRubyCallbacks = (model, boundary, access) => {
 	for(const callback of boundary.callbacks)
 	{
 		const { node, result, parameters } = callback, i = node.index;
+		const borrowed = callback.anchor !== undefined;
 		const args = parameters.map((_, j) => `arg${j}`), automatic = ownedCallbackRecovery(c.native.model, node, id => id) !== null;
 		const copy = boundary.calls.find(fn => (fn.retain || fn.copy) && fn.id === result.id);
 		const output = (parameter, j) => access.read(parameter, `pointer(arg${j}.to_i, ${parameter.size}, ${parameter.alignment})`);
 		lines.push(`      def host${i}(value, scope, frame = nil)
-${c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0) ? "        value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)\n" : ""}\
+${c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0) || c.callbacks.some(fn => fn.anchor !== undefined) ? "        value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)\n" : ""}\
         scope.enter(nil, 0, 32)
         if exact?(value, ::${model.namespace}::${node.publicType})
           handle = input${i}(value, scope)
@@ -74,6 +75,7 @@ ${c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0) ? "      
         function, recovery = wrapped ? DATA_FIELDS.bind_call(value) : [value, nil]
         require_callback(function)
 ${automatic ? "" : '        raise TypeError, "This callback requires with_recovery(function, value)" unless wrapped'}
+${borrowed ? "        recovery = VALUE_GET.bind_call(recovery) if wrapped && exact?(recovery, Owned::Value)\n" : ""}\
         converted = input${result.index}(recovery, scope) if wrapped
         return nil if scope.check_only
         descriptor = scope.allocate(32)
@@ -104,6 +106,7 @@ ${result.aggregate ? "          recovery_pointer = converted" : `          recov
             borrowed_output = Output.new(nil, borrowed.lease)
 ${parameters.map((parameter, j) => `            value${j} = output${parameter.index}(${output(parameter, j)}, incoming, borrowed_output)`).join("\n")}
             reply = frame.invoke { function.call(${args.map((_, j) => `value${j}`).join(", ")}) }
+${borrowed ? "            reply = VALUE_GET.bind_call(reply) if exact?(reply, Owned::Value)\n" : ""}\
             reply_scope = ValueScope.new(state, false, frame.scope.budget)
             converted = input${result.index}(reply, reply_scope)
 ${result.aggregate ? "            raw = converted" : `            raw = reply_scope.allocate(${result.size})\n            ${access.write(result, "raw", 0, "converted")}`}

@@ -570,6 +570,47 @@ method calls work, including `api::Value.instance_method(:serial)`.
 These APIs do not require callbacks or result anchors when the exported Lean
 functions do not use them. See the [author configuration](../publish/rubygems.md#export-methods-and-properties).
 
+### Results borrowed from a callback argument
+
+A returned Lean function can tie its result to one of that function's arguments.
+Pass the selected argument as its whole `Value` owner. Callback argument numbers
+start at zero inside the returned function; they do not include its closure or
+the outer export's arguments.
+
+For the `owned-callback-results` acceptance gem, save `owned-callback-results.rb`:
+
+```ruby file=ruby/owned-callback-results.rb
+require "lean_bridge/owned_aggregates"
+
+api = LeanBridge::OwnedAggregates
+ticket = api.new_ticket(42, "owner")
+owner = api.copy_value(api::Tree::Leaf.new(ticket: ticket.get))
+callback = api.make_recursive(owner.get)
+view = callback.call(false, owner)
+independent = view.retain
+begin
+  puts api.serial(view.get.ticket)
+  owner.close
+  raise "Callback result outlived its owner" unless view.closed?
+  puts api.serial(independent.get.ticket)
+ensure
+  [ticket, owner, callback, view, independent].each(&:close)
+end
+```
+
+The declared callback result follows `owner`, the second argument to `call`.
+The original owner's last alias closing, its thread exiting, or a consuming
+handoff expires the result and its descendants. Closing the callback itself does
+not substitute a different owner. Empty recursive values obey the same contract.
+An explicit `retain` or `copy_value` creates independent ownership.
+
+These callback-local anchors work without host callbacks, export-result anchors
+or receiver methods. A package that also accepts Ruby callbacks can receive raw
+argument values or a correctly typed whole `Value` as the reply or recovery
+value. The bridge converts the reply before expiring its callback-local views.
+Returned Lean functions can be passed back as callbacks using either their
+whole owner or their checked `get` value. Asynchronous delivery remains unsupported.
+
 ### Alpha interoperability example
 
 The remaining example uses `lean_bridge_alpha-0.0.0.gem`. It exercises resources and callbacks through the separate Alpha fixture API. Resource identities remain separate from ordinary copied values and primitive callables.

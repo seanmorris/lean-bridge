@@ -353,6 +353,96 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  owned-ruby-callback-results:
+    name: Callback-result lifetimes in installed Ruby gems
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      EMCC_CORES: "2"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Select Python 3.11 for backported type aliases
+        id: callback_python311
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Select Python 3.12 for standard-library type aliases
+        id: callback_python312
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Select Ruby 3.3
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Install callback acceptance tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3-venv ripgrep zstd
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh
+          bash scripts/bootstrap-rust-ci.sh
+          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.6.0 typing_extensions==4.6.0
+          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
+          python3 -m venv build/python-collection-typecheck
+          build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
+      - name: Install all callback browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Build the callback shared runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-ruby-callback-result-runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Verify Ruby callback-result lifetimes
+        shell: bash
+        env:
+          LEAN_BRIDGE_PYTHON: ${{ steps.callback_python311.outputs.python-path }}
+          LEAN_BRIDGE_COLLECTION_PYTHONS: '["${{ steps.callback_python311.outputs.python-path }}", "${{ steps.callback_python312.outputs.python-path }}"]'
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+          export LEAN_BRIDGE_GEM="$(command -v gem)"
+          npm run test:owned-ruby-callback-results 2>&1 | tee build/owned-ruby-callback-results.log
+          rg '^# tests 12$' build/owned-ruby-callback-results.log
+          rg '^# pass 12$' build/owned-ruby-callback-results.log
+          rg '^# fail 0$' build/owned-ruby-callback-results.log
+          rg '^# cancelled 0$' build/owned-ruby-callback-results.log
+          rg '^# skipped 0$' build/owned-ruby-callback-results.log
+          test -s build/owned-ruby-callback-results/runtime-ordinary-no-host.json
+          test -s build/owned-ruby-callback-results/runtime-ordinary-host.json
+          test -s build/owned-ruby-callback-results/runtime-ordinary-combined.json
+          test -s build/owned-ruby-callback-results/ordinary-no-host-package.json
+          test -s build/owned-ruby-callback-results/ordinary-combined-package.json
+          test -s build/owned-ruby-callback-results/ordinary-combined-release.json
+          test -s build/owned-ruby-callback-results/runtime-reviewed-no-host.json
+          test -s build/owned-ruby-callback-results/runtime-reviewed-host.json
+          test -s build/owned-ruby-callback-results/runtime-reviewed-combined.json
+          test -s build/owned-ruby-callback-results/reviewed-no-host-package.json
+          test -s build/owned-ruby-callback-results/reviewed-combined-package.json
+          test -s build/owned-ruby-callback-results/reviewed-combined-release.json
+      - name: Preserve Ruby callback-result acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ruby-callback-results-${{ github.sha }}
+          path: |
+            build/owned-ruby-callback-results/
+            build/owned-ruby-callback-results.log
+            build/owned-ruby-callback-result-runtime.log
+          if-no-files-found: error
+          retention-days: 30
+
   owned-python-callback-results:
     name: Callback-result lifetimes in installed Python wheels
     runs-on: ubuntu-24.04
@@ -3144,6 +3234,7 @@ jobs:
       - node-consumers
       - owned-javascript-wasm
       - owned-javascript-receivers
+      - owned-ruby-callback-results
       - owned-python-callback-results
       - owned-rust-callback-results
       - owned-callback-results
@@ -3190,6 +3281,9 @@ jobs:
         run: exit 1
       - name: Enforce JavaScript receiver acceptance
         if: needs.owned-javascript-receivers.result != 'success'
+        run: exit 1
+      - name: Enforce Ruby callback-result acceptance
+        if: needs.owned-ruby-callback-results.result != 'success'
         run: exit 1
       - name: Enforce Python callback-result acceptance
         if: needs.owned-python-callback-results.result != 'success'

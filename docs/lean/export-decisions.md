@@ -176,13 +176,14 @@ Nested arrays, Lists, copied records, variants, aliases, bounded recursive value
 
 For resource-containing values, select `resources` and an explicit `ownedAggregates` policy. The analyzer then projects resource identities, owned records and variants, containers, recursive values and synchronous callbacks through the shared ownership model. Its schema-4 Binding IR records borrowed inputs and explicitly leased results. It also preserves explicit input-transfer decisions from ordinary configuration or a reviewed API. C packages compile those decisions into [owner-consuming calls](../consume/c.md#transferred-inputs); C++ packages use [rvalue references](../consume/cpp.md#transferred-inputs), Rust packages use [mutable references](../consume/rust.md#transferred-inputs), and the other implemented bindings consume checked resource leases ([Python](../consume/python.md#transferred-inputs), [Ruby](../consume/ruby.md#transferred-inputs), [C#](../consume/dotnet.md#consuming-inputs), [Java](../consume/java.md#consuming-inputs), [Kotlin](../consume/kotlin.md#consuming-inputs), [Perl](../consume/perl.md#consuming-inputs), [native PHP and PHP-Wasm](../php.md#consuming-inputs), [JavaScript/TypeScript](../javascript-typescript.md#consuming-inputs), [WIT/WASI](../consume/wit-wasi.md#consuming-inputs)). These profiles also preserve [owner-anchored borrowed results](../publish/c.md#anchor-a-result-to-an-input), including the [WIT/WASI Component Model path](../consume/wit-wasi.md#borrowed-results). C, C++, Rust, Python, Ruby, C#, Java, Kotlin, Perl, native PHP, PHP-Wasm, JavaScript/TypeScript and WIT/WASI also support [receiver-bound results](../publish/c.md#export-methods-and-properties).
 
-For C, C++, Rust, Python and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)
+For C, C++, Rust, Python, Ruby and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)
 can borrow a callback's result from one of that callback's arguments. Argument
 names are local to each callable. The selected argument's original owner
 controls expiration; outer export parameters and receiver anchors cannot stand
 in for callback arguments. Other targets still reject callback-result anchors.
 Rust callers pass a checked [`Value<T>` owner](../consume/rust.md#borrowed-callback-results),
-and Python callers pass a [`Value[T]` owner](../consume/python.md#callback-results-borrowed-from-an-argument),
+Python callers pass a [`Value[T]` owner](../consume/python.md#callback-results-borrowed-from-an-argument),
+and Ruby callers pass a [`Value` owner](../consume/ruby.md#results-borrowed-from-a-callback-argument)
 for the selected argument. Host replies may return the declared payload or its
 whole owner; the bridge checks and converts either form before the callback ends.
 
