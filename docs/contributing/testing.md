@@ -3502,6 +3502,31 @@ fifteen passes without skips and retains
 `build/owned-jvm-receivers.log` and twelve reports under
 `build/owned-jvm-receiver-core/`.
 
+### Optimized receiver garbage collection
+
+Run the Java and Kotlin lifetime checks with the same JDK, Kotlin and native
+Lean tools:
+
+```sh
+npm run test:owned-jvm-receiver-gc
+```
+
+Both the ordinary and reviewed source paths execute compiled Lean. Each case
+checks 10,627 assertions per language, collects eight nominal owners per
+language, and forces 100 collections inside receiver getter calls. HotSpot's
+compilation log must show C2 compilation of the resource and aggregate getters
+and both ephemeral-receiver callers. The test checks that method references
+keep their receiver alive, borrowed views expire with their original owner,
+and independent retains remain usable after collection.
+
+The test removes Java and Kotlin reachability fences separately, compiles each
+altered implementation, and requires its optimized getter assertion to fail.
+It restores the generated sources and runs again with no live native
+allocations or identities. Native and container CI run this two-test gate
+without skips. CI retains `build/owned-jvm-receiver-gc.log` and both reports in
+`build/owned-jvm-receiver-gc/`. These checks exercise generated bindings directly;
+the installed Maven package checks remain in the receiver gate above.
+
 ## Native PHP receiver acceptance
 
 Use PHP CLI 8.2 or later, Composer, the FFI extension and the pinned native

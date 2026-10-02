@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedWitReceiver, ownedWitReceiverChangedPaths } from "./wit-owned-receiver-history.mjs";
+import { beforeOwnedWitReceiver, ownedWitReceiverNormalizationPaths } from "./wit-owned-receiver-history.mjs";
 
 export const ownedJavaScriptReceiverPath = "docs/evidence/owned-javascript-receivers-20261001.json";
 export const ownedJavaScriptReceiverBaseline = "a56a39a7e959067643b545800b7d5e95082beafd";
@@ -70,7 +70,7 @@ export const ownedJavaScriptReceiverAddedPaths = [
 	, "tests/owned-javascript-receivers.test.mjs"
 ].sort();
 let cached;
-export const ownedJavaScriptReceiverNormalizationPaths = [...new Set([...ownedJavaScriptReceiverChangedPaths, ...ownedWitReceiverChangedPaths])].sort();
+export const ownedJavaScriptReceiverNormalizationPaths = [...new Set([...ownedJavaScriptReceiverChangedPaths, ...ownedWitReceiverNormalizationPaths])].sort();
 
 /**
  * Reverse exact ordered edits after authenticating both complete identities.

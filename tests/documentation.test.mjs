@@ -729,6 +729,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
     , ...["runtime", "values", "layout", "kotlin", "conversions", "calls", "thread-exit", "packaging", "transfers", "transfer-packaging", "borrows"].map(name => `build/owned-jvm-${name}/`)
     , "build/owned-jvm-borrows.log"
     , "build/owned-jvm-receiver-core/", "build/owned-jvm-receivers.log"
+    , "build/owned-jvm-receiver-gc/", "build/owned-jvm-receiver-gc.log"
     , ...["compounds", "lists", "aliases", "variants", "equality"].map(name => `build/${name}/jvm.json`)
     , ...["jvm-values", "jvm-conversions", "jvm-native", "kotlin-values", "jvm-package-cold", "jvm-packages", "jvm-reproducibility", "jvm-composition", "jvm-conflicts"].map(name => `build/recursive/${name}.json`)
     , "build/collections/jvm-conversions.json", "build/collections/jvm.json"

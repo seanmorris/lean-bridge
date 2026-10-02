@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJvmReceiverGc, ownedJvmReceiverGcChangedPaths } from "./owned-jvm-receiver-gc-history.mjs";
 
 export const ownedWitReceiverPath = "docs/evidence/wit-owned-receivers-20261001.json";
 export const ownedWitReceiverBaseline = "3195b47fc2ef224a6b4d92501e0dadefb3b9a1f0";
@@ -54,6 +55,7 @@ export const ownedWitReceiverAddedPaths = [
 	, "tests/wit-owned-receivers.test.mjs"
 ].sort();
 let cached;
+export const ownedWitReceiverNormalizationPaths = [...new Set([...ownedWitReceiverChangedPaths, ...ownedJvmReceiverGcChangedPaths])].sort();
 
 /**
  * Reverse ordered edits only after authenticating both complete identities.
@@ -86,6 +88,7 @@ export const reverseOwnedWitReceiverUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedWitReceiver = (path, source, expected) => {
+	source = beforeOwnedJvmReceiverGc(path, source, expected);
 	if(!ownedWitReceiverChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -112,5 +115,5 @@ export const beforeOwnedWitReceiver = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedWitReceiverHistoricalBytes = (path, bytes, expected) => ownedWitReceiverChangedPaths.includes(path)
+export const ownedWitReceiverHistoricalBytes = (path, bytes, expected) => ownedWitReceiverNormalizationPaths.includes(path)
 	? beforeOwnedWitReceiver(path, bytes.toString("utf8"), expected) : bytes;

@@ -2060,6 +2060,15 @@ jobs:
           test -s build/owned-jvm-receiver-core/reviewed-package.json
           test -s build/owned-jvm-receiver-core/ordinary-resource-package.json
           test -s build/owned-jvm-receiver-core/reviewed-resource-package.json
+          npm run test:owned-jvm-receiver-gc > build/owned-jvm-receiver-gc.log 2>&1
+          cat build/owned-jvm-receiver-gc.log
+          rg '^# tests 2$' build/owned-jvm-receiver-gc.log
+          rg '^# pass 2$' build/owned-jvm-receiver-gc.log
+          rg '^# fail 0$' build/owned-jvm-receiver-gc.log
+          rg '^# cancelled 0$' build/owned-jvm-receiver-gc.log
+          rg '^# skipped 0$' build/owned-jvm-receiver-gc.log
+          test -s build/owned-jvm-receiver-gc/ordinary.json
+          test -s build/owned-jvm-receiver-gc/reviewed.json
           test -s build/owned-jvm-thread-exit/ordinary.json
           test -s build/owned-jvm-thread-exit/reviewed.json
           test -s build/owned-jvm-runtime/ordinary.json
@@ -2146,6 +2155,8 @@ jobs:
             build/owned-jvm-borrows.log
             build/owned-jvm-receiver-core/
             build/owned-jvm-receivers.log
+            build/owned-jvm-receiver-gc/
+            build/owned-jvm-receiver-gc.log
             build/compounds/jvm.json
             build/lists/jvm.json
             build/aliases/jvm.json
@@ -2346,6 +2357,7 @@ jobs:
               consumer_command="$consumer_command && npm run test:owned-jvm-transfers"
               consumer_command="$consumer_command && npm run test:owned-jvm-borrows"
               consumer_command="$consumer_command && npm run test:owned-jvm-receivers"
+              consumer_command="$consumer_command && npm run test:owned-jvm-receiver-gc"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_COMPOUND_TEST=1 node --test tests/jvm-compounds.test.mjs tests/jvm-compound-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_LIST_TEST=1 node --test tests/jvm-lists.test.mjs tests/jvm-list-contract.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_JVM_ALIAS_TEST=1 node --test tests/jvm-aliases.test.mjs"

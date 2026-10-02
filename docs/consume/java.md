@@ -546,6 +546,18 @@ before Lean runs, including before a host callback executes.
 
 Callback results anchored to a callback argument remain unsupported.
 
+#### Receiver lifetimes and garbage collection
+
+Keep the whole owner or one of its `share()` wrappers reachable while using a
+borrowed result. Raw values from `get()` and borrowed descendants do not keep
+that owner alive. Collecting its last shared wrapper expires those descendants;
+an independently retained owner remains valid.
+
+Generated methods and getters keep their receiver alive until the call returns,
+including after JIT optimization. A bound method reference also keeps its
+receiver reachable until you release that reference. The cleaner queues native
+releases for the creating thread. Use `try`-with-resources for prompt cleanup.
+
 ### Alpha interoperability example
 
 The remaining example uses the separate `org.leanbridge:lean-alpha:0.0.0` fixture API. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the authenticated Alpha release directory containing `repository/org/leanbridge/lean-alpha/0.0.0/`.

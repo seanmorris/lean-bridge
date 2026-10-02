@@ -493,6 +493,18 @@ invalidate the original owner and its aliases before Lean or its callbacks run.
 
 Callback results anchored to a callback argument remain unsupported.
 
+#### Receiver lifetimes and garbage collection
+
+Keep the whole owner or one of its `share()` wrappers reachable while using
+borrowed results. Raw values and borrowed descendants do not keep that owner
+alive. Independent retains remain valid after the original owner is collected.
+Methods and property getters keep their receiver alive for the call, including
+after JIT optimization. A saved callable that
+captures an owner keeps it reachable until you release the callable.
+
+Use `use` for prompt cleanup. The [Java garbage-collection rules](java.md#receiver-lifetimes-and-garbage-collection)
+also apply to Kotlin owners and their creating threads.
+
 ### Alpha interoperability example
 
 The remaining example uses the separate authenticated `org.leanbridge:lean-alpha:0.0.0` fixture API. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the Alpha release directory containing `repository/`.
