@@ -223,7 +223,7 @@ ${fn ? `${fn.invocations.map(invocation => `    public ${returnType} invoke(${in
     }`).join("\n")}
 ${fn.anchor === undefined ? `\
     private ${fn.returnType} callFromHost(${fn.hostParameters.map((type, i) => `${type} arg${i}`).join(", ")}) {
-        ${fn.returnType === "void" ? "" : "return "}${wholeOwners ? "rawInvocation.invoke" : "invoke"}(${fn.parameters.slice(1).map((id, i) => `arg${i}${delegates.has(id) ? ".asCallback()" : ""}`).join(", ")});
+        ${fn.returnType === "void" ? "" : "return "}${wholeOwners ? "rawInvocation.invoke" : "invoke"}(${fn.parameters.slice(1).map((_, i) => `arg${i}${c.hostArgument?.(fn, i + 1) && !fn.invocations.at(-1).fn.nativeCallbacks?.includes(i + 1) ? ".asCallback()" : ""}`).join(", ")});
     }
     public ${fn.delegateType} asCallback() { return this::callFromHost; }
 ` : `    public ${name} asCallback() { return this; }\n`}\

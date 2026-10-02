@@ -102,7 +102,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedReceiverExports: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
-			, ownedCallbackResultAnchors: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget"].includes(target))
+			, ownedCallbackResultAnchors: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"].includes(target))
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)

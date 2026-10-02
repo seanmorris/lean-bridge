@@ -29,8 +29,67 @@ const javaMethods = model => {
 	}).join("\n");
 };
 
-const combinedJavaMethods = `    private static void drop(Value<?> value) { value.close(); }
-    private static void combinedOwners() {
+const javaLifetimeMethods = `    private static void drop(Value<?> value) { value.close(); }
+    private static long sessionLive, sessionIdentities;
+    private static void ownersReleased(String stage) {
+        bindings.runtime.current().require();
+        long liveOwners = count(live), identityOwners = count(identities);
+        check(liveOwners == sessionLive && identityOwners == sessionIdentities,
+            stage + " left native owners: " + liveOwners + "/" + identityOwners
+                + ", expected " + sessionLive + "/" + sessionIdentities);
+    }
+    private static void expired(Runnable action) {
+        try { action.run(); }
+        catch (LeanBridgeException error) { check(error.status() == 4, "expired owner status"); return; }
+        throw new AssertionError("expired callback owner was accepted");
+    }
+    private static void originalOwners() {
+        try (var capturedSeed = newTicket(BigInteger.valueOf(42), "captured");
+             var suppliedSeed = newTicket(BigInteger.valueOf(7), "supplied");
+             var captured = echoRecord(bundle(capturedSeed.get()));
+             var supplied = echoRecord(bundle(suppliedSeed.get()));
+             var closureOwner = makeRecord(captured.get());
+             var closure = closureOwner.get().retain();
+             var result = closure.invoke(true, supplied);
+             var descendant = closure.invoke(false, result);
+             var independent = result.retain(); var alias = supplied.share()) {
+            var raw = descendant.get().primary();
+            check(serial(raw).intValueExact() == 42, "callback result preserves captured data");
+            drop(captured); drop(closureOwner);
+            check(serial(result.get().primary()).intValueExact() == 42,
+                "captured owner and closure are not the callback result anchor");
+            drop(supplied);
+            check(!result.isClosed() && !descendant.isClosed(), "shared original owner keeps descendants live");
+            drop(alias);
+            check(result.isClosed() && descendant.isClosed() && raw.isClosed(),
+                "last original owner expires callback descendants transitively");
+            expired(result::get); expired(descendant::get); expired(() -> serial(raw));
+            expired(() -> closure.invoke(false, supplied));
+            check(serial(independent.get().primary()).intValueExact() == 42,
+                "retained callback result owns an independent copy");
+            try (var later = echoRecord(bundle(suppliedSeed.get())); var valid = closure.invoke(false, later)) {
+                check(serial(valid.get().primary()).intValueExact() == 7,
+                    "retained closure remains usable with a fresh original owner");
+            }
+        }
+    }
+    private static void emptyOwners() {
+        Tree empty = new TreeBranch(new Tree[0]);
+        try (var original = echoRecursive(empty); var closureOwner = makeRecursive(empty);
+             var result = closureOwner.get().invoke(false, original);
+             var descendant = closureOwner.get().invoke(true, result); var independent = result.retain()) {
+            check(result.get() instanceof TreeBranch branch && branch.children().length == 0,
+                "empty callback result retains its shape");
+            drop(original);
+            check(result.isClosed() && descendant.isClosed(), "empty callback descendants keep their original owner");
+            expired(result::get); expired(descendant::get); expired(() -> descendant.equals(descendant));
+            check(independent.get() instanceof TreeBranch branch && branch.children().length == 0,
+                "retained empty callback result is independent");
+        }
+    }
+`;
+
+const combinedJavaMethods = `    private static void combinedOwners() {
         try (var seed = newTicket(BigInteger.valueOf(63), "combined-owner")) {
             var input = bundle(seed.get());
             try (var closureOwner = makeRecordCallback(input)) {
@@ -45,6 +104,21 @@ const combinedJavaMethods = `    private static void drop(Value<?> value) { valu
                         "whole callback reply is copied before its independent owner closes");
                 }
                 ApplyTwiceArgument1ClosureCallback raw = value -> CallbackResult.value(value);
+                try (var receiver = echoRecord(input); var alias = receiver.share();
+                     var borrowed = receiver.borrowRecord(); var invalid = echoRecord(input)) {
+                    drop(invalid); var invoked = new boolean[1];
+                    var recovery = OwnedCallbacks.withRecovery((ApplyTwiceArgument1ClosureCallback)value -> {
+                        invoked[0] = true; return CallbackResult.value(value);
+                    }, CallbackResult.owner(invalid));
+                    expired(() -> receiver.moveRecord(recovery));
+                    check(!invoked[0] && !receiver.isClosed() && !alias.isClosed() && !borrowed.isClosed(),
+                        "expired recovery rejects before callback and original-owner handoff");
+                    expired(() -> receiver.moveRecord((ApplyTwiceArgument1ClosureCallback)value -> {
+                        invoked[0] = true; return CallbackResult.owner(invalid);
+                    }));
+                    check(invoked[0] && receiver.isClosed() && alias.isClosed() && borrowed.isClosed(),
+                        "expired callback reply fails after handoff and leaves aliases consumed");
+                }
                 for (int mode = 0; mode < 4; ++mode) {
                     try (var receiver = echoRecord(input);
                          var moved = switch (mode) {
@@ -97,6 +171,7 @@ ${javaMethods(model)}
         return new Bundle(ticket, Option.some(ticket), new Ticket[] { ticket }, new Ticket[0],
             new Payload(BigInteger.valueOf(-17), new byte[] { 0, -1, 3 }));
     }
+${javaLifetimeMethods}
 ${combined ? combinedJavaMethods : ""}
     public static void main(String[] args) {
         try (var library = Arena.ofShared()) {
@@ -105,6 +180,8 @@ ${combined ? combinedJavaMethods : ""}
             live = linker.downcallHandle(symbols.find("probe_live").orElseThrow(), FunctionDescriptor.of(JAVA_LONG));
             identities = linker.downcallHandle(symbols.find("probe_identities").orElseThrow(), FunctionDescriptor.of(JAVA_LONG));
             bindings.runtime.current().require();
+            sessionLive = count(live); sessionIdentities = count(identities);
+            originalOwners(); ownersReleased("original owners"); emptyOwners(); ownersReleased("empty owners");
             try (var ticketOwner = newTicket(BigInteger.valueOf(42), "callback-owner")) {
                 var input = bundle(ticketOwner.get());
                 try (var original = echoRecord(input)) {
@@ -118,6 +195,24 @@ ${combined ? combinedJavaMethods : ""}
                     }
                     try (var ownerReply = callbackRecord(input, (ApplyTwiceArgument1ClosureCallback)ignored -> CallbackResult.owner(original))) {
                         check(serial(ownerReply.get().primary()).intValueExact() == 42, "whole callback reply preserves its original owner");
+                    }
+                    try (var rawRecovery = callbackRecord(input, OwnedCallbacks.withRecovery(
+                             (ApplyTwiceArgument1ClosureCallback)value -> CallbackResult.value(value), CallbackResult.value(input)));
+                         var wholeRecovery = callbackRecord(input, OwnedCallbacks.withRecovery(
+                             (ApplyTwiceArgument1ClosureCallback)value -> CallbackResult.owner(original), CallbackResult.owner(original)))) {
+                        check(serial(rawRecovery.get().primary()).intValueExact() == 42
+                            && serial(wholeRecovery.get().primary()).intValueExact() == 42,
+                            "explicit raw and whole recoveries preserve callback replies");
+                    }
+                    try (var invalid = echoRecord(input)) {
+                        drop(invalid); var invoked = new boolean[1];
+                        expired(() -> callbackRecord(input, OwnedCallbacks.withRecovery(
+                            (ApplyTwiceArgument1ClosureCallback)value -> { invoked[0] = true; return CallbackResult.value(value); },
+                            CallbackResult.owner(invalid))));
+                        check(!invoked[0], "expired whole recovery rejects before callback execution");
+                        expired(() -> callbackRecord(input,
+                            (ApplyTwiceArgument1ClosureCallback)value -> CallbackResult.owner(invalid)));
+                        check(!original.isClosed(), "expired whole reply does not consume independent input owners");
                     }
                     try (var closureOwner = makeRecordCallback(input)) {
                         var closure = closureOwner.get();
@@ -144,6 +239,7 @@ ${combined ? combinedJavaMethods : ""}
                 }
             }
             ${combined ? "combinedOwners();" : ""}
+            ownersReleased("Java callbacks before session shutdown");
             int javaChecks = checks;
             long beforeKotlinLive = count(live), beforeKotlinIdentities = count(identities);
             int kotlinChecks = OwnedKotlinCallbackResultProbe.INSTANCE.run();
@@ -195,6 +291,27 @@ const combinedKotlinMethods = `    private fun combinedOwners() {
                     }
                 }
                 val raw = ApplyTwiceArgument1ClosureCallback { CallbackResult.value(it) }
+                echoRecord(input).use { receiver ->
+                    receiver.share().use { alias ->
+                        receiver.borrowRecord().use { borrowed ->
+                            echoRecord(input).use { invalid ->
+                                invalid.close()
+                                var invoked = false
+                                val recovery = KotlinOwnedCallbacks.withRecovery(
+                                    ApplyTwiceArgument1ClosureCallback { invoked = true; CallbackResult.value(it) },
+                                    CallbackResult.owner(invalid))
+                                expired { receiver.moveRecord(recovery) }
+                                verify(!invoked && !receiver.isClosed && !alias.isClosed && !borrowed.isClosed,
+                                    "Kotlin invalid recovery rejects before original-owner transfer")
+                                expired { receiver.moveRecord(ApplyTwiceArgument1ClosureCallback {
+                                    invoked = true; CallbackResult.owner(invalid)
+                                }) }
+                                verify(invoked && receiver.isClosed && alias.isClosed && borrowed.isClosed,
+                                    "Kotlin invalid reply fails after original-owner transfer")
+                            }
+                        }
+                    }
+                }
                 for (mode in 0 until 4) {
                     echoRecord(input).use { receiver ->
                         val moved = when (mode) {
@@ -233,7 +350,9 @@ import ${model.kotlin.namespace}.Bundle
 import ${model.kotlin.namespace}.Ticket
 import ${model.kotlin.namespace}.Option
 import ${model.kotlin.namespace}.Payload
+import ${model.kotlin.namespace}.TreeBranch
 import ${model.kotlin.namespace}.ApplyTwiceArgument1ClosureCallback
+import ${model.kotlin.namespace}.OwnedCallbacks as KotlinOwnedCallbacks
 
 internal object OwnedKotlinCallbackResultProbe {
     private val bindings get() = OwnedJvmCallbackResultProbe.bindings
@@ -241,6 +360,11 @@ internal object OwnedKotlinCallbackResultProbe {
     private fun verify(value: Boolean, message: String) {
         if (!value) throw AssertionError(message)
         checks++
+    }
+    private fun expired(action: () -> kotlin.Any?) {
+        try { action() }
+        catch (error: LeanBridgeException) { verify(error.status() == 4, "Kotlin expired owner status"); return }
+        throw AssertionError("expired Kotlin callback owner was accepted")
     }
     private fun owners(live: Long, identities: Long, stage: String) {
         val actualLive = OwnedJvmCallbackResultProbe.liveCount()
@@ -251,10 +375,50 @@ internal object OwnedKotlinCallbackResultProbe {
 ${kotlinMethods(model)}
     private fun bundle(ticket: Ticket) = Bundle(ticket, Option.some(ticket), arrayOf(ticket), emptyArray(),
         Payload(BigInteger.valueOf(-17), byteArrayOf(0, -1, 3)))
+    private fun originalOwners() {
+        val owners = mutableListOf<AutoCloseable>()
+        fun <T : AutoCloseable> own(value: T): T { owners.add(value); return value }
+        try {
+            val capturedSeed = own(newTicket(BigInteger.valueOf(42), "Kotlin captured"))
+            val suppliedSeed = own(newTicket(BigInteger.valueOf(7), "Kotlin supplied"))
+            val captured = own(echoRecord(bundle(capturedSeed.get())))
+            val supplied = own(echoRecord(bundle(suppliedSeed.get())))
+            val closureOwner = own(makeRecord(captured.get()))
+            val closure = own(closureOwner.get().retain())
+            val result = own(closure.invoke(true, supplied))
+            val descendant = own(closure.invoke(false, result))
+            val independent = own(result.retain())
+            val alias = own(supplied.share())
+            val raw = descendant.get().primary
+            captured.close(); closureOwner.close()
+            verify(serial(result.get().primary).intValueExact() == 42,
+                "Kotlin captured owner and closure are not the callback anchor")
+            supplied.close()
+            verify(!result.isClosed && !descendant.isClosed, "Kotlin shared original owner preserves descendants")
+            alias.close()
+            verify(result.isClosed && descendant.isClosed && raw.isClosed,
+                "Kotlin callback descendants expire with the original owner")
+            expired { result.get() }; expired { descendant.get() }; expired { serial(raw) }
+            expired { closure.invoke(false, supplied) }
+            verify(serial(independent.get().primary).intValueExact() == 42, "Kotlin retained callback reply is independent")
+            val empty = TreeBranch(emptyArray())
+            val emptyOriginal = own(echoRecursive(empty))
+            val emptyClosure = own(makeRecursive(empty))
+            val emptyResult = own(emptyClosure.get().invoke(false, emptyOriginal))
+            val emptyDescendant = own(emptyClosure.get().invoke(true, emptyResult))
+            val emptyIndependent = own(emptyResult.retain())
+            emptyOriginal.close()
+            verify(emptyResult.isClosed && emptyDescendant.isClosed, "Kotlin empty descendants preserve the original owner")
+            expired { emptyResult.get() }; expired { emptyDescendant.get() }
+            verify((emptyIndependent.get() as TreeBranch).children.isEmpty(), "Kotlin retained empty reply is independent")
+        } finally { owners.asReversed().forEach { it.close() } }
+    }
 ${combined ? combinedKotlinMethods : ""}
     fun run(): Int {
         val baselineLive = OwnedJvmCallbackResultProbe.liveCount()
         val baselineIdentities = OwnedJvmCallbackResultProbe.identityCount()
+        originalOwners()
+        owners(baselineLive, baselineIdentities, "original and empty owners")
         newTicket(BigInteger.valueOf(52), "kotlin-callback-owner").use { ticketOwner ->
             val input = bundle(ticketOwner.get())
             echoRecord(input).use { original ->
@@ -273,6 +437,17 @@ ${combined ? combinedKotlinMethods : ""}
                     verify(serial(ownerReply.get().primary).intValueExact() == 52, "Kotlin whole callback reply")
                 }
                 owners(ownerLive, ownerIdentities, "whole reply")
+                echoRecord(input).use { invalid ->
+                    invalid.close()
+                    var invoked = false
+                    val recovery = KotlinOwnedCallbacks.withRecovery(
+                        ApplyTwiceArgument1ClosureCallback { invoked = true; CallbackResult.value(it) }, CallbackResult.owner(invalid))
+                    expired { callbackRecord(input, recovery) }
+                    verify(!invoked, "Kotlin expired whole recovery rejects before callback execution")
+                    expired { callbackRecord(input, ApplyTwiceArgument1ClosureCallback { CallbackResult.owner(invalid) }) }
+                    verify(!original.isClosed, "Kotlin invalid callback reply preserves independent owner")
+                }
+                owners(ownerLive, ownerIdentities, "expired replies and recoveries")
                 makeRecordCallback(input).use { closureOwner ->
                     val closure = closureOwner.get()
                     callbackRecord(input, closure).use { direct ->
@@ -334,6 +509,7 @@ ${javaMethods(model)}
         return new Bundle(ticket, Option.some(ticket), new Ticket[] { ticket }, new Ticket[0],
             new Payload(BigInteger.valueOf(-21), new byte[] { 0, -1 }));
     }
+${javaLifetimeMethods}
     public static void main(String[] args) {
         try (var library = Arena.ofShared()) {
             var symbols = SymbolLookup.libraryLookup(args[0], library); var linker = Linker.nativeLinker();
@@ -341,6 +517,8 @@ ${javaMethods(model)}
             live = linker.downcallHandle(symbols.find("probe_live").orElseThrow(), FunctionDescriptor.of(JAVA_LONG));
             identities = linker.downcallHandle(symbols.find("probe_identities").orElseThrow(), FunctionDescriptor.of(JAVA_LONG));
             bindings.runtime.current().require();
+            sessionLive = count(live); sessionIdentities = count(identities);
+            originalOwners(); ownersReleased("original owners"); emptyOwners(); ownersReleased("empty owners");
             try (var ticketOwner = newTicket(BigInteger.valueOf(61), "native-callback")) {
                 var ticket = ticketOwner.get(); var input = bundle(ticket);
                 try (var original = echoRecord(input); var closureOwner = makeRecordCallback(input)) {
@@ -440,7 +618,7 @@ test("Java callback replies copy raw and whole values before their frame expires
 	{
 		throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error });
 	}
-	assert.ok(observed.checks >= 9); assert.ok(observed.kotlinChecks >= 9);
+	assert.ok(observed.checks >= 30); assert.ok(observed.kotlinChecks >= 30);
 	assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 });
 
@@ -473,7 +651,7 @@ test("JVM native closures preserve callback-result owners without host upcalls",
 	{
 		throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error });
 	}
-	assert.ok(observed.checks >= 7); assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
+	assert.ok(observed.checks >= 23); assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 });
 
 test("JVM callback-result owners compose with transfers, anchors, and receivers", {
@@ -507,6 +685,6 @@ test("JVM callback-result owners compose with transfers, anchors, and receivers"
 	{
 		throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error });
 	}
-	assert.ok(observed.checks >= 16); assert.ok(observed.kotlinChecks >= 16);
+	assert.ok(observed.checks >= 40); assert.ok(observed.kotlinChecks >= 40);
 	assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 });

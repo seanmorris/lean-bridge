@@ -22,9 +22,17 @@ export const rejectOwnedJvmPackageMutations = async (options, verified, compiled
 	const transfers = Boolean(verified.model.ownedGraph.inputTransfers);
 	const anchors = Boolean(verified.model.ownedGraph.resultAnchors);
 	const receivers = Boolean(verified.model.ownedGraph.receiverExports);
+	const callbacks = Boolean(verified.model.ownedGraph.callbackResultAnchors);
 	const mutations = [...transfers ? ["adapter-version", "contract-version", "consumption", "aliases", "native-transfers"] : []
 		, ...anchors ? ["native-anchors", "owned-version", "original-anchor", "borrow-expiry", "empty-owner", "canonical-equality", "raw-views", "copy-type", ...transfers ? ["whole-inputs"] : []] : []
 		, ...receivers ? ["native-receivers", ...["values", "members", "properties", "owners", "consumingReceivers", "exports"].map(field => "receiver-" + field)] : []
+		, ...callbacks ? ["callback-adapter-version", "callback-owned-version"
+			, "native-callback-results"
+			, ...["schemaVersion", "values", "anchor", "parameterNumbering", "expiration"
+				, "descendants", "emptyValues", "independentOwnership", "hostArguments"
+				, "hostReply", "hostResultHandoff", "nativeInputs", "nativeClosures"]
+				.map(field => "callback-" + field)
+			, "callback-signatures", "callback-parameter", "callback-result"] : []
 		, "lifetime", "source", "guard", "gmp-receipt", "gmp-source", "library"
 		, "unrecorded"];
 	for(const mutation of mutations)
@@ -38,6 +46,14 @@ export const rejectOwnedJvmPackageMutations = async (options, verified, compiled
 		else if(mutation === "native-anchors") delete forged.ownedValues.resultAnchors;
 		else if(mutation === "native-receivers") delete forged.ownedValues.receiverExports;
 		else if(mutation.startsWith("receiver-")) forged.jvmValues.receiverExports[mutation.slice(9)] = "forged";
+		else if(mutation === "callback-adapter-version") forged.schemaVersion = 4;
+		else if(mutation === "callback-owned-version") forged.ownedValues.schemaVersion = 5;
+		else if(mutation === "native-callback-results") delete forged.ownedValues.callbackResultAnchors;
+		else if(mutation === "callback-signatures") forged.jvmValues.callbackResultAnchors.signatures.pop();
+		else if(mutation === "callback-parameter") forged.jvmValues.callbackResultAnchors.signatures[0].parameter++;
+		else if(mutation === "callback-result") forged.jvmValues.callbackResultAnchors.signatures[0].result += ".forged";
+		else if(mutation.startsWith("callback-"))
+			forged.jvmValues.callbackResultAnchors[mutation.slice(9)] = mutation === "callback-schemaVersion" ? 0 : "forged";
 		else if(mutation === "owned-version") forged.ownedValues.schemaVersion = 3;
 		else if(mutation === "original-anchor") forged.jvmValues.resultAnchors.anchor = "fresh-snapshot";
 		else if(mutation === "borrow-expiry") forged.jvmValues.resultAnchors.expiration = "wrapper-close";
@@ -77,7 +93,7 @@ export const rejectOwnedJvmPackageMutations = async (options, verified, compiled
 	}
 	const api = `src/main/java/${verified.projection.namespace.replaceAll(".", "/")}/Api.java`;
 	const original = await readFile(join(jvmRoot, api));
-	for(const mutation of ["managed-source", "compiler-options", "managed-lifetime", ...transfers ? ["managed-version"] : []])
+	for(const mutation of ["managed-source", "compiler-options", "managed-lifetime", ...transfers || callbacks ? ["managed-version"] : []])
 	{
 		const forged = structuredClone(compiled);
 		if(mutation === "managed-source")

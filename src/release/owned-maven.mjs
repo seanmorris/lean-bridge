@@ -35,15 +35,17 @@ export const packageOwnedMaven = async ({ working, jvmRoot, nativeRoot, runtimeR
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const capabilities = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
 	const compiled = JSON.parse(await readFile(join(jvmRoot, "native-jvm.json"), "utf8"));
 	await verifyNativeFiles(jvmRoot, compiled.files);
 	validateKotlinCompilation(compiled.kotlin, projection.namespace, { ownedValues: true });
-	if(compiled.schemaVersion !== (receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
+	if(compiled.schemaVersion !== (callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.namespace !== projection.namespace || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| canonicalJson(compiled.ownedValues ?? null) !== canonicalJson(projection.contract)
 		|| !/^javac 22(?:[.+ -]|$)/.test(compiled.compiler)
 		|| (await nativeArtifactPaths(jvmRoot)).some(path => path !== "native-jvm.json" && !Object.hasOwn(compiled.files, path))) throw new Error("Compiled JVM projection differs from native evidence");
-	const sources = generateOwnedJvmPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }).files;
+	const sources = generateOwnedJvmPackage(model.bindingIr, evidence, capabilities).files;
 	for(const path of Object.keys(compiled.files))
 		if(!Object.hasOwn(sources, path) && !/^classes\/[A-Za-z0-9_.$/-]+\.(?:class|kotlin_module)$/u.test(path))
 			throw new Error("Unexpected compiled owned JVM file: " + path);
@@ -90,7 +92,7 @@ export const packageOwnedMaven = async ({ working, jvmRoot, nativeRoot, runtimeR
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("META-INF/lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1, kind: "lean-bridge-owned-maven-package", ecosystem: "maven", name, version, component: model.component, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, namespace: projection.namespace, kotlin: { namespace: compiled.kotlin.namespace, standardLibraryVersion: compiled.kotlin.standardLibraryVersion }, compiledProjectionSha256: sha256(canonicalJson(compiled)), ownedValues: projection.contract, files: inventory }));
+	await save("META-INF/lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1, kind: "lean-bridge-owned-maven-package", ecosystem: "maven", name, version, component: model.component, bindingIrSha256: model.bindingIrSha256, runtimeIdentity: evidence.runtimeIdentity, sourceIdentity: model.sourceIdentity, glibcMinimumVersion, namespace: projection.namespace, kotlin: { namespace: compiled.kotlin.namespace, standardLibraryVersion: compiled.kotlin.standardLibraryVersion }, compiledProjectionSha256: sha256(canonicalJson(compiled)), ownedValues: projection.contract, files: inventory }));
 	const jar = await createDeterministicZip({ directory: root, sourceDateEpoch: 315532800 }), packages = [];
 	await mkdir(coordinateRoot, { recursive: true }); await mkdir(join(working, "archives"), { recursive: true });
 	for(const [extension, bytes] of [["jar", jar], ["pom", Buffer.from(pom)]])

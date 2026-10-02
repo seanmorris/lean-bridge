@@ -473,6 +473,67 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  owned-jvm-callback-results:
+    name: Callback-result lifetimes in installed Maven packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Select Java 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22.0.2'
+      - name: Install native tools, Maven, Lean and Kotlin
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 maven pkg-config ripgrep unzip zstd
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh --lean-only
+          mkdir -p build
+          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+      - name: Verify JVM callback-result lifetimes and installed consumers
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+          export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+          export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+          export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+          npm run test:owned-jvm-callback-results 2>&1 | tee build/owned-jvm-callback-results.log
+          rg '^# tests 12$' build/owned-jvm-callback-results.log
+          rg '^# pass 12$' build/owned-jvm-callback-results.log
+          rg '^# fail 0$' build/owned-jvm-callback-results.log
+          rg '^# cancelled 0$' build/owned-jvm-callback-results.log
+          rg '^# skipped 0$' build/owned-jvm-callback-results.log
+          test -s build/owned-jvm-callback-results/ordinary-no-host-package.json
+          test -s build/owned-jvm-callback-results/ordinary-combined-package.json
+          test -s build/owned-jvm-callback-results/reviewed-no-host-package.json
+          test -s build/owned-jvm-callback-results/reviewed-combined-package.json
+      - name: Preserve JVM callback-result acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: jvm-callback-results-${{ github.sha }}
+          path: |
+            build/owned-jvm-callback-results/
+            build/owned-jvm-callback-results.log
+          if-no-files-found: error
+          retention-days: 30
+
   owned-ruby-callback-results:
     name: Callback-result lifetimes in installed Ruby gems
     runs-on: ubuntu-24.04
@@ -3358,6 +3419,7 @@ jobs:
       - owned-javascript-receivers
       - owned-ruby-callback-results
       - owned-dotnet-callback-results
+      - owned-jvm-callback-results
       - owned-python-callback-results
       - owned-rust-callback-results
       - owned-callback-results
@@ -3410,6 +3472,9 @@ jobs:
         run: exit 1
       - name: Enforce .NET callback-result acceptance
         if: needs.owned-dotnet-callback-results.result != 'success'
+        run: exit 1
+      - name: Enforce JVM callback-result acceptance
+        if: needs.owned-jvm-callback-results.result != 'success'
         run: exit 1
       - name: Enforce Python callback-result acceptance
         if: needs.owned-python-callback-results.result != 'success'

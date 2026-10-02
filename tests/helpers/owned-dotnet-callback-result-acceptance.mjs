@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJvmCallbackResults } from "./owned-jvm-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { assertOwnedDotnetCallbackRuntime } from "./owned-dotnet-callback-result-evidence.mjs";
 import { assertOwnedDotnetCallbackPackageExecution } from "./owned-dotnet-callback-result-package-execution.mjs";
@@ -113,7 +114,8 @@ export const assertOwnedDotnetCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedDotnetCallbackHistoryPath, sha256: ownedDotnetCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedDotnetCallbackSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(beforeOwnedJvmCallbackResults(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.runs.map(({ name, tests }) => ({ name, tests })), ownedDotnetCallbackRuns);
 	for(const run of record.runs) passed(run, run.tests);
 	assert.equal(record.verification.command, "npm run test:owned-dotnet-callback-evidence");

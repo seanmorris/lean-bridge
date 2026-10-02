@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeOwnedCallbackResults, ownedCallbackResultChangedPaths } from "./owned-callback-result-history.mjs";
 import { ownedDotnetCallbackChangedPaths } from "./owned-dotnet-callback-result-history.mjs";
+import { ownedJvmCallbackChangedPaths } from "./owned-jvm-callback-result-history.mjs";
 import { callbackInventoryRepairPaths } from "./owned-callback-inventory-history.mjs";
 import { ownedCppCallbackChangedPaths } from "./owned-cpp-callback-result-history.mjs";
 import { ownedRustCallbackChangedPaths } from "./owned-rust-callback-result-history.mjs";
@@ -33,6 +34,7 @@ export const copiedFixtureReaderPaths = Object.freeze([...new Set([
 	...readHistory().updates.map(update => update.path)
 	, ...ownedCallbackResultChangedPaths
 	, ...ownedDotnetCallbackChangedPaths
+	, ...ownedJvmCallbackChangedPaths
 	, ...callbackInventoryRepairPaths
 	, ...ownedCppCallbackChangedPaths
 	, ...ownedRustCallbackChangedPaths

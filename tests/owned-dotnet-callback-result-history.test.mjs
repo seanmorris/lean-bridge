@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedJvmCallbackResults } from "./helpers/owned-jvm-callback-result-history.mjs";
 import { ownedDotnetCallbackHistoryPath, ownedDotnetCallbackHistorySha256
 	, ownedDotnetCallbackBaseline, ownedDotnetCallbackChangedPaths
 	, beforeOwnedDotnetCallbackResults, reverseOwnedDotnetCallbackUpdate } from "./helpers/owned-dotnet-callback-result-history.mjs";
@@ -20,7 +21,8 @@ test("Dotnet callback history authenticates exact source transitions and rejects
 	assert.deepEqual(history.updates.map(update => update.path), ownedDotnetCallbackChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path), prior = beforeOwnedDotnetCallbackResults(update.path, current);
+		const current = Buffer.from(beforeOwnedJvmCallbackResults(update.path, await readFile(update.path)));
+		const prior = beforeOwnedDotnetCallbackResults(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedDotnetCallbackResults(update.path, current, update.currentSha256), current);

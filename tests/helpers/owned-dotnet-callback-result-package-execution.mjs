@@ -12,6 +12,7 @@ import { ownedDotnetCallbackInstalledProcessProbe, ownedDotnetCallbackProcessPro
 import { ownedDotnetCallbackForkProbe } from "./owned-dotnet-callback-result-probes.mjs";
 import { ownedDotnetCallbackResultConfiguration } from "./owned-dotnet-callback-result-fixture.mjs";
 import { assertOwnedDotnetCallbackPackageInputs } from "./owned-dotnet-callback-result-package-evidence.mjs";
+import { beforeOwnedJvmCallbackResults } from "./owned-jvm-callback-result-history.mjs";
 
 const hash = value => sha256(canonicalJson(value));
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
@@ -78,13 +79,14 @@ export const assertOwnedDotnetCallbackCli = async report => {
 	assert.equal(report.schemaVersion, 1); assert.equal(report.kind, "lean-bridge-cli-package");
 	assert.equal(report.productionApproved, false); assert.equal(externalRegistryWrites, false);
 	assert.equal(inventorySha256, hash(inventory)); digest(archive.sha256); assert.ok(archive.bytes > 0);
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const configPath = "config/cli-package.v1.json";
+	const config = JSON.parse(beforeOwnedJvmCallbackResults(configPath, await readFile(configPath, "utf8")));
 	assert.deepEqual(report.package, { name: config.name, version: config.version });
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)
 	{
 		const file = report.files.find(entry => entry.path === path); assert.ok(file, path);
-		const bytes = await readFile(path);
+		const bytes = Buffer.from(beforeOwnedJvmCallbackResults(path, await readFile(path), file.sha256));
 		assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 };

@@ -160,7 +160,7 @@ ${equality}
 					: nodes.get(id).kind === "callback" ? `${quoted(model.namespace)}.${identityName(nodes.get(id))}` : type(id))
 		}));
 		const functionTypes = invocations?.map(invocation => `(${invocation.parameters.join(", ")}) -> ${publicReturn}`);
-		const rawFunction = callback && callback.anchor === undefined ? `(${invocations.at(-1).parameters.join(", ")}) -> ${returnType}` : null;
+		const rawFunction = wholeOwners && callback && callback.anchor === undefined ? `(${invocations.at(-1).parameters.join(", ")}) -> ${returnType}` : null;
 		add(node.publicType, `typealias ${quoted(node.publicType)} = ${quoted(model.namespace)}.${name}\n`);
 		const path = `${kotlin}/${name}.kt`;
 		files[path] = `package ${quoted(model.namespace)}
@@ -176,7 +176,7 @@ ${anchors ? `    fun sameIdentity(other: ${name}): kotlin.Boolean = equals(other
 ${callback ? `${invocations.map(invocation => `    fun invoke(${invocation.parameters.map((type, index) => `arg${index}: ${type}`).join(", ")}): ${publicReturn} = try { invocation${invocation.suffix}(${invocation.parameters.map((_, i) => `arg${i}`).join(", ")}) }
         finally { java.lang.ref.Reference.reachabilityFence(this) }`).join("\n")}
 ${callback.anchor === undefined ? `    fun asCallback(): ${quoted(`${namespace}.${node.delegateType}`)} =
-        ${quoted(`${namespace}.${node.delegateType}`)} { ${callback.parameters.slice(1).map((_, i) => `arg${i}`).join(", ")}${callback.parameters.length > 1 ? " -> " : ""}${wholeOwners ? "rawInvocation" : "invoke"}(${callback.parameters.slice(1).map((id, i) => `arg${i}${nodes.get(id).kind === "callback" ? ".asCallback()" : ""}`).join(", ")}) }
+        ${quoted(`${namespace}.${node.delegateType}`)} { ${callback.parameters.slice(1).map((_, i) => `arg${i}`).join(", ")}${callback.parameters.length > 1 ? " -> " : ""}${wholeOwners ? "rawInvocation" : "invoke"}(${callback.parameters.slice(1).map((_, i) => `arg${i}${model.c.hostArgument?.(callback, i + 1) && !callback.invocations.at(-1).fn.nativeCallbacks?.includes(i + 1) ? ".asCallback()" : ""}`).join(", ")}) }
 ` : `    fun asCallback(): ${name} = this\n`}\
 ` : ""}${node.ownerType ? "    /* CHECKED RECEIVER MEMBERS */\n" : ""}    companion object {
         @kotlin.jvm.JvmSynthetic internal fun create(

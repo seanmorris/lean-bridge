@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJvmCallbackResults } from "./owned-jvm-callback-result-history.mjs";
 
 export const ownedDotnetCallbackHistoryPath = "docs/evidence/owned-dotnet-callback-result-source-history-20261002.json";
 export const ownedDotnetCallbackHistorySha256 = "dc4b95aa55a74b04b86e55e47289f5c45ca39d42a97247f3e9e62074496f2a59";
@@ -78,6 +79,7 @@ export const reverseOwnedDotnetCallbackUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedDotnetCallbackResults = (path, source, expected) => {
+	source = beforeOwnedJvmCallbackResults(path, source, expected);
 	const update = readOwnedDotnetCallbackHistory().updates.find(item => item.path === path);
 	const digest = sha256(source);
 	return update && digest !== expected && digest === update.currentSha256
