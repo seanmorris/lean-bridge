@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { nativeVariantReviewedIr, nativeVariantSignatures } from "./helpers/native-variant-fixture.mjs";
@@ -15,7 +16,7 @@ test("C++ variant receipts bind every constructor, installed package and failure
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64);
 	assert.deepEqual(record.profiles, ["cpp"]); assert.deepEqual(record.signatures, nativeVariantSignatures);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeVariantReviewedIr())));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	const expected = record.contracts;
 	assert.deepEqual(expected, nativeVariantReviewedIr().types.map(type => ({ id: type.id

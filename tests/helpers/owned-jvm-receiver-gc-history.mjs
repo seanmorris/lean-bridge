@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeCopiedFixtureReaders, copiedFixtureReaderPaths } from "./copied-fixture-source-history.mjs";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -39,6 +40,7 @@ export const ownedJvmReceiverGcAddedPaths = [
 	, "tests/owned-jvm-receiver-gc.test.mjs"
 ].sort();
 let cached;
+export const ownedJvmReceiverGcNormalizationPaths = [...new Set([...ownedJvmReceiverGcChangedPaths, ...copiedFixtureReaderPaths])].sort();
 
 /**
  * Reverse ordered edits only after authenticating complete source identities.
@@ -71,6 +73,7 @@ export const reverseOwnedJvmReceiverGcUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeOwnedJvmReceiverGc = (path, source, expected) => {
+	source = beforeCopiedFixtureReaders(path, source, expected);
 	if(!ownedJvmReceiverGcChangedPaths.includes(path) || sha256(source) === expected) return source;
 	if(!cached)
 	{
@@ -97,5 +100,5 @@ export const beforeOwnedJvmReceiverGc = (path, source, expected) => {
  * @param bytes - Complete source bytes.
  * @param expected - Optional stopping digest.
  */
-export const ownedJvmReceiverGcHistoricalBytes = (path, bytes, expected) => ownedJvmReceiverGcChangedPaths.includes(path)
+export const ownedJvmReceiverGcHistoricalBytes = (path, bytes, expected) => ownedJvmReceiverGcNormalizationPaths.includes(path)
 	? beforeOwnedJvmReceiverGc(path, bytes.toString("utf8"), expected) : bytes;

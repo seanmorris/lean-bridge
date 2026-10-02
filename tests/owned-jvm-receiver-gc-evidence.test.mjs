@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { beforeCopiedFixtureReaders } from "./helpers/copied-fixture-source-history.mjs";
 import { sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedJvmReceiverGcAcceptance } from "./helpers/owned-jvm-receiver-gc-evidence.mjs";
 import { ownedJvmReceiverGcPath, ownedJvmReceiverGcBaseline, ownedJvmReceiverGcPrevious
@@ -22,13 +23,13 @@ test("JVM receiver GC history authenticates sources without changing support cel
 	const bytes = await readFile(record.previous.path), previous = JSON.parse(bytes);
 	assert.equal(sha256(bytes), record.previous.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), [...Object.keys(previous.sources), ...ownedJvmReceiverGcAddedPaths].sort());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(beforeCopiedFixtureReaders(path, await readFile(path), digest)), digest, path);
 	assert.deepEqual(record.updates.map(update => update.path), ownedJvmReceiverGcChangedPaths);
 	for(const update of record.updates)
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = await readFile(update.path, "utf8"), prior = beforeOwnedJvmReceiverGc(update.path, source);
+		const source = beforeCopiedFixtureReaders(update.path, await readFile(update.path, "utf8")), prior = beforeOwnedJvmReceiverGc(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJvmReceiverGc(update.path, prior), prior);
 		assert.equal(beforeOwnedJvmReceiverGc(update.path, source, update.currentSha256), source);

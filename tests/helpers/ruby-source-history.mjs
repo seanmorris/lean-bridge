@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { copiedFixtureHistoricalBytes } from "./copied-fixture-source-history.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 const fixtureImport = 'import { rubyVariantReviewedIr, rubyVariantSignatures } from "./helpers/ruby-variant-fixture.mjs";';
@@ -28,6 +29,7 @@ const upgrades = new Map([
  * @param expected - Unchanged recorded SHA-256.
  */
 export const assertRubyVariantSourceHash = (path, contents, expected) => {
+	contents = copiedFixtureHistoricalBytes(path, contents, expected);
 	if(sha256(contents) === expected) return;
 	assert.ok(upgrades.has(path), `Unreviewed historical Ruby source change: ${path}`);
 	let source = contents.toString();

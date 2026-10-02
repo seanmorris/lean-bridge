@@ -9,6 +9,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { createNativeModel } from "../src/build/native-model.mjs";
@@ -36,7 +37,7 @@ test("Perl alias evidence binds all eight executions to unchanged relocated inst
 	assert.equal(record.wordBits, 64); assert.deepEqual(record.signatures, nativeAliasSignatures); assert.deepEqual(record.primitives, aliasPrimitives);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeAliasReviewedIr())));
 	assert.deepEqual(record.perlAbis, ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.equal(record.executions.length, 8);
 	assert.deepEqual(record.executions.map(run => `${run.path}/${run.perl.slice(1)}-${run.threaded ? "threaded" : "unthreaded"}`), ["ordinary-source", "reviewed-ir"].flatMap(path => record.perlAbis.map(abi => `${path}/${abi}`)));
 	const expected = nativeAliasReviewedIr().types.filter(type => type.kind === "alias").map(({ id, name, target }) => ({ id, name, target, perlType: perlAliasValueTypes[name] }));

@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeOwnedJvmReceiverGc, ownedJvmReceiverGcChangedPaths } from "./owned-jvm-receiver-gc-history.mjs";
+import { beforeOwnedJvmReceiverGc, ownedJvmReceiverGcNormalizationPaths } from "./owned-jvm-receiver-gc-history.mjs";
 
 export const ownedWitReceiverPath = "docs/evidence/wit-owned-receivers-20261001.json";
 export const ownedWitReceiverBaseline = "3195b47fc2ef224a6b4d92501e0dadefb3b9a1f0";
@@ -55,7 +55,7 @@ export const ownedWitReceiverAddedPaths = [
 	, "tests/wit-owned-receivers.test.mjs"
 ].sort();
 let cached;
-export const ownedWitReceiverNormalizationPaths = [...new Set([...ownedWitReceiverChangedPaths, ...ownedJvmReceiverGcChangedPaths])].sort();
+export const ownedWitReceiverNormalizationPaths = [...new Set([...ownedWitReceiverChangedPaths, ...ownedJvmReceiverGcNormalizationPaths])].sort();
 
 /**
  * Reverse ordered edits only after authenticating both complete identities.

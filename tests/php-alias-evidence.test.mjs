@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { aliasPrimitives, nativeAliasReviewedIr, nativeAliasSignatures } from "./helpers/native-alias-fixture.mjs";
@@ -19,7 +20,7 @@ test("native PHP alias evidence preserves both installed source paths and lexica
 	assert.deepEqual(record.signatures, nativeAliasSignatures); assert.deepEqual(record.primitives, aliasPrimitives);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeAliasReviewedIr())));
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	for(const run of record.executions)
 	{
 		assert.equal(run.profile, "php-native"); assert.equal(run.sourceRemovedBeforeInstallation, true); assert.equal(run.handoffRemovedBeforeExecution, true);

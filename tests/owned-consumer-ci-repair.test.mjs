@@ -18,7 +18,12 @@ const read = async () => JSON.parse(await readFile(ownedConsumerCiPath, "utf8"))
 test("WIT log checks declare ripgrep before execution", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	assertOwnedWitLogTooling(workflow);
-	assert.throws(() => assertOwnedWitLogTooling(workflow.replace("pkg-config zstd ripgrep", "pkg-config zstd")));
+	const marker = "\n  wasi-consumer:\n", [otherJobs, witJob] = workflow.split(marker);
+	assert.equal(typeof witJob, "string");
+	const missing = witJob.replace("pkg-config zstd ripgrep", "pkg-config zstd");
+	assert.notEqual(missing, witJob);
+	assert.throws(() => assertOwnedWitLogTooling(otherJobs + marker + missing));
+	assertOwnedWitLogTooling(otherJobs.replaceAll("ripgrep", "unavailable") + marker + witJob);
 });
 
 test("owned consumer CI repair authenticates current sources without promoting support", async () => {

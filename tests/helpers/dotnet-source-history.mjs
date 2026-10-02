@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { copiedFixtureHistoricalBytes } from "./copied-fixture-source-history.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 const fixtureImport = 'import { cVariantReviewedIr, cVariantSignatures } from "./helpers/c-variant-fixture.mjs";';
@@ -35,6 +36,7 @@ const upgrades = new Map([
  * @param expected - Original recorded SHA-256.
  */
 export const assertDotnetVariantSourceHash = (path, contents, expected) => {
+	contents = copiedFixtureHistoricalBytes(path, contents, expected);
 	if(sha256(contents) === expected) return;
 	assert.ok(upgrades.has(path), `Unreviewed historical .NET source change: ${path}`);
 	let source = contents.toString();

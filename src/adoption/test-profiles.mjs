@@ -160,6 +160,7 @@ const profileManifest = Object.freeze({
 		, "compiler-callable-aliases"
 		, "reviewed-telemetry-aliases"
 		, "compound-source-history"
+		, "copied-fixture-source-history"
 		, "unlocked-component"
 		, "component-consumer-docs"
 		, "component-runtime"

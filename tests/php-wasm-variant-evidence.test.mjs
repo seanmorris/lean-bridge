@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
@@ -28,7 +29,7 @@ test("PHP-Wasm variant evidence binds every named case to installed packages and
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	assert.deepEqual(record.reproduction.reports.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const [path, hash] of Object.entries(record.sourceHashes))
-		if(path !== "tests/php-wasm-variant-evidence.test.mjs") assert.equal(sha256(await readFile(path)), hash, path);
+		if(path !== "tests/php-wasm-variant-evidence.test.mjs") assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	const arrangements = new Set(["node/embedded", "node/composer", "chromium/bundled"].flatMap(host =>
 		["startup", "lazy"].flatMap(loading => ["weak", "strict"].map(mode => `${host}/${loading}/${mode}`))));
 	for(const run of record.executions)

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { generateCopiedDotnetPackage } from "../src/backends/dotnet/copied-values.mjs";
@@ -33,7 +34,7 @@ test(".NET alias evidence binds installed contracts, cleanup, compiler rejection
 	assert.equal(record.schemaVersion, 1);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeAliasReviewedIr())));
 	assert.deepEqual(record.signatures, nativeAliasSignatures); assert.deepEqual(record.primitives, aliasPrimitives);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.runs.map(run => `${run.path}/${run.profile}`), ["ordinary-source/dotnet", "reviewed-ir/dotnet"]);
 	for(const run of record.runs)
 	{

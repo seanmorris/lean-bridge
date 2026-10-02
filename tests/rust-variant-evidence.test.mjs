@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { cVariantReviewedIr, cVariantSignatures } from "./helpers/c-variant-fixture.mjs";
@@ -14,7 +15,7 @@ test("Rust variant evidence binds original crates to independent contracts and f
 	const record = JSON.parse(await readFile("docs/evidence/rust-variants-20260921.json"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64); assert.deepEqual(record.profiles, ["rust"]);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.signatures, cVariantSignatures()); assert.deepEqual(record.types, cVariantReviewedIr().types);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(cVariantReviewedIr())));
 	assert.equal(record.types.filter(type => type.kind === "variant").length, 7);

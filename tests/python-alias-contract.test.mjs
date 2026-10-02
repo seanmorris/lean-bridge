@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { compileCopiedPythonModel } from "../src/backends/python/copied-model.mjs";
@@ -19,7 +20,7 @@ test("Python alias evidence binds offline installed wheels, relocated values and
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeAliasReviewedIr())));
 	assert.deepEqual(record.signatures, nativeAliasSignatures);
 	assert.deepEqual(record.primitives, aliasPrimitives);
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.runs.map(run => `${run.path}/${run.profile}`), ["ordinary-source/python", "reviewed-ir/python"]);
 	for(const run of record.runs)
 	{

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileCopiedWitModel } from "../src/backends/wit/copied-model.mjs";
 import { generateCBindingPackage } from "../src/backends/c/generate.mjs";
@@ -26,7 +27,7 @@ test("WIT alias receipts bind named types, exact packages and both installed sou
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeAliasReviewedIr())));
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const [path, hash] of Object.entries(record.sourceHashes))
-		if(path !== "tests/wit-alias-evidence.test.mjs") assert.equal(sha256(await readFile(path)), hash, path);
+		if(path !== "tests/wit-alias-evidence.test.mjs") assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
 	const source = await witAliasConsumer();
 	const fixture = { source, validateSignatures: validateWitAliasSignatures

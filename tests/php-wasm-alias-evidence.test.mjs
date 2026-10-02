@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { aliasPrimitives, nativeAliasReviewedIr, nativeAliasSignatures } from "./helpers/native-alias-fixture.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
@@ -27,7 +28,7 @@ test("PHP-Wasm alias evidence covers installed public contracts and every loadin
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(nativeAliasReviewedIr())));
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const [path, hash] of Object.entries(record.sourceHashes))
-		if(path !== "tests/php-wasm-alias-evidence.test.mjs") assert.equal(sha256(await readFile(path)), hash, path);
+		if(path !== "tests/php-wasm-alias-evidence.test.mjs") assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	const arrangements = new Set(["node/embedded", "node/composer", "chromium/bundled"].flatMap(host =>
 		["startup", "lazy"].flatMap(loading => ["weak", "strict"].map(mode => `${host}/${loading}/${mode}`))));
 	for(const run of record.executions)

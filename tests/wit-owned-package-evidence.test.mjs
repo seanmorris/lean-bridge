@@ -94,6 +94,8 @@ test("owned WIT installed CI executes enabled probes and retains logs and packag
 
 test("owned WIT installed CI rejects hidden failures and disabled or missing checks", async () => {
 	const source = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
+	const jobStart = source.indexOf("  wasi-consumer:\n"); assert.ok(jobStart > 0);
+	const prefix = source.slice(0, jobStart), jobAndFollowing = source.slice(jobStart);
 	const execute = "      - name: Install owned WIT packages without producer sources\n";
 	for(const [before, after] of [
 		['          LEAN_BRIDGE_WIT_OWNED_PACKAGE_TEST: "1"', '          LEAN_BRIDGE_WIT_OWNED_PACKAGE_TEST: "0"']
@@ -110,7 +112,10 @@ test("owned WIT installed CI rejects hidden failures and disabled or missing che
 		, ["steps.owned_wit_package.outcome != 'success'", "false"]
 		, ["      - wasi-consumer\n", ""]
 	]) {
-		const changed = source.replace(before, after); assert.notEqual(changed, source);
+		const changed = prefix + jobAndFollowing.replace(before, after); assert.notEqual(changed, source);
 		assert.throws(() => assertOwnedWitPackageCi(changed), before);
 	}
+	const unrelated = prefix.replace("build-essential cmake pkg-config zstd ripgrep", "build-essential pkg-config zstd ripgrep");
+	assert.notEqual(unrelated, prefix);
+	assert.doesNotThrow(() => assertOwnedWitPackageCi(unrelated + jobAndFollowing));
 });

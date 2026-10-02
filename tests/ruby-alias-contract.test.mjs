@@ -9,6 +9,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
 import { compileCopiedRubyModel } from "../src/backends/ruby/copied-model.mjs";
@@ -29,7 +30,7 @@ test("Ruby alias evidence binds both installed source paths to unchanged relocat
 	assert.equal(record.wordBits, 64); assert.equal(record.ruby, "3.3.12");
 	assert.deepEqual(record.primitives, aliasPrimitives); assert.deepEqual(record.signatures, rubyAliasSignatures);
 	assert.equal(record.reviewedIrSha256, sha256(canonicalJson(rubyAliasReviewedIr())));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
 	for(const run of record.executions)
 	{

@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { copiedFixtureHistoricalBytes } from "./helpers/copied-fixture-source-history.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { gmpIdentity } from "../src/backends/c/gmp.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
@@ -15,7 +16,7 @@ test("C variant receipts bind plain and GMP installations to both source contrac
 	const record = JSON.parse(await readFile("docs/evidence/c-variants-20260921.json"));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.wordBits, 64); assert.deepEqual(record.profiles, ["c"]);
 	assert.equal(record.reportSha256, sha256(canonicalJson({ schemaVersion: 1, reports: record.executions })));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(copiedFixtureHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assert.deepEqual(record.executions.map(run => `${run.transport}/${run.path}`), ["plain/ordinary-source", "plain/reviewed-ir", "gmp/ordinary-source", "gmp/reviewed-ir"]);
 	for(const transport of ["plain", "gmp"])
 	{
