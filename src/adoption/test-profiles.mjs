@@ -98,6 +98,7 @@ const profileManifest = Object.freeze({
 		, "owned-dotnet-callback-evidence", "owned-dotnet-loading-evidence"
 		, "owned-dotnet-callback-result-history"
 		, "owned-dotnet-callback-result-ci"
+		, "owned-dotnet-callback-result-acceptance"
 		, "owned-dotnet-evidence", "owned-dotnet-process-evidence"
 		, "owned-jvm-runtime-evidence", "owned-jvm-conversion-evidence"
 		, "owned-jvm-call-evidence", "owned-jvm-ci", "owned-jvm-package-evidence"
