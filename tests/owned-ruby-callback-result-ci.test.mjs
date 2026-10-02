@@ -17,7 +17,7 @@ test("CI requires both Ruby callback source paths, installed archives and every 
 	const missingRust = workflow.replace(/( {2}owned-ruby-callback-results:\n[\s\S]*?) {10}bash scripts\/bootstrap-rust-ci\.sh\n/u, "$1");
 	assert.notEqual(missingRust, workflow);
 	assert.throws(() => assertOwnedRubyCallbackResultCi(missingRust, manifest));
-	const missingRuby = workflow.replace("        uses: ruby/setup-ruby@v1\n        with:\n          ruby-version: '3.3.12'\n", "");
+	const missingRuby = workflow.replace(/( {2}owned-ruby-callback-results:\n[\s\S]*?) {8}uses: ruby\/setup-ruby@v1\n {8}with:\n {10}ruby-version: '3\.3\.12'\n/u, (_match, prefix) => prefix);
 	assert.notEqual(missingRuby, workflow);
 	assert.throws(() => assertOwnedRubyCallbackResultCi(missingRuby, manifest));
 	for(const line of [

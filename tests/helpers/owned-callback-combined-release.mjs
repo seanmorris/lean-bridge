@@ -42,6 +42,8 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 		, reviewedIr: ownedCallbackResultCombinedReviewedIr
 		, source: ownedCallbackResultCombinedSource, reportDirectory } = options;
 	const dotnet = options.dotnet === true;
+	const buildTimeoutMs = options.buildTimeoutMs ?? 900000;
+	assert.ok(Number.isSafeInteger(buildTimeoutMs) && buildTimeoutMs > 0 && buildTimeoutMs <= 3600000);
 	// Check offline consumer prerequisites before compiling seven releases.
 	for(const [version, expected] of Object.entries(pythonTypingWheels))
 	{
@@ -125,7 +127,8 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 			, "--target", "pypi", "--target", "rubygems", "--target", "npm"
 			, ...dotnet ? ["--target", "nuget"] : []
 			, "--output", output, "--json"];
-		const built = JSON.parse((await run(join(author, "node_modules/.bin/lean-bridge"), arguments_, author)).stdout);
+		const built = JSON.parse((await run(join(author, "node_modules/.bin/lean-bridge"), arguments_, author
+			, environment, buildTimeoutMs)).stdout);
 		assert.equal(built.status, "ok"); assert.deepEqual(await lakeInputState(project), before);
 		const checked = await readVerifiedPackageSetReceipt({ receiptPath: join(output, "package-set-receipt.json") });
 		const nativeRoot = join(output, "profiles/native/native/component");

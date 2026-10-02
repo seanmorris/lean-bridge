@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertOwnedDotnetCallbackResultCi, ownedDotnetCallbackResultReports } from "./helpers/owned-dotnet-callback-result-ci.mjs";
+import { runOwnedCallbackCombinedRelease } from "./helpers/owned-callback-combined-release.mjs";
 
 test("CI requires installed .NET callback execution and authenticated reports", async () => {
 	const workflow = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
@@ -42,4 +43,12 @@ test("CI requires installed .NET callback execution and authenticated reports", 
 		const disabled = structuredClone(manifest); disabled.scripts[name] = disabled.scripts[name].replace("_TEST=1", "_TEST=0");
 		assert.throws(() => assertOwnedDotnetCallbackResultCi(workflow, disabled));
 	}
+});
+
+test("combined callback build budgets reject invalid or unbounded deadlines before compiling", async () => {
+	for(const buildTimeoutMs of [0, -1, NaN, Infinity, 3600001])
+		await assert.rejects(runOwnedCallbackCombinedRelease({}, { buildTimeoutMs }), { code: "ERR_ASSERTION" });
+	const source = await readFile("tests/owned-dotnet-callback-result-combined-packaging.test.mjs", "utf8");
+	assert.match(source, /timeout: 3600000/u);
+	assert.match(source, /buildTimeoutMs: 1800000/u);
 });

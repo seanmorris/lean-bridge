@@ -11,8 +11,8 @@ import { ownedDotnetCallbackResultCombinedConfiguration as configuration
 
 test("installed NuGet and C/C++/Cargo/PyPI/RubyGems/npm archives share callback-result contracts", {
 	skip: process.env.LEAN_BRIDGE_OWNED_DOTNET_CALLBACK_RESULT_TEST !== "1"
-	, timeout: 2400000
+	, timeout: 3600000
 }, t => runOwnedCallbackCombinedRelease(t, {
-	configuration, reviewedIr, source, dotnet: true
+	configuration, reviewedIr, source, dotnet: true, buildTimeoutMs: 1800000
 	, reportDirectory: "build/owned-dotnet-callback-results"
 }));

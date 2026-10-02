@@ -50,6 +50,8 @@ const addedPaths = [
 	ownedDotnetCallbackHistoryPath
 	, "src/backends/dotnet/owned-callback-arguments.mjs"
 	, "tests/helpers/owned-callback-combined-release.mjs"
+	, "tests/owned-dotnet-callback-result-acceptance.test.mjs"
+	, "tests/helpers/owned-dotnet-callback-result-acceptance-tests.mjs"
 	, ...["acceptance", "authenticity", "ci", "combined-evidence", "combined-install", "evidence", "fixture", "guards", "history", "installed", "installed-process", "package-evidence", "package-execution", "probes", "sanitizers"].map(name => `tests/helpers/owned-dotnet-callback-result-${name}.mjs`)
 	, ...["results", "lifetime", "process", "sanitizers", "runtime-evidence", "package-evidence", "combined-evidence", "result-ci", "result-history", "result-packaging", "result-combined-packaging"].map(name => `tests/owned-dotnet-callback-${name}.test.mjs`)
 	, ...["results", "combined-results", "host-results", "lifetimes", "host-lifetimes", "transfer-lifetimes", "process"].map(name => `tests/fixtures/structured-types/owned-dotnet-callback-${name}.cs`)

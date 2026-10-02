@@ -3468,6 +3468,32 @@
       "strategy": "spans"
     },
     {
+      "currentSha256": "a5c574f9f20a76ec5201aced5d57971eeaf5c425b41d4c0117e34df812a04d03",
+      "edits": [
+        {
+          "current": "\tconst configuration = beforeOwnedCppCallbackResults(\"config/cli-package.v1.json\", await readFile(\"config/cli-package.v1.json\"));\n\tassert.deepEqual(current.files, JSON.parse(configuration).files);\n",
+          "previous": "\tassert.deepEqual(current.files, JSON.parse(await readFile(\"config/cli-package.v1.json\", \"utf8\")).files);\n",
+          "start": 2894
+        }
+      ],
+      "path": "tests/owned-callback-inventory-repair.test.mjs",
+      "previousSha256": "520e8017365121388bd57b4bc46f66104b53e5c4c6f1f57e6b9ef9bf80d7fdac",
+      "strategy": "spans"
+    },
+    {
+      "currentSha256": "1b65d9e5666787896aceeb4021a088f11ea3ebf88a75260f27dabffd45abab2c",
+      "edits": [
+        {
+          "current": "\tconst missingRuby = workflow.replace(/( {2}owned-ruby-callback-results:\\n[\\s\\S]*?) {8}uses: ruby\\/setup-ruby@v1\\n {8}with:\\n {10}ruby-version: '3\\.3\\.12'\\n/u, (_match, prefix) => prefix);\n",
+          "previous": "\tconst missingRuby = workflow.replace(\"        uses: ruby/setup-ruby@v1\\n        with:\\n          ruby-version: '3.3.12'\\n\", \"\");\n",
+          "start": 995
+        }
+      ],
+      "path": "tests/owned-ruby-callback-result-ci.test.mjs",
+      "previousSha256": "2bb9948cd90bed7fd51525e6112ed6786ab3f5cca7e1bbea95712c303dc7b79b",
+      "strategy": "spans"
+    },
+    {
       "currentSha256": "52a5c3939455f84607513ab8fea8414b046dec47e4d6f00ef342067fcbeeab37",
       "edits": [
         {
