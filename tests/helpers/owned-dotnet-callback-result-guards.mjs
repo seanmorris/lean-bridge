@@ -51,10 +51,10 @@ export const checkOwnedDotnetCallbackResultGuards = async (compiled, probe, base
 		rejected.push({ name, source, diagnostic: diagnostic.source });
 	}
 	const mutations = [
-		["closure-used-as-original-owner", "Calls.cs"
+		["non-whole-closure-used-as-original-owner", "Calls.cs"
 			, "var anchor = arg2.Guard.Require(state).Owner(state);"
 			, "var anchor = arg0.Lease.Owner(state);"
-			, /callback-local owner expires transitively/u]
+			, /LeanBridgeException: Invalid argument/u]
 		, ["unchecked-whole-result", "Lifetime.cs"
 			, "        Lease.Require();\n        if (global::System.Threading.Volatile.Read(ref closed)"
 			, "        if (global::System.Threading.Volatile.Read(ref closed)"
