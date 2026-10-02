@@ -61,6 +61,14 @@ internal static unsafe class Program
         using var passed = Api.CallbackRecord(later.Get(), native.Get());
         native.Dispose();
         Check(Api.Serial(passed.Get().Primary) == 42, "native closure input preserves its identity and reply");
+        using var secondNative = Api.MakeRecordCallback(later.Get());
+        using var firstNative = Api.MakeRecordCallback(kept.Get());
+        using var twice = Api.ApplyTwice(later.Get(), firstNative.Get(), secondNative.Get());
+        Check(Api.Serial(twice.Get().Primary) == 7, "two native closure arguments use their own identities");
+        using var dispatch = Api.Dispatch(later.Get());
+        using var dispatched = dispatch.Get().Invoke(firstNative.Get());
+        firstNative.Dispose(); dispatch.Dispose();
+        Check(Api.Serial(dispatched.Get().Primary) == 42, "higher-order native invocation publishes an independent owner");
     }
     private static void EmptyOwners()
     {

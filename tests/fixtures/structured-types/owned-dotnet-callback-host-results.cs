@@ -34,7 +34,7 @@
         Check(Api.Serial(automatic.Get().Primary) == 42, "ordinary host delegate uses compiler-proven recovery");
         try
         {
-            Api.CallbackRecord(raw, OwnedCallbacks.WithRecovery(_value => default, raw));
+            Api.CallbackRecord(raw, OwnedCallbacks.WithRecovery(_value => default(CallbackResult<Bundle>), raw));
             throw new Exception("uninitialized host reply was accepted");
         }
         catch (ArgumentException) { checks++; }
@@ -63,6 +63,24 @@
         using var treeNative = Api.MakeTreeCallback(empty);
         using var emptyPassed = Api.CallbackRecursive(empty, treeNative.Get().AsCallback);
         Check(emptyPassed.Get() is TreeBranch { Children.Length: 0 }, "empty native callback passback");
+        using var nativeAgain = Api.MakeRecordCallback(raw);
+        using var allHost = Api.ApplyTwice(raw, value => value, value => value);
+        using var hostThenNative = Api.ApplyTwice(raw, value => value, nativeAgain.Get());
+        using var nativeThenHost = Api.ApplyTwice(raw, nativeAgain.Get(), value => value);
+        using var allNative = Api.ApplyTwice(raw, nativeAgain.Get(), nativeAgain.Get());
+        foreach (var result in new[] { allHost, hostThenNative, nativeThenHost, allNative })
+            Check(Api.Serial(result.Get().Primary) == 42, "mixed native/host export overloads preserve results");
+        using var dispatch = Api.Dispatch(raw);
+        using var hostDispatch = dispatch.Get().Invoke(value => value);
+        using var nativeDispatch = dispatch.Get().Invoke(nativeAgain.Get().AsCallback);
+        var rawDispatch = dispatch.Get().AsCallback(nativeAgain.Get());
+        Check(Api.Serial(rawDispatch.Primary) == 42, "unanchored higher-order AsCallback preserves native inner identity");
+        rawDispatch.Primary.Dispose(); rawDispatch.Spare.Value.Dispose();
+        foreach (var value in rawDispatch.Peers) value.Dispose();
+        foreach (var value in rawDispatch.History) value.Dispose();
+        nativeAgain.Dispose(); dispatch.Dispose();
+        Check(Api.Serial(hostDispatch.Get().Primary) == 42 && Api.Serial(nativeDispatch.Get().Primary) == 42,
+            "higher-order Invoke publishes results from both callback overloads");
     }
     private static int HostFaults(bool managed, bool wholeReply)
     {

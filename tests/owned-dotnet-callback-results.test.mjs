@@ -9,17 +9,18 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedDotnetCalls } from "../src/backends/dotnet/owned-calls.mjs";
 import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
-import { ownedRustCallbackResultConfiguration, ownedRustCallbackResultReviewedIr
-	, ownedRustCallbackResultSource, ownedRustCallbackResultCombinedConfiguration
-	, ownedRustCallbackResultCombinedReviewedIr, ownedRustCallbackResultCombinedSource } from "./helpers/owned-rust-callback-result-fixture.mjs";
+import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReviewedIr
+	, ownedDotnetCallbackResultSource, ownedDotnetCallbackResultCombinedConfiguration
+	, ownedDotnetCallbackResultCombinedReviewedIr, ownedDotnetCallbackResultCombinedSource } from "./helpers/owned-dotnet-callback-result-fixture.mjs";
 import { compileOwnedDotnetFixture } from "./helpers/owned-dotnet-native.mjs";
+import { checkOwnedDotnetCallbackResultGuards } from "./helpers/owned-dotnet-callback-result-guards.mjs";
 import { ownedDotnetReceiverProject } from "./helpers/owned-dotnet-receiver-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const options = { callbackResultAnchors: true, hostCallbacks: false };
 
 test("C# callback arguments carry whole owners without enabling export anchors", () => {
-	const ir = ownedRustCallbackResultReviewedIr(), before = structuredClone(ir);
+	const ir = ownedDotnetCallbackResultReviewedIr(), before = structuredClone(ir);
 	assert.throws(() => generateOwnedDotnetCalls(ir, { hostCallbacks: false }), /explicit output leases/u);
 	const generated = generateOwnedDotnetCalls(ir, options);
 	assert.deepEqual(ir, before);
@@ -41,6 +42,9 @@ test("C# callback arguments carry whole owners without enabling export anchors",
 	assert.match(hosted.files["Calls.cs"], /reply\.Read\(replies\)/u);
 	assert.equal(hosted.functions.filter(fn => fn.name === "callbackRecord").length, 1);
 	assert.equal(hosted.calls.filter(fn => fn.name === "callbackRecord").length, 2);
+	assert.equal(hosted.calls.filter(fn => fn.name === "applyTwice").length, 4);
+	const dispatch = hosted.functions.find(fn => fn.name === "dispatch");
+	assert.equal(hosted.callbacks.find(fn => fn.id === dispatch.result).invocations.length, 2);
 });
 
 for(const mode of ["ordinary", "reviewed"]) for(const variant of ["no-host", "host", "combined"]) test(`C# callback results follow original owners (${mode}, ${variant})`, {
@@ -51,9 +55,9 @@ for(const mode of ["ordinary", "reviewed"]) for(const variant of ["no-host", "ho
 	const compiled = await compileOwnedDotnetFixture(t, {
 		...options, hostCallbacks, transferredInputs: combined
 		, anchoredResults: combined, receiverExports: combined
-		, sourceSuffix: combined ? ownedRustCallbackResultCombinedSource : ownedRustCallbackResultSource
-		, ...mode === "ordinary" ? { configuration: await (combined ? ownedRustCallbackResultCombinedConfiguration : ownedRustCallbackResultConfiguration)() }
-			: { reviewedIr: (combined ? ownedRustCallbackResultCombinedReviewedIr : ownedRustCallbackResultReviewedIr)() }
+		, sourceSuffix: combined ? ownedDotnetCallbackResultCombinedSource : ownedDotnetCallbackResultSource
+		, ...mode === "ordinary" ? { configuration: await (combined ? ownedDotnetCallbackResultCombinedConfiguration : ownedDotnetCallbackResultConfiguration)() }
+			: { reviewedIr: (combined ? ownedDotnetCallbackResultCombinedReviewedIr : ownedDotnetCallbackResultReviewedIr)() }
 		, evidenceName: `dotnet-callback-results-${mode}-${variant}-inputs.json`
 	});
 	let probe = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-results.cs", "utf8");
@@ -65,11 +69,17 @@ for(const mode of ["ordinary", "reviewed"]) for(const variant of ["no-host", "ho
 			.replace("int managedFaults =", "var hostFaults = new[] { HostFaults(true, false), HostFaults(false, false), HostFaults(true, true), HostFaults(false, true) };\n        int managedFaults =")
 			.replace("new { checks,", "new { hostFaults, checks,");
 	}
-	let observed;
+	if(combined)
+	{
+		const methods = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-combined-results.cs", "utf8");
+		probe = probe.replace("    private static void Main", methods + "\n    private static void Main")
+			.replace("HostReplies();", "HostReplies(); CombinedOwners();");
+	}
+	let observed, execution;
 	try
 	{
 		const execute = await compiled.compile({ "Program.cs": probe, "Calls.csproj": ownedDotnetReceiverProject });
-		const result = await execute(); assert.equal(result.stderr, ""); observed = JSON.parse(result.stdout);
+		execution = await execute(); assert.equal(execution.stderr, ""); observed = JSON.parse(execution.stdout);
 	}
 	catch(error)
 	{ throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); }
@@ -77,9 +87,12 @@ for(const mode of ["ordinary", "reviewed"]) for(const variant of ["no-host", "ho
 	assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 	if(hostCallbacks)
 	{ assert.equal(observed.hostFaults.length, 4); assert.ok(observed.hostFaults.every(count => count > 0)); }
+	t.diagnostic(JSON.stringify({ phase: "baseline", ...observed }));
+	const guards = await checkOwnedDotnetCallbackResultGuards(compiled, probe, execution.stdout, hostCallbacks);
 	await saveLakeFile("build/owned-dotnet-callback-results", `${mode}-${variant}.json`, canonicalJson({
 		mode, actualLean: true, installedPackage: false
 		, hostCallbacks, combined, observed
+		, ...guards
 		, input: { metadata: compiled.metadata, sourceIdentity: compiled.sourceIdentity, component: compiled.model.c.native.model.component }
 		, generated: Object.fromEntries(Object.entries(compiled.model.files).map(([path, source]) => [path, sha256(source)]))
 		, nativeProbeSha256: sha256(compiled.implementation)
