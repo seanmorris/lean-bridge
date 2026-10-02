@@ -94,12 +94,12 @@ const nativeOptions = (hostCallbacks, combined) => ({
 	, ownedCallbackResultAnchors: true, ownedAnchoredResults: combined
 	, ownedReceiverExports: combined, ownedInputTransfers: combined
 });
-const source = async (input, mode, combined) => {
+const source = async (input, mode, combined, fixture = null) => {
 	assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), mode === "reviewed");
 	assert.equal(input.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
 	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(input.sourceIdentity.modules.find(item => item.module === "Owned").source.sha256
-		, sha256(lean + (combined ? ownedCallbackResultCombinedSource : ownedCallbackResultSource)));
+		, sha256(lean + (fixture?.source ?? (combined ? ownedCallbackResultCombinedSource : ownedCallbackResultSource))));
 };
 const probe = async (hostCallbacks, combined, installed = false) =>
 	(installed ? "#define CALLBACK_RESULTS_INSTALLED 1\n" : "")
@@ -107,14 +107,14 @@ const probe = async (hostCallbacks, combined, installed = false) =>
 	+ await readFile("tests/fixtures/structured-types/owned-cpp-callback-results.cpp", "utf8");
 const example = async () => (await readFile("docs/consume/cpp.md", "utf8"))
 	.match(/```cpp file=cpp\/owned-callback-results\.cpp\n([\s\S]*?)```/u)[1];
-const graph = (model, hostCallbacks, combined, count = 4) => {
+const graph = (model, hostCallbacks, combined, count = 4, fixture = null) => {
 	assert.equal(model.schemaVersion, 11); assert.equal(model.ownedGraph.schemaVersion, 6);
 	const signatures = model.bindingIr.types.filter(type => type.kind === "callback" && type.callable.result.ownership === "borrow")
 		.map(type => ({ id: type.id, parameter: type.callable.parameters.findIndex(parameter => parameter.name === type.callable.result.lifetime.anchor) }));
 	assert.equal(signatures.length, count);
 	assert.deepEqual(model.ownedGraph.callbackResultAnchors.signatures, signatures);
 	assert.equal(Boolean(model.ownedGraph.hostCallbacks), hostCallbacks);
-	for(const [name, length] of [["receiverExports", 4], ["resultAnchors", 1], ["inputTransfers", 1]])
+	for(const [name, length] of fixture?.exports ?? [["receiverExports", 4], ["resultAnchors", 1], ["inputTransfers", 1]])
 		if(combined) assert.equal(model.ownedGraph[name].exports.length, length);
 		else assert.equal(model.ownedGraph[name], undefined);
 };
@@ -135,10 +135,10 @@ const cli = async report => {
 		assert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 };
-const native = async (item, input, model, receipt, manifest, hostCallbacks, combined, count = 4) => {
-	await source(input, item.mode, combined);
+const native = async (item, input, model, receipt, manifest, hostCallbacks, combined, count = 4, fixture = null) => {
+	await source(input, item.mode, combined, fixture);
 	assert.deepEqual(model, createCompiledNativeModel({ ...input, moduleName: model.moduleName }, nativeOptions(hostCallbacks, combined)));
-	graph(model, hostCallbacks, combined, count); assert.equal(model.pointerBits, 64);
+	graph(model, hostCallbacks, combined, count, fixture); assert.equal(model.pointerBits, 64);
 	const adapters = generateCompiledNativeLeanAdapters(model);
 	assert.equal(receipt.schemaVersion, 7); assert.equal(receipt.modelSha256, hash(model));
 	assert.equal(receipt.metadataSha256, hash(input.metadata)); assert.equal(receipt.headerSha256, sha256(adapters.header));
@@ -181,9 +181,9 @@ const rustExample = async () => {
 		.match(/```rust file=rust\/owned-callback-results\.rs\n([\s\S]*?)```/u)?.[1], text);
 	return text;
 };
-const rustPackage = async (input, model, receipt, manifest, hostCallbacks, combined, compiled, adapter, cManifest) => {
+const rustPackage = async (input, model, receipt, manifest, hostCallbacks, combined, compiled, adapter, cManifest, fixture = null) => {
 	const { c } = await native({ mode: input.sourceIdentity.reviewedBindingIr ? "reviewed" : "ordinary" }
-		, input, model, receipt, null, hostCallbacks, combined);
+		, input, model, receipt, null, hostCallbacks, combined, 4, fixture);
 	const rustOptions = options(hostCallbacks, combined);
 	const contract = generateOwnedRustPackage(model.bindingIr, null, {}, rustOptions).contract;
 	assert.equal(manifest.schemaVersion, 6); assert.equal(contract.schemaVersion, 5);
@@ -286,9 +286,9 @@ const pythonExample = async () => {
 };
 const loaderProbe = () => ownedPythonInstalledProbe.replaceAll("compatible.serial(ticket)", "compatible.serial(ticket.get())")
 	.replaceAll("module.serial(value)", "module.serial(value.get())").replaceAll("api.serial(ticket)", "api.serial(ticket.get())");
-const pythonPackage = async (input, model, receipt, manifest, combined, adapter = null, runtime = null, cManifest = null) => {
+const pythonPackage = async (input, model, receipt, manifest, combined, adapter = null, runtime = null, cManifest = null, fixture = null) => {
 	const { c } = await native({ mode: input.sourceIdentity.reviewedBindingIr ? "reviewed" : "ordinary" }
-		, input, model, receipt, null, combined, combined);
+		, input, model, receipt, null, combined, combined, 4, fixture);
 	const generated = generateOwnedPythonPackage(model.bindingIr, null, options(combined, combined));
 	assert.equal(manifest.schemaVersion, 6); assert.equal(generated.contract.schemaVersion, 5);
 	assert.equal(manifest.kind, "lean-bridge-owned-python-package"); assert.equal(manifest.ecosystem, "pypi");
@@ -471,18 +471,19 @@ const typing = async item => {
  * @param item - Complete combined-release report.
  * @param mode - Ordinary source or reviewed IR.
  * @param additionalTargets - Other package targets verified by the calling reader.
+ * @param fixture - Explicit source, counts and CLI verifier for a larger fixture.
  */
-export const assertOwnedPythonCallbackCombinedRelease = async (item, mode, additionalTargets = []) => {
+export const assertOwnedPythonCallbackCombinedRelease = async (item, mode, additionalTargets = [], fixture = null) => {
 	assert.equal(item.mode, mode); assert.equal(item.schemaVersion, 1);
-	await cli(item.cli); assert.equal(item.cliFilesVerified, item.cli.files.length);
+	await (fixture?.cli ?? cli)(item.cli); assert.equal(item.cliFilesVerified, item.cli.files.length);
 	flags(item, ["cmake", "cppCmake", "installedTypeScript", "sourceUnchanged", "producerAndCliRemovedBeforeInstall", "compilerFreeConsumerEnvironment"]);
-	await native(item, item.nativeInput, item.native.model, item.native.receipt, item.cppManifest, true, true);
-	await native(item, item.nativeInput, item.native.model, item.native.receipt, item.manifest, true, true);
+	await native(item, item.nativeInput, item.native.model, item.native.receipt, item.cppManifest, true, true, 4, fixture);
+	await native(item, item.nativeInput, item.native.model, item.native.receipt, item.manifest, true, true, 4, fixture);
 	assert.deepEqual(item.cppManifest.ownedValues, item.manifest.ownedValues);
 	await pythonObservations(item.installedPython, true);
 	for(const observed of item.installedPython)
 	{
-		await pythonPackage(item.nativeInput, item.native.model, item.native.receipt, observed.manifest, true, null, null, item.manifest);
+		await pythonPackage(item.nativeInput, item.native.model, item.native.receipt, observed.manifest, true, null, null, item.manifest, fixture);
 		flags(observed, ["sourceFreeInstallation", "cliRemovedBeforeConsumerInstall", "sourceFreeRelocatedExecution", "handoffRemovedBeforeRelocatedExecution"]);
 		assert.equal(observed.consumerSha256, sha256(await ownedPythonCallbackInstalledProbe(true)));
 		assert.equal(observed.loaderProbeSha256, sha256(loaderProbe()));
@@ -492,7 +493,7 @@ export const assertOwnedPythonCallbackCombinedRelease = async (item, mode, addit
 	assert.equal(item.cppProbeSha256, sha256(await probe(true, true, true)));
 	assert.equal(item.installedCpp.consumerSha256, item.cppProbeSha256);
 	assert.deepEqual(item.cppDocumentation, { sourceSha256: sha256(await example()), output: "42\n" });
-	const lock = await rustPackage(item.nativeInput, item.native.model, item.native.receipt, item.rustManifest, true, true, null, null, item.manifest);
+	const lock = await rustPackage(item.nativeInput, item.native.model, item.native.receipt, item.rustManifest, true, true, null, null, item.manifest, fixture);
 	const rust = item.installedRust;
 	assert.equal(rust.checks, 118); assert.equal(rust.relocatedChecks, 118); assert.equal(rust.reruns, 2);
 	flags(rust, ["offlineInstall", "emptyCargoHome", "linkOnly", "sourceFreeRelocatedExecution", "handoffRemovedBeforeExecution"]);
@@ -501,12 +502,13 @@ export const assertOwnedPythonCallbackCombinedRelease = async (item, mode, addit
 	assert.deepEqual(item.rustDocumentation, { sourceSha256: sha256(await rustExample()), output: "42\n" });
 	const cProbe = await readFile("tests/fixtures/structured-types/owned-installed-callback-results.c", "utf8");
 	const cExtra = await readFile("tests/fixtures/structured-types/owned-installed-callback-combinations.c", "utf8");
-	const combinedC = cProbe.replace("int main(void) {", cExtra + "\nint main(void) {")
+	let combinedC = cProbe.replace("int main(void) {", cExtra + "\nint main(void) {")
 		.replace("  clear(&supplied_owner); clear(&first_owner); clear(&second_owner);", "  clear(&supplied_owner); clear(&first_owner); clear(&second_owner);\n  callback_combinations(session);");
+	if(fixture?.cProbe) combinedC = fixture.cProbe(combinedC);
 	assert.equal(item.cProbeSha256, sha256(combinedC)); assert.equal(item.installedC.consumerSha256, item.cProbeSha256);
-	await source(item.wasmInput, mode, true);
+	await source(item.wasmInput, mode, true, fixture);
 	const model = createOwnedJavaScriptWasmModel({ ...item.wasmInput, ...options(true, true) });
-	assert.deepEqual(item.wasm.model, model); graph(model, true, true); assert.equal(model.pointerBits, 32);
+	assert.deepEqual(item.wasm.model, model); graph(model, true, true, 4, fixture); assert.equal(model.pointerBits, 32);
 	const generated = generateCompiledJavaScriptWasmOwned(model, item.wasmInput.metadata, generateOwnedJavaScriptWasmLeanAdapters(model));
 	assert.deepEqual(item.wasm.receipt.ownedGraph, generated.receipt);
 	assert.equal(item.wasm.receipt.modelSha256, hash(model));

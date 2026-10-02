@@ -3527,6 +3527,49 @@ without skips. CI retains `build/owned-jvm-receiver-gc.log` and both reports in
 `build/owned-jvm-receiver-gc/`. These checks exercise generated bindings directly;
 the installed Maven package checks remain in the receiver gate above.
 
+## .NET callback-result lifetimes
+
+Run these gates in order with .NET SDK 8.0.424, the pinned Lean, Rust and
+Emscripten tools, Ruby 3.3, the Python setup below and all three Playwright
+browsers:
+
+```sh
+npm run test:owned-dotnet-callback-results
+npm run test:owned-dotnet-callback-evidence
+```
+
+Set `LEAN_BRIDGE_DOTNET` to the `dotnet` executable. On glibc 2.36, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36`. The first gate requires 26 tests
+without skips and retains 26 reports under `build/owned-dotnet-callback-results/`.
+The second gate runs eight tests that reconstruct those reports' runtime and
+package inputs, generated bindings and public consumer probes across all seven
+ecosystems, and rejects altered claims.
+It runs after execution because it reads the newly produced reports.
+
+Both ordinary Lean source and reviewed IR exercise native closure results
+anchored to their original argument owner, raw and whole-value host replies,
+higher-order callbacks, multiple callback arguments, receiver methods and
+consuming calls. Optimized managed probes force collections during reads and
+callback replies, exercise concurrent close and creator-thread exit, and check
+allocation failures before and after ownership transfer. Compiled mutations
+must fail before the restored bindings pass again.
+
+NuGet tests compare independently built archives, reject modified contracts
+and generated sources, and compile valid and invalid consumers against the
+installed assembly. They delete producer sources and the CLI before consumer
+installation, then remove consumer sources, package caches and handoff archives
+before SDK-free relocated execution. The installed consumers also check fork
+rejection and runtime retirement, including host replies and consuming calls.
+The combined release installs C, C++, Rust, Python, Ruby, NuGet and npm packages
+from one build and exercises npm in browser pages, React and workers.
+
+AddressSanitizer and UndefinedBehaviorSanitizer instrument the native adapter
+called by the C# probe. Positive fault controls must trigger both detectors.
+The Lean runtime and CLR are not instrumented; native allocation and identity
+ledgers check cleanup. LeakSanitizer is disabled for these managed runs.
+CI requires both gates, rejects skipped cases and retains their logs and
+reports as `dotnet-callback-results` artifacts.
+
 ## Ruby callback-result lifetimes
 
 Run `npm run test:owned-ruby-callback-results` with MRI Ruby 3.3, the pinned

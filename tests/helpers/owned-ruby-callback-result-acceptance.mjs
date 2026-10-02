@@ -72,14 +72,22 @@ export const ownedRubyCallbackSourcePaths = async () => {
 	return [...new Set([...Object.keys(JSON.parse(bytes).sources), ...ownedRubyCallbackChangedPaths, ...addedPaths])].sort();
 };
 const flags = (item, names) => { for(const name of names) assert.equal(item[name], true, name); };
-const combinedRelease = async (item, mode) => {
-	await assertOwnedPythonCallbackCombinedRelease(item, mode, ["rubygems"]);
+/**
+ * Reconstruct all installed peers, including Ruby's original native libraries.
+ *
+ * @param item - Executed multi-ecosystem release.
+ * @param mode - Ordinary or reviewed source admission.
+ * @param additionalTargets - Extra peers checked by the caller.
+ * @param fixture - Explicit source and counts for an extended shared fixture.
+ */
+export const assertOwnedRubyCallbackCombinedRelease = async (item, mode, additionalTargets = [], fixture = null) => {
+	await assertOwnedPythonCallbackCombinedRelease(item, mode, ["rubygems", ...additionalTargets], fixture);
 	validatePackageSetReceipt(item.receipt);
 	const ruby = item.installedRuby;
 	await assertOwnedRubyCallbackPackageInputs({ mode, combined: true
 		, metadata: item.nativeInput.metadata, model: item.native.model
 		, componentReceipt: item.native.receipt, adapter: item.rubyAdapter
-		, runtime: item.nativeRuntime, manifest: ruby.manifest });
+		, runtime: item.nativeRuntime, manifest: ruby.manifest }, fixture);
 	assert.equal(ruby.checks, 206); assert.equal(ruby.relocatedChecks, 206);
 	flags(ruby, ["sourceFreeInstallation", "cliRemovedBeforeConsumerInstall"
 		, "offlineInstall", "sourceFreeRelocatedExecution"
@@ -117,7 +125,7 @@ export const assertOwnedRubyCallbackReport = async (path, item) => {
 	}
 	const mode = name.startsWith("ordinary-") ? "ordinary" : "reviewed";
 	assert.equal(item.mode, mode);
-	if(name === `${mode}-combined-release`) return combinedRelease(item, mode);
+	if(name === `${mode}-combined-release`) return assertOwnedRubyCallbackCombinedRelease(item, mode);
 	assert.equal(item.combined, name === `${mode}-combined-package`);
 	return assertOwnedRubyCallbackPackage(item);
 };

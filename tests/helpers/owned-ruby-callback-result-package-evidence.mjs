@@ -22,8 +22,9 @@ const flags = (value, names) => { for(const name of names) assert.equal(value[na
  * Authenticate the generated adapter, packaged API and automatically loaded libraries.
  *
  * @param item - Compiled inputs and original installed gem receipt.
+ * @param fixture - Exact source and export counts for an extended shared fixture.
  */
-export const assertOwnedRubyCallbackPackageInputs = async item => {
+export const assertOwnedRubyCallbackPackageInputs = async (item, fixture = null) => {
 	const { mode, combined, metadata, model, componentReceipt: component, adapter, runtime, manifest } = item;
 	assert.ok(["ordinary", "reviewed"].includes(mode)); assert.equal(typeof combined, "boolean");
 	const options = { hostCallbacks: combined, transferredInputs: combined
@@ -42,7 +43,7 @@ export const assertOwnedRubyCallbackPackageInputs = async item => {
 	assert.equal(model.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
 	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(model.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256
-		, sha256(source + (combined ? ownedRubyCallbackResultCombinedSource : ownedRubyCallbackResultSource)));
+		, sha256(source + (fixture?.source ?? (combined ? ownedRubyCallbackResultCombinedSource : ownedRubyCallbackResultSource))));
 	const c = generateOwnedCPackage(input), ruby = generateOwnedRubyPackage(model.bindingIr, null, options);
 	const native = generateCompiledNativeLeanAdapters(model);
 	assert.equal(component.schemaVersion, 7); assert.equal(component.modelSha256, hash(model));
@@ -54,7 +55,7 @@ export const assertOwnedRubyCallbackPackageInputs = async item => {
 	assert.equal(adapter.componentReceiptSha256, hash(component));
 	assert.equal(adapter.bindingIrSha256, model.bindingIrSha256);
 	assert.equal(adapter.runtimeIdentity, component.runtimeIdentity);
-	for(const [key, count] of [["receiverExports", 4], ["resultAnchors", 1], ["inputTransfers", 1]])
+	for(const [key, count] of fixture?.exports ?? [["receiverExports", 4], ["resultAnchors", 1], ["inputTransfers", 1]])
 	{
 		if(combined) assert.equal(model.ownedGraph[key].exports.length, count);
 		else assert.equal(model.ownedGraph[key], undefined);
