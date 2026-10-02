@@ -11,7 +11,8 @@ import { generateOwnedJvmPackage } from "../src/backends/jvm/owned-package.mjs";
 import { ownedJvmKotlinParameterType, ownedJvmKotlinReturnType } from "../src/backends/jvm/owned-receivers.mjs";
 import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
-import { ownedDotnetCallbackResultReviewedIr, ownedDotnetCallbackResultSource } from "./helpers/owned-dotnet-callback-result-fixture.mjs";
+import { ownedDotnetCallbackResultReviewedIr, ownedDotnetCallbackResultSource
+	, ownedDotnetCallbackResultCombinedReviewedIr, ownedDotnetCallbackResultCombinedSource } from "./helpers/owned-dotnet-callback-result-fixture.mjs";
 import { compileOwnedJvmCallNative, compileOwnedJvmCallSources } from "./helpers/owned-jvm-call-fixture.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 
@@ -28,7 +29,50 @@ const javaMethods = model => {
 	}).join("\n");
 };
 
-const javaProbe = model => `package ${model.namespace};
+const combinedJavaMethods = `    private static void drop(Value<?> value) { value.close(); }
+    private static void combinedOwners() {
+        try (var seed = newTicket(BigInteger.valueOf(63), "combined-owner")) {
+            var input = bundle(seed.get());
+            try (var closureOwner = makeRecordCallback(input)) {
+                var nativeCallback = closureOwner.get();
+                try (var replyOwner = echoRecord(input); var receiver = echoRecord(input);
+                     var alias = receiver.share(); var borrowed = receiver.borrowRecord();
+                     var moved = receiver.moveRecord((ApplyTwiceArgument1ClosureCallback)value -> CallbackResult.owner(replyOwner))) {
+                    check(receiver.isClosed() && alias.isClosed() && borrowed.isClosed(),
+                        "callback handoff consumes receiver aliases and anchored views");
+                    drop(replyOwner);
+                    check(serial(moved.get().primary()).intValueExact() == 63,
+                        "whole callback reply is copied before its independent owner closes");
+                }
+                ApplyTwiceArgument1ClosureCallback raw = value -> CallbackResult.value(value);
+                for (int mode = 0; mode < 4; ++mode) {
+                    try (var receiver = echoRecord(input);
+                         var moved = switch (mode) {
+                             case 0 -> receiver.moveTwice(raw, raw);
+                             case 1 -> receiver.moveTwice(nativeCallback, raw);
+                             case 2 -> receiver.moveTwice(raw, nativeCallback);
+                             default -> receiver.moveTwice(nativeCallback, nativeCallback);
+                         }) {
+                        check(receiver.isClosed() && serial(moved.get().primary()).intValueExact() == 63,
+                            "mixed receiver overload consumes its original owner");
+                    }
+                }
+                try (var receiver = echoRecord(input); var alias = receiver.share()) {
+                    var expected = new IllegalStateException("same combined exception");
+                    try {
+                        receiver.moveTwice(raw, (ApplyTwiceArgument1ClosureCallback)value -> { throw expected; });
+                        throw new AssertionError("missing combined callback exception");
+                    } catch (IllegalStateException observed) {
+                        check(observed == expected, "post-handoff callback exception identity");
+                    }
+                    check(receiver.isClosed() && alias.isClosed(), "post-handoff failure leaves receiver consumed");
+                }
+            }
+        }
+    }
+`;
+
+const javaProbe = (model, combined = false) => `package ${model.namespace};
 
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
@@ -53,6 +97,7 @@ ${javaMethods(model)}
         return new Bundle(ticket, Option.some(ticket), new Ticket[] { ticket }, new Ticket[0],
             new Payload(BigInteger.valueOf(-17), new byte[] { 0, -1, 3 }));
     }
+${combined ? combinedJavaMethods : ""}
     public static void main(String[] args) {
         try (var library = Arena.ofShared()) {
             var symbols = SymbolLookup.libraryLookup(args[0], library); var linker = Linker.nativeLinker();
@@ -98,6 +143,7 @@ ${javaMethods(model)}
                     }
                 }
             }
+            ${combined ? "combinedOwners();" : ""}
             int javaChecks = checks;
             long beforeKotlinLive = count(live), beforeKotlinIdentities = count(identities);
             int kotlinChecks = OwnedKotlinCallbackResultProbe.INSTANCE.run();
@@ -128,7 +174,59 @@ const kotlinMethods = model => {
 	}).join("\n");
 };
 
-const kotlinProbe = model => `package ${model.namespace}
+const combinedKotlinMethods = `    private fun combinedOwners() {
+        newTicket(BigInteger.valueOf(63), "kotlin-combined-owner").use { seed ->
+            val input = bundle(seed.get())
+            makeRecordCallback(input).use { closureOwner ->
+                val nativeCallback = closureOwner.get()
+                echoRecord(input).use { replyOwner ->
+                    echoRecord(input).use { receiver ->
+                        receiver.share().use { alias ->
+                            receiver.borrowRecord().use { borrowed ->
+                                receiver.moveRecord(ApplyTwiceArgument1ClosureCallback { CallbackResult.owner(replyOwner) }).use { moved ->
+                                    verify(receiver.isClosed && alias.isClosed && borrowed.isClosed,
+                                        "Kotlin callback handoff consumes receiver aliases and views")
+                                    replyOwner.close()
+                                    verify(serial(moved.get().primary).intValueExact() == 63,
+                                        "Kotlin whole callback reply survives its owner")
+                                }
+                            }
+                        }
+                    }
+                }
+                val raw = ApplyTwiceArgument1ClosureCallback { CallbackResult.value(it) }
+                for (mode in 0 until 4) {
+                    echoRecord(input).use { receiver ->
+                        val moved = when (mode) {
+                            0 -> receiver.moveTwice(raw, raw)
+                            1 -> receiver.moveTwice(nativeCallback, raw)
+                            2 -> receiver.moveTwice(raw, nativeCallback)
+                            else -> receiver.moveTwice(nativeCallback, nativeCallback)
+                        }
+                        moved.use {
+                            verify(receiver.isClosed && serial(it.get().primary).intValueExact() == 63,
+                                "Kotlin mixed receiver overload consumes its owner")
+                        }
+                    }
+                }
+                echoRecord(input).use { receiver ->
+                    receiver.share().use { alias ->
+                        val expected = IllegalStateException("same Kotlin combined exception")
+                        try {
+                            receiver.moveTwice(raw, ApplyTwiceArgument1ClosureCallback { throw expected })
+                            throw AssertionError("missing Kotlin combined callback exception")
+                        } catch (observed: IllegalStateException) {
+                            verify(observed === expected, "Kotlin post-handoff callback exception identity")
+                        }
+                        verify(receiver.isClosed && alias.isClosed, "Kotlin post-handoff failure consumes receiver")
+                    }
+                }
+            }
+        }
+    }
+`;
+
+const kotlinProbe = (model, combined = false) => `package ${model.namespace}
 
 import java.math.BigInteger
 import ${model.kotlin.namespace}.Bundle
@@ -153,6 +251,7 @@ internal object OwnedKotlinCallbackResultProbe {
 ${kotlinMethods(model)}
     private fun bundle(ticket: Ticket) = Bundle(ticket, Option.some(ticket), arrayOf(ticket), emptyArray(),
         Payload(BigInteger.valueOf(-17), byteArrayOf(0, -1, 3)))
+${combined ? combinedKotlinMethods : ""}
     fun run(): Int {
         val baselineLive = OwnedJvmCallbackResultProbe.liveCount()
         val baselineIdentities = OwnedJvmCallbackResultProbe.identityCount()
@@ -205,6 +304,7 @@ ${kotlinMethods(model)}
                 owners(ownerLive, ownerIdentities, "callback exception")
             }
         }
+        ${combined ? "combinedOwners()" : ""}
         owners(baselineLive, baselineIdentities, "final scope")
         return checks
     }
@@ -374,4 +474,39 @@ test("JVM native closures preserve callback-result owners without host upcalls",
 		throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error });
 	}
 	assert.ok(observed.checks >= 7); assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
+});
+
+test("JVM callback-result owners compose with transfers, anchors, and receivers", {
+	skip: process.env.LEAN_BRIDGE_OWNED_JVM_CALLBACK_RESULT_TEST !== "1"
+	, timeout: 900000
+}, async t => {
+	const options = { ...capability, hostCallbacks: true, transferredInputs: true
+		, anchoredResults: true, receiverExports: true };
+	const compiled = await compileOwnedAggregateFixture(t, {
+		reviewedIr: ownedDotnetCallbackResultCombinedReviewedIr(), hostCallbacks: true
+		, sourceSuffix: ownedDotnetCallbackResultCombinedSource
+		, evidenceName: "jvm-callback-results-reviewed-combined-inputs.json"
+	});
+	await compileOwnedJvmCallNative(compiled, options);
+	const model = generateOwnedJvmCalls(compiled.model.bindingIr, options);
+	const files = { ...model.files
+		, "OwnedJvmCallbackResultProbe.java": javaProbe(model, true)
+		, "OwnedKotlinCallbackResultProbe.kt": kotlinProbe(model, true) };
+	let observed;
+	try
+	{
+		const toolchain = await compileOwnedJvmCallSources(compiled.directory, files);
+		const args = ["--enable-native-access=ALL-UNNAMED"
+			, "-cp", "classes:" + toolchain.stdlib
+			, model.namespace + ".OwnedJvmCallbackResultProbe"
+			, join(compiled.directory, "libprobe.so")];
+		const run = await runCopied(toolchain.java, args, compiled.directory);
+		assert.equal(run.stderr, ""); observed = JSON.parse(run.stdout.trim());
+	}
+	catch(error)
+	{
+		throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error });
+	}
+	assert.ok(observed.checks >= 16); assert.ok(observed.kotlinChecks >= 16);
+	assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
 });
