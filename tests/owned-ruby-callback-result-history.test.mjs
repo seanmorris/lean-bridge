@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedDotnetCallbackResults } from "./helpers/owned-dotnet-callback-result-history.mjs";
 import { generateOwnedRubyPackage } from "../src/backends/ruby/owned-package.mjs";
 import { historicalOwnedRubyCallbackPackage } from "./helpers/owned-ruby-callback-generated-history.mjs";
 import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
@@ -24,7 +25,8 @@ test("Ruby callback history authenticates exact source transitions and rejects p
 	assert.deepEqual(history.updates.map(update => update.path), ownedRubyCallbackChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path), prior = beforeOwnedRubyCallbackResults(update.path, current);
+		const current = Buffer.from(beforeOwnedDotnetCallbackResults(update.path, await readFile(update.path)));
+		const prior = beforeOwnedRubyCallbackResults(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedRubyCallbackResults(update.path, current, update.currentSha256), current);
@@ -59,10 +61,10 @@ test("Ruby historical generation preserves exact legacy files and rejects callba
 });
 
 test("Ruby callback source identities do not promote unrelated type-surface cells", async () => {
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedDotnetCallbackResults(path, await readFile(path, "utf8"));
 	const previous = JSON.parse(beforeOwnedRubyCallbackResults(path, current));
 	for(const evidence of previous.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(await readFile(file.path));
+		file.sha256 = sha256(beforeOwnedDotnetCallbackResults(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), previous);
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(beforeOwnedRubyCallbackResults("unrelated.bin", binary), binary);

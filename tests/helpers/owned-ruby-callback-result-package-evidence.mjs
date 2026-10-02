@@ -13,6 +13,7 @@ import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mj
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { ownedRubyCallbackResultSource, ownedRubyCallbackResultCombinedSource } from "./owned-ruby-callback-result-fixture.mjs";
 import { ownedRubyCallbackInstalledProbe } from "./owned-ruby-callback-result-installed.mjs";
+import { beforeOwnedDotnetCallbackResults } from "./owned-dotnet-callback-result-history.mjs";
 
 const hash = value => sha256(canonicalJson(value));
 const flags = (value, names) => { for(const name of names) assert.equal(value[name], true, name); };
@@ -21,8 +22,9 @@ const flags = (value, names) => { for(const name of names) assert.equal(value[na
  * Authenticate the generated adapter, packaged API and automatically loaded libraries.
  *
  * @param item - Compiled inputs and original installed gem receipt.
+ * @param fixture - Exact source and export counts for an extended shared fixture.
  */
-export const assertOwnedRubyCallbackPackageInputs = async item => {
+export const assertOwnedRubyCallbackPackageInputs = async (item, fixture = null) => {
 	const { mode, combined, metadata, model, componentReceipt: component, adapter, runtime, manifest } = item;
 	assert.ok(["ordinary", "reviewed"].includes(mode)); assert.equal(typeof combined, "boolean");
 	const options = { hostCallbacks: combined, transferredInputs: combined
@@ -41,7 +43,7 @@ export const assertOwnedRubyCallbackPackageInputs = async item => {
 	assert.equal(model.sourceIdentity.extractorSha256, sha256(await readFile("src/analyze/NativeExports.lean")));
 	const source = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
 	assert.equal(model.sourceIdentity.modules.find(value => value.module === "Owned").source.sha256
-		, sha256(source + (combined ? ownedRubyCallbackResultCombinedSource : ownedRubyCallbackResultSource)));
+		, sha256(source + (fixture?.source ?? (combined ? ownedRubyCallbackResultCombinedSource : ownedRubyCallbackResultSource))));
 	const c = generateOwnedCPackage(input), ruby = generateOwnedRubyPackage(model.bindingIr, null, options);
 	const native = generateCompiledNativeLeanAdapters(model);
 	assert.equal(component.schemaVersion, 7); assert.equal(component.modelSha256, hash(model));
@@ -53,7 +55,7 @@ export const assertOwnedRubyCallbackPackageInputs = async item => {
 	assert.equal(adapter.componentReceiptSha256, hash(component));
 	assert.equal(adapter.bindingIrSha256, model.bindingIrSha256);
 	assert.equal(adapter.runtimeIdentity, component.runtimeIdentity);
-	for(const [key, count] of [["receiverExports", 4], ["resultAnchors", 1], ["inputTransfers", 1]])
+	for(const [key, count] of fixture?.exports ?? [["receiverExports", 4], ["resultAnchors", 1], ["inputTransfers", 1]])
 	{
 		if(combined) assert.equal(model.ownedGraph[key].exports.length, count);
 		else assert.equal(model.ownedGraph[key], undefined);
@@ -179,14 +181,17 @@ export const assertOwnedRubyCallbackPackage = async item => {
 	assert.equal(item.cli.kind, "lean-bridge-cli-package"); assert.equal(item.cli.productionApproved, false);
 	assert.equal(externalRegistryWrites, false); assert.equal(inventorySha256, hash(inventory));
 	assert.match(archive.sha256, /^[a-f0-9]{64}$/u); assert.ok(archive.bytes > 0);
-	const config = JSON.parse(await readFile("config/cli-package.v1.json", "utf8"));
+	const configPath = "config/cli-package.v1.json";
+	const config = JSON.parse(beforeOwnedDotnetCallbackResults(configPath, await readFile(configPath, "utf8")));
 	assert.equal(item.cli.schemaVersion, 1);
 	assert.deepEqual(item.cli.package, { name: config.name, version: config.version });
 	assert.equal(item.cli.files.length, config.files.length + 2);
 	assert.equal(new Set(item.cli.files.map(file => file.path)).size, item.cli.files.length);
 	for(const path of config.files)
 	{
-		const file = item.cli.files.find(value => value.path === path), bytes = await readFile(path);
+		const file = item.cli.files.find(value => value.path === path);
+		assert.ok(file, path);
+		const bytes = Buffer.from(beforeOwnedDotnetCallbackResults(path, await readFile(path), file.sha256));
 		assert.equal(file?.bytes, bytes.length, path); assert.equal(file?.sha256, sha256(bytes), path);
 	}
 };

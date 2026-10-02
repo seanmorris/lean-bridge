@@ -3,6 +3,7 @@
  *
  * @file
  */
+import { ownedDotnetCallbackArguments } from "./owned-callback-arguments.mjs";
 
 const reserved = new Set("Get Share Retain IsClosed Dispose Guard Handle SameIdentity Invoke AsCallback Invocation RawInvocation CallFromHost Equals GetHashCode GetType ToString ReferenceEquals MemberwiseClone Clone EqualityContract PrintMembers Deconstruct".split(" "));
 
@@ -23,7 +24,7 @@ export const ownedDotnetReceiverDeclarations = model => {
 	};
 	const parameterType = (fn, index) => {
 		const node = nodes.get(fn.parameters[index]);
-		return c.hostArgument?.(fn, index) ? node.delegateType
+		return c.hostArgument?.(fn, index) && !fn.nativeCallbacks?.includes(index) ? node.delegateType
 			: fn.anchor === index || fn.transfers?.includes(index) ? `Value<${node.publicType}>` : node.publicType;
 	};
 	const member = (fn, whole) => {
@@ -53,7 +54,8 @@ ${property ? "        }\n" : ""}\
 			if(claimed.has(fn.publicName)) throw new TypeError(`C# receiver member is reserved or duplicated: ${node.ownerType}.${fn.publicName}`);
 			claimed.add(fn.publicName);
 		}
-		if(node.identity) raw.set(node.id, members.filter(fn => fn.anchor !== 0 && !fn.transfers?.includes(0)).map(fn => member(fn, false)).join(""));
+		if(node.identity) raw.set(node.id, members.filter(fn => fn.anchor !== 0 && !fn.transfers?.includes(0))
+			.flatMap(fn => ownedDotnetCallbackArguments(c, fn).map(variant => member(variant, false))).join(""));
 		owners.push(`/// <summary>A checked ${node.publicType} owner with its exported Lean members.</summary>
 public sealed class ${node.ownerType} : Value<${node.publicType}>
 {
@@ -66,7 +68,7 @@ public sealed class ${node.ownerType} : Value<${node.publicType}>
         finally { global::System.GC.KeepAlive(this); }
     }
     public override ${node.ownerType} Retain() => (${node.ownerType})base.Retain();
-${members.map(fn => member(fn, true)).join("")}\
+${members.flatMap(fn => ownedDotnetCallbackArguments(c, fn).map(variant => member(variant, true))).join("")}\
 }`);
 	}
 	return { raw, source: owners.join("\n\n") };

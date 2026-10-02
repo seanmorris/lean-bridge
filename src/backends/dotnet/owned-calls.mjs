@@ -9,6 +9,7 @@ import { ownedDotnetRuntime } from "./owned-runtime.mjs";
 import { dotnetGraphException } from "./copied-graph-runtime.mjs";
 import { ownedDotnetTransfers } from "./owned-transfers.mjs";
 import { ownedDotnetAnchoredCall, ownedDotnetOriginalTransfers, ownedDotnetWholeGuard } from "./owned-borrows.mjs";
+import { ownedDotnetCallbackArguments } from "./owned-callback-arguments.mjs";
 
 /**
  * Library authentication is supplied by OwnedLoader. These bindings only accept
@@ -20,24 +21,30 @@ import { ownedDotnetAnchoredCall, ownedDotnetOriginalTransfers, ownedDotnetWhole
 export const generateOwnedDotnetCalls = (ir, options = {}) => {
 	const model = generateOwnedDotnetConversions(ir, options), { c } = model;
 	const transfers = c.functions.some(fn => fn.transfers?.length);
-	const anchored = c.functions.some(fn => fn.anchor !== undefined);
+	const anchored = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
 	const wholeOwners = model.wholeOwners;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const names = new Map(model.nativeTypes.map(node => [node.id, node.publicType]));
+	const exportCalls = model.functions.flatMap((fn, index) => ownedDotnetCallbackArguments(c, fn)
+		.map((variant, overload) => ({ ...variant, method: `Call${index}${overload ? `Native${overload}` : ""}` })));
 	const calls = [
-		...model.functions.map((fn, index) => ({ ...fn, method: `Call${index}` }))
+		...exportCalls
 		, ...c.retains.map(fn => ({ ...fn, method: `Retain${nodes.get(fn.id).index}`, handle: true, ...wholeOwners ? { rawResult: true } : {} }))
 		, ...(c.copies ?? []).map(fn => ({ ...fn, method: `Copy${nodes.get(fn.id).index}`, ...wholeOwners ? { rawResult: true } : {} }))
-		, ...c.callbacks.map(fn => ({ ...fn, method: `Invoke${nodes.get(fn.id).index}`, handle: true }))
+		, ...model.callbacks.flatMap(fn => fn.invocations.map(invocation => ({ ...invocation.fn
+			, method: `Invoke${nodes.get(fn.id).index}${invocation.suffix}`
+			, handle: true })))
 		, ...wholeOwners ? [
-			...c.callbacks.map(fn => ({ ...fn, method: `InvokeRaw${nodes.get(fn.id).index}`, handle: true, rawResult: true }))
+			...model.callbacks.filter(fn => fn.anchor === undefined).map(fn => ({ ...fn.invocations.at(-1).fn
+				, method: `InvokeRaw${nodes.get(fn.id).index}`
+				, handle: true, rawResult: true }))
 			, ...[...c.retains, ...c.copies ?? []].filter(fn => nodes.get(fn.id).representation !== "copied")
 				.map(fn => ({ ...fn, method: `CopyWhole${nodes.get(fn.id).index}`, wholeCopy: true }))
 		] : []
 	];
 	const symbols = [...calls.map(fn => fn.cName), ...anchored ? model.types.filter(node => node.identity).map(node => `${node.cName}_equal`) : []];
 	const parameterType = (fn, index) => fn.handle && index === 0 ? "OwnedHandle"
-		: c.hostArgument?.(fn, index) ? `_V.${nodes.get(fn.parameters[index]).delegateType}`
+		: c.hostArgument?.(fn, index) && !fn.nativeCallbacks?.includes(index) ? `_V.${nodes.get(fn.parameters[index]).delegateType}`
 			: wholeOwners && (fn.anchor === index || fn.transfers?.includes(index)) ? `_V.Value<${names.get(fn.parameters[index])}>` : names.get(fn.parameters[index]);
 	const ownerType = id => nodes.get(id).ownerType ? `_V.${nodes.get(id).ownerType}` : `_V.Value<${names.get(id)}>`;
 	const returnType = fn => wholeOwners && !fn.rawResult && nodes.get(fn.result).representation !== "copied"
@@ -125,7 +132,7 @@ ${invoke}
 	});
 	const identities = model.types.filter(node => node.identity), factories = identities.map(node => {
 		const fn = model.callbacks.find(fn => fn.id === node.id);
-		return `handle => new _V.${node.publicType}(handle, Retain${node.index}${fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => Invoke${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""}${anchored ? `, Equal${node.index}` : ""}${wholeOwners && fn ? `, (${fn.invokeParameters.map((_, j) => `arg${j}`).join(", ")}) => InvokeRaw${node.index}(handle${fn.invokeParameters.map((_, j) => `, arg${j}`).join("")})` : ""})`;
+		return `handle => new _V.${node.publicType}(handle, Retain${node.index}${fn ? fn.invocations.map(invocation => `, (${invocation.parameters.map((_, j) => `arg${j}`).join(", ")}) => Invoke${node.index}${invocation.suffix}(handle${invocation.parameters.map((_, j) => `, arg${j}`).join("")})`).join("") : ""}${anchored ? `, Equal${node.index}` : ""}${wholeOwners && fn && fn.anchor === undefined ? `, (${fn.invocations.at(-1).parameters.map((_, j) => `arg${j}`).join(", ")}) => InvokeRaw${node.index}(handle${fn.invocations.at(-1).parameters.map((_, j) => `, arg${j}`).join("")})` : ""})`;
 	});
 	if(anchored) for(const node of identities) methods.push(`    private bool Equal${node.index}(OwnedHandle left, OwnedHandle right)
     {
@@ -192,7 +199,7 @@ ${callback.methods}
 namespace ${model.namespace};
 public static class Api
 {
-${model.functions.map((fn, index) => `${fn.transfers?.length ? `    /// <summary>Consumes resource leases in ${fn.transfers.map(i => `arg${i}`).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership.</summary>\n` : ""}    public static ${nodes.get(fn.result).name === "unit" ? "void" : returnType(fn)} ${fn.publicName}(${fn.parameters.map((_, i) => `${parameterType(fn, i)} arg${i}`).join(", ")}) => Interop.OwnedLoader.Bindings.Call${index}(${fn.parameters.map((_, i) => `arg${i}`).join(", ")});`).join("\n")}${wholeOwners ? "\n" + copies.join("\n") : ""}
+${exportCalls.map(fn => `${fn.transfers?.length ? `    /// <summary>Consumes resource leases in ${fn.transfers.map(i => `arg${i}`).join(", ")} at the Lean call boundary. Shared aliases close; independent retains survive. Pre-handoff errors preserve ownership.</summary>\n` : ""}    public static ${nodes.get(fn.result).name === "unit" ? "void" : returnType(fn)} ${fn.publicName}(${fn.parameters.map((_, i) => `${parameterType(fn, i)} arg${i}`).join(", ")}) => Interop.OwnedLoader.Bindings.${fn.method}(${fn.parameters.map((_, i) => `arg${i}`).join(", ")});`).join("\n")}${wholeOwners ? "\n" + copies.join("\n") : ""}
 }
 ${callback.publicSource}
 `;

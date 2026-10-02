@@ -252,6 +252,71 @@ borrowed descendants before a reentrant callback runs. Borrowed results cannot
 be consumed directly; use `Retain()` first. Validation failures preserve inputs;
 failures after handoff leave them consumed.
 
+#### Callback results borrowed from an argument
+
+A returned Lean closure can borrow its result from one of its own arguments.
+Its typed `Invoke` requires a `Value<T>` for that argument. The result follows
+the argument's original owner, even when the closure returns captured data.
+Closing the last shared owner, transferring it or exiting its creating thread
+expires the result and its borrowed descendants, including empty values.
+
+For the [callback-result Owned package](../publish/nuget.md#anchor-a-callback-result-to-its-argument),
+save this as `Program.cs`:
+
+```csharp file=dotnet/owned-callback-results.cs
+using System;
+using LeanBridge.OwnedAggregates;
+
+using var ticket = Api.NewTicket(42, "example");
+var value = new Bundle(ticket.Get(), Option<Ticket>.None,
+    Array.Empty<Ticket>(), Array.Empty<Ticket>(), new Payload(0, new byte[0]));
+using var original = Api.CopyValue(value);
+using var closure = Api.MakeRecord(value);
+using var borrowed = closure.Get().Invoke(false, original);
+using var kept = borrowed.Retain();
+Console.WriteLine(Api.Serial(borrowed.Get().Primary));
+
+original.Dispose();
+if (!borrowed.IsClosed)
+    throw new Exception("The callback result outlived its original owner.");
+Console.WriteLine(Api.Serial(kept.Get().Primary));
+```
+
+This prints `42` twice. `Retain()` or `Api.CopyValue(borrowed.Get())` creates
+independent ownership while the borrow is valid. The wrapper checks its owner
+on `Get()`; the bridge does not implicitly retain it for later use.
+
+Host delegates still receive ordinary borrowed payloads. Their result type,
+`CallbackResult<T>`, accepts either a raw `T` or a whole `Value<T>` through an
+implicit conversion. The bridge validates and converts the reply before the
+callback's borrowed arguments expire. It does not dispose a supplied owner.
+With host callbacks enabled in that package, this `Program.cs` prints `42` twice:
+
+```csharp file=dotnet/owned-callback-replies.cs
+using System;
+using LeanBridge.OwnedAggregates;
+
+using var ticket = Api.NewTicket(42, "example");
+var value = new Bundle(ticket.Get(), Option<Ticket>.None,
+    Array.Empty<Ticket>(), Array.Empty<Ticket>(), new Payload(0, new byte[0]));
+using var whole = Api.CopyValue(value);
+using var rawReply = Api.CallbackRecord(value, borrowed => borrowed);
+using var wholeReply = Api.CallbackRecord(value, borrowed => whole);
+whole.Dispose();
+Console.WriteLine(Api.Serial(rawReply.Get().Primary));
+Console.WriteLine(Api.Serial(wholeReply.Get().Primary));
+```
+
+`OwnedCallbacks.WithRecovery(callback, recoveryValue)` accepts either reply
+form too. Expired whole replies and uninitialized `default(CallbackResult<T>)`
+reject. Call `Retain()` inside the callback to keep one of its borrowed resources.
+
+An anchored native closure's `AsCallback` preserves its native type and identity;
+it does not produce a raw-input host delegate. Pass it directly to the generated
+native-callback overload. Functions, receiver methods and returned closures
+provide typed overloads for combinations of native closures and host delegates.
+Host callbacks remain synchronous and call-scoped.
+
 #### Methods and properties
 
 When the package declares receiver exports, its resource-containing results

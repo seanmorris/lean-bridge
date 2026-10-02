@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedDotnetCallbackResults } from "./owned-dotnet-callback-result-history.mjs";
 
 export const ownedRubyCallbackHistoryPath = "docs/evidence/owned-ruby-callback-result-source-history-20261002.json";
 export const ownedRubyCallbackHistorySha256 = "7aadc1de7e28872aa4ae4da2b22cdc1ba153953dbcaa8fad4761539c64fec588";
@@ -78,6 +79,7 @@ export const reverseOwnedRubyCallbackUpdate = (source, update) => {
  * @param expected - Optional stopping identity.
  */
 export const beforeOwnedRubyCallbackResults = (path, source, expected) => {
+	source = beforeOwnedDotnetCallbackResults(path, source, expected);
 	const update = readOwnedRubyCallbackHistory().updates.find(item => item.path === path);
 	const digest = sha256(source);
 	return update && digest !== expected && digest === update.currentSha256

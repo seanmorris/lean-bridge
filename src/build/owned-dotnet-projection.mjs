@@ -22,14 +22,15 @@ import { packageOwnedNuget } from "../release/owned-nuget.mjs";
 export const projectOwnedDotnet = async options => {
 	const { working, nativeRoot, runtimeRoot, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });
-	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports) throw new TypeError("Owned C# requires authenticated callback/copy or receiver support");
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
+	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned C# requires authenticated callback/copy, receiver or callback-result support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
-	const capabilities = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...capabilities });
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const capabilities = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
+	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...capabilities });
 	const projection = generateOwnedDotnetPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;
 	const adapterRoot = join(working, "native/owned-dotnet-binding"), gmpRoot = join(adapterRoot, "gmp");
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
@@ -76,12 +77,13 @@ export const projectOwnedDotnet = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(adapterRoot))
 	{ const bytes = await readFile(join(adapterRoot, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(adapterRoot, "native-dotnet-adapter.json"), canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
+	await writeFile(join(adapterRoot, "native-dotnet-adapter.json"), canonicalJson({ schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity: identity, library
-		, ownedValues: { schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2
+		, ownedValues: { schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2
 			, hostCallbacks: model.ownedGraph.hostCallbacks
+			, ...callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {}
 			, ...receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
 			, ...anchoredResults ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
 			, ...transferredInputs ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
@@ -118,7 +120,7 @@ export const projectOwnedDotnet = async options => {
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(dotnetRoot))
 	{ const bytes = await readFile(join(dotnetRoot, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await writeFile(join(dotnetRoot, "native-dotnet.json"), canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
+	await writeFile(join(dotnetRoot, "native-dotnet.json"), canonicalJson({ schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, profile: "native-library-v1", bindingIrSha256: model.bindingIrSha256
 		, evidence, sdk: version, assembly: projection.assembly
 		, ownedValues: projection.contract, files: inventory }), { flag: "wx" });

@@ -15,6 +15,7 @@ import { assertOwnedRubyCallbackResultCi, ownedRubyCallbackResultReports } from 
 import { ownedRubyCallbackBaseline, ownedRubyCallbackChangedPaths
 	, ownedRubyCallbackHistoryPath, ownedRubyCallbackHistorySha256 } from "./owned-ruby-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
+import { beforeOwnedDotnetCallbackResults } from "./owned-dotnet-callback-result-history.mjs";
 
 export const ownedRubyCallbackEvidencePath = "docs/evidence/owned-ruby-callback-results-20261002.json";
 export const ownedRubyCallbackPrevious = Object.freeze({
@@ -71,14 +72,22 @@ export const ownedRubyCallbackSourcePaths = async () => {
 	return [...new Set([...Object.keys(JSON.parse(bytes).sources), ...ownedRubyCallbackChangedPaths, ...addedPaths])].sort();
 };
 const flags = (item, names) => { for(const name of names) assert.equal(item[name], true, name); };
-const combinedRelease = async (item, mode) => {
-	await assertOwnedPythonCallbackCombinedRelease(item, mode, ["rubygems"]);
+/**
+ * Reconstruct all installed peers, including Ruby's original native libraries.
+ *
+ * @param item - Executed multi-ecosystem release.
+ * @param mode - Ordinary or reviewed source admission.
+ * @param additionalTargets - Extra peers checked by the caller.
+ * @param fixture - Explicit source and counts for an extended shared fixture.
+ */
+export const assertOwnedRubyCallbackCombinedRelease = async (item, mode, additionalTargets = [], fixture = null) => {
+	await assertOwnedPythonCallbackCombinedRelease(item, mode, ["rubygems", ...additionalTargets], fixture);
 	validatePackageSetReceipt(item.receipt);
 	const ruby = item.installedRuby;
 	await assertOwnedRubyCallbackPackageInputs({ mode, combined: true
 		, metadata: item.nativeInput.metadata, model: item.native.model
 		, componentReceipt: item.native.receipt, adapter: item.rubyAdapter
-		, runtime: item.nativeRuntime, manifest: ruby.manifest });
+		, runtime: item.nativeRuntime, manifest: ruby.manifest }, fixture);
 	assert.equal(ruby.checks, 206); assert.equal(ruby.relocatedChecks, 206);
 	flags(ruby, ["sourceFreeInstallation", "cliRemovedBeforeConsumerInstall"
 		, "offlineInstall", "sourceFreeRelocatedExecution"
@@ -116,7 +125,7 @@ export const assertOwnedRubyCallbackReport = async (path, item) => {
 	}
 	const mode = name.startsWith("ordinary-") ? "ordinary" : "reviewed";
 	assert.equal(item.mode, mode);
-	if(name === `${mode}-combined-release`) return combinedRelease(item, mode);
+	if(name === `${mode}-combined-release`) return assertOwnedRubyCallbackCombinedRelease(item, mode);
 	assert.equal(item.combined, name === `${mode}-combined-package`);
 	return assertOwnedRubyCallbackPackage(item);
 };
@@ -134,7 +143,8 @@ export const assertOwnedRubyCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedRubyCallbackHistoryPath, sha256: ownedRubyCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedRubyCallbackSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(beforeOwnedDotnetCallbackResults(path, await readFile(path), digest)), digest, path);
 	assert.equal(record.run.command, "npm run test:owned-ruby-callback-results"); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, count] of Object.entries({ tests: 12, pass: 12, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))

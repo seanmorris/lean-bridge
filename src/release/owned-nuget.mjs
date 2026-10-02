@@ -27,10 +27,11 @@ export const packageOwnedNuget = async options => {
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
-	const capabilities = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const capabilities = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
 	const compiled = JSON.parse(await readFile(join(dotnetRoot, "native-dotnet.json"), "utf8"));
 	await verifyNativeFiles(dotnetRoot, compiled.files);
-	if(compiled.schemaVersion !== (receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
+	if(compiled.schemaVersion !== (callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || compiled.profile !== "native-library-v1" || compiled.bindingIrSha256 !== model.bindingIrSha256
 		|| compiled.assembly !== projection.assembly || canonicalJson(compiled.evidence) !== canonicalJson(evidence)
 		|| canonicalJson(compiled.ownedValues ?? null) !== canonicalJson(projection.contract)
 		|| !/^8\.0\.\d+$/u.test(compiled.sdk)
@@ -76,7 +77,7 @@ export const packageOwnedNuget = async options => {
 	const inventory = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); inventory[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
+	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, kind: "lean-bridge-owned-nuget-package", ecosystem: "nuget", name, version
 		, component: model.component, bindingIrSha256: model.bindingIrSha256
 		, runtimeIdentity: evidence.runtimeIdentity
@@ -88,7 +89,7 @@ export const packageOwnedNuget = async options => {
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: "nuget"
-		, backend: receiverExports ? "owned-dotnet-v4" : anchoredResults ? "owned-dotnet-v3" : transferredInputs ? "owned-dotnet-v2" : "owned-dotnet-v1"
+		, backend: callbackResultAnchors ? "owned-dotnet-v5" : receiverExports ? "owned-dotnet-v4" : anchoredResults ? "owned-dotnet-v3" : transferredInputs ? "owned-dotnet-v2" : "owned-dotnet-v1"
 		, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion
 		, namespace: projection.namespace, assembly: projection.assembly
 		, packages: [{ archive, name, version, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };

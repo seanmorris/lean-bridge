@@ -51,7 +51,8 @@ test("callback inventory repair preserves complete source and acceptance identit
 	const prior = JSON.parse(beforeCallbackInventoryRepair("package.json", await readFile("package.json")));
 	prior.files.push("src/analyze/callback-signature.mjs"); prior.files.sort();
 	assert.deepEqual(current, prior);
-	assert.deepEqual(current.files, JSON.parse(await readFile("config/cli-package.v1.json", "utf8")).files);
+	const configuration = beforeOwnedCppCallbackResults("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"));
+	assert.deepEqual(current.files, JSON.parse(configuration).files);
 });
 
 test("callback inventory repair refreshes source identities without changing support claims", async () => {

@@ -7,6 +7,7 @@ import { compileOwnedDotnetLayout } from "./owned-layout.mjs";
 import { dotnetGraphCompoundTypes, dotnetGraphEquality } from "./copied-graph-equality.mjs";
 import { ownedDotnetWholeValues } from "./owned-borrows.mjs";
 import { ownedDotnetReceiverDeclarations } from "./owned-receivers.mjs";
+import { ownedDotnetCallbackArguments, ownedDotnetCallbackResult } from "./owned-callback-arguments.mjs";
 
 const pascal = value => value.split(/[^A-Za-z0-9]+/u).filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("");
 const suffix = value => value.match(/_+$/u)?.[0] ?? "";
@@ -32,11 +33,13 @@ const scalar = {
  */
 export const generateOwnedDotnetValues = (ir, options = {}) => {
 	const layout = compileOwnedDotnetLayout(ir, options), c = layout.c;
-	const anchored = c.functions.some(fn => fn.anchor !== undefined);
+	const anchored = [...c.functions, ...c.callbacks].some(fn => fn.anchor !== undefined);
+	const callbackReplies = Boolean(c.hostArgument) && c.callbacks.some(fn => fn.anchor !== undefined);
 	const receivers = c.functions.some(fn => fn.receiver === 0), wholeOwners = anchored || receivers;
 	const component = pascal(c.prefix), names = new Map();
 	const occupied = new Set(reserved), fail = message => { throw new TypeError(`Invalid owned C# values: ${message}`); };
 	if(wholeOwners) occupied.add("Value");
+	if(callbackReplies) occupied.add("CallbackResult");
 	const claim = name => {
 		if(!/^[A-Z][A-Za-z0-9_]*$/u.test(name) || occupied.has(name)) fail(`reserved or duplicate name: ${name}`);
 		occupied.add(name); return name;
@@ -110,12 +113,20 @@ export const generateOwnedDotnetValues = (ir, options = {}) => {
 	const aliases = c.native.aliases.map(alias => ({ ...alias
 		, name: definitions.get(alias.id).name, managedType: type(alias.target)
 		, contractType: contract(definitions.get(alias.id).target) }));
-	const callbacks = c.callbacks.map(fn => ({ ...fn
+	const callbacks = c.callbacks.map(fn => {
+		const invocations = ownedDotnetCallbackArguments(c, fn).map((variant, index) => ({
+			fn: variant, suffix: index ? `Native${index}` : ""
+			, parameters: fn.parameters.slice(1).map((id, position) => c.hostArgument?.(fn, position + 1) && !variant.nativeCallbacks?.includes(position + 1) ? delegates.get(id)
+				: fn.anchor === position + 1 ? `Value<${type(id)}>` : type(id))
+		}));
+		return { ...fn
 		, publicType: type(fn.id), delegateType: delegates.get(fn.id)
 		, returnType: table.get(fn.result).name === "unit" ? "void" : type(fn.result)
+		, hostReturnType: callbackReplies && fn.anchor !== undefined ? `CallbackResult<${type(fn.result)}>` : table.get(fn.result).name === "unit" ? "void" : type(fn.result)
 		, ...wholeOwners ? { invokeReturnType: table.get(fn.result).representation !== "copied" ? types.find(node => node.id === fn.result).ownerType ?? `Value<${type(fn.result)}>` : table.get(fn.result).name === "unit" ? "void" : type(fn.result) } : {}
 		, hostParameters: fn.parameters.slice(1).map(type)
-		, invokeParameters: fn.parameters.slice(1).map((id, index) => c.hostArgument?.(fn, index + 1) ? delegates.get(id) : type(id)) }));
+		, invokeParameters: invocations[0].parameters, invocations };
+	});
 	let budget = 4 * 1024 * 1024 - dotnetGraphCompoundTypes.length - dotnetGraphEquality.length;
 	const reserve = count => { budget -= count; if(budget < 0) fail("generated declarations exceed 4 MiB"); };
 	for(const node of types)
@@ -124,7 +135,8 @@ export const generateOwnedDotnetValues = (ir, options = {}) => {
 		for(const field of [...node.fields, ...node.cases.flatMap(branch => branch.fields)]) reserve(128 + type(field.type).length * 4 + field.publicName.length * 4);
 		for(const branch of node.cases) reserve(1024 + branch.publicName.length * 10);
 	}
-	for(const fn of callbacks) reserve(2048 + fn.returnType.length * 8 + [...fn.hostParameters, ...fn.invokeParameters].reduce((sum, name) => sum + name.length * 8, 0));
+	for(const fn of callbacks) for(const invocation of fn.invocations)
+		reserve(2048 + fn.returnType.length * 8 + [...fn.hostParameters, ...invocation.parameters].reduce((sum, name) => sum + name.length * 8, 0));
 	for(const alias of aliases) reserve(128 + alias.name.length + alias.contractType.length + alias.managedType.length);
 	const record = (name, values, parent = null) => `public sealed record ${name}(${values.map(field => `${type(field.type)} ${field.publicName}`).join(", ")}) : ${parent ? `${parent}, ` : ""}IGraphValue
 {
@@ -143,19 +155,19 @@ ${values.map((field, index) => `        ${index} => ${field.publicName},`).join(
 		const name = node.publicType;
 		if(node.identity)
 		{
-			const fn = callbacks.find(fn => fn.id === node.id);
-			const params = fn?.invokeParameters.map((type, index) => `${type} arg${index}`).join(", ");
+			const fn = callbacks.find(fn => fn.id === node.id), rawBridge = wholeOwners && fn && fn.anchor === undefined;
+			const rawParams = fn?.invocations.at(-1).parameters.map((type, index) => `${type} arg${index}`).join(", ");
 			return `/// <summary>A thread-bound Lean ${fn ? "closure" : "resource"}. Retain creates an independent owner.</summary>
 public sealed class ${name} : global::System.IDisposable, IOwnedValue
 {
     internal readonly Interop.OwnedHandle Handle;
     private readonly global::System.Func<Interop.OwnedHandle, ${name}> retain;${anchored ? "\n    private readonly global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal;" : ""}
-${fn ? `    internal delegate ${fn.invokeReturnType ?? fn.returnType} Invocation(${params});
-    private readonly Invocation invoke;
-${wholeOwners ? `    internal delegate ${fn.returnType} RawInvocation(${params});
+${fn ? `${fn.invocations.map(invocation => `    internal delegate ${fn.invokeReturnType ?? fn.returnType} Invocation${invocation.suffix}(${invocation.parameters.map((type, index) => `${type} arg${index}`).join(", ")});
+    private readonly Invocation${invocation.suffix} invoke${invocation.suffix};
+`).join("")}${rawBridge ? `    internal delegate ${fn.returnType} RawInvocation(${rawParams});
     private readonly RawInvocation rawInvoke;
-` : ""}` : ""}    internal ${name}(Interop.OwnedHandle handle, global::System.Func<Interop.OwnedHandle, ${name}> retain${fn ? ", Invocation invoke" : ""}${anchored ? ", global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal" : ""}${wholeOwners && fn ? ", RawInvocation rawInvoke" : ""})
-    { Handle = handle; this.retain = retain;${fn ? " this.invoke = invoke;" : ""}${anchored ? " this.equal = equal;" : ""}${wholeOwners && fn ? " this.rawInvoke = rawInvoke;" : ""} }
+` : ""}` : ""}    internal ${name}(Interop.OwnedHandle handle, global::System.Func<Interop.OwnedHandle, ${name}> retain${fn ? fn.invocations.map(invocation => `, Invocation${invocation.suffix} invoke${invocation.suffix}`).join("") : ""}${anchored ? ", global::System.Func<Interop.OwnedHandle, Interop.OwnedHandle, bool> equal" : ""}${rawBridge ? ", RawInvocation rawInvoke" : ""})
+    { Handle = handle; this.retain = retain;${fn ? fn.invocations.map(invocation => ` this.invoke${invocation.suffix} = invoke${invocation.suffix};`).join("") : ""}${anchored ? " this.equal = equal;" : ""}${rawBridge ? " this.rawInvoke = rawInvoke;" : ""} }
     public bool IsClosed => Handle.IsClosed;
     public void Dispose() => Handle.Dispose();
     public ${name} Retain() => retain(Handle);
@@ -172,9 +184,12 @@ ${anchored ? `    public bool SameIdentity(${name} other)
     bool IOwnedValue.OwnedEquals(object? other) => Equals(other);
     public override int GetHashCode() => throw new global::System.NotSupportedException("Lean resources cannot be dictionary keys");
 ` : ""}\
-${fn ? `    public ${fn.invokeReturnType ?? fn.returnType} Invoke(${params}) => invoke(${fn.invokeParameters.map((_, i) => `arg${i}`).join(", ")});
+${fn ? `${fn.invocations.map(invocation => `    public ${fn.invokeReturnType ?? fn.returnType} Invoke(${invocation.parameters.map((type, index) => `${type} arg${index}`).join(", ")}) => invoke${invocation.suffix}(${invocation.parameters.map((_, i) => `arg${i}`).join(", ")});
+`).join("")}\
+${fn.anchor === undefined ? `\
     private ${fn.returnType} CallFromHost(${fn.hostParameters.map((type, i) => `${type} arg${i}`).join(", ")}) => ${wholeOwners ? "rawInvoke" : "Invoke"}(${fn.parameters.slice(1).map((id, i) => `arg${i}${c.hostArgument?.(fn, i + 1) ? ".AsCallback" : ""}`).join(", ")});
     public ${fn.delegateType} AsCallback => CallFromHost;
+` : `    public ${name} AsCallback => this;\n`}\
 ` : ""}${receiverDeclarations.raw.get(node.id) ?? ""}}`;
 		}
 		if(node.kind === "record") return record(name, node.fields);
@@ -198,8 +213,9 @@ ${node.cases.map(branch => record(branch.publicName, branch.fields, name)).join(
 public readonly record struct Unit;
 internal interface IOwnedValue {${anchored ? " bool OwnedEquals(object? other); " : " "}}
 ${wholeOwners ? receivers ? ownedDotnetWholeValues.replace("public sealed class Value<T>", "public class Value<T>").replaceAll("public Value<T>", "public virtual Value<T>") : ownedDotnetWholeValues : ""}\
+${callbackReplies ? ownedDotnetCallbackResult : ""}\
 ${dotnetGraphCompoundTypes}
-${callbacks.map(fn => `public delegate ${fn.returnType} ${fn.delegateType}(${fn.hostParameters.map((type, index) => `${type} arg${index}`).join(", ")});`).join("\n")}
+${callbacks.map(fn => `public delegate ${fn.hostReturnType} ${fn.delegateType}(${fn.hostParameters.map((type, index) => `${type} arg${index}`).join(", ")});`).join("\n")}
 ${declarations.join("\n\n")}
 ${receivers ? receiverDeclarations.source + "\n" : ""}\
 ${aliases.map(alias => `// Lean alias ${alias.name} = ${alias.contractType}; C#: ${alias.managedType}`).join("\n")}

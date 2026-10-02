@@ -595,6 +595,10 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(nodeJob, /--backend nix --browsers chromium,firefox,webkit/);
   const nativeJob = workflow.split("  native-consumers:\n")[1].split("\n  managed-consumers:\n")[0];
   assert.match(nativeJob, /^ {4}timeout-minutes: 240$/m);
+  const wasiJob = workflow.split("  wasi-consumer:\n")[1].split("\n  docker-engine:\n")[0];
+  assert.match(wasiJob, /^ {4}timeout-minutes: 240$/m);
+  assert.match(wasiJob, /npm run test:owned-wit-transfers/);
+  assert.match(wasiJob, /npm run test:owned-wit-borrows/);
   const phpJob = workflow.split("  php-consumers:\n")[1].split("\n  native-consumers:\n")[0];
   assert.match(phpJob, /^ {4}timeout-minutes: 360$/m);
   assert.match(phpJob, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
