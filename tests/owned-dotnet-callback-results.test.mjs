@@ -10,7 +10,8 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedDotnetCalls } from "../src/backends/dotnet/owned-calls.mjs";
 import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { ownedRustCallbackResultConfiguration, ownedRustCallbackResultReviewedIr
-	, ownedRustCallbackResultSource } from "./helpers/owned-rust-callback-result-fixture.mjs";
+	, ownedRustCallbackResultSource, ownedRustCallbackResultCombinedConfiguration
+	, ownedRustCallbackResultCombinedReviewedIr, ownedRustCallbackResultCombinedSource } from "./helpers/owned-rust-callback-result-fixture.mjs";
 import { compileOwnedDotnetFixture } from "./helpers/owned-dotnet-native.mjs";
 import { ownedDotnetReceiverProject } from "./helpers/owned-dotnet-receiver-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -35,20 +36,35 @@ test("C# callback arguments carry whole owners without enabling export anchors",
 	assert.deepEqual(generateOwnedDotnetCalls(reversed, options).files, generated.files);
 	assert.deepEqual(generateOwnedDotnetCalls(ownedAggregateReviewedIr(), options).files,
 		generateOwnedDotnetCalls(ownedAggregateReviewedIr(), { hostCallbacks: false }).files);
-	assert.throws(() => generateOwnedDotnetCalls(ir, { ...options, hostCallbacks: true }), /host transport is not implemented/u);
+	const hosted = generateOwnedDotnetCalls(ir, { ...options, hostCallbacks: true });
+	assert.match(hosted.files["Values.cs"], /readonly struct CallbackResult<T>/u);
+	assert.match(hosted.files["Calls.cs"], /reply\.Read\(replies\)/u);
+	assert.equal(hosted.functions.filter(fn => fn.name === "callbackRecord").length, 1);
+	assert.equal(hosted.calls.filter(fn => fn.name === "callbackRecord").length, 2);
 });
 
-for(const mode of ["ordinary", "reviewed"]) test(`C# native callback results follow original owners (${mode})`, {
+for(const mode of ["ordinary", "reviewed"]) for(const variant of ["no-host", "host", "combined"]) test(`C# callback results follow original owners (${mode}, ${variant})`, {
 	skip: process.env.LEAN_BRIDGE_OWNED_DOTNET_CALLBACK_RESULT_TEST !== "1"
 	, timeout: 900000
 }, async t => {
+	const hostCallbacks = variant !== "no-host", combined = variant === "combined";
 	const compiled = await compileOwnedDotnetFixture(t, {
-		...options
-		, sourceSuffix: ownedRustCallbackResultSource
-		, ...mode === "ordinary" ? { configuration: await ownedRustCallbackResultConfiguration() } : { reviewedIr: ownedRustCallbackResultReviewedIr() }
-		, evidenceName: `dotnet-callback-results-${mode}-inputs.json`
+		...options, hostCallbacks, transferredInputs: combined
+		, anchoredResults: combined, receiverExports: combined
+		, sourceSuffix: combined ? ownedRustCallbackResultCombinedSource : ownedRustCallbackResultSource
+		, ...mode === "ordinary" ? { configuration: await (combined ? ownedRustCallbackResultCombinedConfiguration : ownedRustCallbackResultConfiguration)() }
+			: { reviewedIr: (combined ? ownedRustCallbackResultCombinedReviewedIr : ownedRustCallbackResultReviewedIr)() }
+		, evidenceName: `dotnet-callback-results-${mode}-${variant}-inputs.json`
 	});
-	const probe = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-results.cs", "utf8");
+	let probe = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-results.cs", "utf8");
+	if(hostCallbacks)
+	{
+		const host = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-host-results.cs", "utf8");
+		probe = probe.replace("    private static void Main", host + "\n    private static void Main")
+			.replace("OriginalOwners(); EmptyOwners();", "OriginalOwners(); EmptyOwners(); HostReplies();")
+			.replace("int managedFaults =", "var hostFaults = new[] { HostFaults(true, false), HostFaults(false, false), HostFaults(true, true), HostFaults(false, true) };\n        int managedFaults =")
+			.replace("new { checks,", "new { hostFaults, checks,");
+	}
 	let observed;
 	try
 	{
@@ -59,9 +75,11 @@ for(const mode of ["ordinary", "reviewed"]) test(`C# native callback results fol
 	{ throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); }
 	assert.ok(observed.checks > 40); assert.ok(observed.managedFaults > 0); assert.ok(observed.nativeFaults > 0);
 	assert.equal(observed.live, 0); assert.equal(observed.identities, 0);
-	await saveLakeFile("build/owned-dotnet-callback-results", `${mode}-native.json`, canonicalJson({
+	if(hostCallbacks)
+	{ assert.equal(observed.hostFaults.length, 4); assert.ok(observed.hostFaults.every(count => count > 0)); }
+	await saveLakeFile("build/owned-dotnet-callback-results", `${mode}-${variant}.json`, canonicalJson({
 		mode, actualLean: true, installedPackage: false
-		, hostCallbacks: false, observed
+		, hostCallbacks, combined, observed
 		, input: { metadata: compiled.metadata, sourceIdentity: compiled.sourceIdentity, component: compiled.model.c.native.model.component }
 		, generated: Object.fromEntries(Object.entries(compiled.model.files).map(([path, source]) => [path, sha256(source)]))
 		, nativeProbeSha256: sha256(compiled.implementation)

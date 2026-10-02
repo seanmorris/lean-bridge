@@ -29,7 +29,6 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  */
 export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
 	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
-	if(valueCopies && hostCallbacks) throw new TypeError("Owned C# callback-result host transport is not implemented");
 	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity

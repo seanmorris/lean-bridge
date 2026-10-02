@@ -74,7 +74,9 @@ export const ownedDotnetCallables = (model, symbols) => {
 		const automatic = ownedCallbackRecovery(model.c.native.model, node, id => id) !== null;
 		const copy = [...model.c.retains, ...model.c.copies ?? []].find(fn => fn.id === result.id);
 		const delegate = `_V.${callback.delegateType}`, publicResult = types.get(result.id);
-		const unit = result.name === "unit", returnType = unit ? "void" : publicResult;
+		const borrowed = callback.anchor !== undefined;
+		const replyType = borrowed ? `_V.CallbackResult<${publicResult}>` : publicResult;
+		const unit = result.name === "unit", returnType = unit ? "void" : replyType;
 		const signature = ["nint context", "nint session", ...parameters.map((param, j) => `${raw(param)} arg${j}`), `${result.raw}* output`, "nint* owner"];
 		const copyPointer = `delegate* unmanaged[Cdecl]<nint, ${raw(result)}, ${result.raw}*, nint*, uint>`;
 		definitions.push(`[global::System.Runtime.InteropServices.UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
@@ -82,20 +84,20 @@ internal unsafe delegate uint OwnedThunk${i}(${signature.join(", ")});
 internal sealed class OwnedRecovery${i} : IOwnedRecovery
 {
     internal readonly ${delegate} Callback;
-    internal readonly ${publicResult} Recovery;
+    internal readonly ${replyType} Recovery;
     global::System.Delegate IOwnedRecovery.Function => Callback;
-    internal OwnedRecovery${i}(${delegate} callback, ${publicResult} recovery)
+    internal OwnedRecovery${i}(${delegate} callback, ${replyType} recovery)
     { global::System.ArgumentNullException.ThrowIfNull(callback); Callback = callback; Recovery = recovery; }
     internal ${returnType} Invoke(${parameters.map((param, j) => `${types.get(param.id)} arg${j}`).join(", ")}) => Callback(${parameters.map((_, j) => `arg${j}`).join(", ")});
 }`);
-		recovery.push(`    public static ${callback.delegateType} WithRecovery(${callback.delegateType} callback, ${result.publicType} recovery)
+		recovery.push(`    public static ${callback.delegateType} WithRecovery(${callback.delegateType} callback, ${borrowed ? `CallbackResult<${result.publicType}>` : result.publicType} recovery)
         => new Interop.OwnedRecovery${i}(callback, recovery).Invoke;`);
 		methods.push(`    private OwnedCallback${i} Host${i}(${delegate} value, OwnedValueScope scope, OwnedCallFrame? frame = null)
     {
         scope.Enter(null, 0, 32, true);
         OwnedCallFrame.Validate(value);
         bool wrapped = false;
-        var recovery = default(${publicResult});
+        var recovery = default(${replyType});
         var function = value;
         int nesting = 0;
         while (function.Target is OwnedRecovery${i} wrapper && function.Equals(new ${delegate}(wrapper.Invoke)))
@@ -104,10 +106,11 @@ internal sealed class OwnedRecovery${i} : IOwnedRecovery
             if (!wrapped) { recovery = wrapper.Recovery; wrapped = true; }
             function = wrapper.Callback;
         }
-        if (!wrapped && function.Target is _V.${node.publicType} closure && function.Equals(closure.AsCallback))
+${borrowed ? "" : `        if (!wrapped && function.Target is _V.${node.publicType} closure && function.Equals(closure.AsCallback))
             return new OwnedCallback${i} { Closure = scope.Root(closure.Handle) };
+`}\
 ${automatic ? "" : '        if (!wrapped) throw new global::System.ArgumentException("This callback requires OwnedCallbacks.WithRecovery(function, value)");\n'}        nint fallback = 0;
-        if (wrapped) fallback = scope.Store(OwnedConvert.Write${result.index}(recovery!, scope));
+        if (wrapped) fallback = scope.Store(OwnedConvert.Write${result.index}(${borrowed ? "recovery.Read(scope)" : "recovery!"}, scope));
         if (scope.CheckOnly) return default;
         if (frame is null) throw new global::System.InvalidOperationException("Callback construction requires an active call frame");
         scope.Storage(512); OwnedRuntime.Checkpoint();
@@ -126,7 +129,7 @@ ${parameters.map((param, j) => `                var value${j} = OwnedConvert.Rea
                 ${unit ? "" : "var reply = "}function(${parameters.map((_, j) => `value${j}`).join(", ")});
                 Ready();
                 using var replies = new OwnedValueScope(frame.State, Factories, budget: frame.Budget);
-                var converted = OwnedConvert.Write${result.index}(${unit ? "default(_V.Unit)" : "reply"}, replies);
+                var converted = OwnedConvert.Write${result.index}(${unit ? "default(_V.Unit)" : borrowed ? "reply.Read(replies)" : "reply"}, replies);
                 // This slot belongs to C, even if a later managed checkpoint fails.
                 OwnedRuntime.Check(((${copyPointer})symbols[${symbols.indexOf(copy.cName)}])(frame.State.Require(), ${result.leaf ? "" : "&"}converted, output, owner));
                 OwnedRuntime.Checkpoint(); return 0;
@@ -135,6 +138,12 @@ ${parameters.map((param, j) => `                var value${j} = OwnedConvert.Rea
         };
         frame.Keep(thunk); OwnedRuntime.Checkpoint();
         return new OwnedCallback${i} { Call = global::System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(thunk), Recovery = fallback };
+    }`);
+		if(borrowed) methods.push(`    private OwnedCallback${i} Host${i}(_V.${node.publicType} value, OwnedValueScope scope, OwnedCallFrame? frame = null)
+    {
+        global::System.ArgumentNullException.ThrowIfNull(value);
+        scope.Enter(null, 0, 32, true);
+        return new OwnedCallback${i} { Closure = scope.Root(value.Handle) };
     }`);
 	}
 	return { definitions: definitions.join("\n"), methods: methods.join("\n")
