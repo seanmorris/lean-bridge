@@ -610,6 +610,24 @@
       ]
     },
     {
+      "path": "tests/managed-close-generated-history.test.mjs",
+      "previousSha256": "ce2a43943a9a4669d5c0ee2b7a84d6d251db12d5f749bcc166d6aded57ef20cd",
+      "currentSha256": "7c756bf90b5698339375657798cbfe3190db0d7e5e2a6401910c0c8704222873",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 436,
+          "current": "",
+          "previous": "import { generateOwnedRubyPackage } from \"../src/backends/ruby/owned-package.mjs\";\n"
+        },
+        {
+          "start": 515,
+          "current": "import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage\n\t, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from \"./helpers/owned-ruby-callback-generated-history.mjs\";\n",
+          "previous": "import { ownedRubyRuntime } from \"../src/backends/ruby/owned-runtime.mjs\";\n"
+        }
+      ]
+    },
+    {
       "path": "tests/owned-python-callback-result-history.test.mjs",
       "previousSha256": "df872afe035702b34d7c3f2bb9c85f926c4fac056b513c21882f753ac01cc2f2",
       "currentSha256": "7ee3dee75f7461a81c6d68c004af6122649b90941c3e315350ed183e2f525559",
