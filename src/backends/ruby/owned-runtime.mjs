@@ -303,6 +303,9 @@ ${wholeOwners ? "      @owning = owning\n" : ""}\
       # may never run ensure, so retire every slot on the creating native thread.
       close(true)
       @exited = true
+      # Finalizer guards can outlive their wrappers. An exited State must not
+      # retain the Thread and its return value, which can contain those wrappers.
+      @thread = nil
     end
   end
   class Runtime

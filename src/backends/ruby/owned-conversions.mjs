@@ -20,7 +20,8 @@ import { ownedRubyAnchoredCall, ownedRubyAnchoredTransfers, ownedRubyValueCopies
 export const generateOwnedRubyConversions = (ir, options = {}) => {
 	const model = compileOwnedRubyLayout(ir, options), boundary = ownedRubyCallBoundary(model);
 	const transfers = model.c.functions.some(fn => fn.transfers?.length);
-	const anchored = model.c.functions.some(fn => fn.anchor !== undefined);
+	const callbackAnchors = model.c.callbacks.some(fn => fn.anchor !== undefined);
+	const anchored = model.c.functions.some(fn => fn.anchor !== undefined) || callbackAnchors;
 	const wholeOwners = anchored || model.c.functions.some(fn => fn.receiver === 0);
 	const nodes = new Map(model.types.map(node => [node.id, node]));
 	const publicName = name => `::${model.namespace}::${name}`;
@@ -57,6 +58,8 @@ export const generateOwnedRubyConversions = (ir, options = {}) => {
 		{ input.push('raise ArgumentError, "The declared type has no finite value"'); output.push('raise Invalid, "Uninhabited native value"'); }
 		else if(node.identity)
 		{
+			if(node.kind === "callback" && callbackAnchors)
+				input.push("value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)");
 			input.push(`raise TypeError, "Expected exact ${node.publicType}" unless exact?(value, ${publicName(node.publicType)})`
 				, "handle = RESOURCE_RAW.bind_call(value, scope.state)", "scope.pin_lease(FIELD.bind_call(value, :@guard).lease)"
 				, ...transfers && !wholeOwners ? ["scope.moves.add(FIELD.bind_call(value, :@guard).lease, scope.move_group, scope) if scope.moves && !scope.move_group.nil?"] : []

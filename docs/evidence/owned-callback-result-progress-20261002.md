@@ -2,7 +2,7 @@
 
 VO task 1219. This work extends the explicit ownership profile so a returned
 Lean function can borrow its result from one of that function's arguments.
-Installed C, C++, Cargo and npm acceptance passes on both authoring paths.
+Installed C, C++, Cargo, PyPI, RubyGems and npm acceptance passes on both authoring paths.
 Rust's complete enabled gate passes all 13 tests without skips. Its six runtime
 configurations, four installed Cargo cases and two combined releases preserve
 the selected callback owner. The support matrix has not been promoted.
@@ -178,18 +178,35 @@ after clearing its only TLS pointer. The repaired complete gate passes all 13
 tests with no failures, skips or cancellation in 2,637 seconds. Its
 [acceptance record](owned-python-callback-results-20261002.json) preserves all
 13 reports and the complete execution log. The verifier reconstructs the
-generated sources and rejects 41 forged reports. Repository-wide regressions
-and CI are separate from this acceptance record.
+generated sources and rejects 41 forged reports. Its final repository regression
+passed 3,009 tests, with 692 explicitly gated skips and no failures. Commit
+`0fc33e4` is pushed, including the Rust CI setup repairs above. Remote CI remains
+separate from this local acceptance record.
 
-Ruby's isolated generator and compiled probes now pass all six source/capability
-configurations. They exercise GC, bounded borrow ancestry, thread and fork
-affinity, close races, nonlocal callback exits, interrupted callbacks and
-allocation failures before and after consuming handoff. Five no-host and nine
-host-capable source mutations fail their semantic checks; restored sources
-reproduce the original results. Installed gems and final Ruby acceptance remain
-unfinished.
+Ruby's generator and compiled probes pass all six source/capability
+configurations under address, undefined-behavior and leak sanitizers. They
+exercise GC, bounded borrow ancestry, thread and fork affinity, close races,
+nonlocal exits, interrupted callbacks and allocation failures before and after
+consuming handoff. A heap trace exposed an exited-thread retention cycle;
+retiring the state now clears its thread reference. The public weak-key
+regression and the mutation that removes this repair both execute. Six no-host
+and ten host-capable mutations fail their named assertions; restored sources
+reproduce the passing results and the complete cold leak baseline.
 
-Finish Python acceptance, then implement and verify Ruby, C#,
+Ruby's complete enabled gate passes all 12 tests with no failures, skips or
+cancellation in 2,090 seconds. All four original gem variants install offline
+after producer source removal and execute again after relocation. No-host gems
+pass 173 checks per installation; combined gems pass 206. Both authoring paths
+also install one C/C++/Cargo/PyPI/RubyGems/npm release, with 206 Ruby, 407 Python
+per interpreter, 118 Rust, 76 C++, 219 C and 40 JavaScript checks, strict
+TypeScript and nine browser contexts. The
+[acceptance record](owned-ruby-callback-results-20261002.json) preserves all 12
+reports and the complete execution log, including the cold and exercised leak
+reports and sanitized observations. The verifier reconstructs the generated
+sources and rejects 52 forged reports. Repository-wide regression and remote
+CI remain separate from this local acceptance record.
+
+Implement and verify C#,
 Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI callback-result projections.
 Update each guide and acceptance record from installed results, then complete
 the package/container checks and support-matrix audit. Run the required CI jobs

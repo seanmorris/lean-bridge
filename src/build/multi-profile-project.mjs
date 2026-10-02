@@ -179,7 +179,7 @@ export const buildMultiProfileProject = async ({
 				, sourceIdentity: nativeReceipt.sourceIdentity }, { ownedGraphs
 				, ownedHostCallbacks: ownedGraphs, ownedInputTransfers: ownedGraphs
 				, ownedAnchoredResults: ownedGraphs, ownedReceiverExports: ownedGraphs
-				, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => ["c", "cpp", "cargo", "pypi", "nuget"].includes(target)) });
+				, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget"].includes(target)) });
 			if(canonicalJson(reconstructed) !== canonicalJson(nativeModel) || sha256(canonicalJson(nativeModel)) !== nativeReceipt.modelSha256) fail("Native model changed after compilation");
 			models.push(nativeModel);
 		}

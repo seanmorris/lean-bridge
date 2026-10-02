@@ -71,6 +71,7 @@ test("CLI archives are deterministic, dependency-free, and contain the complete 
 		assert.deepEqual(first.report, second.report);
 		assert.equal(first.report.runtimeIncluded, false);
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedDotnetPackage } from './src/backends/dotnet/copied-values.mjs'; if (typeof generateCopiedDotnetPackage !== 'function') throw new Error('Missing .NET generator');"], { cwd: first.directory });
+		await execute(process.execPath, ["--input-type=module", "-e", "import { generateOwnedDotnetPackage } from './src/backends/dotnet/owned-package.mjs'; if (typeof generateOwnedDotnetPackage !== 'function') throw new Error('Missing owned .NET generator');"], { cwd: first.directory });
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedJvmPackage } from './src/backends/jvm/copied-values.mjs'; if (typeof generateCopiedJvmPackage !== 'function') throw new Error('Missing JVM generator');"], { cwd: first.directory });
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedRubyPackage } from './src/backends/ruby/copied-values.mjs'; if (typeof generateCopiedRubyPackage !== 'function') throw new Error('Missing Ruby generator');"], { cwd: first.directory });
 		await execute(process.execPath, ["--input-type=module", "-e", "import { generateCopiedPhpPackage } from './src/backends/php/copied-values.mjs'; if (typeof generateCopiedPhpPackage !== 'function') throw new Error('Missing PHP generator');"], { cwd: first.directory });

@@ -8,7 +8,7 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedDotnetReceiverHistoricalBytes } from "./owned-dotnet-receiver-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedRubyPackage } from "../../src/backends/ruby/owned-package.mjs";
+import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage } from "./owned-ruby-callback-generated-history.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
 import { ownedRubyAdapterSources } from "../../src/build/owned-ruby-artifacts.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";

@@ -29,6 +29,7 @@ import { pythonTypingWheels } from "./python-wheel-install.mjs";
 import { ownedPythonCallbackBaseline, ownedPythonCallbackChangedPaths
 	, ownedPythonCallbackHistoryPath, ownedPythonCallbackHistorySha256 } from "./owned-python-callback-result-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
+import { beforeOwnedRubyCallbackResults } from "./owned-ruby-callback-result-history.mjs";
 
 export const ownedPythonCallbackEvidencePath = "docs/evidence/owned-python-callback-results-20261002.json";
 export const ownedPythonCallbackPrevious = Object.freeze({
@@ -127,7 +128,9 @@ const cli = async report => {
 	assert.equal(new Set(report.files.map(file => file.path)).size, report.files.length);
 	for(const path of config.files)
 	{
-		const file = report.files.find(entry => entry.path === path), bytes = await readFile(path);
+		const file = report.files.find(entry => entry.path === path);
+		assert.ok(file, path);
+		const bytes = Buffer.from(beforeOwnedRubyCallbackResults(path, await readFile(path), file.sha256));
 		assert.ok(file, path); assert.equal(file.bytes, bytes.length, path); assert.equal(file.sha256, sha256(bytes), path);
 	}
 };
@@ -461,7 +464,14 @@ const typing = async item => {
 	}
 	assert.deepEqual(item, { observations: expected });
 };
-const combinedRelease = async (item, mode) => {
+/**
+ * Reconstruct the C/C++/Cargo/PyPI/npm portion of one installed release.
+ *
+ * @param item - Complete combined-release report.
+ * @param mode - Ordinary source or reviewed IR.
+ * @param additionalTargets - Other package targets verified by the calling reader.
+ */
+export const assertOwnedPythonCallbackCombinedRelease = async (item, mode, additionalTargets = []) => {
 	assert.equal(item.mode, mode); assert.equal(item.schemaVersion, 1);
 	await cli(item.cli); assert.equal(item.cliFilesVerified, item.cli.files.length);
 	flags(item, ["cmake", "cppCmake", "installedTypeScript", "sourceUnchanged", "producerAndCliRemovedBeforeInstall", "compilerFreeConsumerEnvironment"]);
@@ -523,8 +533,8 @@ const combinedRelease = async (item, mode) => {
 	const guide = await readFile("docs/javascript-typescript.md", "utf8");
 	const jsExample = guide.split("### Borrowed callback results\n")[1].split("### Methods and properties\n")[0].match(/```js\n([\s\S]*?)\n```/u)[1];
 	assert.deepEqual(item.documentation, { sourceSha256: sha256(jsExample), output: "42n\ntrue\n42n\n" });
-	assert.equal(item.receipt.packages.length, 6); assert.equal(item.built.status, "ok");
-	assert.deepEqual(item.receipt.packages.map(value => value.target).sort(), ["c", "cargo", "cpp", "npm", "npm", "pypi"]);
+	assert.equal(item.receipt.packages.length, 6 + additionalTargets.length); assert.equal(item.built.status, "ok");
+	assert.deepEqual(item.receipt.packages.map(value => value.target).sort(), ["c", "cargo", "cpp", "npm", "npm", "pypi", ...additionalTargets].sort());
 	digest(item.compilerInputsIdentity);
 };
 
@@ -545,7 +555,7 @@ export const assertOwnedPythonCallbackReport = async (path, item) => {
 	}
 	const mode = name.startsWith("ordinary-") ? "ordinary" : "reviewed";
 	const variant = name.slice(mode.length + 1);
-	if(variant === "combined-release") return combinedRelease(item, mode);
+	if(variant === "combined-release") return assertOwnedPythonCallbackCombinedRelease(item, mode);
 	return installed(item, mode, variant === "combined-package");
 };
 
@@ -562,7 +572,7 @@ export const assertOwnedPythonCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedPythonCallbackHistoryPath, sha256: ownedPythonCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedPythonCallbackSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(beforeOwnedRubyCallbackResults(path, await readFile(path), digest)), digest, path);
 	assert.equal(record.run.command, "npm run test:owned-python-callback-results"); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, count] of Object.entries({ tests: 13, pass: 13, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))

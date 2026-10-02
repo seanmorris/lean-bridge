@@ -455,6 +455,53 @@ its private pointer-call adapter and isolated GMP library. The targets share
 the compiled Lean component and runtime; each generated package carries its
 own authenticated loader and ownership contract.
 
+## Anchor a callback result to its argument
+
+A returned Lean function can borrow its result from one of its own arguments.
+Keep `resources` and `ownedAggregates`, and place the decision inside the
+export's `callable.result` contract. For a function with the type
+`Bundle → Bool → Bundle → Bundle`, select one outer argument with
+`"arities": { "Owned.makeRecord": 1 }`. The returned function then has two
+arguments; this contract selects its second argument:
+
+```json
+{
+  "result": {
+    "ownership": "lease",
+    "lifetime": { "scope": "explicit", "anchor": null },
+    "callable": {
+      "result": {
+        "ownership": "borrow",
+        "lifetime": { "scope": "parameter", "anchor": "arg1" }
+      }
+    }
+  }
+}
+```
+
+Place that object under `contracts["Owned.makeRecord"]`. Reviewed contracts
+record the same decision on the callable result. The anchor names belong to
+that callable, not the outer export or its private closure handle.
+
+Ruby callers pass a checked `Value` for the selected argument. That argument's
+original owner controls the result and every borrowed descendant, including
+empty recursive values. Closing its last alias, exiting its creating thread or
+transferring it expires the result. `retain` and `copy_value` create independent
+ownership. See the [Ruby example](../consume/ruby.md#results-borrowed-from-a-callback-argument).
+
+Host callbacks may return the declared payload or a whole `Value`. The bridge
+validates and converts the reply before the callback's borrowed arguments
+expire. Recovery replies obey the same rule. Host callback storage still lasts
+only for the call; this contract does not enable asynchronous delivery.
+
+Build with `--target rubygems`. Callback-result gems use `owned-ruby-v5`,
+Ruby ownership contract and gem receipt version 5, and native ownership model
+version 6. The builder keeps callback-result anchors separate from export-result
+anchors, receiver members and consuming inputs. Combined releases can select
+C, C++, Cargo, PyPI, RubyGems and npm when every target accepts the complete API.
+Ruby retains its private adapter and GMP library while sharing the native Lean
+component with the other native packages.
+
 ## Build the gem
 
 The separate Alpha fixture retains its resource and callback examples.

@@ -20,15 +20,17 @@ import { ownedRubyAbiHeader } from "./owned-abi.mjs";
  * @param options.transferredInputs - Enable explicitly consuming input leases.
  * @param options.anchoredResults - Preserve original whole-result owners.
  * @param options.receiverExports - Expose nominal methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - The adapter provides callbacks and copies.
  */
-export const generateOwnedRubyPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const generated = generateOwnedRubyConversions(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = generated.c.prefix;
+export const generateOwnedRubyPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const generated = generateOwnedRubyConversions(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), prefix = generated.c.prefix;
 	const transfers = generated.c.functions.some(fn => fn.transfers?.length);
-	const anchors = Boolean(generated.c.anchoredResults);
-	const receivers = generated.functions.filter(fn => fn.receiver === 0), wholeOwners = anchors || receivers.length > 0;
+	const anchors = generated.c.functions.some(fn => fn.anchor !== undefined);
+	const callbackAnchors = generated.c.callbacks.filter(fn => fn.anchor !== undefined);
+	const receivers = generated.functions.filter(fn => fn.receiver === 0), wholeOwners = anchors || callbackAnchors.length > 0 || receivers.length > 0;
 	const { requirePath, componentName, namespace } = generated;
-	const entry = `lib/${requirePath}.rb`, runtime = ownedRubyRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors, receiverExports: receivers.length > 0 });
+	const entry = `lib/${requirePath}.rb`, runtime = ownedRubyRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors || callbackAnchors.length > 0, receiverExports: receivers.length > 0 });
 	const native = `${generated.source}
 require "digest"
 require "digest/sha2"
@@ -45,10 +47,21 @@ ${verifiedRubyAssets(evidence)}
 end
 `;
 	const abiHeader = ownedRubyAbiHeader(generated);
-	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+	const schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;
+	const contract = { schemaVersion
 		, language: "ruby-3.3"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "raise-after-native-return"
+		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-argument-owner"
+			, parameterNumbering: "callback-local"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved"
+			, independentOwnership: "retain-or-copy_value"
+			, hostReply: "value-or-whole-owner"
+			, hostResultHandoff: "before-callback-frame-expires"
+			, signatures: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1 }))
+		} } : {}
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
 			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
 			, consumption: "before-lean-call"
@@ -113,7 +126,7 @@ the anchor expires its descendants. Copied Ruby fields remain ordinary data.
 
 Use copy_value(record_or_resource) for nominal shapes. Ambiguous containers
 require result_of: :function_name or parameter_of: [:function_name, :arg0].
-These selectors choose a declared type without calling that function.${anchors ? ` Resource
+These selectors choose a declared type without calling that function.${anchors || callbackAnchors.length ? ` Resource
 equality uses native canonical identity and rejects expired values.` : ""} Lean owners
 and resources cannot be serialized or used as Hash keys.
 ` : `Resource wrappers share checked result leases. dup and clone create independent
@@ -121,7 +134,18 @@ close guards; retain creates an independent native owner. Use with { |value| }
 or close for deterministic release. Finalization queues fallback cleanup on the
 creating thread. Resource calls reject after that thread exits, after fork or
 from another thread. Serialization of resource identities is rejected.
-`}${receivers.length ? `
+`}${callbackAnchors.length ? `
+Callback anchor parameters are local to the returned function. Pass Value for
+the selected argument. Its original owner controls the result and descendants,
+including empty constructors, even when Lean returns captured data. Releasing
+or transferring that owner expires the result. retain and copy_value create
+independent owners. Returned Lean closures accept call, retain and close;
+pass either their Value wrapper or checked get result back into Lean.
+${hostCallbacks ? `Host callbacks receive ordinary typed values. Replies and recovery values
+can be raw payloads or Value owners. The bridge validates and snapshots either
+form before the callback arguments expire. Expired whole-value replies reject,
+including empty constructors.
+` : ""}` : ""}${receivers.length ? `
 Methods and zero-argument property readers are available on Value owners.
 Members check their declared resource, record or variant type before calling
 Lean. Record fields remain on get; a property on Value is a Lean call, not a
@@ -146,7 +170,7 @@ borrows must be retained before transfer. Two transferred arguments cannot share
 a resource lease. Errors before handoff preserve ownership; errors after handoff
 leave inputs consumed, including callback exceptions and conversion failures.
 ` : ""}
-${!receivers.length || hostCallbacks ? `Pass synchronous Ruby callables to callback parameters. Resource leaves in
+${hostCallbacks || (!receivers.length && !callbackAnchors.length) ? `Pass synchronous Ruby callables to callback parameters. Resource leaves in
 callback arguments borrow the callback frame and expire on return, including
 duplicates. Call retain inside the callback to keep a resource. Replies are
 snapshotted before borrowed storage expires. Returned Lean closures are callable
@@ -166,8 +190,8 @@ These limits do not bound Lean algorithm memory or every Ruby allocator cost.
 Malformed native values retire the runtime. Ordinary input and allocation
 failures leave it usable. Partial output wrappers are revoked on failure.
 ` };
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
-		, backend: receivers.length ? "owned-ruby-v4" : anchors ? "owned-ruby-v3" : transfers ? "owned-ruby-v2" : "owned-ruby-v1"
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion
+		, backend: `owned-ruby-v${schemaVersion}`
 		, target: "ruby", component: ir.component.id
 		, bindingIrSha256: generated.c.native.model.bindingIrSha256
 		, namespace, requirePath, publicFiles: [entry]

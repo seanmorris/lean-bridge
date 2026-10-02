@@ -49,11 +49,13 @@ ${fields.map(field => `        @${field.publicName} = ${field.publicName}`).join
  * @param options.transferredInputs - Admit consuming resource-containing inputs.
  * @param options.anchoredResults - Admit original-owner borrowed results.
  * @param options.receiverExports - Expose nominal methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - The adapter provides callback and copy helpers.
  */
-export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
-	const anchored = c.functions.some(fn => fn.anchor !== undefined);
+export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
+	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const anchored = c.functions.some(fn => fn.anchor !== undefined) || c.callbacks.some(fn => fn.anchor !== undefined);
 	const receivers = c.functions.filter(fn => fn.receiver === 0), wholeOwners = anchored || receivers.length > 0;
 	const componentName = constant(c.prefix), occupied = new Set(reservedConstants), names = new Map();
 	if(wholeOwners) occupied.add("Value");
