@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedJvmPackages, ownedJvmChangedPaths } from "./owned-jvm-source-history.mjs";
 
 export const managedCiIsolationBaseline = "733bd5a289841309c3ed0b6a99e322cdcb361a09";
 export const managedCiIsolationPath = "docs/evidence/managed-ci-isolation-20260927.json";
@@ -18,6 +19,7 @@ export const managedCiIsolationChangedPaths = [
 	, "tests/helpers/owned-dotnet-process-history.mjs"
 	, "tests/native-fork-repair-evidence.test.mjs"
 ].sort();
+export const managedCiIsolationNormalizationPaths = [...new Set([...managedCiIsolationChangedPaths, ...ownedJvmChangedPaths])].sort();
 export const managedCiIsolationAddedPaths = [
 	"docs/evidence/managed-ci-isolation-20260927.md"
 	, "tests/helpers/managed-ci-isolation.mjs"
@@ -36,6 +38,7 @@ const record = () => cached ??= JSON.parse(readFileSync(managedCiIsolationPath, 
  * @param update - Exact hashes and ordered literal edits.
  */
 export const reverseManagedCiIsolation = (source, update) => {
+	source = beforeOwnedJvmPackages(update.path, source, update.currentSha256);
 	assert.ok(managedCiIsolationChangedPaths.includes(update.path), update.path);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
@@ -61,6 +64,7 @@ export const reverseManagedCiIsolation = (source, update) => {
  * @param expected - Optional requested identity.
  */
 export const beforeManagedCiIsolation = (path, source, expected) => {
+	source = beforeOwnedJvmPackages(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected || !managedCiIsolationChangedPaths.includes(path)) return source;
 	const update = record().updates.find(item => item.path === path);
@@ -74,5 +78,5 @@ export const beforeManagedCiIsolation = (path, source, expected) => {
  * @param bytes - Complete current or historical bytes.
  * @param expected - Optional requested identity.
  */
-export const managedCiIsolationHistoricalBytes = (path, bytes, expected) => managedCiIsolationChangedPaths.includes(path)
+export const managedCiIsolationHistoricalBytes = (path, bytes, expected) => managedCiIsolationNormalizationPaths.includes(path)
 	? beforeManagedCiIsolation(path, bytes.toString("utf8"), expected) : bytes;

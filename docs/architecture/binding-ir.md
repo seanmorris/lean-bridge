@@ -56,8 +56,8 @@ supply layouts or proof evidence. C, C++ and Cargo package builds ship that tran
 with the shared runtime, GMP and relocatable build metadata. C++ adds named value
 types, standard containers, exact Boost integers and checked RAII resource leases.
 Installed ordinary
-and reviewed consumers execute without producer source or Lean. Other host
-projections, transfer and anchored-result lowering, and Wasm remain unfinished. Existing
+and reviewed consumers execute without producer source or Lean. Transferred inputs,
+anchored results and Wasm ownership adapters remain unfinished. Existing
 version-3 backends reject this contract.
 
 The [owned host callback projection](../evidence/owned-host-callbacks-20260926.md)
@@ -119,6 +119,19 @@ loads Lean and private GMP automatically, sharing its loader with copied-value
 packages. Creator-thread exit drains native owners even when managed wrappers
 remain reachable. Finalizers queue cleanup rather than calling Lean from the
 finalizer thread. This profile requires .NET 8 on Linux x86-64.
+
+The [Java](../consume/java.md#owned-resources-and-aggregates) and
+[Kotlin](../consume/kotlin.md#owned-resources-and-aggregates) ownership
+projections use nominal values with `AutoCloseable` resource and closure
+wrappers. Inputs borrow their resource leaves; returned wrappers own checked
+leases. Callback borrows expire on return unless retained explicitly.
+Calls and callbacks stay on the creating platform thread; virtual threads
+reject. Closing from another thread queues release, and native thread exit
+drains owners even when JVM wrappers remain reachable. Prepared Maven
+packages authenticate their libraries and share compatible Lean and private
+GMP dependencies with copied and recursive packages. Consumers compile with JDK 22
+and can deploy with a Java 22 runtime. They do not need Lean, native declarations
+or a native compiler.
 
 ## Rich values cross as rich values
 

@@ -20,6 +20,7 @@ import { auditManagedBindingPackage } from "../src/backends/managed/package-audi
 import { compileNativeGraphProjection } from "../src/build/native-graph-projection.mjs";
 import { assertJvmGraphPackageReports } from "./helpers/jvm-graph-receipt.mjs";
 import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-history.mjs";
+import { ownedJvmHistoricalBytes } from "./helpers/owned-jvm-source-history.mjs";
 
 const loadingEvidence = () => ({ componentId: "recursive@1.0.0"
 	, library: "librecursive.so"
@@ -99,7 +100,10 @@ for(const scenario of ["Composition", "Conflicts"])
 test("recursive JVM loaders require pinned asset identities and safe parameter names", () => {
 	const ir = jvmGraphConversionIr(), evidence = loadingEvidence();
 	const files = generateCopiedJvmGraphPackage(ir, evidence), source = files["src/main/java/org/leanbridge/recursive/_GraphNative.java"];
-	assert.ok(source.indexOf("verify(root.resolve(") < source.indexOf("SymbolLookup.libraryLookup("));
+	assert.ok(source.includes("verify(root.resolve(name), hashes.get(name));"));
+	assert.ok(source.indexOf("verify(root.resolve(name), hashes.get(name));") < source.indexOf("var handle = open(root.resolve(name).toString(), 2 | 256 | 8);"));
+	assert.ok(source.indexOf("var lookup = _Assets.lookup();") < source.indexOf("synchronized (_GraphNative.class)"));
+	assert.match(source, /static boolean loaded\(\) \{ return targets != null; \}/u);
 	assert.match(source, /Conflicting builds of the same Lean component/);
 	assert.match(source, /Incompatible Lean runtime identities/);
 	assert.match(source, /volatile _GraphRuntime.Target\[\]/);
@@ -151,7 +155,10 @@ test("recursive Maven package evidence binds installed archives and rejects inco
 	}
 	for(const name of ["composition", "conflicts"])
 		for(const [path, hash] of Object.entries(record.reports[name].sourceHashes))
-			assert.equal(sha256(await readFile(`tests/fixtures/structured-types/${path}`)), hash, path);
+		{
+			const source = `tests/fixtures/structured-types/${path}`;
+			assert.equal(sha256(ownedJvmHistoricalBytes(source, await readFile(source), hash)), hash, path);
+		}
 	for(const profile of ["java", "kotlin"])
 	{
 		const guide = await readFile(`docs/consume/${profile}.md`, "utf8");

@@ -84,7 +84,7 @@ public final class Wire {
         String prefix = System.getProperty("java.io.tmpdir") + "/lean-bridge-jvm-";
         for (String line : Files.readAllLines(Path.of("/proc/self/maps"))) {
             String path = line.substring(line.lastIndexOf(' ') + 1);
-            if (path.startsWith(prefix) && path.endsWith(".so")) paths.add(path);
+            if (path.startsWith(prefix) && path.matches(".*\\.so(?:\\.[0-9]+)*")) paths.add(path);
         }
         for (String name : paths) {
             var path = Path.of(name); roots.add(path.getParent());

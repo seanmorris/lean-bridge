@@ -135,6 +135,7 @@ export const jvmNativeCall = (model, { name, native, parameters, result, closure
 	const hasCallbacks = inputs.some(callable), scope = hasCallbacks || inputs.some(value => value.aggregate);
 	const args = [...closure ? ["MemorySegment.ofAddress(token)"] : [], ...inputs.map((_, i) => `input${i}`), ...unit(output) ? [] : ["output"], "error"];
 	return `    static ${jvmResult(model, output)} ${name}(${[...closure ? ["ClosureLease lease"] : [], ...inputs.map((value, i) => `${model.publicType(value)} arg${i}`)].join(", ")}) {
+        NativeAssets.ensureProcess();
         ${model.surface.callbacks.size ? `${owner}ProcessGuard.${hasCallbacks || closure || callable(output) ? "platformThread" : "ensure"}();` : ""}
         ${closure ? "long token = lease.enter();" : ""}
         try (Arena arena = Arena.ofConfined()) {

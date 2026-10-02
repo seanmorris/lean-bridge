@@ -14,7 +14,8 @@ import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.m
 import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { saveLakeFile, lakeInputState } from "./lake-workspace.mjs";
-import { prepareJvmCorpusDependencies, jvmTools, jvmMaven, mavenGoals, mavenSettings, javaCompilerOptions, kotlinCompilerOptions } from "./type-corpus-jvm-tools.mjs";
+import { captureCorpusCompiler } from "./type-corpus-compiler.mjs";
+import { prepareJvmCorpusDependencies, jvmTools, jvmMaven, mavenGoals, mavenSettings, javaCompilerOptions, kotlinCompilerOptions, jvmDiagnostics } from "./type-corpus-jvm-tools.mjs";
 
 const inventory = async root => Object.fromEntries(await Promise.all((await nativeArtifactPaths(root)).map(async path => {
 	const bytes = await readFile(join(root, path)); return [path, { sha256: sha256(bytes), bytes: bytes.length }];
@@ -26,10 +27,19 @@ const build = async (root, specifications, diagnostic) => {
 	let dependencies;
 	for(const [index, specification] of specifications.entries())
 	{
-		const { name, module, graph, value, targets, artifact = name } = specification;
+		const { name, module, graph, owned = false, value, targets, artifact = name } = specification;
 		const author = join(root, "author"), projectRoot = join(author, "project"), outputRoot = join(author, "release");
 		const handoff = join(root, "handoff"), lean = `namespace ${module}
-${graph ? `inductive V where
+${owned ? `structure Ticket where
+  serial : Nat
+  label : String
+structure Parcel where
+  ticket : Ticket
+  bytes : ByteArray
+def ticket (serial : Nat) : Ticket := ⟨serial, "owned"⟩
+def read (value : Ticket) : Nat := value.serial
+def through (value : Parcel) (callback : Parcel → Parcel) : Parcel := callback value
+` : graph ? `inductive V where
   | done (value : UInt32)
   | next (value : V)
 structure Parcel where
@@ -43,7 +53,8 @@ end ${module}
 		await saveLakeFile(projectRoot, "lakefile.toml", `name = "${name}"\nversion = "1.0.0"\n[[lean_lib]]\nname = "${module}"\n`);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1
 			, modules: [module]
-			, exports: [...graph ? [`${module}.echo`] : [], `${module}.value`]
+			, exports: [...owned ? ["ticket", "read", "through"].map(name => `${module}.${name}`) : graph ? [`${module}.echo`] : [], `${module}.value`]
+			, ...owned ? { resources: [`${module}.Ticket`], ownedAggregates: { ownership: "lease", disposal: "required", fallback: "queued-finalizer", cycles: "reject" } } : {}
 			, targets: { maven: { name: `org.leanbridge:${artifact}`, version: "1.0.0" } } }));
 		const before = await lakeInputState(projectRoot);
 		diagnostic(`loading: building ${artifact} (${targets.join(", ")})`);
@@ -235,4 +246,81 @@ export const checkJvmGraphConflicts = async (root, diagnostic) => {
 		, sourceFreeExecution: true, compilerFreeExecution: true
 		, duplicateClassLoaders: true, conflictRejectedBeforeMapping: true
 		, existingComponentRemainsUsable: true };
+};
+
+/**
+ * Owned, recursive copied and ordinary packages share one pinned native runtime.
+ *
+ * @param root - Test-owned temporary root.
+ * @param diagnostic - Progress reporter.
+ */
+export const checkOwnedJvmComposition = async (root, diagnostic) => {
+	const prepared = await build(root, [
+		{ name: "owned_one", module: "OwnedOne", owned: true, value: 44, targets: ["maven"] }
+		, { name: "owned_two", module: "OwnedTwo", owned: true, value: 45, targets: ["maven"] }
+		, { name: "graph_one", module: "GraphOne", graph: true, value: 41, targets: ["maven"] }
+		, { name: "graph_peer", module: "GraphPeer", graph: false, value: 42, targets: ["maven"] }
+	], diagnostic);
+	const { project, tools, environment, classpath, receipts } = prepared, sources = {};
+	for(const [file, name] of [
+		["recursive-jvm-loading.java", "Loading.java"]
+		, ["owned-jvm-coexistence.java", "Coexistence.java"]
+		, ["owned-kotlin-coexistence.kt", "Coexistence.kt"]
+	]) {
+		const source = await fixture(file);
+		await saveLakeFile(project, name, source); sources[file] = sha256(source);
+	}
+	await runCopied(tools.javac, [...javaCompilerOptions, "-cp", classpath.join(":"), "-d", "classes", "Loading.java", "Coexistence.java"], project);
+	const kotlin = dirname(dirname(environment.LEAN_BRIDGE_KOTLINC));
+	await runCopied(tools.java, ["-cp", join(kotlin, "lib/*")
+		, "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler", "-kotlin-home", kotlin
+		, ...kotlinCompilerOptions, "-jdk-home", tools.jdk
+		, "-cp", [...classpath, join(project, "classes")].join(":")
+		, "-d", "classes", "Coexistence.kt"], project);
+	const rejections = [];
+	for(const profile of ["java", "kotlin"]) for(const nested of [false, true])
+	{
+		const java = profile === "java", suffix = java ? "" : ".kotlin";
+		const one = "org.leanbridge.owned_one" + suffix, two = "org.leanbridge.owned_two" + suffix;
+		const invocation = nested ? `${java ? "new " : ""}${one}.Parcel(value, ${java ? "new byte[0]" : "byteArrayOf()"})` : `${one}.Api.read(value)`;
+		const source = java ? `class Invalid { void invalid(${two}.Ticket value) { ${invocation}; } }\n`
+			: `fun invalid(value: ${two}.Ticket) { ${invocation} }\n`;
+		const file = `invalid-${nested ? "nested" : "direct"}.${java ? "java" : "kt"}`;
+		await saveLakeFile(project, file, source);
+		const args = java ? [...javaCompilerOptions, "-XDrawDiagnostics"
+			, "-cp", classpath.join(":"), "-d", "rejected", file]
+			: ["-cp", join(kotlin, "lib/*"), "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler"
+				, "-kotlin-home", kotlin, ...kotlinCompilerOptions, "-jdk-home", tools.jdk
+				, "-cp", classpath.join(":"), "-d", "rejected", file];
+		const result = await captureCorpusCompiler(java ? tools.javac : tools.java, args, project, copiedCleanEnvironment);
+		const entry = { id: "owned/foreign-" + (nested ? "nested" : "direct")
+			, expectation: { diagnostic: java ? "compiler.err.cant.apply.symbol" : "ARGUMENT_TYPE_MISMATCH" } };
+		const diagnostics = jvmDiagnostics(result, entry, profile, project, file);
+		assert.equal(diagnostics.length, 1);
+		assert.match(diagnostics[0].message, /Ticket/u);
+		rejections.push({ profile, id: entry.id, sourceSha256: sha256(source), diagnostics });
+	}
+	const deployed = await deploy(prepared), scenarios = [], expected = {};
+	for(const { receipt } of receipts)
+		for(const [path, file] of Object.entries(receipt.files).filter(([path]) => path.startsWith("META-INF/lean-bridge/native/linux-x64/")))
+		{
+			const name = basename(path); if(expected[name]) assert.equal(expected[name], file.sha256);
+			expected[name] = file.sha256;
+		}
+	for(const profile of ["java", "kotlin"])
+		for(const mode of ["owned-first", "second-owned-first", "graph-first", "peer-first"])
+		{
+			diagnostic(`owned coexistence: ${profile}/${mode} without author tools`);
+			const observation = await execute(prepared, deployed, profile, mode, profile === "java" ? "Coexistence" : "CoexistenceKt");
+			assert.deepEqual(observation.mappings, expected);
+			scenarios.push({ ...observation, concurrentIterations: 64 });
+		}
+	return { schemaVersion: 1, packages: prepared.packages, receipts, scenarios
+		, sourceHashes: sources, dependencies: prepared.dependencies
+		, deployment: deployed.files, runtimeFiles: deployed.runtimeFiles
+		, runtimeModules: deployed.modules
+		, offlineInstall: true, emptyRepository: true
+		, sourceFreeExecution: true, compilerFreeExecution: true
+		, sharedRetirement: true, sharedPrivateGmp: true
+		, nestedCrossComponentCalls: true, foreignResourceRejections: rejections };
 };

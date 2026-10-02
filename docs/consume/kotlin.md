@@ -229,7 +229,7 @@ argument-slot limit use typed builders, with every field required before
 apply to both APIs, including cycle rejection and the 128-level value limit.
 
 The [recursive Maven checks](../contributing/testing.md#recursive-java-and-kotlin-packages)
-execute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. [Recursive callbacks](#recursive-callback-values) also have installed-package checks. Resource-containing aggregates remain separate work.
+execute this example on both compiler source paths. [Installed recursive acceptance](../evidence/recursive-managed-acceptance-20260924.md) covers copied inputs, results and fields. [Recursive callbacks](#recursive-callback-values) also have installed-package checks. For values containing resources, use the [owned profile](#owned-resources-and-aggregates).
 
 ### Callbacks and returned Lean functions
 
@@ -350,9 +350,50 @@ host callbacks and asynchronous delivery remain unsupported.
 [Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
 cover both authoring paths and compile this example against the original JAR.
 
+### Owned resources and aggregates
+
+Import the companion `.kotlin` API and value types from the prepared owned-value
+JAR. Records expose non-null `val` properties; resources and returned functions
+implement `AutoCloseable` and work with `use`.
+
+Save `OwnedExample.kt`:
+
+```kotlin
+import java.math.BigInteger
+import org.leanbridge.owned_aggregates.kotlin.Api
+import org.leanbridge.owned_aggregates.kotlin.Bundle
+import org.leanbridge.owned_aggregates.kotlin.Option
+import org.leanbridge.owned_aggregates.kotlin.Payload
+
+fun main() {
+    Api.newTicket(BigInteger.valueOf(42), "demo").use { ticket ->
+        val input = Bundle(ticket, Option.none(), emptyArray(), emptyArray(),
+            Payload(BigInteger.ZERO, byteArrayOf()))
+        val output = Api.callbackRecord(input) { borrowed -> borrowed }
+        output.primary.use { println(Api.serial(it)) } // 42
+    }
+}
+```
+
+Use the [prepared JAR commands](#call-an-ordinary-lean-package), substituting
+`OwnedExample.kt` and `OwnedExampleKt`. The
+[author recipe](../publish/maven.md#owned-resources-and-aggregates) defines this API.
+Maven resolves the Kotlin standard library; native loading is automatic.
+
+Containers do not close their resource leaves. Close each returned owner or
+retain it explicitly when extending its lifetime. Callbacks borrow their
+resource and closure arguments only for the callback. `retain()` creates an
+independent owner, and `asCallback()` passes a returned Lean function back to
+Lean without changing its identity.
+
+The [Java ownership, thread and conversion rules](java.md#owned-resources-and-aggregates)
+apply to Kotlin. Keep an owner on its creating platform thread for calls and
+retains. Coroutine suspension or dispatcher changes do not transfer ownership.
+Do not mix Java values with the companion Kotlin API.
+
 ### Alpha interoperability example
 
-The remaining example uses the authenticated `org.leanbridge:lean-alpha:0.0.0` fixture to demonstrate identity-bearing resources, which ordinary-source Maven builds do not yet admit. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the Alpha release directory containing `repository/`.
+The remaining example uses the separate authenticated `org.leanbridge:lean-alpha:0.0.0` fixture API. Set `LEAN_BRIDGE_MAVEN_RELEASE` to the Alpha release directory containing `repository/`.
 
 ## Resolve the JAR
 

@@ -13,10 +13,12 @@ import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixt
 import { callableReviewedIr } from "./helpers/callable-fixture.mjs";
 import { assertJvmStructuredCodegenRegression } from "./helpers/jvm-structured-callable-regression.mjs";
 import { instrumentJvmStructuredCallables, assertJvmStructuredFaults } from "./helpers/jvm-structured-callable-faults.mjs";
+import { ownedJvmHistoricalBytes } from "./helpers/owned-jvm-source-history.mjs";
 
 test("structured JVM callbacks preserve every older Java and Kotlin generated file", async () => {
 	const record = JSON.parse(await readFile("docs/evidence/jvm-structured-codegen-regression-20260924.json"));
-	for(const [path, hash] of Object.entries(record.sourceHashes)) assert.equal(sha256(await readFile(path)), hash, path);
+	for(const [path, hash] of Object.entries(record.sourceHashes))
+		assert.equal(sha256(ownedJvmHistoricalBytes(path, await readFile(path), hash)), hash, path);
 	assertJvmStructuredCodegenRegression(record);
 	const altered = structuredClone(record);
 	Object.values(altered.fixtures[0].files)[0].sha256 = "0".repeat(64);
