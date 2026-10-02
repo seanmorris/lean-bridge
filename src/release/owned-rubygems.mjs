@@ -29,7 +29,8 @@ export const packageOwnedRuby = async options => {
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
-	const generated = generateOwnedRubyPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = generated.c.prefix;
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const generated = generateOwnedRubyPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors }), prefix = generated.c.prefix;
 	const name = settings.name ?? `lean_bridge_${prefix}`, version = settings.version ?? model.component.version.replace("-", ".pre.");
 	validateOrdinaryRubySettings({ name, version });
 	const root = join(working, "packages/rubygems/package");
@@ -59,7 +60,7 @@ export const packageOwnedRuby = async options => {
 	const files = {};
 	for(const path of await nativeArtifactPaths(root))
 	{ const bytes = await readFile(join(root, path)); files[path] = { bytes: bytes.length, sha256: sha256(bytes) }; }
-	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
+	await save("lean-bridge/package-receipt.json", canonicalJson({ schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, kind: "lean-bridge-owned-rubygems-package"
 		, ecosystem: "rubygems", name, version, component: model.component
 		, namespace: generated.namespace, requirePath: generated.requirePath
@@ -95,7 +96,7 @@ end
 	await mkdir(join(working, "archives"), { recursive: true });
 	await writeFile(join(working, "archives", archive), bytes, { flag: "wx" });
 	return { ecosystem: "rubygems"
-		, backend: receiverExports ? "owned-ruby-v4" : anchoredResults ? "owned-ruby-v3" : transferredInputs ? "owned-ruby-v2" : "owned-ruby-v1"
+		, backend: callbackResultAnchors ? "owned-ruby-v5" : receiverExports ? "owned-ruby-v4" : anchoredResults ? "owned-ruby-v3" : transferredInputs ? "owned-ruby-v2" : "owned-ruby-v1"
 		, runtimeIdentity: evidence.runtimeIdentity, glibcMinimumVersion
 		, namespace: generated.namespace, requirePath: generated.requirePath
 		, packages: [{ archive, name, version, bytes: bytes.length, sha256: sha256(bytes), compilerAccess: false }] };

@@ -8,8 +8,8 @@ import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
 import { generateOwnedRubyConversions } from "../../src/backends/ruby/owned-conversions.mjs";
-import { generateOwnedRubyPackage } from "../../src/backends/ruby/owned-package.mjs";
-import { ownedRubyRuntime } from "../../src/backends/ruby/owned-runtime.mjs";
+import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage
+	, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from "./owned-ruby-callback-generated-history.mjs";
 import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
 import { historicalOwnedTransferPackage } from "./owned-transfer-generated-history.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";

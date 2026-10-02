@@ -3527,6 +3527,43 @@ without skips. CI retains `build/owned-jvm-receiver-gc.log` and both reports in
 `build/owned-jvm-receiver-gc/`. These checks exercise generated bindings directly;
 the installed Maven package checks remain in the receiver gate above.
 
+## Ruby callback-result lifetimes
+
+Run `npm run test:owned-ruby-callback-results` with MRI Ruby 3.3, the pinned
+Lean, Rust and Emscripten tools, the Python setup below and all three Playwright
+browsers. Set `LEAN_BRIDGE_RUBY` and `LEAN_BRIDGE_GEM` to the Ruby and gem
+executables. On a glibc 2.36 host, set
+`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` before running the gate. It requires
+twelve tests without skips and twelve reports under
+`build/owned-ruby-callback-results/`.
+
+Six runtime cases cover both source paths with callbacks disabled, enabled,
+and combined with receiver methods and ownership transfers. They check original
+owners, recursive empty values, transitive expiration, retained copies, native
+closure passback, host replies and recovery, nonlocal exits, interruptions,
+thread and fork affinity, concurrent close schedules, and allocation failures
+before and after consuming handoff. A weak-key check requires an exited creator
+thread to be collected while its closed result wrappers remain in scope.
+
+AddressSanitizer and UndefinedBehaviorSanitizer instrument the native boundary.
+LeakSanitizer runs after normal interpreter shutdown; the complete normalized
+report must equal the cold startup baseline. Five deliberate detector controls
+cover overflow, undefined behavior, an unreferenced leak, a live dynamic-TLS
+root and a leak after clearing that root. No leak suppressions are used. Six
+no-host and ten host-capable source mutations must fail their named semantic
+assertions before restored sources reproduce the passing observations. The
+[sanitizer diagnosis](../evidence/ruby-callback-sanitizer-runtime-20261002.md)
+records the exited-thread retention bug and repair.
+
+Four gem cases build ordinary and reviewed packages with and without host
+callbacks. They require deterministic reassembly and independent builds,
+offline installation after removing producer sources and the CLI, automatic
+private-GMP loading, rejected package mutations, executed documentation and
+relocated consumers after removing the handoff and gem cache. A separate test
+installs C, C++, Cargo, PyPI, RubyGems and npm from one release, including strict
+TypeScript and all nine browser contexts. The required Ruby CI job checks every
+report and propagates failure to the consumer summary.
+
 ## Python callback-result lifetimes
 
 Run `npm run test:owned-python-callback-results` with the pinned Lean, Rust and

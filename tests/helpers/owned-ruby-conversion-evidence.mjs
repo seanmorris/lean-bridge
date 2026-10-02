@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateOwnedRubyConversions } from "../../src/backends/ruby/owned-conversions.mjs";
-import { ownedRubyRuntime } from "../../src/backends/ruby/owned-runtime.mjs";
+import { historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from "./owned-ruby-callback-generated-history.mjs";
 import { beforeOwnedRubyTransfer, ownedRubyTransferHistoricalBytes } from "./owned-ruby-transfer-history.mjs";
 
 export const ownedRubyConversionSources = [

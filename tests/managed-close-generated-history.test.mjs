@@ -9,9 +9,9 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { createCompiledNativeModel } from "../src/build/native-graph-model.mjs";
 import { generateOwnedPythonPackage } from "../src/backends/python/owned-package.mjs";
-import { generateOwnedRubyPackage } from "../src/backends/ruby/owned-package.mjs";
 import { ownedPythonRuntime } from "../src/backends/python/owned-runtime.mjs";
-import { ownedRubyRuntime } from "../src/backends/ruby/owned-runtime.mjs";
+import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage
+	, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from "./helpers/owned-ruby-callback-generated-history.mjs";
 import { beforeManagedCloseGenerated, historicalManagedClosePythonPackage
 	, historicalManagedCloseRubyPackage } from "./helpers/managed-close-generated-history.mjs";
 

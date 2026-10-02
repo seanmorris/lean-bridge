@@ -1,0 +1,659 @@
+{
+  "schemaVersion": 1,
+  "kind": "owned-ruby-callback-result-source-history",
+  "baselineRevision": "0fc33e4fd17f3347d845847f284709208ada1c9e",
+  "previous": {
+    "path": "docs/evidence/owned-python-callback-result-source-history-20261002.json",
+    "sha256": "31082b5c541fe8536eef8d416fff51b46ed2bb4befa1d2c397ce048578754c10"
+  },
+  "updates": [
+    {
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "e99330a1542e75035d6ec79769a7ae1e90d7d1982172de2e759d971c5884c4c7",
+      "currentSha256": "7b7b2f70196609091bb030eb414b4b7594b579576d6fad1ac6ea8c5e6f700cd6",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 16307,
+          "current": "  owned-ruby-callback-results:\n    name: Callback-result lifetimes in installed Ruby gems\n    runs-on: ubuntu-24.04\n    timeout-minutes: 180\n    env:\n      EMCC_CORES: \"2\"\n    steps:\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: ${{ env.NODE_VERSION }}\n          cache: npm\n      - name: Select Python 3.11 for backported type aliases\n        id: callback_python311\n        uses: actions/setup-python@v7\n        with:\n          python-version: \"3.11\"\n      - name: Select Python 3.12 for standard-library type aliases\n        id: callback_python312\n        uses: actions/setup-python@v7\n        with:\n          python-version: \"3.12\"\n      - name: Select Ruby 3.3\n        uses: ruby/setup-ruby@v1\n        with:\n          ruby-version: '3.3.12'\n      - name: Install callback acceptance tools\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3-venv ripgrep zstd\n          npm ci --ignore-scripts --no-audit --no-fund\n          bash scripts/bootstrap-toolchains.sh\n          bash scripts/bootstrap-rust-ci.sh\n          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.6.0 typing_extensions==4.6.0\n          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0\n          python3 -m venv build/python-collection-typecheck\n          build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2\n      - name: Install all callback browser engines\n        run: npx playwright install --with-deps chromium firefox webkit\n      - name: Build the callback shared runtime\n        shell: bash\n        run: |\n          set -euo pipefail\n          mkdir -p build\n          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-ruby-callback-result-runtime.log\n          test -s build/lean-link-spike/lazy/main.wasm\n      - name: Verify Ruby callback-result lifetimes\n        shell: bash\n        env:\n          LEAN_BRIDGE_PYTHON: ${{ steps.callback_python311.outputs.python-path }}\n          LEAN_BRIDGE_COLLECTION_PYTHONS: '[\"${{ steps.callback_python311.outputs.python-path }}\", \"${{ steps.callback_python312.outputs.python-path }}\"]'\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          export LEAN_BRIDGE_RUBY=\"$(command -v ruby)\"\n          export LEAN_BRIDGE_GEM=\"$(command -v gem)\"\n          npm run test:owned-ruby-callback-results 2>&1 | tee build/owned-ruby-callback-results.log\n          rg '^# tests 12$' build/owned-ruby-callback-results.log\n          rg '^# pass 12$' build/owned-ruby-callback-results.log\n          rg '^# fail 0$' build/owned-ruby-callback-results.log\n          rg '^# cancelled 0$' build/owned-ruby-callback-results.log\n          rg '^# skipped 0$' build/owned-ruby-callback-results.log\n          test -s build/owned-ruby-callback-results/runtime-ordinary-no-host.json\n          test -s build/owned-ruby-callback-results/runtime-ordinary-host.json\n          test -s build/owned-ruby-callback-results/runtime-ordinary-combined.json\n          test -s build/owned-ruby-callback-results/ordinary-no-host-package.json\n          test -s build/owned-ruby-callback-results/ordinary-combined-package.json\n          test -s build/owned-ruby-callback-results/ordinary-combined-release.json\n          test -s build/owned-ruby-callback-results/runtime-reviewed-no-host.json\n          test -s build/owned-ruby-callback-results/runtime-reviewed-host.json\n          test -s build/owned-ruby-callback-results/runtime-reviewed-combined.json\n          test -s build/owned-ruby-callback-results/reviewed-no-host-package.json\n          test -s build/owned-ruby-callback-results/reviewed-combined-package.json\n          test -s build/owned-ruby-callback-results/reviewed-combined-release.json\n      - name: Preserve Ruby callback-result acceptance\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: ruby-callback-results-${{ github.sha }}\n          path: |\n            build/owned-ruby-callback-results/\n            build/owned-ruby-callback-results.log\n            build/owned-ruby-callback-result-runtime.log\n          if-no-files-found: error\n          retention-days: 30\n\n",
+          "previous": ""
+        },
+        {
+          "start": 194457,
+          "current": "      - owned-ruby-callback-results\n",
+          "previous": ""
+        },
+        {
+          "start": 196186,
+          "current": "      - name: Enforce Ruby callback-result acceptance\n        if: needs.owned-ruby-callback-results.result != 'success'\n        run: exit 1\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "a0ee5a9c202baae405262c6c8b68c153c5c45b2e7035adab635eeb5a7889f4d6",
+      "currentSha256": "1a34fd2e8c00d35fc5a12f0874f5d7bebd075328178b41ae95a2cf99200025a2",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 26857,
+          "current": "### Results borrowed from a callback argument\n\nA returned Lean function can tie its result to one of that function's arguments.\nPass the selected argument as its whole `Value` owner. Callback argument numbers\nstart at zero inside the returned function; they do not include its closure or\nthe outer export's arguments.\n\nFor the `owned-callback-results` acceptance gem, save `owned-callback-results.rb`:\n\n```ruby file=ruby/owned-callback-results.rb\nrequire \"lean_bridge/owned_aggregates\"\n\napi = LeanBridge::OwnedAggregates\nticket = api.new_ticket(42, \"owner\")\nowner = api.copy_value(api::Tree::Leaf.new(ticket: ticket.get))\ncallback = api.make_recursive(owner.get)\nview = callback.call(false, owner)\nindependent = view.retain\nbegin\n  puts api.serial(view.get.ticket)\n  owner.close\n  raise \"Callback result outlived its owner\" unless view.closed?\n  puts api.serial(independent.get.ticket)\nensure\n  [ticket, owner, callback, view, independent].each(&:close)\nend\n```\n\nThe declared callback result follows `owner`, the second argument to `call`.\nThe original owner's last alias closing, its thread exiting, or a consuming\nhandoff expires the result and its descendants. Closing the callback itself does\nnot substitute a different owner. Empty recursive values obey the same contract.\nAn explicit `retain` or `copy_value` creates independent ownership.\n\nThese callback-local anchors work without host callbacks, export-result anchors\nor receiver methods. A package that also accepts Ruby callbacks can receive raw\nargument values or a correctly typed whole `Value` as the reply or recovery\nvalue. The bridge converts the reply before expiring its callback-local views.\nReturned Lean functions can be passed back as callbacks using either their\nwhole owner or their checked `get` value. Asynchronous delivery remains unsupported.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "8f18da55975fa03e90526389003c1f8a1aa9983e7011fce56020a6983af26579",
+      "currentSha256": "fb09dac4bc81a969e93cbd723acf4cd32674122e137efa3d74f4c41ba954754b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 217840,
+          "current": "## Ruby callback-result lifetimes\n\nRun `npm run test:owned-ruby-callback-results` with MRI Ruby 3.3, the pinned\nLean, Rust and Emscripten tools, the Python setup below and all three Playwright\nbrowsers. Set `LEAN_BRIDGE_RUBY` and `LEAN_BRIDGE_GEM` to the Ruby and gem\nexecutables. On a glibc 2.36 host, set\n`LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36` before running the gate. It requires\ntwelve tests without skips and twelve reports under\n`build/owned-ruby-callback-results/`.\n\nSix runtime cases cover both source paths with callbacks disabled, enabled,\nand combined with receiver methods and ownership transfers. They check original\nowners, recursive empty values, transitive expiration, retained copies, native\nclosure passback, host replies and recovery, nonlocal exits, interruptions,\nthread and fork affinity, concurrent close schedules, and allocation failures\nbefore and after consuming handoff. A weak-key check requires an exited creator\nthread to be collected while its closed result wrappers remain in scope.\n\nAddressSanitizer and UndefinedBehaviorSanitizer instrument the native boundary.\nLeakSanitizer runs after normal interpreter shutdown; the complete normalized\nreport must equal the cold startup baseline. Five deliberate detector controls\ncover overflow, undefined behavior, an unreferenced leak, a live dynamic-TLS\nroot and a leak after clearing that root. No leak suppressions are used. Six\nno-host and ten host-capable source mutations must fail their named semantic\nassertions before restored sources reproduce the passing observations. The\n[sanitizer diagnosis](../evidence/ruby-callback-sanitizer-runtime-20261002.md)\nrecords the exited-thread retention bug and repair.\n\nFour gem cases build ordinary and reviewed packages with and without host\ncallbacks. They require deterministic reassembly and independent builds,\noffline installation after removing producer sources and the CLI, automatic\nprivate-GMP loading, rejected package mutations, executed documentation and\nrelocated consumers after removing the handoff and gem cache. A separate test\ninstalls C, C++, Cargo, PyPI, RubyGems and npm from one release, including strict\nTypeScript and all nine browser contexts. The required Ruby CI job checks every\nreport and propagates failure to the consumer summary.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/owned-callback-result-progress-20261002.md",
+      "previousSha256": "a552e6357713b01273b7fb4ce15628f2464aa587c6d43fcfd3b20745f1ef5e31",
+      "currentSha256": "607a219175cfb22a23fd407753739544b5b75962bdcbe4755b5d77221e82c922",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 195,
+          "current": "Installed C, C++, Cargo, PyPI, RubyGems and npm acceptance passes on both authoring paths.\n",
+          "previous": "Installed C, C++, Cargo and npm acceptance passes on both authoring paths.\n"
+        },
+        {
+          "start": 11138,
+          "current": "generated sources and rejects 41 forged reports. Its final repository regression\npassed 3,009 tests, with 692 explicitly gated skips and no failures. Commit\n`0fc33e4` is pushed, including the Rust CI setup repairs above. Remote CI remains\nseparate from this local acceptance record.\n\nRuby's generator and compiled probes pass all six source/capability\nconfigurations under address, undefined-behavior and leak sanitizers. They\nexercise GC, bounded borrow ancestry, thread and fork affinity, close races,\nnonlocal exits, interrupted callbacks and allocation failures before and after\nconsuming handoff. A heap trace exposed an exited-thread retention cycle;\nretiring the state now clears its thread reference. The public weak-key\nregression and the mutation that removes this repair both execute. Six no-host\nand ten host-capable mutations fail their named assertions; restored sources\nreproduce the passing results and the complete cold leak baseline.\n\nRuby's complete enabled gate passes all 12 tests with no failures, skips or\ncancellation in 2,090 seconds. All four original gem variants install offline\nafter producer source removal and execute again after relocation. No-host gems\npass 173 checks per installation; combined gems pass 206. Both authoring paths\nalso install one C/C++/Cargo/PyPI/RubyGems/npm release, with 206 Ruby, 407 Python\nper interpreter, 118 Rust, 76 C++, 219 C and 40 JavaScript checks, strict\nTypeScript and nine browser contexts. The\n[acceptance record](owned-ruby-callback-results-20261002.json) preserves all 12\nreports and the complete execution log, including the cold and exercised leak\nreports and sanitized observations. The verifier reconstructs the generated\nsources and rejects 52 forged reports. Repository-wide regression and remote\nCI remain separate from this local acceptance record.\n\nImplement and verify C#,\n",
+          "previous": "generated sources and rejects 41 forged reports. Repository-wide regressions\nand CI are separate from this acceptance record.\n\nRuby's isolated generator and compiled probes now pass all six source/capability\nconfigurations. They exercise GC, bounded borrow ancestry, thread and fork\naffinity, close races, nonlocal callback exits, interrupted callbacks and\nallocation failures before and after consuming handoff. Five no-host and nine\nhost-capable source mutations fail their semantic checks; restored sources\nreproduce the original results. Installed gems and final Ruby acceptance remain\nunfinished.\n\nFinish Python acceptance, then implement and verify Ruby, C#,\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "47650c3f5956b8eec23ae53d5216e16d869d7ec2caebf6ef6d7f184ef1f20688",
+      "currentSha256": "b371663bc2d7dd926a2f756f11466e8e649d24286cd1365da87375d572a08182",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 23240,
+          "current": "C, C++, Rust, Python, Ruby and npm also accept [callback-result anchors](../publish/c.md#anchor-a-callback-result-to-its-argument).\n",
+          "previous": "C, C++, Rust, Python and npm also accept [callback-result anchors](../publish/c.md#anchor-a-callback-result-to-its-argument).\n"
+        },
+        {
+          "start": 23680,
+          "current": "Ruby uses the same contract with a checked `Value`; its\n[publisher guide](../publish/rubygems.md#anchor-a-callback-result-to-its-argument)\nalso describes thread exit and host reply conversion.\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "5f4eeec0c501c764ef31e0114306c0507ae69df0076b2f83f2f4f5776c4028af",
+      "currentSha256": "5fc222b6717074c3510566638f601ec42a6d572a3e6ba0836ea92342a4058981",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 32553,
+          "current": "For C, C++, Rust, Python, Ruby and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\n",
+          "previous": "For C, C++, Rust, Python and npm, a nested [`callable.result` contract](../publish/c.md#anchor-a-callback-result-to-its-argument)\n"
+        },
+        {
+          "start": 33093,
+          "current": "Python callers pass a [`Value[T]` owner](../consume/python.md#callback-results-borrowed-from-an-argument),\nand Ruby callers pass a [`Value` owner](../consume/ruby.md#results-borrowed-from-a-callback-argument)\n",
+          "previous": "and Python callers pass a [`Value[T]` owner](../consume/python.md#callback-results-borrowed-from-an-argument),\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/publish/rubygems.md",
+      "previousSha256": "10cb7f18398101e56e9e85bd637389a3319812c261ae71fbe2c47a03bbf14d35",
+      "currentSha256": "b4f14d843b011a2d42e441c034bb841d496e112298232d0548498be1daeb5e64",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 23228,
+          "current": "## Anchor a callback result to its argument\n\nA returned Lean function can borrow its result from one of its own arguments.\nKeep `resources` and `ownedAggregates`, and place the decision inside the\nexport's `callable.result` contract. For a function with the type\n`Bundle → Bool → Bundle → Bundle`, select one outer argument with\n`\"arities\": { \"Owned.makeRecord\": 1 }`. The returned function then has two\narguments; this contract selects its second argument:\n\n```json\n{\n  \"result\": {\n    \"ownership\": \"lease\",\n    \"lifetime\": { \"scope\": \"explicit\", \"anchor\": null },\n    \"callable\": {\n      \"result\": {\n        \"ownership\": \"borrow\",\n        \"lifetime\": { \"scope\": \"parameter\", \"anchor\": \"arg1\" }\n      }\n    }\n  }\n}\n```\n\nPlace that object under `contracts[\"Owned.makeRecord\"]`. Reviewed contracts\nrecord the same decision on the callable result. The anchor names belong to\nthat callable, not the outer export or its private closure handle.\n\nRuby callers pass a checked `Value` for the selected argument. That argument's\noriginal owner controls the result and every borrowed descendant, including\nempty recursive values. Closing its last alias, exiting its creating thread or\ntransferring it expires the result. `retain` and `copy_value` create independent\nownership. See the [Ruby example](../consume/ruby.md#results-borrowed-from-a-callback-argument).\n\nHost callbacks may return the declared payload or a whole `Value`. The bridge\nvalidates and converts the reply before the callback's borrowed arguments\nexpire. Recovery replies obey the same rule. Host callback storage still lasts\nonly for the call; this contract does not enable asynchronous delivery.\n\nBuild with `--target rubygems`. Callback-result gems use `owned-ruby-v5`,\nRuby ownership contract and gem receipt version 5, and native ownership model\nversion 6. The builder keeps callback-result anchors separate from export-result\nanchors, receiver members and consuming inputs. Combined releases can select\nC, C++, Cargo, PyPI, RubyGems and npm when every target accepts the complete API.\nRuby retains its private adapter and GMP library while sharing the native Lean\ncomponent with the other native packages.\n\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e33eb048e1673af43c338b0d49e4faa47b8d503d9d1936bc5b8078d82442f7e0",
+      "currentSha256": "25fd5b50310c5df2d4dac334d0e5b8534bd93b9d9c45830994384ebe480000c8",
+      "strategy": "replacements",
+      "edits": [
+        {
+          "current": "\"c7f55ad9fa44f9317dcf91739a7cd9e28f81780d66375ab7ab2b4b3e3874291b\"",
+          "previous": "\"61858f7878e9170e78276d584e5cdfcbaee3daa563f2b02c39b9e9f19a8f41e8\"",
+          "count": 18
+        },
+        {
+          "current": "\"7fba7e5863c24705a39e898ab01964e8f5fa12c528b6bd0c5fc1ef200de2f674\"",
+          "previous": "\"c3ddfb6c7dd37d7b1ed0b107a78b0c976d0ba16127f5d840013cb0c537b5585b\"",
+          "count": 93
+        },
+        {
+          "current": "\"a1f88bbcdbcc124d2ad7b52c332428a49448ff45ee7e52c0d047d4886a85cd34\"",
+          "previous": "\"28d656822012e010772e8d320d3dffc8dccd7b57988d85e10478c5d7bea807c3\"",
+          "count": 83
+        },
+        {
+          "current": "\"4963668facedcab8afbad015f4d6e9546d4cd2acb0326ddfa00016a62a5fd328\"",
+          "previous": "\"f16f696e16750a523fb8bd509315434e69f8fe7a2677355867ab407e2c88104f\"",
+          "count": 75
+        },
+        {
+          "current": "\"7b7b2f70196609091bb030eb414b4b7594b579576d6fad1ac6ea8c5e6f700cd6\"",
+          "previous": "\"e99330a1542e75035d6ec79769a7ae1e90d7d1982172de2e759d971c5884c4c7\"",
+          "count": 89
+        },
+        {
+          "current": "\"1a34fd2e8c00d35fc5a12f0874f5d7bebd075328178b41ae95a2cf99200025a2\"",
+          "previous": "\"a0ee5a9c202baae405262c6c8b68c153c5c45b2e7035adab635eeb5a7889f4d6\"",
+          "count": 1
+        },
+        {
+          "current": "\"b4f14d843b011a2d42e441c034bb841d496e112298232d0548498be1daeb5e64\"",
+          "previous": "\"10cb7f18398101e56e9e85bd637389a3319812c261ae71fbe2c47a03bbf14d35\"",
+          "count": 3
+        },
+        {
+          "current": "\"57054736c8bc72e43b17afede4557856af1efaf125311c57c47f09bc3f3413a6\"",
+          "previous": "\"7d8a407ba7aed2f1cd3385c6cc0d02ee316a816bd25e580ac6169752176b45da\"",
+          "count": 7
+        },
+        {
+          "current": "\"b371663bc2d7dd926a2f756f11466e8e649d24286cd1365da87375d572a08182\"",
+          "previous": "\"47650c3f5956b8eec23ae53d5216e16d869d7ec2caebf6ef6d7f184ef1f20688\"",
+          "count": 18
+        },
+        {
+          "current": "\"5fc222b6717074c3510566638f601ec42a6d572a3e6ba0836ea92342a4058981\"",
+          "previous": "\"5f4eeec0c501c764ef31e0114306c0507ae69df0076b2f83f2f4f5776c4028af\"",
+          "count": 22
+        },
+        {
+          "current": "\"fb09dac4bc81a969e93cbd723acf4cd32674122e137efa3d74f4c41ba954754b\"",
+          "previous": "\"8f18da55975fa03e90526389003c1f8a1aa9983e7011fce56020a6983af26579\"",
+          "count": 11
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "61858f7878e9170e78276d584e5cdfcbaee3daa563f2b02c39b9e9f19a8f41e8",
+      "currentSha256": "c7f55ad9fa44f9317dcf91739a7cd9e28f81780d66375ab7ab2b4b3e3874291b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 45928,
+          "current": "    \"test:owned-ruby-callback-results\": \"LEAN_BRIDGE_OWNED_RUBY_CALLBACK_RESULT_TEST=1 node --test --test-concurrency=1 tests/owned-ruby-callback-results.test.mjs tests/owned-ruby-callback-result-runtime.test.mjs tests/owned-ruby-callback-result-packaging.test.mjs tests/owned-ruby-callback-result-combined-packaging.test.mjs\",\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c3ddfb6c7dd37d7b1ed0b107a78b0c976d0ba16127f5d840013cb0c537b5585b",
+      "currentSha256": "7fba7e5863c24705a39e898ab01964e8f5fa12c528b6bd0c5fc1ef200de2f674",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1491,
+          "current": "\t\t, \"owned-ruby-callback-results\"\n\t\t, \"owned-ruby-callback-result-runtime\"\n\t\t, \"owned-ruby-callback-result-packaging\"\n\t\t, \"owned-ruby-callback-result-combined-packaging\"\n\t\t, \"owned-ruby-callback-result-ci\"\n\t\t, \"owned-ruby-callback-result-history\"\n\t\t, \"owned-ruby-callback-result-evidence\"\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/owned-callables.mjs",
+      "previousSha256": "82048ef1381185f1be0e89c5e64774d5a823c98c156f7390a43be3c854bdbbd6",
+      "currentSha256": "1a20f6565b4526773e280abcf1c93659a184012ee9719b50ac8fcbec8649fad2",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2317,
+          "current": "\t\tconst borrowed = callback.anchor !== undefined;\n",
+          "previous": ""
+        },
+        {
+          "start": 2771,
+          "current": "${c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0) || c.callbacks.some(fn => fn.anchor !== undefined) ? \"        value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)\\n\" : \"\"}\\\n",
+          "previous": "${c.functions.some(fn => fn.anchor !== undefined || fn.receiver === 0) ? \"        value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)\\n\" : \"\"}\\\n"
+        },
+        {
+          "start": 3582,
+          "current": "${borrowed ? \"        recovery = VALUE_GET.bind_call(recovery) if wrapped && exact?(recovery, Owned::Value)\\n\" : \"\"}\\\n",
+          "previous": ""
+        },
+        {
+          "start": 5639,
+          "current": "${borrowed ? \"            reply = VALUE_GET.bind_call(reply) if exact?(reply, Owned::Value)\\n\" : \"\"}\\\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/owned-conversions.mjs",
+      "previousSha256": "b64ce1be62f85cdb30dfb1eef05ece21d95af2ea18c2f94efb1aa60770fa26b8",
+      "currentSha256": "adf6b0e2d60df7ea37d934bcbaf1a3f569a57686b0c8980ae7fe86826e548f01",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1037,
+          "current": "\tconst callbackAnchors = model.c.callbacks.some(fn => fn.anchor !== undefined);\n\tconst anchored = model.c.functions.some(fn => fn.anchor !== undefined) || callbackAnchors;\n",
+          "previous": "\tconst anchored = model.c.functions.some(fn => fn.anchor !== undefined);\n"
+        },
+        {
+          "start": 3175,
+          "current": "\t\t\tif(node.kind === \"callback\" && callbackAnchors)\n\t\t\t\tinput.push(\"value = VALUE_GET.bind_call(value) if exact?(value, Owned::Value)\");\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/owned-package.mjs",
+      "previousSha256": "dce26ba6587623c2377671151f2e356ecd96f960baa9746639bf683720250d9d",
+      "currentSha256": "22700e547830733da4b543469d696fecf7cf35c71629426c57481bc9ca65ef09",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1063,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 1225,
+          "current": "export const generateOwnedRubyPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst generated = generateOwnedRubyConversions(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), prefix = generated.c.prefix;\n",
+          "previous": "export const generateOwnedRubyPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst generated = generateOwnedRubyConversions(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = generated.c.prefix;\n"
+        },
+        {
+          "start": 1683,
+          "current": "\tconst anchors = generated.c.functions.some(fn => fn.anchor !== undefined);\n\tconst callbackAnchors = generated.c.callbacks.filter(fn => fn.anchor !== undefined);\n\tconst receivers = generated.functions.filter(fn => fn.receiver === 0), wholeOwners = anchors || callbackAnchors.length > 0 || receivers.length > 0;\n",
+          "previous": "\tconst anchors = Boolean(generated.c.anchoredResults);\n\tconst receivers = generated.functions.filter(fn => fn.receiver === 0), wholeOwners = anchors || receivers.length > 0;\n"
+        },
+        {
+          "start": 2056,
+          "current": "\tconst entry = `lib/${requirePath}.rb`, runtime = ownedRubyRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors || callbackAnchors.length > 0, receiverExports: receivers.length > 0 });\n",
+          "previous": "\tconst entry = `lib/${requirePath}.rb`, runtime = ownedRubyRuntime(prefix, { transferredInputs: transfers, anchoredResults: anchors, receiverExports: receivers.length > 0 });\n"
+        },
+        {
+          "start": 2661,
+          "current": "\tconst schemaVersion = callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1;\n\tconst contract = { schemaVersion\n",
+          "previous": "\tconst contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1\n"
+        },
+        {
+          "start": 2971,
+          "current": "\t\t, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1\n\t\t\t, values: \"checked-whole-result\", anchor: \"original-argument-owner\"\n\t\t\t, parameterNumbering: \"callback-local\"\n\t\t\t, expiration: \"owner-release-or-transfer\", descendants: \"transitive\"\n\t\t\t, emptyValues: \"owner-preserved\"\n\t\t\t, independentOwnership: \"retain-or-copy_value\"\n\t\t\t, hostReply: \"value-or-whole-owner\"\n\t\t\t, hostResultHandoff: \"before-callback-frame-expires\"\n\t\t\t, signatures: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1 }))\n\t\t} } : {}\n",
+          "previous": ""
+        },
+        {
+          "start": 7244,
+          "current": "These selectors choose a declared type without calling that function.${anchors || callbackAnchors.length ? ` Resource\n",
+          "previous": "These selectors choose a declared type without calling that function.${anchors ? ` Resource\n"
+        },
+        {
+          "start": 7899,
+          "current": "`}${callbackAnchors.length ? `\nCallback anchor parameters are local to the returned function. Pass Value for\nthe selected argument. Its original owner controls the result and descendants,\nincluding empty constructors, even when Lean returns captured data. Releasing\nor transferring that owner expires the result. retain and copy_value create\nindependent owners. Returned Lean closures accept call, retain and close;\npass either their Value wrapper or checked get result back into Lean.\n${hostCallbacks ? `Host callbacks receive ordinary typed values. Replies and recovery values\ncan be raw payloads or Value owners. The bridge validates and snapshots either\nform before the callback arguments expire. Expired whole-value replies reject,\nincluding empty constructors.\n` : \"\"}` : \"\"}${receivers.length ? `\n",
+          "previous": "`}${receivers.length ? `\n"
+        },
+        {
+          "start": 10342,
+          "current": "${hostCallbacks || (!receivers.length && !callbackAnchors.length) ? `Pass synchronous Ruby callables to callback parameters. Resource leaves in\n",
+          "previous": "${!receivers.length || hostCallbacks ? `Pass synchronous Ruby callables to callback parameters. Resource leaves in\n"
+        },
+        {
+          "start": 11646,
+          "current": "\tfiles[\"binding-manifest.json\"] = canonicalJson({ schemaVersion\n\t\t, backend: `owned-ruby-v${schemaVersion}`\n",
+          "previous": "\tfiles[\"binding-manifest.json\"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1\n\t\t, backend: receivers.length ? \"owned-ruby-v4\" : anchors ? \"owned-ruby-v3\" : transfers ? \"owned-ruby-v2\" : \"owned-ruby-v1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/owned-runtime.mjs",
+      "previousSha256": "4b4c6582762fb1c7fd5cf64aa374524a4f5fdc32f50bf4f188512991e8170db7",
+      "currentSha256": "b2fe0d66d5d9911b19bb023f4e0dbc358c5b02d06cae2c381aa041ea013636e9",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 10331,
+          "current": "      # Finalizer guards can outlive their wrappers. An exited State must not\n      # retain the Thread and its return value, which can contain those wrappers.\n      @thread = nil\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "src/backends/ruby/owned-values.mjs",
+      "previousSha256": "c8d7d1ea5fd5df35ea746e7bc19737d2198f81ac00372914e546754af5362f67",
+      "currentSha256": "74733aa68286ebf837147b89706922be5db4bd6b3f1bba2c584b9cfe731762d3",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 3564,
+          "current": " * @param options.callbackResultAnchors - Preserve callback-local result owners.\n",
+          "previous": ""
+        },
+        {
+          "start": 3731,
+          "current": "export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {\n\tconst valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === \"callback\" && type.callable.result.ownership === \"borrow\");\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });\n\tconst anchored = c.functions.some(fn => fn.anchor !== undefined) || c.callbacks.some(fn => fn.anchor !== undefined);\n",
+          "previous": "export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {\n\tconst c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });\n\tconst anchored = c.functions.some(fn => fn.anchor !== undefined);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/multi-profile-project.mjs",
+      "previousSha256": "7d8a407ba7aed2f1cd3385c6cc0d02ee316a816bd25e580ac6169752176b45da",
+      "currentSha256": "57054736c8bc72e43b17afede4557856af1efaf125311c57c47f09bc3f3413a6",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 11775,
+          "current": "\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\"].includes(target)) });\n",
+          "previous": "\t\t\t\t, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-c-projection.mjs",
+      "previousSha256": "28d656822012e010772e8d320d3dffc8dccd7b57988d85e10478c5d7bea807c3",
+      "currentSha256": "a1f88bbcdbcc124d2ad7b52c332428a49448ff45ee7e52c0d047d4886a85cd34",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 3646,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\"].includes(target)) });\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedGraphs: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedHostCallbacks: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedInputTransfers: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedAnchoredResults: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedReceiverExports: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)), ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target)) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-project.mjs",
+      "previousSha256": "f16f696e16750a523fb8bd509315434e69f8fe7a2677355867ab407e2c88104f",
+      "currentSha256": "4963668facedcab8afbad015f4d6e9546d4cd2acb0326ddfa00016a62a5fd328",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 7832,
+          "current": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\", \"rubygems\"].includes(target))\n",
+          "previous": "\t\t\t, ownedCallbackResultAnchors: targets.every(target => [\"c\", \"cpp\", \"cargo\", \"pypi\"].includes(target))\n"
+        },
+        {
+          "start": 9730,
+          "current": "\t\t\t\t\tif(targets.includes(\"rubygems\")) generateOwnedRubyPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });\n",
+          "previous": "\t\t\t\t\tif(targets.includes(\"rubygems\")) generateOwnedRubyPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-ruby-artifacts.mjs",
+      "previousSha256": "828c9014a72cdb723aadacc6926231a43368a34ffe750ade7f268c5e01d4ee6a",
+      "currentSha256": "f33b7afa279370e05c4a89f5718b77db3e9f44feee82b1492b5915a176e869f1",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1509,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Ruby requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports) throw new TypeError(\"Owned Ruby requires authenticated callback/copy or receiver support\");\n"
+        },
+        {
+          "start": 2338,
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors, valueCopies: callbackResultAnchors };\n",
+          "previous": "\tconst options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };\n"
+        },
+        {
+          "start": 3420,
+          "current": "\tif(adapter.schemaVersion !== (callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== identity\n",
+          "previous": "\tif(adapter.schemaVersion !== (receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1) || adapter.profile !== \"native-library-v1\" || adapter.runtimeIdentity !== identity\n"
+        },
+        {
+          "start": 3757,
+          "current": "\t\t|| adapter.library !== `lib${prefix}_ruby.so` || adapter.ownedValues?.schemaVersion !== (callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2)\n\t\t|| canonicalJson(adapter.ownedValues.callbackResultAnchors ?? null) !== canonicalJson(model.ownedGraph.callbackResultAnchors ?? null)\n",
+          "previous": "\t\t|| adapter.library !== `lib${prefix}_ruby.so` || adapter.ownedValues?.schemaVersion !== (receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2)\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-ruby-projection.mjs",
+      "previousSha256": "204af50830254a221cd457993323e68bf8e2365e67c83eefed120fd708babbf3",
+      "currentSha256": "fc2ea34c5a2a051a25462e304b254fab028b648929f04d6ce36406878dd0400b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1168,
+          "current": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError(\"Owned Ruby requires authenticated callback/copy, receiver or callback-result support\");\n",
+          "previous": "\tconst { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });\n\tif(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports) throw new TypeError(\"Owned Ruby requires authenticated callback/copy or receiver support\");\n"
+        },
+        {
+          "start": 1997,
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst contractOptions = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors, valueCopies: callbackResultAnchors };\n",
+          "previous": "\tconst contractOptions = { transferredInputs, anchoredResults, receiverExports, hostCallbacks };\n"
+        },
+        {
+          "start": 4947,
+          "current": "\tawait writeFile(join(root, \"native-ruby-adapter.json\"), canonicalJson({ schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1\n",
+          "previous": "\tawait writeFile(join(root, \"native-ruby-adapter.json\"), canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1\n"
+        },
+        {
+          "start": 5307,
+          "current": "\t\t, ownedValues: { schemaVersion: callbackResultAnchors ? 6 : receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2\n\t\t\t, ...callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {}\n",
+          "previous": "\t\t, ownedValues: { schemaVersion: receiverExports ? 5 : anchoredResults ? 4 : transferredInputs ? 3 : 2\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/owned-rubygems.mjs",
+      "previousSha256": "8d62ee42e6d8907d15df7d175cd285a10af8808d48a2e0f7eb9b2a6b6d714c02",
+      "currentSha256": "3201dc9fde051691ff32aeddfda2f8b5a1c366d9487aae2a8342aa157520cde4",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 1782,
+          "current": "\tconst callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);\n\tconst generated = generateOwnedRubyPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors }), prefix = generated.c.prefix;\n",
+          "previous": "\tconst generated = generateOwnedRubyPackage(model.bindingIr, evidence, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), prefix = generated.c.prefix;\n"
+        },
+        {
+          "start": 4563,
+          "current": "\tawait save(\"lean-bridge/package-receipt.json\", canonicalJson({ schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1\n",
+          "previous": "\tawait save(\"lean-bridge/package-receipt.json\", canonicalJson({ schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1\n"
+        },
+        {
+          "start": 7449,
+          "current": "\t\t, backend: callbackResultAnchors ? \"owned-ruby-v5\" : receiverExports ? \"owned-ruby-v4\" : anchoredResults ? \"owned-ruby-v3\" : transferredInputs ? \"owned-ruby-v2\" : \"owned-ruby-v1\"\n",
+          "previous": "\t\t, backend: receiverExports ? \"owned-ruby-v4\" : anchoredResults ? \"owned-ruby-v3\" : transferredInputs ? \"owned-ruby-v2\" : \"owned-ruby-v1\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/copied-fixture-source-history.mjs",
+      "previousSha256": "ab63c0a9bfd04141c524e2aa2f6f9ef9e8062ecfe3bcab58667c8a8bce33f086",
+      "currentSha256": "9142bdd972adc4bbd38c14e9a835aa7c0940d53e8dfaa57699222ead5cd9ca99",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 711,
+          "current": "import { ownedRubyCallbackChangedPaths } from \"./owned-ruby-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1771,
+          "current": "\t, ...ownedRubyCallbackChangedPaths\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-python-callback-result-acceptance.mjs",
+      "previousSha256": "721d154209f974a6d664f7b11d11713b719a4bdacbc21662eee2336662c217fe",
+      "currentSha256": "00eee84c9f3d0acc9fe36d3158bb3e4eeffee5f619ac754782771c0377d6303b",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 2451,
+          "current": "import { beforeOwnedRubyCallbackResults } from \"./owned-ruby-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 8861,
+          "current": "\t\tconst file = report.files.find(entry => entry.path === path);\n\t\tassert.ok(file, path);\n\t\tconst bytes = Buffer.from(beforeOwnedRubyCallbackResults(path, await readFile(path), file.sha256));\n",
+          "previous": "\t\tconst file = report.files.find(entry => entry.path === path), bytes = await readFile(path);\n"
+        },
+        {
+          "start": 31304,
+          "current": "/**\n * Reconstruct the C/C++/Cargo/PyPI/npm portion of one installed release.\n *\n * @param item - Complete combined-release report.\n * @param mode - Ordinary source or reviewed IR.\n * @param additionalTargets - Other package targets verified by the calling reader.\n */\nexport const assertOwnedPythonCallbackCombinedRelease = async (item, mode, additionalTargets = []) => {\n",
+          "previous": "const combinedRelease = async (item, mode) => {\n"
+        },
+        {
+          "start": 37139,
+          "current": "\tassert.equal(item.receipt.packages.length, 6 + additionalTargets.length); assert.equal(item.built.status, \"ok\");\n\tassert.deepEqual(item.receipt.packages.map(value => value.target).sort(), [\"c\", \"cargo\", \"cpp\", \"npm\", \"npm\", \"pypi\", ...additionalTargets].sort());\n",
+          "previous": "\tassert.equal(item.receipt.packages.length, 6); assert.equal(item.built.status, \"ok\");\n\tassert.deepEqual(item.receipt.packages.map(value => value.target).sort(), [\"c\", \"cargo\", \"cpp\", \"npm\", \"npm\", \"pypi\"]);\n"
+        },
+        {
+          "start": 38135,
+          "current": "\tif(variant === \"combined-release\") return assertOwnedPythonCallbackCombinedRelease(item, mode);\n",
+          "previous": "\tif(variant === \"combined-release\") return combinedRelease(item, mode);\n"
+        },
+        {
+          "start": 39207,
+          "current": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(beforeOwnedRubyCallbackResults(path, await readFile(path), digest)), digest, path);\n",
+          "previous": "\tfor(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-python-callback-result-history.mjs",
+      "previousSha256": "0ac9f3f0bfe9047bbd2fa486bea3d02935681fe8f0556663b09fcc6fdbc26716",
+      "currentSha256": "9d56678c917bd38b3bc2b189c773bda5da58270354216f50defd8bcebc4e2075",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 236,
+          "current": "import { beforeOwnedRubyCallbackResults } from \"./owned-ruby-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 3873,
+          "current": "\tsource = beforeOwnedRubyCallbackResults(path, source, expected);\n",
+          "previous": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-ruby-borrow-evidence.mjs",
+      "previousSha256": "3d7b2e8c117dcc6884fdab8855c03ac51a3c36ba6ebfc87e4d8adf19a0ba3592",
+      "currentSha256": "7bc2363c5f4a7eeb9770a6d3d25d934ae0d43dac939854bc2afc51a86a4369ee",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 502,
+          "current": "import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage\n\t, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from \"./owned-ruby-callback-generated-history.mjs\";\n",
+          "previous": "import { generateOwnedRubyPackage } from \"../../src/backends/ruby/owned-package.mjs\";\nimport { ownedRubyRuntime } from \"../../src/backends/ruby/owned-runtime.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-ruby-conversion-evidence.mjs",
+      "previousSha256": "5c2347166080ff8e7ab1b5a7514245055dd0714104498e1157f01fe15c11d621",
+      "currentSha256": "5481fadca1cee5129e9157d0c1bd41f23d0fd1ba42a3558628551d1763d550c1",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 350,
+          "current": "import { historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from \"./owned-ruby-callback-generated-history.mjs\";\n",
+          "previous": "import { ownedRubyRuntime } from \"../../src/backends/ruby/owned-runtime.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-ruby-evidence.mjs",
+      "previousSha256": "7abd62d0f426ce02130baff1dbd7ea063c88b8991a089dace63dcc5786095524",
+      "currentSha256": "39886e96d33e9b2b44e42012779e4045a942654db68abd4ec3b39cdad239fd51",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 541,
+          "current": "import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage } from \"./owned-ruby-callback-generated-history.mjs\";\n",
+          "previous": "import { generateOwnedRubyPackage } from \"../../src/backends/ruby/owned-package.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-ruby-receiver-evidence.mjs",
+      "previousSha256": "d6a7c6bd0b428867dc6b8d15a4c3d7fd8c611c9153314c6d0221166f55f7a626",
+      "currentSha256": "fefd9958523d63acb6605454260ddfe528a76c5484be88fb0ba20d345c2ec844",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 424,
+          "current": "import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage } from \"./owned-ruby-callback-generated-history.mjs\";\n",
+          "previous": "import { generateOwnedRubyPackage } from \"../../src/backends/ruby/owned-package.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-ruby-transfer-evidence.mjs",
+      "previousSha256": "7ecaeb06a9c02d9c611ca0b482edc5bfea166e9b03478fa812eb7938b3041013",
+      "currentSha256": "a2446f4e1850ec4c93848e71341797813f0ad43718adfecef2790a09a1a14d72",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 422,
+          "current": "import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage\n\t, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from \"./owned-ruby-callback-generated-history.mjs\";\n",
+          "previous": "import { generateOwnedRubyPackage } from \"../../src/backends/ruby/owned-package.mjs\";\nimport { ownedRubyRuntime } from \"../../src/backends/ruby/owned-runtime.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/managed-close-generated-history.test.mjs",
+      "previousSha256": "ce2a43943a9a4669d5c0ee2b7a84d6d251db12d5f749bcc166d6aded57ef20cd",
+      "currentSha256": "7c756bf90b5698339375657798cbfe3190db0d7e5e2a6401910c0c8704222873",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 436,
+          "current": "",
+          "previous": "import { generateOwnedRubyPackage } from \"../src/backends/ruby/owned-package.mjs\";\n"
+        },
+        {
+          "start": 515,
+          "current": "import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage\n\t, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from \"./helpers/owned-ruby-callback-generated-history.mjs\";\n",
+          "previous": "import { ownedRubyRuntime } from \"../src/backends/ruby/owned-runtime.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-python-callback-result-history.test.mjs",
+      "previousSha256": "df872afe035702b34d7c3f2bb9c85f926c4fac056b513c21882f753ac01cc2f2",
+      "currentSha256": "7ee3dee75f7461a81c6d68c004af6122649b90941c3e315350ed183e2f525559",
+      "strategy": "spans",
+      "edits": [
+        {
+          "start": 269,
+          "current": "import { beforeOwnedRubyCallbackResults } from \"./helpers/owned-ruby-callback-result-history.mjs\";\n",
+          "previous": ""
+        },
+        {
+          "start": 1206,
+          "current": "\t\tconst current = Buffer.from(beforeOwnedRubyCallbackResults(update.path, await readFile(update.path)));\n\t\tconst prior = beforeOwnedPythonCallbackResults(update.path, current);\n",
+          "previous": "\t\tconst current = await readFile(update.path), prior = beforeOwnedPythonCallbackResults(update.path, current);\n"
+        },
+        {
+          "start": 2444,
+          "current": "\tconst path = \"docs/type-surface.v1.json\", current = beforeOwnedRubyCallbackResults(path, await readFile(path, \"utf8\"));\n",
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", current = await readFile(path, \"utf8\");\n"
+        },
+        {
+          "start": 2720,
+          "current": "\t\tfile.sha256 = sha256(beforeOwnedRubyCallbackResults(file.path, await readFile(file.path)));\n",
+          "previous": "\t\tfile.sha256 = sha256(await readFile(file.path));\n"
+        }
+      ]
+    }
+  ]
+}
