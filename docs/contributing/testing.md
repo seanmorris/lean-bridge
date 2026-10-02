@@ -983,6 +983,20 @@ separate work.
 
 ### Recursive C-family callbacks
 
+Check closure thread lifetimes separately:
+
+```sh
+node --test tests/closure-thread-contract.test.mjs
+LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-installed.test.mjs
+```
+
+The registry tests check both token widths, departed creators, full registries
+and exhausted thread serials under ASan, UBSan and LSan. The 32-bit variant runs
+on the native test host. Two compiled negative variants remove thread binding
+or permit serial wraparound; both must fail. Installed tests compile Lean on
+both source paths and verify that replacement threads cannot invoke a departed
+creator's closures. CI uploads `build/closure-thread/installed.json`.
+
 Run the installed packages and executable documentation serially:
 
 ```sh

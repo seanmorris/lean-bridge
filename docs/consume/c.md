@@ -332,6 +332,10 @@ Return the package's `_STATUS_OK` on success. On failure, return a non-OK status
 
 Returned closures own their captured Lean values. Call them on the creating thread, then pass the owning pointer's address to `_dispose`; it clears the pointer and repeated disposal is safe. Do not shallow-copy an owning pointer or use aliases after disposal. The adapter checks closure signatures and generation tokens. A Lean closure that retained a borrowed host callback fails after that borrow expires.
 
+The creating thread's lifetime matters, not its operating-system ID. After that
+thread exits, replacement threads cannot invoke its closures, even if the OS
+reuses the same ID. Disposal still releases the owned capture.
+
 Same-thread nested C/Lean calls are supported up to 64 active callable invocations. Each call has a 16 MiB conversion budget covering inputs, callback arguments/results and the final output. Closure leases share the runtime's 4,096-identity capacity. These limits leave the Lean algorithm's own memory use unbounded. The [installed C checks](../evidence/c-callables-20260918.md) cover conversion, failure recovery, expired callbacks and disposal on both source paths.
 
 The [structured callable checks](../evidence/c-structured-callables-20260924.md)

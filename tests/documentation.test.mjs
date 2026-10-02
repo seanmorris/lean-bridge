@@ -378,6 +378,8 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(perlWorkflow, /test -s build\/compounds\/perl\.json/);
   assert.match(perlWorkflow, /test -s build\/lists\/perl\.json/);
   assert.ok(workflow.includes("LEAN_BRIDGE_C_CALLABLE_TEST=1 node --test tests/c-callables.test.mjs"));
+  assert.ok(workflow.includes("LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-contract.test.mjs tests/closure-thread-installed.test.mjs"));
+  assert.ok(workflow.includes("test -s build/closure-thread/installed.json"));
   assert.ok(workflow.includes("node --test tests/component-structured-callables.test.mjs"));
   assert.ok(workflow.includes("test -s build/structured-callables/npm/report.json"));
   const performanceWorkflow = await readFile(".github/workflows/performance.yml", "utf8");
@@ -570,7 +572,7 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   assert.match(workflow, /steps\.type_corpus_c_family\.outcome != 'success'/);
   assert.match(workflow, /steps\.type_corpus_c_family\.outcome }}" != success/);
   assert.match(workflow, /name: type-corpus-c-family-\$\{\{ github\.sha \}\}/);
-  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/c-cpp\.json\n\s*build\/type-corpus\/reviewed-native-c-cpp\.json\n\s*build\/char-native\/c-cpp\.json\n\s*build\/word-native\/c-cpp\.json\n\s*build\/callables\/c\.json\n\s*build\/structured-callables\/c\.json\n\s*build\/callables\/cpp\.json\n\s*build\/structured-callables\/cpp\.json\n\s*build\/native-recursive-callables\/transport\.json\n\s*build\/recursive-callables\/c\.json\n\s*build\/recursive-callables\/cpp\.json\n\s*build\/recursive-callables\/c-family-documentation\.json\n\s*build\/compounds\/native\.json\n\s*build\/lists\/native\.json\n\s*build\/collections\/native\.json\n\s*build\/aliases\/native\.json\n\s*build\/variants\/cpp\.json\n\s*build\/variants\/c\.json\n\s*build\/recursive\/c-family\.json\n\s*if-no-files-found: error/);
+  assert.match(workflow, /path: \|\n\s*build\/type-corpus\/c-cpp\.json\n\s*build\/type-corpus\/reviewed-native-c-cpp\.json\n\s*build\/char-native\/c-cpp\.json\n\s*build\/word-native\/c-cpp\.json\n\s*build\/callables\/c\.json\n\s*build\/structured-callables\/c\.json\n\s*build\/closure-thread\/installed\.json\n\s*build\/callables\/cpp\.json\n\s*build\/structured-callables\/cpp\.json\n\s*build\/native-recursive-callables\/transport\.json\n\s*build\/recursive-callables\/c\.json\n\s*build\/recursive-callables\/cpp\.json\n\s*build\/recursive-callables\/c-family-documentation\.json\n\s*build\/compounds\/native\.json\n\s*build\/lists\/native\.json\n\s*build\/collections\/native\.json\n\s*build\/aliases\/native\.json\n\s*build\/variants\/cpp\.json\n\s*build\/variants\/c\.json\n\s*build\/recursive\/c-family\.json\n\s*if-no-files-found: error/);
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_COMPOUND_TEST=1 node --test tests\/native-compounds\.test\.mjs/);
   assert.match(workflow, /LEAN_BRIDGE_NATIVE_LIST_TEST=1 node --test tests\/native-lists\.test\.mjs/);
   assert.match(workflow, /test -s build\/lists\/native\.json/);

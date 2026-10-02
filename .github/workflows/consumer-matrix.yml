@@ -639,6 +639,8 @@ jobs:
           test -s build/callables/c.json
           LEAN_BRIDGE_C_STRUCTURED_CALLABLE_TEST=1 node --test tests/c-structured-callables.test.mjs
           test -s build/structured-callables/c.json
+          LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-contract.test.mjs tests/closure-thread-installed.test.mjs
+          test -s build/closure-thread/installed.json
           LEAN_BRIDGE_CPP_CALLABLE_TEST=1 node --test tests/cpp-callables.test.mjs
           test -s build/callables/cpp.json
           LEAN_BRIDGE_CPP_STRUCTURED_CALLABLE_TEST=1 node --test tests/cpp-structured-callables.test.mjs
@@ -667,6 +669,7 @@ jobs:
             build/word-native/c-cpp.json
             build/callables/c.json
             build/structured-callables/c.json
+            build/closure-thread/installed.json
             build/callables/cpp.json
             build/structured-callables/cpp.json
             build/native-recursive-callables/transport.json
@@ -853,6 +856,7 @@ jobs:
             if [ "$consumer" = c ] || [ "$consumer" = cpp ]; then
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_C_TEST=1 node --test tests/native-c-family.test.mjs tests/native-c-copied.test.mjs && npm run test:type-corpus:c-family && LEAN_BRIDGE_REVIEWED_NATIVE_PROFILES=c,cpp node --test tests/type-corpus-reviewed-native.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_GRAPH_PACKAGE_TEST=1 node --test tests/native-graph-package.test.mjs"
+              consumer_command="$consumer_command && LEAN_BRIDGE_C_CLOSURE_THREAD_TEST=1 node --test tests/closure-thread-contract.test.mjs tests/closure-thread-installed.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_NATIVE_RECURSIVE_CALLABLE_TEST=1 node --test tests/native-recursive-callable-compile.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_C_RECURSIVE_CALLABLE_TEST=1 node --test tests/c-recursive-callable-package.test.mjs"
               consumer_command="$consumer_command && LEAN_BRIDGE_CPP_RECURSIVE_CALLABLE_TEST=1 node --test tests/cpp-recursive-callable-package.test.mjs"

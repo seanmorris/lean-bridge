@@ -13,6 +13,7 @@ import { callableReviewedIr } from "./callable-fixture.mjs";
 import { witCallableSignatures } from "./wit-callable-fixture.mjs";
 import { rustStructuredRegressionFixtures } from "./rust-structured-callable-regression.mjs";
 import { perlStructuredRegressionModels, perlStructuredContractModels } from "./perl-structured-callable-regression.mjs";
+import { beforeClosureThreadRegistry } from "./closure-thread-registry.mjs";
 
 export const witStructuredCodegenSources = [
 	"src/backends/c/native-callables.mjs"
@@ -75,7 +76,7 @@ export const assertWitStructuredCodegenRegression = record => {
 	{
 		const model = models[fixture.name];
 		assert.equal(fixture.modelSha256, sha256(canonicalJson(model)));
-		assert.deepEqual(fixture.files, identity({ "native.c": generateNativePrimitiveC(model, witStructuredNativeReceipt) }));
+		assert.deepEqual(fixture.files, identity({ "native.c": beforeClosureThreadRegistry(generateNativePrimitiveC(model, witStructuredNativeReceipt)) }));
 		const repaired = ["alias-parameter", "alias-result"].includes(fixture.name);
 		assert.equal(fixture.identicalToPredecessor, !repaired);
 		if(repaired) assert.equal(fixture.previousFailure, "Cannot read properties of undefined (reading 'name')");

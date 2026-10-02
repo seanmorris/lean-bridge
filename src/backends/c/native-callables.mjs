@@ -155,11 +155,18 @@ static ${p}_status lb_leave(lb_frame *frame, ${p}_error *error) {
 }
 /* Registry lookups never dereference a supplied token. Active calls retain a
    separate Lean reference, so disposing a lease during reentry is safe. */
-typedef struct { uintptr_t token; ${wasm ? "uint64_t identity; " : ""}lean_object *value; const char *kind; pthread_t thread; pid_t process; } lb_lease;
+typedef struct { uintptr_t token; ${wasm ? "uint64_t identity; " : ""}lean_object *value; const char *kind; uint64_t thread; pid_t process; } lb_lease;
 static lb_lease lb_leases[4096];${wasm ? "\nstatic uintptr_t lb_next_lease; /* Never reuse a wasm32 token. */" : ""}
 static pthread_mutex_t lb_lease_mutex = PTHREAD_MUTEX_INITIALIZER;
+/* OS thread IDs can be reused after exit. Lease thread serials never repeat. */
+static uint64_t lb_lease_thread_serial;
+static _Thread_local uint64_t lb_lease_thread;
 static inline uintptr_t lb_lease_store(lean_object *value, const char *kind) {
   pthread_mutex_lock(&lb_lease_mutex);
+  if (!lb_lease_thread) {
+    if (lb_lease_thread_serial == UINT64_MAX) { pthread_mutex_unlock(&lb_lease_mutex); return 0; }
+    lb_lease_thread = ++lb_lease_thread_serial;
+  }
   size_t free_slot = 4096;
   for (size_t i = 0; i < 4096; ++i) {
     lb_lease *slot = &lb_leases[i];
@@ -172,7 +179,7 @@ static inline uintptr_t lb_lease_store(lean_object *value, const char *kind) {
     if (identity) token = ++lb_next_lease;` : "token = (uintptr_t)lean_bridge_native_identity_acquire(kind, slot);"}
     if (token) {
       lean_mark_mt(value);
-      *slot = (lb_lease){token, ${wasm ? "identity, " : ""}value, kind, pthread_self(), getpid()};
+      *slot = (lb_lease){token, ${wasm ? "identity, " : ""}value, kind, lb_lease_thread, getpid()};
     }
   }
   pthread_mutex_unlock(&lb_lease_mutex); return token;
@@ -182,7 +189,7 @@ static lean_object *lb_lease_borrow(uintptr_t token, const char *kind) {
   pthread_mutex_lock(&lb_lease_mutex);
   for (size_t i = 0; token && i < 4096; ++i) {
     lb_lease *slot = &lb_leases[i];
-    if (slot->token == token && !strcmp(slot->kind, kind) && slot->process == getpid() && pthread_equal(slot->thread, pthread_self())) {
+    if (slot->token == token && !strcmp(slot->kind, kind) && slot->process == getpid() && slot->thread == lb_lease_thread) {
       value = slot->value; lean_inc(value); break;
     }
   }
