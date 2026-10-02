@@ -8,7 +8,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 export const ownedRubyCallbackHistoryPath = "docs/evidence/owned-ruby-callback-result-source-history-20261002.json";
-export const ownedRubyCallbackHistorySha256 = "3868242e424ef8b21de7bfd29c8e0dce3a1a1e22c1e58aa40d7bdf43ab165b84";
+export const ownedRubyCallbackHistorySha256 = "6c24fbaa435f70ed76e0aa6ea73745869db95734d96e347fb5443a39ccb15512";
 export const ownedRubyCallbackBaseline = "0fc33e4fd17f3347d845847f284709208ada1c9e";
 let history;
 /** Authenticate the complete ledger and its immutable predecessor. */

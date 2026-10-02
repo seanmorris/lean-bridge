@@ -2,7 +2,7 @@
 
 VO task 1219. This work extends the explicit ownership profile so a returned
 Lean function can borrow its result from one of that function's arguments.
-Installed C, C++, Cargo, PyPI and npm acceptance passes on both authoring paths.
+Installed C, C++, Cargo, PyPI, RubyGems and npm acceptance passes on both authoring paths.
 Rust's complete enabled gate passes all 13 tests without skips. Its six runtime
 configurations, four installed Cargo cases and two combined releases preserve
 the selected callback owner. The support matrix has not been promoted.
@@ -193,13 +193,20 @@ regression and the mutation that removes this repair both execute. Six no-host
 and ten host-capable mutations fail their named assertions; restored sources
 reproduce the passing results and the complete cold leak baseline.
 
-Fresh ordinary and reviewed no-host gems pass 173 checks before and after
-relocation. The complete gate is rebuilding from the Python milestone baseline,
-including combined C/C++/Cargo/PyPI/RubyGems/npm releases, all installed gem
-variants and the required twelve-report CI contract. Final Ruby acceptance
-remains unfinished.
+Ruby's complete enabled gate passes all 12 tests with no failures, skips or
+cancellation in 2,090 seconds. All four original gem variants install offline
+after producer source removal and execute again after relocation. No-host gems
+pass 173 checks per installation; combined gems pass 206. Both authoring paths
+also install one C/C++/Cargo/PyPI/RubyGems/npm release, with 206 Ruby, 407 Python
+per interpreter, 118 Rust, 76 C++, 219 C and 40 JavaScript checks, strict
+TypeScript and nine browser contexts. The
+[acceptance record](owned-ruby-callback-results-20261002.json) preserves all 12
+reports and the complete execution log, including the cold and exercised leak
+reports and sanitized observations. The verifier reconstructs the generated
+sources and rejects 52 forged reports. Repository-wide regression and remote
+CI remain separate from this local acceptance record.
 
-Finish Ruby acceptance, then implement and verify C#,
+Implement and verify C#,
 Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI callback-result projections.
 Update each guide and acceptance record from installed results, then complete
 the package/container checks and support-matrix audit. Run the required CI jobs
