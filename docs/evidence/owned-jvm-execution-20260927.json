@@ -29237,6 +29237,23 @@
     "sourceRemovedBeforeInstallation": true
   },
   "kind": "owned-jvm-package-execution",
+  "nativeCi": {
+    "commandsCompared": 6,
+    "failFast": false,
+    "profiles": [
+      "c-family",
+      "python",
+      "rust"
+    ],
+    "selectedConsumers": [
+      "c",
+      "cpp",
+      "python",
+      "rust"
+    ],
+    "selectedOutcomeCases": 27,
+    "timeoutMinutesPerProfile": 240
+  },
   "packages": {
     "callbacks-ordinary": {
       "adapterReceipt": {
@@ -113017,10 +113034,10 @@
   },
   "runs": {
     "ci": {
-      "command": "node --test tests/owned-jvm-ci.test.mjs tests/managed-ci-isolation.test.mjs",
+      "command": "node --test tests/owned-jvm-ci.test.mjs tests/managed-ci-isolation.test.mjs tests/native-ci-isolation.test.mjs",
       "exitCode": 0,
-      "sha256": "234a9e52c26539c7ed18f739356d22c0a2532cfd4fe6c1003f4b507302203c2c",
-      "text": "TAP version 13\n# Subtest: managed CI isolates timeout budgets, profile gates and artifact names\nok 1 - managed CI isolates timeout budgets, profile gates and artifact names\n  ---\n  duration_ms: 52.014493\n  type: 'test'\n  ...\n# Subtest: managed CI rejects dropped gates, shared artifacts and incomplete bootstrap\nok 2 - managed CI rejects dropped gates, shared artifacts and incomplete bootstrap\n  ---\n  duration_ms: 177.013179\n  type: 'test'\n  ...\n# Subtest: owned JVM CI runs every acceptance layer and retains nonempty observations\nok 3 - owned JVM CI runs every acceptance layer and retains nonempty observations\n  ---\n  duration_ms: 7.621222\n  type: 'test'\n  ...\n# Subtest: owned JVM CI rejects dropped execution, suites, reports and artifacts\nok 4 - owned JVM CI rejects dropped execution, suites, reports and artifacts\n  ---\n  duration_ms: 10.493699\n  type: 'test'\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 306.605591\n"
+      "sha256": "f2bbfebf073b9ddbb77c102732fcbc91a6e4d695c640d56446b2e80c4cd78772",
+      "text": "TAP version 13\n# Subtest: managed CI isolates timeout budgets, profile gates and artifact names\nok 1 - managed CI isolates timeout budgets, profile gates and artifact names\n  ---\n  duration_ms: 86.048003\n  type: 'test'\n  ...\n# Subtest: managed CI rejects dropped gates, shared artifacts and incomplete bootstrap\nok 2 - managed CI rejects dropped gates, shared artifacts and incomplete bootstrap\n  ---\n  duration_ms: 597.799554\n  type: 'test'\n  ...\n# Subtest: native CI isolates C/C++, Python and Rust without dropping acceptance\nok 3 - native CI isolates C/C++, Python and Rust without dropping acceptance\n  ---\n  duration_ms: 74.659541\n  type: 'test'\n  ...\n# Subtest: native CI rejects incomplete bootstrap, shared artifacts and permissive gates\nok 4 - native CI rejects incomplete bootstrap, shared artifacts and permissive gates\n  ---\n  duration_ms: 612.422118\n  type: 'test'\n  ...\n# Subtest: native recording scripts emit only selected rows and reject every incomplete selected step\nok 5 - native recording scripts emit only selected rows and reject every incomplete selected step\n  ---\n  duration_ms: 2230.759984\n  type: 'test'\n  ...\n# 30 actual Bash recording runs checked 40 result rows.\n# Subtest: owned JVM CI runs every acceptance layer and retains nonempty observations\nok 6 - owned JVM CI runs every acceptance layer and retains nonempty observations\n  ---\n  duration_ms: 10.514929\n  type: 'test'\n  ...\n# Subtest: owned JVM CI rejects dropped execution, suites, reports and artifacts\nok 7 - owned JVM CI rejects dropped execution, suites, reports and artifacts\n  ---\n  duration_ms: 13.619469\n  type: 'test'\n  ...\n1..7\n# tests 7\n# suites 0\n# pass 7\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3065.645691\n"
     },
     "coexistence": {
       "command": "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-coexistence.test.mjs",
@@ -113082,7 +113099,7 @@
     "docs/architecture/binding-ir.md": "90ddb62d0330e0f8ba643f8bfe188afa5ca1a941793df55a100eb6badab9e5bb",
     "docs/consume/java.md": "3157a00e214e447c5b8eed94b63fe640b1a2cb28f7817e7d13f6472aa78c5efc",
     "docs/consume/kotlin.md": "22e2be8b1024134ba2bd525c7335a388f78842d97c465e4d937945632e6f882f",
-    "docs/contributing/testing.md": "7f3513926b97725cca63b38bf8fbccf1a063f0626d11107ca2a5f93afca03ef7",
+    "docs/contributing/testing.md": "a6c3856aa5b7d12b8c81827fcddf4fccd3819a7c0c3518ecb26cef970f8a8ed0",
     "docs/evidence/owned-jvm-calls-20260927.md": "2a24dfa7c361a509bc635866950595a06559f5bd15a03faa21a7119a793d88c3",
     "docs/evidence/owned-jvm-conversions-20260927.md": "3c679d135576b9269df8a264494d68f2ba85a00044872e7fc9cac5b4ad9c4cf8",
     "docs/evidence/owned-jvm-runtime-20260927.md": "6625e5edf58a381970d9ec494a1737f07647ee6c9b9457ae92a15b9dbe961155",
@@ -113107,7 +113124,7 @@
     "src/abi/pending-operation.mjs": "7238bf7a1e23c01565b43f97a2ad4b9f8b6fef618bb8e8b5b18393fcaaa39f8b",
     "src/abi/resource-lifecycle.mjs": "24173dfc3b06df1b2604c5aedeb71dafdde5e63a10cbc1f4884b7af7dec09fa0",
     "src/abi/value-frame.mjs": "5774e9efa9eacb5cb26fbc841adced8080e53526154ab711d7e9c2a00ef94e3b",
-    "src/adoption/test-profiles.mjs": "275bb7e3a16df87d006b795a45f2086b795580c59eb780a16f728f9754164940",
+    "src/adoption/test-profiles.mjs": "be55d8b708380a9502970d20c46b2fb39cca2e3d29b93cce4e8c7644ec1a934f",
     "src/analyze/NativeExports.lean": "1a6fc817276453148403b09d8fa979d5e0ee897049d646afe8f727bf02c0f985",
     "src/analyze/README.md": "27acd00789f9701ee5f69b30d53b41fca95f9b347af1dc3caa718144ef17a2f9",
     "src/analyze/copied-metadata-graph.mjs": "7ad41f21d0cfd4933c73e7293131499219b72309d172f2e8201580885f1abc58",
@@ -113494,7 +113511,8 @@
     "src/release/source-notices.mjs": "a9a185b8bbe109d7dfe9d8b10e408f661434c75df3fef2f0689d2fc34b21dee9",
     "src/release/wasi-package.mjs": "bed6e7da12d2c77a3ee559f4f66633c79ee98382414847e21e3ee2abfd364144",
     "src/wasi/native-component-host.c": "ae1ae22782985a50b1713c6b89d5e5cbae873d2ee68f9e9a293ed4f320b83b2c",
-    "tests/documentation.test.mjs": "1881d937d978d7c5b15855a23e712e035d280179ebe48852eac2cf8602c24bb5",
+    "tests/documentation.test.mjs": "8b14bd4ceccde8cc0c134785a06a12f20c51ca2dc8bf46541c9e2275e0939f25",
+    "tests/fixtures/ci/native-acceptance-before-isolation.json": "e0b9a7f8660edb5b343bfdd2dcde4dc380536912577718efcac5f917c3f7925e",
     "tests/fixtures/onboarding/owned-dotnet-callables/Owned.lean": "4be0ae13abd383c31aad3c50196c7ade2349f3ae45546b3b9a1f8db80e899a18",
     "tests/fixtures/onboarding/owned-dotnet-callables/lakefile.toml": "cae37361374ab5cdb8517841f2223822fc4b62fc3dcb51592bc63dce441985eb",
     "tests/fixtures/onboarding/owned-dotnet-callables/lean-bridge.exports.json": "2a5b474e549a4c48476e6691d9d2445be195b73d55189d7f2fd8d564fd2efa39",
@@ -113529,6 +113547,7 @@
     "tests/helpers/jvm-structured-callable-regression.mjs": "c38ce9dc8386602823b61047f2a1697e4ce88c630a6c64d33e24d242003d6803",
     "tests/helpers/managed-ci-isolation-evidence.mjs": "47363b328c7e8e0edeaf97fa190a320d41db2061641810b576a7d71f3d4baa89",
     "tests/helpers/managed-ci-isolation-history.mjs": "45bf66e13dfaae5683f0bce9307fd5d4c2144f6a469b12c3583d03b823bdea01",
+    "tests/helpers/native-ci-isolation.mjs": "4a880d346bcd61ccb7d3735ee67c123bbd4020db1350de34dfb300ed0a819709",
     "tests/helpers/native-fork-repair-history.mjs": "3f247d7020108342541dfcf710d095d3979a03504f0670979073359ce8f567a3",
     "tests/helpers/owned-dotnet-callback-fixture.mjs": "39ba76036afab443ce6cfa4f614c65dc2a9033e805efceee3f5cd65b43f51938",
     "tests/helpers/owned-jvm-call-evidence.mjs": "118679667493b05c043c1d4392e5f51ac8aca1e2e1bef163d85e7275be144c8a",
@@ -113540,16 +113559,21 @@
     "tests/helpers/owned-jvm-installed-assets.mjs": "d82328461743add82a4518a8c7d0282827e246e8837917da3dc031169b4d9a68",
     "tests/helpers/owned-jvm-installed-signatures.mjs": "cd5f7305802e64997efb9c19ea09f33c788911b0374fcc7bc59f7d41d7aeec02",
     "tests/helpers/owned-jvm-installed.mjs": "0e5efa06001406fd846a034ae26af1c6f2ff542b66990796165ad5a17e15dd15",
-    "tests/helpers/owned-jvm-package-evidence.mjs": "4d0f348be65c43de9a37182b710272095c456d49b8cd78099c1e0009f80ae64a",
+    "tests/helpers/owned-jvm-package-evidence.mjs": "54cf9db1f2811be529be6153e6afb2a46b59005a6c25354a399c2dafd9842629",
     "tests/helpers/owned-jvm-package-tamper.mjs": "f847ffb7940d85dca4908d8ae40eb53b1a552d5592d93d7f451b4fd89a4a3b1a",
     "tests/helpers/owned-jvm-runtime-evidence.mjs": "075693a4fa1b7772d8c10244551462aa7ebe873361743d436f8ce73a36a97f74",
     "tests/helpers/owned-jvm-runtime-native.mjs": "f2faf29d8b62bd5dabb5802201ae95d809692a9970bf8c9a378823831b47f47c",
-    "tests/helpers/owned-jvm-source-history.mjs": "367eed45e589aa8046e67c1995409112e7cafb303072afff9b005052d1687c96",
+    "tests/helpers/owned-jvm-source-history.mjs": "63f8129ffd6b7f4cece97b5432647464f3da01129af6e603a9a4af232a5df237",
     "tests/helpers/type-corpus-jvm.mjs": "ecfc1551fadfc0aa0af715a16e31748c50d5371699435e91be43a903498dacfa",
+    "tests/java-collection-evidence.test.mjs": "0976200f46566efae3f422861c7ca90a1e02d593bedf3f9c30dc467ec2ece71d",
     "tests/jvm-graph-package.test.mjs": "6f4261c6810a34727b548a9648a3ed650e6404dbc181c3b11a7148873bcbc4e8",
     "tests/jvm-recursive-callable-contract.test.mjs": "4623c5206047d8c89b05be6ea9bb80d35fa57f3a8f29d5cb721b7e09f6c9bd4c",
     "tests/jvm-structured-callable-contract.test.mjs": "0d76ffa9494f789d567d9bd9d9454d66377afc84c3b67783f5417e9a280d56a1",
+    "tests/kotlin-collection-evidence.test.mjs": "adebf2cc34a5dae976e8022b02e21cb1ea2e9ea2e3cf260c97ca6523b2de62e0",
     "tests/managed-ci-isolation-evidence.test.mjs": "714fb11adabd94327c1885030a7b49c7e5a16f14cd857db9a9234c002e9590bd",
+    "tests/managed-ci-isolation.test.mjs": "7bf90bd410bfea730cc538d580b9be8521b42aa14494378dd5e348d4205144dd",
+    "tests/native-ci-isolation.test.mjs": "663292a808d213137e8ed3c04ccb763f73d27a2d13b3706b21ad58855b488acc",
+    "tests/owned-c-packaging.test.mjs": "e3ddcc0751808894676d3445761bdf1d87f6e2be4da578aa7513b2ea331a9935",
     "tests/owned-jvm-call-evidence.test.mjs": "8f717bc18e99757270a35a629f0e09d2b8a371430b849b59796c20fbba841bed",
     "tests/owned-jvm-calls.test.mjs": "5574c1ba38d13137beca7ac641d0c89254ed2bf0808591f9fc2842a907f9fa6c",
     "tests/owned-jvm-ci.test.mjs": "0cb21b80dab61b11b9e7f38c0f82b1d09d2d13b08929a32b22fe946ad8e93a85",
@@ -113559,7 +113583,7 @@
     "tests/owned-jvm-documentation.test.mjs": "0f21545e4740a6a0d8493d35005c20a36dc07c1d0706d4af49f44f052d8fdce1",
     "tests/owned-jvm-kotlin.test.mjs": "514e1456037a77b97ea26245cd42104813e89d31cb9862cef5da1f7390047c48",
     "tests/owned-jvm-layout.test.mjs": "9d6590d12a8365688cd7a55db79e135d6038f06833057e1444e2a94c708dc5b2",
-    "tests/owned-jvm-package-evidence.test.mjs": "9afff8708179588c266b746a36641b406e311fa3e393c45f434fd856a81b6307",
+    "tests/owned-jvm-package-evidence.test.mjs": "617c77c739e036af82449c94d528650e972945296aa8aa93ac50c60cf37815f3",
     "tests/owned-jvm-package.test.mjs": "9e1916b2154840e124f46217c23823d3e1630f45773213519571581f407b5b54",
     "tests/owned-jvm-packaging.test.mjs": "182c4a3ec755c9dcf86c7fe4fc327bc33fd514060c5a4a8bc398ca392e8ed64c",
     "tests/owned-jvm-runtime-evidence.test.mjs": "c896d8b224b4dfda63c738bb756d032ae4c34f13dbc03b7429dbe0da190eb4d1",

@@ -21,11 +21,12 @@ import { assertOwnedJvmCalls, ownedJvmCallReceipt, ownedJvmCallSources } from ".
 import { ownedJvmConversionSources } from "./owned-jvm-conversion-evidence.mjs";
 import { ownedJvmRuntimeSources } from "./owned-jvm-runtime-evidence.mjs";
 import { assertOwnedJvmCi } from "./owned-jvm-ci.mjs";
+import { assertNativeCiIsolation } from "./native-ci-isolation.mjs";
 import { assertJvmGraphPackageReports } from "./jvm-graph-receipt.mjs";
 import { jvmStructuredRegressionFixtures } from "./jvm-structured-callable-regression.mjs";
 import { assertManagedCiIsolationEvidence } from "./managed-ci-isolation-evidence.mjs";
 import { managedCiIsolationPath } from "./managed-ci-isolation-history.mjs";
-import { ownedJvmBaseline, ownedJvmExecutionPath, ownedJvmChangedPaths, ownedJvmAddedPaths, ownedJvmGeneratedPaths, reverseOwnedJvmUpdate } from "./owned-jvm-source-history.mjs";
+import { ownedJvmBaseline, ownedJvmExecutionPath, ownedJvmChangedPaths, ownedJvmAddedPaths, ownedJvmGeneratedPaths, ownedJvmSortedGeneratedPaths, reverseOwnedJvmUpdate } from "./owned-jvm-source-history.mjs";
 
 const predecessor = JSON.parse(readFileSync(managedCiIsolationPath, "utf8"));
 export const ownedJvmExecutionSources = [...new Set([
@@ -54,7 +55,7 @@ export const ownedJvmPackageCommands = {
 	, coexistence: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-coexistence.test.mjs"
 	, documentation: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/owned-jvm-documentation.test.mjs"
 	, loaders: "LEAN_BRIDGE_OWNED_NATIVE_TEST=1 node --test tests/verified-jvm-assets.test.mjs"
-	, ci: "node --test tests/owned-jvm-ci.test.mjs tests/managed-ci-isolation.test.mjs"
+	, ci: "node --test tests/owned-jvm-ci.test.mjs tests/managed-ci-isolation.test.mjs tests/native-ci-isolation.test.mjs"
 	, copied: "LEAN_BRIDGE_JVM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_JVM_GRAPH_INSTALLED_TEST=1 LEAN_BRIDGE_JVM_GRAPH_REPRO_TEST=1 LEAN_BRIDGE_JVM_GRAPH_LOADING_TEST=1 node --test --test-name-pattern='install offline|independent recursive|shared-runtime|before cold' tests/jvm-graph-package.test.mjs"
 };
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
@@ -346,7 +347,7 @@ export const assertOwnedJvmPackageExecution = async (record, replay = true) => {
 	for(const [path, hash] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), hash, path);
 	assert.deepEqual(record.previous, { path: ownedJvmCallReceipt, sha256: "87b8d27a6d0a0cc4cd9b7a193a323fa574ec0043eea69b2afaef6bda803471e3" });
 	const previous = await readFile(record.previous.path); assert.equal(sha256(previous), record.previous.sha256);
-	for(const [name, count] of Object.entries({ packages: 4, coexistence: 1, documentation: 1, loaders: 2, ci: 4, copied: 5 }))
+	for(const [name, count] of Object.entries({ packages: 4, coexistence: 1, documentation: 1, loaders: 2, ci: 7, copied: 5 }))
 		passing(record.runs[name], ownedJvmPackageCommands[name], count);
 	const loading = JSON.parse(record.runs.loaders.text.match(/^# (\{"fixtureLibraries":[^]*?\})$/mu)?.[1]);
 	assert.equal(loading.fixtureLibraries, true); assert.equal(loading.compiledLean, false);
@@ -382,6 +383,9 @@ export const assertOwnedJvmPackageExecution = async (record, replay = true) => {
 		})));
 	}
 	assert.deepEqual(record.ci, assertOwnedJvmCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8")));
+	assert.deepEqual(record.nativeCi, assertNativeCiIsolation(
+		await readFile(".github/workflows/consumer-matrix.yml", "utf8")
+		, JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json"))));
 	if(replay) await assertOwnedJvmCalls(JSON.parse(previous));
 };
 
@@ -425,6 +429,19 @@ export const assertOwnedJvmPackageIntegration = async record => {
 	assert.deepEqual(document, expected);
 	assert.deepEqual(typeSurfaceCells(document, contracts), typeSurfaceCells(old, contracts));
 	assert.deepEqual(record.inventory, previous.inventory);
+	await assertOwnedJvmGeneratedHistory(record);
+	const nativeBaseline = JSON.parse(await readFile("tests/fixtures/ci/native-acceptance-before-isolation.json"));
+	assert.equal(nativeBaseline.workflowSha256, updates.get(".github/workflows/consumer-matrix.yml").previousSha256);
+	await assertOwnedJvmPackageExecution(JSON.parse(execution));
+	await assertManagedCiIsolationEvidence(previous);
+};
+
+/**
+ * Authenticate exact generated changes for fixture and compiler-ordered APIs.
+ *
+ * @param record - Integration history containing both immutable predecessors.
+ */
+export const assertOwnedJvmGeneratedHistory = async record => {
 	assert.deepEqual(record.generatedPrevious, {
 		path: "docs/evidence/jvm-structured-codegen-regression-20260924.json"
 		, sha256: "0f401b406002cbb9ae841c80f3b7b76adcb23edc04f32b74debf75c85df655b9"
@@ -443,6 +460,21 @@ export const assertOwnedJvmPackageIntegration = async record => {
 			assert.equal(sha256(reverseOwnedJvmUpdate(generated[update.path], update)), update.previousSha256);
 		}
 	}
-	await assertOwnedJvmPackageExecution(JSON.parse(execution));
-	await assertManagedCiIsolationEvidence(previous);
+	assert.deepEqual(record.generatedSortedPrevious, {
+		path: "docs/evidence/kotlin-collections-20260922.json"
+		, sha256: "c7a1b371b89de0099fd1d2af45cb557071ae15cb7701abce4fd1eba5e83013b2"
+	});
+	const sortedBytes = await readFile(record.generatedSortedPrevious.path);
+	assert.equal(sha256(sortedBytes), record.generatedSortedPrevious.sha256);
+	const sortedPrevious = JSON.parse(sortedBytes), ir = jvmStructuredRegressionFixtures.collections();
+	for(const key of ["declarations", "types"]) ir[key].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+	const sorted = generateCopiedJvmKotlinPackage(ir);
+	assert.deepEqual(record.generatedSortedUpdates.map(item => item.path), ownedJvmSortedGeneratedPaths);
+	for(const update of record.generatedSortedUpdates)
+	{
+		for(const run of sortedPrevious.executions)
+			assert.equal(update.previousSha256, run.installedFiles["META-INF/lean-bridge/jvm/" + update.path].sha256);
+		assert.equal(sha256(sorted[update.path]), update.currentSha256);
+		assert.equal(sha256(reverseOwnedJvmUpdate(sorted[update.path], update)), update.previousSha256);
+	}
 };

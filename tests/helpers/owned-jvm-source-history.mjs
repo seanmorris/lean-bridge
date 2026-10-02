@@ -39,14 +39,20 @@ export const ownedJvmChangedPaths = [
 	, "tests/helpers/managed-ci-isolation-history.mjs"
 	, "tests/helpers/native-fork-repair-history.mjs"
 	, "tests/helpers/type-corpus-jvm.mjs"
+	, "tests/java-collection-evidence.test.mjs"
 	, "tests/jvm-graph-package.test.mjs"
 	, "tests/jvm-recursive-callable-contract.test.mjs"
 	, "tests/jvm-structured-callable-contract.test.mjs"
+	, "tests/kotlin-collection-evidence.test.mjs"
 	, "tests/managed-ci-isolation-evidence.test.mjs"
+	, "tests/managed-ci-isolation.test.mjs"
+	, "tests/owned-c-packaging.test.mjs"
 ];
 export const ownedJvmGeneratedPaths = ["aliases", "callables", "collections", "compounds", "lists", "variants"]
 	.flatMap(name => ["KotlinRuntime", "NativeAssets", "Runtime"].map(type =>
 		`src/main/java/org/leanbridge/${name}/${type}.java`)).sort();
+export const ownedJvmSortedGeneratedPaths = ["KotlinRuntime", "Runtime"]
+	.map(type => `src/main/java/org/leanbridge/collections/${type}.java`);
 export const ownedJvmAddedPaths = [
 	"docs/evidence/owned-jvm-calls-20260927.json"
 	, "docs/evidence/owned-jvm-calls-20260927.md"
@@ -73,6 +79,7 @@ export const ownedJvmAddedPaths = [
 	, "src/build/owned-jvm-artifacts.mjs"
 	, "src/build/owned-jvm-projection.mjs"
 	, "src/release/owned-maven.mjs"
+	, "tests/fixtures/ci/native-acceptance-before-isolation.json"
 	, "tests/fixtures/structured-types/OwnedInstalledAssetsProbe.java"
 	, "tests/fixtures/structured-types/OwnedInstalledSupport.java"
 	, "tests/fixtures/structured-types/OwnedRuntimeProbe.java"
@@ -93,6 +100,7 @@ export const ownedJvmAddedPaths = [
 	, "tests/fixtures/structured-types/owned-kotlin-coexistence.kt"
 	, "tests/fixtures/structured-types/owned-kotlin-scalars.kt"
 	, "tests/fixtures/structured-types/owned-kotlin-values.kt"
+	, "tests/helpers/native-ci-isolation.mjs"
 	, "tests/helpers/owned-jvm-call-evidence.mjs"
 	, "tests/helpers/owned-jvm-call-fixture.mjs"
 	, "tests/helpers/owned-jvm-ci.mjs"
@@ -107,6 +115,7 @@ export const ownedJvmAddedPaths = [
 	, "tests/helpers/owned-jvm-runtime-evidence.mjs"
 	, "tests/helpers/owned-jvm-runtime-native.mjs"
 	, "tests/helpers/owned-jvm-source-history.mjs"
+	, "tests/native-ci-isolation.test.mjs"
 	, "tests/owned-jvm-call-evidence.test.mjs"
 	, "tests/owned-jvm-calls.test.mjs"
 	, "tests/owned-jvm-ci.test.mjs"
@@ -185,7 +194,8 @@ export const ownedJvmHistoricalBytes = (path, bytes, expected) => ownedJvmChange
 export const beforeOwnedJvmGenerated = (path, source, expected) => {
 	const digest = sha256(source);
 	if(digest === expected || !ownedJvmGeneratedPaths.includes(path)) return source;
-	const update = record().generatedUpdates.find(item => item.path === path
+	const history = record();
+	const update = [...history.generatedUpdates, ...(history.generatedSortedUpdates ?? [])].find(item => item.path === path
 		&& item.currentSha256 === digest && item.previousSha256 === expected);
 	return update ? reverseOwnedJvmUpdate(source, update) : source;
 };

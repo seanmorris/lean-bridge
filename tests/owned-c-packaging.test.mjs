@@ -55,19 +55,23 @@ test("unsupported native targets reject owned source decisions before compiling"
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	const project = join(directory, "source");
 	await cp(resolve("tests/fixtures/onboarding/owned-aggregates"), project, { recursive: true });
-	for(const targets of [["cpan"], ["maven"], ["php-native"], ["wit-wasi"], ["c", "cpp", "cpan"], ["nuget", "maven"]])
+	for(const targets of [["cpan"], ["php-native"], ["wit-wasi"], ["c", "cpp", "cpan"], ["maven", "cpan"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), /ownedAggregates/);
-	for(const targets of [["cargo"], ["c", "cargo"], ["cpp", "cargo"], ["c", "cpp", "cargo"], ["pypi"], ["c", "pypi"], ["cpp", "pypi"], ["c", "cpp", "cargo", "pypi"], ["rubygems"], ["c", "rubygems"], ["c", "cpp", "cargo", "pypi", "rubygems"], ["nuget"], ["c", "nuget"], ["cpp", "nuget"], ["c", "cpp", "cargo", "pypi", "rubygems", "nuget"]])
+	for(const targets of [["cargo"], ["c", "cargo"], ["cpp", "cargo"], ["c", "cpp", "cargo"], ["pypi"], ["c", "pypi"], ["cpp", "pypi"], ["c", "cpp", "cargo", "pypi"], ["rubygems"], ["c", "rubygems"], ["c", "cpp", "cargo", "pypi", "rubygems"], ["nuget"], ["c", "nuget"], ["cpp", "nuget"], ["c", "cpp", "cargo", "pypi", "rubygems", "nuget"], ["maven"], ["nuget", "maven"], ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven"]])
 		await assert.rejects(buildNativeProject({ projectRoot: project, targets
 			, outputRoot: join(directory, "unused")
 			, environment: copiedCleanEnvironment }), { code: "ENOENT" });
 	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson({ schemaVersion: 1, modules: ["Owned"] }));
 	await saveLakeFile(project, "api.binding-ir.json", canonicalJson(ownedAggregateReviewedIr()));
+	for(const targets of [["cpan"], ["php-native"], ["wit-wasi"], ["maven", "cpan"]])
+		await assert.rejects(buildNativeProject({ projectRoot: project, targets
+			, outputRoot: join(directory, "unused")
+			, environment: copiedCleanEnvironment }), { code: "consumer-upgrade-required" });
 	await assert.rejects(buildNativeProject({ projectRoot: project
 		, targets: ["maven"], outputRoot: join(directory, "unused")
-		, environment: copiedCleanEnvironment }), { code: "consumer-upgrade-required" });
+		, environment: copiedCleanEnvironment }), { code: "ENOENT" });
 	await assert.rejects(buildNativeProject({ projectRoot: project
 		, targets: ["nuget"], outputRoot: join(directory, "unused")
 		, environment: copiedCleanEnvironment }), { code: "ENOENT" });

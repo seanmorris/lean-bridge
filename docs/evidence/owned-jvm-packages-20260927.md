@@ -14,6 +14,9 @@ The [execution record](owned-jvm-execution-20260927.json) binds the compiler
 inputs, generated source hashes, native receipts, original archives and
 terminal test logs. The [source history](owned-jvm-integration-20260927.json)
 preserves earlier receipts and records each changed source span.
+Generated-source history authenticates eighteen fixture-ordered files and
+two compiler-ordered collection runtimes against their original receipts.
+Unknown source changes do not normalize to an accepted predecessor.
 
 The CLI acceptance builds scalar and callback/composition packages on both
 authoring paths. It checks compiler-free byte-identical reassembly, rejects
@@ -40,6 +43,10 @@ The author recipe and both consumer examples compile and execute verbatim.
 Copied recursive packages retain their own installed, deterministic-rebuild,
 coexistence, conflicting-classloader and cold-value regression checks.
 CI requires eleven ownership suites, 25 nonempty reports and artifact retention.
+The native consumer job runs C/C++, Python and Rust in separate shards.
+Each retains its acceptance commands, required reports and result gates.
+Routing tests exercise failed, skipped and cancelled outcomes, including the
+result-recording shell commands.
 
 ## Ownership and platform
 

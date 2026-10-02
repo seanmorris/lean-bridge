@@ -9,7 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { generateCopiedJvmKotlinPackage } from "../src/backends/jvm/copied-kotlin.mjs";
 import { jvmStructuredRegressionFixtures } from "./helpers/jvm-structured-callable-regression.mjs";
-import { assertOwnedJvmPackageExecution, assertOwnedJvmPackageIntegration } from "./helpers/owned-jvm-package-evidence.mjs";
+import { assertOwnedJvmGeneratedHistory, assertOwnedJvmPackageExecution, assertOwnedJvmPackageIntegration } from "./helpers/owned-jvm-package-evidence.mjs";
 import { beforeOwnedJvmPackages, beforeOwnedJvmGenerated, ownedJvmHistoricalBytes, ownedJvmHistoryPath, ownedJvmExecutionPath, reverseOwnedJvmUpdate } from "./helpers/owned-jvm-source-history.mjs";
 
 const json = async path => JSON.parse(await readFile(path, "utf8"));
@@ -49,6 +49,8 @@ test("owned JVM evidence rejects widened scope and forged package or execution c
 		, record => { record.coexistence.scenarios[0].concurrentIterations--; }
 		, record => { record.copied.packages.observations[0].jvm.offline = false; }
 		, record => { record.ci.requiredReports--; }
+		, record => { record.nativeCi.profiles.pop(); }
+		, record => { record.runs.ci.exitCode = 1; }
 	]) {
 		const changed = structuredClone(original); change(changed);
 		await assert.rejects(() => assertOwnedJvmPackageExecution(changed, false), change.toString());
@@ -77,13 +79,34 @@ test("owned JVM generated history retains old APIs and rejects unrecorded change
 	const record = await json(ownedJvmHistoryPath);
 	const files = Object.assign({}, ...Object.values(jvmStructuredRegressionFixtures)
 		.map(fixture => generateCopiedJvmKotlinPackage(fixture())));
-	for(const update of record.generatedUpdates)
+	const ir = jvmStructuredRegressionFixtures.collections();
+	for(const key of ["declarations", "types"]) ir[key].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+	const sorted = generateCopiedJvmKotlinPackage(ir);
+	for(const [updates, sources] of [[record.generatedUpdates, files], [record.generatedSortedUpdates, sorted]])
+	for(const update of updates)
 	{
-		const source = files[update.path];
+		const source = sources[update.path];
 		assert.equal(sha256(beforeOwnedJvmGenerated(update.path, source, update.previousSha256)), update.previousSha256);
 		const changed = source + "\n/* unrecorded */\n";
 		assert.equal(beforeOwnedJvmGenerated(update.path, changed, update.previousSha256), changed);
 		assert.equal(beforeOwnedJvmGenerated(update.path, source, "0".repeat(64)), source);
 		assert.throws(() => reverseOwnedJvmUpdate(changed, update));
+	}
+});
+
+test("owned JVM generated history rejects missing or exchanged source-order identities", async () => {
+	const original = await json(ownedJvmHistoryPath);
+	await assertOwnedJvmGeneratedHistory(original);
+	for(const change of [
+		record => { record.generatedSortedUpdates.pop(); }
+		, record => { record.generatedSortedUpdates.push(record.generatedSortedUpdates[0]); }
+		, record => { record.generatedSortedPrevious.sha256 = "0".repeat(64); }
+		, record => { record.generatedSortedUpdates[0].currentSha256 = "0".repeat(64); }
+		, record => { record.generatedSortedUpdates[0].previousSha256 = "0".repeat(64); }
+		, record => { record.generatedSortedUpdates[0].edits[0].previous = "unrecorded"; }
+		, record => { record.generatedSortedUpdates[0] = record.generatedUpdates.find(item => item.path === record.generatedSortedUpdates[0].path); }
+	]) {
+		const changed = structuredClone(original); change(changed);
+		await assert.rejects(() => assertOwnedJvmGeneratedHistory(changed), change.toString());
 	}
 });
