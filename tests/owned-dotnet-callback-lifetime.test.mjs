@@ -4,11 +4,11 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileOwnedDotnetFixture } from "./helpers/owned-dotnet-native.mjs";
 import { ownedDotnetReceiverProject, instrumentOwnedDotnetReceivers } from "./helpers/owned-dotnet-receiver-fixture.mjs";
+import { ownedDotnetCallbackLifetimeProbe } from "./helpers/owned-dotnet-callback-result-probes.mjs";
 import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReviewedIr
 	, ownedDotnetCallbackResultSource, ownedDotnetCallbackResultCombinedConfiguration
 	, ownedDotnetCallbackResultCombinedReviewedIr, ownedDotnetCallbackResultCombinedSource } from "./helpers/owned-dotnet-callback-result-fixture.mjs";
@@ -29,15 +29,7 @@ test(`C# callback-result lifetime stress (${mode}, ${variant})`, {
 			: { reviewedIr: (combined ? ownedDotnetCallbackResultCombinedReviewedIr : ownedDotnetCallbackResultReviewedIr)() }
 		, evidenceName: `dotnet-callback-lifetime-${mode}-${variant}-inputs.json`
 	});
-	const base = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-results.cs", "utf8");
-	let methods = await readFile("tests/fixtures/structured-types/owned-dotnet-callback-lifetimes.cs", "utf8");
-	if(hostCallbacks) methods += await readFile("tests/fixtures/structured-types/owned-dotnet-callback-host-lifetimes.cs", "utf8");
-	if(combined) methods += await readFile("tests/fixtures/structured-types/owned-dotnet-callback-transfer-lifetimes.cs", "utf8");
-	let probe = base.replace("    private static void Main", methods + "\n    private static void Main")
-		.replace("        if (remaining == 0)", "        var hook = allocationHook; allocationHook = null; hook?.Invoke();\n        if (remaining == 0)")
-		.replace("OriginalOwners(); EmptyOwners();", `OriginalOwners(); EmptyOwners(); CallbackLifetimeOwners();${hostCallbacks ? " HostLifetimeOwners();" : ""}${combined ? " TransferLifetimeFaults(false); TransferLifetimeFaults(true);" : ""}`)
-		.replace("new { checks,", `new { lifetimeCollections, exitedThreads, concurrentReads,${combined ? " managedBefore, managedAfter, nativeBefore, nativeAfter," : ""} checks,`);
-	if(combined) probe = probe.replace("        Runtime.Current.Require(); OriginalOwners();", "        Handoffs = (delegate* unmanaged[Cdecl]<nuint>)NativeLibrary.GetExport(library, \"probe_handoffs\");\n        Runtime.Current.Require(); OriginalOwners();");
+	const probe = await ownedDotnetCallbackLifetimeProbe(hostCallbacks, combined);
 	const files = { ...compiled.model.files, "Program.cs": probe
 		, "Lifetime.cs": instrumentOwnedDotnetReceivers(compiled.model.files["Lifetime.cs"])
 		, "Calls.csproj": ownedDotnetReceiverProject };

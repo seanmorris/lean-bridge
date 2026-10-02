@@ -22,7 +22,7 @@ import { saveLakeFile, lakeInputState } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { checkOwnedJavaScriptBrowsers } from "./owned-javascript-npm-browser.mjs";
 import { ownedJavaScriptReceiverInventory } from "./owned-javascript-receiver-inventory.mjs";
-import { installPythonWheel } from "./python-wheel-install.mjs";
+import { installPythonWheel, pythonTypingWheels } from "./python-wheel-install.mjs";
 import { ownedPythonCallbackInstalledProbe } from "./owned-python-callback-result-installed.mjs";
 import { ownedPythonInstalledProbe } from "./owned-python-installed-probes.mjs";
 
@@ -42,6 +42,12 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 		, reviewedIr: ownedCallbackResultCombinedReviewedIr
 		, source: ownedCallbackResultCombinedSource, reportDirectory } = options;
 	const dotnet = options.dotnet === true;
+	// Check offline consumer prerequisites before compiling seven releases.
+	for(const [version, expected] of Object.entries(pythonTypingWheels))
+	{
+		const path = resolve(process.env.LEAN_BRIDGE_PYTHON_TYPING_WHEELS ?? "build/python-typing-wheels", version, `typing_extensions-${version}-py3-none-any.whl`);
+		assert.equal(sha256(await readFile(path)), expected, "Pinned offline Python wheel");
+	}
 	const root = await mkdtemp(join(tmpdir(), `lean-${dotnet ? "dotnet" : "ruby"}-callback-combined-installed-`));
 	t.after(() => rm(root, { recursive: true, force: true }));
 	const runtimeRoot = resolve(process.env.LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT ?? "build/lean-link-spike", "lazy");

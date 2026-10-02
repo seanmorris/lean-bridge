@@ -8,7 +8,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { compileOwnedDotnetFixture } from "./helpers/owned-dotnet-native.mjs";
 import { ownedDotnetReceiverProject } from "./helpers/owned-dotnet-receiver-fixture.mjs";
-import { ownedDotnetCallbackResultProbe } from "./helpers/owned-dotnet-callback-result-probes.mjs";
+import { ownedDotnetCallbackSanitizerProbe } from "./helpers/owned-dotnet-callback-result-probes.mjs";
 import { ownedDotnetSanitizerControls, runOwnedDotnetCallbackSanitizers } from "./helpers/owned-dotnet-callback-result-sanitizers.mjs";
 import { ownedDotnetCallbackResultConfiguration, ownedDotnetCallbackResultReviewedIr
 	, ownedDotnetCallbackResultSource, ownedDotnetCallbackResultCombinedConfiguration
@@ -29,21 +29,7 @@ test(`C# callback native sanitizers (${mode}, ${combined ? "combined" : "no-host
 			: { reviewedIr: (combined ? ownedDotnetCallbackResultCombinedReviewedIr : ownedDotnetCallbackResultReviewedIr)() }
 		, evidenceName: `dotnet-callback-sanitizers-${mode}-${combined}-inputs.json`
 	});
-	const original = await ownedDotnetCallbackResultProbe(combined, combined);
-	const marker = "        Live = (delegate* unmanaged[Cdecl]<nuint>)NativeLibrary.GetExport(library, \"probe_live\");";
-	assert.equal(original.split(marker).length, 2);
-	const controls = `        if (args[1] == "address")
-        {
-            var fault = (delegate* unmanaged[Cdecl]<nuint, void>)NativeLibrary.GetExport(library, "probe_address");
-            fault(17); throw new Exception("Address sanitizer did not stop the invalid write.");
-        }
-        if (args[1] == "undefined")
-        {
-            var fault = (delegate* unmanaged[Cdecl]<int, int>)NativeLibrary.GetExport(library, "probe_undefined");
-            _ = fault(40); throw new Exception("Undefined behavior sanitizer did not stop the invalid shift.");
-        }
-`;
-	const probe = original.replace(marker, controls + marker);
+	const probe = await ownedDotnetCallbackSanitizerProbe(combined);
 	const execute = await compiled.compile({ "Program.cs": probe, "Calls.csproj": ownedDotnetReceiverProject });
 	const baseline = await execute(); assert.equal(baseline.stderr, "");
 	const observed = JSON.parse(baseline.stdout);
