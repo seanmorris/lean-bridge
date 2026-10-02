@@ -3555,6 +3555,27 @@ The CI job `owned-callback-results` requires every report and propagates failure
 through the consumer summary. C and npm acceptance does not establish this
 capability for the remaining language adapters.
 
+## C++ callback-result lifetimes
+
+Run the C++ gate with the same native, Emscripten and browser dependencies:
+
+```sh
+npm run test:owned-cpp-callback-results
+```
+
+The gate requires 12 passing tests with no skips and 12 JSON reports in
+`build/owned-cpp-callback-results/`. Both authoring paths compile normal and
+sanitized consumers, inject allocation failures before and after ownership
+transfer, and reject deliberately broken lifetime implementations.
+
+Installed checks cover explicit callback-disabled native builds and combined
+callback, receiver, result-anchor and transfer packages built by the installed
+CLI. Consumers use pkg-config and relocated CMake after producer removal.
+Independent builds and reassembly must reproduce the original archives. Separate
+C/C++/npm releases exercise all three projections, browser contexts and the
+published C++ and JavaScript examples. CI requires every report and propagates
+the C++ job's failure through the consumer summary.
+
 ## Native PHP receiver acceptance
 
 Use PHP CLI 8.2 or later, Composer, the FFI extension and the pinned native

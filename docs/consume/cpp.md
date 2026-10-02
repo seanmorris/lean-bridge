@@ -483,6 +483,51 @@ C++ reference does not check later access automatically; copied resource wrapper
 still reject use after their borrowed lifetime ends. Resource equality uses Lean
 identity, including when the two wrappers belong to different result owners.
 
+### Callback-result owners
+
+A returned Lean closure can borrow its result from one of its arguments. Pass
+that argument as `Value<T>`. The result expires with the supplied argument's
+original owner, even when Lean returns data from the closure's capture. Closing
+the closure does not close the supplied argument's owner.
+
+```cpp file=cpp/owned-callback-results.cpp
+#include "owned_aggregates.hpp"
+#include <cassert>
+#include <iostream>
+
+namespace api = lean_bridge::owned_aggregates;
+
+int main() {
+    auto ticket = api::new_ticket(42, "callback");
+    api::Bundle raw{ticket.get(), {}, {}, {}, {api::Int(0), {}}};
+    auto captured = api::echo_record(raw);
+    auto supplied = api::echo_record(raw);
+    auto closure = api::make_record(captured);
+    auto borrowed = closure(true, supplied);
+    auto kept = borrowed.retain();
+    supplied.close();
+    assert(borrowed.is_closed());
+    captured.close();
+    closure.close();
+    std::cout << api::serial(kept->primary) << '\n';
+}
+```
+
+Borrowed descendants expire transitively, including empty recursive values.
+`retain()` and `copy_value()` create independent owners. Callback-result anchors
+do not require ordinary result anchors, receiver methods, or host callbacks.
+
+For a host callback with a borrowed result contract, return the declared `T` or
+`Value<T>`. Lean Bridge checks the reply and retains its resource contents before
+the callback's borrowed arguments expire. An expired reply rejects. Exceptions
+retain their C++ type and rethrow after native cleanup. Host callbacks remain
+synchronous and call-scoped.
+
+When a consuming method invokes a callback, aliases and borrowed descendants
+close before that callback runs. A failure before the native handoff leaves the
+input usable; a failure after the handoff leaves it consumed. Independent retains
+survive either case.
+
 ### Methods and properties
 
 Packages with [receiver exports](../publish/cpp.md#export-methods-and-properties)

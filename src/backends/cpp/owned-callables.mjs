@@ -19,12 +19,14 @@ import { ownedCppAnchoredTransfers, ownedCppValueCopies } from "./owned-borrows.
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
  * @param options.anchoredResults - Preserve original owners for returned borrows.
  * @param options.receiverExports - Expose checked nominal methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedCppCallables = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const conversions = generateOwnedCppConversions(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = conversions;
+export const generateOwnedCppCallables = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const conversions = generateOwnedCppConversions(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), { c } = conversions;
 	const transfers = c.functions.some(item => item.transfers?.length);
-	const anchors = c.functions.some(item => item.anchor !== undefined);
+	const callbackAnchors = c.callbacks.some(item => item.anchor !== undefined);
+	const anchors = callbackAnchors || c.functions.some(item => item.anchor !== undefined);
 	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const p = c.prefix, m = p.toUpperCase(), nodes = new Map(conversions.types.map(node => [node.id, node]));
 	const unit = node => node.kind === "primitive" && node.name === "unit";
@@ -38,11 +40,14 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 		const params = callback.parameters.slice(1).map(id => nodes.get(id));
 		const automatic = ownedCallbackRecovery(c.native.model, node, id => id) !== null;
 		const copy = [...c.retains, ...c.copies].find(item => item.id === result.id);
+		const borrowed = callback.anchor !== undefined;
+		const reply = borrowed ? "owned_callback_reply(reply)" : "reply";
+		const recovery = borrowed ? "owned_callback_reply(input.recovery)" : "input.recovery";
 		callbacks.push(`template<class F> concept OwnedCallback${i} = std::same_as<std::remove_cvref_t<F>, ${node.hostName}> || (`
 			, `  ${automatic ? "true" : "owned_has_recovery<std::remove_cvref_t<F>>"}`
-			, `  && owned_recovery_matches<std::remove_cvref_t<F>, ${result.hostName}>`
+			, `  && ${borrowed ? "owned_callback_recovery_matches" : "owned_recovery_matches"}<std::remove_cvref_t<F>, ${result.hostName}>`
 			, `  && requires(F& function${params.map((param, index) => `, const ${param.hostName}& a${index}`).join("")}) {`
-			, `    { std::invoke(owned_function(function)${params.map((_, index) => `, a${index}`).join("")}) } -> std::same_as<${resultType(result)}>;`
+			, `    { std::invoke(owned_function(function)${params.map((_, index) => `, a${index}`).join("")}) } -> ${borrowed ? "OwnedCallbackReply" : "std::same_as"}<${resultType(result)}>;`
 			, "  });"
 			, `template<class F> requires OwnedCallback${i}<F> struct OwnedCallbackView${i} {`
 			, "  F& function; OwnedCall& call;"
@@ -57,8 +62,8 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 			, ...params.map((param, index) => `      auto argument${index} = owned_from${param.index}(${param.leaf ? `a${index}` : `owned_read(a${index})`}, 0, self.call.budget, borrowed);`)
 			, `      ${unit(result) ? "" : "auto reply = "}std::invoke(owned_function(self.function)${params.map((_, index) => `, std::as_const(argument${index})`).join("")});`
 			, ...unit(result) ? ["      const std::monostate reply{};"] : []
-			, `      owned_check${result.index}(reply, 0, self.call.budget, self.call.state);`
-			, `      OwnedView${result.index} view(reply, self.call.state);`
+			, `      owned_check${result.index}(${reply}, 0, self.call.budget, self.call.state);`
+			, `      OwnedView${result.index} view(${reply}, self.call.state);`
 			, `      ${result.cName} converted{}; NativeOwner retained;`
 			, `      checked(${copy.cName}(self.call.state->require(), ${result.leaf ? "" : "&"}view.value, &converted, &retained.value));`
 			, "      *out = converted; *owner = std::exchange(retained.value, nullptr);"
@@ -72,7 +77,7 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 			, "    } else {"
 			, "      value.call = &invoke; value.context = this;"
 			, "      if constexpr (owned_has_recovery<std::remove_cvref_t<F>>) {"
-			, `        recovery = std::make_unique<OwnedView${result.index}>(input.recovery, scope.state);`
+			, `        recovery = std::make_unique<OwnedView${result.index}>(${recovery}, scope.state);`
 			, "        value.recovery = &recovery->value;", "      }", "    }", "  }"
 			, `  OwnedCallbackView${i}(const OwnedCallbackView${i}&) = delete;`
 			, `  OwnedCallbackView${i}& operator=(const OwnedCallbackView${i}&) = delete;`, "};"
@@ -82,7 +87,7 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 			, `    call.budget.enter(0); call.budget.native(1, sizeof(${node.cName}_host));`
 			, `    call.budget.storage(1, sizeof(OwnedCallbackView${i}<F>));`
 			, "    if constexpr (owned_has_recovery<std::remove_cvref_t<F>>)"
-			, `      owned_check${result.index}(input.recovery, 0, call.budget, call.state);`, "  }", "}");
+			, `      owned_check${result.index}(${recovery}, 0, call.budget, call.state);`, "  }", "}");
 	}
 	const all = [...c.functions, ...c.callbacks, ...c.retains];
 	const signature = (item, offset = 0, qualified = "") => {
@@ -191,6 +196,13 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 		, "template<class F> inline F& owned_function(F& function) { return function; }"
 		, "template<class F, class R> inline F& owned_function(RecoveredCallback<F, R>& function) { return function.function; }"
 		, "template<class F, class R> inline const F& owned_function(const RecoveredCallback<F, R>& function) { return function.function; }"
+		, ...callbackAnchors && hostCallbacks ? [
+			"template<class T, class Expected> concept OwnedCallbackReply = std::same_as<std::remove_cvref_t<T>, Expected> || std::same_as<std::remove_cvref_t<T>, Value<Expected>>;"
+			, "template<class T> inline const T& owned_callback_reply(const T& value) { return value; }"
+			, "template<class T> inline const T& owned_callback_reply(const Value<T>& value) { return value.get(); }"
+			, "template<class F, class Expected> constexpr bool owned_callback_recovery_matches = true;"
+			, "template<class F, class R, class Expected> constexpr bool owned_callback_recovery_matches<RecoveredCallback<F, R>, Expected> = OwnedCallbackReply<R, Expected>;"
+		] : []
 		, ...transfers ? [wholeOwners ? ownedCppAnchoredTransfers(p) : ownedCppInputTransfers(conversions)] : []
 		, ...callbacks, ...calls, ...operations
 		, ...wholeOwners ? [ownedCppValueCopies(conversions)] : []

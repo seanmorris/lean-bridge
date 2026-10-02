@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforeOwnedCppCallbackResults } from "./helpers/owned-cpp-callback-result-history.mjs";
 import { callbackInventoryHistoryPath, callbackInventoryHistorySha256
 	, readCallbackInventoryHistory, beforeCallbackInventoryRepair } from "./helpers/owned-callback-inventory-history.mjs";
 import { ownedPhpReceiverModel } from "./helpers/owned-php-receiver-evidence.mjs";
@@ -30,7 +31,7 @@ test("callback inventory repair preserves complete source and acceptance identit
 	]);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path), prior = beforeCallbackInventoryRepair(update.path, current);
+		const current = beforeOwnedCppCallbackResults(update.path, await readFile(update.path)), prior = beforeCallbackInventoryRepair(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(update.previousSha256, accepted.sources[update.path], update.path);
@@ -46,7 +47,7 @@ test("callback inventory repair preserves complete source and acceptance identit
 		finally
 		{ update.previousSha256 = digest; }
 	}
-	const current = JSON.parse(await readFile("package.json", "utf8"));
+	const current = JSON.parse(beforeOwnedCppCallbackResults("package.json", await readFile("package.json")));
 	const prior = JSON.parse(beforeCallbackInventoryRepair("package.json", await readFile("package.json")));
 	prior.files.push("src/analyze/callback-signature.mjs"); prior.files.sort();
 	assert.deepEqual(current, prior);
@@ -54,9 +55,9 @@ test("callback inventory repair preserves complete source and acceptance identit
 });
 
 test("callback inventory repair refreshes source identities without changing support claims", async () => {
-	const path = "docs/type-surface.v1.json", current = await readFile(path, "utf8");
+	const path = "docs/type-surface.v1.json", current = beforeOwnedCppCallbackResults(path, await readFile(path, "utf8"));
 	const prior = JSON.parse(beforeCallbackInventoryRepair(path, current));
-	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(await readFile(file.path));
+	for(const evidence of prior.evidence) for(const file of evidence.files) file.sha256 = sha256(beforeOwnedCppCallbackResults(file.path, await readFile(file.path)));
 	assert.deepEqual(JSON.parse(current), prior);
 });
 

@@ -15,12 +15,14 @@ import { boostIdentity, boostSources } from "./boost.mjs";
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
  * @param options.anchoredResults - Preserve owner-scoped result values.
  * @param options.receiverExports - Expose receiver methods and property accessors.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedCppPackage = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const generated = generateOwnedCppCallables(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), p = generated.c.prefix;
+export const generateOwnedCppPackage = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const generated = generateOwnedCppCallables(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), p = generated.c.prefix;
 	const transfers = generated.c.functions.some(item => item.transfers?.length);
 	const anchors = generated.c.functions.some(item => item.anchor !== undefined);
+	const callbackAnchors = generated.c.callbacks.filter(item => item.anchor !== undefined);
 	const receivers = generated.c.functions.filter(item => item.receiver === 0);
 	const bigint = generated.types.some(node => node.integer);
 	const files = {
@@ -30,10 +32,20 @@ export const generateOwnedCppPackage = (ir, { transferredInputs = false, anchore
 		, [`src/${p}.cpp`]: `#include "${p}.hpp"\n`
 		, ...bigint ? boostSources() : {}
 	};
-	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+	const contract = { schemaVersion: callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
 		, language: "c++20"
 		, ownership: "checked-result-leases", callbackLifetime: "call"
 		, explicitRetention: "retain", callbackFailure: "rethrow-after-cleanup"
+		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
+			, values: "checked-whole-result", anchor: "original-argument-owner"
+			, parameterNumbering: "callback-local"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, emptyValues: "owner-preserved"
+			, independentOwnership: "retain-or-copy_value"
+			, hostReply: "value-or-whole-owner"
+			, hostResultHandoff: "before-callback-frame-expires"
+			, signatures: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1 }))
+		} } : {}
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
 			, arguments: "rvalue-references", consumption: "before-lean-call"
 			, validation: "before-consumption", failure: "consumed-after-handoff"

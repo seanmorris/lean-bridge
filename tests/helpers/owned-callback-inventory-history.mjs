@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeOwnedCppCallbackResults } from "./owned-cpp-callback-result-history.mjs";
 
 export const callbackInventoryHistoryPath = "docs/evidence/owned-callback-inventory-repair-20261002.json";
 export const callbackInventoryHistorySha256 = "52dbcf9a39a7a67d7ad473a9f4f5849c3890021345370977b01ffd5d15942403";
@@ -40,6 +41,7 @@ export const callbackInventoryRepairPaths = Object.freeze(readCallbackInventoryH
  * @param expected - Optional stopping digest.
  */
 export const beforeCallbackInventoryRepair = (path, source, expected) => {
+	source = beforeOwnedCppCallbackResults(path, source, expected);
 	const update = readCallbackInventoryHistory().updates.find(item => item.path === path);
 	if(!update || sha256(source) === expected || sha256(source) !== update.currentSha256) return source;
 	if(update.strategy === "replacements")

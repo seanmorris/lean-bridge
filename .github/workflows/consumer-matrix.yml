@@ -353,6 +353,72 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  owned-cpp-callback-results:
+    name: Callback-result lifetimes in installed C++ packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    env:
+      EMCC_CORES: "2"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install callback acceptance tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3 ripgrep zstd
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh
+      - name: Install all callback browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Build the callback shared runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-cpp-callback-result-runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Verify C++ callback-result lifetimes
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-cpp-callback-results 2>&1 | tee build/owned-cpp-callback-results.log
+          rg '^# tests 12$' build/owned-cpp-callback-results.log
+          rg '^# pass 12$' build/owned-cpp-callback-results.log
+          rg '^# fail 0$' build/owned-cpp-callback-results.log
+          rg '^# cancelled 0$' build/owned-cpp-callback-results.log
+          rg '^# skipped 0$' build/owned-cpp-callback-results.log
+          test -s build/owned-cpp-callback-results/ordinary-base-nohost.json
+          test -s build/owned-cpp-callback-results/ordinary-base-host.json
+          test -s build/owned-cpp-callback-results/ordinary-combined.json
+          test -s build/owned-cpp-callback-results/ordinary-no-host-package.json
+          test -s build/owned-cpp-callback-results/ordinary-combined-package.json
+          test -s build/owned-cpp-callback-results/ordinary-combined-release.json
+          test -s build/owned-cpp-callback-results/reviewed-base-nohost.json
+          test -s build/owned-cpp-callback-results/reviewed-base-host.json
+          test -s build/owned-cpp-callback-results/reviewed-combined.json
+          test -s build/owned-cpp-callback-results/reviewed-no-host-package.json
+          test -s build/owned-cpp-callback-results/reviewed-combined-package.json
+          test -s build/owned-cpp-callback-results/reviewed-combined-release.json
+      - name: Preserve C++ callback-result acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cpp-callback-results-${{ github.sha }}
+          path: |
+            build/owned-cpp-callback-results/
+            build/owned-cpp-callback-results.log
+            build/owned-cpp-callback-result-runtime.log
+          if-no-files-found: error
+          retention-days: 30
+
   owned-callback-results:
     name: Callback-result lifetimes in installed C and npm packages
     runs-on: ubuntu-24.04
@@ -2927,6 +2993,7 @@ jobs:
       - owned-javascript-wasm
       - owned-javascript-receivers
       - owned-callback-results
+      - owned-cpp-callback-results
       - browser-consumer
       - php-consumers
       - php-receivers
@@ -2972,6 +3039,9 @@ jobs:
         run: exit 1
       - name: Enforce callback-result acceptance
         if: needs.owned-callback-results.result != 'success'
+        run: exit 1
+      - name: Enforce C++ callback-result acceptance
+        if: needs.owned-cpp-callback-results.result != 'success'
         run: exit 1
       - name: Enforce real Nix owned npm acceptance
         if: needs.node-consumers.result != 'success'

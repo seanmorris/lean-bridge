@@ -30,12 +30,14 @@ const scalar = {
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
  * @param options.anchoredResults - Keep complete result owners, including empty values.
  * @param options.receiverExports - Expose named methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedCppValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+export const generateOwnedCppValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
+	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const transfers = c.functions.some(item => item.transfers?.length);
-	const anchors = c.functions.some(item => item.anchor !== undefined);
+	const anchors = [...c.functions, ...c.callbacks].some(item => item.anchor !== undefined);
 	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node
 		, aggregate: !node.leaf

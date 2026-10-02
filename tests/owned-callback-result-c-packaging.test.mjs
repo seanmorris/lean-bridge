@@ -78,7 +78,7 @@ for(const mode of ["ordinary", "reviewed"]) test(`installed callback-result C ar
 		, leanPrefix: environment.LEAN_BRIDGE_LEAN_PREFIX
 		, settings: configuration.targets.c
 		, glibcMinimumVersion: built.glibcMinimumVersion };
-	await assert.rejects(packageOwnedNativeC({ ...packageOptions, target: "cpp", working: join(directory, "unsupported") }), { code: "native-owned-callback-anchors-unavailable" });
+	await assert.rejects(packageOwnedNativeC({ ...packageOptions, target: "cpp", working: join(directory, "unsupported") }), /Owned C\+\+ adapter differs/u);
 	const reassembled = join(directory, "reassembled");
 	const rebuilt = await packageOwnedNativeC({ ...packageOptions, working: reassembled });
 	assert.deepEqual(rebuilt.packages, built.packages);

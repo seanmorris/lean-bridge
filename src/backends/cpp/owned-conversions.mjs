@@ -100,10 +100,11 @@ struct OwnedIntegerView {
  * @param options.transferredInputs - Enable explicit rvalue input consumption.
  * @param options.anchoredResults - Validate whole-result lifetimes.
  * @param options.receiverExports - Preserve named receiver calls.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
-export const generateOwnedCppConversions = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const values = generateOwnedCppValues(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { c } = values, p = c.prefix, m = p.toUpperCase();
+export const generateOwnedCppConversions = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const values = generateOwnedCppValues(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), { c } = values, p = c.prefix, m = p.toUpperCase();
 	const nodes = new Map(values.types.map(node => [node.id, node]));
 	const declarations = [], structures = [], implementations = [];
 	const finite = new Set(); let changed = true;
@@ -271,7 +272,7 @@ export const generateOwnedCppConversions = (ir, { transferredInputs = false, anc
 	const header = ["#pragma once", `#include "${p}-values.hpp"`
 		, "#include <climits>", "#include <cstring>", "#include <iterator>"
 		, `namespace lean_bridge::${p}::detail {`
-		, support(p, c.native.model.limits, c.nodes.some(node => node.integer), c.functions.some(item => item.anchor !== undefined))
+		, support(p, c.native.model.limits, c.nodes.some(node => node.integer), [...c.functions, ...c.callbacks].some(item => item.anchor !== undefined))
 		, ...declarations, ...structures, ...implementations, "}", ""].join("\n");
 	return { ...values, valuesHeader: values.header, header };
 };

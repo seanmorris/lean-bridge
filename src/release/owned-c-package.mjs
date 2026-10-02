@@ -32,7 +32,7 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	if(!["c", "cpp"].includes(target)) throw new TypeError("Owned native packaging requires c or cpp");
 	validateNativeCSettings(settings);
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: target === "c" });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
 	if(!model.ownedGraph) throw new TypeError("Owned C packaging requires a v4 native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
@@ -40,10 +40,12 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
-	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
-	const p = generated.values.prefix, adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
-	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }) : null;
-	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks && !receiverExports) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
+	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
+	const valueCopies = Boolean(adapter.cppValues) && callbackResultAnchors;
+	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const p = generated.values.prefix;
+	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
+	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
 		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== (callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity
@@ -154,7 +156,7 @@ owner specified by the author; they never create an implicit retained anchor.
 Resource-containing results use Value<T> even without borrowed-result exports.
 retain() or copy_value creates an independent owner; close() releases a copy.
 ` : ""}
-${anchoredResults ? `Functions returning resource-containing values use Value<T>, including empty
+${anchoredResults || callbackResultAnchors ? `Functions returning resource-containing values use Value<T>, including empty
 containers. get(), operator* and operator-> check the complete result lifetime.
 Copies of Value<T> share immutable storage and its original owner. close() drops
 one such reference. retain() or copy_value(value) creates independent ownership;
@@ -166,7 +168,16 @@ the result and every borrowed descendant. A borrowed result does not retain its
 anchor. Resource equality compares canonical identity across different views.
 Use get() again to validate access; a previously obtained C++ reference does not
 perform further checks by itself. Resource leaves still validate their own use.
-` : "Copied container storage is independent; its resource leaves retain their leases."}${transferredInputs ? anchoredResults || receiverExports ? `
+` : "Copied container storage is independent; its resource leaves retain their leases."}${callbackResultAnchors ? `
+Returned closures use callback-local parameter numbering, excluding the closure
+itself. An anchored callback result borrows the selected argument's original owner,
+not the closure's captured owner. Pass Value<T> for the selected argument. Releasing
+or transferring that owner expires the result and every descendant, including empty
+containers. retain() or copy_value creates an independent owner before expiration.
+${hostCallbacks ? `Host callbacks may return the exact raw result type or Value<T>. The bridge
+validates and copies the reply before its callback borrow frame expires. Recovery
+values follow the same rule. A Value<T> reply with an expired owner is rejected.
+` : ""}` : ""}${transferredInputs ? anchoredResults || receiverExports || callbackResultAnchors ? `
 
 Transferred inputs take Value<T>&&. Pass std::move(value) after constructing an
 owner with a Lean call or copy_value. The original owner is consumed, not a copied
@@ -187,7 +198,7 @@ first. Failures before handoff preserve the input leases; failures after handoff
 leave them consumed. Copied fields remain ordinary C++ values.
 ` : ""}
 
-Typed lambdas and function objects are call-scoped callbacks. Borrowed callback
+${callbackResultAnchors && !hostCallbacks ? "" : `Typed lambdas and function objects are call-scoped callbacks. Borrowed callback
 resource arguments expire on return, including copies of those wrappers. Call
 retain() inside the callback to keep a resource. Reply storage is copied into an
 owning C result before callback locals die. Original callback exceptions are
@@ -197,6 +208,7 @@ Factories that cannot derive a failure-path value require
 with_recovery(callback, typedValue); failures never publish it as successful output.
 Returned Lean closures support function-call syntax and retain(). A closure that
 captures a borrowed host callback cannot invoke that callback after the borrow ends.
+`}
 
 Input, callback and result conversions share per-call depth128,262144-visit and
 16MiB native/storage budgets. C/native conversion limits also apply; these do not

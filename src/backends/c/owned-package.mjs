@@ -41,6 +41,7 @@ export const generateOwnedCPackage = (options, backend = null) => {
 	}) : options.publicPrefix;
 	const values = generateOwnedCValues(generated.layout.model.bindingIr, {
 		hostCallbacks: options.hostCallbacks
+		, valueCopies: options.valueCopies
 		, publicPrefix
 		, transferredInputs: options.transferredInputs
 		, anchoredResults: options.anchoredResults

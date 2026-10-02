@@ -24,6 +24,7 @@ const nominal = name => {
  * @param ir - Explicit v4 ownership contract.
  * @param options - Explicit transport capabilities.
  * @param options.hostCallbacks - Admit call-scoped host descriptors and copies.
+ * @param options.valueCopies - Expose value copies without admitting host callbacks.
  * @param options.publicPrefix - Internal backend namespace, independent of Lean identity.
  * @param options.transferredInputs - Admit explicit consumption of input owners.
  * @param options.anchoredResults - Preserve owner-scoped result views.
@@ -31,7 +32,7 @@ const nominal = name => {
  * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.identityEquality - Expose checked canonical identity comparison without result anchors.
  */
-export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, identityEquality = false } = {}) => {
+export const generateOwnedCValues = (ir, { hostCallbacks = false, valueCopies = false, publicPrefix, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, identityEquality = false } = {}) => {
 	const native = compileOwnedNativeValueLayout(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const hasAnchors = [...native.functions, ...native.callbacks].some(item => item.anchor !== undefined);
 	const hasEquality = hasAnchors || identityEquality;
@@ -64,7 +65,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 			claim(`${name}_host`, node.id);
 			claim(`${name.toUpperCase()}_REQUIRES_RECOVERY`, node.id);
 		}
-		if(hostCallbacks && !identity) claim(node.kind === "primitive" ? `${p}_scalar_${node.name}_copy` : `${name}_copy`, node.id);
+		if((hostCallbacks || valueCopies) && !identity) claim(node.kind === "primitive" ? `${p}_scalar_${node.name}_copy` : `${name}_copy`, node.id);
 		const fields = items => {
 			const members = new Set();
 			return items.map(field => {
@@ -239,7 +240,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 	for(const item of retains) header.push(signature(item) + ";");
 	if(hasEquality) for(const node of nodes.filter(node => node.identity))
 		header.push(`${p}_status ${node.cName}_equal(${p}_session *session, ${node.cName} left, ${node.cName} right, bool *out);`);
-	const copies = hostCallbacks ? nodes.filter(node => !node.identity).map(node => ({
+	const copies = hostCallbacks || valueCopies ? nodes.filter(node => !node.identity).map(node => ({
 		id: node.id
 		, cName: node.kind === "primitive" ? `${p}_scalar_${node.name}_copy` : `${node.cName}_copy`
 		, parameters: [node.id], result: node.id, copy: true
@@ -248,7 +249,7 @@ export const generateOwnedCValues = (ir, { hostCallbacks = false, publicPrefix, 
 	header.push("#ifdef __cplusplus", "}", "#endif", "");
 	return { native, prefix: p, nodes, functions, callbacks, retains
 		, ...hasAnchors ? { anchoredResults: true } : {}
-		, ...(hostCallbacks ? { copies, hostArgument } : {})
+		, ...(hostCallbacks ? { copies, hostArgument } : valueCopies ? { copies } : {})
 		, aliases: [...aliases].map(([name, id]) => ({ name, id }))
 		, signature, header: header.join("\n") };
 };

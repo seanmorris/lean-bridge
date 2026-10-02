@@ -839,6 +839,7 @@
     "test:owned-cpp-transfers": "LEAN_BRIDGE_OWNED_CPP_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-transfers.test.mjs tests/owned-cpp-transfer-packaging.test.mjs",
     "test:owned-cpp-borrows": "LEAN_BRIDGE_OWNED_CPP_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-borrows.test.mjs tests/owned-cpp-borrow-packaging.test.mjs",
     "test:owned-cpp-receivers": "LEAN_BRIDGE_OWNED_CPP_RECEIVER_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-receivers.test.mjs tests/owned-cpp-receiver-packaging.test.mjs tests/owned-cpp-receiver-plain.test.mjs",
+    "test:owned-cpp-callback-results": "LEAN_BRIDGE_OWNED_CPP_CALLBACK_RESULT_TEST=1 node --test --test-concurrency=1 tests/owned-cpp-callback-results.test.mjs tests/owned-cpp-callback-result-packaging.test.mjs tests/owned-cpp-callback-result-combined-packaging.test.mjs",
     "test:owned-rust-transfers": "LEAN_BRIDGE_OWNED_RUST_TRANSFER_TEST=1 node --test --test-concurrency=1 tests/owned-rust-transfers.test.mjs tests/owned-rust-transfer-packaging.test.mjs",
     "test:owned-rust-borrows": "LEAN_BRIDGE_OWNED_RUST_BORROW_TEST=1 node --test --test-concurrency=1 tests/owned-rust-borrows.test.mjs tests/owned-rust-borrow-packaging.test.mjs",
     "test:owned-rust-receivers": "LEAN_BRIDGE_OWNED_RUST_RECEIVER_TEST=1 node --test --test-concurrency=1 tests/owned-rust-receivers.test.mjs tests/owned-rust-receiver-packaging.test.mjs tests/owned-rust-receiver-plain.test.mjs",
