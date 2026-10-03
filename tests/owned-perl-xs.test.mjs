@@ -27,8 +27,13 @@ import "./helpers/owned-perl-callback-result-runtime-evidence-tests.mjs";
 import "./helpers/owned-perl-callback-result-fault-evidence-tests.mjs";
 import "./helpers/owned-perl-callback-result-lifetime-evidence-tests.mjs";
 import "./helpers/owned-perl-callback-result-mutant-evidence-tests.mjs";
+import "./helpers/owned-perl-callback-result-sanitizer-evidence-tests.mjs";
+import "./helpers/owned-perl-callback-result-package-evidence-tests.mjs";
+import "./helpers/owned-perl-callback-result-combined-evidence-tests.mjs";
 import "./helpers/owned-perl-callback-result-installed-smoke.mjs";
 import "./helpers/owned-perl-callback-result-history-tests.mjs";
+import "./helpers/owned-perl-callback-result-ci-tests.mjs";
+import "./helpers/owned-perl-callback-result-acceptance-tests.mjs";
 
 const fixtures = {
 	callbacks: ownedHostCallbackReviewedIr

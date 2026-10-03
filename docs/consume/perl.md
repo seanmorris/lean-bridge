@@ -572,8 +572,33 @@ preserve the owners of empty containers and `None`.
 Consuming parameters in these packages take whole `Value` owners and consume
 their original native slots. Shared owners and borrowed descendants expire
 together. Independently retained owners survive. A borrowed result must be
-retained before it can be consumed. Packages without borrowed results or receiver
-exports keep the ordinary-value API described above.
+retained before it can be consumed. Packages without borrowed results, receiver
+exports, or callback-result anchors keep the ordinary-value API described above.
+
+### Callback-result owners
+
+A returned Lean closure can declare that its result borrows one of its call
+arguments. Pass a whole `Value` owner at that argument position. The result and
+its descendants expire when the original argument owner closes or transfers,
+even if the closure itself remains open. This applies to empty containers too.
+Call `retain` before that happens to keep an independent result.
+
+The closure's `copy_arg0`, `copy_arg1`, and other generated factories make whole
+owners for its resource-containing arguments. The numbers refer to the closure's
+visible arguments, starting at zero; they do not count the closure itself.
+`copy_result` makes an independent owner for its result type. These factories
+also handle container types that have no named Perl class.
+
+Host callbacks in these packages can return the declared raw Perl value or a
+whole result owner. The bridge checks and copies the reply before the callback's
+borrowed arguments expire. Recovery values use the same rule. An already-closed
+owner is rejected, and a returned native closure keeps its identity when passed
+back to Lean.
+
+The [Perl callback-result evidence](../evidence/owned-perl-callback-results-20261003.md)
+records direct-runtime checks and installed combined-capability CPAN packages.
+Native-only and host-only installed variants remain to be validated. This
+receipt does not promote the versioned type-conversion table below.
 
 ### Methods and properties
 

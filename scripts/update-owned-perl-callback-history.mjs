@@ -21,8 +21,10 @@ const completedPredecessor = {
 	, sha256: "ce3855e16ac23fed6c437def1c09a9c27c7c3ac54c2d3298141bad60c78d3310"
 };
 const allowed = new Set([
-	"config/checked-javascript.json", "config/cli-package.v1.json"
+	".github/workflows/consumer-matrix.yml"
+	, "config/checked-javascript.json", "config/cli-package.v1.json"
 	, "docs/type-surface.v1.json", "nix/perl-engine-source-boundary.json"
+	, "docs/consume/perl.md"
 	, "package.json"
 	, "src/backends/perl/owned-borrows.mjs", "src/backends/perl/owned-values.mjs"
 	, "src/backends/perl/owned-xs.mjs"
@@ -44,6 +46,7 @@ const allowed = new Set([
 const added = new Set([
 	historyPath, helperPath, "scripts/update-owned-perl-callback-history.mjs"
 	, "docs/evidence/owned-perl-callback-results-20261003.md"
+	, "docs/evidence/owned-perl-callback-results-20261003.json"
 	, "src/backends/perl/owned-callback-arguments.mjs"
 	, "src/backends/perl/BuildCallbackResults.pm"
 	, "src/backends/perl/owned-callback-build.mjs"
@@ -68,6 +71,13 @@ const added = new Set([
 	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence-tests.mjs"
 	, "tests/helpers/owned-perl-callback-result-package-evidence.mjs"
 	, "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-ci.mjs"
+	, "tests/helpers/owned-perl-callback-result-ci-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-combined-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-combined-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-acceptance.mjs"
+	, "tests/helpers/owned-perl-callback-result-acceptance-tests.mjs"
+	, "scripts/record-owned-perl-callback-results.mjs"
 	, "tests/fixtures/structured-types/owned-perl-callback-results-installed.pl"
 	, "tests/fixtures/structured-types/owned-perl-callback-result-faults.pl"
 	, "tests/fixtures/structured-types/owned-perl-callback-result-lifetime.pl"

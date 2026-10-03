@@ -74,11 +74,18 @@ const fixture = {
  *
  * @param item - Original eight-target release report after producer removal.
  * @param readSource - Current source reader, or authenticated frozen source bytes.
+ * @param options - Explicit CPAN participation and independent-build requirement.
  */
-export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = readFile) => {
+export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = readFile, options = {}) => {
+	const { cpan = false, independentRebuild = true } = options;
+	assert.equal(typeof cpan, "boolean"); assert.equal(typeof independentRebuild, "boolean");
+	assert.equal(item.independentProducerBuild, independentRebuild);
+	if(!independentRebuild)
+		for(const field of ["independentBuild", "independentPackageSetReceipt"])
+			assert.equal(Object.hasOwn(item, field), false, field);
 	assert.ok(["ordinary", "reviewed"].includes(item.mode));
 	const readCli = report => cli(report, readSource);
-	await assertOwnedRubyCallbackCombinedRelease(item, item.mode, ["nuget", "maven"], { ...fixture, cli: readCli });
+	await assertOwnedRubyCallbackCombinedRelease(item, item.mode, ["nuget", "maven", ...cpan ? ["cpan", "cpan"] : []], { ...fixture, cli: readCli });
 	assert.equal(await readCli(item.cli), item.compilerInputsIdentity);
 	for(const name of ["main.mjs", "main.wasm"])
 		assert.equal(item.cli.files.find(file => file.path === `runtime/wasm/${name}`).sha256, item.inventory[`@lean-bridge/runtime/internal/${name}`].sha256);
@@ -91,6 +98,7 @@ export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = r
 		, npm: { name: `@owned/${item.mode}-callback-combinations`, version: "1.2.3" }
 		, nuget: { name: "Owned.CallbackResults", version: "1.2.3" }
 		, maven: { name: "org.leanbridge:owned-callback-results", version: "1.2.3" }
+		, ...cpan ? { cpan: { module: "LeanBridge::OwnedProbe", version: "0.010" } } : {}
 	};
 	const shared = { schemaVersion: 1, planNode: 1219, mode: item.mode
 		, combined: true, input: item.nativeInput
@@ -108,9 +116,12 @@ export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = r
 	const jvm = { ...shared, ...item.installedJvm };
 	const { model, projection, libraries, pom } = await assertOwnedJvmCallbackPackageInputs(jvm, targets);
 	assert.deepEqual(model, item.native.model);
-	validatePackageSetReceipt(item.receipt); validatePackageSetReceipt(item.independentPackageSetReceipt);
-	assert.equal(item.independentProducerBuild, true);
-	assert.deepEqual(item.independentPackageSetReceipt, item.receipt);
+	validatePackageSetReceipt(item.receipt);
+	if(independentRebuild)
+	{
+		validatePackageSetReceipt(item.independentPackageSetReceipt);
+		assert.deepEqual(item.independentPackageSetReceipt, item.receipt);
+	}
 	assert.deepEqual(item.receipt.component, model.component);
 	assert.deepEqual(item.receipt.profiles.map(profile => profile.id), ["javascript-wasm-owned-v1", "native-library-v1"]);
 	for(const profile of item.receipt.profiles)
@@ -130,7 +141,7 @@ export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = r
 	const nuget = item.receipt.packages.filter(pkg => pkg.target === "nuget");
 	assert.equal(nuget.length, 1); assert.equal(nuget[0].name, dotnet.manifest.name);
 	assert.equal(nuget[0].version, dotnet.manifest.version); assert.equal(nuget[0].runtimeIdentity, dotnet.manifest.runtimeIdentity);
-	for(const build of [item.built, item.independentBuild])
+	for(const build of [item.built, ...independentRebuild ? [item.independentBuild] : []])
 	{
 		assert.equal(build.status, "ok"); assert.equal(build.exitCode, 0); assert.deepEqual(build.diagnostics, []);
 		assert.equal(build.result.kind, "lean-bridge-multi-profile-release"); assert.equal(build.result.schemaVersion, 2);
@@ -152,8 +163,12 @@ export const assertOwnedJvmCallbackCombinedRelease = async (item, readSource = r
 		for(const file of archives)
 			assert.equal(file.sha256, item.receipt.packages.flatMap(value => value.artifacts).find(value => value.path === file.path).sha256);
 	}
-	const { output: firstOutput, ...first } = item.built.result;
-	const { output: secondOutput, ...second } = item.independentBuild.result;
-	assert.notEqual(firstOutput, secondOutput); assert.deepEqual(first, second);
+	if(independentRebuild)
+	{
+		const { output: firstOutput, ...first } = item.built.result;
+		const { output: secondOutput, ...second } = item.independentBuild.result;
+		assert.notEqual(firstOutput, secondOutput); assert.deepEqual(first, second);
+	}
 	await assertOwnedJvmCallbackInstalledExecution(jvm, projection, libraries, pkg);
+	return { model, targets };
 };

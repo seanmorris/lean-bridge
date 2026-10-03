@@ -473,6 +473,150 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  owned-perl-callback-results:
+    name: Callback-result lifetimes in installed CPAN packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    env:
+      EMCC_CORES: "2"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Select Java 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22.0.2'
+      - name: Select Python 3.11 for backported type aliases
+        id: perl_callback_python311
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Select Python 3.12 for standard-library type aliases
+        id: perl_callback_python312
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Select Ruby 3.3
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Select .NET 8 SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.424'
+      - name: Install native tools, Maven, Lean and Kotlin
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 maven pkg-config python3-venv ripgrep unzip zstd
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/bootstrap-toolchains.sh
+          bash scripts/bootstrap-rust-ci.sh
+          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.6.0 typing_extensions==4.6.0
+          python3 -m pip download --no-cache-dir --only-binary=:all: --no-deps --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
+          python3 -m venv build/python-collection-typecheck
+          build/python-collection-typecheck/bin/python -m pip install --no-cache-dir mypy==2.3.1 typing_extensions==4.16.0 mypy_extensions==1.1.0 pathspec==1.1.1 librt==0.15.0 ast-serialize==0.11.2
+          mkdir -p build
+          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+      - name: Restore the four checksummed Perl ABIs
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl
+          key: perl-callback-abis-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Build every pinned Perl ABI
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/build-perl-toolchains.mjs 5.36.3 threaded
+          node scripts/build-perl-toolchains.mjs 5.36.3 unthreaded
+          node scripts/build-perl-toolchains.mjs 5.38.2 threaded
+          node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded
+      - name: Install all callback browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Build the callback shared runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          bash scripts/build-lean-link-spike.sh 2>&1 | tee build/owned-perl-callback-result-runtime.log
+          test -s build/lean-link-spike/lazy/main.wasm
+      - name: Verify Perl callback-result lifetimes and installed consumers
+        shell: bash
+        env:
+          LEAN_BRIDGE_PYTHON: ${{ steps.perl_callback_python311.outputs.python-path }}
+          LEAN_BRIDGE_COLLECTION_PYTHONS: '["${{ steps.perl_callback_python311.outputs.python-path }}", "${{ steps.perl_callback_python312.outputs.python-path }}"]'
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+          export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+          export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+          export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+          export LEAN_BRIDGE_DOTNET="$(command -v dotnet)"
+          export LEAN_BRIDGE_RUBY="$(command -v ruby)"
+          export LEAN_BRIDGE_GEM="$(command -v gem)"
+          npm run test:owned-perl-callback-results 2>&1 | tee build/owned-perl-callback-results.log
+          rg '^# tests 37$' build/owned-perl-callback-results.log
+          rg '^# pass 37$' build/owned-perl-callback-results.log
+          rg '^# fail 0$' build/owned-perl-callback-results.log
+          rg '^# cancelled 0$' build/owned-perl-callback-results.log
+          rg '^# skipped 0$' build/owned-perl-callback-results.log
+          test -s build/owned-perl-callback-results/ordinary-no-host.json
+          test -s build/owned-perl-callback-results/ordinary-host.json
+          test -s build/owned-perl-callback-results/ordinary-combined.json
+          test -s build/owned-perl-callback-results/ordinary-combined-package.json
+          test -s build/owned-perl-callback-results/ordinary-combined-release.json
+          test -s build/owned-perl-callback-results/reviewed-no-host.json
+          test -s build/owned-perl-callback-results/reviewed-host.json
+          test -s build/owned-perl-callback-results/reviewed-combined.json
+          test -s build/owned-perl-callback-results/reviewed-combined-package.json
+          test -s build/owned-perl-callback-results/reviewed-combined-release.json
+          test -s build/owned-perl-callback-result-faults/ordinary.json
+          test -s build/owned-perl-callback-result-faults/reviewed.json
+          test -s build/owned-perl-callback-result-lifetime/ordinary.json
+          test -s build/owned-perl-callback-result-lifetime/reviewed.json
+          test -s build/owned-perl-callback-result-mutants/ordinary.json
+          test -s build/owned-perl-callback-result-mutants/reviewed.json
+          test -s build/owned-perl-callback-result-sanitizers/ordinary.json
+          test -s build/owned-perl-callback-result-sanitizers/reviewed.json
+      - name: Reconstruct Perl callback execution evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run test:owned-perl-callback-evidence 2>&1 | tee build/owned-perl-callback-evidence.log
+          rg '^# tests 14$' build/owned-perl-callback-evidence.log
+          rg '^# pass 14$' build/owned-perl-callback-evidence.log
+          rg '^# fail 0$' build/owned-perl-callback-evidence.log
+          rg '^# cancelled 0$' build/owned-perl-callback-evidence.log
+          rg '^# skipped 0$' build/owned-perl-callback-evidence.log
+      - name: Preserve Perl callback-result acceptance
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: perl-callback-results-${{ github.sha }}
+          path: |
+            build/owned-perl-callback-results/
+            build/owned-perl-callback-result-faults/
+            build/owned-perl-callback-result-lifetime/
+            build/owned-perl-callback-result-mutants/
+            build/owned-perl-callback-result-sanitizers/
+            build/owned-perl-callback-results.log
+            build/owned-perl-callback-evidence.log
+            build/owned-perl-callback-result-runtime.log
+          if-no-files-found: error
+          retention-days: 30
+
   owned-jvm-callback-results:
     name: Callback-result lifetimes in installed Maven packages
     runs-on: ubuntu-24.04
@@ -3494,6 +3638,7 @@ jobs:
       - owned-ruby-callback-results
       - owned-dotnet-callback-results
       - owned-jvm-callback-results
+      - owned-perl-callback-results
       - owned-python-callback-results
       - owned-rust-callback-results
       - owned-callback-results
@@ -3549,6 +3694,9 @@ jobs:
         run: exit 1
       - name: Enforce JVM callback-result acceptance
         if: needs.owned-jvm-callback-results.result != 'success'
+        run: exit 1
+      - name: Enforce Perl callback-result acceptance
+        if: needs.owned-perl-callback-results.result != 'success'
         run: exit 1
       - name: Enforce Python callback-result acceptance
         if: needs.owned-python-callback-results.result != 'success'

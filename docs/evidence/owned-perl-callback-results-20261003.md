@@ -1,4 +1,4 @@
-# Staged Perl callback-result ownership
+# Perl callback-result ownership evidence
 
 This stage adds opt-in callback-local result anchors to the Perl ownership
 projection. The selected callback argument remains the original owner of a
@@ -11,7 +11,8 @@ The completed predecessor is JVM callback-result acceptance at commit
 `owned-jvm-callback-results-20261003.json`, SHA-256
 `ce3855e16ac23fed6c437def1c09a9c27c7c3ac54c2d3298141bad60c78d3310`.
 The separate Perl source-history ledger authenticates the current changes against
-that commit. It does not replace the JVM receipt or declare Perl accepted.
+that commit. The frozen Perl receipt records the direct-runtime and combined
+installed-package coverage below; it does not replace the JVM receipt.
 
 ## Executed runtime coverage
 
@@ -32,7 +33,7 @@ source identities, generated-source hashes, probe hash, and original process
 stdout/stderr. Each process reports its actual Perl version and threading mode.
 The evidence verifier reconstructs the six generated C/XS configurations from
 the pinned compiler inputs and rejects 253 altered report or matrix claims.
-These direct runtime observations are not a frozen Perl acceptance receipt.
+The receipt keeps these direct-runtime checks separate from installed consumers.
 
 Focused CLI packaging and installation, filtered Perl engine import closure,
 checked-JavaScript disposition, and strict typechecking passed after registering
@@ -120,8 +121,8 @@ The consumer exercises native and host callbacks, callback order, whole replies
 and recovery, transitive expiry, independent retains, and consuming receiver
 preflight. It uses no private cleanup counters. The saved report binds the
 original CLI, package receipts, and final consumer executions. This is a
-single-producer smoke test; independent rebuilds and XS compilation during
-consumer installation remain separate requirements.
+single-producer smoke test. The complete matrix below adds independent rebuilds
+and XS compilation during consumer installation.
 
 ## Complete CPAN installation matrix
 
@@ -141,6 +142,26 @@ allocation counters. The original reports are
 `{ordinary,reviewed}-combined-package.json` under
 `build/owned-perl-callback-results/`.
 
+## Shared release
+
+Both source paths passed a shared release targeting C, C++, Rust, Python, Ruby,
+.NET, Java/Kotlin, JavaScript, and Perl. Each release contains 11 packages and
+12 archives for nine publishing targets. The installed consumers share the same
+native and WebAssembly producer outputs. JavaScript also ran in Chromium,
+Firefox, and WebKit pages, React, and workers.
+
+Across both releases, Perl passed another 16 installations, 32 relocated public
+executions, and 96 cold/warm asset-rejection cases. The reports retain 42 direct
+raw commands per source path, the Perl installer and consumer outputs, and the
+peer consumers' observations. These shared releases did not repeat the producer
+build; the independent CPAN builds are the separate matrix above.
+
+The runner removed the author project and producer tools before consumption.
+Original archives remain saved outside temporary storage. After verifying those
+copies, the run removed unused non-Maven archives from private JVM handoffs and
+one completed Rust executable to recover disk space. Maven inputs and recorded
+observations stayed intact.
+
 ## Address and undefined-behavior checks
 
 Both source paths passed on all four Perl ABIs with the generated C adapter,
@@ -152,24 +173,52 @@ six zero cleanup counters.
 
 Prebuilt Perl, its standard XS modules, the Lean runtime, and GMP were not
 instrumented. These address/undefined-behavior runs disable leak detection.
-The separate strict LSan matrix is not clean: 55 executions report leaks, and
-one reports a tracer failure that makes the detector unavailable. Thirty-nine
+The separate strict LSan matrix is not clean: 54 executions report leaks, and
+two report tracer failures that make the detector unavailable. Thirty-eight
 cold or exercised runs report the same 128 bytes in 12 Lean/GMP allocations;
 16 intentional leak controls add 73 bytes in one allocation. Setting
 `PERL_DESTRUCT_LEVEL=2` removes interpreter arena-exit noise without suppressions.
-The final reports and earlier failed attempts remain archived separately.
+The checker derives each ABI's baseline from its cold run and compares exercised
+runs against it; it does not assume those local allocation counts on other hosts.
+The final reports and earlier attempts remain archived separately.
 
-## Still open
+## CI gate
 
-Shared releases, installed/sanitizer report reconstruction, and frozen Perl
-acceptance remain open. This stage makes no new installed-support claim and
-does not publish a registry package. Existing
-type-surface support cells and completed predecessor receipts remain unchanged;
-only authenticated current-source file hashes are refreshed.
+The downstream workflow now includes a required Perl callback-result job. It
+builds all four pinned Perl ABIs and runs the native probes, both CPAN install
+modes, and the nine-target shared release. The gate requires 37 passing tests,
+zero skips, and all 18 runtime reports. A separate step reconstructs those fresh
+reports and checks their source identities and observed behavior.
+
+The workflow uploads the reports and logs even when execution fails. Its support
+summary fails if the Perl job does not succeed. This wiring has local contract
+tests; the complete new CI job has not run yet.
+
+## Receipt and remaining coverage
+
+The [frozen receipt](owned-perl-callback-results-20261003.json) embeds all 18
+reports as canonical JSON, the eight executed TAP groups containing 37 passing
+tests, and the final 14-test evidence run. All required tests passed without
+skips. The verifiers reject 1,667 altered report, source, execution, and scope
+claims. Source hashes cover the execution and verifier import closure, the Perl
+toolchain builder, and the package lock.
+
+Installed acceptance covers combined-capability packages. Native-only and
+host-only variants have real direct-runtime coverage and synthetic package
+contract checks, but their installed archives remain to be validated. The
+receipt explicitly excludes those installed claims. Separate work will add
+both source paths, four Perl ABIs, and both installation modes for each variant.
+
+This receipt makes no type-surface support-cell promotion and publishes no
+registry package. Completed predecessor receipts remain unchanged; the inventory
+refreshes only authenticated current-source file hashes.
 
 ## Reproduction
 
 ```sh
+npm run test:owned-perl-callback-results
+npm run test:owned-perl-callback-evidence
+
 LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
   --test-name-pattern '^Perl callback-result owners execute real Lean' \
   tests/owned-perl-xs.test.mjs
@@ -207,6 +256,10 @@ node scripts/update-owned-perl-callback-history.mjs
 node --test --test-name-pattern 'Perl callback source history|staged Perl source identities|frozen JVM CLI reports' \
   tests/owned-perl-xs.test.mjs
 ```
+
+The downstream CI job provisions the toolchains for the complete execution
+command. The evidence command validates its fresh reports; it does not rebuild
+or substitute missing executions.
 
 Run the updater only after the reviewed source edits have settled and the
 authentic predecessor evidence files are available. It rejects unreviewed source

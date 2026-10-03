@@ -99,6 +99,25 @@ const checkUnavailableDiagnostic = () => {
 		]) assert.doesNotMatch(unknown, unavailableLsan);
 	}
 };
+// Parse only a complete leak report. Baseline comparison ignores process
+// addresses, not allocation counts, source sites, frame order or extra errors.
+const strictLeakBlocks = diagnostic => {
+	const matched = /^\n={65}\n==[1-9][0-9]*==ERROR: LeakSanitizer: detected memory leaks\n\n([^]+)\n\nSUMMARY: AddressSanitizer: ([1-9][0-9]*) byte\(s\) leaked in ([1-9][0-9]*) allocation\(s\)\.\n$/u.exec(diagnostic);
+	assert.ok(matched, "complete strict LSan diagnostic");
+	const blocks = matched[1].split("\n\n").map(block => {
+		const fields = /^(Direct|Indirect) leak of ([1-9][0-9]*) byte\(s\) in ([1-9][0-9]*) object\(s\) allocated from:\n([^]+)$/u.exec(block);
+		assert.ok(fields, "complete strict LSan allocation");
+		const frames = fields[4].split("\n").map((line, index) => {
+			assert.match(line, new RegExp("^ {4}#" + index + " 0x[0-9a-f]+ in [A-Za-z0-9_]+ [^\\n]+$", "u"));
+			return line.replaceAll(/0x[0-9a-f]+/gu, "<address>");
+		});
+		return { kind: fields[1], bytes: Number(fields[2])
+			, allocations: Number(fields[3]), frames };
+	});
+	assert.equal(blocks.reduce((sum, block) => sum + block.bytes, 0), Number(matched[2]));
+	assert.equal(blocks.reduce((sum, block) => sum + block.allocations, 0), Number(matched[3]));
+	return blocks;
+};
 
 for(const mode of ["ordinary", "reviewed"])
 test(`Perl callback-result ASan and UBSan instrument actual C and XS (${mode})`, {
@@ -274,6 +293,20 @@ $builder->link(objects => [$object], module_name => 'LeanBridge::OwnedProbe',
 		}
 		// These are deliberately NOT clean sanitizer executions. Keep their real
 		// failure status and exact diagnostics, including the upstream baseline.
+		const cold = observation.strictLeakExecutions[0];
+		assert.equal(cold.leakStatus, "not-clean", "cold LSan detector unavailable: cannot invent a per-ABI baseline");
+		const baseline = strictLeakBlocks(cold.execution.stderr);
+		for(const block of baseline)
+		{
+			assert.equal(block.kind, "Direct"); assert.equal(block.frames.length, 2);
+			assert.match(block.frames[0], / in __interceptor_malloc /u);
+			assert.ok(block.frames[1].includes(` in __gmp_default_allocate (${compiled.directory}/runtime/lib/libleanshared.so+`));
+		}
+		const observedBaseline = {
+			bytes: baseline.reduce((sum, block) => sum + block.bytes, 0)
+			, allocations: baseline.reduce((sum, block) => sum + block.allocations, 0)
+			, source: "prebuilt Lean/GMP"
+		};
 		for(const item of observation.strictLeakExecutions)
 		{
 			assert.equal(item.execution.code, 23, item.execution.stderr);
@@ -282,15 +315,21 @@ $builder->link(objects => [$object], module_name => 'LeanBridge::OwnedProbe',
 				assert.match(item.execution.stderr, unavailableLsan);
 				continue; // No allocation-baseline equality or leak result is claimed.
 			}
-			assert.match(item.execution.stderr, /Direct leak of 128 byte\(s\) in 12 object\(s\)/u);
-			assert.match(item.execution.stderr, /__gmp_default_allocate.*libleanshared\.so/u);
-			item.observedBaseline = { bytes: 128, allocations: 12, source: "prebuilt Lean/GMP" };
+			const blocks = strictLeakBlocks(item.execution.stderr);
+			item.observedBaseline = observedBaseline;
 			if(item.variant.endsWith("-leak"))
 			{
-				assert.match(item.execution.stderr, /Direct leak of 73 byte\(s\) in 1 object\(s\)/u);
-				assert.match(item.execution.stderr, /^SUMMARY: AddressSanitizer: 201 byte\(s\) leaked in 13 allocation\(s\)\.$/mu);
+				const name = item.variant === "native-leak" ? "sanitizer_native_leak" : "XS_LeanBridge__OwnedProbe_sanitizer_xs_leak";
+				const file = item.variant === "native-leak" ? "sanitized/public-api.c" : "sanitized/Probe.xs";
+				const needle = item.variant === "native-leak" ? "void sanitizer_native_leak(void) {" : "sanitizer_xs_allocate(73);";
+				const lines = report.sources[file].source.split("\n").flatMap((line, index) => line.includes(needle) ? [index + 1] : []);
+				assert.equal(lines.length, 1);
+				const control = blocks.filter(block => block.frames.some(frame => frame.endsWith(` in ${name} ${file}:${lines[0]}`)));
+				assert.equal(control.length, 1); assert.equal(control[0].kind, "Direct");
+				assert.equal(control[0].bytes, 73); assert.equal(control[0].allocations, 1);
+				assert.deepEqual(blocks.filter(block => !control.includes(block)), baseline);
 			}
-			else assert.match(item.execution.stderr, /^SUMMARY: AddressSanitizer: 128 byte\(s\) leaked in 12 allocation\(s\)\.$/mu);
+			else assert.deepEqual(blocks, baseline);
 		}
 		await saveReport();
 		const unavailable = observation.strictLeakExecutions.filter(item => item.leakStatus === "detector-unavailable").length;
