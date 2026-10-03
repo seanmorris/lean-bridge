@@ -429,6 +429,7 @@ const profileManifest = Object.freeze({
 		, "wit-owned-receiver-resource", "wit-owned-receiver-packaging"
 		, "wit-owned-receiver-resource-packaging", "wit-owned-receiver-ci"
 		, "wit-owned-receiver-evidence"
+		, "wit-owned-callback-results", "wit-owned-callback-result-runtime"
 		, "owned-transfer-c-evidence"
 		, "wit-recursive-callable-model"
 		, "wit-recursive-callable-host"
