@@ -9,7 +9,8 @@ import { join } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { assertOwnedPerlCallbackSanitizers, assertOwnedPerlCallbackSanitizerMatrix
-	, ownedPerlCallbackSanitizerReports, isOwnedPerlCallbackLsanUnavailable } from "./owned-perl-callback-result-sanitizer-evidence.mjs";
+	, ownedPerlCallbackSanitizerReports, isOwnedPerlCallbackLsanUnavailable
+	, isOwnedPerlBinaryOffsetLocation } from "./owned-perl-callback-result-sanitizer-evidence.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_EVIDENCE_TEST === "1";
 const directory = process.env.LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_SANITIZER_REPORTS ?? "build/owned-perl-callback-result-sanitizers";
@@ -34,6 +35,15 @@ const syncCommands = item => {
 const fixMessage = record => {
 	if(record.execution.code !== 0)
 		record.execution.message = `Command failed: ${record.command} ${record.args.join(" ")}\n${record.execution.stderr}`;
+};
+const shadowStride = (record, stride, mixed = false) => {
+	let base, index = 0;
+	record.execution.stderr = record.execution.stderr.replaceAll(/^([ ]{2}|=>)(0x[0-9a-f]+): /gmu, (_, prefix, address) => {
+		base ??= BigInt(address);
+		const offset = BigInt(index++) * stride + (mixed && index > 6 ? 16n : 0n);
+		return `${prefix}0x${(base + offset).toString(16)}: `;
+	});
+	assert.equal(index, 11, "synthetic fixture rewrites every ASan shadow row");
 };
 const executionChange = (variant, change, strict = false) => item => {
 	const observation = strict ? item.observations.find(observation => observation.strictLeakExecutions
@@ -128,6 +138,41 @@ test("Perl callback sanitizer evidence reconstructs scoped address/UB and separa
 		}
 	}
 	await assertOwnedPerlCallbackSanitizerMatrix(publicAllocator);
+	const modernAsanReports = structuredClone(original), buildId = "1".repeat(40);
+	for(const item of Object.values(modernAsanReports))
+	{
+		for(const observation of item.observations)
+		{
+			const records = [observation.coldPerlDefault, observation.coldPerlFull
+				, ...observation.executions, ...observation.strictLeakExecutions];
+			for(const record of records)
+			{
+				record.execution.stderr = record.execution.stderr.replaceAll(/(\([^\n)]+\/bin\/perl\+0x[0-9a-f]+\))(?! \(BuildId:)/gu
+					, `$1 (BuildId: ${buildId})`)
+					.replaceAll("7 bytes to the right of 1-byte region", "7 bytes after 1-byte region");
+				fixMessage(record);
+			}
+			syncCommands(item);
+		}
+	}
+	await assertOwnedPerlCallbackSanitizerMatrix(modernAsanReports);
+	for(const stride of [16n, 128n])
+	{
+		const shadowReports = structuredClone(original);
+		for(const item of Object.values(shadowReports))
+		{
+			for(const observation of item.observations)
+				for(const record of observation.executions.filter(record => record.variant.endsWith("-address")))
+				{ shadowStride(record, stride); fixMessage(record); }
+			syncCommands(item);
+		}
+		await assertOwnedPerlCallbackSanitizerMatrix(shadowReports);
+	}
+	const perl = "/opt/perl/bin/perl", offset = `(${perl}+0xf66d3)`;
+	assert.equal(isOwnedPerlBinaryOffsetLocation(offset, perl), true);
+	assert.equal(isOwnedPerlBinaryOffsetLocation(`${offset} (BuildId: ${buildId})`, perl), true);
+	assert.equal(isOwnedPerlBinaryOffsetLocation(`${offset} (BuildId: short)`, perl), false);
+	assert.equal(isOwnedPerlBinaryOffsetLocation(`(/other/perl+0xf66d3) (BuildId: ${buildId})`, perl), false);
 	assert.equal(canonicalJson(original), before, "original reports remain byte-equivalent JSON; no diagnostic rewriting");
 });
 
@@ -201,6 +246,10 @@ test("Perl callback sanitizer evidence rejects forged source, execution, cleanup
 		, ["lifetime probe path", observedChange("process-reentry", value => { value.errors[0].error = value.errors[0].error.replace("./lifetime.pl", "consumer.pl"); })]
 		, ["lifetime reply pin", observedChange("process-reentry", value => { value.events.replyPin.after[1]--; })]
 		, ["shutdown pin", observedChange("reentrant-shutdown", value => { value.events.shutdownDuringCallback.after[1] = 0; })]
+		, ...["native-address", "xs-address"].flatMap(variant => [
+			[variant + " unsupported shadow stride", executionChange(variant, record => shadowStride(record, 32n))]
+			, [variant + " mixed shadow stride", executionChange(variant, record => shadowStride(record, 128n, true))]
+		])
 		, ...["native-address", "xs-address", "native-undefined", "xs-undefined"].flatMap(variant => [
 			[variant + " detector silent", executionChange(variant, record => { record.execution.stderr = ""; })]
 			, [variant + " detector exit", executionChange(variant, record => { record.execution.code = 9; })]

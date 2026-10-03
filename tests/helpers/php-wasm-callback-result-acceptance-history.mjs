@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
-export const phpWasmCallbackResultHistorySha256 = "a2d50018358a40d1abba436e2b3f9713386b85371ddba446e4d9a49022828ae0";
+export const phpWasmCallbackResultHistorySha256 = "96c7b4161304bfabf137729b5cc240faaa90c0ce74da0922ec261f517b38b172";
 export const phpWasmCallbackResultBaseline = "146cff24d74eabc00a53cbda7cedfea0be7dbb0e";
 export const phpWasmCallbackResultIntegration = "39a82da8a81730db7d576b706011f20ea4a29892";
 export const phpWasmCallbackResultLineage = Object.freeze([
@@ -62,6 +62,7 @@ export const phpWasmCallbackResultIntroducedPaths = Object.freeze([
 ].sort());
 export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	"docs/type-surface.v1.json"
+	, "src/backends/perl/runtime.h"
 	, "src/backends/php/owned-zend-borrows.mjs"
 	, "src/backends/php/owned-zend-callbacks.mjs"
 	, "src/backends/php/owned-zend-model.mjs"
@@ -75,6 +76,10 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	, "tests/helpers/owned-host-evidence.mjs"
 	, "tests/helpers/owned-jvm-package-evidence.mjs"
 	, "tests/helpers/owned-package-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-package-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-variant-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-variant-history-tests.mjs"
 	, "tests/helpers/owned-php-wasm-callback-result-evidence.mjs"
 	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence-tests.mjs"
 	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence.mjs"
@@ -118,6 +123,7 @@ const categories = Object.freeze({
 	, "scripts/record-owned-php-wasm-callback-results.mjs": "recorder"
 	, "src/adoption/test-profiles.mjs": "administrative"
 	, "src/analyze/export-configuration.mjs": "implementation"
+	, "src/backends/perl/runtime.h": "implementation"
 	, "src/backends/php/owned-zend-borrows.mjs": "implementation"
 	, "src/backends/php/owned-zend-callbacks.mjs": "implementation"
 	, "src/backends/php/owned-zend-extension.mjs": "implementation"
@@ -142,6 +148,10 @@ const categories = Object.freeze({
 	, "tests/helpers/owned-host-evidence.mjs": "reader"
 	, "tests/helpers/owned-jvm-package-evidence.mjs": "reader"
 	, "tests/helpers/owned-package-evidence.mjs": "reader"
+	, "tests/helpers/owned-perl-callback-result-package-evidence.mjs": "reader"
+	, "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs": "reader"
+	, "tests/helpers/owned-perl-callback-result-variant-evidence.mjs": "reader"
+	, "tests/helpers/owned-perl-callback-result-variant-history-tests.mjs": "reader"
 	, "tests/helpers/owned-php-wasm-callback-result-evidence.mjs": "reader"
 	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence-tests.mjs": "reader"
 	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence.mjs": "reader"

@@ -94,7 +94,10 @@ test("Perl optional history closes former exclusions and preserves exact stoppin
 		assert.equal(sha256(beforeCopiedFixtureReaders(update.path, current, expected)), expected, update.path);
 	}
 	for(const [path, identity] of Object.entries(history.introducedSources))
-		assert.equal(sha256(beforePerlCallbackVariants(path, await readFile(path), identity.sha256)), identity.sha256);
+	{
+		const source = beforePhpCallbackInstalledStaging(path, await readFile(path), identity.sha256);
+		assert.equal(sha256(beforePerlCallbackVariants(path, source, identity.sha256)), identity.sha256, path);
+	}
 	const inventoryUpdate = history.extensionUpdates.find(value => value.path === "docs/type-surface.v1.json");
 	const inventoryBytes = beforePhpCallbackInstalledStaging(inventoryUpdate.path, await readFile(inventoryUpdate.path), inventoryUpdate.currentSha256);
 	const inventory = JSON.parse(inventoryBytes);

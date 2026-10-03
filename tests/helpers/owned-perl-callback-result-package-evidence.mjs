@@ -24,6 +24,7 @@ const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const compact = value => JSON.stringify(JSON.parse(canonicalJson(value)));
 const roles = ["runtime", "component"];
 const consumer = { checks: 79, phases: { native: 25, host: 23, combined: 29 } };
+const supportedGlibcFloor = /^2\.(?:36|38)$/u;
 export const ownedPerlCallbackPackageReports = Object.freeze(["ordinary", "reviewed"].map(mode => `${mode}-combined-package.json`));
 
 // Captured compiler-source identities, independent of supplied report labels.
@@ -137,6 +138,9 @@ export const assertOwnedPerlCallbackPackageArtifacts = async (item, model, readS
 	const { metadata, sourceIdentity: identity } = item.input;
 	assert.deepEqual(identity, model.sourceIdentity);
 	const { manifest, runtimeManifest: runtime, componentReceipt: component } = item;
+	const glibcMinimumVersion = manifest.glibcMinimumVersion;
+	assert.match(glibcMinimumVersion, supportedGlibcFloor);
+	assert.equal(runtime.glibcMinimumVersion, glibcMinimumVersion);
 	const manifestKeys = [
 		"backend", "distribution", "ecosystem", "files", "glibcMinimumVersion"
 		, "include"
@@ -232,7 +236,7 @@ export const assertOwnedPerlCallbackPackageArtifacts = async (item, model, readS
 			assert.ok(!path.startsWith("/") && !path.split("/").some(part => ["", ".", ".."].includes(part)));
 			digest(value);
 		}
-		assert.equal(pkg.glibcMinimumVersion, "2.36");
+		assert.equal(pkg.glibcMinimumVersion, glibcMinimumVersion);
 		const stem = pkg.module.split("::").at(-1);
 		const prebuilt = ownedPerlReceiverVariants.map(variant => {
 			const abi = abiFor(variant), abiKey = sha256(compact(abi));
@@ -513,6 +517,7 @@ export const assertOwnedPerlCallbackPackageIdentity = async (item, model, readSo
 const assertProducer = async (item, model, readSource) => {
 	const packages = await assertOwnedPerlCallbackPackageIdentity(item, model, readSource);
 	const { manifest, runtimeManifest: runtime, componentReceipt: component } = item;
+	const { glibcMinimumVersion } = manifest;
 	assert.equal(item.cliBuilds.length, 2); assert.equal(item.cliExecutions.length, 2);
 	const root = item.cliExecutions[0].cwd;
 	assert.ok(isAbsolute(root) && !root.split("/").includes(".."));
@@ -529,7 +534,7 @@ const assertProducer = async (item, model, readSource) => {
 			, component: model.component
 			, configurationSha256: model.sourceIdentity.exportConfigurationSha256
 			, ecosystem: "cpan"
-			, glibcMinimumVersion: "2.36"
+			, glibcMinimumVersion
 			, nativeRuntimeIdentity: component.runtimeIdentity
 			, output: join(root, output)
 			, packages

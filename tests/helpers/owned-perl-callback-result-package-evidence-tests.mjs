@@ -108,6 +108,12 @@ test("Perl callback package evidence rejects coordinated producer, receipt and i
 		, ["extra source claim", item => { item.input.acceptance = true; }]
 		, ["manifest extra claim", item => { item.manifest.acceptance = true; }]
 		, ["runtime manifest extra claim", item => { item.runtimeManifest.acceptance = true; }]
+		, ["inconsistent glibc floor", item => {
+			item.runtimeManifest.glibcMinimumVersion = item.manifest.glibcMinimumVersion === "2.36" ? "2.38" : "2.36";
+		}]
+		, ["unsupported glibc floor", item => {
+			item.manifest.glibcMinimumVersion = "2.99"; item.runtimeManifest.glibcMinimumVersion = "2.99";
+		}]
 		, ["packing extra claim", item => { item.runtimeManifest.runtimePacking.authenticated = true; }]
 		, ["packing archive implementation", item => { item.runtimeManifest.runtimePacking.implementationSha256 = "0".repeat(64); }]
 		, ["packing producer version without identity", item => { item.runtimeManifest.runtimePacking.nodeVersion = "24.9.1"; }]

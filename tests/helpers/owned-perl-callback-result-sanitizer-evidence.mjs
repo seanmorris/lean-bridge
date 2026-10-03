@@ -176,6 +176,17 @@ const controlSites = sources => Object.fromEntries([
 	, ["XS_LeanBridge__OwnedProbe_sanitizer_xs_leak", "sanitized/Probe.xs", "sanitizer_xs_allocate(73);"]
 ].map(([name, file, needle]) => [name, sourceSite(sources, file, needle)]));
 const escape = value => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+const binaryOffsetPattern = path => new RegExp("^\\(" + escape(path)
+	+ "\\+0x[0-9a-f]+\\)(?: \\(BuildId: [0-9a-f]{40}\\))?$", "u");
+
+/**
+ * Recognize a path-bound unsymbolized ELF frame with an optional GNU BuildId.
+ *
+ * @param location - Symbolizer location text.
+ * @param path - Exact binary path expected for the frame.
+ */
+export const isOwnedPerlBinaryOffsetLocation = (location, path) => binaryOffsetPattern(path).test(location);
+
 const assertStack = (text, context, allowed = []) => {
 	const frames = text.split("\n").map((line, index) => {
 		const match = /^[ ]{4}#(\d+) 0x[0-9a-f]+ (?:in ([A-Za-z0-9_]+) | )([^\n]+)$/u.exec(line);
@@ -189,7 +200,7 @@ const assertStack = (text, context, allowed = []) => {
 		else if(asanAllocatorName.test(name))
 			assert.equal(isOwnedPerlAsanAllocatorFrame(name, location), true);
 		else if(name === "__gmp_default_allocate")
-			assert.match(location, new RegExp("^\\(" + escape(context.directory + "/runtime/lib/libleanshared.so") + "\\+0x[0-9a-f]+\\)$", "u"));
+			assert.equal(isOwnedPerlBinaryOffsetLocation(location, context.directory + "/runtime/lib/libleanshared.so"), true);
 		else
 		{
 			const perlFunctions = ["Perl_pp_entersub", "Perl_runops_standard"
@@ -197,11 +208,11 @@ const assertStack = (text, context, allowed = []) => {
 				, "Perl_safesyscalloc", "Perl_safesysrealloc", "Perl_my_cxt_init"
 				, "Perl_savepv", "Perl_savepvn"];
 			if(perlFunctions.includes(name))
-				assert.match(location, new RegExp("^\\(" + escape(context.perl) + "\\+0x[0-9a-f]+\\)$", "u"));
+				assert.equal(isOwnedPerlBinaryOffsetLocation(location, context.perl), true);
 			else
 			{
 				assert.ok(["", "__libc_start_main", "__libc_start_call_main"].includes(name), "unknown sanitizer frame: " + name);
-				assert.match(location, /^\((?:\/usr)?\/lib\/x86_64-linux-gnu\/libc\.so\.6\+0x[0-9a-f]+\)$/u);
+				assert.match(location, /^\((?:\/usr)?\/lib\/x86_64-linux-gnu\/libc\.so\.6\+0x[0-9a-f]+\)(?: \(BuildId: [0-9a-f]{40}\))?$/u);
 			}
 		}
 		return name;
@@ -278,7 +289,7 @@ const shadowLegend = `Shadow byte legend (one shadow byte represents 8 applicati
   Right alloca redzone:    cb
 `;
 const assertAddressDiagnostic = (diagnostic, context, variant, name) => {
-	const pattern = /^={65}\n==(?<pid>[1-9][0-9]*)==ERROR: AddressSanitizer: heap-buffer-overflow on address (?<address>0x[0-9a-f]+) at pc 0x[0-9a-f]+ bp 0x[0-9a-f]+ sp 0x[0-9a-f]+\nWRITE of size 1 at \k<address> thread T0\n(?<stack>[^]+?)\n\n\k<address> is located 7 bytes to the right of 1-byte region \[(?<base>0x[0-9a-f]+),(?<end>0x[0-9a-f]+)\)\nallocated by thread T0 here:\n(?<allocated>[^]+?)\n\nSUMMARY: AddressSanitizer: heap-buffer-overflow (?<site>[^\n]+) in (?<name>[^\n]+)\nShadow bytes around the buggy address:\n(?<shadow>[^]+?)\n(?<legend>Shadow byte legend[^]+)\n==\k<pid>==ABORTING\n$/u;
+	const pattern = /^={65}\n==(?<pid>[1-9][0-9]*)==ERROR: AddressSanitizer: heap-buffer-overflow on address (?<address>0x[0-9a-f]+) at pc 0x[0-9a-f]+ bp 0x[0-9a-f]+ sp 0x[0-9a-f]+\nWRITE of size 1 at \k<address> thread T0\n(?<stack>[^]+?)\n\n\k<address> is located 7 bytes (?:to the right of|after) 1-byte region \[(?<base>0x[0-9a-f]+),(?<end>0x[0-9a-f]+)\)\nallocated by thread T0 here:\n(?<allocated>[^]+?)\n\nSUMMARY: AddressSanitizer: heap-buffer-overflow (?<site>[^\n]+) in (?<name>[^\n]+)\nShadow bytes around the buggy address:\n(?<shadow>[^]+?)\n(?<legend>Shadow byte legend[^]+)\n==\k<pid>==ABORTING\n$/u;
 	const match = pattern.exec(diagnostic); assert.ok(match, "complete typed AddressSanitizer control diagnostic");
 	const value = match.groups;
 	assert.equal(BigInt(value.address), BigInt(value.base) + 8n); assert.equal(BigInt(value.end), BigInt(value.base) + 1n);
@@ -287,12 +298,20 @@ const assertAddressDiagnostic = (diagnostic, context, variant, name) => {
 	assert.match(assertStack(value.allocated, context, allowedControlFrames(variant))[0], asanAllocatorName);
 	assert.equal(value.legend + "\n", shadowLegend);
 	const rows = value.shadow.split("\n"); assert.equal(rows.length, 11);
-	let previous;
+	let previous, stride;
 	for(const [index, row] of rows.entries())
 	{
 		const parsed = /^([ ]{2}|=>)(0x[0-9a-f]+): ((?:[0-9a-f]{2}|\[[0-9a-f]{2}\]| )+)$/u.exec(row);
 		assert.ok(parsed, "typed ASan shadow row"); assert.equal(parsed[1], index === 5 ? "=>" : "  ");
-		const address = BigInt(parsed[2]); if(previous !== undefined) assert.equal(address, previous + 16n); previous = address;
+		const address = BigInt(parsed[2]);
+		if(previous !== undefined)
+		{
+			const delta = address - previous;
+			if(stride === undefined)
+			{ assert.ok([16n, 128n].includes(delta), "known ASan shadow label stride"); stride = delta; }
+			else assert.equal(delta, stride);
+		}
+		previous = address;
 		const bytes = parsed[3].match(/\[[0-9a-f]{2}\]|[0-9a-f]{2}/gu); assert.equal(bytes.length, 16);
 		assert.equal(bytes.filter(byte => byte.startsWith("[")).length, index === 5 ? 1 : 0);
 		if(index === 5) assert.ok(bytes.includes("[fa]"));

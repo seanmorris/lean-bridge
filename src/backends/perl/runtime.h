@@ -62,9 +62,11 @@ static inline SV *lbp_field(pTHX_ HV *value, const char *field, I32 length) {
 }
 /* Branches have one payload, even when it is undef. No coercion or inheritance. */
 static inline int lbp_is_branch(SV *value, const char *package) {
-  return SvROK(value) && SvTYPE(SvRV(value)) == SVt_PVHV &&
-    !SvMAGICAL(SvRV(value)) && SvOBJECT(SvRV(value)) &&
-    HvNAME(SvSTASH(SvRV(value))) && strEQ(HvNAME(SvSTASH(SvRV(value))), package);
+  if (!SvROK(value) || SvTYPE(SvRV(value)) != SVt_PVHV ||
+      SvMAGICAL(SvRV(value)) || !SvOBJECT(SvRV(value))) return 0;
+  HV *stash = SvSTASH(SvRV(value));
+  const char *name = stash ? HvNAME(stash) : NULL;
+  return name && strEQ(name, package);
 }
 static inline SV *lbp_branch_value(pTHX_ SV *value, const char *package) {
   if (!lbp_is_branch(value, package)) croak("expected %s", package);

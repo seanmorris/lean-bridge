@@ -98,6 +98,7 @@ const sources = async (mode, variant, item, readSource) => {
 
 const producers = async (item, model, readSource) => {
 	const packages = await assertOwnedPerlCallbackPackageIdentity(item, model, readSource);
+	const { glibcMinimumVersion } = item.manifest;
 	assert.equal(item.producerExecutions.length, 2);
 	const root = item.producerExecutions[0].cwd, node = item.producerExecutions[0].command;
 	absolute(root); absolute(node); assert.ok(["node", "nodejs"].includes(basename(node)));
@@ -116,7 +117,7 @@ const producers = async (item, model, readSource) => {
 			result = { backend: "perl", bindingIrSha256: model.bindingIrSha256
 				, component: model.component
 				, configurationSha256: model.sourceIdentity.exportConfigurationSha256
-				, ecosystem: "cpan", glibcMinimumVersion: "2.36"
+				, ecosystem: "cpan", glibcMinimumVersion
 				, nativeRuntimeIdentity: item.componentReceipt.runtimeIdentity
 				, output, packages, profile: "native-library-v1", project
 				, runtimeIdentity: item.manifest.runtimeIdentity
@@ -126,7 +127,7 @@ const producers = async (item, model, readSource) => {
 			args = [cli, "build", "--project", project, "--target", "cpan", "--output", output, "--json"];
 		} else
 		{
-			result = { backend: "perl", ecosystem: "cpan", glibcMinimumVersion: "2.36"
+			result = { backend: "perl", ecosystem: "cpan", glibcMinimumVersion
 				, packages, runtimeIdentity: item.manifest.runtimeIdentity
 				, targets: ["cpan"] };
 			expected = { status: "ok", producerInterface: "native-build-api", capabilities: capabilities(false), result };
