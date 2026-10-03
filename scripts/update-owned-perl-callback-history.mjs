@@ -26,6 +26,10 @@ const allowed = new Set([
 	, "package.json"
 	, "src/backends/perl/owned-borrows.mjs", "src/backends/perl/owned-values.mjs"
 	, "src/backends/perl/owned-xs.mjs"
+	, "src/backends/perl/owned-package.mjs", "src/adoption/test-profiles.mjs"
+	, "src/build/owned-perl-projection.mjs", "src/build/native-project.mjs"
+	, "src/build/multi-profile-project.mjs", "src/release/cpan-package.mjs"
+	, "src/release/owned-cpan-contract.mjs"
 	, "tests/helpers/copied-fixture-source-history.mjs"
 	, "tests/helpers/owned-jvm-callback-result-history.mjs"
 	, "tests/helpers/owned-jvm-callback-result-acceptance.mjs"
@@ -40,8 +44,12 @@ const added = new Set([
 	historyPath, helperPath, "scripts/update-owned-perl-callback-history.mjs"
 	, "docs/evidence/owned-perl-callback-results-20261003.md"
 	, "src/backends/perl/owned-callback-arguments.mjs"
+	, "src/backends/perl/BuildCallbackResults.pm"
+	, "src/backends/perl/owned-callback-build.mjs"
+	, "tests/owned-perl-callback-result-contract.test.mjs"
+	, "tests/helpers/owned-perl-callback-result-package-fixture.mjs"
 	, "tests/fixtures/structured-types/owned-perl-callback-results.pl"
-	, ...["contract", "factory", "history", "runtime", "xs"]
+	, ...["contract", "factory", "history", "installer", "package", "runtime", "xs"]
 		.map(name => `tests/helpers/owned-perl-callback-result-${name}-tests.mjs`)
 ]);
 const git = args => execFileSync("git", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });

@@ -38,6 +38,33 @@ the new callback-argument module. No native package producer was run for that
 inventory check. Existing generated APIs remain covered by explicit legacy-byte
 regressions when callback-result anchors are absent.
 
+## CPAN contract checks
+
+The producer generates callback-specific owned-v5 policies and forwards the
+capability through native and multi-profile builds. Callback-only packages do
+not require host callbacks, transfers, export anchors, or receiver methods.
+The package verifier reconstructs the compiler-derived model and generated
+sources. It rejects downgraded or stripped summaries using independent binding
+IR and native receipt witnesses.
+
+The v5 component installer extends the existing builder with a separate
+validator. Earlier components and the shared runtime retain the original
+`Build.pm` bytes. Prepared-package verification also requires the exact generated
+installer, even if someone rewrites its mutable file inventory.
+
+Four installer tests passed with no skips on all four pinned Perl ABIs. They
+accepted 16 isolated JSON contracts and 32 compiler-derived contracts, rejected
+768 altered contracts, and confirmed that 32 unchanged legacy readers reject
+v5. The compiler-derived fixtures use synthetic library bytes and never load
+native code. Three JavaScript package tests reconstruct eight capability/source
+configurations, reject 48 altered policies, and reject two rehashed installer
+substitutions. These tests do not claim installed CPAN execution.
+
+The standalone CLI inventory, offline CLI installation, filtered Perl engine
+closure, strict typechecking, and scoped lint pass with the new template and
+renderer included. The callback contract wrapper belongs to the mandatory core
+test profile; the four-ABI installer cases require the opt-in variable below.
+
 ## Still open
 
 Installed CPAN callback packages, independent producer rebuilds, shared releases,
@@ -53,6 +80,9 @@ only authenticated current-source file hashes are refreshed.
 LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
   --test-name-pattern '^Perl callback-result owners execute real Lean' \
   tests/owned-perl-xs.test.mjs
+
+LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
+  tests/owned-perl-callback-result-contract.test.mjs
 
 node scripts/update-owned-perl-callback-history.mjs
 
