@@ -41,6 +41,28 @@ const observedJson = execution => {
 	return value;
 };
 
+/**
+ * Keep the production glibc floor unless a local test host explicitly overrides it.
+ *
+ * @param source - Selected process environment.
+ */
+export const ownedPhpCallbackPackageEnvironment = (source = process.env) => ({
+	PATH: "/usr/bin:/bin", LC_ALL: "C", TZ: "UTC"
+	, CC: "/usr/bin/cc", CXX: "/usr/bin/c++"
+	, LEAN_BRIDGE_LEAN_PREFIX: resolve(source.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
+	, LEAN_BRIDGE_PHP: source.LEAN_BRIDGE_PHP ?? "/usr/bin/php"
+	, LEAN_BRIDGE_COMPOSER: source.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer"
+	, ...(source.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR === undefined ? {}
+		: { LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: source.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR })
+});
+
+test("native PHP callback packages keep the production glibc floor implicit", () => {
+	const production = ownedPhpCallbackPackageEnvironment({});
+	assert.equal(Object.hasOwn(production, "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR"), false);
+	const local = ownedPhpCallbackPackageEnvironment({ LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36" });
+	assert.equal(local.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR, "2.36");
+});
+
 for(const mode of ["ordinary", "reviewed"]) for(const variant of ["no-host", "host", "combined"])
 test(`installed Composer callback-result owners (${mode}, ${variant})`, {
 	skip: process.env.LEAN_BRIDGE_OWNED_PHP_CALLBACK_RESULT_PACKAGE_TEST !== "1"
@@ -52,12 +74,7 @@ test(`installed Composer callback-result owners (${mode}, ${variant})`, {
 	const savedHandoff = await mkdtemp(join(reportRoot, `${mode}-${variant}-handoff-`));
 	const project = join(directory, "source"), author = join(directory, "author"), output = join(directory, "producer");
 	const independent = join(directory, "independent"), consumer = join(directory, "consumer");
-	const environment = { PATH: "/usr/bin:/bin", LC_ALL: "C", TZ: "UTC"
-		, CC: "/usr/bin/cc", CXX: "/usr/bin/c++"
-		, LEAN_BRIDGE_LEAN_PREFIX: resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX ?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2")
-		, LEAN_BRIDGE_PHP: process.env.LEAN_BRIDGE_PHP ?? "/usr/bin/php"
-		, LEAN_BRIDGE_COMPOSER: process.env.LEAN_BRIDGE_COMPOSER ?? "/usr/bin/composer"
-		, LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: process.env.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.36" };
+	const environment = ownedPhpCallbackPackageEnvironment();
 	const report = { schemaVersion: 1
 		, kind: "owned-php-callback-result-installed-observations"
 		, mode, variant, stage: "prepare", savedHandoff, directory

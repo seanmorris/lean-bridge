@@ -90,16 +90,20 @@ test("PHP callback acceptance history preserves the receipt without promoting su
 		, producerRerun: true, registryPublication: false, supportPromotions: 0 });
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
-		assert.equal(sha256(await readFile(path)), identity.currentSha256, path);
+		const source = beforePhpCallbackAcceptance(path
+			, await readFile(path), identity.currentSha256);
+		assert.equal(sha256(source), identity.currentSha256, path);
 		const sourceUpdate = [...history.readerUpdates, ...history.updates]
 			.find(value => value.path === path);
 		assert.equal(identity.integrationSha256
 			, sourceUpdate?.previousSha256 ?? identity.currentSha256, path);
 	}
 	const update = history.updates.find(value => value.path === "docs/type-surface.v1.json");
-	const current = JSON.parse(await readFile(update.path, "utf8"));
+	const currentSource = beforePhpCallbackAcceptance(update.path
+		, await readFile(update.path, "utf8"), update.currentSha256);
+	const current = JSON.parse(currentSource);
 	const previous = JSON.parse(beforePhpCallbackAcceptance(update.path
-		, JSON.stringify(current, null, 2) + "\n"));
+		, currentSource, update.previousSha256));
 	for(const evidence of current.evidence) for(const file of evidence.files)
 	{
 		const prior = previous.evidence.find(item => item.id === evidence.id);

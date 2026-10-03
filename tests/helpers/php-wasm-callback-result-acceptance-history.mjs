@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
-export const phpWasmCallbackResultHistorySha256 = "ffdd861a64f1fd74f240edd7d950586b7f935787e01908e77e1f5e6fac95ae7b";
+export const phpWasmCallbackResultHistorySha256 = "7ff592fdae21e368f2bc913ab2c9add9558cb0dd212a610cbb55c66b7dfe8a0d";
 export const phpWasmCallbackResultBaseline = "146cff24d74eabc00a53cbda7cedfea0be7dbb0e";
 export const phpWasmCallbackResultIntegration = "39a82da8a81730db7d576b706011f20ea4a29892";
 export const phpWasmCallbackResultLineage = Object.freeze([
@@ -77,6 +77,7 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	, "tests/helpers/owned-package-evidence.mjs"
 	, "tests/helpers/owned-php-wasm-callback-result-evidence.mjs"
 	, "tests/helpers/owned-perl-callback-result-variant-acceptance.mjs"
+	, "tests/helpers/php-callback-acceptance-history-tests.mjs"
 	, "tests/helpers/owned-php-callback-result-acceptance.mjs"
 	, "tests/helpers/owned-php-receiver-package-evidence.mjs"
 	, "tests/helpers/owned-php-wasm-borrow-evidence.mjs"
@@ -139,6 +140,7 @@ const categories = Object.freeze({
 	, "tests/helpers/owned-php-wasm-callback-result-evidence.mjs": "reader"
 	, "tests/helpers/owned-php-wasm-packages.mjs": "test"
 	, "tests/helpers/owned-perl-callback-result-variant-acceptance.mjs": "reader"
+	, "tests/helpers/php-callback-acceptance-history-tests.mjs": "reader"
 	, "tests/helpers/owned-php-callback-result-acceptance.mjs": "reader"
 	, "tests/helpers/owned-php-receiver-package-evidence.mjs": "reader"
 	, "tests/helpers/owned-php-wasm-borrow-evidence.mjs": "reader"

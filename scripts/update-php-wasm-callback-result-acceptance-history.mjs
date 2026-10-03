@@ -58,6 +58,7 @@ const categories = new Map([
 	, ["tests/helpers/owned-php-wasm-callback-result-evidence.mjs", "reader"]
 	, ["tests/helpers/owned-php-wasm-packages.mjs", "test"]
 	, ["tests/helpers/owned-perl-callback-result-variant-acceptance.mjs", "reader"]
+	, ["tests/helpers/php-callback-acceptance-history-tests.mjs", "reader"]
 	, ["tests/helpers/owned-php-callback-result-acceptance.mjs", "reader"]
 	, ["tests/helpers/owned-php-receiver-package-evidence.mjs", "reader"]
 	, ["tests/helpers/owned-php-wasm-borrow-evidence.mjs", "reader"]
