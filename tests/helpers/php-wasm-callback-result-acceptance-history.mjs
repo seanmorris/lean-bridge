@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
-export const phpWasmCallbackResultHistorySha256 = "7ff592fdae21e368f2bc913ab2c9add9558cb0dd212a610cbb55c66b7dfe8a0d";
+export const phpWasmCallbackResultHistorySha256 = "2f166a7605432483c404e078ede7c36c00c73056c3908971ae4d172c889f804d";
 export const phpWasmCallbackResultBaseline = "146cff24d74eabc00a53cbda7cedfea0be7dbb0e";
 export const phpWasmCallbackResultIntegration = "39a82da8a81730db7d576b706011f20ea4a29892";
 export const phpWasmCallbackResultLineage = Object.freeze([
@@ -95,6 +95,7 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	, "tests/owned-jvm-receiver-gc-evidence.test.mjs"
 	, "tests/owned-perl-package-evidence.test.mjs"
 	, "tests/owned-php-callback-result-packaging.test.mjs"
+	, "tests/owned-php-wasm-receiver-documentation.test.mjs"
 	, "tests/owned-php-wasm-evidence.test.mjs"
 	, "tests/owned-php-wasm-callback-result-evidence.test.mjs"
 	, "tests/perl-contract-repair-evidence.test.mjs"
@@ -158,6 +159,7 @@ const categories = Object.freeze({
 	, "tests/owned-jvm-receiver-gc-evidence.test.mjs": "reader"
 	, "tests/owned-perl-package-evidence.test.mjs": "reader"
 	, "tests/owned-php-callback-result-packaging.test.mjs": "reader"
+	, "tests/owned-php-wasm-receiver-documentation.test.mjs": "reader"
 	, "tests/owned-php-wasm-evidence.test.mjs": "reader"
 	, "tests/owned-php-wasm-callback-result-evidence.test.mjs": "reader"
 	, "tests/perl-contract-repair-evidence.test.mjs": "reader"

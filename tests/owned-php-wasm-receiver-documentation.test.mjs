@@ -17,11 +17,12 @@ import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-inst
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { prepareOwnedPhpWasmRuntime } from "./helpers/owned-php-wasm-runtime.mjs";
 
-const block = (source, heading, language) => {
+const block = (source, heading, language, occurrence = 0) => {
 	const sections = source.split(heading + "\n"); assert.equal(sections.length, 2);
 	const section = sections[1].split(/^#{1,3} /mu)[0];
 	const blocks = [...section.matchAll(new RegExp("^```" + language + "\\n([^]*?)^```", "gmu"))];
-	assert.equal(blocks.length, 1); return blocks[0][1];
+	assert.ok(Number.isSafeInteger(occurrence) && occurrence >= 0);
+	assert.ok(blocks.length > occurrence); return blocks[occurrence][1];
 };
 
 test("installed C/PHP-Wasm release runs the exact receiver documentation", {

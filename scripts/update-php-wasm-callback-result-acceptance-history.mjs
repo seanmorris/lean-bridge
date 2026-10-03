@@ -76,6 +76,7 @@ const categories = new Map([
 	, ["tests/owned-jvm-receiver-gc-evidence.test.mjs", "reader"]
 	, ["tests/owned-perl-package-evidence.test.mjs", "reader"]
 	, ["tests/owned-php-callback-result-packaging.test.mjs", "reader"]
+	, ["tests/owned-php-wasm-receiver-documentation.test.mjs", "reader"]
 	, ["tests/owned-php-wasm-evidence.test.mjs", "reader"]
 	, ["tests/owned-php-wasm-callback-result-evidence.test.mjs", "reader"]
 	, ["tests/perl-contract-repair-evidence.test.mjs", "reader"]
