@@ -20,9 +20,11 @@ export const ownedPhpMemberName = name => name.replace(/_([a-z])/gu, (_, letter)
  * @param functions - Exports retaining their original receiver and anchor slots.
  * @param types - Public result annotations and owner classes.
  * @param raw - Omit members requiring the receiver's original whole owner.
+ * @param options - Optional callback-local owner capabilities.
+ * @param options.callbackResultAnchors - Reserve authenticated callback factories.
  */
-export const ownedPhpReceiverMembers = (node, functions, types, raw = false) => {
-	const names = new Set(reserved), methods = [], properties = [];
+export const ownedPhpReceiverMembers = (node, functions, types, raw = false, { callbackResultAnchors = false } = {}) => {
+	const names = new Set([...reserved, ...callbackResultAnchors ? ["copyarg", "copyresult"] : []]), methods = [], properties = [];
 	for(const fn of functions)
 	{
 		if(fn.receiver !== 0 || fn.parameters[0] !== node.id) continue;
@@ -68,8 +70,9 @@ ${properties.map(({ name, call }) => `            '${name}' => ${call},`).join("
  * @param templates - Transport-specific storage with the same owner API.
  * @param templates.valueSource - Whole-owner class before nominal specialization.
  * @param templates.accessSource - Private factory and snapshot implementation.
+ * @param templates.callbackResultAnchors - Reserve authenticated callback factories.
  */
-export const ownedPhpReceiverOwners = (namespace, types, functions, { valueSource = ownedPhpBorrowValue, accessSource = ownedPhpBorrowAccess } = {}) => {
+export const ownedPhpReceiverOwners = (namespace, types, functions, { valueSource = ownedPhpBorrowValue, accessSource = ownedPhpBorrowAccess, callbackResultAnchors = false } = {}) => {
 	let value = valueSource.replace("final class Value", "class Value")
 		.replaceAll("    public function ", "    final public function ")
 		.replace("public function share(): self", "public function share(): static")
@@ -77,7 +80,7 @@ export const ownedPhpReceiverOwners = (namespace, types, functions, { valueSourc
 		.replace("return new self(", "return new static(");
 	for(const node of types.filter(node => node.ownerType))
 	{
-		const members = ownedPhpReceiverMembers(node, functions, types);
+		const members = ownedPhpReceiverMembers(node, functions, types, false, { callbackResultAnchors });
 		const doc = members.doc ? members.doc.replace("/**\n", `/**\n * @extends Value<${node.docType}>\n`) : `/** @extends Value<${node.docType}> */\n`;
 		value += `\n${doc}final class ${node.ownerType} extends Value\n{\n${members.source}}\n`;
 	}

@@ -11,8 +11,9 @@
  * @param options.transferredInputs - Prepare and finish consuming input groups.
  * @param options.anchoredResults - Carry whole roots and original native slots.
  * @param options.wholeOwners - Carry receiver owners independently of borrowed results.
+ * @param options.callbackResultAnchors - Authenticate whole callback identities and replies.
  */
-export const ownedPhpCallRuntime = ({ transferredInputs: requestedTransfers = false, anchoredResults = false, wholeOwners = anchoredResults } = {}) => {
+export const ownedPhpCallRuntime = ({ transferredInputs: requestedTransfers = false, anchoredResults = false, wholeOwners = anchoredResults, callbackResultAnchors = false } = {}) => {
 	const transferredInputs = requestedTransfers && !wholeOwners;
 	return String.raw`
 final class OwnedCallFrame
@@ -74,13 +75,18 @@ final class OwnedCalls
             $signature = OwnedCallTypes::CALLBACKS[$type];
             $recovery = $value instanceof @NAMESPACE@\WithRecovery;
             $fallback = $recovery ? $value->value : null; $callback = $recovery ? $value->callback : $value;
-            if ($callback instanceof Resource) {
+${callbackResultAnchors ? String.raw`            $native = $callback;
+            if ($native instanceof @NAMESPACE@\Value) [, , $native] = ValueAccess::snapshot($native, $type);
+` : ""}            if (${callbackResultAnchors ? "$native" : "$callback"} instanceof Resource) {
                 if ($recovery) throw new \TypeError('A returned Lean closure does not accept a PHP recovery wrapper');
-                $types[] = $type; $values[] = $callback; $callbacks[$index] = ['closure' => $callback];
+                $types[] = $type; $values[] = ${callbackResultAnchors ? "$native" : "$callback"}; $callbacks[$index] = ['closure' => $callback];
             } else {
                 if ($signature['requiresRecovery'] && !$recovery) throw new \TypeError('This callback requires with_recovery and a value of its result type');
                 $callbacks[$index] = ['call' => self::callback($callback, count($signature['parameters'])), 'hasRecovery' => $recovery, 'recovery' => $fallback];
-                if ($recovery) { $types[] = $signature['result']; $values[] = $fallback; }
+                if ($recovery) {${callbackResultAnchors ? String.raw`
+                    if ($signature['anchor'] !== null && $fallback instanceof @NAMESPACE@\Value)
+                        [, , $fallback] = ValueAccess::snapshot($fallback, $signature['result']);
+                    ` : " "}$types[] = $signature['result']; $values[] = $fallback; }
             }
         }
         // All ordinary arguments, identity arguments and recovery values share
@@ -118,7 +124,7 @@ final class OwnedCalls
             foreach ($cb['parameters'] as $index => $type)
                 $values[] = $this->decode($type, $arguments[$index], $frame->scope, fn(int $type, \FFI\CData $handle) => $this->wrap($type, $handle, $borrow->lease));
             $result = $callback(...$values); $state->requireOpen();
-            $reply = OwnedConversions::write($cb['result'], $result, $frame->scope);
+            $reply = OwnedConversions::write($cb['result'], ${callbackResultAnchors ? "$cb['anchor'] !== null ? $frame->scope->wholeValue($cb['result'], $result) : $result" : "$result"}, $frame->scope);
             $node = $schema->nodes[$cb['result']];
             $destination = $schema->pointer($schema->ffi->cast('lb_php_owned_bytes', $output), 1, $node['size'], $node['alignment']);
             \FFI::memcpy($destination, $reply, $node['size']);
@@ -136,7 +142,7 @@ final class OwnedCalls
         $cb = OwnedCallTypes::CALLBACKS[$type]; $scope = $frame->scope; $ffi = $this->schema->ffi;
         $scope->checkpoint(); $descriptor = $ffi->new($cb['ctype']); $frame->descriptors[] = $descriptor;
         if (isset($prepared['closure'])) {
-            $input = OwnedConversions::write($type, $prepared['closure'], $scope);
+            $input = OwnedConversions::write($type, ${callbackResultAnchors ? "$scope->wholeValue($type, $prepared['closure'])" : "$prepared['closure']"}, $scope);
             $descriptor->closure = $ffi->cast($this->schema->nodes[$type]['pointerType'], $input)[0];
             return \FFI::addr($descriptor);
         }
@@ -149,7 +155,7 @@ final class OwnedCalls
             $this->stubs[$type] = $stub;
         }
         if ($prepared['hasRecovery']) {
-            $recovery = OwnedConversions::write($cb['result'], $prepared['recovery'], $scope);
+            $recovery = OwnedConversions::write($cb['result'], ${callbackResultAnchors ? "$cb['anchor'] !== null ? $scope->wholeValue($cb['result'], $prepared['recovery']) : $prepared['recovery']" : "$prepared['recovery']"}, $scope);
             $descriptor->recovery = $ffi->cast($this->schema->nodes[$cb['result']]['pointerType'], $recovery);
         }
         if ($this->nextContext === PHP_INT_MAX) throw new \OverflowException('PHP callback context identities exhausted');
@@ -190,6 +196,22 @@ ${wholeOwners ? String.raw`    private function equal(int $type, NativeBinding $
         if ($value instanceof @NAMESPACE@\Value) { ValueAccess::snapshot($value, $type); return $value->retain(); }
         return $this->copyTyped($type, $value);
     }
+` : ""}${callbackResultAnchors ? String.raw`    public function copyCallback(mixed $closure, ?int $index, mixed $value): @NAMESPACE@\Value {
+        $this->context(); $whole = $closure;
+        if ($closure instanceof @NAMESPACE@\Value) [, , $closure] = ValueAccess::snapshot($closure);
+        if (!$closure instanceof Resource) throw new \TypeError('Expected an authentic generated Lean closure');
+        $binding = ResourceAccess::binding($closure);
+        if (!$binding instanceof NativeBinding) throw new \TypeError('Expected a native Lean closure');
+        $signature = OwnedCallTypes::CALLBACK_TYPES[GraphTypes::IDENTITIES[$closure::class]]
+            ?? throw new \TypeError('Expected an authentic generated Lean closure');
+        $type = $index === null ? $signature['result'] : ($signature['parameters'][$index] ?? null);
+        if ($type === null) throw new \TypeError('Callback selector requires a resource-bearing argument or result');
+        $pin = new OwnedPin($binding->pin($this->load()->current()));
+        try {
+            if ($value instanceof @NAMESPACE@\Value) { ValueAccess::snapshot($value, $type); return $value->retain(); }
+            return $this->copyTyped($type, $value);
+        } finally { $pin->close(); }
+    }
 ` : ""}    private function execute(int $index, array $arguments${wholeOwners ? ", bool $wholeCopy = false" : ""}): mixed {
         $this->context(); $fn = OwnedCallTypes::CALLS[$index];${wholeOwners ? String.raw`
         $wholeInputs = []; $inputLeases = []; $pins = []; $moves = [];
@@ -197,7 +219,11 @@ ${wholeOwners ? String.raw`    private function equal(int $type, NativeBinding $
             if (isset($parameter['transfer']) || isset($parameter['anchor'])) {
                 $wholeInputs[$position] = $arguments[$position] ?? null;
                 [$inputLeases[$position], , $arguments[$position]] = ValueAccess::snapshot($wholeInputs[$position], $parameter['type']);
-            }
+            }${callbackResultAnchors ? String.raw` elseif (!$parameter['host'] && isset(OwnedCallTypes::CLOSURES[$parameter['type']])
+                && ($arguments[$position] ?? null) instanceof @NAMESPACE@\Value) {
+                $wholeInputs[$position] = $arguments[$position];
+                [$inputLeases[$position], , $arguments[$position]] = ValueAccess::snapshot($wholeInputs[$position], $parameter['type']);
+            }` : ""}
         }
         ` : " "}$prepared = self::validate($fn, $arguments);
         if ($this->depth >= 64) throw new \OverflowException('Lean callback reentry exceeds 64 levels');
@@ -285,7 +311,10 @@ final class Native
         return (self::$engine ?? throw new \LogicException('Owned PHP package loader is not installed'))->call($name, $arguments);
     }
     public static function close(): void { self::$engine?->close(); }
-${wholeOwners ? String.raw`    public static function copyValue(mixed $value, ?string $resultOf, ?array $parameterOf): @NAMESPACE@\Value {
+${callbackResultAnchors ? String.raw`    public static function copyCallback(mixed $closure, ?int $index, mixed $value): @NAMESPACE@\Value {
+        return (self::$engine ?? throw new \LogicException('Owned PHP package loader is not installed'))->copyCallback($closure, $index, $value);
+    }
+` : ""}${wholeOwners ? String.raw`    public static function copyValue(mixed $value, ?string $resultOf, ?array $parameterOf): @NAMESPACE@\Value {
         return (self::$engine ?? throw new \LogicException('Owned PHP package loader is not installed'))->copyValue($value, $resultOf, $parameterOf);
     }
 ` : ""}}

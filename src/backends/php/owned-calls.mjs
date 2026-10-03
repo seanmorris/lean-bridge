@@ -18,7 +18,7 @@ import { phpCallableLiteral as literal } from "./callable-graph-calls.mjs";
  * @param options - Explicit transport capabilities.
  */
 export const generateOwnedPhpCalls = (ir, options = {}) => {
-	const model = generateOwnedPhpConversions(ir, options), { c, namespace, wholeOwners, hostCallbacks } = model;
+	const model = generateOwnedPhpConversions(ir, options), { c, namespace, wholeOwners, hostCallbacks, callbackResultAnchors } = model;
 	const transferredInputs = model.functions.some(fn => fn.transfers?.length);
 	const anchoredResults = c.anchoredResults;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
@@ -61,6 +61,7 @@ export const generateOwnedPhpCalls = (ir, options = {}) => {
 		callbacks[node.index] = { ctype, invoke
 			, parameters: parameters.map(node => node.index)
 			, result: result.index
+			, ...callbackResultAnchors ? { anchor: callback.anchor === undefined ? null : callback.anchor - 1 } : {}
 			, requiresRecovery: ownedCallbackRecovery(c.native.model, types.get(node.id), id => id) === null };
 	}
 	const calls = [...c.functions, ...c.callbacks, ...c.retains, ...c.copies ?? []].map((fn, index) => {
@@ -164,8 +165,16 @@ function copy_value(mixed $value, mixed $resultOf = null, mixed $parameterOf = n
 		const equality = `    public const EQUALITY = ${literal(Object.fromEntries(model.types.filter(node => node.identity).map(node => [node.index, node.cName + "_equal"])))};\n`;
 		files["src/Internal/OwnedCallTypes.php"] = files["src/Internal/OwnedCallTypes.php"].replace("    public const CALLS =", `    public const COPIES = ${literal(copies)};\n    public const NOMINALS = ${literal(nominals)};\n    public const RESULTS = ${literal(results)};\n    public const PARAMETERS = ${literal(parameters)};\n${equality}    public const CALLS =`);
 	}
+	if(callbackResultAnchors)
+	{
+		const copyType = id => nodes.get(id).representation === "copied" ? null : nodes.get(id).index;
+		const callbackTypes = Object.fromEntries(c.callbacks.map(fn => [nodes.get(fn.id).index
+			, { parameters: fn.parameters.slice(1).map(copyType), result: copyType(fn.result) }]));
+		files["src/Internal/OwnedCallTypes.php"] = files["src/Internal/OwnedCallTypes.php"].replace(
+			"    public const CALLS =", `    public const CALLBACK_TYPES = ${literal(callbackTypes)};\n    public const CALLS =`);
+	}
 	files["src/Internal/OwnedRuntime.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n${ownedPhpRuntime(c.prefix, { transferredInputs, anchoredResults, wholeOwners })}`;
-	files["src/Internal/OwnedCalls.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/OwnedRuntime.php';\nrequire_once __DIR__ . '/OwnedConversions.php';\nrequire_once __DIR__ . '/OwnedCallTypes.php';\n${ownedPhpCallRuntime({ transferredInputs, anchoredResults, wholeOwners }).replaceAll("@NAMESPACE@", `\\${namespace}`)}`;
+	files["src/Internal/OwnedCalls.php"] = `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nrequire_once __DIR__ . '/OwnedRuntime.php';\nrequire_once __DIR__ . '/OwnedConversions.php';\nrequire_once __DIR__ . '/OwnedCallTypes.php';\n${ownedPhpCallRuntime({ transferredInputs, anchoredResults, wholeOwners, callbackResultAnchors }).replaceAll("@NAMESPACE@", `\\${namespace}`)}`;
 	if(Object.values(files).reduce((sum, text) => sum + Buffer.byteLength(text), 0) > 16 * 1024 * 1024)
 		throw new TypeError("Owned PHP call sources exceed 16 MiB");
 	return { ...model, files, definitions, callbacks, calls, functionIndices: functions, closures, retains, nativeSource: source.join("\n") + "\n" };

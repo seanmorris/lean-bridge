@@ -41,16 +41,18 @@ const checkEvidence = (model, contract, evidence) => {
  * @param options.transferredInputs - Enable consuming input leases.
  * @param options.anchoredResults - Preserve whole owners for borrowed results.
  * @param options.receiverExports - Generate nominal methods and read-only properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Enable synchronous callback transport independently.
  */
-export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const model = generateOwnedPhpCalls(ir, { transferredInputs, anchoredResults, receiverExports, hostCallbacks }), { namespace, wholeOwners } = model, prefix = model.c.prefix;
+export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const model = generateOwnedPhpCalls(ir, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }), { namespace, wholeOwners } = model, prefix = model.c.prefix;
 	const transfers = model.functions.some(fn => fn.transfers?.length);
-	const anchors = Boolean(model.c.anchoredResults);
+	const anchors = model.functions.some(fn => fn.anchor !== undefined);
+	const callbackAnchors = model.c.callbacks.filter(fn => fn.anchor !== undefined);
 	const receivers = model.functions.filter(fn => fn.receiver === 0);
 	if(["gmp", "leanshared", "lean_bridge_native"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("Owned PHP component name collides with a dependency or exceeds its name limit");
-	const contract = { schemaVersion: receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
+	const contract = { schemaVersion: callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : transfers ? 2 : 1
 		, language: "php-8.2-nts-cli"
 		, ...transfers ? { inputTransfers: { schemaVersion: 1
 			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
@@ -77,6 +79,17 @@ export const generateOwnedPhpPackage = (ir, evidence = null, { transferredInputs
 			, exports: receivers.map(fn => ({ bindingId: fn.id
 				, owner: fn.declaration.owner
 				, kind: fn.declaration.kind, member: ownedPhpMemberName(fn.publicName) }))
+		} } : {}
+		, ...callbackAnchors.length ? { callbackResultAnchors: { schemaVersion: 1
+			, values: "checked-whole-result", anchor: "callback-parameter-owner"
+			, closureIdentity: "preserved", emptyValues: "owner-preserved"
+			, expiration: "owner-release-or-transfer", descendants: "transitive"
+			, independentOwnership: "retain-or-copyArg-or-copyResult"
+			, ...hostCallbacks ? { hostArguments: "call-scoped-borrows"
+				, hostReplies: "raw-or-authentic-whole-value"
+				, recovery: "raw-or-authentic-whole-value"
+				, wholeReplies: "pinned-until-native-snapshot" } : {}
+			, signatures: callbackAnchors.map(fn => ({ type: fn.id, parameter: fn.anchor - 1 }))
 		} } : {}
 		, ownership: "checked-result-leases"
 		, ...hostCallbacks ? { callbackLifetime: "call" } : {}
@@ -190,7 +203,25 @@ be consumed; retain them first. Two consuming arguments cannot share one owner.
 Generated function documentation names the consuming parameters.
 
 ` : ""}\
-${hostCallbacks ? `Pass synchronous PHP callables to callback parameters. Borrowed resources in
+${callbackAnchors.length ? `Callback-result anchors use whole Value owners, including empty containers.
+Invoke a returned Lean closure with its declared whole anchor argument. The
+result follows that argument's original owner, not the closure's captured owner.
+Closing or transferring the anchor expires its descendants. retain() creates
+independent ownership. Native closure arguments preserve their native identity.
+
+Use $closure->copyArg(index, payload) or $closure->copyResult(payload) to create an
+independent whole owner selected by that authenticated closure's signature.
+The zero-based argument selector excludes the
+closure itself; scalar and unknown selectors reject. Anonymous Array, List,
+Option and Tuple callback types need no declaration names or private type IDs.
+Whole closure owners forward both methods. get() returns a borrowed payload;
+share() adds a root to the same owner, and retain() makes an independent owner.
+
+${hostCallbacks ? `Anchored host callbacks accept raw or authentic whole replies and recovery
+values. Whole values, including empty values, remain pinned through the native
+snapshot. Borrowed callback arguments expire when the PHP callback returns.
+
+` : ""}` : ""}${hostCallbacks ? `Pass synchronous PHP callables to callback parameters. Borrowed resources in
 callback arguments expire on return. Call retain() inside the callback to keep
 one. Callback replies are copied before native borrowed storage expires.
 Returned Lean closures are invokable but cannot extend a borrowed PHP callback's
@@ -214,7 +245,7 @@ and invalid calls reject before loading native code.
 		, ...model.types.filter(node => node.identity || node.kind === "variant").map(node => node.publicType)
 		, ...model.records.map(record => record.name)
 		, ...model.functions.map(fn => fn.publicName)].map(name => `${namespace}\\${name}`);
-	files["binding-manifest.json"] = canonicalJson({ schemaVersion: receivers.length ? 4 : anchors ? 3 : 1
+	files["binding-manifest.json"] = canonicalJson({ schemaVersion: callbackAnchors.length ? 5 : receivers.length ? 4 : anchors ? 3 : 1
 		, generator: { id: "lean-wasm/php-owned", version: 1 }
 		, component: ir.component.id
 		, bindingIrSha256: model.c.native.model.bindingIrSha256

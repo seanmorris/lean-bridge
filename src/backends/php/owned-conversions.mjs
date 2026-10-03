@@ -66,7 +66,7 @@ ${c.prefix}_status ${c.prefix}_php_integer_new(const char *, size_t, mpz_srcptr 
 void ${c.prefix}_php_integer_free(mpz_srcptr *);
 ${c.prefix}_status ${c.prefix}_php_integer_text(mpz_srcptr, char *, size_t, size_t *);
 `;
-	const support = `${copiedPhpHelpers.slice(copiedPhpHelpers.indexOf("final class ScalarCodec"))}\n${ownedPhpConversionSupport({ transferredInputs: transferredInputs && !wholeOwners, anchoredResults: wholeOwners })}\n${ownedPhpConversionTransfer}`
+	const support = `${copiedPhpHelpers.slice(copiedPhpHelpers.indexOf("final class ScalarCodec"))}\n${ownedPhpConversionSupport({ transferredInputs: transferredInputs && !wholeOwners, anchoredResults: wholeOwners, callbackResultAnchors: model.callbackResultAnchors })}\n${ownedPhpConversionTransfer}`
 		.replaceAll("@PREFIX@", c.prefix).replaceAll("@NAMESPACE@", `\\${namespace}`);
 	const files = { ...model.files
 		, "src/Internal/OwnedNativeTypes.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class OwnedNativeTypes\n{\n    public const DEFINITIONS = <<<'CDEFS'\n${definitions}CDEFS;\n    public const NODES = ${literal(descriptors)};\n}\n`

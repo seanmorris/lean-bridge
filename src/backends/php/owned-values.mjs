@@ -31,12 +31,15 @@ const bigint = "\\Brick\\Math\\BigInteger";
  * @param options.transferredInputs - Admit explicitly consuming arguments.
  * @param options.anchoredResults - Admit original-owner borrowed results.
  * @param options.receiverExports - Admit checked methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Admit synchronous host callbacks and copied returns.
  */
-export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
+export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
 	if(![32, 64].includes(integerBits) || ![32, 64].includes(wordBits)) throw new TypeError("PHP and Lean integer widths must be 32 or 64");
 	const identityEquality = receiverExports && ir.declarations.some(item => item.receiver);
-	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports, identityEquality }), namespace = `Lean${pascal(c.prefix)}`;
+	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
+	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, identityEquality }), namespace = `Lean${pascal(c.prefix)}`;
+	callbackResultAnchors = c.callbacks.some(callback => callback.anchor !== undefined);
 	anchoredResults = c.anchoredResults;
 	receiverExports = c.functions.some(fn => fn.receiver === 0);
 	const wholeOwners = Boolean(anchoredResults || receiverExports);
@@ -129,10 +132,18 @@ export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = intege
 			, classes: (node.identity || node.kind === "record" ? [node.publicType] : node.kind === "option" ? ["Some"] : node.kind === "result" ? ["Ok", "Err"] : node.cases.map(branch => branch.publicName)).map(qualified) });
 	const resources = types.filter(node => node.identity).map(node => {
 		const callback = c.callbacks.find(fn => fn.id === node.id), args = callback?.parameters.slice(1).map((_, index) => `$argument${index}`) ?? [];
-		const members = receiverExports ? ownedPhpReceiverMembers(node, functions, types, true) : { doc: "", source: "" };
+		const members = receiverExports ? ownedPhpReceiverMembers(node, functions, types, true, { callbackResultAnchors }) : { doc: "", source: "" };
 		return `${members.doc}final class ${node.publicType} extends Internal\\Resource
 {
-${members.source}${callback ? `    public function __invoke(${args.map(arg => `mixed ${arg}`).join(", ")}): mixed {
+${members.source}${callback && callbackResultAnchors ? `    public function copyArg(mixed $index, mixed $value): Value {
+        if (\\func_num_args() !== 2 || !\\is_int($index)) throw new \\TypeError('copyArg requires an argument index and value');
+        return Internal\\Native::copyCallback($this, $index, $value);
+    }
+    public function copyResult(mixed $value): Value {
+        if (\\func_num_args() !== 1) throw new \\ArgumentCountError('copyResult requires one value');
+        return Internal\\Native::copyCallback($this, null, $value);
+    }
+` : ""}${callback ? `    public function __invoke(${args.map(arg => `mixed ${arg}`).join(", ")}): mixed {
         if (\\func_num_args() !== ${args.length}) throw new \\ArgumentCountError('Lean closure requires ${args.length} arguments');
         return Internal\\ResourceAccess::invoke($this, [${args.join(", ")}]);
     }\n` : ""}}`;
@@ -173,8 +184,19 @@ ${resources}
 		, "src/Internal/GraphTypes.php": `<?php\ndeclare(strict_types=1);\nnamespace ${namespace}\\Internal;\n\nfinal class GraphTypes\n{\n    public const NODES = ${literal(catalog)};\n    public const CLASSES = ${literal(classes)};\n    public const IDENTITIES = ${literal(identities)};\n}\n` };
 	if(wholeOwners)
 	{
-		const owners = receiverExports ? ownedPhpReceiverOwners(namespace, types, functions)
-			: { value: ownedPhpBorrowValue, access: ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", `\\${namespace}`) };
+		const valueSource = callbackResultAnchors ? ownedPhpBorrowValue.replace(
+			"    public function __invoke(mixed ...$arguments): mixed"
+			, String.raw`    public function copyArg(mixed $index, mixed $value): Value {
+        if (\func_num_args() !== 2 || !\is_int($index)) throw new \TypeError('copyArg requires an argument index and value');
+        return Internal\Native::copyCallback($this, $index, $value);
+    }
+    public function copyResult(mixed $value): Value {
+        if (\func_num_args() !== 1) throw new \ArgumentCountError('copyResult requires one value');
+        return Internal\Native::copyCallback($this, null, $value);
+    }
+    public function __invoke(mixed ...$arguments): mixed`) : ownedPhpBorrowValue;
+		const owners = receiverExports ? ownedPhpReceiverOwners(namespace, types, functions, { valueSource, callbackResultAnchors })
+			: { value: valueSource, access: ownedPhpBorrowAccess.replaceAll("@NAMESPACE@", `\\${namespace}`) };
 		files["src/Api.php"] += owners.value;
 		files["src/Internal/Values.php"] += owners.access;
 	}
@@ -191,5 +213,5 @@ ${resources}
     }`);
 	}
 	if(Object.values(files).reduce((sum, contents) => sum + Buffer.byteLength(contents), 0) > 4 * 1024 * 1024) fail("PHP declarations exceed 4 MiB");
-	return { c, namespace, integerBits, wordBits, files, source: files["src/Api.php"], types, records, functions, aliases, wholeOwners, receiverExports, hostCallbacks, publicFiles: ["src/Api.php"] };
+	return { c, namespace, integerBits, wordBits, files, source: files["src/Api.php"], types, records, functions, aliases, wholeOwners, receiverExports, hostCallbacks, callbackResultAnchors, publicFiles: ["src/Api.php"] };
 };

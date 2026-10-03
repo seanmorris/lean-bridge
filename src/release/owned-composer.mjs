@@ -30,6 +30,7 @@ export const packageOwnedPhp = async options => {
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const capabilities = { transferredInputs, anchoredResults
 		, receiverExports: Boolean(model.ownedGraph.receiverExports)
+		, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors)
 		, hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) };
 	const generated = generateOwnedPhpPackage(model.bindingIr, evidence, capabilities), prefix = generated.c.prefix;
 	auditOwnedPhpPackage(model.bindingIr, generated.files, capabilities);

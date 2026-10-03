@@ -10,8 +10,9 @@
  * @param options - Explicit transport capabilities.
  * @param options.transferredInputs - Reserve identities during consuming conversion.
  * @param options.anchoredResults - Pin storage separately from the whole root count.
+ * @param options.callbackResultAnchors - Pin whole host replies through native snapshotting.
  */
-export const ownedPhpConversionSupport = ({ transferredInputs = false, anchoredResults = false } = {}) => String.raw`
+export const ownedPhpConversionSupport = ({ transferredInputs = false, anchoredResults = false, callbackResultAnchors = false } = {}) => String.raw`
 final class OwnedInvalidNative extends \RuntimeException
 {
     public function __construct(string $message) { parent::__construct($message, 9); }
@@ -99,7 +100,16 @@ final class OwnedConversionScope
         $this->leases[] = ${anchoredResults ? "new OwnedPin(" : transferredInputs ? "$lease = " : ""}$binding->pin($this->state)${anchoredResults ? ")" : ""};${transferredInputs ? "\n        $this->inputGroup?->reserve($lease);" : ""}
         return $binding->raw($this->state);
     }
-    public function close(): void {
+${callbackResultAnchors ? String.raw`    public function wholeValue(int $type, mixed $value): mixed {
+        if (!$value instanceof @NAMESPACE@\Value) return $value;
+        [$lease, , $payload] = ValueAccess::snapshot($value, $type);
+        if ($lease->state !== $this->state) OwnedRuntime::checked(1);
+        // Empty containers have no resource leaf that could pin their owner.
+        $this->storage->charge(32); $this->checkpoint();
+        $this->leases[] = new OwnedPin($lease);
+        return $payload;
+    }
+` : ""}    public function close(): void {
         if ($this->closed) return;
         $this->state->runtime->affinity();
         foreach ($this->integers as $slot) $this->schema->ffi->@PREFIX@_php_integer_free(\FFI::addr($slot));
