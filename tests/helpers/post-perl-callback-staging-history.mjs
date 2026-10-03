@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitCallbackRuntimeStaging } from "./wit-callback-runtime-staging-history.mjs";
 
 export const postPerlCallbackHistoryPath = "docs/evidence/post-perl-callback-staging-source-history-20261003.json";
 export const postPerlCallbackHistorySha256 = "710955098bb7ee148093d5e7f9c266f27be334d642d6ad06d9020202825850f4";
@@ -100,6 +101,7 @@ export const reversePostPerlCallbackUpdate = (source, update) => {
  * @param expected - Optional stopping SHA-256.
  */
 export const beforePostPerlCallbackStaging = (path, source, expected) => {
+	source = beforeWitCallbackRuntimeStaging(path, source, expected);
 	const update = readPostPerlCallbackHistory().updates.find(item => item.path === path);
 	const digest = sha256(source);
 	return update && digest !== expected && digest === update.currentSha256
