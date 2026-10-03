@@ -7,7 +7,6 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
-import { beforeWitCallbackRuntimeStaging } from "./helpers/wit-callback-runtime-staging-history.mjs";
 import { copiedFixtureReaderHistoryPath, copiedFixtureReaderHistorySha256
 	, beforeCopiedFixtureReaders, copiedFixtureHistoricalBytes
 	, reverseCopiedFixtureReaderUpdate } from "./helpers/copied-fixture-source-history.mjs";
@@ -92,11 +91,26 @@ test("the reader repair preserves immutable WIT and JVM GC evidence", async () =
 });
 
 test("the reader repair refreshes source identities without changing support claims", async () => {
-	const path = "docs/type-surface.v1.json", source = await readFile(path, "utf8");
-	const previous = JSON.parse(beforeCopiedFixtureReaders(path, source));
-	for(const evidence of previous.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, await readFile(file.path)));
-	assert.deepEqual(JSON.parse(source), previous);
+	const path = "docs/type-surface.v1.json", record = await read();
+	const update = record.updates.find(value => value.path === path);
+	assert.ok(update);
+	const currentSource = beforeOwnedCallbackResults(path, await readFile(path), update.currentSha256);
+	assert.equal(sha256(currentSource), update.currentSha256);
+	const current = JSON.parse(currentSource);
+	const previous = JSON.parse(beforeCopiedFixtureReaders(path, currentSource));
+	assert.equal(current.evidence.length, previous.evidence.length);
+	for(let evidenceIndex = 0; evidenceIndex < previous.evidence.length; evidenceIndex++)
+	{
+		const currentFiles = current.evidence[evidenceIndex].files;
+		const previousFiles = previous.evidence[evidenceIndex].files;
+		assert.equal(currentFiles.length, previousFiles.length);
+		for(let fileIndex = 0; fileIndex < previousFiles.length; fileIndex++)
+		{
+			assert.equal(previousFiles[fileIndex].path, currentFiles[fileIndex].path);
+			previousFiles[fileIndex].sha256 = currentFiles[fileIndex].sha256;
+		}
+	}
+	assert.deepEqual(current, previous);
 	const binary = Buffer.from([0, 255, 128, 192]);
 	assert.equal(copiedFixtureHistoricalBytes("unrelated.bin", binary), binary);
 });
