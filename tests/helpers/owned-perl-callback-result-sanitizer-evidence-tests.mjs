@@ -109,6 +109,25 @@ test("Perl callback sanitizer evidence reconstructs scoped address/UB and separa
 		syncCommands(item);
 	}
 	await assertOwnedPerlCallbackSanitizerMatrix(relocated);
+	// GCC/ASan symbolizers expose the same allocator interceptor either with
+	// the legacy __interceptor_ prefix or as the public allocator name. Preserve
+	// the raw diagnostic while authenticating both names against ASan's source.
+	const publicAllocator = structuredClone(original);
+	for(const item of Object.values(publicAllocator))
+	{
+		for(const observation of item.observations)
+		{
+			const records = [observation.coldPerlDefault, observation.coldPerlFull
+				, ...observation.executions, ...observation.strictLeakExecutions];
+			for(const record of records)
+			{
+				record.execution.stderr = record.execution.stderr.replaceAll(" in __interceptor_malloc ", " in malloc ");
+				fixMessage(record);
+			}
+			syncCommands(item);
+		}
+	}
+	await assertOwnedPerlCallbackSanitizerMatrix(publicAllocator);
 	assert.equal(canonicalJson(original), before, "original reports remain byte-equivalent JSON; no diagnostic rewriting");
 });
 

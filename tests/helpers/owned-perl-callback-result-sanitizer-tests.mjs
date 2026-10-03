@@ -80,6 +80,16 @@ __attribute__((noinline)) static void *sanitizer_xs_allocate(size_t bytes) { ret
 const fingerprintCode = 'print JSON::PP->new->canonical->encode({perlVersion => "$^V", threaded => $Config{useithreads} ? 1 : 0})';
 const positiveModes = ["cold", "runtime", "faults", "process-reentry", "reentrant-shutdown"];
 const controlModes = ["native-address", "xs-address", "native-undefined", "xs-undefined"];
+const asanMallocFrame = / in (?:__interceptor_)?malloc (?:\.\.\/)*src\/libsanitizer\/asan\/asan_malloc_linux\.cpp:[1-9][0-9]*(?::[1-9][0-9]*)?$/u;
+const checkAsanMallocFrame = () => {
+	for(const name of ["__interceptor_malloc", "malloc"])
+		assert.match(`    #0 <address> in ${name} ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69`, asanMallocFrame);
+	for(const invalid of [
+		"    #0 <address> in malloc user.c:69"
+		, "    #0 <address> in calloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69"
+		, "    #0 <address> in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:0"
+	]) assert.doesNotMatch(invalid, asanMallocFrame);
+};
 // Only the exact observed LSan tracer failure is a recognized unavailable
 // diagnostic. Other signals, errors and partial reports remain test failures.
 const unavailableLsan = /^Tracer caught signal 11: addr=0x[0-9a-f]+ pc=0x[0-9a-f]+ sp=0x[0-9a-f]+\n==(?<pid>\d+)==LeakSanitizer has encountered a fatal error\.\n==\k<pid>==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1\n==\k<pid>==HINT: LeakSanitizer does not work under ptrace \(strace, gdb, etc\)\n$/u;
@@ -125,6 +135,7 @@ test(`Perl callback-result ASan and UBSan instrument actual C and XS (${mode})`,
 	, timeout: 1200000
 }, async t => {
 	checkUnavailableDiagnostic();
+	checkAsanMallocFrame();
 	const options = { hostCallbacks: true, callbackResultAnchors: true
 		, transferredInputs: true, anchoredResults: true, receiverExports: true };
 	const compiled = await prepareOwnedPerlNative(t, {
@@ -299,7 +310,7 @@ $builder->link(objects => [$object], module_name => 'LeanBridge::OwnedProbe',
 		for(const block of baseline)
 		{
 			assert.equal(block.kind, "Direct"); assert.equal(block.frames.length, 2);
-			assert.match(block.frames[0], / in __interceptor_malloc /u);
+			assert.match(block.frames[0], asanMallocFrame);
 			assert.ok(block.frames[1].includes(` in __gmp_default_allocate (${compiled.directory}/runtime/lib/libleanshared.so+`));
 		}
 		const observedBaseline = {

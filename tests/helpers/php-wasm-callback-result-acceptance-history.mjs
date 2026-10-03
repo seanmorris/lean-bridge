@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 
 export const phpWasmCallbackResultHistoryPath
 	= "docs/evidence/php-wasm-callback-result-acceptance-source-history-20261003.json";
-export const phpWasmCallbackResultHistorySha256 = "fae01c7d5425e73c2c1d6a9ef982de8dbde866e3ec1d42ed2d23eeed3684d3dd";
+export const phpWasmCallbackResultHistorySha256 = "a2d50018358a40d1abba436e2b3f9713386b85371ddba446e4d9a49022828ae0";
 export const phpWasmCallbackResultBaseline = "146cff24d74eabc00a53cbda7cedfea0be7dbb0e";
 export const phpWasmCallbackResultIntegration = "39a82da8a81730db7d576b706011f20ea4a29892";
 export const phpWasmCallbackResultLineage = Object.freeze([
@@ -76,6 +76,9 @@ export const phpWasmCallbackResultReaderPaths = Object.freeze([
 	, "tests/helpers/owned-jvm-package-evidence.mjs"
 	, "tests/helpers/owned-package-evidence.mjs"
 	, "tests/helpers/owned-php-wasm-callback-result-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-tests.mjs"
 	, "tests/helpers/owned-perl-callback-result-variant-acceptance.mjs"
 	, "tests/helpers/php-callback-acceptance-history-tests.mjs"
 	, "tests/helpers/owned-php-callback-result-acceptance.mjs"
@@ -140,6 +143,9 @@ const categories = Object.freeze({
 	, "tests/helpers/owned-jvm-package-evidence.mjs": "reader"
 	, "tests/helpers/owned-package-evidence.mjs": "reader"
 	, "tests/helpers/owned-php-wasm-callback-result-evidence.mjs": "reader"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence-tests.mjs": "reader"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence.mjs": "reader"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-tests.mjs": "reader"
 	, "tests/helpers/owned-php-wasm-packages.mjs": "test"
 	, "tests/helpers/owned-perl-callback-result-variant-acceptance.mjs": "reader"
 	, "tests/helpers/php-callback-acceptance-history-tests.mjs": "reader"

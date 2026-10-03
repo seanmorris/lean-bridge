@@ -26,6 +26,8 @@ const controls = ["native-address", "xs-address", "native-undefined", "xs-undefi
 const strict = [...positive, "native-leak", "xs-leak"];
 const flags = ["-O1", "-g", "-fPIC", "-fsanitize=address,undefined", "-fno-omit-frame-pointer"];
 const environment = { PATH: "/usr/bin:/bin" };
+const asanAllocatorName = /^(?:__interceptor_)?(?:malloc|calloc|realloc)$/u;
+const asanAllocatorLocation = /^(?:\.\.\/)*src\/libsanitizer\/asan\/asan_malloc_linux\.cpp:[1-9][0-9]*(?::[1-9][0-9]*)?$/u;
 const fingerprintArgs = ["-MConfig", "-MJSON::PP", "-e"
 	, 'print JSON::PP->new->canonical->encode({perlVersion => "$^V", threaded => $Config{useithreads} ? 1 : 0})'];
 const success = stdout => ({ code: 0, signal: null, stdout, stderr: "" });
@@ -56,6 +58,15 @@ const parseXsC = {
  */
 export const isOwnedPerlCallbackLsanUnavailable = diagnostic =>
 	/^Tracer caught signal 11: addr=0x[0-9a-f]+ pc=0x[0-9a-f]+ sp=0x[0-9a-f]+\n==(?<pid>\d+)==LeakSanitizer has encountered a fatal error\.\n==\k<pid>==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1\n==\k<pid>==HINT: LeakSanitizer does not work under ptrace \(strace, gdb, etc\)\n$/u.test(diagnostic);
+
+/**
+ * Recognize ASan allocator frames across GCC symbolizer spellings.
+ *
+ * @param name - Symbolized allocator name.
+ * @param location - ASan source location emitted for the frame.
+ */
+export const isOwnedPerlAsanAllocatorFrame = (name, location) =>
+	asanAllocatorName.test(name) && asanAllocatorLocation.test(location);
 
 const authoredLiteral = (source, name) => {
 	const expression = new RegExp("const " + name + " = `([^]*?)`;", "gu");
@@ -175,8 +186,8 @@ const assertStack = (text, context, allowed = []) => {
 			assert.ok(allowed.includes(name), "unexpected instrumented frame: " + name);
 			assert.match(location, new RegExp("^(?:" + escape(context.directory + "/") + ")?" + escape(context.sites[name]) + "(?::[1-9][0-9]*)?$", "u"));
 		}
-		else if(/^__interceptor_(?:malloc|calloc|realloc)$/u.test(name))
-			assert.match(location, /^(?:\.\.\/)*src\/libsanitizer\/asan\/asan_malloc_linux\.cpp:[1-9][0-9]*(?::[1-9][0-9]*)?$/u);
+		else if(asanAllocatorName.test(name))
+			assert.equal(isOwnedPerlAsanAllocatorFrame(name, location), true);
 		else if(name === "__gmp_default_allocate")
 			assert.match(location, new RegExp("^\\(" + escape(context.directory + "/runtime/lib/libleanshared.so") + "\\+0x[0-9a-f]+\\)$", "u"));
 		else
@@ -218,7 +229,7 @@ const assertLeakDiagnostic = (diagnostic, context, variant, baseline) => {
 	{
 		for(const block of blocks)
 		{
-			assert.match(block.frames[0], /^__interceptor_(?:malloc|calloc|realloc)$/u);
+			assert.match(block.frames[0], asanAllocatorName);
 			assert.ok(block.frames.slice(1).every(name => /^Perl_(?:safesysmalloc|safesyscalloc|safesysrealloc|my_cxt_init|savepv|savepvn)$/u.test(name)));
 			assert.ok(block.frames.length > 1);
 		}
@@ -229,7 +240,8 @@ const assertLeakDiagnostic = (diagnostic, context, variant, baseline) => {
 		for(const block of blocks)
 		{
 			assert.equal(block.kind, "Direct");
-			assert.deepEqual(block.frames, ["__interceptor_malloc", "__gmp_default_allocate"]);
+			assert.equal(block.frames.length, 2); assert.match(block.frames[0], asanAllocatorName);
+			assert.equal(block.frames[1], "__gmp_default_allocate");
 		}
 		return blocks;
 	}
@@ -241,7 +253,7 @@ const assertLeakDiagnostic = (diagnostic, context, variant, baseline) => {
 	if(leaking)
 	{
 		const [block] = control; assert.equal(block.kind, "Direct"); assert.equal(block.bytes, 73); assert.equal(block.allocations, 1);
-		assert.equal(block.frames[0], "__interceptor_malloc");
+		assert.match(block.frames[0], asanAllocatorName);
 		assert.ok(block.frames.includes(variant === "native-leak" ? "sanitizer_native_leak" : "XS_LeanBridge__OwnedProbe_sanitizer_xs_leak"));
 	}
 };
@@ -272,7 +284,7 @@ const assertAddressDiagnostic = (diagnostic, context, variant, name) => {
 	assert.equal(BigInt(value.address), BigInt(value.base) + 8n); assert.equal(BigInt(value.end), BigInt(value.base) + 1n);
 	assert.equal(value.name, name); assert.equal(value.site, context.sites[name]);
 	assert.equal(assertStack(value.stack, context, allowedControlFrames(variant))[0], name);
-	assert.equal(assertStack(value.allocated, context, allowedControlFrames(variant))[0], "__interceptor_malloc");
+	assert.match(assertStack(value.allocated, context, allowedControlFrames(variant))[0], asanAllocatorName);
 	assert.equal(value.legend + "\n", shadowLegend);
 	const rows = value.shadow.split("\n"); assert.equal(rows.length, 11);
 	let previous;
