@@ -14,9 +14,9 @@ import { packOwnedCallbackReports, unpackOwnedCallbackReports } from "./owned-ca
 import { assertOwnedWitCallbackRuntimeMatrix, assertOwnedWitCallbackRuntimeLogs
 	, ownedWitCallbackRuntimeLogs, ownedWitCallbackRuntimeReports
 	, ownedWitCallbackRuntimeSourcePaths } from "./wit-owned-callback-result-runtime-evidence.mjs";
-import { beforeWitCallbackRuntimeStaging, readWitCallbackRuntimeHistory
-	, witCallbackRuntimeBaseline, witCallbackRuntimeHistoryPath
+import { readWitCallbackRuntimeHistory, witCallbackRuntimeBaseline, witCallbackRuntimeHistoryPath
 	, witCallbackRuntimeHistorySha256 } from "./wit-callback-runtime-staging-history.mjs";
+import { beforeWitCallbackAcceptance } from "./wit-callback-acceptance-history.mjs";
 
 const keys = (value, names) => assert.deepEqual(Object.keys(value).sort()
 	, (Array.isArray(names) ? [...names] : names.split(" ")).sort());
@@ -65,6 +65,9 @@ export const ownedWitCallbackClosureRoots = freeze([
 	, "tests/helpers/owned-wit-callback-result-acceptance-tests.mjs"
 	, "scripts/record-owned-wit-callback-results.mjs"
 ]);
+const ownedWitCallbackSuccessorPaths = new Set([
+	"tests/helpers/wit-callback-acceptance-history.mjs"
+]);
 
 /** Include the completed predecessor and the complete local verifier closure. */
 export const ownedWitCallbackSourcePaths = async () => {
@@ -89,7 +92,10 @@ export const ownedWitCallbackSourcePaths = async () => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;
 			if(specifier && ts.isStringLiteral(specifier) && specifier.text.startsWith("."))
-				pending.push(join(dirname(path), specifier.text));
+			{
+				const dependency = join(dirname(path), specifier.text);
+				if(!ownedWitCallbackSuccessorPaths.has(dependency)) pending.push(dependency);
+			}
 			ts.forEachChild(node, visit);
 		};
 		visit(tree);
@@ -157,7 +163,7 @@ export const assertOwnedWitCallbackAcceptance = async record => {
 	const sourceBytes = new Map();
 	for(const [path, digest] of Object.entries(record.sources))
 	{
-		const source = beforeWitCallbackRuntimeStaging(path, await readFile(path), digest);
+		const source = beforeWitCallbackAcceptance(path, await readFile(path), digest);
 		assert.equal(sha256(source), digest, path); sourceBytes.set(path, Buffer.from(source));
 	}
 	keys(record.archive, "format nodes reports");

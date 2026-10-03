@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitCallbackAcceptance } from "./wit-callback-acceptance-history.mjs";
 
 export const phpCallbackAcceptanceHistoryPath
 	= "docs/evidence/php-callback-acceptance-source-history-20261003.json";
@@ -207,6 +208,7 @@ export const reversePhpCallbackAcceptanceUpdate = (source, update, category = "u
  * @param expected - Optional exact stopping SHA-256.
  */
 export const beforePhpCallbackAcceptance = (path, source, expected) => {
+	source = beforeWitCallbackAcceptance(path, source, expected);
 	for(const category of ["readerUpdates", "updates"])
 	{
 		const update = readPhpCallbackAcceptanceHistory()[category].find(value => value.path === path);

@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeWitCallbackAcceptance } from "./wit-callback-acceptance-history.mjs";
 import { assertPhpCallbackAcceptanceHistory, beforePhpCallbackAcceptance
 	, phpCallbackAcceptanceHistoryPath, phpCallbackAcceptanceHistorySha256
 	, phpCallbackAcceptanceIntegrationModifiedPaths, phpCallbackAcceptanceReaderPaths
@@ -57,7 +58,8 @@ test("PHP callback acceptance history reverses exact sources and preserves unkno
 	for(const category of ["readerUpdates", "updates"]) for(const update of history[category])
 	{
 		const current = await readFile(update.path);
-		const source = category === "readerUpdates" ? current
+		const source = category === "readerUpdates"
+			? Buffer.from(beforeWitCallbackAcceptance(update.path, current, update.currentSha256))
 			: Buffer.from(beforePhpCallbackAcceptance(update.path, current, update.currentSha256));
 		const previous = beforePhpCallbackAcceptance(update.path, source, update.previousSha256);
 		assert.equal(sha256(source), update.currentSha256, update.path);
