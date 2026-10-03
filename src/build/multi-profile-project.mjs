@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { readExportConfiguration, assertExportConfigurationCapabilities } from "../analyze/export-configuration.mjs";
 import { sourceApiIdentity } from "../analyze/semantic-model.mjs";
 import { canonicalizeJsonValue, hashBindingIr } from "../binding-ir/canonical.mjs";
-import { buildNativeProject } from "./native-project.mjs";
+import { buildNativeProject, supportsNativeCallbackResultTargets } from "./native-project.mjs";
 import { createCompiledNativeModel } from "./native-graph-model.mjs";
 import { verifyNativeFiles } from "./native-artifacts.mjs";
 import { prepareLakeEntryIntent } from "./lake-entry-intent.mjs";
@@ -179,7 +179,7 @@ export const buildMultiProfileProject = async ({
 				, sourceIdentity: nativeReceipt.sourceIdentity }, { ownedGraphs
 				, ownedHostCallbacks: ownedGraphs, ownedInputTransfers: ownedGraphs
 				, ownedAnchoredResults: ownedGraphs, ownedReceiverExports: ownedGraphs
-				, ownedCallbackResultAnchors: ownedGraphs && nativeTargets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target)) });
+				, ownedCallbackResultAnchors: ownedGraphs && supportsNativeCallbackResultTargets(nativeTargets) });
 			if(canonicalJson(reconstructed) !== canonicalJson(nativeModel) || sha256(canonicalJson(nativeModel)) !== nativeReceipt.modelSha256) fail("Native model changed after compilation");
 			models.push(nativeModel);
 		}

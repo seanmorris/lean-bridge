@@ -41,6 +41,14 @@ import { validatePerlModel } from "../backends/perl/generate.mjs";
 import { writeNativePackageSet } from "../release/package-set-assembly.mjs";
 
 /**
+ * Admit callback-local result anchors only when every native projection understands them.
+ *
+ * @param targets - Validated native package target names.
+ */
+export const supportsNativeCallbackResultTargets = targets => targets.every(target =>
+	["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target));
+
+/**
  * Build Lean once, compile XS per Perl ABI, then archive the checked inputs.
  *
  * @param root0 - Named inputs for this native build or packaging operation.
@@ -102,7 +110,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedReceiverExports: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
-			, ownedCallbackResultAnchors: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native"].includes(target))
+			, ownedCallbackResultAnchors: supportsNativeCallbackResultTargets(targets)
 			, copiedGraphs: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target))
 			, validateModel: model => {
 				if(model.ownedGraph)
@@ -120,7 +128,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 					if(targets.includes("maven")) generateOwnedJvmPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
 					if(targets.includes("cpan")) generateOwnedPerlXs(model.bindingIr, ownedPerlNamespace(model.component, config.targets?.cpan), { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
 					if(targets.includes("php-native")) generateOwnedPhpPackage(model.bindingIr, null, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });
-					if(targets.includes("wit-wasi")) compileOwnedWitGraphModel(model.bindingIr, config.targets?.["wit-wasi"], { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports) });
+					if(targets.includes("wit-wasi")) compileOwnedWitGraphModel(model.bindingIr, config.targets?.["wit-wasi"], { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors) });
 					return;
 				}
 				if(model.copiedGraph)

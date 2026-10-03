@@ -104,7 +104,18 @@ endif()
 		, packages: [{ archive, name, version, bytes: packed.length, sha256: sha256(packed), compilerAccess: false }] };
 };
 
-const ownedWitReadme = ({ projection, prefix: p, model }, glibc, cmakePackage, cmakeTarget) => `# ${projection.name} ${projection.version}
+/**
+ * Describe the reconstructed public host contract without changing legacy releases.
+ *
+ * @param verified - Verified projection, public prefix and native model.
+ * @param verified.projection - Reconstructed WIT surface.
+ * @param verified.prefix - Generated public C prefix.
+ * @param verified.model - Verified native ownership model.
+ * @param glibc - Minimum glibc version recorded by the producer.
+ * @param cmakePackage - Installed CMake package name.
+ * @param cmakeTarget - Installed imported target name.
+ */
+export const ownedWitReadme = ({ projection, prefix: p, model }, glibc, cmakePackage, cmakeTarget) => `# ${projection.name} ${projection.version}
 
 Compiled ownership-aware WIT API from ${model.component.id}. Linux x86-64,
 glibc ${glibc} or newer. The archive includes Wasmtime 42.0.1, the shared Lean
@@ -127,8 +138,8 @@ standalone WASI command or a browser module. Raw Wasmtime resource handles and
 custom caller-owned stores are not part of this public API.
 
 Initialize each output owner to NULL. A successful call returns a typed value and
-${model.ownedGraph.resultAnchors ? "a result owner, either independent or anchored as declared below" : "an independent result owner"}. Release it with ${p}_result_release. Failure leaves
-both output slots unchanged. ${model.ownedGraph.inputTransfers ? "Inputs borrow unless their declaration specifies transfer." : "Inputs are borrowed for the call."} ${model.ownedGraph.resultAnchors ? "An independent result owns its copied storage and resource leases. Borrowed\nresults follow their source owners as described below." : "A result owns all\nits copied storage and resource leaves; aliases expire when that owner is released."}
+${model.ownedGraph.resultAnchors || model.ownedGraph.callbackResultAnchors ? "a result owner, either independent or anchored as declared below" : "an independent result owner"}. Release it with ${p}_result_release. Failure leaves
+both output slots unchanged. ${model.ownedGraph.inputTransfers ? "Inputs borrow unless their declaration specifies transfer." : "Inputs are borrowed for the call."} ${model.ownedGraph.resultAnchors || model.ownedGraph.callbackResultAnchors ? "An independent result owns its copied storage and resource leases. Borrowed\nresults follow their source owners as described below." : "A result owns all\nits copied storage and resource leaves; aliases expire when that owner is released."}
 Use the generated retain/copy helpers to acquire independent ownership.${model.ownedGraph.resultAnchors ? `
 
 ## Borrowed results
@@ -154,7 +165,30 @@ The Component Model returns owned transport handles. The bundled host passes
 the original native lifetime anchor through its trusted import and checks that
 anchor again before publishing the result. Transport handles do not extend the
 source lifetime. This contract belongs to the bundled public API, not arbitrary
-raw Wasmtime resource handles. ${model.ownedGraph.receiverExports ? "Callback-result anchors are not yet supported." : "Receiver and callback-result anchors are not yet\nsupported."}` : ""}${model.ownedGraph.receiverExports ? `
+raw Wasmtime resource handles.${model.ownedGraph.callbackResultAnchors ? "" : model.ownedGraph.receiverExports ? " Callback-result anchors are not yet supported." : " Receiver and callback-result anchors are not yet\nsupported."}` : ""}${model.ownedGraph.callbackResultAnchors ? `
+
+## Callback-result anchors
+
+A borrowed Lean closure result names one of that closure's explicit arguments,
+not its implicit self parameter. Pass the argument's original result owner beside
+its typed value. The host validates that owner before entering the component and
+again before publishing the result. binding-manifest.json records zero-based
+callback-local parameter indexes separately from export result anchors.
+
+The result expires when its argument owner is released or consumed. This includes
+empty values and transitive descendants. Its returned storage owner and the
+Component Model's owned transport handles do not extend that lifetime. Release
+every returned owner even after expiry. Retain resources or use a generated typed
+copy helper before expiry to acquire independent ownership. Native Lean closures
+keep their checked resource identity when passed back as callback arguments.
+${model.ownedGraph.hostCallbacks ? `
+Host callback replies may be raw typed values with a NULL result owner, or typed
+values paired with an owned result. The adapter copies the reply before its
+callback argument frame expires and releases any supplied reply owner afterward.
+Recovery values are validated before native handoff; callback failure still
+prevents successful outer publication.` : `
+This package has no host callback descriptors. Callback parameters accept native
+Lean closures; typed copy helpers remain available without host callbacks.`}` : ""}${model.ownedGraph.receiverExports ? `
 
 ## Methods and properties
 
@@ -206,14 +240,14 @@ use exact GMP integers; negative Nat inputs reject. Strings are UTF-8 with expli
 lengths, including embedded NUL. Bytes use byte spans. Resource identities and
 returned closures are opaque checked handles, never serialized pointer values.
 
-Typed host callbacks borrow their arguments for the callback invocation. Retain
+${model.ownedGraph.callbackResultAnchors && !model.ownedGraph.hostCallbacks ? "Host callbacks are not enabled in this package. Native closure calls still cross\nthe embedded Component Model binary." : `Typed host callbacks borrow their arguments for the callback invocation. Retain
 resources during that invocation to keep them. Callback replies transfer an owned
 result to the adapter; it releases that result after conversion, including on
 failure. A callback error prevents the outer call from publishing a successful
 result. Recovery values follow the typed callback descriptor in the header.
 Retaining a Lean closure that captured a host callback does not extend that
 callback's call-scoped borrow. Retained host callbacks and asynchronous callbacks
-are not supported.
+are not supported.`}
 
 Input, callback and output conversions enforce the limits recorded in
 binding-manifest.json. Canonical scratch memory is capped at 64 MiB per active

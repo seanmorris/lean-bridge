@@ -16,6 +16,8 @@ import { guardOwnedWitHostSource } from "../src/backends/wit/owned-host-evidence
 import { brokerHeader } from "../src/backends/native/runtime-broker.mjs";
 import { nativeCallbackHeader } from "../src/backends/native/callback-broker.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../src/build/native-graph-model.mjs";
+import { supportsNativeCallbackResultTargets } from "../src/build/native-project.mjs";
+import { ownedWitReadme } from "../src/release/owned-wasi.mjs";
 import { assertOwnedWitHostContract, ownedWitValueContract } from "../src/build/owned-wit-artifacts.mjs";
 import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { ownedRustTransferReviewedIr } from "./helpers/owned-rust-transfer-fixture.mjs";
@@ -23,11 +25,39 @@ import { ownedRustBorrowReviewedIr } from "./helpers/owned-rust-borrow-fixture.m
 import { ownedRustReceiverReviewedIr } from "./helpers/owned-rust-receiver-fixture.mjs";
 import { ownedDotnetCallbackResultReviewedIr, ownedDotnetCallbackResultCombinedReviewedIr } from "./helpers/owned-dotnet-callback-result-fixture.mjs";
 import { witOwnedCallbackResultFixture } from "./helpers/wit-owned-callback-result-fixture.mjs";
+import { ownedWitCallbackResultProbe } from "./helpers/wit-owned-callback-result-probe.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 
 const capabilities = { transferredInputs: true, anchoredResults: true, receiverExports: true, callbackResultAnchors: true };
 const variants = ["no-host", "host", "combined"];
+
+test("WIT native and multi-profile admission reconstruct callback anchors without admitting unsupported targets", async () => {
+	for(const targets of [["wit-wasi"], ["c", "wit-wasi"], ["cpan", "maven", "wit-wasi", "php-native"]])
+		assert.equal(supportsNativeCallbackResultTargets(targets), true);
+	for(const targets of [["php-wasm"], ["wit-wasi", "npm"], ["wit-wasi", "unknown"]])
+		assert.equal(supportsNativeCallbackResultTargets(targets), false);
+	for(const mode of ["ordinary", "reviewed"]) for(const variant of variants)
+	{
+		const { input, options, model, evidence, sources } = await witOwnedCallbackResultFixture(mode, variant);
+		const reconstructed = createCompiledNativeModel(input, { ownedGraphs: true
+			, ownedHostCallbacks: options.hostCallbacks, ownedInputTransfers: true
+			, ownedAnchoredResults: true, ownedReceiverExports: true
+			, ownedCallbackResultAnchors: supportsNativeCallbackResultTargets(["wit-wasi"]) });
+		assert.deepEqual(reconstructed, model);
+		const readme = ownedWitReadme({ ...evidence, prefix: sources.generated.values.prefix }, "2.38", "Example", "Example::example");
+		assert.match(readme, /## Callback-result anchors/u);
+		assert.match(readme, /zero-based\ncallback-local parameter indexes separately from export result anchors/u);
+		assert.doesNotMatch(readme, /Callback-result anchors are not yet supported/u);
+		assert.match(readme, /empty values and transitive descendants/u);
+		if(variant === "no-host")
+		{
+			assert.match(readme, /This package has no host callback descriptors/u);
+			assert.doesNotMatch(readme, /Typed host callbacks borrow/u);
+		}
+		else assert.match(readme, /raw typed values with a NULL result owner/u);
+	}
+});
 
 test("WIT callback anchors require admission and keep callback-local indexes separate from exports", () => {
 	for(const combined of [false, true])
@@ -70,6 +100,9 @@ test("WIT callback packages generate whole-owner signatures and no-host typed co
 	{
 		const { input, options, model, component, sources, compiled, evidence } = await witOwnedCallbackResultFixture(mode, variant);
 		const generated = sources.generated, callbacks = generated.values.callbacks.filter(item => item.anchor !== undefined);
+		const probe = await ownedWitCallbackResultProbe(generated, variant === "combined", options.hostCallbacks);
+		assert.ok(probe.startsWith(`#define HOST_CALLBACKS ${options.hostCallbacks ? 1 : 0}\n#define COMBINED ${variant === "combined" ? 1 : 0}\n`));
+		await assert.rejects(ownedWitCallbackResultProbe(generated, variant === "combined", !options.hostCallbacks));
 		assert.equal(model.schemaVersion, 11); assert.equal(model.ownedGraph.schemaVersion, 6);
 		assert.equal(compiled.ownedValues.schemaVersion, 5);
 		assert.deepEqual(compiled.ownedValues.callbackResultAnchors, model.ownedGraph.callbackResultAnchors);
@@ -216,12 +249,20 @@ test("WIT callback admission preserves predecessor files and contracts byte for 
 		}
 		for(const item of [...record.packages, ...record.resourcePackages ?? []])
 		{
+			assert.deepEqual(createCompiledNativeModel(item.inputs, { ownedGraphs: true
+				, ownedHostCallbacks: Boolean(item.model.ownedGraph.hostCallbacks)
+				, ownedInputTransfers: true, ownedAnchoredResults: true
+				, ownedReceiverExports: true
+				, ownedCallbackResultAnchors: true }), item.model);
 			const generated = generateOwnedWitPackage({ ...item.inputs, callbackResultAnchors: true }
 				, Buffer.from(item.componentBase64, "base64"), item.receipt.settings);
 			const sources = { generated
 				, files: { ...generated.files
 				, [`src/${generated.values.prefix}.c`]: guardOwnedWitHostSource(generated, item.receipt.dependencies) } };
 			assert.deepEqual(ownedWitValueContract(item.model, sources), item.receipt.ownedValues);
+			const readme = ownedWitReadme({ projection: generated.model, prefix: generated.values.prefix, model: item.model }
+				, item.manifest.glibcMinimumVersion, item.manifest.cmakePackage, item.manifest.cmakeTarget);
+			assert.deepEqual({ bytes: Buffer.byteLength(readme), sha256: sha256(readme) }, item.manifest.files["README.md"]);
 		}
 	}
 });
