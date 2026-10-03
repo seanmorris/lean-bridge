@@ -49,10 +49,12 @@ ${fields.map(field => `# ${field.publicName}: ${field.contractType}\nsub ${field
  * @param options.transferredInputs - Enable consuming parameters.
  * @param options.anchoredResults - Keep whole owners for borrowed results.
  * @param options.receiverExports - Preserve receiver methods and properties.
+ * @param options.callbackResultAnchors - Preserve callback-local result owners.
  * @param options.hostCallbacks - Enable callback/copy transport independently.
  */
-export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = false, anchoredResults = false, receiverExports = false, hostCallbacks = true } = {}) => {
-	const c = generateOwnedCValues(ir, { hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
+	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
+	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const receivers = c.functions.some(fn => fn.receiver === 0);
 	const anchored = c.anchoredResults === true || receivers;
 	const definitions = new Map(ir.types.map(type => [type.id, type]));

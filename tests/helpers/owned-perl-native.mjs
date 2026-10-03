@@ -52,11 +52,18 @@ export const prepareOwnedPerlNative = async (t, options) => {
 	const compiled = await compileOwnedAggregateFixture(t, { ...options, hostCallbacks });
 	const transferredInputs = Boolean(options.transferredInputs);
 	const anchoredResults = Boolean(options.anchoredResults);
+	const callbackResultAnchors = Boolean(options.callbackResultAnchors);
+	const valueCopies = callbackResultAnchors && compiled.model.bindingIr.types
+		.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
 	const c = generateOwnedCPackage({ metadata: compiled.metadata
 		, sourceIdentity: compiled.sourceIdentity
 		, component: compiled.model.component, hostCallbacks
-		, transferredInputs, anchoredResults, receiverExports });
-	const model = generateOwnedPerlXs(c.layout.model.bindingIr, "LeanBridge::OwnedProbe", { transferredInputs, anchoredResults, receiverExports, hostCallbacks });
+		, transferredInputs, anchoredResults, receiverExports
+		, callbackResultAnchors, valueCopies });
+	const model = generateOwnedPerlXs(c.layout.model.bindingIr, "LeanBridge::OwnedProbe", {
+		transferredInputs, anchoredResults, receiverExports, hostCallbacks
+		, callbackResultAnchors
+	});
 	const handoff = "static inline void oc_transfer_consume(void *context) {";
 	if(transferredInputs) assert.equal(c.source.split(handoff).length, 2);
 	const native = `#include <stdlib.h>

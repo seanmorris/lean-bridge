@@ -18,6 +18,7 @@ import { prepareOwnedPerlNative } from "./helpers/owned-perl-native.mjs";
 import { perlGraphCommands } from "./helpers/perl-graph-probes.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
+import "./helpers/owned-perl-callback-result-factory-tests.mjs";
 
 const options = { transferredInputs: true, anchoredResults: true };
 

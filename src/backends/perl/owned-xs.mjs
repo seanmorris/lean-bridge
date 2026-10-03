@@ -5,6 +5,7 @@
  */
 import { generateOwnedPerlConversions } from "./owned-conversions.mjs";
 import { ownedPerlAnchoredCall, ownedPerlBorrowXs } from "./owned-borrows.mjs";
+import { ownedPerlCallbackArguments } from "./owned-callback-arguments.mjs";
 
 const callbackRuntime = prefix => `
 typedef struct {
@@ -95,7 +96,10 @@ sub new {
 export const generateOwnedPerlXs = (ir, moduleName, options = {}) => {
 	const model = generateOwnedPerlConversions(ir, moduleName, options), p = model.c.prefix;
 	const nodes = new Map(model.types.map(node => [node.id, node]));
-	const declarations = [model.source, callbackRuntime(p)];
+	const callbackAnchors = model.c.callbacks.some(callback => callback.anchor !== undefined);
+	const declarations = [model.source
+		, ...callbackAnchors && model.hostCallbacks ? [ownedPerlCallbackArguments] : []
+		, callbackRuntime(p)];
 	const xs = [`MODULE = ${moduleName} PACKAGE = ${moduleName}
 PROTOTYPES: DISABLE
 
@@ -107,6 +111,7 @@ BOOT:
 	for(const callback of model.hostCallbacks ? model.c.callbacks : [])
 	{
 		const node = nodes.get(callback.id), result = nodes.get(callback.result);
+		const borrowed = callback.anchor !== undefined;
 		const parameters = callback.parameters.slice(1).map(id => nodes.get(id));
 		const invoker = "_owned_callback_" + node.index;
 		const copy = [...model.c.copies, ...model.c.retains].find(fn => fn.result === result.id);
@@ -124,10 +129,10 @@ static ${node.cName}_host lpo_host${node.index}(pTHX_ lpo_frame *frame, SV *valu
     SV **slots = lpg_fields(aTHX_ frame->scope, value, "${hostClass}", fields, 2);
     code = slots[0];
     ${result.cName} *recovery = lpg_allocate(aTHX_ frame->scope, 1, sizeof(*recovery));
-    lpo_read${result.index}(aTHX_ frame->scope, slots[1], recovery, 0, 1);
+    lpo_read${result.index}(aTHX_ frame->scope, ${borrowed ? `lpo_callback_value(aTHX_ frame->scope, slots[1], ${result.index}, 0)` : "slots[1]"}, recovery, 0, 1);
     descriptor.recovery = recovery;
   } else if (!(SvROK(code) && SvTYPE(SvRV(code)) == SVt_PVCV && !SvOBJECT(SvRV(code)))) {
-    descriptor.closure = (${node.cName})lpo_borrow(aTHX_ value, ${node.index});
+    descriptor.closure = (${node.cName})lpo_borrow(aTHX_ ${callbackAnchors ? `lpo_callback_value(aTHX_ frame->scope, value, ${node.index}, 1)` : "value"}, ${node.index});
     return descriptor;
   }
   if (${node.cName.toUpperCase()}_REQUIRES_RECOVERY && !descriptor.recovery)
@@ -159,7 +164,7 @@ ${invoker}(...)
     lpo_context(aTHX);
     if (lpo_state.closed) croak("Lean ownership session is closed");
     ${result.cName} input = {0};
-    lpo_read${result.index}(aTHX_ scope, returned, &input, 0, 1);
+    lpo_read${result.index}(aTHX_ scope, ${borrowed ? `lpo_callback_value(aTHX_ scope, returned, ${result.index}, 0)` : "returned"}, &input, 0, 1);
     /* Copy before Perl temporaries and borrowed argument owners unwind.
        The native caller releases this reply owner on success and failure. */
     lpo_status(aTHX_ ${copy.cName}(lpo_state.session, ${result.leaf ? "" : "&"}input, invocation->output, &reply->result));

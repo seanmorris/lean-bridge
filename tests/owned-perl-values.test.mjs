@@ -13,6 +13,7 @@ import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-f
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
+import "./helpers/owned-perl-callback-result-contract-tests.mjs";
 
 const namespace = "LeanBridge::OwnedValues";
 

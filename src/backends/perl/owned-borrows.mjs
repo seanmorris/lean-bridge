@@ -228,6 +228,28 @@ export const ownedPerlBorrowXs = model => {
   return out;
 }`;
 	}).join("\n");
+	const nodes = new Map(model.types.map(node => [node.id, node]));
+	const callbackFactories = model.c.callbacks.some(fn => fn.anchor !== undefined)
+		? model.c.callbacks.flatMap(fn => {
+			const callback = nodes.get(fn.id);
+			const sites = fn.parameters.slice(1).map((id, index) => [`copy_arg${index}`, nodes.get(id)]);
+			sites.push(["copy_result", nodes.get(fn.result)]);
+			return sites.filter(([, node]) => node.representation !== "copied").map(([name, node]) => `MODULE = ${model.moduleName} PACKAGE = ${callback.publicType}
+
+void
+${name}(self, value)
+    SV *self
+    SV *value
+  PPCODE:
+    ENTER;
+    lpo_enter_call(aTHX);
+    (void)lpo_borrow(aTHX_ self, ${callback.index});
+    lpg_scope *scope = lpg_begin(aTHX_ NULL);
+    SV *out = lpo_copy_value${node.index}(aTHX_ scope, value);
+    LEAVE;
+    SPAGAIN; SP = PL_stack_base + ax - 1; EXTEND(SP, 1); XPUSHs(out);
+`);
+		}) : [];
 	const xs = [`MODULE = ${model.moduleName} PACKAGE = ${model.moduleName}\n`
 		, ...types.map(node => `void
 _owned_copy${node.index}(value)
@@ -240,6 +262,7 @@ _owned_copy${node.index}(value)
     LEAVE;
     SPAGAIN; SP = PL_stack_base + ax - 1; EXTEND(SP, 1); XPUSHs(out);
 `)
+		, ...callbackFactories
 		, `MODULE = ${model.moduleName} PACKAGE = ${valueClass}
 
 void
