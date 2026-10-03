@@ -35,7 +35,7 @@ struct ow_native_host {
   int status;
   ow_native_call *call;
 ${model.layout.functions.some(fn => fn.transfers?.length) ? "  ov_input_transfers *input_transfers;\n" : ""}\
-${model.layout.functions.some(fn => fn.anchor !== undefined) ? "  const ov_input_anchor *input_anchor;\n" : ""}\
+${[...model.layout.functions, ...model.layout.callbacks].some(fn => fn.anchor !== undefined) ? "  const ov_input_anchor *input_anchor;\n" : ""}\
   bool closing;
   wasmtime_error_t *failure;
 };

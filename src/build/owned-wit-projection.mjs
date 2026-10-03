@@ -11,7 +11,7 @@ import { buildNativeGmp } from "./native-gmp.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
 import { wasmtimeCapiIdentity } from "./native-wit-artifacts.mjs";
 import { snapshotWasmtimeCapi } from "./native-wit-projection.mjs";
-import { ownedWitEvidence, ownedWitSources } from "./owned-wit-artifacts.mjs";
+import { ownedWitEvidence, ownedWitSources, ownedWitValueContract } from "./owned-wit-artifacts.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOwnedWasi } from "../release/owned-wasi.mjs";
 
@@ -83,13 +83,7 @@ export const projectOwnedWasi = async options => {
 		, componentReceiptSha256: sha256(canonicalJson(receipt))
 		, runtimeIdentity, library, component, settings
 		, glibcMinimumVersion: floor
-		, ownedValues: { schemaVersion: model.ownedGraph.receiverExports ? 4 : model.ownedGraph.resultAnchors ? 3 : model.ownedGraph.inputTransfers ? 2 : 1
-			, hostCallbacks: model.ownedGraph.hostCallbacks ?? null
-			, ...model.ownedGraph.inputTransfers ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
-			, ...model.ownedGraph.resultAnchors ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
-			, ...model.ownedGraph.receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
-			, headerSha256: sha256(sources.generated.publicHeader)
-			, sourceSha256: sha256(sources.files[`src/${p}.c`]) }
+		, ownedValues: ownedWitValueContract(model, sources)
 		, dependencies: sources.dependencies
 		, wasmtime: { ...wasmtimeCapiIdentity, files: wasmtimeFiles }
 		, wasmTools: toolsVersion

@@ -23,7 +23,7 @@ import { wasmtimeCapiIdentity } from "./native-wit-artifacts.mjs";
  */
 export const ownedWitEvidence = async ({ nativeRoot, runtimeRoot, settings = {} }) => {
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
 	if(!model.ownedGraph) throw new TypeError("Owned WIT requires an ownership-aware native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const inputs = { metadata, sourceIdentity: model.sourceIdentity
@@ -31,9 +31,10 @@ export const ownedWitEvidence = async ({ nativeRoot, runtimeRoot, settings = {} 
 		, hostCallbacks: Boolean(model.ownedGraph.hostCallbacks)
 		, transferredInputs: Boolean(model.ownedGraph.inputTransfers)
 		, anchoredResults: Boolean(model.ownedGraph.resultAnchors)
-		, receiverExports: Boolean(model.ownedGraph.receiverExports) };
+		, receiverExports: Boolean(model.ownedGraph.receiverExports)
+		, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors) };
 	return { model, receipt, runtime, runtimeIdentity, inputs
-		, projection: compileOwnedWitGraphModel(model.bindingIr, settings, { transferredInputs: inputs.transferredInputs, anchoredResults: inputs.anchoredResults, receiverExports: inputs.receiverExports })
+		, projection: compileOwnedWitGraphModel(model.bindingIr, settings, { transferredInputs: inputs.transferredInputs, anchoredResults: inputs.anchoredResults, receiverExports: inputs.receiverExports, callbackResultAnchors: inputs.callbackResultAnchors })
 		, settings };
 };
 
@@ -59,13 +60,58 @@ export const ownedWitSources = (evidence, component, wasmtimeFiles, gmpFiles) =>
 };
 
 /**
+ * Preserve the native ownership policy and bind the generated public transport.
+ * The model and sources come from independently reconstructed compiler inputs.
+ *
+ * @param model - Verified native component model.
+ * @param sources - Regenerated WIT host sources.
+ */
+export const ownedWitValueContract = (model, sources) => ({
+	schemaVersion: model.ownedGraph.callbackResultAnchors ? 5 : model.ownedGraph.receiverExports ? 4 : model.ownedGraph.resultAnchors ? 3 : model.ownedGraph.inputTransfers ? 2 : 1
+	, hostCallbacks: model.ownedGraph.hostCallbacks ?? null
+	, ...model.ownedGraph.inputTransfers ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
+	, ...model.ownedGraph.resultAnchors ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
+	, ...model.ownedGraph.receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
+	, ...model.ownedGraph.callbackResultAnchors ? { callbackResultAnchors: model.ownedGraph.callbackResultAnchors } : {}
+	, headerSha256: sha256(sources.generated.publicHeader)
+	, sourceSha256: sha256(sources.files[`src/${sources.generated.values.prefix}.c`])
+});
+
+/**
+ * Reject altered capabilities and generated-file identities before installation.
+ * This check does not replace the reader's binary, SDK or filesystem validation.
+ *
+ * @param compiled - Recorded WIT adapter receipt.
+ * @param evidence - Independently verified native model, receipt and coordinates.
+ * @param sources - Regenerated WIT host sources and dependency guards.
+ * @param glibcMinimumVersion - Requested native platform floor.
+ */
+export const assertOwnedWitHostContract = (compiled, evidence, sources, glibcMinimumVersion) => {
+	const { model, receipt, runtimeIdentity, projection, settings } = evidence;
+	const p = sources.generated.values.prefix;
+	if(compiled.schemaVersion !== 2 || compiled.profile !== "native-wit-v1"
+		|| compiled.runtimeIdentity !== runtimeIdentity || compiled.bindingIrSha256 !== model.bindingIrSha256
+		|| compiled.componentReceiptSha256 !== sha256(canonicalJson(receipt))
+		|| compiled.glibcMinimumVersion !== glibcMinimumVersion || !/^2\.\d+$/u.test(glibcMinimumVersion)
+		|| canonicalJson(compiled.settings) !== canonicalJson(settings)
+		|| compiled.library !== `lib${p}.so` || compiled.component !== `component/${projection.name}.wasm`
+		|| !/^wasm-tools 1\.245\.1(?: |$)/u.test(compiled.wasmTools)
+		|| canonicalJson(compiled.ownedValues) !== canonicalJson(ownedWitValueContract(model, sources))
+		|| canonicalJson(compiled.dependencies) !== canonicalJson(sources.dependencies))
+		throw new Error("Owned WIT host differs from compiler-authenticated types or runtime");
+	for(const [path, source] of Object.entries(sources.files))
+		if(canonicalJson(compiled.files?.[path]) !== canonicalJson({ bytes: Buffer.byteLength(source), sha256: sha256(source) }))
+			throw new Error(`Owned WIT generated source identity differs: ${path}`);
+};
+
+/**
  * Verify a complete compiled host without invoking a producer toolchain.
  *
  * @param options - Native roots, compiled WIT root and package coordinates.
  */
 export const readVerifiedOwnedWitHost = async options => {
 	const { witRoot, glibcMinimumVersion } = options, evidence = await ownedWitEvidence(options);
-	const { model, receipt, runtimeIdentity, projection, settings } = evidence;
+	const { projection } = evidence;
 	const compiled = JSON.parse(await readFile(join(witRoot, "native-wit-adapter.json"), "utf8"));
 	await verifyNativeFiles(witRoot, compiled.files);
 	if(compiled.wasmtime?.version !== wasmtimeCapiIdentity.version
@@ -90,23 +136,7 @@ export const readVerifiedOwnedWitHost = async options => {
 	const component = `component/${projection.name}.wasm`;
 	const sources = ownedWitSources(evidence, await readFile(join(witRoot, component)), compiled.wasmtime.files, compiled.gmp.files);
 	const p = sources.generated.values.prefix, library = `lib${p}.so`;
-	const contract = { schemaVersion: model.ownedGraph.receiverExports ? 4 : model.ownedGraph.resultAnchors ? 3 : model.ownedGraph.inputTransfers ? 2 : 1
-		, hostCallbacks: model.ownedGraph.hostCallbacks ?? null
-		, ...model.ownedGraph.inputTransfers ? { inputTransfers: model.ownedGraph.inputTransfers } : {}
-		, ...model.ownedGraph.resultAnchors ? { resultAnchors: model.ownedGraph.resultAnchors } : {}
-		, ...model.ownedGraph.receiverExports ? { receiverExports: model.ownedGraph.receiverExports } : {}
-		, headerSha256: sha256(sources.generated.publicHeader)
-		, sourceSha256: sha256(sources.files[`src/${p}.c`]) };
-	if(compiled.schemaVersion !== 2 || compiled.profile !== "native-wit-v1"
-		|| compiled.runtimeIdentity !== runtimeIdentity || compiled.bindingIrSha256 !== model.bindingIrSha256
-		|| compiled.componentReceiptSha256 !== sha256(canonicalJson(receipt))
-		|| compiled.glibcMinimumVersion !== glibcMinimumVersion || !/^2\.\d+$/u.test(glibcMinimumVersion)
-		|| canonicalJson(compiled.settings) !== canonicalJson(settings)
-		|| compiled.library !== library || compiled.component !== component
-		|| !/^wasm-tools 1\.245\.1(?: |$)/u.test(compiled.wasmTools)
-		|| canonicalJson(compiled.ownedValues) !== canonicalJson(contract)
-		|| canonicalJson(compiled.dependencies) !== canonicalJson(sources.dependencies))
-		throw new Error("Owned WIT host differs from compiler-authenticated types or runtime");
+	assertOwnedWitHostContract(compiled, evidence, sources, glibcMinimumVersion);
 	const paths = [...Object.keys(sources.files), component, `lib/${library}`
 		, ...Object.keys(compiled.wasmtime.files).map(path => `wasmtime/${path}`)
 		, ...Object.keys(compiled.gmp.files).map(path => `gmp/${path}`)].sort();

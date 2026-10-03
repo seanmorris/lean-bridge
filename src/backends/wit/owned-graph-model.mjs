@@ -47,6 +47,7 @@ export const compileOwnedWitGraphModel = (ir, settings = {}, options = {}) => {
 	const layout = compileOwnedNativeValueLayout(ir, options), model = layout.model;
 	const transfers = layout.functions.filter(item => item.transfers?.length);
 	const anchors = layout.functions.filter(item => item.anchor !== undefined);
+	const callbackAnchors = layout.callbacks.filter(item => item.anchor !== undefined);
 	const receivers = model.declarations.filter(item => item.receiver);
 	const name = settings.name ?? `owned-h${model.bindingIrSha256.slice(0, 20)}`;
 	const version = settings.version ?? model.component.version;
@@ -98,18 +99,23 @@ ${functions.map(fn => `    (export "${fn.witName}" (func ${fn.parameters.map(par
 				, witType: functions[index].parameters[0].copy.wit } } : {}
 			, parameters: declaration.parameters.map((site, position) => ({ ...site, witType: functions[index].parameters[position + Number(Boolean(declaration.receiver))].copy.wit }))
 			, result: { ...declaration.result, witType: functions[index].resultCopy.wit } }))
-		, graph: { schemaVersion: receivers.length ? 3 : anchors.length ? 2 : 1
+		, graph: { schemaVersion: callbackAnchors.length ? 4 : receivers.length ? 3 : anchors.length ? 2 : 1
 			, representation: "owned-typed-node-tables-v1"
 			, layoutSha256: sha256(canonicalJson(layout)), limits: model.limits
 			, ...transfers.length ? { inputTransfers: transfers.map(fn => ({ bindingId: fn.id, parameters: fn.transfers })) } : {}
 			, ...anchors.length ? { resultAnchors: anchors.map(fn => ({ bindingId: fn.id, parameter: fn.anchor })) } : {}
 			, ...receivers.length ? { receiverExports: receivers.map(item => ({ bindingId: item.id, kind: item.kind, owner: item.owner, argument: 0 })) } : {}
+			, ...callbackAnchors.length ? { callbackResultAnchors: callbackAnchors.map(item => ({ id: item.id, parameter: item.anchor - 1 })) } : {}
 			, types: model.types
 			, resources: resources.map(resource => ({ id: resource.id, kind: resource.node.kind, witName: resource.witName }))
 			, values: [...graph.values].map(([key, copy]) => ({ key, witType: copy.wit
 				, tables: copy.tables.map(table => ({ type: table.node.id, field: table.field, rowType: table.row.wit })) })) }
 		, deferred: [...transfers.length ? [] : ["transferred-inputs"]
-			, ...anchors.length ? [...receivers.length ? [] : ["receiver-result-anchors"], "callback-result-anchors"] : ["anchored-borrowed-results"]
+			, ...anchors.length || callbackAnchors.length ? [
+				...anchors.length ? [] : ["export-result-anchors"]
+				, ...receivers.length ? [] : ["receiver-result-anchors"]
+				, ...callbackAnchors.length ? [] : ["callback-result-anchors"]
+			] : ["anchored-borrowed-results"]
 			, "retained-host-callbacks", "asynchronous-callables"] };
 	return { model, layout, graph, functions, types, resources, name, version, importName, exportName, wit, wat, manifest };
 };
