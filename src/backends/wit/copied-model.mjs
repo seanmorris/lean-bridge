@@ -22,6 +22,8 @@ const identifier = value => reserved.has(value) ? `%${value}` : value;
 export const validateOrdinaryWasiSettings = (settings = {}) => {
 	if(settings.name !== undefined && (settings.name.length > 100 || !/^[a-z][a-z0-9]*(?:-[a-z][a-z0-9]*)*$/.test(settings.name) || reserved.has(settings.name))) throw new TypeError("WIT/WASI name must be a non-reserved lowercase kebab-case coordinate");
 	if(settings.version !== undefined && !/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(?:0|[1-9]\d*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?$/.test(settings.version)) throw new TypeError("WIT/WASI version must be an exact semantic version");
+	if(settings.hostCallbacks !== undefined && typeof settings.hostCallbacks !== "boolean")
+		throw new TypeError("WIT/WASI hostCallbacks must be a Boolean when supplied");
 };
 
 /**

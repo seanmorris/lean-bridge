@@ -103,7 +103,7 @@ export const buildElaboratedComponent = async ({ projectRoot
 		if(configurationSha256 !== undefined && configurationSha256 !== record.sha256) throw new Error("export configuration changed before native compilation");
 		const config = record.configuration;
 		for(const target of targets)
-			assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])], targetFields: target === "cpan" ? ["module", "version"] : target === "php-wasm" ? ["npm", "composer"] : ["name", "version"] });
+			assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])], targetFields: target === "cpan" ? ["module", "version"] : target === "php-wasm" ? ["npm", "composer"] : target === "wit-wasi" ? ["name", "version", "hostCallbacks"] : ["name", "version"] });
 		for(const [field, value] of Object.entries({ modules, exports, resources, arities }))
 			if(value !== undefined && config[field] !== undefined && canonicalJson(value) !== canonicalJson(config[field]))
 				throw new Error(`Native ${field} override conflicts with lean-bridge.exports.json`);

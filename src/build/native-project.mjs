@@ -73,7 +73,13 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 	const config = record.configuration;
 	for(const target of targets)
 	{
-		assertExportConfigurationCapabilities(config, { target, fields: ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])], targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
+		assertExportConfigurationCapabilities(config, { target
+			, fields: ["package", "modules", "exports", "resources", "arities"
+				, "specializations", "contracts", "generators"
+				, ...(ownedGraphs ? ["ownedAggregates"] : [])]
+			, targetFields: target === "cpan" ? ["module", "version"]
+				: target === "wit-wasi" ? ["name", "version", "hostCallbacks"]
+					: ["name", "version"] });
 		if(target === "nuget") validateOrdinaryNugetSettings(config.targets?.[target]);
 		else if(target === "maven") validateOrdinaryMavenSettings(config.targets?.[target]);
 		else if(target === "rubygems") validateOrdinaryRubySettings(config.targets?.[target]);
@@ -84,6 +90,11 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 		else if(target !== "cpan") validateNativeCSettings(config.targets?.[target]);
 	}
 	const cTargets = targets.filter(target => target !== "cpan");
+	const withoutHostCallbacks = targets.includes("wit-wasi")
+		&& config.targets?.["wit-wasi"]?.hostCallbacks === false;
+	if(withoutHostCallbacks && targets.length !== 1)
+		throw new CanonicalBuildError("incompatible-native-targets"
+			, "A WIT/WASI release with hostCallbacks disabled must be built as its own target");
 	const project = resolve(projectRoot), output = resolve(outputRoot ?? join(project, targets.length === 1 && targets[0] === "cpan" ? "build/lean-bridge-perl" : "build/lean-bridge-native"));
 	if(output === project || project.startsWith(`${output}/`)) throw new CanonicalBuildError("invalid-output-root", "Native output cannot replace the source project");
 	try
@@ -106,7 +117,7 @@ export async function buildNativeProject({ projectRoot, outputRoot, environment 
 			, lakeSnapshot
 			, targets
 			, ownedGraphs
-			, ownedHostCallbacks: ownedGraphs
+			, ownedHostCallbacks: ownedGraphs && !withoutHostCallbacks
 			, ownedInputTransfers: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedAnchoredResults: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))
 			, ownedReceiverExports: targets.every(target => ["c", "cpp", "cargo", "pypi", "rubygems", "nuget", "maven", "cpan", "php-native", "wit-wasi"].includes(target))

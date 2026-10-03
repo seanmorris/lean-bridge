@@ -100,8 +100,11 @@ test("ordinary WIT emits each source function without Alpha dispatch", async t =
 });
 
 test("ordinary WIT admission rejects reserved names, partial projections and changed coordinates", () => {
+	assert.doesNotThrow(() => validateOrdinaryWasiSettings({ hostCallbacks: true }));
+	assert.doesNotThrow(() => validateOrdinaryWasiSettings({ hostCallbacks: false }));
 	assert.throws(() => validateOrdinaryWasiSettings({ name: "bad/name" }), /coordinate/);
 	assert.throws(() => validateOrdinaryWasiSettings({ version: "1.0.0-01" }), /semantic version/);
+	assert.throws(() => validateOrdinaryWasiSettings({ hostCallbacks: 0 }), /Boolean/);
 	const reserved = synthetic(); reserved.declarations[0].name = "world";
 	assert.throws(() => compileCopiedWitModel(reserved), error => error.code === "unsupported-wit-signature" && error.details.source.path === "Sample.lean");
 	const effectful = synthetic(); effectful.declarations[0].effects = ["nondeterministic"];

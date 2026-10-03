@@ -69,3 +69,26 @@ int main(void) {
 }
 `;
 };
+
+/**
+ * Build the same public lifetime probe for an immutable installed package.
+ * Allocation fault injection and private runtime counters belong to the direct
+ * runtime gate; installed consumers use only symbols declared by the archive.
+ *
+ * @param generated - Generated WIT package with public C names.
+ * @param combined - Include consuming receivers and export anchors.
+ * @param hostCallbacks - Whether public host callback descriptors are enabled.
+ */
+export const ownedWitCallbackResultInstalledProbe = async (generated, combined, hostCallbacks) => {
+	let source = await ownedWitCallbackResultProbe(generated, combined, hostCallbacks);
+	const counters = "\nextern size_t owned_test_component_calls(void);";
+	const index = source.indexOf(counters); assert.ok(index > 0);
+	source = source.slice(0, index) + "\nint main(void) { return consumer_main(); }\n";
+	source = source.replace("extern size_t owned_test_identities(void);\n", "")
+		.replaceAll("owned_test_identities()", "((size_t) 0)")
+		.replace("CHECK(completed && failures > 10);", "CHECK(completed);")
+		.replace("CHECK(completed && failures > previous_failures + 10);"
+			, "CHECK(completed && failures == previous_failures);");
+	assert.doesNotMatch(source, /owned_test_component_calls|owned_test_identities/u);
+	return "#define LEAN_BRIDGE_CALLBACK_INSTALLED 1\n" + source;
+};

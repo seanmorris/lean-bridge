@@ -151,7 +151,7 @@ export const buildMultiProfileProject = async ({
 	const record = await readExportConfiguration(project, { signal });
 	const fields = ["package", "modules", "exports", "resources", "arities", "specializations", "contracts", "generators", ...(ownedGraphs ? ["ownedAggregates"] : [])];
 	for(const target of nativeTargets)
-		assertExportConfigurationCapabilities(record.configuration, { target, fields, targetFields: target === "cpan" ? ["module", "version"] : ["name", "version"] });
+		assertExportConfigurationCapabilities(record.configuration, { target, fields, targetFields: target === "cpan" ? ["module", "version"] : target === "wit-wasi" ? ["name", "version", "hostCallbacks"] : ["name", "version"] });
 	if(phpSelected) assertExportConfigurationCapabilities(record.configuration, { target: "php-wasm", fields, targetFields: ["npm", "composer"] });
 	const intent = await prepareLakeEntryIntent({ projectRoot: project, lakeSnapshot, signal, purpose: npmSelected && !ownedNpm ? "build" : "analysis", ownedGraphs });
 	const runtimeRoot = npmSelected && !ownedNpm ? await resolveComponentRuntimeRoot({ engineRoot, environment }) : null;
