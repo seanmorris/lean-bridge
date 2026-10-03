@@ -92,6 +92,7 @@ export const perlVariantSourcePaths = async () => {
 		visit(tree);
 	}
 	assert.equal(paths.delete("tests/helpers/php-callback-installed-staging-history.mjs"), true);
+	assert.equal(paths.delete("tests/helpers/php-callback-acceptance-history.mjs"), true);
 	assert.equal(paths.has(perlVariantEvidencePath), false);
 	return [...paths].sort();
 };

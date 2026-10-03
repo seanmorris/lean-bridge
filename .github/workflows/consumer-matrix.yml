@@ -1464,8 +1464,8 @@ jobs:
         run: |
           set -euo pipefail
           npm run test:owned-php-callback-evidence 2>&1 | tee build/owned-php-callback-evidence.log
-          rg '^# tests 10$' build/owned-php-callback-evidence.log
-          rg '^# pass 10$' build/owned-php-callback-evidence.log
+          rg '^# tests 13$' build/owned-php-callback-evidence.log
+          rg '^# pass 13$' build/owned-php-callback-evidence.log
           rg '^# fail 0$' build/owned-php-callback-evidence.log
           rg '^# cancelled 0$' build/owned-php-callback-evidence.log
           rg '^# skipped 0$' build/owned-php-callback-evidence.log

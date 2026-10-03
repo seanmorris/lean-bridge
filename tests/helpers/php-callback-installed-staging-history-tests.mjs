@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpCallbackAcceptance } from "./php-callback-acceptance-history.mjs";
 import { assertPerlVariantAcceptance, perlVariantEvidencePath } from "./owned-perl-callback-result-variant-acceptance.mjs";
 import { assertPhpCallbackInstalledHistory, beforePhpCallbackInstalledStaging
 	, phpCallbackInstalledChangedPaths, phpCallbackInstalledHistoryPath
@@ -51,7 +52,9 @@ test("PHP installed callback staging reverses exact sources and rejects drift", 
 	let rejected = 0;
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path), previous = beforePhpCallbackInstalledStaging(update.path, current);
+		const current = Buffer.from(beforePhpCallbackAcceptance(update.path
+			, await readFile(update.path), update.currentSha256));
+		const previous = beforePhpCallbackInstalledStaging(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(previous), update.previousSha256, update.path);
 		assert.equal(beforePhpCallbackInstalledStaging(update.path, current, update.currentSha256), current);
@@ -72,8 +75,9 @@ test("PHP installed callback staging reverses exact sources and rejects drift", 
 	}
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
-		assert.equal(sha256(await readFile(path)), identity.stagedSha256, path);
 		const update = history.updates.find(value => value.path === path);
+		const current = beforePhpCallbackAcceptance(path, await readFile(path), identity.stagedSha256);
+		assert.equal(sha256(current), identity.stagedSha256, path);
 		assert.equal(identity.integrationSha256, update?.previousSha256 ?? identity.stagedSha256, path);
 	}
 	assert.equal(beforePhpCallbackInstalledStaging("unknown.mjs", bytes), bytes);
@@ -88,7 +92,8 @@ test("PHP staging registers two tests without changing type-surface support", as
 		, "owned-php-callback-result-packaging"
 	]);
 	const inventoryUpdate = history.updates.find(update => update.path === "docs/type-surface.v1.json");
-	const current = await readFile(inventoryUpdate.path, "utf8");
+	const current = beforePhpCallbackAcceptance(inventoryUpdate.path
+		, await readFile(inventoryUpdate.path, "utf8"), inventoryUpdate.currentSha256);
 	const previous = beforePhpCallbackInstalledStaging(inventoryUpdate.path, current);
 	const currentInventory = JSON.parse(current), previousInventory = JSON.parse(previous);
 	const refreshes = new Map(inventoryUpdate.edits.map(edit => [edit.path, edit]));

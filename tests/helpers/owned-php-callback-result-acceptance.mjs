@@ -76,6 +76,9 @@ export const ownedPhpCallbackClosureRoots = freeze([
 	, "scripts/record-owned-php-callback-results.mjs"
 	, "scripts/update-owned-php-callback-acceptance.mjs"
 ]);
+const ownedPhpCallbackSuccessorPaths = new Set([
+	"tests/helpers/php-callback-acceptance-history.mjs"
+]);
 
 /** Include the completed predecessor and the complete local acceptance closure. */
 export const ownedPhpCallbackSourcePaths = async () => {
@@ -102,7 +105,10 @@ export const ownedPhpCallbackSourcePaths = async () => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;
 			if(specifier && ts.isStringLiteral(specifier) && specifier.text.startsWith("."))
-				pending.push(join(dirname(path), specifier.text));
+			{
+				const dependency = join(dirname(path), specifier.text);
+				if(!ownedPhpCallbackSuccessorPaths.has(dependency)) pending.push(dependency);
+			}
 			ts.forEachChild(node, visit);
 		};
 		visit(tree);
