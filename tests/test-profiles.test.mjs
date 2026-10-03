@@ -36,6 +36,9 @@ test("every repository test receives exactly one named execution profile", async
 		assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`));
 	assert.ok(grouped.native.includes("tests/rust-generator.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/perl-contract.test.mjs"));
+	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-results.test.mjs"));
+	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-result-evidence.test.mjs"));
+	assert.ok(grouped.contract.includes("tests/wit-owned-callback-result-installed-acceptance.test.mjs"));
 	assert.ok(grouped.native.includes("tests/perl-native.test.mjs"));
 	assert.ok(grouped.native.includes("tests/lake-workspace.test.mjs"));
 	assert.ok(grouped.native.includes("tests/lake-generators.test.mjs"));

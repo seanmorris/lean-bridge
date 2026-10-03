@@ -88,6 +88,13 @@ export const nativeCiRecordScript = (workflow, profile, overrides = {}) => nativ
 export const assertNativeCiIsolation = (workflow, baseline) => {
 	// The transfer receipt authenticates its added gates separately. Rewind only
 	// that exact full-file transition when checking the original shard commands.
+	// The PHP-Wasm callback-result lane is a disjoint job, so remove that exact
+	// block before authenticating the older full-workflow transition.
+	const withoutCallbackResults = workflow
+		.replace(/^ {2}php-wasm-callback-results:\n[\s\S]*?(?=^ {2}php-consumers:\n)/mu, "")
+		.replace(/^ {6}- php-wasm-callback-results\n/mu, "")
+		.replace(/^ {6}- name: Enforce PHP-Wasm callback-result acceptance\n {8}if: needs\.php-wasm-callback-results\.result != 'success'\n {8}run: exit 1\n/mu, "");
+	workflow = withoutCallbackResults;
 	workflow = beforeOwnedTransferC(".github/workflows/consumer-matrix.yml", workflow);
 	assert.equal(baseline.schemaVersion, 1);
 	assert.equal(baseline.baselineRevision, "4ae2450fd9dfd164486970993d0923e667c18bbf");

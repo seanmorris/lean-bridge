@@ -216,9 +216,9 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 		const { model, receipt } = await readVerifiedPhpWasmCopiedComponent(componentRoot, runtime.identity);
 		assert.equal(model.pointerBits, 32); assert.equal(model.schemaVersion, callbackResultAnchors ? 11 : receiverExports ? 10 : anchoredResults ? 9 : transferredInputs ? 8 : 7);
 		assert.equal(model.ownedGraph.transport, "owned-zend-v1"); assert.equal(model.exports.length, callbackResultAnchors ? callbackVariant === "combined" ? 30 : 27 : receiverExports ? 27 : transferredInputs ? 26 : 51);
-		if(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, anchoredResults ? 4 : 20);
-		if(anchoredResults) assert.equal(model.ownedGraph.resultAnchors.exports.length, receiverExports ? 20 : 19);
-		if(receiverExports) assert.equal(model.ownedGraph.receiverExports.exports.length, 16);
+		if(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, callbackResultAnchors ? 2 : anchoredResults ? 4 : 20);
+		if(anchoredResults) assert.equal(model.ownedGraph.resultAnchors.exports.length, callbackResultAnchors ? 1 : receiverExports ? 20 : 19);
+		if(receiverExports) assert.equal(model.ownedGraph.receiverExports.exports.length, callbackResultAnchors ? 5 : 16);
 		if(callbackResultAnchors)
 		{
 			assert.equal(model.ownedGraph.callbackResultAnchors.signatures.length, 4);

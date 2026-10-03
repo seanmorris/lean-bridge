@@ -297,6 +297,12 @@ ${model.callbackResultAnchors ? String.raw`    public static function copyCallba
         foreach ($fn['wholeParameters'] as $position) {
             $wholeInputs[$position] = $arguments[$position];
             [$owners[$position], , $arguments[$position]] = ValueAccess::snapshot($wholeInputs[$position], $fn['parameters'][$position]);
+		}
+		foreach ($fn['parameters'] as $position => $type) {
+			if ($fn['host'][$position] || !isset(self::CALLBACKS[$type])
+				|| !$arguments[$position] instanceof @NAMESPACE@\Value) continue;
+			$wholeInputs[$position] = $arguments[$position];
+			[, , $arguments[$position]] = ValueAccess::snapshot($wholeInputs[$position], $type);
         }`);
 	source = replace(source, `            foreach ($fn['parameters'] as $index => $type)
                 $inputs[] = $fn['host'][$index] ? self::host($type, $prepared[$index], $frame)

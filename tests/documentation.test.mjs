@@ -106,12 +106,16 @@ test("PHP borrow guides explain whole roots in both transports and retain packag
 	assert.match(consumer, /\$kept = \$view->retain\(\)/u);
 	assert.match(consumer, /last root expires its borrowed descendants/u);
 	assert.match(consumer, /input's lifetime in native PHP or\nPHP-Wasm/u);
-	assert.match(consumer, /Callback-result-anchored lifetimes remain\nunsupported/u);
+	assert.match(consumer, /### Callback-result lifetimes/u);
+	assert.match(consumer, /\$argument = \$closure->copyArg\(0, \$payload\)/u);
+	assert.match(consumer, /targets\.php-wasm\.hostCallbacks: false/u);
 	assert.match(consumer, /### Methods and properties/u);
 	assert.match(consumer, /Native PHP and PHP-Wasm packages can expose methods and read-only properties/u);
 	assert.match(consumer, /Both transports preserve the same receiver and argument lifetimes/u);
 	assert.match(publisher, /### Anchor a result to an input/u);
 	assert.match(publisher, /"scope": "parameter", "anchor": "arg0"/u);
+	assert.match(publisher, /"hostCallbacks": false/u);
+	assert.match(publisher, /`copyArg\(\)` and `copyResult\(\)`/u);
 	assert.match(publisher, /### Publish to the private HTTPS repository/u);
 });
 
@@ -602,6 +606,14 @@ test("dedicated CI covers every consumer with Node 22 and pinned build paths", a
   const phpJob = workflow.split("  php-consumers:\n")[1].split("\n  native-consumers:\n")[0];
   assert.match(phpJob, /^ {4}timeout-minutes: 360$/m);
   assert.match(phpJob, /LEAN_BRIDGE_REVIEWED_MULTI_PROFILE_TEST=1 node --test tests\/php-wasm-multi-profile\.test\.mjs/);
+  const phpWasmCallbackJob = workflow.split("  php-wasm-callback-results:\n")[1].split("\n  php-consumers:\n")[0];
+  assert.match(phpWasmCallbackJob, /^ {4}timeout-minutes: 180$/m);
+  assert.match(phpWasmCallbackJob, /npm run test:owned-php-wasm-callback-results/);
+  assert.match(phpWasmCallbackJob, /npm run test:owned-php-wasm-callback-evidence/);
+  for(const variant of ["no-host", "host", "combined"])
+    assert.match(phpWasmCallbackJob, new RegExp(`test -s build/owned-php-wasm-callback-results/${variant}-packages\\.json`));
+  assert.match(workflow, /^ {6}- php-wasm-callback-results$/m);
+  assert.match(workflow, /if: needs\.php-wasm-callback-results\.result != 'success'/);
   assert.match(workflow, /LEAN_BRIDGE_CONSUMER_PERFORMANCE_DIR: build\/consumer-ci\/performance/);
   assert.match(workflow, /npm run build:builder-image/);
   assert.match(workflow, /npm run test:builder-ownership/);

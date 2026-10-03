@@ -151,6 +151,39 @@ remain unsupported. The
 [installed package checks](../evidence/owned-php-packages-20260928.md) cover native
 package loading, relocation, independent builds and mixed packages.
 
+Callback results can borrow from one of that callback's arguments. Put the
+lifetime on the callable result, using the zero-based callback argument in
+`anchor`:
+
+```json
+{
+  "contracts": {
+    "Owned.callbackRecord": {
+      "parameters": [
+        { "ownership": "borrow", "lifetime": { "scope": "call", "anchor": null } },
+        {
+          "ownership": "borrow",
+          "lifetime": { "scope": "call", "anchor": null },
+          "callable": {
+            "result": {
+              "ownership": "borrow",
+              "lifetime": { "scope": "parameter", "anchor": "arg0" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+The compiler checks the callback signature and records the resolved argument
+position in the release receipt. Generated `Value` and returned Lean-closure
+classes expose `copyArg()` and `copyResult()` so a consumer can create an
+authenticated whole owner before invoking a callback directly. Native PHP and
+PHP-Wasm support these contracts for resource-containing acyclic and finite
+recursive values.
+
 For PHP-Wasm, use the [PHP-Wasm author toolchain](#build-an-ordinary-php-wasm-package)
 and build the same source:
 
@@ -164,6 +197,26 @@ to distribute them. Consumers use the generated PHP classes and the installed
 descriptor, with startup or first-call loading. The build uses a checked 32-bit
 Zend adapter, not the native PHP FFI library. The 32-bit primitive mappings also
 apply to callback arguments and resource-containing values.
+
+PHP-Wasm admits host PHP callables by default. Set `hostCallbacks` to `false`
+when a package should accept only generated Lean closures at callable
+parameters:
+
+```json
+{
+  "targets": {
+    "php-wasm": {
+      "hostCallbacks": false,
+      "npm": { "name": "@example/owned-values-wasm", "version": "1.0.0" },
+      "composer": { "name": "example/owned-values-wasm", "version": "1.0.0" }
+    }
+  }
+}
+```
+
+That setting removes the host-callback recovery API and rejects PHP callables
+before entry. Returned Lean closures, callback-result anchors, `copyArg()`, and
+`copyResult()` remain available.
 
 To produce both PHP releases from one source capture, repeat the target:
 

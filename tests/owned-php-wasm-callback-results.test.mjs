@@ -45,6 +45,7 @@ test("PHP-Wasm callback-result models preserve every compiler-authenticated life
 		assert.match(generated.files["src/Api.php"], /function copyArg\(mixed \$index, mixed \$value\): Value/u);
 		assert.match(generated.files["src/Api.php"], /function copyResult\(mixed \$value\): Value/u);
 		assert.match(generated.files["src/Internal/Native.php"], /function copyCallback\(mixed \$closure, \?int \$index, mixed \$value\):/u);
+		assert.match(generated.files["src/Internal/Native.php"], /!isset\(self::CALLBACKS\[\$type\]\)[\s\S]+ValueAccess::snapshot\(\$wholeInputs\[\$position\], \$type\)/u);
 		if(observation.options.hostCallbacks)
 		{
 			assert.match(generated.files["src/Internal/Native.php"], /\['owner' => \$owner, 'value' => \$wire\]/u);
