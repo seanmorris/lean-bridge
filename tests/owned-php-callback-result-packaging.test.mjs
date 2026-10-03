@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { access, cp, mkdir, mkdtemp, readFile, realpath, rename, rm, statfs } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import test from "node:test";
+import test, { before } from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { ownedPhpEvidence } from "../src/build/owned-php-artifacts.mjs";
 import { verifyNativeFiles } from "../src/build/native-artifacts.mjs";
@@ -56,7 +56,7 @@ export const ownedPhpCallbackPackageEnvironment = (source = process.env) => ({
 		: { LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: source.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR })
 });
 
-test("native PHP callback packages keep the production glibc floor implicit", () => {
+before(() => {
 	const production = ownedPhpCallbackPackageEnvironment({});
 	assert.equal(Object.hasOwn(production, "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR"), false);
 	const local = ownedPhpCallbackPackageEnvironment({ LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.36" });
