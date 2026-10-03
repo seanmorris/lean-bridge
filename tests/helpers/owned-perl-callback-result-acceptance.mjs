@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { ownedPerlCallbackBaseline, ownedPerlCallbackChangedPaths
 	, ownedPerlCallbackHistoryPath, ownedPerlCallbackHistorySha256
@@ -166,13 +167,14 @@ const passed = (run, count, titles) => {
  *
  * @param path - Required canonical CI artifact path.
  * @param item - Complete original observation.
+ * @param readSource - Current source or independently authenticated historical bytes.
  */
-export const assertOwnedPerlCallbackReport = async (path, item) => {
+export const assertOwnedPerlCallbackReport = async (path, item, readSource = readFile) => {
 	assert.ok(ownedPerlCallbackResultReports.includes(path), path);
 	const name = path.split("/").at(-1), mode = name.startsWith("ordinary") ? "ordinary" : "reviewed";
 	assert.equal(item.mode, mode);
-	if(name.endsWith("-combined-release.json")) return assertOwnedPerlCallbackCombinedRelease(name, item);
-	if(name.endsWith("-combined-package.json")) return assertOwnedPerlCallbackPackage(name, item);
+	if(name.endsWith("-combined-release.json")) return assertOwnedPerlCallbackCombinedRelease(name, item, readSource);
+	if(name.endsWith("-combined-package.json")) return assertOwnedPerlCallbackPackage(name, item, readSource);
 	if(path.startsWith("build/owned-perl-callback-results/")) return assertOwnedPerlCallbackRuntime(name, item);
 	if(path.startsWith("build/owned-perl-callback-result-faults/")) return assertOwnedPerlCallbackFaults(mode, item);
 	if(path.startsWith("build/owned-perl-callback-result-lifetime/")) return assertOwnedPerlCallbackLifetime(name, item);
@@ -195,7 +197,13 @@ export const assertOwnedPerlCallbackAcceptance = async record => {
 	assert.deepEqual(record.sourceHistory, { path: ownedPerlCallbackHistoryPath, sha256: ownedPerlCallbackHistorySha256 });
 	assert.equal(sha256(await readFile(record.sourceHistory.path)), record.sourceHistory.sha256);
 	assert.deepEqual(Object.keys(record.sources).sort(), await ownedPerlCallbackSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	const readSource = async path => {
+		if(!Object.hasOwn(record.sources, path)) return readFile(path);
+		const digest = record.sources[path];
+		const source = beforePostPerlCallbackStaging(path, await readFile(path), digest);
+		assert.equal(sha256(source), digest, path); return source;
+	};
+	for(const path of Object.keys(record.sources)) await readSource(path);
 	assert.deepEqual(record.runs.map(({ name, tests }) => ({ name, tests })), ownedPerlCallbackRuns);
 	for(const run of record.runs)
 	{
@@ -212,6 +220,6 @@ export const assertOwnedPerlCallbackAcceptance = async record => {
 	for(const entry of Object.values(record.archive.reports)) keys(entry, "bytes sha256 data");
 	const reports = unpackOwnedCallbackReports(record.archive);
 	assert.deepEqual(Object.keys(reports).sort(), [...ownedPerlCallbackResultReports].sort());
-	for(const [path, item] of Object.entries(reports)) await assertOwnedPerlCallbackReport(path, item);
-	assertOwnedPerlCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
+	for(const [path, item] of Object.entries(reports)) await assertOwnedPerlCallbackReport(path, item, readSource);
+	assertOwnedPerlCallbackResultCi((await readSource(".github/workflows/consumer-matrix.yml")).toString(), JSON.parse(await readSource("package.json")));
 };

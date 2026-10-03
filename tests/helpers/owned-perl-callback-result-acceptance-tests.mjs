@@ -9,6 +9,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 import ts from "typescript";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { assertOwnedPerlCallbackAcceptance, assertOwnedPerlCallbackReport
 	, ownedPerlCallbackEvidencePath, ownedPerlCallbackSourcePaths } from "./owned-perl-callback-result-acceptance.mjs";
@@ -29,7 +30,8 @@ test("Perl acceptance covers the execution and verifier import closure", async (
 		assert.ok(paths.has(path), `Unrecorded imported source: ${path}`);
 		visited.add(path);
 		if(!path.endsWith(".mjs")) continue;
-		const tree = ts.createSourceFile(path, await readFile(path, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+		const source = beforePostPerlCallbackStaging(path, await readFile(path, "utf8"));
+		const tree = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 		const visit = node => {
 			const specifier = ts.isImportDeclaration(node) || ts.isExportDeclaration(node) ? node.moduleSpecifier
 				: ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword ? node.arguments[0] : null;

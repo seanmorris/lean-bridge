@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
 import { unpackOwnedCallbackReports } from "./owned-callback-result-evidence.mjs";
 import { assertOwnedJvmCallbackReport, ownedJvmCallbackEvidencePath } from "./owned-jvm-callback-result-acceptance.mjs";
 import { ownedPerlCallbackHistoryPath, ownedPerlCallbackHistorySha256
@@ -29,7 +30,8 @@ test("Perl callback source history authenticates complete transitions and reject
 	assert.equal(history.acceptance, undefined); assert.equal(history.scope, undefined);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path), prior = beforeOwnedPerlCallbackResults(update.path, current);
+		const current = Buffer.from(beforePostPerlCallbackStaging(update.path, await readFile(update.path)));
+		const prior = beforeOwnedPerlCallbackResults(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedPerlCallbackResults(update.path, current, update.currentSha256), current);

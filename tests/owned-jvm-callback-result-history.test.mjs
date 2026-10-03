@@ -13,11 +13,15 @@ import { ownedJvmCallbackHistoryPath, ownedJvmCallbackHistorySha256
 	, beforeOwnedJvmCallbackResults, reverseOwnedJvmCallbackUpdate } from "./helpers/owned-jvm-callback-result-history.mjs";
 import "./helpers/owned-jvm-callback-result-acceptance-tests.mjs";
 import "./helpers/owned-perl-callback-result-history-tests.mjs";
+import "./helpers/post-perl-callback-staging-history-tests.mjs";
+import "./helpers/owned-php-callback-result-runtime-evidence-tests.mjs";
 
 test("JVM callback source history authenticates complete transitions and rejects drift", async () => {
 	const wrapper = await readFile("tests/owned-jvm-callback-result-history.test.mjs", "utf8");
 	assert.match(wrapper, /^import "\.\/helpers\/owned-jvm-callback-result-acceptance-tests\.mjs";$/mu);
 	assert.match(wrapper, /^import "\.\/helpers\/owned-perl-callback-result-history-tests\.mjs";$/mu);
+	assert.match(wrapper, /^import "\.\/helpers\/post-perl-callback-staging-history-tests\.mjs";$/mu);
+	assert.match(wrapper, /^import "\.\/helpers\/owned-php-callback-result-runtime-evidence-tests\.mjs";$/mu);
 	const bytes = await readFile(ownedJvmCallbackHistoryPath);
 	assert.equal(sha256(bytes), ownedJvmCallbackHistorySha256);
 	const history = JSON.parse(bytes);
