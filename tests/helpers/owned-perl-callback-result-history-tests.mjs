@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpCallbackInstalledStaging } from "./php-callback-installed-staging-history.mjs";
 import { beforeWitCallbackRuntimeStaging } from "./wit-callback-runtime-staging-history.mjs";
 import { beforePerlCallbackVariants } from "./owned-perl-callback-result-variant-history.mjs";
 import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
@@ -58,10 +59,15 @@ test("Perl callback source history authenticates complete transitions and reject
 });
 
 test("staged Perl source identities do not promote type-surface support", async () => {
-	const path = "docs/type-surface.v1.json", current = beforePerlCallbackVariants(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = beforePhpCallbackInstalledStaging(path, await readFile(path, "utf8"));
+	const current = beforePerlCallbackVariants(path, source);
 	const previous = JSON.parse(beforeOwnedPerlCallbackResults(path, current));
 	for(const evidence of previous.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, await readFile(file.path)));
+	{
+		const fileSource = beforePhpCallbackInstalledStaging(file.path, await readFile(file.path));
+		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, fileSource));
+	}
 	assert.deepEqual(JSON.parse(current), previous);
 });
 

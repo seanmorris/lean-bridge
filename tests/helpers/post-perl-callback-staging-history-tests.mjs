@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpCallbackInstalledStaging } from "./php-callback-installed-staging-history.mjs";
 import { beforeWitCallbackRuntimeStaging } from "./wit-callback-runtime-staging-history.mjs";
 import { beforePerlCallbackVariants } from "./owned-perl-callback-result-variant-history.mjs";
 import { beforePostPerlCallbackStaging, postPerlCallbackChangedPaths
@@ -23,7 +24,8 @@ test("post-Perl callback staging reverses complete registered bytes and preserve
 	let rejected = 0;
 	for(const update of history.updates)
 	{
-		const current = Buffer.from(beforeWitCallbackRuntimeStaging(update.path, await readFile(update.path)));
+		const source = beforePhpCallbackInstalledStaging(update.path, await readFile(update.path));
+		const current = Buffer.from(beforeWitCallbackRuntimeStaging(update.path, source));
 		const prior = beforePostPerlCallbackStaging(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
@@ -48,9 +50,10 @@ test("post-Perl callback staging reverses complete registered bytes and preserve
 	}
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
-		assert.equal(sha256(beforeWitCallbackRuntimeStaging(path, await readFile(path))), identity.currentSha256);
+		const source = beforePhpCallbackInstalledStaging(path, await readFile(path));
+		assert.equal(sha256(beforeWitCallbackRuntimeStaging(path, source)), identity.currentSha256);
 		assert.equal(identity.currentSha256, identity.integratedSha256);
-		const current = Buffer.from(beforeWitCallbackRuntimeStaging(path, await readFile(path)));
+		const current = Buffer.from(beforeWitCallbackRuntimeStaging(path, source));
 		assert.equal(beforePostPerlCallbackStaging(path, current), current);
 	}
 	t.diagnostic(`${history.updates.length} exact transitions, ${Object.keys(history.introducedSources).length} introduced inputs, ${rejected} rejected source forgeries.`);
@@ -60,10 +63,15 @@ test("post-Perl staging preserves completed receipts and type-surface support wh
 	const history = readPostPerlCallbackHistory();
 	for(const predecessor of [history.previous, history.completedPredecessor])
 		assert.equal(sha256(await readFile(predecessor.path)), predecessor.sha256);
-	const path = "docs/type-surface.v1.json", current = beforePerlCallbackVariants(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = beforePhpCallbackInstalledStaging(path, await readFile(path, "utf8"));
+	const current = beforePerlCallbackVariants(path, source);
 	const prior = JSON.parse(beforePostPerlCallbackStaging(path, current));
 	for(const evidence of prior.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, await readFile(file.path)));
+	{
+		const fileSource = beforePhpCallbackInstalledStaging(file.path, await readFile(file.path));
+		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, fileSource));
+	}
 	assert.deepEqual(JSON.parse(current), prior);
 	const wrapper = await readFile("tests/owned-jvm-callback-result-history.test.mjs", "utf8");
 	assert.match(wrapper, /^import "\.\/helpers\/post-perl-callback-staging-history-tests\.mjs";$/mu);

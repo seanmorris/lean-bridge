@@ -13,6 +13,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { copiedCleanEnvironment } from "./copied-fixture-install.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
+import { beforePhpCallbackInstalledStaging } from "./php-callback-installed-staging-history.mjs";
 import { expectedOwnedPhpInstalledCallback, ownedPhpInstalledCallbackProbe } from "./owned-php-callback-result-installed.mjs";
 import { assertOwnedPhpCallbackPackageSources } from "./owned-php-callback-result-package-sources.mjs";
 import { readOwnedPhpCallbackZip } from "./owned-php-callback-result-package-zip.mjs";
@@ -79,6 +80,13 @@ export const readOwnedPhpInstalledEvidence = async (readEvidence = readFile) => 
 	}
 	return { reports, logs };
 };
+/**
+ * Read the exact source state authenticated when the six reports were captured.
+ *
+ * @param path - Repository-relative source path.
+ */
+export const readOwnedPhpInstalledSource = async path =>
+	beforePhpCallbackInstalledStaging(path, await readFile(path));
 let originals;
 const original = async name => {
 	originals ??= readOwnedPhpInstalledEvidence().then(freeze);
@@ -280,7 +288,7 @@ const assertRaw = (item, baseline) => {
  * @param item - Untrusted report observation.
  * @param readSource - Repository source reader.
  */
-export const assertOwnedPhpInstalledReport = async (name, item, readSource = readFile) => {
+export const assertOwnedPhpInstalledReport = async (name, item, readSource = readOwnedPhpInstalledSource) => {
 	const pin = selected(name), baseline = await original(name); shape(item, baseline);
 	assert.equal(item.schemaVersion, 1); assert.equal(item.kind, "owned-php-callback-result-installed-observations");
 	assert.equal(item.mode, pin.mode); assert.equal(item.variant, pin.variant); assert.equal(item.stage, "complete");
@@ -371,7 +379,7 @@ export const assertOwnedPhpInstalledHandoffs = async (name, item, readEvidence =
  * @param root0.readSource - Repository source reader.
  * @param root0.readEvidence - Original archive reader.
  */
-export const assertOwnedPhpInstalledMatrix = async (evidence, { readSource = readFile, readEvidence = readFile } = {}) => {
+export const assertOwnedPhpInstalledMatrix = async (evidence, { readSource = readOwnedPhpInstalledSource, readEvidence = readFile } = {}) => {
 	keys(evidence, ["reports", "logs"]); const names = cases.map(value => value.name);
 	keys(evidence.reports, names); keys(evidence.logs, names);
 	let checks = 0;

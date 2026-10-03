@@ -91,6 +91,7 @@ export const perlVariantSourcePaths = async () => {
 		};
 		visit(tree);
 	}
+	assert.equal(paths.delete("tests/helpers/php-callback-installed-staging-history.mjs"), true);
 	assert.equal(paths.has(perlVariantEvidencePath), false);
 	return [...paths].sort();
 };
@@ -161,7 +162,8 @@ export const assertPerlVariantAcceptance = async record => {
 	}
 	await assertPerlVariantVerification(record.verification);
 	assert.deepEqual(Object.keys(record.sources), await perlVariantSourcePaths());
-	for(const [path, digest] of Object.entries(record.sources)) assert.equal(sha256(await readFile(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.sources))
+		assert.equal(sha256(beforePostPerlCallbackStaging(path, await readFile(path), digest)), digest, path);
 	assertOwnedPerlCallbackResultCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
 	const expected = new Map(reports[ownedPerlCallbackVariantReports[0]].cli.files.map(value => [value.path, value.sha256]));
 	const readSource = async path => {

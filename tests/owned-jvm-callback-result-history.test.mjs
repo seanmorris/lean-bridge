@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
+import { beforePhpCallbackInstalledStaging } from "./helpers/php-callback-installed-staging-history.mjs";
 import { beforeWitCallbackRuntimeStaging } from "./helpers/wit-callback-runtime-staging-history.mjs";
 import { beforePerlCallbackVariants } from "./helpers/owned-perl-callback-result-variant-history.mjs";
 import { beforeOwnedPerlCallbackResults } from "./helpers/owned-perl-callback-result-history.mjs";
@@ -17,6 +18,7 @@ import "./helpers/owned-jvm-callback-result-acceptance-tests.mjs";
 import "./helpers/owned-perl-callback-result-history-tests.mjs";
 import "./helpers/post-perl-callback-staging-history-tests.mjs";
 import "./helpers/wit-callback-runtime-staging-history-tests.mjs";
+import "./helpers/php-callback-installed-staging-history-tests.mjs";
 import "./helpers/owned-php-callback-result-runtime-evidence-tests.mjs";
 
 test("JVM callback source history authenticates complete transitions and rejects drift", async () => {
@@ -25,6 +27,7 @@ test("JVM callback source history authenticates complete transitions and rejects
 	assert.match(wrapper, /^import "\.\/helpers\/owned-perl-callback-result-history-tests\.mjs";$/mu);
 	assert.match(wrapper, /^import "\.\/helpers\/post-perl-callback-staging-history-tests\.mjs";$/mu);
 	assert.match(wrapper, /^import "\.\/helpers\/wit-callback-runtime-staging-history-tests\.mjs";$/mu);
+	assert.match(wrapper, /^import "\.\/helpers\/php-callback-installed-staging-history-tests\.mjs";$/mu);
 	assert.match(wrapper, /^import "\.\/helpers\/owned-php-callback-result-runtime-evidence-tests\.mjs";$/mu);
 	const bytes = await readFile(ownedJvmCallbackHistoryPath);
 	assert.equal(sha256(bytes), ownedJvmCallbackHistorySha256);
@@ -58,9 +61,14 @@ test("JVM callback source history authenticates complete transitions and rejects
 });
 
 test("staged JVM source identities do not promote type-surface support", async () => {
-	const path = "docs/type-surface.v1.json", current = beforePerlCallbackVariants(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = beforePhpCallbackInstalledStaging(path, await readFile(path, "utf8"));
+	const current = beforePerlCallbackVariants(path, source);
 	const previous = JSON.parse(beforeOwnedJvmCallbackResults(path, current));
 	for(const evidence of previous.evidence) for(const file of evidence.files)
-		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, await readFile(file.path)));
+	{
+		const fileSource = beforePhpCallbackInstalledStaging(file.path, await readFile(file.path));
+		file.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, fileSource));
+	}
 	assert.deepEqual(JSON.parse(current), previous);
 });

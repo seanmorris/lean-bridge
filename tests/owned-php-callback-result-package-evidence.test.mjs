@@ -10,7 +10,8 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { assertOwnedPhpInstalledHandoffs, assertOwnedPhpInstalledLog
 	, assertOwnedPhpInstalledMatrix, assertOwnedPhpInstalledReport
-	, ownedPhpInstalledCases, ownedPhpInstalledReportRoot, readOwnedPhpInstalledEvidence } from "./helpers/owned-php-callback-result-package-evidence.mjs";
+	, ownedPhpInstalledCases, ownedPhpInstalledReportRoot, readOwnedPhpInstalledEvidence
+	, readOwnedPhpInstalledSource } from "./helpers/owned-php-callback-result-package-evidence.mjs";
 import { readOwnedPhpCallbackZip } from "./helpers/owned-php-callback-result-package-zip.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_PHP_CALLBACK_RESULT_PACKAGE_EVIDENCE_TEST === "1";
@@ -26,7 +27,7 @@ test("six installed PHP reports authenticate original sources, handoffs and 300 
 	const evidence = await readOwnedPhpInstalledEvidence(), before = canonicalJson(evidence);
 	const sources = new Set(), artifacts = new Set();
 	const result = await assertOwnedPhpInstalledMatrix(evidence, {
-		readSource: async path => { sources.add(path); return readFile(path); }
+		readSource: async path => { sources.add(path); return readOwnedPhpInstalledSource(path); }
 		, readEvidence: async path => { artifacts.add(path); return readFile(path); }
 	});
 	assert.deepEqual(result, { reports: 6, producerBuilds: 12, handoffs: 12

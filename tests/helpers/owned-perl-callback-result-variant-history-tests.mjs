@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpCallbackInstalledStaging } from "./php-callback-installed-staging-history.mjs";
 import { beforePostPerlCallbackStaging } from "./post-perl-callback-staging-history.mjs";
 import { beforeCopiedFixtureReaders } from "./copied-fixture-source-history.mjs";
 import { assertPerlVariantHistory, beforePerlCallbackVariants, readPerlVariantHistory
@@ -62,7 +63,8 @@ test("Perl optional history closes former exclusions and preserves exact stoppin
 	const history = readPerlVariantHistory(); let rejected = 0;
 	for(const category of ["extensionUpdates", "successorUpdates"]) for(const update of history[category])
 	{
-		const current = beforePerlCallbackVariants(update.path, await readFile(update.path), update.currentSha256);
+		const source = beforePhpCallbackInstalledStaging(update.path, await readFile(update.path), update.currentSha256);
+		const current = beforePerlCallbackVariants(update.path, source, update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256);
 		const prior = reversePerlVariantUpdate(current, update, category);
 		assert.equal(sha256(prior), update.previousSha256);
@@ -94,8 +96,9 @@ test("Perl optional history closes former exclusions and preserves exact stoppin
 	for(const [path, identity] of Object.entries(history.introducedSources))
 		assert.equal(sha256(beforePerlCallbackVariants(path, await readFile(path), identity.sha256)), identity.sha256);
 	const inventoryUpdate = history.extensionUpdates.find(value => value.path === "docs/type-surface.v1.json");
-	const inventory = JSON.parse(await readFile(inventoryUpdate.path));
-	const previous = JSON.parse(reversePerlVariantUpdate(await readFile(inventoryUpdate.path), inventoryUpdate, "extensionUpdates"));
+	const inventoryBytes = beforePhpCallbackInstalledStaging(inventoryUpdate.path, await readFile(inventoryUpdate.path), inventoryUpdate.currentSha256);
+	const inventory = JSON.parse(inventoryBytes);
+	const previous = JSON.parse(reversePerlVariantUpdate(inventoryBytes, inventoryUpdate, "extensionUpdates"));
 	const allowed = new Map([["package.json", 18]
 		, ["src/adoption/test-profiles.mjs", 93]
 		, ["src/build/native-project.mjs", 75]
@@ -109,7 +112,7 @@ test("Perl optional history closes former exclusions and preserves exact stoppin
 		if(file.sha256 !== prior.sha256)
 		{
 			assert.ok(allowed.has(file.path), file.path);
-			assert.equal(file.sha256, sha256(await readFile(file.path)));
+			assert.equal(file.sha256, sha256(beforePhpCallbackInstalledStaging(file.path, await readFile(file.path), file.sha256)));
 			file.sha256 = prior.sha256; refreshed.set(file.path, refreshed.get(file.path) + 1);
 		}
 	}

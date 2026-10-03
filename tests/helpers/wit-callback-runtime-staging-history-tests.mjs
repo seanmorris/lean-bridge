@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforePhpCallbackInstalledStaging } from "./php-callback-installed-staging-history.mjs";
 import { beforePerlCallbackVariants } from "./owned-perl-callback-result-variant-history.mjs";
 import { beforeCopiedFixtureReaders, copiedFixtureReaderPaths } from "./copied-fixture-source-history.mjs";
 import { beforePostPerlCallbackStaging, readPostPerlCallbackHistory } from "./post-perl-callback-staging-history.mjs";
@@ -68,7 +69,8 @@ test("WIT runtime staging authenticates complete source bytes and preserves stop
 	const history = readWitCallbackRuntimeHistory(); let rejected = 0;
 	for(const category of ["readerUpdates", "updates"]) for(const update of history[category])
 	{
-		const current = Buffer.from(beforePerlCallbackVariants(update.path, await readFile(update.path), update.currentSha256));
+		const source = beforePhpCallbackInstalledStaging(update.path, await readFile(update.path), update.currentSha256);
+		const current = Buffer.from(beforePerlCallbackVariants(update.path, source, update.currentSha256));
 		const prior = reverseWitCallbackRuntimeUpdate(current, update, category);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
@@ -109,7 +111,8 @@ test("WIT runtime staging composes latest-first into post-Perl and copied reader
 	for(const path of [...witCallbackRuntimeSourcePaths, ...witCallbackRuntimeReaderPaths])
 	{
 		assert.ok(copiedFixtureReaderPaths.includes(path));
-		const current = await readFile(path), stage = beforeWitCallbackRuntimeStaging(path, current);
+		const current = Buffer.from(beforePhpCallbackInstalledStaging(path, await readFile(path)));
+		const stage = beforeWitCallbackRuntimeStaging(path, current);
 		const old = previous.updates.find(update => update.path === path);
 		const expected = old?.previousSha256 ?? sha256(stage);
 		if(old) assert.equal(sha256(stage), old.currentSha256, path);
@@ -132,7 +135,8 @@ test("frozen WIT runtime stage excludes Perl successors now closed by a separate
 	for(const path of witCallbackRuntimeSuccessorPaths)
 	{
 		const expected = history.successorInputs[path].sha256;
-		const current = beforePerlCallbackVariants(path, await readFile(path), expected);
+		const source = beforePhpCallbackInstalledStaging(path, await readFile(path), expected);
+		const current = beforePerlCallbackVariants(path, source, expected);
 		assert.equal(sha256(current), expected, path);
 		assert.equal(beforeWitCallbackRuntimeStaging(path, current, expected), current);
 		assert.equal(beforePostPerlCallbackStaging(path, current, expected), current);
