@@ -20,7 +20,13 @@ import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import "./helpers/owned-perl-callback-result-xs-tests.mjs";
 import "./helpers/owned-perl-callback-result-runtime-tests.mjs";
 import "./helpers/owned-perl-callback-result-fault-tests.mjs";
+import "./helpers/owned-perl-callback-result-lifetime-tests.mjs";
+import "./helpers/owned-perl-callback-result-mutant-tests.mjs";
+import "./helpers/owned-perl-callback-result-sanitizer-tests.mjs";
 import "./helpers/owned-perl-callback-result-runtime-evidence-tests.mjs";
+import "./helpers/owned-perl-callback-result-fault-evidence-tests.mjs";
+import "./helpers/owned-perl-callback-result-lifetime-evidence-tests.mjs";
+import "./helpers/owned-perl-callback-result-mutant-evidence-tests.mjs";
 import "./helpers/owned-perl-callback-result-installed-smoke.mjs";
 import "./helpers/owned-perl-callback-result-history-tests.mjs";
 

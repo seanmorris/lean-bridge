@@ -32,25 +32,16 @@ const identityHashes = {
 };
 
 /**
- * Reconstruct one exact source/capability configuration and check raw execution.
+ * Reconstruct one exact source/capability configuration without execution claims.
  *
- * @param name - Required report basename, independent of its supplied labels.
- * @param item - Original unmodified direct-runtime report.
+ * @param mode - Independently required author source path.
+ * @param variant - Independently required capability combination.
+ * @param item - Original inputs, options and generated-source hashes.
  */
-export const assertOwnedPerlCallbackRuntime = async (name, item) => {
-	assert.ok(ownedPerlCallbackRuntimeReports.includes(name), name);
-	const fields = [
-		"schemaVersion", "kind", "mode", "variant", "actualLean", "installedPackage"
-		, "options", "input", "nativeSourceSha256", "declarationsSha256"
-		, "valuesSha256", "xsSha256", "probe", "probeSha256", "observations"
-	];
-	keys(item, fields);
-	const [, mode, variant] = /^(ordinary|reviewed)-(no-host|host|combined)\.json$/u.exec(name);
+export const assertOwnedPerlCallbackSources = async (mode, variant, item) => {
+	assert.ok(["ordinary", "reviewed"].includes(mode));
+	assert.ok(["no-host", "host", "combined"].includes(variant));
 	const combined = variant === "combined", hostCallbacks = variant !== "no-host";
-	assert.equal(item.schemaVersion, 1);
-	assert.equal(item.kind, "owned-perl-callback-results-runtime");
-	assert.equal(item.mode, mode); assert.equal(item.variant, variant);
-	assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
 	const options = { hostCallbacks, callbackResultAnchors: true
 		, transferredInputs: combined
 		, anchoredResults: combined
@@ -98,6 +89,30 @@ export const assertOwnedPerlCallbackRuntime = async (name, item) => {
 	assert.equal(item.declarationsSha256, sha256(xs.declarations));
 	assert.equal(item.valuesSha256, sha256(xs.valuesSource));
 	assert.equal(item.xsSha256, sha256(sources.xs));
+	return { model, c, xs, sources };
+};
+
+/**
+ * Check one direct-runtime report against its sources and original process output.
+ *
+ * @param name - Required report basename, independent of its supplied labels.
+ * @param item - Original unmodified direct-runtime report.
+ */
+export const assertOwnedPerlCallbackRuntime = async (name, item) => {
+	assert.ok(ownedPerlCallbackRuntimeReports.includes(name), name);
+	const fields = [
+		"schemaVersion", "kind", "mode", "variant", "actualLean", "installedPackage"
+		, "options", "input", "nativeSourceSha256", "declarationsSha256"
+		, "valuesSha256", "xsSha256", "probe", "probeSha256", "observations"
+	];
+	keys(item, fields);
+	const [, mode, variant] = /^(ordinary|reviewed)-(no-host|host|combined)\.json$/u.exec(name);
+	const combined = variant === "combined", hostCallbacks = variant !== "no-host";
+	assert.equal(item.schemaVersion, 1);
+	assert.equal(item.kind, "owned-perl-callback-results-runtime");
+	assert.equal(item.mode, mode); assert.equal(item.variant, variant);
+	assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
+	await assertOwnedPerlCallbackSources(mode, variant, item);
 	const probe = await readFile("tests/fixtures/structured-types/owned-perl-callback-results.pl", "utf8");
 	assert.equal(item.probe, probe); assert.equal(item.probeSha256, sha256(probe));
 	assertOwnedPerlReceiverMatrix(item.observations);

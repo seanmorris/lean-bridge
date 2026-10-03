@@ -54,8 +54,31 @@ Independent retains remained usable; original aliases expired only after the
 recorded transfer. All six final cleanup counters returned to zero.
 
 The two reports under `build/owned-perl-callback-result-faults/` retain every
-attempt and its original process output. They do not complete the process,
-thread, sanitizer, or installed-package acceptance requirements.
+attempt and its original process output. Their verifier reconstructs the native
+and XS sources, checks every handoff and restored control, and rejects 106 forged
+reports, including coordinated changes to parsed observations and raw output.
+It requires each restored control immediately after its fault sweep and checks
+the recorded allocation, active-scope, and cleanup-status counters.
+
+## Process lifetimes and compiled negative controls
+
+Both source paths passed process/reentry and reentrant-shutdown probes on all
+four Perl variants: 16 subprocesses and 520 assertions. Forked processes and
+cloned interpreters reject six public entry points while the creator remains
+usable. The probes also cover nested raw and whole-value callbacks, closing an
+original owner during an active call, shutdown during a callback, and deferred
+native cleanup. Every execution finishes with six zero counters.
+
+The lifetime verifier derives exact failure locations from the probe and
+generated adapter. It checks the interpreter fingerprint, all observed events,
+and the complete source/scenario matrix, rejecting 239 coordinated alterations.
+
+Four deliberately broken XS adapters compiled on both source paths and all four
+Perl variants. The 32 executions fail their named semantic checks for a wrong
+callback owner, expired empty values, an escaped callback frame, or a missing
+whole-reply conversion. All 48 original-code controls pass 92 assertions. The
+verifier reconstructs each source substitution and rejects 68 false claims;
+compilation failures and crashes cannot stand in for semantic failures.
 
 ## CPAN contract checks
 
@@ -100,12 +123,47 @@ original CLI, package receipts, and final consumer executions. This is a
 single-producer smoke test; independent rebuilds and XS compilation during
 consumer installation remain separate requirements.
 
+## Complete CPAN installation matrix
+
+Ordinary and reviewed source paths each passed two independent producer builds.
+Their package sets, manifests, and archive bytes match within each source path.
+Archive reassembly also reproduces the original bytes.
+
+The resulting packages passed 16 installations: both source paths, all four Perl
+ABIs, and both prebuilt-only and build-xs modes. After removing the producer,
+source, tools, and handoff, each relocated installation ran its public consumer
+twice. Those 32 processes passed 2,528 assertions. The reports retain the actual
+installer commands, architecture receipts, XS hashes, and original outputs.
+
+Another 96 cold and warm checks reject altered installed XS, GMP, and component
+libraries. These public installed-package checks do not measure private native
+allocation counters. The original reports are
+`{ordinary,reviewed}-combined-package.json` under
+`build/owned-perl-callback-results/`.
+
+## Address and undefined-behavior checks
+
+Both source paths passed on all four Perl ABIs with the generated C adapter,
+native broker, XS, Lean-emitted Owned/Carriers/Witness C, and callback C rebuilt
+with ASan and UBSan. Forty positive executions passed with empty stderr. All 32
+intentional native and XS address/undefined-behavior defects triggered their
+named detector sites. The probes executed 97,376 Perl assertions and ended with
+six zero cleanup counters.
+
+Prebuilt Perl, its standard XS modules, the Lean runtime, and GMP were not
+instrumented. These address/undefined-behavior runs disable leak detection.
+The separate strict LSan matrix is not clean: 55 executions report leaks, and
+one reports a tracer failure that makes the detector unavailable. Thirty-nine
+cold or exercised runs report the same 128 bytes in 12 Lean/GMP allocations;
+16 intentional leak controls add 73 bytes in one allocation. Setting
+`PERL_DESTRUCT_LEVEL=2` removes interpreter arena-exit noise without suppressions.
+The final reports and earlier failed attempts remain archived separately.
+
 ## Still open
 
-Full installed CPAN coverage, independent producer rebuilds, shared releases,
-callback-specific process and thread lifetimes, sanitizer checks, complete
-report reconstruction, and frozen Perl acceptance remain open. This stage makes no new
-installed-support claim and does not publish a registry package. Existing
+Shared releases, installed/sanitizer report reconstruction, and frozen Perl
+acceptance remain open. This stage makes no new installed-support claim and
+does not publish a registry package. Existing
 type-surface support cells and completed predecessor receipts remain unchanged;
 only authenticated current-source file hashes are refreshed.
 
@@ -125,10 +183,24 @@ LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_EVIDENCE_TEST=1 node --test \
 LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
   tests/helpers/owned-perl-callback-result-fault-tests.mjs
 
+LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
+  tests/helpers/owned-perl-callback-result-lifetime-tests.mjs
+
+LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_MUTANT_TEST=1 node --test \
+  tests/helpers/owned-perl-callback-result-mutant-tests.mjs
+
 LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 \
 LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 \
 LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_PACKAGE_TEST=1 node --test \
   tests/helpers/owned-perl-callback-result-installed-smoke.mjs
+
+LEAN_BRIDGE_PERL_TEST_GLIBC_FLOOR=2.36 \
+LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 \
+LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_PACKAGE_TEST=1 node --test \
+  tests/helpers/owned-perl-callback-result-packaging-tests.mjs
+
+LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_TEST=1 node --test \
+  tests/helpers/owned-perl-callback-result-sanitizer-tests.mjs
 
 node scripts/update-owned-perl-callback-history.mjs
 

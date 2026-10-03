@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { access, chmod, cp, mkdir, mkdtemp, readFile, readdir, rename, rm, symlink } from "node:fs/promises";
+import { access, chmod, cp, mkdir, mkdtemp, readFile, readdir, rename, rm, statfs, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -17,7 +17,7 @@ import { ownedDotnetEvidence } from "../../src/build/owned-dotnet-artifacts.mjs"
 import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 import { ownedRustReceiverLinker as linker } from "./owned-rust-receiver-fixture.mjs";
-import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
+import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied as runCopiedCommand } from "./copied-fixture-install.mjs";
 import { saveLakeFile, lakeInputState } from "./lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { checkOwnedJavaScriptBrowsers } from "./owned-javascript-npm-browser.mjs";
@@ -43,6 +43,20 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 		, reviewedIr: ownedCallbackResultCombinedReviewedIr
 		, source: ownedCallbackResultCombinedSource, reportDirectory } = options;
 	const dotnet = options.dotnet === true, jvm = options.jvm === true;
+	const extra = options.additionalNativeConsumer;
+	if(extra)
+	{
+		assert.equal(extra.target, "cpan"); assert.equal(extra.profile, "perl");
+		assert.deepEqual(extra.roles, ["runtime", "component"]);
+		assert.equal(typeof extra.prepare, "function");
+	}
+	const diskGuard = async () => {
+		if(options.minimumFreeBytes === undefined) return;
+		assert.ok(Number.isSafeInteger(options.minimumFreeBytes) && options.minimumFreeBytes > 0);
+		const disk = await statfs(tmpdir());
+		assert.ok(disk.bavail * disk.bsize >= options.minimumFreeBytes, `Shared release requires ${options.minimumFreeBytes} free bytes`);
+	};
+	await diskGuard();
 	assert.ok(!jvm || dotnet, "JVM peers use the complete callback fixture with NuGet");
 	const buildTimeoutMs = options.buildTimeoutMs ?? 900000;
 	assert.ok(Number.isSafeInteger(buildTimeoutMs) && buildTimeoutMs > 0 && buildTimeoutMs <= 3600000);
@@ -63,16 +77,26 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 	await rm(candidate.output, { recursive: true }); await rm(inputs.output, { recursive: true });
 	const interpreters = JSON.parse(process.env.LEAN_BRIDGE_COLLECTION_PYTHONS ?? JSON.stringify([resolve(".toolchains/python311/bin/python3.11"), resolve(".toolchains/python312/bin/python3.12")]));
 	assert.equal(interpreters.length, 2);
-	const environment = { ...nativeFixtureEnvironment(["c", "cpp", "rust", "python", "ruby", ...dotnet ? ["dotnet"] : [], ...jvm ? ["java", "kotlin"] : []])
+	const environment = { ...nativeFixtureEnvironment(["c", "cpp", "rust", "python", "ruby", ...dotnet ? ["dotnet"] : [], ...jvm ? ["java", "kotlin"] : [], ...extra ? [extra.profile] : []])
 		, LEAN_BRIDGE_BUILD_BACKEND: "auto", LEAN_BRIDGE_PYTHON: interpreters[0]
 		, LEAN_BRIDGE_RUBY: resolve(process.env.LEAN_BRIDGE_RUBY ?? ".toolchains/ruby33/bin/ruby")
 		, LEAN_BRIDGE_GEM: resolve(process.env.LEAN_BRIDGE_GEM ?? ".toolchains/ruby33/bin/gem")
 		, ...dotnet ? { LEAN_BRIDGE_DOTNET: resolve(process.env.LEAN_BRIDGE_DOTNET ?? ".toolchains/dotnet/dotnet") } : {}
 		, CARGO_HOME: process.env.CARGO_HOME ?? resolve(".toolchains/cargo-copied")
-		, LEAN_BRIDGE_JS_EMSDK: resolve(process.env.LEAN_BRIDGE_JS_EMSDK ?? ".toolchains/emsdk") };
+		, LEAN_BRIDGE_JS_EMSDK: resolve(process.env.LEAN_BRIDGE_JS_EMSDK ?? ".toolchains/emsdk")
+		, ...extra?.environment };
 	for(const key of ["LEAN_BRIDGE_RUNTIME_ROOT", "LEAN_BRIDGE_JS_INPUTS", "LEAN_BRIDGE_JS_TARGET_RUNTIME", "NODE_PATH", "NODE_OPTIONS"]) delete environment[key];
-	const run = (command, args, cwd, env = environment, timeoutMs = 900000) => processBuildRunner.capture({ command, args, cwd, env, timeoutMs })
-		.catch(error => { t.diagnostic(JSON.stringify(error.details ?? error.message)); throw error; });
+	let rawExecutions = [];
+	const remember = async (command, args, cwd, execute) => {
+		const result = await execute();
+		if(extra) rawExecutions.push({ command, args, cwd, ...result });
+		return result;
+	};
+	const run = (command, args, cwd, env = environment, timeoutMs = 900000) => remember(command, args, cwd,
+		() => processBuildRunner.capture({ command, args, cwd, env, timeoutMs })
+			.catch(error => { t.diagnostic(JSON.stringify(error.details ?? error.message)); throw error; }));
+	const runCopied = (command, args, cwd, env) => remember(command, args, cwd,
+		() => runCopiedCommand(command, args, cwd, env));
 	const baseC = await readFile("tests/fixtures/structured-types/owned-installed-callback-results.c", "utf8");
 	const combinedC = await readFile("tests/fixtures/structured-types/owned-installed-callback-combinations.c", "utf8");
 	const main = "int main(void) {", end = "  clear(&supplied_owner); clear(&first_owner); clear(&second_owner);";
@@ -99,6 +123,7 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 	assert.ok(example, "The consumer guide must contain its executable callback example");
 	for(const mode of ["ordinary", "reviewed"])
 	{
+		await diskGuard(); rawExecutions = [];
 		const author = join(root, mode + "-author"), project = join(root, mode + "-source");
 		const output = join(root, mode + "-release"), handoff = join(root, mode + "-handoff");
 		await saveLakeFile(author, "package.json", canonicalJson({ private: true }));
@@ -121,22 +146,24 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 			, npm: { name: `@owned/${mode}-callback-combinations`, version: "1.2.3" } };
 		if(dotnet) configuration.targets.nuget = { name: "Owned.CallbackResults", version: "1.2.3" };
 		if(jvm) configuration.targets.maven = { name: "org.leanbridge:owned-callback-results", version: "1.2.3" };
+		if(extra) configuration.targets[extra.target] = extra.configuration;
 		await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(mode === "reviewed") await saveLakeFile(project, "reviewed.binding-ir.json", canonicalJson(ownedCallbackResultCombinedReviewedIr()));
 		const before = await lakeInputState(project);
-		t.diagnostic(`${mode}: installed CLI builds one C/C++/Cargo/PyPI/RubyGems/${dotnet ? "NuGet/" : ""}${jvm ? "Maven/" : ""}npm release with all four capabilities`);
+		t.diagnostic(`${mode}: installed CLI builds one C/C++/Cargo/PyPI/RubyGems/${dotnet ? "NuGet/" : ""}${jvm ? "Maven/" : ""}${extra ? "CPAN/" : ""}npm release with all four capabilities`);
 		const arguments_ = ["build", "--project", project
 			, "--target", "c", "--target", "cpp", "--target", "cargo"
 			, "--target", "pypi", "--target", "rubygems", "--target", "npm"
 			, ...dotnet ? ["--target", "nuget"] : []
 			, ...jvm ? ["--target", "maven"] : []
+			, ...extra ? ["--target", extra.target] : []
 			, "--output", output, "--json"];
 		const built = JSON.parse((await run(join(author, "node_modules/.bin/lean-bridge"), arguments_, author
 			, environment, buildTimeoutMs)).stdout);
 		assert.equal(built.status, "ok"); assert.deepEqual(await lakeInputState(project), before);
 		const checked = await readVerifiedPackageSetReceipt({ receiptPath: join(output, "package-set-receipt.json") });
 		let independentBuild, independentPackageSetReceipt;
-		if(jvm)
+		if(jvm && options.independentRebuild !== false)
 		{
 			const independent = join(root, mode + "-independent-release");
 			const args = [...arguments_]; args[args.indexOf("--output") + 1] = independent;
@@ -183,14 +210,37 @@ export const runOwnedCallbackCombinedRelease = async (t, options) => {
 		const dotnetCompiled = dotnet ? await json(join(output, "profiles/native/native/dotnet/native-dotnet.json")) : null;
 		const receipt = await copyPackageSetHandoff(output, handoff);
 		assert.deepEqual(receipt, checked.receipt);
-		assert.deepEqual(receipt.packages.map(item => item.target).sort(), ["c", "cargo", "cpp", ...jvm ? ["maven"] : [], "npm", "npm", ...dotnet ? ["nuget"] : [], "pypi", "rubygems"]);
+		assert.deepEqual(receipt.packages.map(item => item.target).sort(), ["c", "cargo", "cpp", ...jvm ? ["maven"] : [], "npm", "npm", ...dotnet ? ["nuget"] : [], "pypi", "rubygems", ...extra ? extra.roles.map(() => extra.target) : []].sort());
 		const dependencies = await prepareRustCorpusDependencies({
 			rustRoot: join(output, "profiles/native/native/rust")
 			, directory: join(root, mode + "-dependencies"), handoff, environment });
 		const managedJvm = jvm ? await prepareOwnedJvmCallbackCombined({
 			root, mode, output, author, handoff, receipt, environment, native }) : null;
-		for(const path of [author, project, output])
+		const additional = extra ? await extra.prepare({
+			root, mode, output, author, handoff, receipt, environment, native
+			, diagnostic: value => t.diagnostic(value) }) : null;
+		let savedHandoff, cliVerificationExecution, cliVerification;
+		if(extra)
+		{
+			await mkdir(resolve(reportDirectory), { recursive: true });
+			savedHandoff = await mkdtemp(join(resolve(reportDirectory), `${mode}-combined-release-handoff-`));
+			assert.deepEqual(await copyPackageSetHandoff(output, savedHandoff), receipt);
+			await saveLakeFile(savedHandoff, "producer-observations.json", canonicalJson({
+				schemaVersion: 1, mode, cli: candidate.report, built, receipt, native, wasm
+				, nativeInput, wasmInput, rawExecutions, installedPerl: additional.report
+			}));
+			t.diagnostic(`${mode}: retained original shared archives at ${savedHandoff}`);
+		}
+		for(const path of [project, output])
 		{ await rm(path, { recursive: true }); await assert.rejects(access(path), { code: "ENOENT" }); }
+		if(extra)
+		{
+			cliVerificationExecution = await run(process.execPath, [join(author, "node_modules/.bin/lean-bridge"), "verify", "--receipt", join(handoff, "package-set-receipt.json"), "--json"], author, copiedCleanEnvironment);
+			cliVerification = JSON.parse(cliVerificationExecution.stdout);
+			assert.equal(cliVerification.status, "ok");
+			assert.equal(cliVerification.result.verificationType, "local-package-set");
+		}
+		await rm(author, { recursive: true }); await assert.rejects(access(author), { code: "ENOENT" });
 		const cPackages = receipt.packages.filter(item => item.target === "c");
 		const cppPackages = receipt.packages.filter(item => item.target === "cpp");
 		assert.equal(cppPackages.length, 1);
@@ -352,6 +402,7 @@ target_compile_options(consumer PRIVATE -Wall -Wextra -Werror -UNDEBUG)
 		const consume = (command, args) => run(command, args, jsRoot, consumerEnvironment, 180000);
 		await consume("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", ...npm.map(item => join(handoff, item.artifacts[0].path))]);
 		await rm(handoff, { recursive: true }); await assert.rejects(access(handoff), { code: "ENOENT" });
+		if(additional) await additional.execute();
 		if(managedJvm) await managedJvm.execute(consumer);
 
 		await ruby.relocate();
@@ -433,7 +484,12 @@ api.close();
 			, rustManifest, installedRust, installedPython
 			, rubyAdapter, nativeRuntime, installedRuby: ruby.report
 			, ...managed ? { installedDotnet: managed.report } : {}
-			, ...managedJvm ? { installedJvm: managedJvm.report, independentBuild, independentPackageSetReceipt, independentProducerBuild: true } : {}
+			, ...managedJvm ? { installedJvm: managedJvm.report } : {}
+			, ...independentBuild ? { independentBuild, independentPackageSetReceipt, independentProducerBuild: true } : {}
+			, ...additional ? {
+				installedPerl: additional.report, rawExecutions, savedHandoff
+				, cliVerificationExecution, cliVerification
+				, independentProducerBuild: Boolean(independentBuild) } : {}
 			, rustDocumentation: { sourceSha256: sha256(rustExample), output: rustDocumented.stdout }
 			, observed, inventory, browser, installedTypeScript: true
 			, cliFilesVerified: candidate.report.files.length, sourceUnchanged: true

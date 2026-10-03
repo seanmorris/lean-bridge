@@ -36,6 +36,7 @@ const allowed = new Set([
 	, "tests/helpers/owned-jvm-callback-result-package-evidence.mjs"
 	, "tests/helpers/owned-jvm-callback-result-combined-evidence.mjs"
 	, "tests/helpers/owned-perl-native.mjs"
+	, "tests/helpers/owned-callback-combined-release.mjs"
 	, "tests/owned-jvm-callback-result-history.test.mjs"
 	, "tests/owned-perl-borrows.test.mjs", "tests/owned-perl-values.test.mjs"
 	, "tests/owned-perl-xs.test.mjs"
@@ -52,10 +53,28 @@ const added = new Set([
 	, "tests/helpers/owned-perl-callback-result-installed-smoke.mjs"
 	, "tests/helpers/owned-perl-callback-result-runtime-evidence.mjs"
 	, "tests/helpers/owned-perl-callback-result-runtime-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-fault-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-fault-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-lifetime-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-lifetime-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-mutant-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-mutant-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-mutants.mjs"
+	, "tests/helpers/owned-perl-callback-result-packaging-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-combined-install.mjs"
+	, "tests/helpers/owned-perl-callback-result-combined-packaging-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-sanitizer-evidence-tests.mjs"
+	, "tests/helpers/owned-perl-callback-result-package-evidence.mjs"
+	, "tests/helpers/owned-perl-callback-result-package-evidence-tests.mjs"
 	, "tests/fixtures/structured-types/owned-perl-callback-results-installed.pl"
 	, "tests/fixtures/structured-types/owned-perl-callback-result-faults.pl"
+	, "tests/fixtures/structured-types/owned-perl-callback-result-lifetime.pl"
+	, "tests/fixtures/structured-types/owned-perl-callback-result-sanitizers.pl"
 	, "tests/fixtures/structured-types/owned-perl-callback-results.pl"
-	, ...["contract", "factory", "fault", "history", "installer", "package", "runtime", "xs"]
+	, ...["contract", "factory", "fault", "history", "installer", "lifetime"
+		, "mutant", "package", "runtime", "xs"]
 		.map(name => `tests/helpers/owned-perl-callback-result-${name}-tests.mjs`)
 ]);
 const git = args => execFileSync("git", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
