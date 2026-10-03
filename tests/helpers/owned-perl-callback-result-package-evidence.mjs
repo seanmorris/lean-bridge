@@ -39,6 +39,11 @@ const pins = {
 	}
 };
 
+/**
+ * Reconstruct the pinned four-ABI Perl Config fingerprint.
+ *
+ * @param variant - Independently selected pinned Perl variant.
+ */
 const abiFor = variant => {
 	assert.ok(ownedPerlReceiverVariants.includes(variant));
 	const threaded = !variant.endsWith("unthreaded");
@@ -148,19 +153,20 @@ export const assertOwnedPerlCallbackPackageArtifacts = async (item, model, readS
 		, "allocationGuardSha256"
 		, "bindingIrSha256"
 		, "callbackResultAnchors"
-		, "callbackSourceSha256"
+		, ...model.ownedGraph.hostCallbacks ? ["callbackSourceSha256"] : []
 		, "compiler"
 		, "exports"
 		, "headerSha256"
 		, "initializer"
-		, "inputTransfers"
+		, ...model.ownedGraph.inputTransfers ? ["inputTransfers"] : []
 		, "library"
 		, "metadataSha256"
 		, "modelSha256"
 		, "nativeLibrary"
 		, "profile"
-		, "receiverExports"
-		, "resultAnchors", "runtimeIdentity", "schemaVersion", "sourceIdentity"]);
+		, ...model.ownedGraph.receiverExports ? ["receiverExports"] : []
+		, ...model.ownedGraph.resultAnchors ? ["resultAnchors"] : []
+		, "runtimeIdentity", "schemaVersion", "sourceIdentity"]);
 	keys(component.nativeLibrary, ["bytes", "sha256"]);
 	assert.ok(Number.isSafeInteger(component.nativeLibrary.bytes) && component.nativeLibrary.bytes > 0);
 	digest(component.nativeLibrary.sha256); digest(component.runtimeIdentity);
@@ -173,7 +179,7 @@ export const assertOwnedPerlCallbackPackageArtifacts = async (item, model, readS
 	assert.equal(component.bindingIrSha256, model.bindingIrSha256);
 	assert.equal(component.headerSha256, sha256(native.header));
 	assert.equal(component.adaptersSha256, sha256(native.leanSource));
-	assert.equal(component.callbackSourceSha256, sha256(native.callbackSource));
+	if(model.ownedGraph.hostCallbacks) assert.equal(component.callbackSourceSha256, sha256(native.callbackSource));
 	assert.equal(component.allocationGuardSha256, sha256(nativeAllocationGuardHeader));
 	assert.equal(component.initializer, `initialize_${native.module}`);
 	assert.deepEqual(component.exports, model.exports.map(value => ({ declaration: value.name, symbol: value.symbol })));
@@ -202,7 +208,8 @@ export const assertOwnedPerlCallbackPackageArtifacts = async (item, model, readS
 		, "binding-ir.json": canonicalJson(model.bindingIr)
 		, "native-component.json": canonicalJson(component)
 		, "component.h": native.header
-		, "generated.lean": native.leanSource, "callbacks.c": native.callbackSource
+		, "generated.lean": native.leanSource
+		, ...model.ownedGraph.hostCallbacks ? { "callbacks.c": native.callbackSource } : {}
 		, "allocation-guard.h": nativeAllocationGuardHeader
 		, "LeanBridgeBuild.pm": renderOwnedPerlCallbackBuild((await readSource("src/backends/perl/Build.pm")).toString()
 			, (await readSource("src/backends/perl/BuildCallbackResults.pm")).toString(), { moduleName: manifest.module, model }) }))
@@ -243,7 +250,7 @@ export const assertOwnedPerlCallbackPackageArtifacts = async (item, model, readS
 			, "allocation-guard.h"
 			, "artifacts.json"
 			, "binding-ir.json"
-			, "callbacks.c"
+			, ...model.ownedGraph.hostCallbacks ? ["callbacks.c"] : []
 			, "component.h"
 			, "generated.lean"
 			, "metadata.json"
@@ -333,6 +340,14 @@ const progress = (command, entries) => ({
 		, sequence: index + 1, state, total: null, type: "progress"
 	}))
 });
+/**
+ * Reconstruct a complete successful noninteractive CLI response.
+ *
+ * @param command - Build or verification command.
+ * @param project - Selected project, or null for receipt verification.
+ * @param result - Independently reconstructed command result.
+ * @param perls - Ordered pinned producer Perl executable paths.
+ */
 const response = (command, project, result, perls = []) => ({
 	cache: { directory: null, policy: command === "build" ? "use" : "off" }
 	, command
@@ -413,7 +428,14 @@ Lean Bridge source is distributed under the MIT license in LICENSE. Upstream run
 	}, null, 2) + "\n"
 });
 
-const assertProducer = async (item, model, readSource) => {
+/**
+ * Check the CLI inventory and both independently rebuilt package identities.
+ *
+ * @param item - Original package observations.
+ * @param model - Independently reconstructed native model.
+ * @param readSource - Current or authenticated historical source reader.
+ */
+export const assertOwnedPerlCallbackPackageIdentity = async (item, model, readSource = readFile) => {
 	keys(item.cli, [
 		"schemaVersion", "kind", "package", "sourceDateEpoch", "runtimeIncluded"
 		, "phpWasmInputsIncluded"
@@ -485,6 +507,12 @@ const assertProducer = async (item, model, readSource) => {
 	assert.deepEqual(item.independentArchives, packages.map((pkg, index) => ({ archive: pkg.archive
 		, original: { bytes: artifacts[index].bytes, sha256: pkg.sha256 }
 		, repeated: { bytes: artifacts[index].bytes, sha256: pkg.sha256 } })));
+	return packages;
+};
+
+const assertProducer = async (item, model, readSource) => {
+	const packages = await assertOwnedPerlCallbackPackageIdentity(item, model, readSource);
+	const { manifest, runtimeManifest: runtime, componentReceipt: component } = item;
 	assert.equal(item.cliBuilds.length, 2); assert.equal(item.cliExecutions.length, 2);
 	const root = item.cliExecutions[0].cwd;
 	assert.ok(isAbsolute(root) && !root.split("/").includes(".."));
@@ -546,6 +574,17 @@ const cleanCommand = (item, command, args, cwd) => {
 	assert.doesNotMatch(item.stdout, /segmentation fault|core dumped|double free|unreleased (?:native|Perl) ownership/iu);
 };
 
+/**
+ * Check generated-XS compiler commands and reconstruct their raw output.
+ *
+ * @param receipt - Original installed build receipt.
+ * @param manifest - Independently checked package manifest.
+ * @param configure - Raw Makefile.PL execution.
+ * @param packageRoot - Recorded extraction directory.
+ * @param consumerRoot - Recorded consumer directory.
+ * @param variant - Pinned Perl ABI variant.
+ * @param abi - Independently reconstructed ABI fingerprint.
+ */
 const assertCompileReceipt = (receipt, manifest, configure, packageRoot, consumerRoot, variant, abi) => {
 	keys(receipt, [
 		"schemaVersion"
@@ -761,3 +800,7 @@ export const assertOwnedPerlCallbackPackageMatrix = async (reports, readSource =
 	for(const name of ownedPerlCallbackPackageReports) await assertOwnedPerlCallbackPackage(name, reports[name], readSource);
 	assert.deepEqual(reports[ownedPerlCallbackPackageReports[0]].cli, reports[ownedPerlCallbackPackageReports[1]].cli);
 };
+
+export { abiFor as ownedPerlCallbackPackageAbi
+	, response as ownedPerlCallbackCliResponse
+	, assertCompileReceipt as assertOwnedPerlCallbackCompileReceipt };
