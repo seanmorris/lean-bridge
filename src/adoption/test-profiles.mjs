@@ -88,6 +88,7 @@ const profileManifest = Object.freeze({
 		, "managed-close-evidence"
 		, "owned-perl-borrow-evidence"
 		, "owned-perl-receiver-ci", "owned-perl-receiver-evidence"
+		, "owned-perl-callback-result-contract"
 		, "owned-php-borrow-evidence"
 		, "owned-php-receiver-ci"
 		, "owned-php-receiver-evidence"

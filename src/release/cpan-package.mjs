@@ -13,6 +13,7 @@ import { readVerifiedNativeRuntime, readVerifiedNativeComponent } from "../build
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { cpanPackageMetadata, verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 import { generateOwnedPerlPackage } from "../backends/perl/owned-package.mjs";
+import { renderOwnedPerlCallbackBuild } from "../backends/perl/owned-callback-build.mjs";
 import { readOwnedPerlGmp } from "../build/owned-perl-artifacts.mjs";
 import { verifyOwnedCpanTransfers } from "./owned-cpan-contract.mjs";
 
@@ -94,6 +95,15 @@ export const readVerifiedCpanPackage = async packageRoot => {
 	} else
 	{
 		verifyOwnedCpanTransfers(manifest, files);
+		if(manifest.ownedValues?.schemaVersion === 5)
+		{
+			const installer = renderOwnedPerlCallbackBuild(
+				await readFile(join(templates, "Build.pm"), "utf8")
+				, await readFile(join(templates, "BuildCallbackResults.pm"), "utf8")
+				, { moduleName: manifest.module, model: JSON.parse(files.get("model.json")) });
+			if(files.get("LeanBridgeBuild.pm")?.toString() !== installer)
+				throw new Error("Owned CPAN callback installer differs from its generated source");
+		}
 		const metadata = JSON.parse(files.get("META.json"));
 		const pin = `== ${manifest.runtimeVersion}`;
 		const pm = files.get(`lib/${manifest.module.replaceAll("::", "/")}.pm`)?.toString("utf8");
@@ -169,11 +179,12 @@ export const stageCpanPackage = async ({ outputRoot
 	void leanPrefix;
 	let moduleName = "LeanBridge::Runtime", xs = "Runtime.xs", include = "lib/LeanBridge/Runtime/include";
 	let packageMetadata = {}, runtimeVersion = version, ownedValues = null;
+	let callbackModel = null;
 	if(componentRoot)
 	{
 		const isOwned = ownedGmpRoot !== null;
 		const { model, receipt } = await readVerifiedNativeComponent(componentRoot, nativeRuntimeIdentity
-			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned });
+			, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned });
 		const sourceNotices = await readVerifiedSourceNotices(componentRoot, receipt.sourceIdentity);
 		packageMetadata = verifyPackageMetadataSource(receipt.sourceIdentity, sourceNotices.document.packages[0].source.inputs);
 		if(!runtimePackageRoot) throw new Error("Component packaging requires the completed CPAN runtime package");
@@ -194,6 +205,7 @@ export const stageCpanPackage = async ({ outputRoot
 				, metadata: JSON.parse(await readFile(join(componentRoot, "metadata.json"), "utf8"))
 				, moduleName, gmpSha256: gmp.sha256 });
 			files = generated.files; ownedValues = generated.owned;
+			if(model.ownedGraph.callbackResultAnchors) callbackModel = model;
 			for(const path of gmp.paths) await copy(join(ownedGmpRoot, path), join(directory, "owned/gmp", path));
 			await copy(join(ownedGmpRoot, "lib", gmp.library), join(directory, `lib/${relative}/native/${gmp.library}`));
 		} else files = generatePerlBindingPackage(model, { ...receipt, runtimeIdentity });
@@ -202,7 +214,7 @@ export const stageCpanPackage = async ({ outputRoot
 		await copy(join(componentRoot, receipt.library), join(directory, `lib/${relative}/native/${receipt.library}`));
 		for(const path of ["component.h", "model.json", "binding-ir.json", "native-component.json", "metadata.json", "generated.lean", "allocation-guard.h", "artifacts.json"])
       await copy(join(componentRoot, path), join(directory, path));
-		if(model.ownedGraph?.hostCallbacks && (model.ownedGraph.inputTransfers || model.ownedGraph.resultAnchors || model.ownedGraph.receiverExports))
+		if(model.ownedGraph?.hostCallbacks && (model.ownedGraph.inputTransfers || model.ownedGraph.resultAnchors || model.ownedGraph.receiverExports || model.ownedGraph.callbackResultAnchors))
 			await copy(join(componentRoot, "callbacks.c"), join(directory, "callbacks.c"));
 		const generatedDigest = receipt.sourceIdentity?.lakeDependencies?.generatedSourcesSha256;
 		if(generatedDigest !== undefined)
@@ -228,7 +240,12 @@ export const stageCpanPackage = async ({ outputRoot
 		await copy(join(runtimeRoot, "include/lean_bridge_native_runtime.h"), join(directory, include, "lean_bridge_native_runtime.h"));
 		await copy(join(templates, "runtime.h"), join(directory, include, "runtime.h"));
 	}
-	await copy(join(templates, "Build.pm"), join(directory, "LeanBridgeBuild.pm"));
+	if(callbackModel)
+		await save(join(directory, "LeanBridgeBuild.pm"), renderOwnedPerlCallbackBuild(
+			await readFile(join(templates, "Build.pm"), "utf8")
+			, await readFile(join(templates, "BuildCallbackResults.pm"), "utf8")
+			, { moduleName, model: callbackModel }));
+	else await copy(join(templates, "Build.pm"), join(directory, "LeanBridgeBuild.pm"));
 	await copy(join(templates, "Platform.pm"), join(directory, "inc/LeanBridge/Runtime/Platform.pm"));
 	await copy(join(root, "LICENSE"), join(directory, componentRoot ? "notices/LeanBridge-LICENSE" : "LICENSE"));
 	for(const name of ["lean.txt", "lean-bundled.txt"]) await copy(join(root, "notices/runtime", name), join(directory, "notices", name));

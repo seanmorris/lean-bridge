@@ -27,13 +27,15 @@ export const generateOwnedPerlPackage = ({ model, receipt, metadata, moduleName,
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports);
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
-	const wholeOwners = anchoredResults || receiverExports;
+	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
+	const wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
 	const c = generateOwnedCPackage({ metadata
 		, sourceIdentity: model.sourceIdentity, component: model.component
-		, hostCallbacks, transferredInputs, anchoredResults, receiverExports });
+		, hostCallbacks, transferredInputs, anchoredResults, receiverExports
+		, callbackResultAnchors, valueCopies: callbackResultAnchors });
 	if(canonicalJson(c.layout.model.bindingIr) !== canonicalJson(model.bindingIr))
 		throw new TypeError("Perl ownership types differ from the compiled component");
-	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults, receiverExports, hostCallbacks });
+	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
 	if(generated.c.prefix !== c.values.prefix) throw new TypeError("Perl and C ownership prefixes differ");
 	const prefix = c.values.prefix, relative = moduleName.replaceAll("::", "/"), stem = moduleName.split("::").at(-1);
 	const gmpLibrary = "libgmp-lean-bridge.so.10", q = perlStringLiteral;
@@ -92,12 +94,29 @@ products use array references. None and Unit use undef; Some->new(undef) keeps
 optional Unit distinct from None. Ok and Err preserve their result branches.
 Nat and Int use Math::BigInt. Text retains Unicode and NUL; ByteArray uses octets.
 
-Resources${hostCallbacks ? " and Lean closures" : ""} provide close, closed and retain. Retained results
+Resources${hostCallbacks || callbackResultAnchors ? " and Lean closures" : ""} provide close, closed and retain. Retained results
 own independent native references. Close is idempotent; finalization releases
 unclosed owners. Closing an input during a call does not invalidate its active
 borrow.${hostCallbacks ? " Callback arguments expire on return unless explicitly retained." : ""}
 
-${receiverExports ? `Declared methods and properties use snake_case members on nominal Value owners.
+${callbackResultAnchors ? `Anchored callback results borrow their selected original argument owner, using
+callback-local parameter numbers. Empty containers and recursive descendants
+keep that lifetime. Closing or transferring the original owner expires its
+borrowed results; retain or copy_value creates independent ownership.
+
+Native closures accept whole Value owners at anchored argument positions. On a
+live closure, copy_arg0, copy_arg1 and other generated argument factories select
+their callback-local schema; copy_result selects the callback result schema.
+The private native closure slot is not counted. Factories exist for non-copied
+sites only. Use get to access a closure held by a whole Value owner.
+${hostCallbacks ? `
+Host callbacks receive borrowed raw values and can return a raw value or a
+matching whole Value owner. A Runtime::Callback recovery uses the same forms.
+Reply values are copied before the callback frame expires. Recovery validation
+happens before ownership transfer. Passing a native closure preserves its
+identity rather than creating a host callback around it.
+` : ""}
+` : ""}${receiverExports ? `Declared methods and properties use snake_case members on nominal Value owners.
 Properties are read-only, zero-argument methods. share, retain and copy_value
 preserve the owner's nominal class. Member calls keep original receiver and
 argument owner slots; consuming methods invalidate shared aliases at handoff.
@@ -146,8 +165,16 @@ adapter with local Perl headers. Lean, Lake and Node are not required.
 
 =cut
 `;
-	const owned = { schemaVersion: receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
+	const owned = { schemaVersion: callbackResultAnchors ? 5 : receiverExports ? 4 : anchoredResults ? 3 : transferredInputs ? 2 : 1
 		, prefix, gmpLibrary
+		, ...callbackResultAnchors ? { callbackResultAnchors: { ...model.ownedGraph.callbackResultAnchors
+			, arguments: "whole-values", results: "checked-whole-values"
+			, emptyValues: "owner-scoped", independentRetains: "preserved"
+			, identityEquality: "native-identity", parameterNumbering: "callback-local"
+			, independentOwnership: "retain-or-copy_value"
+			, hostArguments: "borrowed-raw-values", hostReply: "value-or-whole-owner"
+			, hostResultHandoff: "before-callback-frame-expires"
+			, nativeClosures: "identity-preserved" } } : {}
 		, ...transferredInputs ? { inputTransfers: { ...model.ownedGraph.inputTransfers
 			, arguments: wholeOwners ? "whole-values" : "ordinary-values"
 			, aliases: wholeOwners ? "shared-owner" : "shared-lease"
