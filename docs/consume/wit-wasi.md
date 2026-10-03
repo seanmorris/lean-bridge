@@ -225,7 +225,10 @@ until they return but cannot publish a result from that expired anchor.
 WIT uses owned handles for returned resources. The bundled host carries the
 original native owner through the Component Model call and checks it before
 publishing results. Those transport handles do not extend the source lifetime.
-Callback-result anchors are not yet supported.
+Prepared packages do not yet expose callback-result anchors. The separate
+[direct runtime acceptance](../evidence/owned-wit-callback-results-20261003.md)
+executes the implementation through compiled Lean and Wasmtime; installed and
+relocated package acceptance remains the next support gate.
 
 ### Methods and properties
 

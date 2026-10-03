@@ -3388,6 +3388,8 @@ jobs:
         uses: cachix/install-nix-action@v31
       - name: Install dependencies without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Verify frozen direct WIT callback-result acceptance
+        run: npm run test:owned-wit-callback-evidence
       - name: Install the archive and invoke the component through Wasmtime
         id: consumer
         continue-on-error: true
